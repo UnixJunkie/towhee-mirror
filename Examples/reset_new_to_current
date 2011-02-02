@@ -1,0 +1,171 @@
+#!/bin/sh
+cd Amber_IsoPropanol
+../reset_files
+cd ../
+cd Amber_Villin
+../reset_files
+cd ../
+cd Au_Cu_Switch
+../reset_files
+cd ../
+cd AVB1_Methane
+../reset_files
+cd ../
+cd Benzene_AA_autofit
+../reset_files
+cd ../
+cd Catlow_Zeolite_4a
+../reset_files
+cd ../
+cd Charmm19_ubiquitin
+../reset_files
+cd ../
+cd Charmm22_Ethanethiol
+../reset_files
+cd ../
+cd Charmm27_benzene
+../reset_files
+cd ../
+cd Charmm27_Heme
+../reset_files
+cd ../
+cd Charmm27_NA
+../reset_files
+cd ../
+cd Charmm27_Polyalanine
+../reset_files
+cd ../
+cd Compass_Methanol
+../reset_files
+cd ../
+cd Cu_Pb_EAM
+../reset_files
+cd ../
+cd Cu_VLE
+../reset_files
+cd ../
+cd Dick1994_PETN
+../reset_files
+cd ../
+cd DREIDING
+../reset_files
+cd ../
+cd Dubb_Zeolite
+../reset_files
+cd ../
+cd Energy_Biasing
+../reset_files
+cd ../
+cd EPM_VLCC
+../reset_files
+cd ../
+cd FENE_Hexamer
+../reset_files
+cd ../
+cd Formamide_Scaled
+../reset_files
+cd ../
+cd Fris_Walls
+../reset_files
+cd ../
+cd Gordon
+../reset_files
+cd ../
+cd Gromos_Isobutane
+../reset_files
+cd ../
+cd Gromos_Methylpropylsulfide
+../reset_files
+cd ../
+cd Hard_Sphere
+../reset_files
+cd ../
+cd Henry_Law
+../reset_files
+cd ../
+cd Ideal_Chain
+../reset_files
+cd ../
+cd MM2_Ethane
+../reset_files
+cd ../
+cd NaCl_1x1x1
+../reset_files
+cd ../
+cd OPLS_Propanamide
+../reset_files
+cd ../
+cd Potter_CF2H2
+../reset_files
+cd ../
+cd Shukla_Gasses
+../reset_files
+cd ../
+cd SKS_Pentane
+../reset_files
+cd ../
+cd SMMKmain_2244688nonane
+../reset_files
+cd ../
+cd SMMKnaip_Ethylpentane
+../reset_files
+cd ../
+cd Small_Peptide
+../reset_files
+cd ../
+cd Solid_LJium
+../reset_files
+cd ../
+cd Square_Well_Chain
+../reset_files
+cd ../
+cd Steele_Wall
+../reset_files
+cd ../
+cd TraPPE_Isomers
+../reset_files
+cd ../
+cd TraPPE_Molecules
+../reset_files
+cd ../
+cd TraPPE_Pentane
+../reset_files
+cd ../
+cd Triglycerol
+../reset_files
+cd ../
+cd UFF
+../reset_files
+cd ../
+cd uVT_Ethane
+../reset_files
+cd ../
+cd Vink2001_Silicon
+../reset_files
+cd ../
+cd Wall_Water
+../reset_files
+cd ../
+cd Walt2001_Nanotube
+../reset_files
+cd ../
+cd Weiner1984
+../reset_files
+cd ../
+cd TMMC/LJ
+../../reset_files
+cd ../../
+cd TMMC/SPC_E_WATER
+../../reset_files
+cd ../../
+cd Convert
+cd LAMMPS_lc
+../../reset_files
+cd ../
+cd LAMMPS_class2
+../../reset_files
+cd ../
+cd LAMMPS_decane
+../../reset_files
+cd ../
+cd ../

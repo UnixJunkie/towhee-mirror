@@ -1,0 +1,46 @@
+towhee_ff Version
+          14
+Number of Nonbonded Types
+           1
+Potential Type
+Gordon n-6                    
+Classical Mixrule
+LB or Geometric               
+Classical N
+          12
+Atom Type Number
+           1
+Nonbond Coefficients
+    0.3730000000E+01
+    0.1480000000E+03
+Mass
+    0.1604260000E+02
+Element
+ C
+Bond Pattern
+sp3  
+Base Charge 
+    0.0000000000E+00
+Polarizability
+    0.1000000000E+01
+Force Field Name
+Gordon    
+Atom Names
+CH4_3     
+CH4_3     
+CH4_3     
+CH4_3     
+Number of Bonded Terms
+           0
+Number of Angle Terms
+           0
+Number of Torsion Terms
+           0
+Number of Improper Terms
+           0
+Number of Angle-Angle Terms
+           0
+Number of One-Five Types
+           0
+Number of Bond Increments
+           0

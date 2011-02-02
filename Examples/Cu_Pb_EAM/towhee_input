@@ -1,0 +1,201 @@
+inputformat
+'Towhee'
+randomseed
+1302002
+random_luxlevel
+3
+random_allow_restart
+T
+ensemble
+'nvt'
+temperature
+300.0d0
+nmolty
+2
+nmolectyp
+2000 2000
+numboxes
+1
+stepstyle
+'cycles'
+nstep
+0
+printfreq
+1000
+blocksize
+2000
+moviefreq
+1000
+backupfreq
+1000
+runoutput
+'full'
+pdb_output_freq
+10
+pressurefreq
+2000
+trmaxdispfreq
+1000
+volmaxdispfreq
+1000
+potentialstyle
+'internal'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_Hoyt2003
+classical_potential
+'Embedded Atom Method'       
+interpolatestyle
+'cubicspline'
+rcut
+1.0d0
+electrostatic_form
+'none'
+linit
+T
+initboxtype
+'dimensions'
+initstyle
+'coords' 'coords'
+initlattice
+'none' 'none'
+initmol
+2000 2000
+inix iniy iniz
+27   27   28
+hmatrix
+36.3282601 0.0d0 0.0d0
+0.0d0  36.3308503  0.0d0
+0.0d0 0.0d0  36.3231923
+pm1boxcbswap
+0.0d0
+          pm1cbswmt
+          1.0d0 1.0d0
+pmavb1
+0.0d0
+          pmavb1in
+          0.5d0
+          pmavb1mt
+          1.0d0 1.0d0
+          pmavb1ct
+          1.0d0 1.0d0
+          1.0d0 1.0d0
+          avb1rad
+          0.05d0
+pmavb2
+0.0d0
+          pmavb2in
+          0.5d0
+          pmavb2mt
+          1.0d0 1.0d0
+          pmavb2ct
+          1.0d0 1.0d0
+          1.0d0 1.0d0
+          avb2rad
+          0.05d0
+pmavb3
+0.0d0
+          pmavb3mt
+          1.0d0 1.0d0
+          pmavb3ct
+          1.0d0 1.0d0
+          1.0d0 1.0d0
+          avb3rad
+          0.05d0
+pmcb
+0.0d0
+          pmcbmt
+          1.0d0 1.0d0
+          pmall
+          0.0d0 0.0d0
+pmback
+0.0d0
+          pmbkmt
+          1.0d0 1.0d0
+pmpivot
+0.0d0
+          pmpivmt
+          1.0d0 1.0d0
+pmconrot
+0.0d0
+          pmcrmt
+          1.0d0 1.0d0
+pmcrback
+0.0d0
+          pmcrbmt
+          1.0d0 1.0d0
+pmplane
+0.0d0
+          pmplanebox
+          1.0d0
+          planewidth
+          1.0d0
+pmrow
+0.0d0
+          pmrowbox
+          1.0d0
+          rowwidth
+          1.0d0
+pmtraat
+0.0d0
+          pmtamt
+          1.0d0 1.0d0
+          rmtraa
+          0.5d0
+          tatraa
+          0.5d0
+pmtracm
+1.0d0
+          pmtcmt
+          1.0d0 1.0d0
+          rmtrac
+          0.5d0
+          tatrac
+          0.5d0
+pmrotate
+0.0d0
+          pmromt
+          1.0d0 1.0d0
+          rmrot
+          0.05d0
+          tarot
+          0.5d0
+#copper
+input_style
+'basic connectivity map'
+nunit
+1
+nmaxcbmc
+1
+lpdbnames
+F
+forcefield
+'Hoyt2003'
+charge_assignment
+'manual'
+unit ntype qqatom
+1    'Cu' 0.0d0
+vibration
+0
+improper torsion
+0
+# lead
+input_style
+'basic connectivity map'
+nunit
+1
+nmaxcbmc
+1
+lpdbnames
+F
+forcefield
+'Hoyt2003'
+charge_assignment
+'manual'
+unit ntype qqatom
+1    'Pb' 0.0d0
+vibration
+0
+improper torsion
+0

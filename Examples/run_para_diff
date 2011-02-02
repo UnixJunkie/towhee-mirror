@@ -1,0 +1,168 @@
+#!/bin/sh
+#
+# $Id: run_para_diff,v 1.27 2009/05/01 16:04:55 marcus_martin Exp $
+cd Amber_IsoPropanol
+../do_para_diff
+cd ../
+cd Amber_Villin
+../do_para_diff
+cd ../
+cd Au_Cu_Switch
+../do_para_diff
+cd ../
+cd AVB1_Methane
+../do_para_diff
+cd ../
+cd Benzene_AA_autofit
+../do_para_diff
+cd ../
+cd Catlow_Zeolite_4a
+../do_para_diff
+cd ../
+cd Charmm19_ubiquitin
+../do_para_diff
+cd ../
+cd Charmm22_Ethanethiol
+../do_para_diff
+cd ../
+cd Charmm27_benzene
+../do_para_diff
+cd ../
+cd Charmm27_Heme
+../do_para_diff
+cd ../
+cd Charmm27_NA
+../do_para_diff
+cd ../
+cd Charmm27_Polyalanine
+../do_para_diff
+cd ../
+cd Compass_Methanol
+../do_para_diff
+cd ../
+cd Cu_VLE
+../do_para_diff
+cd ../
+cd Cu_Pb_EAM
+../do_para_diff
+cd ../
+cd Dick1994_PETN
+../do_para_diff
+cd ../
+cd DREIDING
+../do_para_diff
+cd ../
+cd Dubb_Zeolite
+../do_para_diff
+cd ../
+cd Energy_Biasing
+../do_para_diff
+cd ../
+cd EPM_VLCC
+../do_para_diff
+cd ../
+cd FENE_Hexamer
+../do_para_diff
+cd ../
+cd Formamide_Scaled
+../do_para_diff
+cd ../
+cd Fris_Walls
+../do_para_diff
+cd ../
+cd Gordon
+../do_para_diff
+cd ../
+cd Gromos_Isobutane
+../do_para_diff
+cd ../
+cd Gromos_Methylpropylsulfide
+../do_para_diff
+cd ../
+cd Hard_Sphere
+../do_para_diff
+cd ../
+cd Henry_Law
+../do_para_diff
+cd ../
+cd Ideal_Chain
+../do_para_diff
+cd ../
+cd MM2_Ethane
+../do_para_diff
+cd ../
+cd NaCl_1x1x1
+../do_para_diff
+cd ../
+cd OPLS_Propanamide
+../do_para_diff
+cd ../
+cd Potter_CF2H2
+../do_para_diff
+cd ../
+cd Shukla_Gasses
+../do_para_diff
+cd ../
+cd SKS_Pentane
+../do_para_diff
+cd ../
+cd Small_Peptide
+../do_para_diff
+cd ../
+cd SMMKmain_2244688nonane
+../do_para_diff
+cd ../
+cd SMMKnaip_Ethylpentane
+../do_para_diff
+cd ../
+cd Solid_LJium
+../do_para_diff
+cd ../
+cd Square_Well_Chain
+../do_para_diff
+cd ../
+cd Steele_Wall
+../do_para_diff
+cd ../
+cd TraPPE_Isomers
+../do_para_diff
+cd ../
+cd TraPPE_Molecules
+../do_para_diff
+cd ../
+cd TraPPE_Pentane
+../do_para_diff
+cd ../
+cd Triglycerol
+../do_para_diff
+cd ../
+cd UFF
+../do_para_diff
+cd ../
+cd uVT_Ethane
+../do_para_diff
+cd ../
+cd Vink2001_Silicon
+../do_para_diff
+cd ../
+cd Wall_Water
+../do_para_diff
+cd ../
+cd Walt2001_Nanotube
+../do_para_diff
+cd ../
+cd Weiner1984
+../do_para_diff
+cd ../
+cd TMMC
+cd LJ
+../../do_para_diff
+cd ../
+cd SPC_E_WATER
+../../do_para_diff
+cd ../
+cat */para_results > para_results
+cd ../
+cat */para_results > para_test_report
+/bin/rm */para_results
+/bin/rm TMMC/*/para_results

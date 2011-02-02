@@ -1,0 +1,182 @@
+#!/bin/sh
+#
+# $Id: run_serial_test,v 1.34 2009/05/01 16:04:55 marcus_martin Exp $
+#
+# NOTE: when adding new examples, please add the entry to examples_list.pm as
+# well.
+cd Amber_IsoPropanol
+../do_test
+cd ../
+cd Amber_Villin
+../do_test
+cd ../
+cd Au_Cu_Switch
+../do_test
+cd ../
+cd AVB1_Methane
+../do_test
+cd ../
+cd Benzene_AA_autofit
+../do_test
+cd ../
+cd Catlow_Zeolite_4a
+../do_test
+cd ../
+cd Charmm19_ubiquitin
+../do_test
+cd ../
+cd Charmm22_Ethanethiol
+../do_test
+cd ../
+cd Charmm27_benzene
+../do_test
+cd ../
+cd Charmm27_Heme
+../do_test
+cd ../
+cd Charmm27_NA
+../do_test
+cd ../
+cd Charmm27_Polyalanine
+../do_test
+cd ../
+cd Compass_Methanol
+../do_test
+cd ../
+cd Cu_Pb_EAM
+../do_test
+cd ../
+cd Cu_VLE
+../do_test
+cd ../
+cd Dick1994_PETN
+../do_test
+cd ../
+cd DREIDING
+../do_test
+cd ../
+cd Dubb_Zeolite
+../do_test
+cd ../
+cd Energy_Biasing
+../do_test
+cd ../
+cd EPM_VLCC
+../do_test
+cd ../
+cd FENE_Hexamer
+../do_test
+cd ../
+cd Formamide_Scaled
+../do_test
+cd ../
+cd Fris_Walls
+../do_test
+cd ../
+cd Gordon
+../do_test
+cd ../
+cd Gromos_Isobutane
+../do_test
+cd ../
+cd Gromos_Methylpropylsulfide
+../do_test
+cd ../
+cd Hard_Sphere
+../do_test
+cd ../
+cd Henry_Law
+../do_test
+cd ../
+cd Ideal_Chain
+../do_test
+cd ../
+cd MM2_Ethane
+../do_test
+cd ../
+cd NaCl_1x1x1
+../do_test
+cd ../
+cd OPLS_Propanamide
+../do_test
+cd ../
+cd Potter_CF2H2
+../do_test
+cd ../
+cd Shukla_Gasses
+../do_test
+cd ../
+cd SKS_Pentane
+../do_test
+cd ../
+cd Solid_LJium
+../do_test
+cd ../
+cd Small_Peptide
+../do_test
+cd ../
+cd SMMKmain_2244688nonane
+../do_test
+cd ../
+cd SMMKnaip_Ethylpentane
+../do_test
+cd ../
+cd Square_Well_Chain
+../do_test
+cd ../
+cd Steele_Wall
+../do_test
+cd ../
+cd TraPPE_Isomers
+../do_test
+cd ../
+cd TraPPE_Molecules
+../do_test
+cd ../
+cd TraPPE_Pentane
+../do_test
+cd ../
+cd Triglycerol
+../do_test
+cd ../
+cd UFF
+../do_test
+cd ../
+cd uVT_Ethane
+../do_test
+cd ../
+cd Vink2001_Silicon
+../do_test
+cd ../
+cd Wall_Water
+../do_test
+cd ../
+cd Walt2001_Nanotube
+../do_test
+cd ../
+cd Weiner1984
+../do_test
+cd ../
+cd TMMC
+cd LJ
+../../do_test
+cd ../
+cd SPC_E_WATER
+../../do_test
+cd ../
+cat */results > results
+cd ../
+cd Convert
+cd LAMMPS_lc
+../do_convert
+cd ../
+cd LAMMPS_class2
+../do_convert
+cd ../
+cd LAMMPS_decane
+../do_convert
+cd ../
+cat */results > results
+cd ../
+cat */results > test_report
+/bin/rm */results

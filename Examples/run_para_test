@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# $Id: run_para_test,v 1.9 2009/05/01 16:04:55 marcus_martin Exp $
+cd Parallel_Test
+./execute_parallel
+cd ../

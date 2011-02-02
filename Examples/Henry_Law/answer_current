@@ -1,0 +1,732 @@
+ MCCCS Towhee - Version 6.2.14 (November 15 2010)
+ Copyright (C) <2010> Marcus G. Martin
+ Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin;
+ Loukas Peristeras;
+ Copyright (C) <2009> Marcus G. Martin
+ Code Contributors for 2009: Rene Haber; Marcus G. Martin; Loukas Peristeras;
+ Copyright (C) <2008> Marcus G. Martin
+ Code Contributors for 2008: Rene Haber; Iyad A. Hijazi; Marcus G. Martin; Loukas Peristeras; Craig Tenney;
+ Copyright (C) <2007> Marcus G. Martin
+ Code Contributors for 2007: Bernhard Eckl; Frank Heilmann; Jianhui Li; Marcus G. Martin; Craig M. Tenney; Ozgur Yazaydin
+ Copyright (C) <2006> Marcus G. Martin
+ Code Contributors for 2006: Alan A. Chen; Arben Jusufi; Christian D. Lorenz; Marcus G. Martin; Jeffrey J. Potoff; Vincent K. Shen; Matthew A. Wyczalkowski; Ozgur Yazaydin
+ Copyright (C) <2005> Marcus G. Martin
+ Code Contributors for 2005: Marcus G. Martin; Alan A. Chen; Christian D. Lorenz; Matthew A. Wyczalkowski
+ Copyright (C) <2004> Marcus G. Martin
+ Code Contributors for 2004: Marcus G. Martin; Christian D. Lorenz; Peter A. Schultz; Aidan P. Thompson; Jeffrey J. Potoff; Steve R. Lustig; Paul S. Crozier; Nicholas du Preez
+ Copyright (C) <2003> Marcus G. Martin
+ Code Contributors for 2003: Marcus G. Martin; Christian D. Lorenz; David B. Ritch; Michael L. Greenfield; Yogesh Srivastava; Evangelos A Coutsias
+ Copyright (C) <2002> Marcus G. Martin
+ Code Contributors for 2002: Marcus G. Martin; Christian D. Lorenz; Aidan P. Thompson; Allen G. Sault
+ Copyright (C) <2000-2001> Marcus G. Martin
+ Copyright (C) <1999> J. Ilja Siepmann and Marcus G. Martin
+ Code Contributors for 1999: J. Ilja Siepmann; Marcus G. Martin; Bin Chen; Collin D. Wick; John Stubbs
+
+ Direct comments about this code to Marcus G. Martin (marcus_martin@users.sourceforge.net)
+ See the MCCCS Towhee web site for more information and the users manual.
+ http://towhee.sourceforge.net
+
+ We would like to thank the following agencies for providing funding used to develop MCCCS Towhee
+ -Department of Energy Industrial Technologies Program (MGM)
+ -National Science Foundation (JIS)
+ -Department of Energy Computational Science Graduate Fellowship (MGM,CDW)
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Reading from towhee_input file: towhee_input                                                                                        
+ in directory: current directory
+ inputformat: Towhee         
+ random_luxlevel:            3
+ random_allow_restart:  T
+ ensemble: npt                           
+ temperature:  373.000    
+ pressure:  223.400    
+ nmolty:            5
+ nmolectyp:          216            0            0            0            0
+ numboxes:            1
+ stepstyle: cycles  
+ nstep:            2
+ printfreq:         5000
+ blocksize:            1
+ moviefreq:       100000
+ backupfreq:         5000
+ runoutput: full                
+Full output of updates and block averages
+ pdb_output_freq:        10000
+ pressurefreq:           20
+ trmaxdispfreq:         1000
+ volmaxdispfreq:         1000
+ chempotperstep:            0           25           25           25           25
+ potentialstyle: internal                      
+ ffnumber:            3
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Coon1987                                                          
+/towheebase/ForceFields/towhee_ff_TraPPE-EH                                                         
+/towheebase/ForceFields/towhee_ff_TraPPE-UA                                                         
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  F
+ ltailc:  T
+ rmin:  1.00000    
+ rcut:  12.0000    
+ rcutin:  12.0000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: ewald_fixed_kmax    
+ kalp:  5.60000    
+ kmax:            5
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ opening forcefield file:    2
+ opening forcefield file:    3
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+default max_bond_length:  3.00
+ No solvation model used
+ linit:  F
+ initboxtype: dimensions          
+initstyle Box:    1
+ full cbmc            full cbmc            full cbmc            full cbmc            full cbmc           
+Box:  1 initlattice: simple cubic         simple cubic         simple cubic         simple cubic         simple cubic        
+Box:  1 initmol:       216          0          0          0          0
+Box:  1 inix,iniy,iniz:         6          6          6
+Box idim hmatrix:    1 1   30.00000    0.00000    0.00000
+Box idim hmatrix:    1 2    0.00000   30.00000    0.00000
+Box idim hmatrix:    1 3    0.00000    0.00000   30.00000
+ pmvol: 0.100000E-01
+ pmvlpr:  1.00000    
+ rmvol: 0.100000    
+ tavol: 0.500000    
+ pmcell:  0.00000    
+ pmcellpr:  1.00000    
+ rmcell:  1.00000    
+ tacell: 0.500000    
+ pm1boxcbswap:  0.00000    
+ pm1cbswmt: 0.500000     1.00000     0.00000     0.00000     0.00000    
+ pmavb1:  0.00000    
+ pmavb1in: 0.500000    
+ pmavb1mt: 0.500000     1.00000     1.00000     1.00000     1.00000    
+moltyp:  1 pmavb1ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  2 pmavb1ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  3 pmavb1ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  4 pmavb1ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  5 pmavb1ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+ avb1rad:  8.00000    
+ pmavb2:  0.00000    
+ pmavb2in: 0.500000    
+ pmavb2mt: 0.500000     1.00000     1.00000     1.00000     1.00000    
+moltyp:  1 pmavb2ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  2 pmavb2ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  3 pmavb2ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  4 pmavb2ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  5 pmavb2ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+ avb2rad:  8.00000    
+ pmavb3:  0.00000    
+ pmavb3mt: 0.500000     1.00000     1.00000     1.00000     1.00000    
+moltyp:  1 pmavb3ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  2 pmavb3ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  3 pmavb3ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  4 pmavb3ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+moltyp:  5 pmavb3ct: 0.500000  1.000000  1.000000  1.000000  1.000000
+ avb3rad:  8.00000    
+ pmcb: 0.330000    
+ pmcbmt:  1.00000     0.00000     0.00000     1.00000     1.00000    
+ pmall:  0.00000     0.00000     0.00000     0.00000     0.00000    
+ pmback:  0.00000    
+ pmbkmt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ pmpivot:  0.00000    
+ pmpivmt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ pmconrot:  0.00000    
+ pmcrmt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ pmcrback:  0.00000    
+ pmcrbmt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ pmplane:  0.00000    
+ pmplanebox:  1.00000    
+ planewidth:  3.00000    
+ pmrow:  0.00000    
+ pmrowbox:  1.00000    
+ rowwidth:  3.00000    
+ pmtraat:  0.00000    
+ pmtamt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ rmtraa: 0.500000    
+ tatraa: 0.500000    
+ pmtracm: 0.670000    
+ pmtcmt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ rmtrac: 0.500000    
+ tatrac: 0.500000    
+ pmrotate:  1.00000    
+ pmromt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+ rmrot: 0.500000E-01
+ tarot: 0.500000    
+cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004         
+ Original Coupled-Decoupled formulation from
+ M.G. Martin; J.I. Siepmann; J. Phys. Chem. B103 2977-2980 (1999)
+ with a decoupled bond length selection from
+ M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
+cbmc_setting_style: explicit                      
+ cbmc_nb_one_generation                            : uniform                       uniform                       uniform                       uniform                       uniform                       
+ nch_nb_one                                        :           10            1            1            1            1
+ nch_nb                                            :           10            1            1            1            1
+cbmc_dihedral_generation: ideal                         
+ Use true distributions to generate torsions in config-bias
+ nch_tor                                           :          360            1            1            1            1
+ nch_tor_connect                                   :          360            1            1            1            1
+cbmc_bend_generation: ideal                         
+ Use ideal distributions to generate angles in configurational-bias
+ nch_bend_a                                        :         1000            1            1            1            1
+ nch_bend_b                                        :         1000            1            1            1            1
+cbmc_bond_generation: r^2 with bounds               
+ Use a bounded r^2 distribution to generate vibrations in config-bias
+vibrang:   0.85000    1.15000
+ nch_vib                                           :            1            1            1            1            1
+two_bond_fixed_endpoint_bias_style: analytic Boltzmann dihedral energy sum            
+three_bond_fixed_endpoint_bias_style: analytic using max and min 2-4 distance           
+ input_style: basic connectivity map                            
+ nunit:            4
+ nmaxcbmc:            4
+ lpdbnames:  F
+   using the TraPPE-UA  force field
+ charge_assignment: bond increment                
+   Building the input file for molecule type:     1
+unit:    1 name:CH3*(sp3) 
+unit:    2 name:CH2**(sp3)
+unit:    3 name:Och(sp3)  
+unit:    4 name:Ho        
+Charges assigned for Molecule Type:    1
+Unit:    1 nbname: CH3*(sp3)  Charge:    0.00000
+Unit:    2 nbname: CH2**(sp3) Charge:    0.26500
+Unit:    3 nbname: Och(sp3)   Charge:   -0.70000
+Unit:    4 nbname: Ho         Charge:    0.43500
+Total charge for Molecule Type:    1 is:    0.00000
+ input_style: basic connectivity map                            
+ nunit:            1
+ nmaxcbmc:            1
+ lpdbnames:  F
+   using the TraPPE-UA  force field
+ charge_assignment: bond increment                
+   Building the input file for molecule type:     2
+unit:    1 name:CH4       
+Charges assigned for Molecule Type:    2
+Unit:    1 nbname: CH4        Charge:    0.00000
+Total charge for Molecule Type:    2 is:    0.00000
+ input_style: basic connectivity map                            
+ nunit:            2
+ nmaxcbmc:            2
+ lpdbnames:  F
+   using the Coon1987   force field
+ charge_assignment: none                          
+   Building the input file for molecule type:     3
+unit:    1 name:O         
+unit:    2 name:O         
+ input_style: basic connectivity map                            
+ nunit:            3
+ nmaxcbmc:            3
+ lpdbnames:  F
+   using the TraPPE-EH  force field
+ charge_assignment: bond increment                
+   Building the input file for molecule type:     4
+unit:    1 name:N_n2      
+unit:    2 name:COM_n2    
+unit:    3 name:N_n2      
+Charges assigned for Molecule Type:    4
+Unit:    1 nbname: N_n2       Charge:   -0.48200
+Unit:    2 nbname: COM_n2     Charge:    0.96400
+Unit:    3 nbname: N_n2       Charge:   -0.48200
+Total charge for Molecule Type:    4 is:    0.00000
+ input_style: basic connectivity map                            
+ nunit:            3
+ nmaxcbmc:            3
+ lpdbnames:  F
+   using the TraPPE-EH  force field
+ charge_assignment: bond increment                
+   Building the input file for molecule type:     5
+unit:    1 name:O_co2     
+unit:    2 name:C_co2     
+unit:    3 name:O_co2     
+Charges assigned for Molecule Type:    5
+Unit:    1 nbname: O_co2      Charge:   -0.35000
+Unit:    2 nbname: C_co2      Charge:    0.70000
+Unit:    3 nbname: O_co2      Charge:   -0.35000
+Total charge for Molecule Type:    5 is:    0.00000
+ Verifying input structures are consistent
+Determining CBMC bond distributions
+ Determining cyclic subunits for molecule type          1
+ Determining cyclic subunits for molecule type          2
+ Determining cyclic subunits for molecule type          3
+ Determining cyclic subunits for molecule type          4
+ Determining cyclic subunits for molecule type          5
+Default total charge on molecule   1 is   0.00000
+Default total charge on molecule   2 is   0.00000
+Default total charge on molecule   3 is   0.00000
+Default total charge on molecule   4 is   0.00000
+Default total charge on molecule   5 is   0.00000
+Total charge in the simulation system:   0.00000
+Bond Types
+Type:      2 Style: Fixed  Length: 1.0166
+Type:      3 Style: Fixed  Length: 1.1600
+Type:      4 Style: Fixed  Length: 0.5500
+Type:      5 Style: Fixed  Length: 1.5400
+Type:      8 Style: Fixed  Length: 1.4300
+Type:      9 Style: Fixed  Length: 0.9450
+Angle Types
+Type:   1 Style: Fixed Angle  Angle:    180.000
+Type:   7 Style: Standard Harmonic  Angle:    109.470 Constant:    25200.0
+Type:   8 Style: Standard Harmonic  Angle:    108.500 Constant:    27700.0
+Torsion Types
+Type:   6 Style: Old UA OPLS Cosine Series
+          k0:       0.0 k1:     209.8 k2:     -29.2 k3:     187.9
+          with 1-4 vdw and scaled (0.500) 1-4 coulomb
+Improper Torsion Types
+   No Improper Types
+ Isobaric-isothermal ensemble
+ 3-dimensional periodic box
+ Additional Center-of-Mass cutoff
+ Dual Cutoff Configurational-bias Monte Carlo
+ Coupled-decoupled Configurational-bias MC
+ Coulombic inter- and intra-molecular interactions
+     with an Ewald sum 
+     including the real-space terms up to half the shortest box length
+
+Molecular mass for molecule type     1 is    46.0684 g/mol
+Molecular mass for molecule type     2 is    16.0426 g/mol
+Molecular mass for molecule type     3 is    31.9980 g/mol
+Molecular mass for molecule type     4 is    28.0140 g/mol
+Molecular mass for molecule type     5 is    44.0090 g/mol
+ Reading in initial conformation from towhee_inital
+Initial version:    4
+ RANLUX LUXURY LEVEL SET BY RLUXGO : 3     P= 223
+ RANLUX INITIALIZED BY RLUXGO FROM SEEDS     1302002           0           0
+ Testing random number generator
+    0.354084  0.719681  0.403250  0.706761  0.174308
+ new maximum displacements read from towhee_initial
+box:     1
+molecule type:     1
+ Max displacement for Atom translate:   0.500000
+ Max displacement for COM translate:   0.482185
+ Max displacement for rotation:   0.190877
+molecule type:     2
+ Max displacement for Atom translate:   0.500000
+ Max displacement for COM translate:   0.500000
+ Max displacement for rotation:   0.050000
+molecule type:     3
+ Max displacement for Atom translate:   0.500000
+ Max displacement for COM translate:   0.500000
+ Max displacement for rotation:   0.050000
+molecule type:     4
+ Max displacement for Atom translate:   0.500000
+ Max displacement for COM translate:   0.500000
+ Max displacement for rotation:   0.050000
+molecule type:     5
+ Max displacement for Atom translate:   0.500000
+ Max displacement for COM translate:   0.500000
+ Max displacement for rotation:   0.050000
+ Max disp. for 3D Volume:             0.4677E+03
+ Max disp. for unit cell perturbation
+    Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+    Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+    Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+
+ new box dimensions read from towhee_initial
+ Box  1 hmatrix(1,x):       28.68608       0.00000       0.00000
+ Box  1 hmatrix(2,x):        0.00000      28.68608       0.00000
+ Box  1 hmatrix(3,x):        0.00000       0.00000      28.68608
+
+Box:     1 Initial calp:    0.19522
+Box:     1 Initial kmax:     5
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 12-6 potential
+    with tail corrections
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
+Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
+   2 O             2 O              3.0900    44.6000     0.0000     0.0000     0.0000
+   2 O             3 C_co2          2.9450    34.7016     0.0000     0.0000     0.0000
+   2 O             4 O_co2          3.0700    59.3582     0.0000     0.0000     0.0000
+   2 O             5 N_n2           3.2000    40.0699     0.0000     0.0000     0.0000
+   2 O             6 COM_n2         1.5450     0.0000     0.0000     0.0000     0.0000
+   2 O             8 CH4            3.4100    81.2453     0.0000     0.0000     0.0000
+   2 O             9 CH3*(sp3)      3.4200    66.1120     0.0000     0.0000     0.0000
+   2 O            10 CH2**(sp3)     3.5200    45.2946     0.0000     0.0000     0.0000
+   2 O            26 Ho             1.5450     0.0000     0.0000     0.0000     0.0000
+   2 O            29 Och(sp3)       3.0550    64.4034     0.0000     0.0000     0.0000
+   3 C_co2         3 C_co2          2.8000    27.0000     0.0000     0.0000     0.0000
+   3 C_co2         4 O_co2          2.9250    46.1844     0.0000     0.0000     0.0000
+   3 C_co2         5 N_n2           3.0550    31.1769     0.0000     0.0000     0.0000
+   3 C_co2         6 COM_n2         1.4000     0.0000     0.0000     0.0000     0.0000
+   3 C_co2         8 CH4            3.2650    63.2139     0.0000     0.0000     0.0000
+   3 C_co2         9 CH3*(sp3)      3.2750    51.4393     0.0000     0.0000     0.0000
+   3 C_co2        10 CH2**(sp3)     3.3750    35.2420     0.0000     0.0000     0.0000
+   3 C_co2        26 Ho             1.4000     0.0000     0.0000     0.0000     0.0000
+   3 C_co2        29 Och(sp3)       2.9100    50.1099     0.0000     0.0000     0.0000
+   4 O_co2         4 O_co2          3.0500    79.0000     0.0000     0.0000     0.0000
+   4 O_co2         5 N_n2           3.1800    53.3292     0.0000     0.0000     0.0000
+   4 O_co2         6 COM_n2         1.5250     0.0000     0.0000     0.0000     0.0000
+   4 O_co2         8 CH4            3.3900   108.1296     0.0000     0.0000     0.0000
+   4 O_co2         9 CH3*(sp3)      3.4000    87.9886     0.0000     0.0000     0.0000
+   4 O_co2        10 CH2**(sp3)     3.5000    60.2827     0.0000     0.0000     0.0000
+   4 O_co2        26 Ho             1.5250     0.0000     0.0000     0.0000     0.0000
+   4 O_co2        29 Och(sp3)       3.0350    85.7146     0.0000     0.0000     0.0000
+   5 N_n2          5 N_n2           3.3100    36.0000     0.0000     0.0000     0.0000
+   5 N_n2          6 COM_n2         1.6550     0.0000     0.0000     0.0000     0.0000
+   5 N_n2          8 CH4            3.5200    72.9932     0.0000     0.0000     0.0000
+   5 N_n2          9 CH3*(sp3)      3.5300    59.3970     0.0000     0.0000     0.0000
+   5 N_n2         10 CH2**(sp3)     3.6300    40.6940     0.0000     0.0000     0.0000
+   5 N_n2         26 Ho             1.6550     0.0000     0.0000     0.0000     0.0000
+   5 N_n2         29 Och(sp3)       3.1650    57.8619     0.0000     0.0000     0.0000
+   6 COM_n2        6 COM_n2         0.0000     0.0000     0.0000     0.0000     0.0000
+   6 COM_n2        8 CH4            1.8650     0.0000     0.0000     0.0000     0.0000
+   6 COM_n2        9 CH3*(sp3)      1.8750     0.0000     0.0000     0.0000     0.0000
+   6 COM_n2       10 CH2**(sp3)     1.9750     0.0000     0.0000     0.0000     0.0000
+   6 COM_n2       26 Ho             0.0000     0.0000     0.0000     0.0000     0.0000
+   6 COM_n2       29 Och(sp3)       1.5100     0.0000     0.0000     0.0000     0.0000
+   8 CH4           8 CH4            3.7300   148.0000     0.0000     0.0000     0.0000
+   8 CH4           9 CH3*(sp3)      3.7400   120.4326     0.0000     0.0000     0.0000
+   8 CH4          10 CH2**(sp3)     3.8400    82.5106     0.0000     0.0000     0.0000
+   8 CH4          26 Ho             1.8650     0.0000     0.0000     0.0000     0.0000
+   8 CH4          29 Och(sp3)       3.3750   117.3201     0.0000     0.0000     0.0000
+   9 CH3*(sp3)     9 CH3*(sp3)      3.7500    98.0000     0.0000     0.0000     0.0000
+   9 CH3*(sp3)    10 CH2**(sp3)     3.8500    67.1416     0.0000     0.0000     0.0000
+   9 CH3*(sp3)    26 Ho             1.8750     0.0000     0.0000     0.0000     0.0000
+   9 CH3*(sp3)    29 Och(sp3)       3.3850    95.4673     0.0000     0.0000     0.0000
+  10 CH2**(sp3)   10 CH2**(sp3)     3.9500    46.0000     0.0000     0.0000     0.0000
+  10 CH2**(sp3)   26 Ho             1.9750     0.0000     0.0000     0.0000     0.0000
+  10 CH2**(sp3)   29 Och(sp3)       3.4850    65.4064     0.0000     0.0000     0.0000
+  26 Ho           26 Ho             0.0000     0.0000     0.0000     0.0000     0.0000
+  26 Ho           29 Och(sp3)       1.5100     0.0000     0.0000     0.0000     0.0000
+  29 Och(sp3)     29 Och(sp3)       3.0200    93.0000     0.0000     0.0000     0.0000
+
+Number of MC cycles:                    2
+Number of molecules:                  216
+Temperature [K]:       373.00000
+External pressure [kPa]:       223.40000
+
+Initial Energies for Box     1
+Total molecules in this box        216
+Molecules of type   1 :        216
+Molecules of type   2 :          0
+Molecules of type   3 :          0
+Molecules of type   4 :          0
+Molecules of type   5 :          0
+ total vibration            0.000 [K]         0.00000 [kcal/mol]
+    regular                 0.000 [K]         0.00000 [kcal/mol]
+    bond-bond(1-2)          0.000 [K]         0.00000 [kcal/mol]
+ total angle            74849.426 [K]       148.74196 [kcal/mol]
+    regular             74849.426 [K]       148.74196 [kcal/mol]
+    angle-angle             0.000 [K]         0.00000 [kcal/mol]
+ total torsion          54046.555 [K]       107.40217 [kcal/mol]
+    regular             54046.555 [K]       107.40217 [kcal/mol]
+    improper                0.000 [K]         0.00000 [kcal/mol]
+ total nonbond        -249830.878 [K]      -496.46788 [kcal/mol]
+    intramolecular          0.000 [K]         0.00000 [kcal/mol]
+    2-body nonbond    -235684.787 [K]      -468.35654 [kcal/mol]
+    3-body nonbond          0.000 [K]         0.00000 [kcal/mol]
+    tail correct.      -14146.090 [K]       -28.11133 [kcal/mol]
+ total coulombic      -651919.316 [K]     -1295.50439 [kcal/mol]
+    real space        -635176.315 [K]     -1262.23244 [kcal/mol]
+      intramolec.           0.000 [K]         0.00000 [kcal/mol]
+      intermolec.     -635176.315 [K]     -1262.23244 [kcal/mol]
+    self             -2979301.649 [K]     -5920.51544 [kcal/mol]
+    correction        2956458.739 [K]      5875.12165 [kcal/mol]
+    recip sum            6099.909 [K]        12.12184 [kcal/mol]
+ external field             0.000 [K]         0.00000 [kcal/mol]
+ solvation                  0.000 [K]         0.00000 [kcal/mol]
+ total classical           -772854.2126 [K]         -1535.828136 [kcal/mol]
+ initial virial pressure in box  1 =      -28984.18
+
+ +++++ start of markov chain +++++
+
+Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
+Block Averages (BA) for block     1
+BA Box: 1 Volume [A^3] 0.23605324E+05
+BA Box: 1 V^2 [A^6] 0.55721671E+09
+BA Box: 1 Specific density [g/ml] 0.70001464E+00
+BA Box: 1 Virial Pressure      [kPa] 0.00000000E+00
+BA Box: 1 Total Classical -.77391988E+06
+BA Box: 1 Inter vdw       -.24973624E+06
+BA Box: 1 Angle           0.77553726E+05
+BA Box: 1 Torsion         0.54587428E+05
+BA Box: 1 Intra vdw       0.00000000E+00
+BA Box: 1 External Field  0.00000000E+00
+BA Box: 1 Vibration       0.00000000E+00
+BA Box: 1 Coulomb         -.65632480E+06
+BA Box: 1 Tail vdw        -.14146351E+05
+BA Box: 1 Solvation       0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   2 0.91930853E+04
+BA Box: 1 u (Gibbs Total) [K] Type   3 -.45838298E+04
+BA Box: 1 u (Gibbs Total) [K] Type   4 -.10756591E+04
+BA Box: 1 u (Gibbs Total) [K] Type   5 0.19672559E+05
+BA Box: 1 Number density [nm-3] Type   1 0.91505666E+01
+BA Box: 1 Number density [nm-3] Type   2 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   3 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   4 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   5 0.00000000E+00
+BA Box: 1 Mol Fraction Type   1 0.10000000E+01
+BA Box: 1 Mol Fraction Type   2 0.00000000E+00
+BA Box: 1 Mol Fraction Type   3 0.00000000E+00
+BA Box: 1 Mol Fraction Type   4 0.00000000E+00
+BA Box: 1 Mol Fraction Type   5 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
+BA Box: 1 Radius of Gyration Type:  1        1.10190
+BA Box: 1 Radius of Gyration Type:  2        0.00000
+BA Box: 1 Radius of Gyration Type:  3        0.00000
+BA Box: 1 Radius of Gyration Type:  4        0.00000
+BA Box: 1 Radius of Gyration Type:  5        0.00000
+Block Averages (BA) for block     2
+BA Box: 1 Volume [A^3] 0.23372427E+05
+BA Box: 1 V^2 [A^6] 0.54627033E+09
+BA Box: 1 Specific density [g/ml] 0.70698317E+00
+BA Box: 1 Virial Pressure      [kPa] 0.00000000E+00
+BA Box: 1 Total Classical -.77514420E+06
+BA Box: 1 Inter vdw       -.23880524E+06
+BA Box: 1 Angle           0.79884441E+05
+BA Box: 1 Torsion         0.54956552E+05
+BA Box: 1 Intra vdw       0.00000000E+00
+BA Box: 1 External Field  0.00000000E+00
+BA Box: 1 Vibration       0.00000000E+00
+BA Box: 1 Coulomb         -.67117996E+06
+BA Box: 1 Tail vdw        -.14287176E+05
+BA Box: 1 Solvation       0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   2 -.50804431E+03
+BA Box: 1 u (Gibbs Total) [K] Type   3 0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   4 0.44182011E+04
+BA Box: 1 u (Gibbs Total) [K] Type   5 0.10966726E+05
+BA Box: 1 Number density [nm-3] Type   1 0.92416591E+01
+BA Box: 1 Number density [nm-3] Type   2 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   3 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   4 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   5 0.00000000E+00
+BA Box: 1 Mol Fraction Type   1 0.10000000E+01
+BA Box: 1 Mol Fraction Type   2 0.00000000E+00
+BA Box: 1 Mol Fraction Type   3 0.00000000E+00
+BA Box: 1 Mol Fraction Type   4 0.00000000E+00
+BA Box: 1 Mol Fraction Type   5 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
+BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
+BA Box: 1 Radius of Gyration Type:  1        1.10226
+BA Box: 1 Radius of Gyration Type:  2        0.00000
+BA Box: 1 Radius of Gyration Type:  3        0.00000
+BA Box: 1 Radius of Gyration Type:  4        0.00000
+BA Box: 1 Radius of Gyration Type:  5        0.00000
+
+ +++++ end of markov chain +++++
+
+ Final hmatrix (general box dimensions) 
+Box:     1
+  hmatrix(1,x)      28.59135       0.00000       0.00000
+  hmatrix(2,x)       0.00000      28.59135       0.00000
+  hmatrix(3,x)       0.00000       0.00000      28.59135
+
+* 3D Volume Change Moves *
+ Box  1 Tries:        3 Acp. Ratio:  1.000 Max Disp.: 0.468E+03
+
+* Configurational-Bias REGROWTH Moves *
+ Molecule type:    1 Box:    1
+     Length  Attempts  Regrown  Accepted  %Regrown   %Accep.
+        1        27        27        17    100.00     62.96
+        2        41        41         7    100.00     17.07
+        3        72        72         6    100.00      8.33
+
+* COM Translation Moves *
+Molecule:  1 Box: 1 Attempts:            154. Accepted:             80. Accepted:  51.948 %
+
+* Rotation Moves *
+Molecule:  1 Box: 1 Attempts:            135. Accepted:             72. Accepted:  53.333 %
+
+Final Energies for Box     1
+Total molecules in this box        216
+Molecules of type   1 :        216
+Molecules of type   2 :          0
+Molecules of type   3 :          0
+Molecules of type   4 :          0
+Molecules of type   5 :          0
+ total vibration            0.000 [K]         0.00000 [kcal/mol]
+    regular                 0.000 [K]         0.00000 [kcal/mol]
+    bond-bond(1-2)          0.000 [K]         0.00000 [kcal/mol]
+ total angle            77776.386 [K]       154.55847 [kcal/mol]
+    regular             77776.386 [K]       154.55847 [kcal/mol]
+    angle-angle             0.000 [K]         0.00000 [kcal/mol]
+ total torsion          55095.870 [K]       109.48739 [kcal/mol]
+    regular             55095.870 [K]       109.48739 [kcal/mol]
+    improper                0.000 [K]         0.00000 [kcal/mol]
+ total nonbond        -236000.686 [K]      -468.98430 [kcal/mol]
+    intramolecular          0.000 [K]         0.00000 [kcal/mol]
+    2-body nonbond    -221713.509 [K]      -440.59260 [kcal/mol]
+    3-body nonbond          0.000 [K]         0.00000 [kcal/mol]
+    tail correct.      -14287.176 [K]       -28.39170 [kcal/mol]
+ total coulombic      -675031.084 [K]     -1341.43247 [kcal/mol]
+    real space        -658364.484 [K]     -1308.31233 [kcal/mol]
+      intramolec.           0.000 [K]         0.00000 [kcal/mol]
+      intermolec.     -658364.484 [K]     -1308.31233 [kcal/mol]
+    self             -2989173.578 [K]     -5940.13309 [kcal/mol]
+    correction        2966003.512 [K]      5894.08917 [kcal/mol]
+    recip sum            6503.465 [K]        12.92379 [kcal/mol]
+ external field             0.000 [K]         0.00000 [kcal/mol]
+ solvation                  0.000 [K]         0.00000 [kcal/mol]
+ total classical           -778159.5142 [K]         -1546.370915 [kcal/mol]
+Averages               Units Type       Box  1
+ Volume                 nm^3       0.23489E+02
+ Volume^2               nm^6       0.55174E+03
+ Molecule Number                1      216.000
+ Molecule Number                2        0.000
+ Molecule Number                3        0.000
+ Molecule Number                4        0.000
+ Molecule Number                5        0.000
+ Molar Volume         ml/mol       0.65485E+02
+ Specific Density       g/ml        0.70349890
+ Number Density         nm-3    1      9.19611
+ Number Density         nm-3    2      0.00000
+ Number Density         nm-3    3      0.00000
+ Number Density         nm-3    4      0.00000
+ Number Density         nm-3    5      0.00000
+ Mole Fraction                  1    1.0000000
+ Mole Fraction                  2    0.0000000
+ Mole Fraction                  3    0.0000000
+ Mole Fraction                  4    0.0000000
+ Mole Fraction                  5    0.0000000
+ Radius of Gyration        A    1    1.1020828
+ Radius of Gyration        A    2    0.0000000
+ Radius of Gyration        A    3    0.0000000
+ Radius of Gyration        A    4    0.0000000
+ Radius of Gyration        A    5    0.0000000
+ Ideal Pressure          kPa       0.47373E+05
+ Ideal p_i <N/V>kT       kPa    1  0.47373E+05
+ Ideal p_i <N/V>kT       kPa    2  0.00000E+00
+ Ideal p_i <N/V>kT       kPa    3  0.00000E+00
+ Ideal p_i <N/V>kT       kPa    4  0.00000E+00
+ Ideal p_i <N/V>kT       kPa    5  0.00000E+00
+ -<dU/dV>                kPa       -.70277E+05
+ Thermodynamic Pressure  kPa       -.22905E+05
+ Thermo p_i <x_1><p_t>   kPa    1  -.22905E+05
+ Thermo p_i <x_1><p_t>   kPa    2  -.00000E+00
+ Thermo p_i <x_1><p_t>   kPa    3  -.00000E+00
+ Thermo p_i <x_1><p_t>   kPa    4  -.00000E+00
+ Thermo p_i <x_1><p_t>   kPa    5  -.00000E+00
+ Total Classical           K       -0.7745E+06
+ Inter vdw                 K       -0.2443E+06
+ Angle                     K        0.7872E+05
+ Torsion                   K        0.5477E+05
+ Intra vdw                 K        0.0000E+00
+ External Field            K        0.0000E+00
+ Vibration                 K        0.0000E+00
+ Coulomb                   K       -0.6638E+06
+ Tail vdw                  K       -0.1422E+05
+ Solvation                 K        0.0000E+00
+ u (Density)               K    2        0.000
+ u (NVT Insertion)         K    2     5168.383
+ u (NpT Insertion)         K    2     5170.237
+ u (Den. + NVT Insert)     K    2     5168.383
+ u (Den. + NpT Insert)     K    2     5170.237
+ u (Gibbs Total)           K    2     -249.500
+ u (Density)               K    3        0.000
+ u (NVT Insertion)         K    3     1478.891
+ u (NpT Insertion)         K    3     1480.745
+ u (Den. + NVT Insert)     K    3     1478.891
+ u (Den. + NpT Insert)     K    3     1480.745
+ u (Gibbs Total)           K    3    -4325.286
+ u (Density)               K    4        0.000
+ u (NVT Insertion)         K    4     4912.665
+ u (NpT Insertion)         K    4     4914.519
+ u (Den. + NVT Insert)     K    4     4912.665
+ u (Den. + NpT Insert)     K    4     4914.519
+ u (Gibbs Total)           K    4     -817.115
+ u (Density)               K    5        0.000
+ u (NVT Insertion)         K    5    17207.771
+ u (NpT Insertion)         K    5    17209.625
+ u (Den. + NVT Insert)     K    5    17207.771
+ u (Den. + NpT Insert)     K    5    17209.625
+ u (Gibbs Total)           K    5    11225.270
+ G: Sum{<u_i><N_i>}   kJ/mol        0.0000E+00
+ U                    kJ/mol       -0.6439E+04
+ u (Isolation)             K    2       -0.000
+ u (Residual)              K    2     5170.237
+ u (Isolation)             K    3       -0.000
+ u (Residual)              K    3     1480.745
+ u (Isolation)             K    4       -0.000
+ u (Residual)              K    4     4914.519
+ u (Isolation)             K    5       -0.000
+ u (Residual)              K    5    17209.625
+ Henry Law (Residual)    MPa    2  0.49574E+08
+ Henry Law (Residual)    MPa    3  0.25088E+04
+ Henry Law (Residual)    MPa    4  0.24975E+08
+ Henry Law (Residual)    MPa    5  0.51648E+22
+
+Block Averages (  2 blocks) Units Type Box Average      Standard Deviation
+ Specific Density            g/ml        1  0.70350E+00  0.34843E-02
+ Thermodynamic Pressure       kPa        1  0.12234E+05  0.35373E+05
+ Total Classical                K        1 -0.77453E+06  0.61216E+03
+ Inter vdw                      K        1 -0.24427E+06  0.54655E+04
+ Angle                          K        1  0.78719E+05  0.11654E+04
+ Torsion                        K        1  0.54772E+05  0.18456E+03
+ Intra vdw                      K        1  0.00000E+00  0.00000E+00
+ External Field                 K        1  0.00000E+00  0.00000E+00
+ Vibration                      K        1  0.00000E+00  0.00000E+00
+ Coulomb                        K        1 -0.66375E+06  0.74276E+04
+ Tail vdw                       K        1 -0.14217E+05  0.70412E+02
+ Solvation                      K        1  0.00000E+00  0.00000E+00
+ u (Gibbs Total)                K    2   1     4342.520     4850.565
+ u (Gibbs Total)                K    3   1    -2291.915     2291.915
+ u (Gibbs Total)                K    4   1     1671.271     2746.930
+ u (Gibbs Total)                K    5   1    15319.643     4352.917
+ u (NpT Insertion)              K    2   1     9762.253     4852.414
+ u (NpT Insertion)              K    3   1      612.023      612.023
+ u (NpT Insertion)              K    4   1     7402.901     2745.081
+ u (NpT Insertion)              K    5   1    21303.993     4354.766
+ u (NVT Insertion)              K    2   1     9760.404     4850.565
+ u (NVT Insertion)              K    3   1      610.174      610.174
+ u (NVT Insertion)              K    4   1     7401.052     2746.930
+ u (NVT Insertion)              K    5   1    21302.144     4352.917
+ Number Density              nm-3    1   1  0.91961E+01  0.45546E-01
+ Number Density              nm-3    2   1  0.00000E+00  0.00000E+00
+ Number Density              nm-3    3   1  0.00000E+00  0.00000E+00
+ Number Density              nm-3    4   1  0.00000E+00  0.00000E+00
+ Number Density              nm-3    5   1  0.00000E+00  0.00000E+00
+ Henry Coeff (Residual)       MPa    2   1  0.24462E+19  0.24462E+19
+ Henry Coeff (Residual)       MPa    4   1  0.15563E+14  0.15563E+14
+ Henry Coeff (Residual)       MPa    5   1  0.17678E+32  0.17678E+32
+ Mole Fraction                       1   1    1.0000000    0.0000000
+ Mole Fraction                       2   1    0.0000000    0.0000000
+ Mole Fraction                       3   1    0.0000000    0.0000000
+ Mole Fraction                       4   1    0.0000000    0.0000000
+ Mole Fraction                       5   1    0.0000000    0.0000000
+ Molarity                       M    1   1  0.15276E+02  0.75658E-01
+ Molarity                       M    2   1  0.00000E+00  0.00000E+00
+ Molarity                       M    3   1  0.00000E+00  0.00000E+00
+ Molarity                       M    4   1  0.00000E+00  0.00000E+00
+ Molarity                       M    5   1  0.00000E+00  0.00000E+00
+ Radius of Gyration             A    1   1      1.10208      0.00018
+ Radius of Gyration             A    2   1      0.00000      0.00000
+ Radius of Gyration             A    3   1      0.00000      0.00000
+ Radius of Gyration             A    4   1      0.00000      0.00000
+ Radius of Gyration             A    5   1      0.00000      0.00000
+
+ -----block averages ------
+Box:    1
+Block Energy         Density        Virial Press.  Mol fracs
+    1 -.77391988E+06 0.70001464E+00 0.00000000E+00 1.00000000 0.00000000 0.00000000 0.00000000 0.00000000
+    2 -.77514420E+06 0.70698317E+00 0.00000000E+00 1.00000000 0.00000000 0.00000000 0.00000000 0.00000000
