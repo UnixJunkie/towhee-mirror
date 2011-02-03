@@ -28,7 +28,7 @@ c     * it then sets up some arrays of information that is useful when *
 c     * computing bending angles, and torsions                         *
 c     *                                                                *
 c     * Originally written 12-15-2000 by M.G. Martin                   *
-c     * Last modified 10-03-2008 by M.G. Martin                        *
+c     * Last modified 01-31-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -71,17 +71,18 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
-      logical lfound,lbnbn,lintraterm,loutdft
+c     --- local logicals
+      logical lfound,lbnbn,lintraterm,loutdft,lonefourtor
 c     --- integer scalars
       integer imolty,ivib,jvib,iben,jben,itor,jtor,iunit,iaa,jaa,itype
       integer iimp,jimp,itest,itestb,itestc,junit,count,iof,jof,itemp
       integer aunit,bunit,cunit,kunit,atype,ii,kk,ktype,matom,type
-      integer iorder,nmolty,nunit,nstep
-c     --- dp scalars
-      double precision rij,rjk,rik,zi,zk,theta,dvalue
-c     --- dp arrays
-      double precision torcross
+      integer iorder,nmolty,nunit,nstep,numtor
+c     --- local double precision arrays
+      integer torcross
       dimension torcross(NUMAX)
+c     --- local dp scalars
+      double precision rij,rjk,rik,zi,zk,theta,dvalue
 
       write(6,*) 'Verifying input structures are consistent'
 
@@ -237,7 +238,8 @@ c           --- atom have a torsion interaction.
                   cunit = twh_get_ijvib(imolty,iunit,ivib)
                   if ( cunit .ne. bunit .and. cunit .ne. aunit ) then
                      lfound = .false.
-                     do itor = 1,twh_get_intor(imolty,cunit)
+                     call twh_intor(GLB_GET,imolty,cunit,numtor)
+                     do itor = 1,numtor
                         if ( twh_get_ijtor2(imolty,cunit,itor).eq.iunit
      &                       .and.
      &                       twh_get_ijtor3(imolty,cunit,itor).eq.bunit
@@ -262,7 +264,8 @@ c           --- atom have a torsion interaction.
             enddo
 
 c           --- check torsions
-            do itor = 1, twh_get_intor(imolty,iunit)
+            call twh_intor(GLB_GET,imolty,iunit,numtor)
+            do itor = 1, numtor
 c              --- check that torsion atoms are between 1 and nunit
                if ( twh_get_ijtor2(imolty,iunit,itor) .lt. 1 .or.
      &              twh_get_ijtor2(imolty,iunit,itor) .gt. nunit
@@ -301,7 +304,8 @@ c              --- check that torsion type is between 1 and ttormax
             enddo
 
 c           --- check for multiple torsions across the same atoms
-            do itor = 1, twh_get_intor(imolty,iunit)-1
+            call twh_intor(GLB_GET,imolty,iunit,numtor)
+            do itor = 1, numtor-1
                do jtor = itor+1, twh_get_intor(imolty,iunit)
                   if ( twh_get_ijtor2(imolty,iunit,itor) .eq. 
      &                 twh_get_ijtor2(imolty,iunit,jtor) .and. 
@@ -955,19 +959,29 @@ c     --- interactions.  In certain cases (6-membered rings) an atom
 c     --- can have multiple torsions which end at the same 4th bead
 c     --- In this case we need to scale the nonbonded interactions to 
 c     --- avoid counting the nonbond terms multiple times
+c     --- for other ring structures it is possible that the 1-4 is also
+c     --- a 1-3 or 1-2 (smaller rings) and we want to disable the
+c     --- nonbonded calculation
       do imolty = 1,nmolty
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
 c           --- initialize the array of cross terms
             do junit = 1,nunit
-               torcross(junit) = 0.0d0
+               torcross(junit) = 0
             enddo
-            do itor = 1,twh_get_intor(imolty,iunit)
-               torcross(twh_get_ijtor4(imolty,iunit,itor)) = 
-     &              torcross(twh_get_ijtor4(imolty,iunit,itor)) + 1.0d0
+            call twh_intor(GLB_GET,imolty,iunit,numtor)
+            do itor = 1,numtor
+c              --- check to see if there are nonbonded terms for this
+c              --- torsion
+               call twh_ittor(GLB_GET,imolty,iunit,itor,itype)
+               call twh_loftor(GLB_GET,iabs(itype),lonefourtor)
+               if ( lonefourtor ) then
+                  torcross(twh_get_ijtor4(imolty,iunit,itor)) = 
+     &                 torcross(twh_get_ijtor4(imolty,iunit,itor)) + 1
+               endif
             enddo
 c           --- now make sure we don't have bonded or angle interaction
-c           --- with that 4th bead (possible in 4 and 5 membered rings)
+c           --- with that 4th bead (possible in rings)
             do itor = 1,twh_get_intor(imolty,iunit)
                junit = twh_get_ijtor4(imolty,iunit,itor)
                lfound = .false.
@@ -980,14 +994,18 @@ c           --- with that 4th bead (possible in 4 and 5 membered rings)
      &                 lfound = .true.
                enddo
 c              --- store the scaling factor for each torsion
-               if ( lfound ) then
+               if ( lfound .or. torcross(junit) .eq. 0 ) then
 c                 --- we do not want to count these nonbonded interact
-                  call twh_itscale(GLB_SET,imolty,iunit,itor,0.0d0)
+                  call twh_torofcode(GLB_SET,imolty,iunit,itor
+     &                 ,CODE_ZERO)
                else
 c                 --- use the torcross to compute scale factor
-                  dvalue = 1.0d0
-     &                 /torcross(twh_get_ijtor4(imolty,iunit,itor))
-                  call twh_itscale(GLB_SET,imolty,iunit,itor,dvalue)
+                  if ( torcross(junit) .gt. 1 ) then
+                     dvalue = 1.0d0 / dble(torcross(junit))
+                     call twh_torofcode(GLB_SET,imolty,iunit,itor
+     &                    ,CODE_RESCALE)
+                     call twh_itscale(GLB_SET,imolty,iunit,itor,dvalue)
+                  endif
                endif
             enddo
          enddo

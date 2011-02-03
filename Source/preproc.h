@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 07-29-2010 by M.G. Martin */
+/* last significant modification 01-30-2011 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -519,6 +519,11 @@
 #define CBMC_FORM_MS1999_MT2004 0
 #define CBMC_FORM_MF2006 1
 
+/* torsion scaling codes, value arbitrary */
+#define CODE_ZERO 0
+#define CODE_ONE 1
+#define CODE_RESCALE 2
+
 /* swapmove codes */
 #define SWAP_CB_INTER 0
 #define SWAP_CB_INTRA 1
@@ -552,6 +557,7 @@
 #define PNT_NBOXI 14
 #define PNT_PARALL 15
 #define PNT_CHAINLIST 16
+#define PNT_TOROFCODE 17
 
 #define MAX_INT_POINTERS 20
 

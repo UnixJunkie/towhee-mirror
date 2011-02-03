@@ -1,8 +1,7 @@
-c     $Id: initloopclosure.F,v 1.9 2008/10/10 02:28:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +29,7 @@ c     * initializes arrays which are required to solve the loop        *
 c     * closure problem                                                *
 c     *                                                                *
 c     * originally rewritten from E. Coutsias 05-01-2003 by C.D. Lorenz*
-c     * last modified 10-09-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -80,11 +79,11 @@ c     --- local varibles
       temp(1) = 0.0
       temp(2) = 0.0
       temp(3) = 0.0
+      lena1n1 = 0.0d0
 
 c     --- calculate the bond lengths and the angles which are 
 c     --- required to initialize the various arrays used to solve 
 c     --- the loop closure problem
-
       do j = 2,9
          i = j-1
          ii = j-2

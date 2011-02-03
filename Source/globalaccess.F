@@ -1598,24 +1598,6 @@ c     --- variables passed to/from the subroutine
       return
       end
 
-      function twh_get_itscale(imolty,iunit,itor)
-c     ******************************************************************
-c     * gets the itscale data                                          *
-c     *                                                                *
-c     * originally written 04-10-2006 by M.G. Martin                   *
-c     * last modified 04-10-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-#define FUNCTION_GET_ITSCALE
-#include "functions.h"
-c     --- variables passed to/from the subroutine
-      integer imolty,iunit,itor
-
-      call twh_itscale(GLB_GET,imolty,iunit,itor,twh_get_itscale)
-  
-      return
-      end
-
       function twh_get_ittor(imolty,iunit,itor)
 c     ******************************************************************
 c     * gets the ittor data                                            *

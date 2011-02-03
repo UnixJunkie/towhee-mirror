@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 06-15-2010 by M.G. Martin                        *
+c     * last modified 01-30-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -90,6 +90,7 @@ c     --- integer scalars
       integer backlist,numboxes,nvmove,ensemble,histcalcfreq,nener
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
+      integer maxnumtor,numtor
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -2425,6 +2426,20 @@ c     --- compute the total number of atoms
 c     --- allocate arrays for coords
       call twh_allocate_coords(natoms,maxunit)
 
+c     --- determine maximum number of torsions on any atom of any
+c     --- molecule in the system
+      maxnumtor = 0
+      do imolty = 1,nmolty
+         call twh_nunit(GLB_GET,imolty,numunits)
+         do iunit = 1,numunits
+            call twh_intor(GLB_GET,imolty,iunit,numtor)
+            if ( numtor .gt. maxnumtor ) maxnumtor = numtor
+         enddo
+      enddo
+c     --- allocate arrays based on nmolty,maxunit and maxnumtor
+      call twh_allocate_maxmolty_maxunit_maxnumtor(nmolty
+     &     ,maxunit,maxnumtor)
+
       do imolty = 1,nmolty
          call twh_nunit(GLB_GET,imolty,numunits)
          if ( .not. lpdbset(imolty) ) then
@@ -2957,7 +2972,7 @@ c     * lpdbset                                                        *
 c     * lfailure                                                       *
 c     * lpdb, lpdbset, lerror are modified in this subroutine          *
 c     *                                                                *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 01-31-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_INAA
@@ -3045,6 +3060,13 @@ c        --- read in bond bending
      &         4,.false.,iatmp)
             call twh_ijben2(GLB_SET,imolty,iunit,iben,iatmp(1))
             call twh_ijben3(GLB_SET,imolty,iunit,iben,iatmp(2))
+            if ( iatmp(3) .lt. 1 ) then
+               write(6,*) 'READTOWHEE: invalid bending type'
+               write(6,*) 'imolty,iunit,iben,ijben2,ijben3,itben'
+     &              ,imolty,iunit,iben,iatmp(1),iatmp(2),iatmp(3)
+               lfailure = .true.
+               return
+            endif
             call twh_itben(GLB_SET,imolty,iunit,iben,iatmp(3))
             call twh_orderben(GLB_SET,imolty,iunit,iben,iatmp(4))
          enddo

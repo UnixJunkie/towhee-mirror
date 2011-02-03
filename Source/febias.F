@@ -1,8 +1,7 @@
-c     $Id: febias.F,v 1.26 2008/11/29 00:03:16 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -40,7 +39,7 @@ c     *         *cord(2) is iuother                                    *
 c     *         *cord(3) is iufrom                                     *
 c     *                                                                *
 c     * originally written 01-23-2001 by M.G. Martin                   *
-c     * last modified 11-26-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -120,6 +119,7 @@ c      write(6,*) 'starting FEBIAS'
 c     --- initialize febias and lovrlap
       twh_febias = 1.0d0
       lovrlap = .false.
+      theta = 0.0d0
 c     --- retrieve constants
       call twh_constant_twopi(GLB_GET,twopi)
       call twh_beta(GLB_GET,beta)

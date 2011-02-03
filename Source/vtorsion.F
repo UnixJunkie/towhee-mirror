@@ -1,10 +1,9 @@
-c     $Id: vtorsion.F,v 1.43 2008/10/21 17:22:44 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2007 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -49,7 +48,7 @@ c     *  the calling routine.  Do not initialize in any of the vxx     *
 c     *  functions                                                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 01-29-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -64,9 +63,7 @@ c     ******************************************************************
 #define FUNCTION_GET_IJTOR3
 #define FUNCTION_GET_IJTOR4
 #define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITSCALE
 #define FUNCTION_GET_ITTOR
-#define FUNCTION_GET_LOFTOR
 #define FUNCTION_GET_NTORLOOP
 #define FUNCTION_GET_NTYPE
 #define FUNCTION_GET_TORCOEFF
@@ -85,28 +82,30 @@ c     --- variables passed to and from function
       double precision xcord,ycord,zcord
       dimension xcord(4),ycord(4),zcord(4)
 
-c     --- local variables
-      integer itor,ntii,ntjj,bij,bjk,bkl,aijk,ajkl,i,style,atype,btype
-      integer abcord,ivec,unit_2,unit_3,unit_4,index
+c     --- local integer scalars
+      integer itor,ntii,ntjj,bij,bjk,bkl,aijk,ajkl,i,style
+      integer torffnum,itmp
+      integer abcord,ivec,unit_2,unit_3,unit_4,index,torofcode
+c     --- local integer arrays
+      integer atype,btype
       dimension btype(3)
       dimension atype(2)
-      integer torffnum,itmp
-
+c     --- local double precision scalars
       double precision phi,rijsq,cosphi,cos2phi,cos3phi,rij
       double precision xaa1,yaa1,zaa1,xaa2,yaa2,zaa2,daa1,daa2
-      double precision length,angle,xcc,ycc,zcc,tcc,qqfact
-      double precision xvec,yvec,zvec,rxij,ryij,rzij
-      dimension xvec(4),yvec(4),zvec(4)
-      dimension length(4)
-      dimension angle(2)
+      double precision xcc,ycc,zcc,tcc,qqfact
+      double precision torscale,rxij,ryij,rzij
       double precision xone,xtwo,yone,ytwo,zone,ztwo,cosshiftphi
-      double precision totbond,dv,onepi,vf(MAX_FOREIGN_LAMBDA)
-
-#if DEBUG_VTORSION
-      double precision vmgmqq,vmgmvdw,vmgmtor
-      save vmgmqq,vmgmvdw,vmgmtor
-      data vmgmqq/0.0d0/,vmgmvdw/0.0d0/,vmgmtor/0.0d0/
-#endif
+      double precision totbond,dv,onepi,vonefour
+c     --- local double precision arrays
+      double precision xvec,yvec,zvec
+      dimension xvec(4),yvec(4),zvec(4)
+      double precision length
+      dimension length(4)
+      double precision angle
+      dimension angle(2)
+      double precision vf
+      dimension vf(MAX_FOREIGN_LAMBDA)
 
 #if DEBUG_VTORSION
       write(6,*) 'Start VTORSION'
@@ -619,13 +618,10 @@ c        --- J. Chem. Phys. 114 579-590 (2001)
          return
       endif
 
-#if DEBUG_VTORSION         
-c     --- save the torsion portion that is not nonbond
-      vmgmtor = vmgmtor + twh_vtorsion
-#endif
-
-      if ( twh_get_loftor(torffnum) ) then
-         if ( cordstyle .eq. 0 ) then
+c     --- compute the 1-4 nonbonded terms, if they are used
+      call twh_torofcode(GLB_GET,imolty,unit_1,torind,torofcode)
+      if ( torofcode .ne. CODE_ZERO ) then
+         if ( cordstyle .ne. 1 ) then
             write(6,*) 'cannot pass angle to VTORSION with 1-4'
             lfailure = .true.
             return
@@ -641,17 +637,18 @@ c        --- need unit number of the opposite atom
          call twh_ntype(GLB_GET,imolty,unit_1,ntii)
          call twh_ntype(GLB_GET,imolty,unit_4,ntjj)
 
-         twh_vtorsion = twh_vtorsion 
-     &        + twh_get_itscale(imolty,unit_1,torind)
-     &        *twh_vtwobody(lfailure,rijsq,ntii,ntjj,3,loverlap,vf,dv )
+         vonefour = twh_vtwobody(lfailure,rijsq,ntii,ntjj,3,loverlap
+     &        ,vf,dv )
+         if ( torofcode .eq. CODE_RESCALE ) then
+c           --- get the scaling factor and rescale
+            call twh_itscale(GLB_GET,imolty,unit_1,torind,torscale)
+            vonefour = torscale*vonefour
+         endif
+c        --- add into the torsion energy
+         twh_vtorsion = twh_vtorsion + vonefour
          if ( lfailure ) return
          if ( loverlap ) return
 
-#if DEBUG_VTORSION
-         vmgmvdw = vmgmvdw + twh_get_itscale(imolty,unit_1,torind)
-     &        *twh_vtwobody(lfailure,rijsq,ntii,ntjj,3,loverlap,vf,dv )
-         if ( lfailure ) return
-#endif
 c        --- compute 1-4 coulombic interactions
          rij = dsqrt(rijsq)
 
@@ -664,26 +661,15 @@ c        --- 2) So I don't need any special logic to determine 1-4
 c        --- interactions in engatom.
 
          call twh_constant_qqfact(GLB_GET,qqfact)
-         twh_vtorsion = twh_vtorsion 
-     &        + twh_get_itscale(imolty,unit_1,torind)
-     &        *twh_get_torcoeff(torffnum,-1)
+         vonefour = twh_get_torcoeff(torffnum,-1)
      &        *qqfact*twh_vcoulomb(ibox,rij,imolty,unit_1,imolty
      &        ,unit_4,.true.,vf,dv,loverlap)
+         if ( torofcode .eq. CODE_RESCALE ) then
+            vonefour = torscale*vonefour
+         endif
+         twh_vtorsion = twh_vtorsion + vonefour
          if ( loverlap ) return
-
-#if DEBUG_VTORSION
-         vmgmqq = vmgmqq + twh_get_itscale(imolty,unit_1,torind)
-     &        *twh_get_torcoeff(torffnum,-1)*qqfact
-     &        *twh_vcoulomb(ibox,rij,imolty,unit_1,imolty,unit_4
-     &        ,.true.,vf,dv,loverlap)
-#endif
       endif
-
-#if DEBUG_VTORSION      
-      write(6,*) 'tor ',vmgmtor
-      write(6,*) 'vdw ',vmgmvdw
-      write(6,*) 'qq  ',vmgmqq
-#endif
 
 c      write(6,*) 'finished VTORSION'
 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs all of the final running and block averages            *
 c     *                                                                *
 c     * split from mainloop on 05-12-2005 by M.G. Martin               *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -145,6 +145,9 @@ c     --- the on the fly pressure style
          istart = 0
          iend = 7
       elseif ( pressurestyle .eq. PRES_RADIAL ) then
+         istart = 0
+         iend = 0
+      else
          istart = 0
          iend = 0
       endif

@@ -1485,3 +1485,21 @@ void twh_chainlist_(int * flag, int * ipoint, int * ibox, int * itype, int * val
   }
   return;
 }
+
+void twh_torofcode_(int * flag, int * imolty, int * iunit, int * itor, int * value)
+/* the list of one-four scaling codes for each torsion in each molecule type
+   originally written 01-30-2011 by M.G. Martin
+   last modified 01-30-2011 by M.G. Martin
+*/
+{
+  int errorcode,mindex,nindex,oindex;
+  mindex = *imolty - 1;
+  nindex = *iunit - 1;
+  oindex = *itor - 1;
+  errorcode = twh_3dreginteger(PNT_TOROFCODE, flag, mindex, nindex, oindex, value);
+  if ( errorcode == EXIT_FAILURE ) {
+    printf("in twh_torofcode \n");
+    exit(errorcode);
+  }
+  return;
+}

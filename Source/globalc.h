@@ -197,6 +197,7 @@ extern dftmain(double *);
 #define twh_nboxi_ TWH_NBOXI
 #define twh_parall_ TWH_PARALL
 #define twh_chainlist_ TWH_CHAINLIST
+#define twh_torofcode_ TWH_TOROFCODE
 #endif
 int twh_1ddouble(int, int *, const int, double *);
 int twh_2dregdouble(int, int *, int, int, double *);

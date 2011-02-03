@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2008-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2008-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * frees all of the allocated memory                              *
 c     *                                                                *
 c     * originally written 12-03-2008 M.G. Martin                      *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 01-30-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- local variables
@@ -103,5 +103,7 @@ c     --- free arrays based on numboxes and nmolty
 c     --- free based on molty and chain
       call twh_parall(GLB_FREE,itemp,jtemp,ivalue)
       call twh_chainlist(GLB_FREE,itemp,jtemp,ktemp,ivalue)
+c     --- free based on molty, unit and torsion
+      call twh_torofcode(GLB_FREE,itemp,jtemp,ktemp,ivalue)
       return
       end

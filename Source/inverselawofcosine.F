@@ -22,10 +22,10 @@ c     ******************************************************************
 c     ******************************************************************
 c     * uses the law of cosines to turn three distances into one of the*
 c     * angles.  In this case, it turns the a, b, and c distances into *
-c     * the angle on the triangle that is opposie of the c side        *
+c     * the Cos(angle) on the triangle that is opposite of the c side  *
 c     *                                                                *
 c     * originally written 07-25-2010 by M.G. Martin                   *
-c     * last modified 07-25-2010 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_INVERSELAWOFCOSINE

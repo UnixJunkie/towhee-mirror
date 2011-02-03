@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 07-25-2010 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -58,7 +58,8 @@ c     --- local variables
       character*30 peakstyle
       character*50 twobbias_style,twobbias_init,threebbias_init
       character*50 threebbias_style
-      logical lovrlap,lfound,lrigid
+c     --- local logical scalars
+      logical lovrlap,lfound,lrigid,lbond
 c     --- local integer parameters
       integer maxextrema
       parameter (maxextrema = 2*(CBMC_MAXTORPEAKS+CBMC_MAXBENDPEAKS))
@@ -68,7 +69,7 @@ c     --- local integer scalars
       integer imax,junitb,kunitb,icrossbend,jbend,kbend,ibondmax
       integer bij_type,bjk_type,iscan_bij,iscan_bjk
       integer type,nmolty,nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
-      integer cbmc_dihedgen_code,style,bonddist
+      integer cbmc_dihedgen_code,style,bonddist,vibtype
 #if DEBUG_ATD_CBMC_SETUP
       integer count,style_code,imgm,ivalue
 #endif
@@ -83,6 +84,7 @@ c     --- local dp scalars
       double precision twobvibone,twobvibtwo,bond_sdev_multiplier
       double precision benda_mult,bendb_mult,dihed_mult
       double precision viblo,vibhi,onethird,mean,std_dev
+      double precision radtodeg
 #if DEBUG_ATD_CBMC_SETUP
       double precision ideal_frac
       double precision phidisp,pdf_bias,lodim,hidim
@@ -111,6 +113,12 @@ c     --- retrieve constants
 c     --- set ibox to zero so we use the full coulombic energies instead
 c     --- of one scaled by Ewald parameters
       ibox = 0
+c     --- initialize
+      do ipeak = 1,2
+         prevweight(ipeak) = 0.0d0
+         prevloc(ipeak) = 0.0d0
+         prevenergy(ipeak) = 0.0d0
+      enddo
 
 c     --- set up information needed to generation trials in a cbmc move
       call twh_cbmc_bondgen_code(GLB_GET,cbmc_bondgen_code)
@@ -121,8 +129,8 @@ c     --- set up information needed to generation trials in a cbmc move
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
             do ivib = 1,twh_get_invib(imolty,iunit)
-               call twh_itvib(GLB_GET,imolty,iunit,ivib,itype)
-               call twh_vibstyle(GLB_GET,itype,style)
+               call twh_itvib(GLB_GET,imolty,iunit,ivib,vibtype)
+               call twh_vibstyle(GLB_GET,vibtype,style)
 c              --- check the style to see if is one of the special cases
                if ( style .eq. 1 ) then
 c                 --- fixed bond length, everything else infinite
@@ -144,9 +152,9 @@ c                 --- normalization is ideal based only on max: 3/rmax^3
 c                 --- infinite square well with defined upper and lower
 c                 --- bounds defined by the potential
                   bonddist = DIST_R_SQ_WITH_BOUNDS
-                  call twh_vibcoeff(GLB_GET,itype,0,length)
-                  call twh_vibcoeff(GLB_GET,itype,1,lolimit)
-                  call twh_vibcoeff(GLB_GET,itype,2,hilimit)
+                  call twh_vibcoeff(GLB_GET,vibtype,0,length)
+                  call twh_vibcoeff(GLB_GET,vibtype,1,lolimit)
+                  call twh_vibcoeff(GLB_GET,vibtype,2,hilimit)
 c                 --- transform for use generating potentials
                   hilimit = hilimit**3 - lolimit**3
                   lolimit = lolimit**3
@@ -165,7 +173,7 @@ c                 --- not a special case based on the potential
      &                 .eq. CBMC_R_SQ_WITH_BOUNDS ) then
                      bonddist = DIST_R_SQ_WITH_BOUNDS
 c                    --- reset vibrang values for use in geometry
-                     call twh_vibcoeff(GLB_GET,itype,0,length)
+                     call twh_vibcoeff(GLB_GET,vibtype,0,length)
                      call twh_vibrang(GLB_GET,1,viblo)
                      call twh_vibrang(GLB_GET,2,vibhi)
                      lolimit = viblo*length
@@ -188,7 +196,7 @@ c                    --- the ideal distribution to normalize
 c                    --- uses a gaussian with parameters based on the
 c                    --- equilibrium bond length and the default
 c                    --- standard deviation
-                     call twh_vibcoeff(GLB_GET,itype,0,mean)
+                     call twh_vibcoeff(GLB_GET,vibtype,0,mean)
                      call twh_sdevvib(GLB_GET,std_dev)
                      call twh_cbmcbondinfo(GLB_SET,imolty,iunit,ivib
      &                    ,3,mean)
@@ -210,8 +218,8 @@ c                    --- determine gaussian parameters
                      do itest = 0,imax
                         length = dble(itest)*rmax/dble(imax)
                         lovrlap = .false.
-                        energy = twh_vbond(lfailure,itype,length,imolty
-     &                       ,iunit,junit,lovrlap)
+                        energy = twh_vbond(lfailure,vibtype,length
+     &                       ,imolty,iunit,junit,lovrlap)
                         if ( lfailure ) return
                         if ( lovrlap ) then
                            weight = 0.0d0
@@ -253,7 +261,7 @@ c                    --- normalization is ideal based only on rmax
                   endif
                endif
 c              --- store the bonddist
-               call twh_cbbonddist(GLB_SET,itype,bonddist)
+               call twh_cbbonddist(GLB_SET,vibtype,bonddist)
 c              --- store the bondnorms
                call twh_cbmcbondinfo(GLB_SET,imolty,iunit,ivib
      &              ,1,truenorm)
@@ -282,15 +290,28 @@ c                 --- computation
                   do ivib = 1,twh_get_invib(imolty,iunit)
                      if ( twh_get_ijvib(imolty,iunit,ivib) .eq. junit 
      &                    ) then
-                        call twh_itvib(GLB_GET,imolty,iunit,ivib,itype)
-                        call twh_vibcoeff(GLB_GET,itype,0,distone)
+                        call twh_itvib(GLB_GET,imolty,iunit,ivib
+     &                       ,vibtype)
+                        call twh_vibcoeff(GLB_GET,vibtype,0,distone)
                      endif
                   enddo
                   do ivib = 1,twh_get_invib(imolty,junit)
                      if ( twh_get_ijvib(imolty,junit,ivib) .eq. kunit 
      &                    ) then
-                        call twh_itvib(GLB_GET,imolty,junit,ivib,itype)
-                        call twh_vibcoeff(GLB_GET,itype,0,disttwo)
+                        call twh_itvib(GLB_GET,imolty,junit,ivib
+     &                       ,vibtype)
+                        call twh_vibcoeff(GLB_GET,vibtype,0,disttwo)
+                     endif
+                  enddo
+                  lbond = .false.
+c                 --- check if this is a 3-membered ring
+                  do ivib = 1,twh_get_invib(imolty,iunit)
+                     itest = twh_get_ijvib(imolty,iunit,ivib)
+                     if ( kunit .eq. itest ) then
+c                       --- this angle is also a bond
+                        lbond = .true.
+                        call twh_itvib(GLB_GET,imolty,iunit,ivib
+     &                       ,vibtype)
                      endif
                   enddo
                   imax = 1000
@@ -301,15 +322,24 @@ c                 --- computation
                      theta = dble(itest)*onepi/dble(imax)
                      angcos = dcos(theta)
                      lovrlap = .false.
-                     energy = twh_vangle(lfailure,lovrlap,1,imolty,iunit
-     &                    ,ibend,0,angcos,distone,disttwo,xbacord
-     &                    ,ybacord,zbacord)
+                     energy = 0.0d0
+                     if ( lbond ) then
+c                       --- compute 3-mem ring bond energy
+                        length = twh_lawofcosine(distone,disttwo,angcos)
+                        energy = energy + twh_vbond(lfailure,vibtype
+     &                       ,length,imolty,iunit,kunit,lovrlap)
+                     else
+                        energy = energy + twh_vangle(lfailure,lovrlap,1
+     &                       ,imolty,iunit,ibend,0,angcos,distone
+     &                       ,disttwo,xbacord,ybacord,zbacord)
+                     endif
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         weight = 0.0d0
                      else
                         weight = twh_expon(-beta*energy)*dsin(theta)
                      endif
+                     call twh_constant_radtodeg(GLB_GET,radtodeg)
                      sum_w = sum_w + weight
                      sum_x = sum_x + weight*theta
                      sum_xx = sum_xx + weight*theta*theta

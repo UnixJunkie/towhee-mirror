@@ -1,10 +1,9 @@
-c     $Id: recipsum.F,v 1.14 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * calculates the total reciprocal space ewald-sum term for volume*
 c     * moves                                                          *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen.                        *
-c     * Last modified 10-13-2008 M.G. Martin                           *
+c     * Last modified 11-16-2010 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -56,13 +55,17 @@ c     --- Set up the reciprocal space vectors
       vrecip = 0.0d0
       call twh_ewald_calp(GLB_GET,ibox,calp)
       call twh_ewald_kmax(GLB_GET,ibox,kmax)
-      if ( kmax .gt. 0 ) then
-c        --- set up some ewald constants
-         invalpsq4 = 1.0d0/(4.0d0*calp*calp)
-c        --- set up the inverse volume along with the charge factor
-         call twh_boxvolume(GLB_GET,ibox,boxvolume)
-         invvol = qqfact*2.0d0*twopi/boxvolume
+      if ( kmax .eq. 0 ) then
+c        --- no vectors
+         call twh_ewald_numvect(GLB_SET,ibox,ncount)
+         return
       endif
+
+c     --- set up some ewald constants
+      invalpsq4 = 1.0d0/(4.0d0*calp*calp)
+c     --- set up the inverse volume along with the charge factor
+      call twh_boxvolume(GLB_GET,ibox,boxvolume)
+      invvol = qqfact*2.0d0*twopi/boxvolume
 
       do nkx = 0, kmax
 c        --- set the double precision version of nkx
@@ -142,6 +145,7 @@ c              --- Potential energy
             enddo
          enddo
       enddo
+
       call twh_ewald_numvect(GLB_SET,ibox,ncount)
       return 
       end

@@ -37,39 +37,24 @@
       developers for them to include in the next release.
       <p></p>
       Those wishing to make substantial changes to the code, such as implementing new algorithms, are better 
-      served by joining the Towhee developer team in order to gain full access to the CVS repositories at 
+      served by joining the Towhee developer team in order to gain full access to the code repositories at 
       SourceForge.  If you are interested then you need to sign up for a free username at SourceForge 
       (<a href="http://sourceforge.net/">http://sourceforge.net/</a>), and send an email indicating your 
       interest to <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>.
      </ul>
 
      <p></p>
-     <b>CVS Access</b>
+     <b>Subversion Access</b>
      <ul>
-      In order to get started using CVS you will need to checkout the current version of the code into a workspace 
-      on one of your machines.  Directions for checking out the code are found by following the CVS link from the
+      In order to get started using Subersion (svn) you will need to checkout the current version of the code into a workspace 
+      on one of your machines.  Directions for checking out the code are found by following the "Code" and "SVN" links from the
       <a href="http://sourceforge.net/projects/towhee/">Towhee SourceForge</a> site.  Make sure to follow the 
-      developer access directions, and not the anonymous access directions.  You first need to set the <b>CVS_RSH</b>
-      environment variable to <b>ssh</b>.  Then you can checkout the code using
+      developer access directions, and not the anonymous access directions.  Then you can checkout the code using
       <ul>
-       cvs -z3 -d:ext:developername@towhee.cvs.sourceforge.net:/cvsroot/towhee co -P towhee
+       svn co https://towhee.svn.sourceforge.net/svnroot/towhee towhee
       </ul>
-      where <i>developername</i> is replaced by your SourceForge user name.  This command creates a directory named 
-      <b>towhee</b> that contains all of the Towhee files and directories. 
+      This command creates a directory named <b>towhee</b> that contains all of the Towhee files and directories. 
       <p></p>
-      For a complete discussion of CVS see a resource like the <a href="http://cvsbook.red-bean.com/">Open Source Development with CVS</a>.
-      A few commands are especially useful and are mentioned here.
-      <ul>
-       cvs update
-      </ul>
-      checks your workbox copy of the code against the repository and attempts to reconcile the two copies by bringing your workbox 
-      version up to date.  Pay special attention to any "conflict" messages during the update as these indicate a problem bringing 
-      the workbox up to date and a note indicating the conflict is placed into all files that contained a conflict.  
-      <ul>
-       cvs commit
-      </ul>
-      is used to check your changes back into the repository.  During this process you are given an opportunity to make 
-      some comments about your changes and it is helpful if you can summarize your changes in a couple of sentences.
      </ul>
 
      <p></p>
@@ -112,7 +97,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->December 14, 2006<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->February 02, 2011<!-- #EndDate -->
   </font>
   <br></br>
  </body>

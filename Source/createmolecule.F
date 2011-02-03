@@ -175,6 +175,7 @@ c                 --- set the type
                   else
                      iorder = ORD_FORWARD
                   endif
+                  write(6,*) 'iangle,angtype:',iangle,angtype(iangle)
                   call twh_itben(GLB_SET,nmolty,current,iangle
      &                 ,angtype(iangle))
                   call twh_orderben(GLB_SET,nmolty,current,iangle

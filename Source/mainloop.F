@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     ******************************************************************
 c     * serves only to call the real main loop and to free all of the  *
 c     * allocated memory after the simulation is complete              *
 c     * rewritten as a shell 12-03-2008 by M.G. Martin                 *
-c     * last modified 12-03-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -35,7 +35,8 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical lreadwrapper
 
-c     --- int_read_wrapper is immediately translated and stored in lreadwrapper
+c     --- int_read_wrapper is immediately translated and stored in
+c     --- lreadwrapper
 c     --- This variable indicates whether certain values 
 c     --- (e.g. cmix_lambda_lj) are read from towhee_input, or from
 c     --- the wrapper data structure defined in wrapperF/C.h and set
@@ -84,7 +85,6 @@ c     --- local variables
 
 #if DEBUG_MAINLOOP
 #define DEBUG_WRITE(T) write(6,*)T
-      logical lprint
 #else
 #define DEBUG_WRITE(T)
 #endif
@@ -163,7 +163,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 07-02-2009 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -184,7 +184,7 @@ c     --- energy tolerance threshold
 #define ENERGY_THRESH 1.d-2
 c     --- local variables
 #if DEBUG_MAINLOOP
-      logical ldebug_fail
+      logical ldebug_fail,lprint
 #endif
 c     --- logical scalars
       logical lovrlap,lnone,loutdft,louthist,lreadwrapper

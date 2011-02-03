@@ -1,4 +1,4 @@
-c     $Id: ffcompass.F,v 1.30 2006/12/19 23:20:48 marcus_martin Exp $
+c     $Id: ffcompass.F,v 1.31 2010/11/15 17:20:29 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *

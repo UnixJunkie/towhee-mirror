@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,7 +32,7 @@ c     * set up this file, and for allowing me to take some code from   *
 c     * Lammps 2001                                                    *
 c     *                                                                *
 c     * originally written 02-27-2002 by M.G. Martin                   *
-c     * last modified 06-21-2009 by M.G. Martin                        *
+c     * last modified 01-31-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_MASS
@@ -75,6 +75,9 @@ c     --- allocate and initialize arrays for numboxes
       call twh_allocate_numboxes(numboxes)
 c     --- allocate and initialize arrays for numboxes and MAXMOLTY
       call twh_allocate_maxmolty_numboxes(NTMAX,numboxes)
+c     --- allocate for torsions
+      call twh_allocate_maxmolty_maxunit_maxnumtor(NTMAX,NUMAX
+     &     ,MAXTOR)
 
 c     --- set pmrotate to 1.0
       call twh_pmrotate(GLB_SET,1.0d0)

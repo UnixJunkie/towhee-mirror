@@ -127,14 +127,14 @@ c     --- variables passed to/from the subroutine
       double precision validlist
       dimension validlist(CBMC_MAXBENDPEAKS)
 c     --- local variables
-      double precision angle_one,angle_two,twopi
+      double precision angle_one,angle_two,twopi,cosdihedral
 
 c     --- retrieve 2Pi
       call twh_constant_twopi(GLB_GET,twopi)
 
-      angle_one = twh_arccos( (dcos(ang_gamma)
-     &     -dcos(ang_alpha)*dcos(ang_beta))
-     &     /(dsin(ang_alpha)*dsin(ang_beta)) )
+      call twh_angle_b_rigid_cosine(ang_alpha,ang_beta,ang_gamma
+     &     ,cosdihedral)
+      angle_one = twh_arccos(cosdihedral)
       
       angle_two = twopi - angle_one
       if ( angle_one .eq. angle_two ) then
@@ -146,5 +146,23 @@ c     --- retrieve 2Pi
          validlist(2) = angle_two
       endif
 
+      return
+      end
+
+      subroutine twh_angle_b_rigid_cosine(ang_alpha,ang_beta,ang_gamma
+     &     ,cosdihedral)
+c     ******************************************************************
+c     * computes the cosine of the dihedral angle described by 3 bend  *
+c     * angles.                                                        *
+c     *                                                                *
+c     * split from angle_b_rigid 01-30-2011 by M.G. Martin             *
+c     * last modified 01-30-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      double precision ang_alpha,ang_beta,ang_gamma,cosdihedral
+
+      cosdihedral = (dcos(ang_gamma) -dcos(ang_alpha)*dcos(ang_beta))
+     &     /(dsin(ang_alpha)*dsin(ang_beta))
       return
       end

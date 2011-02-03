@@ -1,8 +1,7 @@
-c     $Id: vimproper.F,v 1.14 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -34,7 +33,7 @@ c     * phic: cosine of the torsional angle (oop impropers)            *
 c     * phic: is instead the angle from -pi to +pi for stereo impropers*
 c     *                                                                *
 c     * rewritten from vtorsion 03-21-2002 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -76,6 +75,10 @@ c     --- retrieve constants
 c     --- initialize lbadstereo and vimproper
       lbadstereo = .false.
       twh_vimproper = 0.0d0
+      phi = 0.0d0
+      do ivec = 1,3
+         phiarray(ivec) = 0.0d0
+      enddo
 
 c     --- determine the improper forcefield number and style
       impffnum = twh_get_itimprop(imolty,unit_1,impind)

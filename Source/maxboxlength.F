@@ -1,8 +1,7 @@
-c     $Id: maxboxlength.F,v 1.7 2008/10/14 14:09:45 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +24,7 @@ c     ******************************************************************
 c     * finds the maximum dimension of a simulation box                *
 c     *                                                                *
 c     * originally written 08-13-2004 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_MAXBOXLENGTH
@@ -38,10 +37,9 @@ c     --- local variables
       integer idim,jdim
       double precision boxlength,dvalue
 
-      if ( ibox .eq. 0 ) then
-c        --- ideal gas box, infinite length, set to zero
-         twh_maxboxlength = 0.0d0
-      else
+c     --- default to zero boxlength, used for the ideal gas box
+      twh_maxboxlength = 0.0d0
+      if ( ibox .ne. 0 ) then
          do jdim = 1,3
             boxlength = 0.0d0
             do idim = 1,3

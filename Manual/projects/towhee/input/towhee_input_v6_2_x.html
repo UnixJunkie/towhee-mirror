@@ -39,6 +39,10 @@
      </ul>
      <b>Bug reports and feature enhancements for 6.2.x versions</b>
      <ul>
+      <li>6.2.15: <a href="../algorithm/cbmc.html">Configurational-bias</a> moves now have support for three membered rings and should no longer give an
+       error message when attempting to regrow molecules with any ring structure.  The code repository has moved from cvs to svn after the old service 
+       ceased functioning at the code home at SourceForge.
+      </li>
       <li>6.2.14: Added a new parameter (<a href="../code/code_manual.html#MMBOND"><b>MMBOND</b></a>) to the <a href = "../code/code_manual.html">preproc.h</a>
        file as the term that controls the maximum number of all of the intramolecular multi-atom interactions except the number of vibrations.  This allowed
        the default value of <a href="../code/code_manual.html#NNBOND"><b>NNBOND</b></a> to increase to 6 for simulation of some small molecule ions without
@@ -2701,7 +2705,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->November 15, 2010<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->February 02, 2011<!-- #EndDate -->
   </font>
   <br></br>
  </body>

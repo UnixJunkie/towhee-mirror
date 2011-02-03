@@ -1,8 +1,7 @@
-c     $Id: wcoulomb.F,v 1.20 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +29,7 @@ c     *                                                                *
 c     * Units returned are [K/molecule]/[angstrom^2]                   *
 c     *                                                                *
 c     * originally written 05-16-2005 by M.G. Martin                   *
-c     * last update 10-13-2008 by M.G. Martin                          *
+c     * last update 11-16-2010 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -56,6 +55,8 @@ c     --- retrieve constants
       if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,ibox,rcelect)
       call twh_lewald(GLB_GET,lewald)
 
+c     --- initialize
+      twh_wcoulomb = 0.0d0
       if ( ibox .eq. 0 .or. ( .not. lewald) ) then
 c        --- ideal gas box of infinite extent, or just no ewald
 c        --- either way compute explicit coulomb interaction
@@ -89,8 +90,6 @@ c              --- and Karplus use e(r) = r)
      &              +(2.0d0)*twh_derfc(calp*rij)/rij)
      &              *qqa*qqb*qqfact/(rijsq*rij)
             endif
-         else
-            twh_wcoulomb = 0.0d0
          endif
       endif
 

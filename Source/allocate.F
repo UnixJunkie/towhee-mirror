@@ -371,6 +371,34 @@ c     --- allocate arrays
       return
       end
 
+      subroutine twh_allocate_maxmolty_maxunit_maxnumtor(maxmolty
+     &     ,maxunit,maxnumtor)
+c     ******************************************************************
+c     * allocate arrays that depend on the maximum number of molecule  *
+c     * types, maximum units per molecule and maximum number of        *
+c     * torsions on any unit                                           *
+c     *                                                                *
+c     * originally written 01-30-2011 by M.G. Martin                   *
+c     * last modified 01-30-2011 M.G. Martin                           *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer maxmolty,maxunit,maxnumtor
+c     --- local variables
+      integer ivalue
+
+      if ( maxmolty*maxunit*maxnumtor .eq. 0 ) return
+
+c     --- default to CODE_ONE
+      ivalue = CODE_ONE
+
+c     --- allocate arrays
+      call twh_torofcode(GLB_ALLOC,maxmolty,maxunit,maxnumtor,ivalue)
+      call twh_torofcode(GLB_INIT,maxmolty,maxunit,maxnumtor,ivalue)
+
+      return
+      end
+
       subroutine twh_allocate_maxmolty_numboxes_nchain(maxmolty,maxboxes
      &     ,maxchain)
 c     ******************************************************************

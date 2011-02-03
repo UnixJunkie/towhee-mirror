@@ -1,10 +1,9 @@
-c     $Id: swapmoves.F,v 1.72 2008/12/08 07:15:40 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -78,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 12-07-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -230,6 +229,8 @@ c        --- intramolecular taken care of in engatom
       lempty = .false.
       lfound = .false.
       lgetbox = .false.
+      vtest = 0.0d0
+      d_tmmc_weight = 0.0d0
       do icordflag = CRD_OLD,CRD_NEW,(CRD_NEW-CRD_OLD)
 c        --- initialize boxtest to 0
          boxtest(icordflag) = 0
@@ -1109,8 +1110,6 @@ c              --- Calculate change in tmmc_weight for biasing.
       write(6,*) 'wrosen dpscaletest old',wrosen(1),dpscaletest(1)
 #endif
 
-c     --- compute log of weight
-      wnlog = dlog10(wrosen(2)) - dpscaletest(2)*scalecut
  666  if ( ltermtest(1) ) then
 c        --- this really should not happen
          write(6,*) 'SWAPMOVES: rosenbluth old walk terminated'
@@ -1121,6 +1120,8 @@ c        --- this really should not happen
 c        -- reject the move
          return
       else
+c        --- compute log of weight
+         wnlog = dlog10(wrosen(2)) - dpscaletest(2)*scalecut
 c        --- compute old log and difference in logs
          wolog = dlog10(wrosen(1)) - dpscaletest(1)*scalecut
          wdlog = wnlog - wolog
@@ -1361,7 +1362,7 @@ c     ******************************************************************
 c     * performs the initial atom insertion for swap moves             *
 c     *                                                                *
 c     * split from swapmoves.F 12-07-2008 by M.G. Martin               *
-c     * last modified 12-07-2008 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -1422,6 +1423,7 @@ c     --- retrieve constants
       call twh_constant_onethird(GLB_GET,onethird)
       call twh_constant_pi(GLB_GET,onepi)
       call twh_constant_twopi(GLB_GET,twopi)
+      vtest = 0.0d0
 
 c     --- start of initial atoms insertion
       if ( .not. lnew ) then

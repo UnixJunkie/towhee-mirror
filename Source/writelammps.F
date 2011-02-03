@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * also creates part of the lammps_input file that has to do with *
 c     * the force field styles.  This is written to lammps_input.out   *
 c     *                                                                *
 c     * originally written 08-07-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 01-30-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -62,7 +62,6 @@ c     ******************************************************************
 #define FUNCTION_GET_ITAA
 #define FUNCTION_GET_ITBEN
 #define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_ITSCALE
 #define FUNCTION_GET_ITTOR
 #define FUNCTION_GET_MASS
 #define FUNCTION_GET_NBCOEFF
@@ -157,6 +156,10 @@ c     --- retrieve constants
       call twh_constant_radtodeg(GLB_GET,radtodeg)
       call twh_numboxes(GLB_GET,numboxes)
       call twh_rcut(GLB_GET,rcut)
+
+      do index = 1,3
+         triple(index) = 0
+      enddo
 
 c     --- initialize lwarn
       do iwarn = 1,maxwarn
@@ -533,11 +536,12 @@ c                             --- see if we have a complete match
 c                                --- check scaling factor
                                  if ( twh_get_ntorloop(type) .eq. 0 
      &                                ) then
-                                    scaletest = twh_get_itscale(imolty
-     &                                   ,iunit,itor)
+                                    call twh_itscale(GLB_GET,imolty
+     &                                   ,iunit,itor,scaletest)
                                  else
-                                    scaletest = twh_get_itscale(imolty
-     &                                   ,iunit,itor)/
+                                    call twh_itscale(GLB_GET,imolty
+     &                                   ,iunit,itor,scaletest)
+                                    scaletest = scaletest /
      &                                   dble(twh_get_ntorloop(type))
                                  endif
                                  if ( (scaletest 
@@ -563,8 +567,9 @@ c                                --- easy case
      &                                = type
                                  decode_dihedral(lam_dihedral_types,2)
      &                                = 0
-                                 scale_dihedral(lam_dihedral_types) =
-     &                                twh_get_itscale(imolty,iunit,itor)
+                                 call twh_itscale(GLB_GET,imolty,iunit
+     &                                ,itor,scale_dihedral(
+     &                                lam_dihedral_types))
                                  div_dihedral(lam_dihedral_types) =
      &                                ndiv_current
                               else
@@ -578,9 +583,10 @@ c                                --- torsions and torsion types
      &                                   ,1) = type
                                     decode_dihedral(lam_dihedral_types
      &                                   ,2) = itricky
+                                    call twh_itscale(GLB_GET,imolty
+     &                                   ,iunit,itor,dvalue)
                                     scale_dihedral(lam_dihedral_types) =
-     &                                   twh_get_itscale(imolty,iunit
-     &                                   ,itor)/
+     &                                   dvalue/
      &                                   dble(twh_get_ntorloop(type))
                                     div_dihedral(lam_dihedral_types) =
      &                                   ndiv_current
@@ -1478,13 +1484,14 @@ c                                 --- see if we have a complete match
 c                                         --- check scaling factor
                                           if ( twh_get_ntorloop(type) 
      &                                         .eq. 0 ) then
-                                             scaletest 
-     &                                            = twh_get_itscale(
-     &                                            imolty,iunit,itor)
+                                             call twh_itscale(GLB_GET
+     &                                            ,imolty,iunit,itor
+     &                                            ,scaletest)
                                           else
-                                             scaletest 
-     &                                            = twh_get_itscale(
-     &                                            imolty,iunit,itor)/
+                                             call twh_itscale(GLB_GET
+     &                                            ,imolty,iunit,itor
+     &                                            ,dvalue)
+                                             scaletest = dvalue /
      &                                            dble(twh_get_ntorloop(
      &                                            type))
                                           endif

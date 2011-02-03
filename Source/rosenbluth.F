@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,7 +31,7 @@ c     * of the trial values for use dimensioning arrays in the main    *
 c     * routine                                                        *
 c     *                                                                *
 c     * written in current form 12-06-2008 by M.G. Martin              *
-c     * last modified 01-22-2009 by M.G. Martin                        *
+c     * last modified 11-16-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to and from the subroutine
@@ -94,7 +94,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 01-23-2009 by M.G. Martin                        *
+c     * last modified 11-21-2010 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -124,10 +124,10 @@ c     --- integer scalars
       integer grownbon,nxangle,nxbias,cbmc_form_code
 c     --- double precision scalars
       double precision alpha,gamma,xub,yub,zub,xxx,yyy,zzz,length,dpmin
-      double precision wmin
-      double precision maxlen,rbf,bs,vbbtr,vvibtr,vimpr,w_nb
+      double precision wmin,gcba_vvib,gcba_vbend,gcba_vtor
+      double precision maxlen,rbf,bs,vvibtr,w_nb
       double precision vcbvib,vcbbend,vcbtor,bfcbbias
-      double precision w_cbbond,w_cbangle,w_cbtor,phishift
+      double precision w_cbbond,gcba_weight,w_cbtor,phishift
       double precision dpscale_bond,dpscale_angle,dpscale_dihed
       double precision dpscale_nb,scalelolog
       double precision rxfrom,ryfrom,rzfrom,rxprev,ryprev,rzprev
@@ -265,7 +265,7 @@ c           --- perform the biased selection to get bond angles
      &           ,iw,ichain
      &           ,imolty,angstart,iuprev,nch_bend_a,nch_bend_b
      &           ,max_nch_bend
-     &           ,vbbtr,vimpr,w_cbangle
+     &           ,gcba_vvib,gcba_vbend,gcba_vtor,gcba_weight
      &           ,dpscale_angle,ibox)
             if ( lfailure ) return
             if ( lovrangle ) then
@@ -279,7 +279,7 @@ c           --- perform the biased selection to get bond angles
                return
             endif
 #if DEBUG_ROSENBLUTH
-            write(6,*) 'w_cbangle:',w_cbangle
+            write(6,*) 'gcba_weight:',gcba_weight
 #endif
 c           --- setup all of the information needed to do the dihedral
 c           --- selection
@@ -341,9 +341,9 @@ c                 --- store the total energies for each type.  This
 c                 --- includes energies computed up above in getcbbond
 c                 --- and getcbangle which are the same for each nb
 c                 --- choice
-                  vxvibtr(ip) = vvibtr + vcbvib
-                  vxbendtr(ip) = vbbtr + vcbbend
-                  vtgtr(ip) = vimpr + vcbtor
+                  vxvibtr(ip) = vvibtr + gcba_vvib + vcbvib
+                  vxbendtr(ip) = gcba_vbend + vcbbend
+                  vtgtr(ip) = gcba_vtor + vcbtor
 c                 --- save bias bolztman factor of this trial position
                   boltzbias(ip) = bfcbbias
 c                 --- save boltzmann sum for torsion
@@ -374,8 +374,8 @@ c                 --- perform the biased selection to get bond angles
                   call twh_getcbangle(lfailure,luseoldone,lovrangle
      &                 ,testcord,iw
      &                 ,ichain,imolty,angstart,iuprev,nch_bend_a
-     &                 ,nch_bend_b,max_nch_bend,vbbtr,vimpr
-     &                 ,w_cbangle,dpscale_angle,ibox)
+     &                 ,nch_bend_b,max_nch_bend,gcba_vvib,gcba_vbend
+     &                 ,gcba_vtor,gcba_weight,dpscale_angle,ibox)
                   if ( lfailure ) return
                   if ( lovrangle ) then
 c                    --- angle selection is failed so this whole trial
@@ -383,7 +383,7 @@ c                    --- is an overlap, kickout past dihedral selection
                      goto 100
                   endif
 #if DEBUG_ROSENBLUTH
-            write(6,*) 'w_cbangle:',w_cbangle
+            write(6,*) 'gcba_weight:',gcba_weight
 #endif
 c                 --- setup all of the information needed to do the 
 c                 --- dihedral selection
@@ -408,7 +408,7 @@ c                 --- check for walk termination
                   else
                      lovrprenb(iouter) = .false.
 c                    --- store the weight products
-                     w_tout(iouter) = w_cbbond*w_cbangle*w_cbtor
+                     w_tout(iouter) = w_cbbond*gcba_weight*w_cbtor
                      dpscale_prenb(iouter) = dpscale_bond 
      &                    + dpscale_angle + dpscale_dihed
 c                    --- adjust dpscale_tor if needed
@@ -436,9 +436,9 @@ c                 --- store the coordinates
 c                 --- store the extra bias factors
                   bias_tout(iouter) = bfcbbias
 c                 --- store the energies
-                  vvib_tout(iouter) = vvibtr + vcbvib
-                  vbend_tout(iouter) = vbbtr + vcbbend
-                  vtor_tout(iouter) = vcbtor + vimpr
+                  vvib_tout(iouter) = vvibtr + gcba_vvib + vcbvib
+                  vbend_tout(iouter) = gcba_vbend + vcbbend
+                  vtor_tout(iouter) = vcbtor + gcba_vtor
                enddo
 c              --- select the outer torsion in a biased fashion
 c              --- initialze weight for this selection
@@ -559,6 +559,7 @@ c           --- overlap
          endif
 c        --- find the lowest number of log scaling (avoid the lovr)
          lfound = .false.
+         dpscale_nb = 0.0d0
          do ip = 1,nch_nb
             if ( .not. lnbterm(ip) ) then
                if ( lfound ) then
@@ -648,7 +649,7 @@ c           --- if we got to this point the w_nb sum must be 0
          if ( cbmc_form_code .eq. CBMC_FORM_MS1999_MT2004 ) then
 c           --- update rosenbluth weight - include angle and
 c           --- bond weights
-            wrosen = wrosen * w_nb * w_cbangle * w_cbbond 
+            wrosen = wrosen * w_nb * gcba_weight * w_cbbond 
 c           --- add in the scaling
             dpscale = dpscale + dpscale_nb + dpscale_bond 
      &           + dpscale_angle
