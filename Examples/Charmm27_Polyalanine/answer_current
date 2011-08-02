@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -187,6 +187,7 @@ cbmc_bond_generation: autofit gaussian
     and correct this in the rosenbluth weights
  mean and standard deviations from a gaussian to r^2 exp(-beta U_bond)
 bond_sdev_multiplier:   1.00000
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
  nch_vib                                           :            1
 two_bond_fixed_endpoint_bias_style: analytic Boltzmann dihedral energy sum            
 three_bond_fixed_endpoint_bias_style: analytic using max and min 2-4 distance           

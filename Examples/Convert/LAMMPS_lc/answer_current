@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -472,6 +472,7 @@ Type:   3 Style: Amber/Charmm/Gromos Cosine Series n:   1
 Type:   4 Style: Amber/Charmm/Gromos Cosine Series n:   1
           Index  1    k:     135.9 m:3.0 d: 0.0000000
 Type:   5 Style: Amber/Charmm/Gromos Cosine Series n:   1
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
           Index  1    k:     251.6 m:2.0 d:-3.1415927
 Type:   6 Style: Amber/Charmm/Gromos Cosine Series n:   1
           Index  1    k:     276.8 m:1.0 d: 0.0000000

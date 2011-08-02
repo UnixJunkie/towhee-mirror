@@ -10112,13 +10112,13 @@ c     ******************************************************************
 c     * the total number of mixrule adjust terms                       *
 c     *                                                                *
 c     * originally written 04-27-2006 by M.G. Martin                   *
-c     * last modified 04-27-2006 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       integer flag,ivalue
 c     --- information variables
-      double precision mixrule_adjust_total
+      integer mixrule_adjust_total
       save mixrule_adjust_total
 
       if ( flag .eq. GLB_SET ) then
@@ -14041,7 +14041,7 @@ c     ******************************************************************
 c     * the electrostatic cutoff in each simulation box                *
 c     *                                                                *
 c     * originally written 05-04-2008 by M.G. Martin                   *
-c     * last modified 05-04-2008 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
@@ -14060,7 +14060,7 @@ c     --- information variables
          rcelect(ibox) = dvalue
       elseif ( flag .eq. GLB_INIT ) then
          do ibtemp = 1,ibox
-            rcelect(ibox) = dvalue
+            rcelect(ibtemp) = dvalue
          enddo
       else
          write(6,*) 'RCELECT: invalid global flag',flag

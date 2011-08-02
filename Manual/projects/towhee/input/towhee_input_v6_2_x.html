@@ -39,6 +39,10 @@
      </ul>
      <b>Bug reports and feature enhancements for 6.2.x versions</b>
      <ul>
+      <li>6.2.16: Fixed a bug that was causing an infinite value of <b>kalp</b> when using a
+       <a href="#coulombstyle"<b>coulombstyle</b></a> value of 'ewald_fixed_cutoff' in combination with a
+       <a href="#numboxes"<b>numboxes</b></a> value greater than 1.  Began adding support for new random number generators.
+      </li>
       <li>6.2.15: <a href="../algorithm/cbmc.html">Configurational-bias</a> moves now have support for three membered rings and should no longer give an
        error message when attempting to regrow molecules with any ring structure.  The code repository has moved from cvs to svn after the old service 
        ceased functioning at the code home at SourceForge.

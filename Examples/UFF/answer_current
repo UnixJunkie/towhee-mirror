@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -188,6 +188,7 @@ Type:    7 Style: UFF Three Term Fourier Expansion
            Molecule:   1 Atoms:    3    1   11 K: 112013.508
            Molecule:   1 Atoms:    3    5    6 K:  57657.568
            Molecule:   1 Atoms:    3    5    7 K: 112013.508
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
            Molecule:   1 Atoms:    4    3    1 K:  57657.568
            Molecule:   1 Atoms:    4    3    5 K:  57657.568
            Molecule:   1 Atoms:    5    3    1 K: 112013.508

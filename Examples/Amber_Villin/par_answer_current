@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -965,7 +965,7 @@ Molecules of type   2 :          1
  total coulombic     -1163494.712 [K]     -2312.11512 [kcal/mol]
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical         259207065.7282 [K]        515100.387643 [kcal/mol]
+ total classical         259207065.7283 [K]        515100.387643 [kcal/mol]
 Averages               Units Type       Box  1
  Volume                 nm^3       0.10000E+04
  Volume^2               nm^6       0.10000E+07

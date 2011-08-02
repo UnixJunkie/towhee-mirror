@@ -1,4 +1,3 @@
-#     $Id: Makefile.am,v 1.145 2010/08/13 21:36:53 marcus_martin Exp $
 # If configured with --enable-mpi, compile mpi version of towhee
 # and MPI compilers and libraries
 # Otherwise, compile towhee and forcefield
@@ -110,6 +109,7 @@ towhee_SOURCES =  \
 		interpolate.F \
 		inverselawofcosine.F \
 		inverthmatrix.F \
+		kiss.F \
 		lawofcosine.F \
 		leastsquares.F \
 		linclude.F \
@@ -219,12 +219,15 @@ towhee_SOURCES =  \
 		wmultibody.F \
 		wtwobody.F \
 		control.c \
-		jobfarm.c \
+		dx-1597-2-7.c \
 		globalinfo.c \
+		jobfarm.c \
+		mrg32k3a.c \
+		rex.c \
+		rnginit.c \
 		scaled_potential_data.c \
 		sturm.c \
-		towhee.c \
-		rex.c
+		towhee.c
 
 forcefield_SOURCES  = \
 		arccos.F \
@@ -598,8 +601,12 @@ wmultibody.o: preproc.h functions.h wmultibody.F
 wtwobody.o: preproc.h functions.h wtwobody.F
 ###C dependencies
 control.o: globalc.h control.c
+dx-1597-2-7.o: globalc.h dx-1597-2-7.c
 globalinfo.o: globalc.h preproc.h globalinfo.c
-towhee.o: globalc.h towhee.c wrapperC.h
 jobfarm.o: globalc.h jobfarm.c
-sturm.o: sturm.c
+mrg32k3a.o: globalc.h mrg32k3a.c
+rex.o: globalc.h rex.c
+rnginit.o: globalc.h rnginit.c
 scaled_potential_data.o: globalc.h scaled_potential_data.c
+sturm.o: sturm.c
+towhee.o: globalc.h towhee.c wrapperC.h

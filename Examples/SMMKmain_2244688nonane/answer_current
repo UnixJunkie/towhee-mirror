@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -204,6 +204,7 @@ Type:   1 Atom(i): CH3methyl  Atom(j): CH3methyl  Sigma:   3.620 Epsilon:  40.00
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
 
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Molecular mass for molecule type     1 is   226.2846 g/mol
  Calling initconf
  RANLUX LUXURY LEVEL SET BY RLUXGO : 3     P= 223

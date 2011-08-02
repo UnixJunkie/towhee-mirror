@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -189,6 +189,7 @@ three_bond_fixed_endpoint_bias_style: analytic using max and min 2-4 distance
  nunit:           12
  nmaxcbmc:           12
  lpdbnames:  F
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
    using the Charmm27   force field
  charge_assignment: manual                        
    Building the input file for molecule type:     1

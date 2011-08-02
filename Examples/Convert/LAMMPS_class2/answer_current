@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -427,6 +427,7 @@ Type:  12 Style: Class 2 with explicit cross terms
           Normal Torsion Constants     48.91     36.33   -129.88      0.00      0.00      0.00
           Bond(jk) - Torsion Constants      0.00      0.00      0.00      1.53
           Bond(ij) - Torsion Constants      0.00      0.00      0.00      1.55
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
           Bond(kl) - Torsion Constants      0.00      0.00      0.00      1.51
           Angle(ijk) - Torsion Constants      0.00      0.00      0.00      0.00
           Angle(jkl) - Torsion Constants      0.00      0.00      1.82      1.94

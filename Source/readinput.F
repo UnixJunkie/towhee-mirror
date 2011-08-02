@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * opens towhee_input and reads in the inputformat                *
 c     * then it calls the appropriate input reading routine            *
 c     *                                                                *
 c     * rewritten 05-15-2002 by M.G. Martin                            *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 02-08-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "wrapperF.h"
@@ -92,9 +92,9 @@ c     --- optional get the random number generator luxury level
          luxvalue = twh_read_labeled_integer(4,'random_luxlevel'
      &        ,.true.,idname)
 c        --- error check
-         if ( luxvalue .lt. 0 .or. luxvalue .gt. 4 ) then
-            write(6,*) 'READINPUT: random_luxlevel must be between'
-     &           ,' 0 and 4 inclusive'
+         if ( luxvalue .lt. 0 .or. luxvalue .gt. 8 ) then
+            write(6,*) 'READINPUT: random_luxlevel must be between '
+     &           ,'0 and 8 inclusive (levels 5-8 choose various RNGs)'
             lfinish = .true.
             return
          endif
@@ -212,7 +212,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- local variables
       logical loutput
-      integer*4 luxvalue,iseed,kone,ktwo
+      integer*4 luxvalue,iseed
       integer itest
       double precision rtest
       dimension rtest(5)
@@ -221,9 +221,7 @@ c     --- retrieve constants
       call twh_loutput(GLB_GET,loutput)
       call twh_random_luxlevel(GLB_GET,luxvalue)
       call twh_randomseed(GLB_GET,iseed)
-      kone = 0
-      ktwo = 0
-      call rluxgo(luxvalue,iseed,kone,ktwo)
+      call rnginit(luxvalue,iseed)
       do itest=1,5
          rtest(itest) = twh_random()
       enddo

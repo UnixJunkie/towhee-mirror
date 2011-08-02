@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -197,6 +197,7 @@ Type:  66 Style: Charmm   Angle:    109.000 Constant:    17864.2
           UB Length: 1.8020 Constant:     2717.4
 Type:  69 Style: Charmm   Angle:    110.100 Constant:    17411.3
           UB Length: 2.1790 Constant:    11337.5
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Type:  77 Style: Charmm   Angle:    108.400 Constant:    17864.2
           UB Length: 1.8020 Constant:     2717.4
 Type:  98 Style: Charmm   Angle:     95.000 Constant:    19524.8

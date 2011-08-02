@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 11-26-2008 by L. Peristeras                      *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -182,12 +182,12 @@ c        --- make sure this type exists in box 1
          call twh_ncmt(GLB_GET,ibox,imolty,ncmt)
          if ( ncmt .eq. 0 ) return
 c        --- select molecule type imolty in box ibox
-         ipoint = dint( dble(ncmt)*twh_random() + 1 )
+         ipoint = idint( dble(ncmt)*twh_random() + 1 )
          call twh_chainlist(GLB_GET,ipoint,ibox,imolty,ichain)
       else
          call twh_nmolectyp(GLB_GET,imolty,nmtype)
          dchain = dble(nmtype)
-         ipoint = dint((dchain*twh_random()) + 1)
+         ipoint = idint((dchain*twh_random()) + 1)
          call twh_parall(GLB_GET,imolty,ipoint,ichain)
       endif
 c     --- determine what box this part of the molecule is in
@@ -215,7 +215,7 @@ c     --- make sure there is a valid option for this molecule type
 c     --- select a unit from the chosen molecule that is part of the 
 c     --- backbone as defined in findrings
       numvalid = dble(ivcount)
-      ivalid = dint(numvalid*twh_random()) + 1
+      ivalid = idint(numvalid*twh_random()) + 1
       call twh_crvalidlist(GLB_GET,imolty,ivalid,unit1)
 #if DEBUG_CONROT
       write(6,*) 'calling crstart'
@@ -407,7 +407,7 @@ c           --- because the original position is always returned as a
 c           --- solution we substract the first solution and then pick 
 c           --- randomly from the remaining solutions
             dnsoln = dble(nsoln)
-            solnno = dint((dnsoln*twh_random())+1)
+            solnno = idint((dnsoln*twh_random())+1)
 c           --- place backbone atoms
             do iunit = 2,searchsize-1
                atomid = crback(iunit)

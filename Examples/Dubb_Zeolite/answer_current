@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -1267,6 +1267,7 @@ Unit:  481 nbname: Si         Charge:    2.05000
 Unit:  482 nbname: Si         Charge:    2.05000
 Unit:  483 nbname: Al         Charge:    1.75000
 Unit:  484 nbname: Al         Charge:    1.75000
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Unit:  485 nbname: Al         Charge:    1.75000
 Unit:  486 nbname: Al         Charge:    1.75000
 Unit:  487 nbname: Al         Charge:    1.75000

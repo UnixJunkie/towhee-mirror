@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 01-30-2011 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -90,7 +90,7 @@ c     --- integer scalars
       integer backlist,numboxes,nvmove,ensemble,histcalcfreq,nener
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
-      integer maxnumtor,numtor
+      integer maxnumtor,numtor,numblock
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -521,21 +521,14 @@ c           --- error check (if = 0, no output)
          endif
          call twh_blocksize(GLB_SET,blocksize)
 
-c        --- safety check to make sure the number of blocks does not
-c        --- exceed maxblock
+c        --- set numblock based on the blocksize
          if (blocksize .ne. 0) then
-            itest = nstep/blocksize
+            numblock = nstep/blocksize
 c           --- check for partial block
-            if ( itest*blocksize .lt. nstep ) itest = itest + 1
-            if ( itest .gt. MAXBLOCK ) then
-               write(6,*) 'READTOWHEE: the number of blocks exceeds ',
-     &              'maxblock'
-               write(6,*) 'blocks ',itest,' maxblock ',MAXBLOCK
-               write(6,*) 'either reduce the number of blocks or'
-     &              ,' increase maxblock'
-               lfailure = .true.
-               return
+            if ( mod(nstep,blocksize) .ne. 0 ) then
+               numblock = numblock + 1
             endif
+            call twh_allocate_blocks(MAXBAPROP,numblock)
          endif
 
 c        --- read in steps between movie file output
@@ -2679,7 +2672,8 @@ c        --- read the initial conformation from a file
          if ( lcoulomb ) then
 c           --- set ewald parameters: 
             do ibox = 1, numboxes
-               call twh_resetcoulomb(ibox)
+               call twh_resetcoulomb(lfailure,ibox)
+               if ( lfailure ) return
                if ( lewald ) then
                   call twh_ewald_calp(GLB_GET,ibox,calp)
                   write(6,41) 'Box:',ibox,'Initial calp:',calp

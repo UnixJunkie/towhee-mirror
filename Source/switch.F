@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 08-10-2010 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -44,7 +44,7 @@ c     --- local logical arrays
       dimension loverlap(2)
 c     --- local integer scalars
       integer ipair,npair,imolty,jmolty,ibox,nmolty,potentialstyle
-      integer nimtype,njmtype,dichain,djchain,ipoint,jpoint,numboxes
+      integer nimtype,njmtype,ipoint,jpoint,numboxes
       integer ichain,jchain,totiunit,totjunit,iunit,junit,nchainmove
 c     --- local integer arrays
       integer chaininfo
@@ -56,7 +56,7 @@ c     --- local double precision scalars
       double precision dvinter_trial,dvext_trial,dvelect_trial
       double precision dvsolv_trial,dvtor_trial,dvbend_trial
       double precision dvvib_trial,dvquantum_trial,ddvdl_lj,ddvdl_c
-      double precision dv_trial,beta,burn
+      double precision dv_trial,beta,burn,dichain,djchain
 c     --- local double precision arrays
       double precision dvf
       dimension dvf(MAX_FOREIGN_LAMBDA)

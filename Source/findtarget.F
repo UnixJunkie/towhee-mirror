@@ -1,8 +1,7 @@
-c     $Id: findtarget.F,v 1.21 2009/06/26 17:23:35 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -62,7 +61,7 @@ c     * it is returned, otherwise lfound is set to false and the move  *
 c     * will be rejected                                               *
 c     *                                                                *
 c     * originally written 09-13-2002 by M.G. Martin                   *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -176,7 +175,7 @@ c           --- at random
 c        --- select an atom from jmolty at random.  this will be the
 c        --- target atom reference for insertion
          call twh_nunit(GLB_GET,jmolty,numjunit)
-         junit = dint(twh_random()*dble(numjunit))+1
+         junit = idint(twh_random()*dble(numjunit))+1
 c        --- assign coordinates for the target atom
          call twh_coordinates(GLB_GET,CRD_REAL,jchain,junit
      &        ,xtarget(1),ytarget(1),ztarget(1))
@@ -290,7 +289,7 @@ c        --- if there are no chains to choose from then reject move
 c        --- we made it this far so we must have found one
          lfound = .true.
 c        --- choose one of the good chains
-         pointp = dint( twh_random()*dble(ngood)) + 1
+         pointp = idint( twh_random()*dble(ngood)) + 1
          ichain = goodchain(pointp)
 
       elseif ( swaptype .eq. 4 ) then
@@ -353,7 +352,7 @@ c        --- does not have overlapping inner regions with jchain
 c        --- if there are no chains to choose from then reject move
          if ( ngood .eq. 0 ) return
 c        --- choose one of the good chains
-         pointt = dint( twh_random()*dble(ngood)) + 1
+         pointt = idint( twh_random()*dble(ngood)) + 1
          kchain = goodchain(pointt)
 c        --- set the secondary targets
          call twh_coordinates(GLB_GET,CRD_REAL,kchain,junit
@@ -392,7 +391,7 @@ c        --- if there are no chains to choose from then reject move
 c        --- we made it this far so we must have found one
          lfound = .true.
 c        --- choose one of the good chains
-         pointp = dint( twh_random()*dble(ngood)) + 1
+         pointp = idint( twh_random()*dble(ngood)) + 1
          ichain = goodchain(pointp)
 
          call twh_moltyp(GLB_GET,ichain,itest)

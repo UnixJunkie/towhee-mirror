@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -186,6 +186,7 @@ three_bond_fixed_endpoint_bias_style: analytic using max and min 2-4 distance
  nmaxcbmc:           90
  Building the protein input file
     using the Charmm19E forcefield
+Selected random number generator RANLUX with luxury level 3 and seed 123452.
     for a single zwitterionic polypeptide
     or for multiple disulfide bonded zwitterionic polypeptides
 peptide:    1 name:r+ stereochem:l bondpartner:    0 terminus:N

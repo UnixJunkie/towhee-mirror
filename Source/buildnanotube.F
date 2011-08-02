@@ -305,7 +305,7 @@ c     ******************************************************************
 c     * original comment: 10/16/95   R. Saito                          *
 c     *                                                                *
 c     * incorporated into Towhee 05-17-2004 by M.G. Martin             *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- functions local to buildnanotube
@@ -340,8 +340,8 @@ c     L
          lfailure = .true.
          return
       endif
-      l=int(sqrt(dfloat(l2))+eps) 
-      dt=a*sqrt(dfloat(l2))/3.1415926525 
+      l = int(sqrt(dfloat(l2))+eps) 
+      dt = int(a*sqrt(dfloat(l2))/3.1415926525)
 c     T 
       nr=(2*m+n)/ndr 
       ns=-(2*n+m)/ndr 

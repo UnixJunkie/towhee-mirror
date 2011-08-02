@@ -1,8 +1,7 @@
-c     $Id: tranatom.F,v 1.46 2009/02/03 19:51:22 lperi Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -92,7 +91,7 @@ c        --- get a chain of type imolty from box ibox
       else
          call twh_nmolectyp(GLB_GET,imolty,nmtype)
          dchain = dble(nmtype)
-         ipoint = dint( dchain*twh_random() + 1 )
+         ipoint = idint( dchain*twh_random() + 1 )
          call twh_parall(GLB_GET,imolty,ipoint,ichain)
       endif
       call twh_nboxi(GLB_GET,ichain,ibox)
@@ -100,7 +99,7 @@ c        --- get a chain of type imolty from box ibox
 c     --- store number of units in the molecule
       call twh_nunit(GLB_GET,imolty,units)
 c     --- choose an atom at random from the molecule
-      atom = dint(twh_random()*units) + 1
+      atom = idint(twh_random()*units) + 1
 
 c     --- move atom in a random direction
       call twh_sphere(rxdisp,rydisp,rzdisp)

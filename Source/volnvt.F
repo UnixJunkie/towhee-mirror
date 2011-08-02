@@ -1,10 +1,9 @@
-c     $Id: volnvt.F,v 1.41 2009/06/26 17:23:35 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +32,7 @@ c     *   in the other box.  the maximum change is controled by rmcell *
 c     *   and the number of successfule trial moves is stored in bscel *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -121,8 +120,8 @@ c        --- add this to the list of volume moves attemped
          call twh_bnvol(GLB_INCR,imove,1)
       elseif ( movetype .eq. 2 ) then
 c        --- determine a random vector
-         ivector = dint(3.0d0*twh_random()) + 1
-         jvector = dint(3.0d0*twh_random()) + 1
+         ivector = idint(3.0d0*twh_random()) + 1
+         jvector = idint(3.0d0*twh_random()) + 1
          movevector = 3*(ivector-1) + jvector
          call twh_bncell(GLB_INCR,imove,movevector,1.0d0)
       endif
@@ -350,7 +349,10 @@ c     --- compute the energy change
       do ilabel = 1,2
          call twh_pairbox(GLB_GET,imove,ilabel,ibox)
 c        --- set coulombic parameters for this new box length
-         if ( lcoulomb ) call twh_resetcoulomb(ibox)
+         if ( lcoulomb ) then
+            call twh_resetcoulomb(lfailure,ibox)
+            if ( lfailure ) return
+         endif
 c        --- determine the maximum rcmu of any chain in this box
          rcmumax = 0.0d0
          call twh_nmolty(GLB_GET,nmolty)
@@ -518,7 +520,8 @@ c           --- reset old volume and hinverse
             call twh_inverthmatrix(ibox)
 
             if ( lcoulomb ) then
-               call twh_resetcoulomb(ibox)
+               call twh_resetcoulomb(lfailure,ibox)
+               if ( lfailure ) return
                if ( lewald ) call twh_recip(ibox,4)
             endif
          enddo

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -321,6 +321,7 @@ Type:  24 Style: Standard Harmonic  Angle:    115.600 Constant:    31702.6
 Type:  25 Style: Standard Harmonic  Angle:    108.700 Constant:    35225.2
 Type:  26 Style: Standard Harmonic  Angle:    120.000 Constant:    35225.2
 Type:  28 Style: Standard Harmonic  Angle:    116.200 Constant:    31702.6
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Type:  32 Style: Standard Harmonic  Angle:    122.700 Constant:    31702.6
 Type:  33 Style: Standard Harmonic  Angle:    132.800 Constant:    35225.2
 Type:  34 Style: Standard Harmonic  Angle:    114.000 Constant:    31702.6
@@ -965,7 +966,7 @@ Molecules of type   2 :          1
  total coulombic     -1163494.712 [K]     -2312.11512 [kcal/mol]
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical         259207065.7282 [K]        515100.387643 [kcal/mol]
+ total classical         259207065.7283 [K]        515100.387643 [kcal/mol]
 Averages               Units Type       Box  1
  Volume                 nm^3       0.10000E+04
  Volume^2               nm^6       0.10000E+07

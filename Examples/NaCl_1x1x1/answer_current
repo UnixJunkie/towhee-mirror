@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -195,6 +195,7 @@ Improper Torsion Types
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
      with an Ewald sum 
      including the real-space terms up to half the shortest box length
 

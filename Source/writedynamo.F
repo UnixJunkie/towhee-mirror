@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * output setfl and funcfl format eam functions to files          *
 c     *                                                                *
 c     * originally submitted 03-10-2004 by A.P. Thompson               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EMBED
@@ -73,7 +73,7 @@ c     --- hand set variables for the increment of the output
 
 c     --- rcut is now determined in setclassical, used that here
       eam_rcutmax = rcut
-      eam_nr = dint(eam_rcutmax/eam_dr)
+      eam_nr = int(eam_rcutmax/eam_dr)
 
 c     --- determine the largest density unit value
       eam_arbmax = 0.0d0
@@ -107,7 +107,7 @@ c           --- multiply this by 12 just to be safe
          endif
          if ( compare .gt. eam_arbmax ) eam_arbmax = compare
       enddo
-      eam_nrho = dint(eam_arbmax/eam_drho)
+      eam_nrho = int(eam_arbmax/eam_drho)
 
 c     --- output the potential in the setfl format
       filename = 'setfl_out'

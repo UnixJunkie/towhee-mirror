@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -171,6 +171,7 @@ Total charge for Molecule Type:    1 is:    0.00000
  lpdbnames:  F
    using the TraPPE-UA  force field
  charge_assignment: bond increment                
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
    Building the input file for molecule type:     2
 unit:    1 name:CH3*(sp3) 
 unit:    2 name:Och(sp3)  

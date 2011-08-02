@@ -792,6 +792,23 @@ void twh_bntrac_(int * flag, int * imolty, int * ibox, double * value)
   return;
 }
 
+void twh_blockvalue_(int * flag, int * iprop, int * iblock, double * value)
+/* averaging invformation for various properties used to compute block averages
+   rewritten from Fortran 02-03-2011 by M.G. Martin
+   last modified 02-03-2011 by M.G. Martin
+*/
+{ 
+  int errorcode,mindex,nindex;
+  mindex = *iprop -1;
+  nindex = *iblock -1;
+  errorcode = twh_2dregdouble(PNT_BLOCKVALUE, flag, mindex, nindex, value);
+  if ( errorcode == EXIT_FAILURE ) {
+    printf("in twh_blockvalue \n");
+    exit(errorcode);
+  }
+  return;
+}
+
 void twh_c_matrix_(int * flag, int * ichain, int * iparam, double * value)
 /* TMMC collection matrix
    originally written in Fortran 10-13-2008 by M.G. Martin

@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 01-30-2011 by M.G. Martin */
+/* last significant modification 02-04-2011 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -27,7 +27,8 @@
 #define MAXBOX 3
 
 /* numax = maximum number of units/atoms in a molecule (default 2002) */
-#define NUMAX 2002
+/* #define NUMAX 2002 */
+#define NUMAX 2200
 
 /* ntmax = maximum number of types of molecules (default: 6) */
 #define NTMAX 7
@@ -245,6 +246,10 @@
 
 /* maximum number of special adjustment terms to the mixrule */
 #define MAXMIXADJUST 3
+
+/* MAXBAPROP = maximum number of properties to average */
+#define MAXBAPROP MAXBOX*(NTMAX*8+20+MAXENER)
+
 
 /* CLASSICAL POTENTIAL ALIASES
    Maps classical potential names to integers to speed
@@ -605,6 +610,7 @@
 #define PNT_WRAP_FOREIGN_ENERGY 40
 #define PNT_WRAP_FOREIGN_LAMBDA_LJ 41
 #define PNT_WRAP_FOREIGN_LAMBDA_C 42
+#define PNT_BLOCKVALUE 43
 
 #define MAX_DOUBLE_POINTERS 50
 

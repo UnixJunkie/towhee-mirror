@@ -1,8 +1,7 @@
-c     $Id: pivot.F,v 1.44 2009/02/03 19:51:22 lperi Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +28,7 @@ c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
 c     * M.G. Martin and C.D. Lorenz 10-16-2002                         *
-c     * last modifed in 10-14-2008 by M.G. Martin                      *
+c     * last modifed in 04-21-2011 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -106,12 +105,12 @@ c        --- see if there are any molecules of this type in active box
          call twh_ncmt(GLB_GET,activebox,imolty,ncmt)
          if ( ncmt .eq. 0 ) return
 c        --- select a molecule of type imolty in box activebox
-         ipoint = dint( dble(ncmt)*twh_random()) + 1
+         ipoint = idint( dble(ncmt)*twh_random()) + 1
          call twh_chainlist(GLB_GET,ipoint,activebox,imolty,ichain)
       else
          call twh_nmolectyp(GLB_GET,imolty,nmtype)
          dchain = dble(nmtype)
-         ipoint = dint((dchain*twh_random()) + 1)
+         ipoint = idint((dchain*twh_random()) + 1)
          call twh_parall(GLB_GET,imolty,ipoint,ichain)
       endif
 
@@ -145,7 +144,7 @@ c     --- select two units from the chosen molecule, where at most
 c     --- one of the two units is in a ring, as defined in findrings
       lfound = .false.
       do while ( .not. lfound .and. ntotry .gt. 0 )
-         unit1ptr = dint(( dble(ntotry)*twh_random())+1)
+         unit1ptr = idint(( dble(ntotry)*twh_random())+1)
          unit1 = ds(unit1ptr)
 #if DEBUG_PIVOT
          write(6,*) 'ntotry,unit1ptr,unit1:',ntotry,unit1ptr,unit1
@@ -192,7 +191,7 @@ c                 --- not in the same ring
 #endif
          if ( ivalid .gt. 0 ) then
 c           --- select one of the valid targets at random
-            unit1nno = dint( dble(ivalid)*twh_random() ) + 1
+            unit1nno = idint( dble(ivalid)*twh_random() ) + 1
             unit1nno = validlist(unit1nno)
             unit2 = twh_get_ijvib(imolty,unit1,unit1nno)
             lfound = .true.
@@ -228,7 +227,7 @@ c     --- select an angle to pivot the chain
          thetap = thetap - onepi
       endif
       thetap = thetap * 180d0/onepi
-      binsize = 180.0d0/dble(MAXPIVOTBIN)
+      binsize = int(180.0d0/dble(MAXPIVOTBIN))
       bintheta = int(thetap/binsize) + 1
       call twh_bnpivbin(GLB_INCR,activebox,bintheta,1)
 

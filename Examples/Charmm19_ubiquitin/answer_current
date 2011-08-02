@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -340,6 +340,7 @@ peptide:   76 name:g0 stereochem:r bondpartner:    0 terminus:C
  arginine protonated                     
  glycine                                 
  glycine                                 
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
  Verifying input structures are consistent
 Determining CBMC bond distributions
  Determining cyclic subunits for molecule type          1

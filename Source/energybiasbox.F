@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * handles the non-uniform generation of an atom position using   *
 c     * the energy-biasing map                                         *
 c     *                                                                *
 c     * split from swapmoves 11-02-2007 by M.G. Martin                 *
-c     * last modified 12-05-2008 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -80,9 +80,9 @@ c                    --- (1/V) / cweight = 1 / (V * cweight)
 c        --- transform into arb coords
          call twh_carttoarb(ibox,xxx,yyy,zzz,aaa,bbb,ccc)
 c        --- evaluate the biasing correction for the old position
-         iaa = dint(aaa/asize) + 1
-         ibb = dint(bbb/bsize) + 1
-         icc = dint(ccc/csize) + 1
+         iaa = idint(aaa/asize) + 1
+         ibb = idint(bbb/bsize) + 1
+         icc = idint(ccc/csize) + 1
          call twh_cubelet_index(iaa,ibb,icc,cubeindex)
          call twh_cubeletweight(GLB_GET,cubeindex,cweight)
 c        --- normalize back to uniform (in this case 1/V)

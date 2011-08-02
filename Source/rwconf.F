@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -35,7 +35,7 @@ c     *              does not get overwritten every time               *
 c     *           if rwflag is RW_READ then 'flag'is the atomcount     *
 c     *                                                                *
 c     * rewritten 04-13-2004 by M.G. Martin from writeconf & readtowhee*
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 02-08-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -63,8 +63,8 @@ c     --- integer arrays
       integer tempstore
       dimension tempstore(nchain)
 c     --- 32-bit integer arrays
-      integer*4 irng
-      dimension irng(25)
+      integer*4 nrng, irng
+      dimension irng(1600)
 c     --- double precision scalars
       double precision xtemp,ytemp,ztemp,rmtraa,rmtrac,rmrot,boxvolume
 c     --- double precision arrays
@@ -130,17 +130,20 @@ c        --- make sure we have a legal iversion
       endif
 
       if ( rwflag .eq. WRITE_FLAG ) then
-c        --- get the sequence of 25 32-bit integers required for a 
+c        --- get the sequence of nrng 32-bit integers required for a 
 c        --- clean restart of the random number generator
-         call rluxut(irng)
-         write(8,*) (irng(itest),itest=1,25)
+         call twh_random_luxlevel(GLB_GET,irng(1))
+         call rngsave(nrng,irng)
+         write(8,*) nrng
+         write(8,*) (irng(itest),itest=1,nrng)
       else
          if ( iversion .ge. 5 ) then
 c           --- read in the sequence of 32-bit integers
-            read(8,*) (irng(itest),itest=1,25)
+            read(8,*) nrng
+            read(8,*) (irng(itest),itest=1,nrng)
 c           --- if restarts are allowed then initialize the RNG
             call twh_random_allow_restart(GLB_GET,lvalue)
-            if ( lvalue ) call rluxin(irng)
+            if ( lvalue ) call rngrestart(nrng,irng)
          else
 c           --- there are not any old values to restart with, use the
 c           --- randomseed approach if restarts were allowed

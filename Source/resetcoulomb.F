@@ -1,8 +1,7 @@
-c     $Id: resetcoulomb.F,v 1.10 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,18 +19,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_resetcoulomb(ibox)
+      subroutine twh_resetcoulomb(lfailure,ibox)
 c     ******************************************************************
 c     * resets all of the coulomb parameters in the specified box      *
 c     *                                                                *
 c     * originally resetewald 08-13-2004 by M.G. Martin                *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_MAXBOXLENGTH
 #define FUNCTION_MINBOXLENGTH
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ibox
 c     --- local variables
       logical lewald
@@ -58,8 +58,8 @@ c        --- determine the minimum box length
          call twh_rcelect(GLB_GET,ibox,rcelect)
          calp = (1.35D0 - 0.15D0*log(ewald_prec))/rcelect
          call twh_ewald_calp(GLB_SET,ibox,calp)
-         kmax = (calp*twh_maxboxlength(ibox)/onepi)
-     &        *dsqrt(-dlog(ewald_prec))
+         kmax = int( (calp*twh_maxboxlength(ibox)/onepi)
+     &        *dsqrt(-dlog(ewald_prec)))
          call twh_ewald_kmax(GLB_SET,ibox,kmax)
       elseif ( coulombstyle .eq. 'minimum image' ) then
 c        --- we interact with the closest atom regardless of cutoff
@@ -69,17 +69,24 @@ c        --- disable the center of mass cutoff
          call twh_lusecom(GLB_SET,.false.)
       else
          write(6,*) 'RESETCOULOMB: unknown coulombstyle'
-         stop
+         lfailure = .true.
+         return
       endif
 
       call twh_lewald(GLB_GET,lewald)
       if ( lewald ) then
 c        --- safety check kmax
          call twh_ewald_kmax(GLB_GET,ibox,kmax)
-         if ( kmax .gt. MAXKMAX ) then
+         if ( kmax .lt. 0 ) then
+            write(6,*) 'RESETCOULOMB: negative kmax ',kmax
+     &           ,' in box ',ibox
+            lfailure = .true.
+            return
+         elseif ( kmax .gt. MAXKMAX ) then
             write(6,*) 'RESETCOULOMB: new kmax exceeds array dimensions'
             write(6,*) 'Please set MAXKMAX to at least ',kmax
-            stop
+            lfailure = .true.
+            return
          endif
       endif
 

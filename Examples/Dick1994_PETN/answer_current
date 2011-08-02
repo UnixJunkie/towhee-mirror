@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -197,6 +197,7 @@ Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
  Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Total charge in the simulation system:   0.00000
 Bond Types
 Type:     47 Style: Standard Harmonic Length: 1.5260 Constant:   155997.1

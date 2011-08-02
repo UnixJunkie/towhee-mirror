@@ -406,7 +406,7 @@ c     * allocate arrays that depend on the maximum number of molecule  *
 c     * types, boxes, and chains                                       *
 c     *                                                                *
 c     * originally written 06-25-2009 by M.G. Martin                   *
-c     * last modified 06-25-2009 M.G. Martin                           *
+c     * last modified 02-03-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -416,10 +416,31 @@ c     --- local variables
 
 c     --- set to null values
       ivalue = 0
-
 c     --- allocate arrays
-      call twh_chainlist(GLB_ALLOC,maxchain,maxboxes,maxmolty)
+      call twh_chainlist(GLB_ALLOC,maxchain,maxboxes,maxmolty,ivalue)
+c     --- initialize
+      call twh_chainlist(GLB_INIT,maxchain,maxboxes,maxmolty,ivalue)
 
       return
       end
 
+      subroutine twh_allocate_blocks(maxprop,maxblock)
+c     ******************************************************************
+c     * allocates the array for block averages                         *
+c     *                                                                *
+c     * originally written 02-03-2011 by M.G. Martin                   *
+c     * last modified 02-04-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer maxprop,maxblock
+c     --- local variables
+      double precision dvalue
+
+      if ( maxprop*maxblock .ne. 0 ) then
+         dvalue = 0.0d0
+         call twh_blockvalue(GLB_ALLOC,maxprop,maxblock,dvalue)
+         call twh_blockvalue(GLB_INIT,maxprop,maxblock,dvalue)
+      endif
+      return
+      end

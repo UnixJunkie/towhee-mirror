@@ -50,7 +50,7 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -128,7 +128,7 @@ c     --- in the case of plane shift this is the dimension that is
 c     --- perpendicular to the plane shift
 c     --- in the case of row shift this is the dimension that is 
 c     --- parallel to the row
-      arbindex = dint(3.0d0*twh_random()) + 1
+      arbindex = int(3.0d0*twh_random()) + 1
 
 c     --- increment number of attempted moves
       call twh_bnshift(GLB_INCR,movetype,ibox,arbindex,1)

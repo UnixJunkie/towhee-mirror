@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -170,6 +170,7 @@ unit:    4 name:CH3*(sp3)
 unit:    5 name:CH3*(sp3) 
  special_torsion_count:            2
            1           2           3           4 trans          
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
            1           2           3           5 cis            
 Charges assigned for Molecule Type:    3
 Unit:    1 nbname: CH3*(sp3)  Charge:    0.00000

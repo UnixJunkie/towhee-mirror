@@ -1,6 +1,6 @@
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -23,13 +23,13 @@ c     ******************************************************************
 c     * writes out the introductory information about Towhee           *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 02-02-2011 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 
 c     --- Output some information about the code
       write(6,'(1x,a)')
-     &     'MCCCS Towhee - Version 6.2.15 (February 02 2011)'
+     &     'MCCCS Towhee - Version 6.2.16 (August 02 2011)'
 c     --- 2011 copyright plus code contributors
       write(6,'(1x,a)') 'Copyright (C) <2011> Marcus G. Martin'
       write(6,'(2(1x,a))')

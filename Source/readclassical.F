@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * reads in all input parameters from towhee_input that are       *
 c     * related to the classical potential style                       *
 c     *                                                                *
 c     * split out of readtowhee 11-01-2004 by M.G. Martin              *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-01-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -274,6 +274,12 @@ c           --- read in ewald sum kalp and kmax parameters
             kmax = twh_read_labeled_integer(4,'kmax',.true.,idname)
             if ( kmax .le. 0 ) then
                write(6,*) 'READCLASSICAL: kmax must be greater than 0'
+               lfailure = .true.
+               return
+            elseif ( kmax .gt. MAXKMAX ) then
+               write(6,*) 'READCLASSICAL: kmax exceeds MAXKMAX'
+               write(6,*) 'either lower kmax or modify MAXKMAX'
+     &              , 'in preproc.h'
                lfailure = .true.
                return
             endif

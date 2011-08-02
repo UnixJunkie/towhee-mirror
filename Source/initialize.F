@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 01-30-2011 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -33,10 +33,10 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
-      integer ivalue,ij,ibox,imolty,idim,jdim,incount,keycode
+      integer ivalue,ij,ibox,idim,jdim
       integer inix,iniy,iniz
       character*(FFNAMELEN) ctemp
-      double precision invalue,dvalue,twopi
+      double precision dvalue,twopi
 
 c     --- default values for random number generation
       call twh_randomseed(GLB_SET,1302002)
@@ -492,17 +492,16 @@ c     --- initialize temporary accumulators
       call twh_bavol(GLB_INIT,MAXPBOX,0)
       call twh_bnvol(GLB_INIT,MAXPBOX,0)
 
-c     --- initalize global accumulators for averages
-      call twh_averages(lfailure,AVG_INITIALIZE,keycode,ibox,imolty
-     &     ,invalue,incount)
-      if ( lfailure ) return
-
 c     --- initialize use coulomb & VdW logical arrays
       call twh_luse_c(GLB_INIT,NTMAX,NUMAX,.true.)
       call twh_luse_v(GLB_INIT,NTMAX,NUMAX,.true.)
 
 c     --- initialize aminonum
       call twh_aminonum(GLB_INIT,NTMAX,NUMAX,0)
+
+c     --- initialize interal storage in averages
+      call twh_averages(lfailure,AVG_INITIALIZE,0,MAXBOX
+     &     ,NTMAX,dvalue,ivalue)
 
       return
       end

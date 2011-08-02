@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * to construct all of the molecule connectivity templates needed *
 c     * for a Towhee run                                               *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 11-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJIMPROP2
@@ -496,10 +496,10 @@ c     --- set inix, iniy and iniz based on the total number of molecules
 c     if s = totmolecs**(1/3) is an integer, then box size = s
 c     Otherwise, box size = next integer larger than s 
       s = totmolecs**(1.0d0/3.0d0)
-      if (abs(s - aint(s)) .lt. epsilon) then
-          inix = aint(s)
-          iniy = aint(s)
-          iniz = aint(s)
+      if (abs(s - int(s)) .lt. epsilon) then
+          inix = int(s)
+          iniy = int(s)
+          iniz = int(s)
       else
           inix = int(s) + 1
           iniy = int(s) + 1

@@ -1,8 +1,7 @@
-c     $Id: putarbinbox.F,v 1.6 2006/11/12 23:58:18 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2006 Marcus G. Martin,                      *
+c     * Copyright (C) 2002-2011 Marcus G. Martin,                      *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +24,7 @@ c     ******************************************************************
 c     * puts the atom inside the central simulation box                *
 c     *                                                                *
 c     * originally written 01-11-2002 by M.G. Martin                   *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 08-01-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 
@@ -50,7 +49,7 @@ c     --- local variables
          endif
       enddo
       if ( nshift .gt. 1 ) then
-         write(6,*) 'PUTARBINBOX: A-dim more than one box shift needed'
+         write(6,*) 'PUTARBINBOX: A-dim required multiple shifts',nshift
       endif
 
       ldone = .false.
@@ -67,7 +66,7 @@ c     --- local variables
          endif
       enddo
       if ( nshift .gt. 1 ) then
-         write(6,*) 'PUTARBINBOX: B-dim more than one box shift needed'
+         write(6,*) 'PUTARBINBOX: B-dim required multiple shifts',nshift
       endif
 
       ldone = .false.
@@ -84,7 +83,7 @@ c     --- local variables
          endif
       enddo
       if ( nshift .gt. 1 ) then
-         write(6,*) 'PUTARBINBOX: C-dim more than one box shift needed'
+         write(6,*) 'PUTARBINBOX: C-dim required multiple shifts',nshift
       endif
 
       return

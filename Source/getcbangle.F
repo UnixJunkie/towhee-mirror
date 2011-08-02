@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 01-28-2011 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -492,7 +492,7 @@ c                 --- peaks.
                   if ( lrandelta ) then
 c                    --- fewer trials than finite allowed angles, select
 c                    --- one at random
-                     ipeak = dint(twh_random()*dble(npeaks)) + 1
+                     ipeak = idint(twh_random()*dble(npeaks)) + 1
                      angle = delta_angle(ipeak)
                   else
 c                    --- No need for randomness as we can sample
@@ -1138,7 +1138,7 @@ c              --- iuprev - iufrom - iugrow
                   if ( lfailure ) return
                else
 c                 --- select a peak at random
-                  ipeak = twh_random()*dble(npeaks) + 1
+                  ipeak = int(twh_random()*dble(npeaks)) + 1
                   call twh_cbmcbendinfo(GLB_GET,imolty,iuprev,icone
      &                 ,ictwo,ipeak,1,mean)
                   call twh_cbmcbendinfo(GLB_GET,imolty,iuprev,icone
@@ -1168,7 +1168,7 @@ c                 --- uniform distribution
 c                 --- sampling of a multipeak delta distribution
                   if ( lrandelta ) then
 c                    --- select from one of the options
-                     ipeak = dint(twh_random()*dble(npeaks)) + 1
+                     ipeak = idint(twh_random()*dble(npeaks)) + 1
                   else
 c                    --- sampling the full list of angles in order
                      ipeak = itrial

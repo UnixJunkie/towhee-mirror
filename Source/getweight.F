@@ -1,8 +1,7 @@
-c     $Id: getweight.F,v 1.9 2008/10/14 14:09:45 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +28,7 @@ c     * style: 0 input is an engery, returns weight and scale          *
 c     * style: 1 input is a weight, returns adjusted weight and scale  *
 c     *                                                                *
 c     * originally written 05-21-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -61,7 +60,7 @@ c              --- not happen and it messes up the code
                stop
             endif
 c           --- scale to keep the weight under control
-            iscale = -dint(-vratio)
+            iscale = -idint(-vratio)
             dpscale = dble(iscale)
             wout = twh_expon(-beta*(vin-(dpscale*vequiv)))
          else
@@ -71,7 +70,7 @@ c              --- extremely high energy, treat as an overlap
                return
             endif
 c           --- scale to make sure we don't get negative weights
-            iscale = dint(vratio)
+            iscale = idint(vratio)
             dpscale = dble(iscale)
             wout = twh_expon(-beta*(vin-(dpscale*vequiv)))
          endif

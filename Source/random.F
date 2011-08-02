@@ -1,4 +1,3 @@
-c     $Id: random.F,v 1.14 2008/11/29 00:03:16 marcus_martin Exp $
 c     --- toggles for the global variables
 #define GLB_SET 2001
 #define GLB_GET 2002
@@ -22,7 +21,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_random()
+      function dranlux()
 c     ******************************************************************
 c     * this function is just a front for calling whichever random     *
 c     * number generator that we wish to use.  Right now we are using  *
@@ -37,7 +36,7 @@ c     * for lattice field-theory simulations" Comp. Phys. Comm.        *
 c     * 79 100-110 (1994).                                             *
 c     *                                                                *
 c     * completely rewritten 08-07-2003 by M.G. Martin                 *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-02-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- function declaration
@@ -47,13 +46,13 @@ c     --- the include files in this routine in case they would conflict
 c     --- with the ranlux implementation
 c     --- Note: random is including in the function list in functions.h 
 c     --- for compatability with all of the other routines
-      double precision twh_random
-      real stuff
+      double precision dranlux
+      real*8 stuff
       dimension stuff(1)
 
       call ranlux(stuff,1)
-      twh_random = stuff(1)
-c      write(6,*) "RANDOM: returning ", twh_random
+      dranlux = stuff(1)
+c      write(6,*) "RANDOM: returning ", dranlux
       return
       end
 
@@ -104,6 +103,8 @@ C!!!      CALL RLUXUT(ISVEC)    outputs the current values of the 25 ++
 C!!!                 32-bit integer seeds, to be used for restarting ++
 C!!!      ISVEC must be dimensioned 25 in the calling program        ++
 C!!! ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+c     * last modified 08-02-2011 by M.G. Martin                       *
+c     *****************************************************************
       subroutine ranlux(rvec,lenv)
       implicit none
 c     --- definitions
@@ -116,7 +117,7 @@ c     --- definitions
 #define ICONS 2147483563
 c     --- variables passed to/from the subroutine
       integer lenv
-      real rvec
+      real*8 rvec
       dimension rvec(lenv)
 c     --- local variables
 C     default

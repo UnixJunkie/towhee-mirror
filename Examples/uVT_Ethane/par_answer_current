@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -262,7 +262,7 @@ Molecules of type   1 :          1
  +++++ start of markov chain +++++
 
 Move       Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
-        10 B: 1 -0.5226E-11  0.1065E+05        330.6     0
+        10 B: 1 -0.1524E-10  0.1065E+05        330.6     0
         20 B: 1  0.1063E+05  0.1065E+05        657.9     2
 Block Averages (BA) for block     1
 BA Box: 1 Volume [A^3] 0.10648000E+05
@@ -375,7 +375,7 @@ BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.67300175E+03
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] -.15076218E+02
 BA Box: 1 Radius of Gyration Type:  1        0.96981
         90 B: 1  0.8314E+04  0.1065E+05        629.6     2
-       100 B: 1  0.9965E-07  0.1065E+05         -0.0     0
+       100 B: 1  0.9974E-07  0.1065E+05         -0.0     0
 Block Averages (BA) for block     5
 BA Box: 1 Volume [A^3] 0.10648000E+05
 BA Box: 1 V^2 [A^6] 0.11337990E+09

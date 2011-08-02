@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -191,6 +191,7 @@ Type:      4 Style: Standard Harmonic Length: 1.4000 Constant:   162366.8
 Type:      5 Style: Standard Harmonic Length: 1.2600 Constant:   180407.5
 Type:      6 Style: Standard Harmonic Length: 1.5300 Constant:   120271.7
 Angle Types
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Type:   4 Style: Standard Harmonic  Angle:    117.000 Constant:    55505.4
 Type:   5 Style: Standard Harmonic  Angle:    124.000 Constant:    91406.5
 Type:   6 Style: Standard Harmonic  Angle:    111.000 Constant:    72163.0

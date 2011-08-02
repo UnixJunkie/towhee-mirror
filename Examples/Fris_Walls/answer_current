@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -212,6 +212,7 @@ unit:    4 name:CH3        charge:   0.00000
 unit:    5 name:CH3        charge:   0.00000
 unit:    6 name:Si         charge:   0.00000
 unit:    7 name:CH3        charge:   0.00000
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 unit:    8 name:CH3        charge:   0.00000
 unit:    9 name:O          charge:   0.00000
 unit:   10 name:Si         charge:   0.00000

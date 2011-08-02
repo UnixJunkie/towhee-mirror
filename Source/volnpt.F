@@ -1,10 +1,9 @@
-c     $Id: volnpt.F,v 1.43 2009/06/26 17:23:35 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -36,7 +35,7 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * originally written in 1995                                     *
-c     * last modified 06-22-2009 by M.G.Martin                         *
+c     * last modified 08-02-2011 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -110,8 +109,8 @@ c        --- increment the number of attempted 3d volume moves
          call twh_bnvol(GLB_INCR,boxvch,1)
       elseif ( movetype .eq. 2 ) then
 c        --- determine which of the 9 quantities to alter
-         ivector = dint(twh_random()*3.0d0) + 1
-         jvector = dint(twh_random()*3.0d0) + 1
+         ivector = idint(twh_random()*3.0d0) + 1
+         jvector = idint(twh_random()*3.0d0) + 1
          movevector = 3*(ivector-1) + jvector
 c        --- increment the number of attemped unit cell changes
          call twh_bncell(GLB_INCR,boxvch,movevector,1.0d0)
@@ -280,7 +279,10 @@ c           --- adjust all of the unit coordinates
 
       lvol = .true.
 c     --- set new coulombic parameters for the new box length
-      if ( lcoulomb ) call twh_resetcoulomb(boxvch)
+      if ( lcoulomb ) then
+         call twh_resetcoulomb(lfailure,boxvch)
+         if ( lfailure ) return
+      endif
 
       call twh_engtotal(lfailure,ovrlap,v,vintern,vduma,vtailn,vintran
      &     ,vvibn,vbendn,vtorn,vextn,velectn,vsolvn,vquantumn
@@ -394,7 +396,8 @@ c        --- restore old box lengths, energy, configration etc
 c        --- restore hinverse and boxvolume
          call twh_inverthmatrix(boxvch)
          if ( lcoulomb ) then
-            call twh_resetcoulomb(boxvch)
+            call twh_resetcoulomb(lfailure,boxvch)
+            if ( lfailure ) return
             if ( lewald ) call twh_recip(boxvch,4)
          endif
 c        --- restore coordinates

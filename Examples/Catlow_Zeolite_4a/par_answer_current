@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -850,7 +850,7 @@ Box:     1 Initial kmax:     5
 Box:     2 Initial calp:    0.05340
 Box:     2 Initial kmax:     5
  initial readtowhee
- PUTARBINBOX: A-dim more than one box shift needed
+ PUTARBINBOX: A-dim required multiple shifts           3
  initial readtowhee
  ibox,testchain,nunit            1          214            5
  xold,yold,zold  88.1426      44.7478      19.9741    

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 04-21-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -145,12 +145,12 @@ c        --- make sure some molecules of this type are in box 1
          if ( ncmt .eq. 0 )  return
 c        --- select molecule of type imolty in box ibox
          dchain = twh_random()*dble(ncmt)
-         ipoint = dint(dchain) + 1
+         ipoint = idint(dchain) + 1
          call twh_chainlist(GLB_GET,ipoint,ibox,imolty,iname)
       else
          call twh_nmolectyp(GLB_GET,imolty,nmtype)
          dchain = twh_random()*dble(nmtype)
-         ipoint = dint( dchain ) + 1
+         ipoint = idint( dchain ) + 1
          call twh_parall(GLB_GET,imolty,ipoint,iname)
          call twh_nboxi(GLB_GET,iname,ibox)
       endif

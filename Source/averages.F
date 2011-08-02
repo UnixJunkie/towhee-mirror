@@ -1,8 +1,7 @@
-c     $Id: averages.F,v 1.16 2008/10/15 14:16:34 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,13 +25,11 @@ c     ******************************************************************
 c     * this subroutine keeps track of all simulation averages         *
 c     *                                                                *
 c     * originally written 10-25-2004 by M.G. Martin                   *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 02-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_LT
 #include "functions.h"
-c     --- MAXBAPROP = maximum number of properties to average
-#define MAXBAPROP MAXBOX*(NTMAX*8+20+MAXENER)
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer updatetype,keycode,inbox,inmolty,count
@@ -56,14 +53,11 @@ c     --- local saved variables
       dimension oldcount(MAXBAPROP)
       dimension oldtotal(MAXBAPROP)
       save oldcount,oldtotal
-      double precision blockvalue(MAXBAPROP,MAXBLOCK)
-      save blockvalue
 
 c     --- local variables
       logical lfound
-      integer ikey
-      integer iblock
-      double precision tempcount,temptotal,mean,msq
+      integer ikey,iblock
+      double precision tempcount,temptotal,mean,msq,dvalue
 
 c     --- find the proper key for certain updatetype
       ikey = 0
@@ -108,9 +102,6 @@ c        --- initialize everything to do with the averages
             bacount(ikey) = 0.0d0
             oldtotal(ikey) = 0.0d0
             oldcount(ikey) = 0.0d0
-            do iblock = 1,MAXBLOCK
-               blockvalue(ikey,iblock) = 0.0d0
-            enddo
          enddo
 
       elseif ( updatetype .eq. AVG_ASSIGN ) then
@@ -160,23 +151,19 @@ c        --- return the count
          count = idnint(bacount(ikey))
 
       elseif ( updatetype .eq. AVG_END_OF_BLOCK ) then
+c        --- increment nblock
          nblock = nblock + 1
-c        --- safety check nblock
-         if ( nblock .gt. MAXBLOCK ) then
-            write(6,*) 'AVERAGES: error nblock exceeds MAXBLOCK'
-            lfailure =  .true.
-            return
-         endif
 c        --- store the block averages
          do ikey = 1,nkey
 c           --- get the value for the current block
             tempcount = bacount(ikey) - oldcount(ikey)
             temptotal = batotal(ikey) - oldtotal(ikey)
             if ( tempcount .gt. 0.5d0 ) then
-               blockvalue(ikey,nblock) = temptotal/tempcount
+               dvalue = temptotal/tempcount
             else
-               blockvalue(ikey,nblock) = 0.0d0
+               dvalue = 0.0d0
             endif
+            call twh_blockvalue(GLB_SET,ikey,nblock,dvalue)
 c           --- store the current values as the old for next block
             oldcount(ikey) = bacount(ikey)
             oldtotal(ikey) = batotal(ikey)
@@ -193,7 +180,7 @@ c        --- where the quantity is difficult to assign on the fly
             lfailure = .true.
             return
          endif
-         blockvalue(ikey,count) = value
+         call twh_blockvalue(GLB_SET,ikey,count,value)
 
       elseif ( updatetype .eq. AVG_EXTRACT_BLOCK_VAL ) then
 c        --- return the data for the specified block and key
@@ -204,7 +191,7 @@ c        --- block number is stored in count
             lfailure = .true.
             return
          endif
-         value = blockvalue(ikey,count)
+         call twh_blockvalue(GLB_GET,ikey,count,value)
 
       elseif ( updatetype .eq. AVG_EXTRACT_BLOCK_STD ) then
 c        --- return the standard deviation from the block averages
@@ -215,8 +202,9 @@ c           --- no blocks, return zero
             mean = 0.0d0
             msq = 0.0d0
             do iblock = 1,nblock
-               mean = mean + blockvalue(ikey,iblock)
-               msq = msq + blockvalue(ikey,iblock)**2
+               call twh_blockvalue(GLB_GET,ikey,iblock,dvalue)
+               mean = mean + dvalue
+               msq = msq + dvalue**2
             enddo
 c           --- divide out the number of blocks
             mean = mean / dble(nblock)
@@ -241,7 +229,8 @@ c           --- no blocks, return zero
          else
             mean = 0.0d0
             do iblock = 1,nblock
-               mean = mean + blockvalue(ikey,iblock)
+               call twh_blockvalue(GLB_GET,ikey,iblock,dvalue)
+               mean = mean + dvalue
             enddo
 c           --- divide out the number of blocks
             value = mean / dble(nblock)

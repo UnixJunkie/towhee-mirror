@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * calculates the total reciprocal space ewald-sum term for volume*
 c     * moves                                                          *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen.                        *
-c     * Last modified 11-16-2010 M.G. Martin                           *
+c     * Last modified 04-21-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -70,7 +70,7 @@ c     --- set up the inverse volume along with the charge factor
       do nkx = 0, kmax
 c        --- set the double precision version of nkx
          n_one = dble(nkx)
-         nky_max = dint(dsqrt(dble(kmax)**2 - n_one**2))
+         nky_max = int(dsqrt(dble(kmax)**2 - n_one**2))
          if (nkx .eq. 0) then
             nky_min = 0
          else
@@ -79,8 +79,8 @@ c        --- set the double precision version of nkx
          do nky = nky_min,nky_max
 c           --- set the double precision version of nky
             n_two = dble(nky)
-            nkz_max = dsqrt(dble(kmax)**2 -
-     &           n_one**2 - n_two**2)
+            nkz_max = int( dsqrt(dble(kmax)**2 -
+     &           n_one**2 - n_two**2) )
             if (nkx .eq. 0 .and. nky .eq. 0) then
                nkz_min = 1 
             else

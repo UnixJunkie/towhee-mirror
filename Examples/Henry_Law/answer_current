@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.15 (February 02 2011)
+ MCCCS Towhee - Version 6.2.16 (August 02 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -166,6 +166,7 @@ moltyp:  5 pmavb3ct: 0.500000  1.000000  1.000000  1.000000  1.000000
  tatraa: 0.500000    
  pmtracm: 0.670000    
  pmtcmt:  1.00000     0.00000     0.00000     0.00000     0.00000    
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
  rmtrac: 0.500000    
  tatrac: 0.500000    
  pmrotate:  1.00000    
