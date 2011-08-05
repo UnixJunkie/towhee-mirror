@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C)2005-2008 Marcus G. Martin                        *
+c     * Copyright (C)2005-2011 Marcus G. Martin                        *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * information                                                    *
 c     * rwflag is either READ_FLAG or WRITE_FLAG                       *
 c     *                                                                *
 c     * originally written 10-13-2005 by M.G. Martin                   *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_INBEN
@@ -103,8 +103,9 @@ c     --- read the towhee_safe version
 c        --- set iversion to the currentversion
          iversion = currentversion
       else
-         iversion = twh_read_labeled_integer(rwfile,
+         iversion = twh_read_labeled_integer(lfailure,rwfile,
      &         goodstring, .true.,idname)
+         if ( lfailure ) return
          if ( iversion .gt. currentversion ) then
             write(6,*) 'invalid towhee_safe version ',iversion
             stop
@@ -119,8 +120,9 @@ c     --- number of molecule types
          call twh_nmolty(GLB_GET,nmolty)
          write(rwfile,*) nmolty
       else
-         itest =  twh_read_labeled_integer(rwfile,
+         itest =  twh_read_labeled_integer(lfailure,rwfile,
      &         goodstring, .true.,idname)
+         if ( lfailure ) return
          call twh_nmolty(GLB_GET,nmolty)
          if ( itest .ne. nmolty ) then
             call twh_rwsafeproblem(bondstyle)
@@ -137,8 +139,9 @@ c     --- number of molecule types
             write(rwfile,rwformat) goodstring
             write(rwfile,*) nunit
          else
-            itest =  twh_read_labeled_integer(rwfile,
+            itest =  twh_read_labeled_integer(lfailure,rwfile,
      &            goodstring, .true.,idname)
+            if ( lfailure ) return
             if ( itest .ne. nunit ) then
                call twh_rwsafeproblem(bondstyle)
                close(rwfile)
@@ -156,8 +159,9 @@ c     --- two_bond biasing style
          write(rwfile,'(a50)') twobbias_style
          localstyle = twobbias_style
       else
-         call twh_read_labeled_string(rwfile,
+         call twh_read_labeled_string(lfailure,rwfile,
      &         goodstring, .true.,idname,localstyle)
+         if ( lfailure ) return
       endif
 
 c     --- set some values based upon the biasing
@@ -194,7 +198,9 @@ c        --- nothing to input or output
 c                 --- set numbend
                   numbend = twh_get_inben(imolty,iunit)
                else
-                  call twh_read_label(rwfile,goodstring,.false.,idname)
+                  call twh_read_label(lfailure,rwfile,goodstring
+     &                 ,.false.,idname)
+                  if ( lfailure ) return
                   read(rwfile,*) itest,numbend
                endif
                do ibend = 1,numbend
@@ -234,8 +240,9 @@ c     --- three bond biasing
          write(rwfile,'(a50)') threebbias_style
          localstyle = threebbias_style
       else
-         call twh_read_labeled_string(rwfile,
+         call twh_read_labeled_string(lfailure,rwfile,
      &         goodstring, .true.,idname,localstyle)
+         if ( lfailure ) return
       endif
 c     --- set some values based on the localstyle
       if ( localstyle .eq. 'self adapting gaussian using 1-4 distance'
@@ -268,7 +275,9 @@ c     --- set some values based on the localstyle
                   write(rwfile,*) iunit,twh_get_intor(imolty,iunit)
                   numdihed = twh_get_intor(imolty,iunit)
                else
-                  call twh_read_label(rwfile,goodstring,.false.,idname)
+                  call twh_read_label(lfailure,rwfile,goodstring
+     &                 ,.false.,idname)
+                  if ( lfailure ) return
                   read(rwfile,*) itest,numdihed
                endif
                do idihed = 1,numdihed

@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -517,7 +517,9 @@ c                    --- choose an angle with probability sin(theta)
      &                    .and. rdecide .gt. bend_a_ideal_fraction )
      &                    ) then
 c                    --- choose an angle based on gaussian distribution
-                     angle = twh_gaussian(mean,std_dev,lolimit,hilimit)
+                     angle = twh_gaussian(lfailure,mean,std_dev
+     &                    ,lolimit,hilimit)
+                     if ( lfailure ) return
                      anglec = dcos(angle)
                   elseif ( style_code .eq. DIST_BOUNDED_SINE ) then
                      anglec = (hibound-lobound)*twh_random() + lobound
@@ -708,7 +710,8 @@ c           --- select one of the trial sites via bias
          endif
 
 c        --- account for vmin
-         call twh_getweight(0,vmin,wmin,dpmin,lterm)
+         call twh_getweight(lfailure,0,vmin,wmin,dpmin,lterm)
+         if ( lfailure ) return
          if ( lterm ) then
 c           --- this should not happen
             write(6,*) 'GETCBANGLE: getweight returned lterm in bend'
@@ -1189,7 +1192,9 @@ c                 --- to properly account for the bias
      &                 .and. rdecide .gt. bend_b_ideal_fraction )
      &                 ) then
 c                 --- gaussian distribution, mean and stdev set above
-                  phitwo = twh_gaussian(mean,std_dev,lolimit,hilimit)
+                  phitwo = twh_gaussian(lfailure,mean,std_dev
+     &                 ,lolimit,hilimit)
+                  if ( lfailure ) return
                else
                   write(6,*) 'GETCBANGLE: unknown bend B style'
                   write(6,*) 'style_code:',style_code
@@ -1480,7 +1485,8 @@ c        --- account for vmin
 #if DEBUG_GETCBANGLE
       write(6,*) 'bend b vmin',vmin
 #endif
-         call twh_getweight(0,vmin,wmin,dpmin,lterm)
+         call twh_getweight(lfailure,0,vmin,wmin,dpmin,lterm)
+         if ( lfailure ) return
          if ( lterm ) then
 c           --- this should not happen
             write(6,*) 'GETCBANGLE: getweight returned lterm in bend b'

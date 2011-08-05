@@ -21,19 +21,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_recipsum(ibox,vrecip)
+      subroutine twh_recipsum(lfailure,ibox,vrecip)
 c     ******************************************************************
 c     * calculates the total reciprocal space ewald-sum term for volume*
 c     * moves                                                          *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen.                        *
-c     * Last modified 04-21-2011 M.G. Martin                           *
+c     * Last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
 #define FUNCTION_GET_NBOXI
 #include "functions.h"
 c     --- variables passed to/from subroutine
+      logical lfailure
       integer ibox
       double precision vrecip
 c     --- local variables
@@ -95,7 +96,8 @@ c              --- safety check total number of vectors
                if ( ncount .gt. VECTORMAX ) then
                   write(6,*) 'RECIPSUM: ncount ',ncount
                   write(6,*) 'choose a larger vectormax in preproc.h'
-                  stop
+                  lfailure = .true.
+                  return
                endif
 c              --- set up the k vectors, these are written as variable
 c              --- h in the Dean Wheeler primer

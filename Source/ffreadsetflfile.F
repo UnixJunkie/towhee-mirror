@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,14 +19,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffreadsetflfile(lfailure,nbtype,ffname)
+      subroutine twh_ffreadsetflfile(lfailure,nbtype,ffname)
 c     ******************************************************************
 c     * reads in a setfl force field file and transforms it into       *
 c     * corresponding Towhee data structures ao that it can create     *
 c     * a Towhee force field file                                      *
 c     *                                                                *
 c     * originally written 03-27-2003 by M.G. Martin                   *
-c     * last modifed 11-15-2010 by M.G. Martin                         *
+c     * last modifed 08-04-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -51,7 +51,11 @@ c     --- double precision arrays
       write(6,*) ' entered this choice by mistake'
       read(5,*) filename
 
-      if ( filename .eq. 'exit' ) stop
+      if ( filename .eq. 'exit' ) then
+         lfailure = .true.
+         return
+      endif
+
 
       write(6,*) 'Enter a name for this forcefield (10 characters max)'
       read(5,*) ffname
@@ -70,7 +74,8 @@ c     --- skip the first 3 lines
 
       if (nbtype .gt. MAXTABTYPE) then
          write(6,*)'error: number of types greater than MAXTABTYPE'
-         stop
+         lfailure = .true.
+         return
       endif
 c     --- set nbff
       do itype = 1,nbtype
@@ -90,11 +95,13 @@ c     --- set the styles all to table
 c     --- safety check nrho and nr
       if ( nrho .gt. MAXTABLE ) then
          write(6,*) 'nrho exceeds MAXTABLE'
-         stop
+         lfailure = .true.
+         return
       endif
       if ( nr .gt. MAXTABLE ) then
          write(6,*) 'nr exceeds MAXTABLE'
-         stop
+         lfailure = .true.
+         return
       endif
 
 c     --- translate to Towhee variable

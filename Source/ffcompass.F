@@ -1,8 +1,7 @@
-c     $Id: ffcompass.F,v 1.31 2010/11/15 17:20:29 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,20 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffcompassv1(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes,naatypes,nbitypes)
+      subroutine twh_ffcompassv1(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nimprotypes,naatypes,nbitypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the compass      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 11-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
      &        ,nimprotypes,naatypes,nbitypes
 c     --- local variables
@@ -898,8 +897,8 @@ c     --- (n1z) Nitrogen, terminal atom in N3
       call twh_nbff(GLB_SET,type,ffname)
 
       ntypes = type
-      call ffcheck(0,type)
-
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * Compass bond potentials                                        *
@@ -1504,7 +1503,8 @@ c     n2z - h1 [jcc2003]
 
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * Compass bond angle potentials - quartic angle                  *
@@ -2990,7 +2990,8 @@ c     n2z - c4 - c4 [jcc 2003]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 
 c     ******************************************************************
@@ -5126,7 +5127,8 @@ c     n2z - c4 - c4 - h1  [JCC2003]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * Compass improper harmonic torsion                              *
@@ -5303,7 +5305,8 @@ c     --- c3a - c3a - c3a - o2
       call twh_set_impnames(type,nislocal,ninlocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
 
 c     --- H. Sun J. Phys. Chem. B (1998) 102, 7338-7364.
 c     --- aacoeff*(theta(KJI) - theta0(KJI))*(theta(KJL) - theta0(KJL))
@@ -5623,7 +5626,8 @@ c     --- c3a - c3a - c3a - o2
 c     --- c3a - c3a - o2 - c3a
       
       naatypes = type
-      call ffcheck(5,type)
+      call twh_ffcheck(lfailure,5,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * bond increments                                                *
@@ -6053,7 +6057,8 @@ c     [Yang JPCB 2000]
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
       
       return
       end

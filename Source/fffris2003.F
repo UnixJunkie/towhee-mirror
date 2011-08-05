@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,8 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine fffris2003(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes)
+      subroutine twh_fffris2003(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the fris2003     *
 c     * forcefield                                                     *
@@ -30,13 +30,13 @@ c     * the parameters listed here are those noted as hybrid/UA in that*
 c     * paper                                                          *
 c     *                                                                *
 c     * originally written 10-13-2003 by M.G. Martin                   *
-c     * last modified 11-14-2010 M.G. Martin                           *
+c     * last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
      &        ,nimprotypes
 c     --- local variables
@@ -193,8 +193,9 @@ c     --- cross term of CH3 with CH3 (3-3)
      &     - 4.0d0*eps126*(sig126**6)
       call twh_set_nbcoeff(ij,nbclocal) 
 
-       ntypes = type
-       call ffcheck(0,type)
+      ntypes = type
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     --- bond potentials
 c     --- simple harmonic
@@ -224,7 +225,8 @@ c     --- Si-CH3
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
        
 c     --- angle potentials
 c     --- standard harmonic
@@ -284,7 +286,8 @@ c     --- O-Si-CH3
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     --- torsion potentials
 
@@ -325,11 +328,13 @@ c     --- Si-O-Si-CH3
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     --- no impropers
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
 
       return
       end

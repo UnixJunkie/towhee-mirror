@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine fftrappeuaf(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nbitypes)
+      subroutine twh_fftrappeuaf(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nbitypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the trappe-uaf   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 11-11-2005 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nbitypes
 c     --- local variables
       integer ii,type,isame
@@ -213,7 +214,8 @@ c     Ccccc(sp3) Alkane [C] (sp3) bonded only to Carbons [TraPPE-2]
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
       
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * TraPPE flexible bond lengths from Mundy 1996                   *
@@ -238,8 +240,8 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
-
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * TraPPE-UA angles - simple harmonic                             *
@@ -294,7 +296,8 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * TraPPE torsions using standard OPLS cosine series              *
@@ -373,7 +376,8 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * TraPPE-UA bond increments                                      *
@@ -390,7 +394,8 @@ c     [TraPPE-1]
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

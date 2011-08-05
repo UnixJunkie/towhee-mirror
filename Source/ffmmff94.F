@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,14 +19,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffmmff94(lfailure,ntypes,nbondtypes,nangletypes
+      subroutine twh_ffmmff94(lfailure,ntypes,nbondtypes,nangletypes
      &     ,ndihedtypes,nimprotypes,nbitypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the mmff94       *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 12-07-2006 by M.G. Martin                   *
-c     * last modified 10-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -43,11 +43,16 @@ c     --- local variables
 
       call twh_ffmmff94_nonbond(lfailure,ffname,ntypes)
       if ( lfailure ) return
-      call twh_ffmmff94_bond(ffname,nbondtypes)
-      call twh_ffmmff94_angle(ffname,nangletypes)
-      call twh_ffmmff94_dihedral(ffname,ndihedtypes)
-      call twh_ffmmff94_improper(ffname,nimprotypes)
-      call twh_ffmmff94_bondincrement(ffname,nbitypes)
+      call twh_ffmmff94_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffmmff94_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffmmff94_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
+      call twh_ffmmff94_improper(lfailure,ffname,nimprotypes)
+      if ( lfailure ) return
+      call twh_ffmmff94_bondincrement(lfailure,ffname,nbitypes)
+      if ( lfailure ) return
 
       return
       end
@@ -5416,21 +5421,23 @@ c     ---  DIPOSITIVE MAGNESIUM CATION
 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmmff94_bond(ffname,nbondtypes)
+      subroutine twh_ffmmff94_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * sets up the MMFF94 bond potentials                             *
 c     *                                                                *
 c     * originally written 12-09-2006 by M.G. Martin                   *
-c     * last modified 12-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
 c     --- integer scalars
@@ -14817,23 +14824,24 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
 
-
-
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
+
       return
       end
 
-      subroutine twh_ffmmff94_angle(ffname,nangletypes)
+      subroutine twh_ffmmff94_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets up the MMFF94 angle terms                                 *
 c     *                                                                *
 c     * originally written 12-11-2006 by M.G. Martin                   *
-c     * last modified 10-30-2007 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
 c     --- character string scalars
@@ -57770,20 +57778,23 @@ c     --- origin:E94
 
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
+
       return
       end
 
-      subroutine twh_ffmmff94_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffmmff94_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * sets up the MMFF94 dihedral parameters                         *
 c     *                                                                *
 c     * originally written 12-13-2006 by M.G. Martin                   *
-c     * last modified 12-13-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(*) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type
@@ -73542,21 +73553,23 @@ c     --- initialize type count
       call twh_set_tornames(type,1,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmmff94_improper(ffname,nimprotypes)
+      subroutine twh_ffmmff94_improper(lfailure,ffname,nimprotypes)
 c     ******************************************************************
 c     * sets up the MMFF94 improper torsion parameters                 *
 c     *                                                                *
 c     * originally written 12-19-2006 by M.G. Martin                   *
-c     * last modified 12-20-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nimprotypes
 c     --- local variables
       integer type
@@ -75093,21 +75106,23 @@ c     --- *-82-*-* E94 DEF
       call twh_set_impnames(type,1,ninlocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
       
       return
       end
 
-      subroutine twh_ffmmff94_bondincrement(ffname,nbitypes)
+      subroutine twh_ffmmff94_bondincrement(lfailure,ffname,nbitypes)
 c     ******************************************************************
 c     * sets up the bond increments for MMFF94                         *
 c     *                                                                *
 c     * originally writen 12-20-2006 by M.G. Martin                    *
-c     * last modified 12-20-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbitypes
 c     --- local variables
       character*(FFNAMELEN) order
@@ -80101,7 +80116,8 @@ c     --- local variables
 
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

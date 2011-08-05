@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -72,7 +72,7 @@ c     *     towhee_parallel.                                           *
 c     * outputmode -- if .ne. 0, loutput = false -> quiet mode         *
 c     *                                                                *
 c     * split from the original twh_mainloop 06-25-2009 by M.G. Martin *
-c     * last modified 02-04-2011 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -125,15 +125,16 @@ c     towhee_parallel file
 c     * Replica exchange runs -- configuration takes place mostly in 
 c     C wrapper, and data passed here via 'wrapper' data.
 c     
-      call main_get_IO_redirect_info(outputlocation, lredirect_stdout, 
-     &      lfailure)
+      call twh_main_get_IO_redirect_info(lfailure,outputlocation
+     &     , lredirect_stdout)
       if ( lfailure ) return
 c     --- Output some information about the code
       call twh_loutput(GLB_GET,loutput)
       if ( loutput ) call twh_writeintro()
 
 c     --- read in the input files
-      call twh_readinput(lfinish)
+      call twh_readinput(lfailure,lfinish)
+      if ( lfailure ) return
       if ( lfinish ) then
 c        --- we are done, this happens for input styles
 c        --- other than Towhee
@@ -167,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -333,7 +334,8 @@ c        --- calculate initial stress tensor
             enddo
          elseif ( pressurestyle .eq. PRES_RADIAL ) then
             do ibox = 1,numboxes
-               call twh_radialpressure(stress(0),ibox)
+               call twh_radialpressure(lfailure,stress(0),ibox)
+               if ( lfailure ) return
                write(6,'(1x,a30,1x,i2,1x,a1,1x,f14.2)') 
      &              'initial radial pressure in box',ibox,'=',stress(0)
             enddo
@@ -1757,7 +1759,7 @@ c     *  speden -- specific density for each box                       *
 c     *  currentpressure -- eponymous, per box                         *
 c     *  stress -- the stress tensor                                   *
 c     * Split from mainloop 04-06-2006 by MAW                          *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1794,7 +1796,8 @@ c     --- retrieve constants
          elseif ( pressurestyle .eq. PRES_RADIAL ) then
             istart = 0
             iend = 0
-            call twh_radialpressure(stress(0),ibox)
+            call twh_radialpressure(lfailure,stress(0),ibox)
+            if ( lfailure ) return
          else
             write(6,*) 'MAINLOOP: unknown pressurestyle'
             write(6,*) pressurestyle
@@ -2348,8 +2351,8 @@ c     --- final warning if there was a problem
       end
 
 
-      subroutine main_get_IO_redirect_info(outputlocation, lredirect, 
-     &      lfailure)
+      subroutine twh_main_get_IO_redirect_info(lfailure,outputlocation
+     &     ,lredirect)
 c     ******************************************************************
 c     * Obtain directory name for remapping files, as described in     *
 c     * mainloop.                                                      *
@@ -2362,7 +2365,7 @@ c     *     in towhee_parallel.  As passed to towheemainloop           *
 c     *   lredirect -- returned value indicating whether io unit 6 must*
 c     *           be closed (if false, output goes to stdout)          *
 c     *   lfailure -- set to true if error                             *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "wrapperF.h"
@@ -2407,14 +2410,20 @@ c        --- NOTE: this is an exception to the normal rules as this
 c        --- is the sequence for finding the directory information
          open(21,file='towhee_parallel',form='formatted')
 c        --- skip the top two lines (one of these is a comments)
-         call twh_skip_lines(21,1)
+         call twh_skip_lines(lfailure,21,1)
+         if ( lfailure ) return
 c        --- get the suffix for the standard out filename
-         call twh_read_string(21,'filename', .false.,stdout_fn)
+         call twh_read_string(lfailure,21,'filename', .false.,stdout_fn)
+         if ( lfailure ) return
 c        --- get the local working directory
          do iskip = 1,outputlocation-1
-            stmp = twh_read_dir_string(21,'ignored dir', .false.)
+            stmp = twh_read_dir_string(lfailure,21,'ignored dir'
+     &           , .false.)
+            if ( lfailure ) return
          enddo
-         io_dir  = twh_read_dir_string(21,'working dir', .false.)
+         io_dir  = twh_read_dir_string(lfailure,21,'working dir'
+     &        , .false.)
+         if ( lfailure ) return
 
          rewind(21)
          close(21)

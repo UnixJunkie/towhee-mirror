@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.16 (August 02 2011)
+ MCCCS Towhee - Version 6.2.17 (August 05 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -193,6 +193,7 @@ Unit:    3 nbname: H          Charge:    0.41000
 Total charge for Molecule Type:    2 is:    0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
+     for molecule type     2
  Determining cyclic subunits for molecule type          1
  Determining cyclic subunits for molecule type          2
 Default total charge on molecule   1 is   0.00000

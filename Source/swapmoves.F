@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -77,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -859,7 +859,9 @@ c           --- "new" portion
             endif
             if ( ibox .eq. 1 ) vtest = -vtest
 c           --- safely convert this into a rosenbluth weight
-            call twh_getweight(0,vtest,wmin,dpmin,ltermtest(ibox))
+            call twh_getweight(lfailure,0,vtest,wmin,dpmin
+     &           ,ltermtest(ibox))
+            if ( lfailure ) return
 c           --- this part is very sneaky - when ibox is 1 we are 
 c           --- storing the negative energy change in the "old" part
 c           --- otherwise storing the positive energy change in the 
@@ -910,8 +912,9 @@ c              --- compute change in tail energy
                else
                   vtailtest(icordflag) = vtest - vtailtest(icordflag)
                endif
-               call twh_getweight(0,vtailtest(icordflag),wmin,dpmin
-     &              ,ltermtest(icordflag))
+               call twh_getweight(lfailure,0,vtailtest(icordflag)
+     &              ,wmin,dpmin,ltermtest(icordflag))
+               if ( lfailure ) return
                waddtest(icordflag) = waddtest(icordflag)*wmin
                dpscaletest(icordflag) = dpscaletest(icordflag) + dpmin
                vrostot(icordflag) = vrostot(icordflag) 
@@ -938,13 +941,15 @@ c        --- compute wrosen
          wrosen(icordflag) = w1test(icordflag)*waddtest(icordflag)
      &        *wrosen(icordflag)
 c        --- account for vmintest
-         call twh_getweight(0,vmintest(icordflag),wmin,dpmin
+         call twh_getweight(lfailure,0,vmintest(icordflag),wmin,dpmin
      &        ,ltermtest(icordflag))
+         if ( lfailure ) return
          wrosen(icordflag) = wrosen(icordflag)*wmin
          dpscaletest(icordflag) = dpscaletest(icordflag) + dpmin
 c        --- rescale wrosen
-         call twh_getweight(1,vdum,wrosen(icordflag),dpmin
+         call twh_getweight(lfailure,1,vdum,wrosen(icordflag),dpmin
      &        ,ltermtest(icordflag))
+         if ( lfailure ) return
          dpscaletest(icordflag) = dpscaletest(icordflag) + dpmin
 
          if ( icordflag .eq. 2 .and. ltermtest(icordflag) ) then

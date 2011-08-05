@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,17 +19,18 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffqmff_viii(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,naatypes,nbitypes)
+      subroutine twh_ffqmff_viii(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,naatypes,nbitypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the QMFF-VIII    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 04-17-2006 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
      &        ,naatypes,nbitypes
 c     --- local variables
@@ -47,28 +48,35 @@ c     J. Comp. Chem. 22, 1782-1800 (2001)
       call twh_classical_potential(GLB_SET,'9-6')
       call twh_classical_mixrule(GLB_SET,'Sixth Power')
 
-      call twh_ffqmff_viii_nonbond(ffname,ntypes)
-      call twh_ffqmff_viii_bond(ffname,nbondtypes)
-      call twh_ffqmff_viii_angle(ffname,nangletypes)
-      call twh_ffqmff_viii_dihedral(ffname,ndihedtypes)
-      call twh_ffqmff_viii_angleangle(ffname,naatypes)
-      call twh_ffqmff_viii_bond_increment(ffname,nbitypes)
+      call twh_ffqmff_viii_nonbond(lfailure,ffname,ntypes)
+      if ( lfailure ) return
+      call twh_ffqmff_viii_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffqmff_viii_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffqmff_viii_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
+      call twh_ffqmff_viii_angleangle(lfailure,ffname,naatypes)
+      if ( lfailure ) return
+      call twh_ffqmff_viii_bond_increment(lfailure,ffname,nbitypes)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffqmff_viii_nonbond(ffname,ntypes)
+      subroutine twh_ffqmff_viii_nonbond(lfailure,ffname,ntypes)
 c     *****************************************************************
 c     * sets up the nonbonded parameters for QMFF-VIII                *
 c     *                                                               *
 c     * originally written 04-17-2006 by M.G. Martin                  *
-c     * last modified 05-04-2006 by M.G. Martin                       *
+c     * last modified 08-04-2011 by M.G. Martin                       *
 c     *****************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ntypes
 c     --- local variables
       character*(FFNAMELEN) nbnlocal,bonlocal,anglocal,torlocal
@@ -833,21 +841,23 @@ c     --- to set the rest of the intramolecular types to h
       call twh_set_nbcoeff(ii,nbclocal)
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffqmff_viii_bond(ffname,nbondtypes)
+      subroutine twh_ffqmff_viii_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * sets up the bond parameters for QMFF-VIII                      *
 c     *                                                                *
 c     * originally written 05-04-2006 by M.G. Martin                   *
-c     * last modified 05-05-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type,nsame
@@ -2176,21 +2186,23 @@ c     --- initialize types
       call twh_set_vibnames(type,nsame,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffqmff_viii_angle(ffname,nangletypes)
+      subroutine twh_ffqmff_viii_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets the angle and bond-angle terms for QMFF-VIII              *
 c     *                                                                *
 c     * originally written 05-05-2006 by M.G. Martin                   *
-c     * last modified 12-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,nsame
@@ -8500,21 +8512,23 @@ c     --- local variables
       call twh_set_bendnames(type,nsame,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffqmff_viii_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffqmff_viii_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * sets the parameters for the Class-2 dihedral interactions      *
 c     *                                                                *
 c     * originally written 05-10-2006 by M.G. Martin                   *
-c     * last modified 05-10-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type,nsame
@@ -37559,21 +37573,23 @@ c     --- local variables
 
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffqmff_viii_angleangle(ffname,naatypes)
+      subroutine twh_ffqmff_viii_angleangle(lfailure,ffname,naatypes)
 c     ******************************************************************
 c     * sets the angle-angle types                                     *
 c     *                                                                *
 c     * originally written 05-10-2006 by M.G. Martin                   *
-c     * last modified 05-10-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer naatypes
 c     --- local variables
       integer type,nsame
@@ -46711,21 +46727,24 @@ c     --- local variables
       call twh_set_aanames(type,nsame,aanlocal)
 
       naatypes = type
-      call ffcheck(5,type)
+      call twh_ffcheck(lfailure,5,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffqmff_viii_bond_increment(ffname,nbitypes)
+      subroutine twh_ffqmff_viii_bond_increment(lfailure,ffname
+     &     ,nbitypes)
 c     ******************************************************************
 c     * sets the bond increments                                       *
 c     *                                                                *
 c     * originally written 05-10-2006 by M.G. Martin                   *
-c     * last modified 05-12-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbitypes
 c     --- local variables
       integer type
@@ -49792,7 +49811,8 @@ c     --- local variables
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

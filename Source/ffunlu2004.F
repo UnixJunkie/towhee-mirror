@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffunlu2004(ntypes,nbondtypes,nangletypes,ndihedtypes)
+      subroutine twh_ffunlu2004(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes)
 c     ******************************************************************
 c     * multiwell force field parameters for SPEAD as described in a   *
 c     * series of papers beginning with Unlu et al 2004.               *
@@ -27,13 +28,13 @@ c     * The details of this force field were kindly provided by J.R.   *
 c     * Elliott Jr. in an email dated 11-25-2005 to M.G. Martin        *
 c     *                                                                *
 c     * originally written 11-30-2005 by M.G. Martin                   *
-c     * last modified 11-15-2010 M.G. Martin                           *
+c     * last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
 c     --- local variables
       character*(FFNAMELEN) ffname
@@ -64,7 +65,8 @@ c     --- set the nonbonded parameters for this force field
       call ffunlu2004_nonbond(type,ffname)
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * square well bonds                                              *
@@ -107,7 +109,8 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * square well angles                                             *
@@ -168,7 +171,8 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * square well dihedrals                                          *
@@ -211,7 +215,8 @@ c     4-18-2005]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end

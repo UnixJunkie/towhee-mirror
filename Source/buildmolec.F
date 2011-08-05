@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * forcefield the atom names, and the set of vibrations           *
 c     * imolty: the molecule type number                               *
 c     *                                                                *
 c     * originally written 03-07-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_INTEGER
@@ -75,8 +75,9 @@ c     --- double precision scalars
 c     --- read in the atom sequence
       call twh_nunit(GLB_GET,imolty,nunit)
       do iatom = 1,nunit
-         call twh_read_label_formatted(4,'unit',.false.,idname, 
-     &         '(a4)')
+         call twh_read_label_formatted(lfailure,4,'unit',.false.
+     &        ,idname, '(a4)')
+         if ( lfailure ) return
          if ( charge_assignment .eq. 'manual' ) then
             read(4,*) itemp,atomname(iatom),qtemp
             call twh_qqatom(GLB_SET,imolty,iatom,qtemp)
@@ -97,8 +98,10 @@ c     --- read in the atom sequence
 
          if ( lpdbnames ) then
 c                 --- also read in the pdb name
-            call twh_read_pdbname(4,'pdbname aminonum aminoshort',
+            call twh_read_pdbname(lfailure,4
+     &           ,'pdbname aminonum aminoshort',
      &         pdbname, aminonum,aminoshort)
+            if ( lfailure ) return
             call twh_pdbname(GLB_SET,imolty,iatom,pdbname)
             call twh_aminonum(GLB_SET,imolty,iatom,aminonum)
             call twh_aminoshort(GLB_SET,imolty,iatom,aminoshort)
@@ -107,8 +110,9 @@ c                 --- also read in the pdb name
 37               format(a8,1x,a4,1x,a9,1x,i10,1x,a11,1x,a3)
          endif
 
-         numvib = twh_read_labeled_integer(4,
+         numvib = twh_read_labeled_integer(lfailure,4,
      &      'vibration', .false., idname)
+         if ( lfailure ) return
          call twh_invib(GLB_SET,imolty,iatom,numvib)
 c        --- safety check
          if ( numvib .gt. NNBOND ) then
@@ -139,9 +143,11 @@ c              --- bond partners and vibration orders on each line
 
          if ( imp_assign .eq. 'manual' ) then
 c           --- read in improper information
-            call twh_read_label_formatted(4,'improper',.false.,idname, 
-     &           '(a8)')
-            inimp = twh_read_integer(4, 'improper',.false.)
+            call twh_read_label_formatted(lfailure,4,'improper',.false.
+     &           ,idname, '(a8)')
+            if ( lfailure ) return
+            inimp = twh_read_integer(lfailure,4, 'improper',.false.)
+            if ( lfailure ) return
             call twh_inimprop(GLB_SET,imolty,iatom,inimp)
 c           --- safety check
             if ( inimp .gt. MAXIMPROP ) then
@@ -163,8 +169,9 @@ c           --- safety check
       spectorcount = 0
       if ( match_style .eq. 'stereoselective' ) then
 c        --- get the special torsion count
-         spectorcount = twh_read_labeled_integer(4,
+         spectorcount = twh_read_labeled_integer(lfailure,4,
      &        'special_torsion_count', .true., idname)
+         if ( lfailure ) return
       endif
 
       call twh_nunit(GLB_GET,imolty,totatoms)
@@ -174,7 +181,8 @@ c        --- get the special torsion count
       if ( lfailure ) return
 c     --- check to see if we need to assign the charges
       if ( charge_assignment .ne. 'manual' ) then
-         call twh_qqassign(imolty,forcefield)
+         call twh_qqassign(lfailure,imolty,forcefield)
+         if ( lfailure ) return
       endif
 
 #if DEBUG_BUILDMOLEC

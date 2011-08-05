@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.16 (August 02 2011)
+ MCCCS Towhee - Version 6.2.17 (August 05 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -180,6 +180,7 @@ Unit:    5 nbname: H(2)       Charge:    0.09700
 Total charge for Molecule Type:    1 is:   -0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
+     for molecule type     1
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters

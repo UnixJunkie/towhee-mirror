@@ -1,8 +1,7 @@
-c     $Id: readutils.F,v 1.16 2009/01/25 04:22:20 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -60,6 +59,8 @@ c     *     reads label and array of specified size of following data  *
 c     * twh_read_TTT_array - reads one line containing an array of data*
 c     ******************************************************************
 #define STDOUT 6
+      function twh_read_labeled_integer(lfailure,io_unit,label,
+     &    print_value,idname)
 c     ******************************************************************
 c     * twh_read_labeled_TTT(io_unit, label, print_value, idname)      *
 c     *                                                                *
@@ -77,55 +78,57 @@ c     * an error is printed and execution halts.                       *
 c     *                                                                *
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     *                                                                *
-c     * last modified 11-10-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
-      function twh_read_labeled_integer(io_unit,label,
-     &    print_value,idname)
       implicit none
 #define FUNCTION_READ_INTEGER
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      logical print_value
+      logical lfailure,print_value
       character*(*) label, idname
       integer io_unit
 c     --- local vars
       integer value
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      value = twh_read_integer(io_unit,label,.false.)
-
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) goto 66
+      value = twh_read_integer(lfailure,io_unit,label,.false.)
+      if ( lfailure ) goto 66
       if (print_value) then
          write(STDOUT,'(1x,a,a,1x,i12)') label,':',value
       endif
 
       twh_read_labeled_integer = value
       return
+ 66   write(STDOUT,*) 'failure in TWH_READ_LABELED_INTEGER'
+      twh_read_labeled_integer = 0
+      return
       end
 
 
-      function twh_read_labeled_float(io_unit, label,print_value, 
-     &   idname)
+      function twh_read_labeled_float(lfailure,io_unit, label
+     &     ,print_value, idname)
 c     ******************************************************************
-c     * last modified 11-10-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_FLOAT
 #define FUNCTION_READ_LABELED_FLOAT
 #include "functions.h"
 c     --- variables passed to/from the function
-      logical print_value
+      logical lfailure,print_value
       character*(*) label, idname
       integer io_unit
 c     --- local vars
       double precision value
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      value = twh_read_float(io_unit,label,.false.)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) goto 77
+      value = twh_read_float(lfailure,io_unit,label,.false.)
+      if ( lfailure ) goto 77
 
       if (print_value) then
          write(STDOUT,'(1x,a,a,1x,g12.6)') label,':',value
@@ -133,13 +136,16 @@ c     --- Confirm correct label
 
       twh_read_labeled_float = value
       return
+ 77   write(STDOUT,*) 'failure in TWH_READ_LABELED_FLOAT'
+      twh_read_labeled_float = 0.0
+      return
       end
 
 
-      function twh_read_labeled_logical(io_unit,label,print_value,
-     &    idname)
+      function twh_read_labeled_logical(lfailure,io_unit,label
+     &     ,print_value,idname)
 c     ******************************************************************
-c     * last modified 11-10-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_LABELED_LOGICAL
@@ -147,52 +153,57 @@ c     ******************************************************************
 #define FUNCTION_READ_LOGICAL
 #include "functions.h"
 c     --- variables passed to/from the function
-      logical print_value
+      logical lfailure,print_value
       character*(*) label, idname
       integer io_unit
 c     --- local vars
       logical value
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      value = twh_read_logical(io_unit,label,.false.)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) goto 78
+      value = twh_read_logical(lfailure,io_unit,label,.false.)
+      if ( lfailure ) goto 78
 
       if (print_value) then
          write(STDOUT,'(1x,a,a,1x,l1)') label,': ',value
       endif
-
       twh_read_labeled_logical = value
+      return
+ 78   write(STDOUT,*) 'failure in TWH_READ_LABELED_LOGICAL'
+      twh_read_labeled_logical = .false.
       return
       end
 
-      subroutine twh_read_labeled_string(io_unit,label,print_value,
-     &    idname,cvalue)
+      subroutine twh_read_labeled_string(lfailure,io_unit,label
+     &     ,print_value,idname,cvalue)
 c     ******************************************************************
 c     * Any leading or trailing quotes from the string are stripped.   *
 c     * i.e.  'hello' becomes hello                                    *
 c     *                                                                *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the function
-      logical print_value
+      logical lfailure,print_value
       character*(*) label,idname,cvalue
       integer io_unit
 c     --- local variables
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) return
 c     --- read in the string
-      call twh_read_string(io_unit,label,.false.,cvalue)
+      call twh_read_string(lfailure,io_unit,label,.false.,cvalue)
+      if ( lfailure ) return
 
       if (print_value) then
          write(STDOUT,'(1x,a,a,1x,a)') label,':',cvalue
       endif
-
       return
       end
 
+      function twh_read_integer(lfailure,io_unit,label,print_value)
 c     ******************************************************************
 c     * twh_read_TTT(io_unit, label, print_value)                      *
 c     *                                                                *
@@ -208,19 +219,20 @@ c     *   an error is printed and execution halts.                     *
 c     *                                                                *
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     *                                                                *
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
-      function twh_read_integer(io_unit,label,print_value)
       implicit none
 #define FUNCTION_READ_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the function
       integer io_unit
+      logical lfailure
       logical print_value
       character*(*) label
 
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) goto 100
 c     --- read the value
       read(io_unit,*,ERR=100) twh_read_integer
 
@@ -230,27 +242,31 @@ c     --- read the value
 
       return
 c     --- get here in case of read error
-100   if (label .eq. '') then
+100   if ( lfailure ) then
+         write(STDOUT,*) 'Error skipping comments'
+      elseif (label .eq. '') then
          write(STDOUT, *) "Error reading integer value in unit ",io_unit
       else
          write(STDOUT, *) "Error reading integer value for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
-      function twh_read_float(io_unit,label,print_value)
+      function twh_read_float(lfailure,io_unit,label,print_value)
 c     ******************************************************************
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_FLOAT
 #include "functions.h"
 c     --- variables passed to/from the function
       integer io_unit
-      logical print_value
+      logical lfailure,print_value
       character*(*) label
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) goto 101
 c     --- read the value
       read(io_unit,*,ERR=101) twh_read_float
 
@@ -260,27 +276,31 @@ c     --- read the value
 
       return
 c     --- get here in case of read error
-101   if (label .eq. '') then
+101   if ( lfailure ) then
+         write(6,*) 'Error skipping comments'
+      elseif (label .eq. '') then
          write(STDOUT, *) "Error reading float value in unit ",io_unit
       else
          write(STDOUT, *) "Error reading float value for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
-      function twh_read_logical(io_unit,label,print_value)
+      function twh_read_logical(lfailure,io_unit,label,print_value)
 c     ******************************************************************
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_LOGICAL
 #include "functions.h"
 c     --- variables passed to/from the function
       integer io_unit
-      logical print_value
+      logical lfailure,print_value
       character*(*) label
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) goto 102
 c     --- read the value
       read(io_unit,*,ERR=102) twh_read_logical
 
@@ -290,27 +310,32 @@ c     --- read the value
 
       return
 c     --- get here in case of read error
-102   if (label .eq. '') then
+102   if ( lfailure ) then
+         write(STDOUT,*) 'Error skipping comments'
+      elseif (label .eq. '') then
          write(STDOUT, *) "Error reading logical value in unit ",io_unit
       else
          write(STDOUT, *) "Error reading logical value for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
-      subroutine twh_read_string(io_unit,label,print_value,cvalue)
+      subroutine twh_read_string(lfailure,io_unit,label,print_value
+     &     ,cvalue)
 c     ******************************************************************
-c     * last modified 01-22-2009 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the function
       integer io_unit
-      logical print_value
+      logical lfailure,print_value
       character*(*) label,cvalue
 c     --- local variables
       character*100 readvalue
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
 c     --- read the value
       read(io_unit,"(a60)",ERR=103) readvalue
       call twh_strip_quotes(readvalue)
@@ -329,25 +354,27 @@ c     --- get here in case of read error.
       else
          write(STDOUT, *) "Error reading string value for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
-      function twh_read_dir_string(io_unit,label,print_value)
+      function twh_read_dir_string(lfailure,io_unit,label,print_value)
 c     ******************************************************************
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_DIR_STRING
 #include "functions.h"
 c     --- variables passed to/from the function
       integer io_unit
-      logical print_value
+      logical lfailure,print_value
       character*(*) label
 
 c     --- local vars
       character*15 control_list
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
 c     --- create control list
 c     --- Note: this is sensitive to size of MAXDIRLENGTH -- be sure
 c     --- control_list is what you expect if reads fail.
@@ -366,9 +393,12 @@ c     --- get here in case of read error.
       else
          write(STDOUT, *) "Error reading string value for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
+      subroutine twh_read_labeled_integer_array(lfailure,io_unit,label,
+     &    array_length, print_values, idname, array_values)
 c     ******************************************************************
 c     * twh_read_labeled_TTT_array(io_unit, label, array_length,       *
 c     *    print_values, idname, array_values)                         *
@@ -392,13 +422,11 @@ c     *  array_length, error is printed and execution halts.           *
 c     *                                                                *
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     *                                                                *
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_read_labeled_integer_array(io_unit,label,
-     &    array_length, print_values, idname, array_values)
       implicit none
 c     --- variables passed to/from the subroutine
-      logical print_values
+      logical lfailure,print_values
       character*(*) label, idname
       integer io_unit, array_length
       integer array_values(array_length) 
@@ -407,10 +435,11 @@ c     --- local vars
       integer i
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      call twh_read_integer_array(io_unit,label,array_length,.false.,
-     &   array_values)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) return
+      call twh_read_integer_array(lfailure,io_unit,label,array_length
+     &     ,.false.,array_values)
+      if ( lfailure ) return
 
       if (print_values) then
          write(STDOUT,'(1x,a,a,10(1x,i12))') label,':',
@@ -420,14 +449,14 @@ c     --- Confirm correct label
       return
       end
 
-      subroutine twh_read_labeled_float_array(io_unit,label,
+      subroutine twh_read_labeled_float_array(lfailure,io_unit,label,
      &    array_length, print_values, idname, array_values)
 c     ******************************************************************
-c     * last modified 11-10-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      logical print_values
+      logical lfailure,print_values
       character*(*) label, idname
       integer io_unit, array_length
       double precision array_values(array_length) 
@@ -436,10 +465,11 @@ c     --- local vars
       integer i
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      call twh_read_float_array(io_unit,label,array_length,.false.,
-     &   array_values)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) return
+      call twh_read_float_array(lfailure,io_unit,label,array_length
+     &     ,.false.,array_values)
+      if ( lfailure ) return
 
       if (print_values) then
          write(STDOUT,'(1x,a,a,1x,10(g12.6))') label,':',
@@ -450,14 +480,14 @@ c     --- Confirm correct label
       end
 
 
-      subroutine twh_read_labeled_logical_array(io_unit,label,
-     &    array_length, print_values, idname, array_values)
+      subroutine twh_read_labeled_logical_array(lfailure,io_unit,label
+     &     ,array_length, print_values, idname, array_values)
 c     ******************************************************************
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      logical print_values
+      logical lfailure,print_values
       character*(*) label, idname
       integer io_unit, array_length
       logical array_values(array_length) 
@@ -466,10 +496,11 @@ c     --- local vars
       integer i
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      call twh_read_logical_array(io_unit,label,array_length,.false.,
-     &   array_values)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) return
+      call twh_read_logical_array(lfailure,io_unit,label,array_length
+     &     ,.false.,array_values)
+      if ( lfailure ) return
 
       if (print_values) then
          write(STDOUT,'(1x,a,a,10(1x,i12))') label,':',
@@ -481,15 +512,14 @@ c     --- Confirm correct label
 
 
 
-      subroutine twh_read_labeled_string_array(io_unit,label,
+      subroutine twh_read_labeled_string_array(lfailure,io_unit,label,
      &    array_length, print_values, idname, array_values)
 c     ******************************************************************
-c     * last modified 11-10-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-
 c     --- variables passed to/from the subroutine
-      logical print_values
+      logical lfailure,print_values
       character*(*) label, idname
       integer io_unit, array_length
       character*(*) array_values(array_length) 
@@ -498,10 +528,11 @@ c     --- local vars
       integer i
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,idname)
-
-      call twh_read_string_array(io_unit,label,array_length,.false.,
-     &   array_values)
+      call twh_read_label(lfailure,io_unit,label,.false.,idname)
+      if ( lfailure ) return
+      call twh_read_string_array(lfailure,io_unit,label,array_length
+     &     ,.false.,array_values)
+      if ( lfailure ) return
 
       if (print_values) then
          write(STDOUT,'(1x,a,a,1x,10(a))') label,':',
@@ -512,8 +543,8 @@ c     --- Confirm correct label
       end
 
 
-      subroutine twh_read_integer_array(io_unit,label,array_length,
-     &   print_values, array_values)
+      subroutine twh_read_integer_array(lfailure,io_unit,label
+     &     ,array_length,print_values, array_values)
 c     ******************************************************************
 c     * twh_read_TTT_array(io_unit, label, array_length, print_values, *
 c     *   array_values)                                                *
@@ -535,10 +566,11 @@ c     *   array_length, error is printed and execution halts.          *
 c     *                                                                *
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     *                                                                *
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer io_unit, array_length
       character*(*) label
       logical print_values
@@ -546,7 +578,8 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       integer i
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
 c     --- read the value
       read(io_unit,*,ERR=100) (array_values(i), i=1,array_length)
 
@@ -562,24 +595,28 @@ c     --- get here in case of read error
       else
          write(STDOUT, *) "Error reading integer array for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
 
+      subroutine twh_read_float_array(lfailure,io_unit,label
+     &     ,array_length,print_values, array_values)
 c     ******************************************************************
-      subroutine twh_read_float_array(io_unit,label,array_length,
-     &   print_values, array_values)
+c     * last modified 08-04-2011 by M.G. Martin                        *
+c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       integer io_unit, array_length
       character*(*) label
-      logical print_values
+      logical lfailure,print_values
       double precision array_values(array_length) 
 
 c     --- local variables
       integer i
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
 c     --- read the value
       read(io_unit,*,ERR=100) (array_values(i), i=1,array_length)
 
@@ -594,26 +631,28 @@ c     --- get here in case of read error
       else
          write(STDOUT, *) "Error reading float array for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
 
-      subroutine twh_read_logical_array(io_unit,label,array_length,
-     &   print_values, array_values)
+      subroutine twh_read_logical_array(lfailure,io_unit,label
+     &     ,array_length,print_values, array_values)
 c     ******************************************************************
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       integer io_unit, array_length
       character*(*) label
-      logical print_values
+      logical lfailure,print_values
       logical array_values(array_length) 
 
 c     --- local variables
       integer i
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
 c     --- read the value
       read(io_unit,*,ERR=100) (array_values(i), i=1,array_length)
 
@@ -628,25 +667,27 @@ c     --- get here in case of read error
       else
          write(STDOUT, *) "Error reading logical array for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
-      subroutine twh_read_string_array(io_unit,label,array_length,
-     &   print_values, array_values)
+      subroutine twh_read_string_array(lfailure,io_unit,label
+     &     ,array_length,print_values, array_values)
 c     ******************************************************************
-c     * last modified 11-11-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       integer io_unit, array_length
       character*(*) label
-      logical print_values
+      logical lfailure,print_values
       character*(*) array_values(array_length) 
 
 c     --- local variables
       integer i
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
 c     --- read the value
       read(io_unit,*,ERR=100) (array_values(i), i=1,array_length)
 
@@ -661,53 +702,59 @@ c     --- get here in case of read error
       else
          write(STDOUT, *) "Error reading string array for label ",label
       endif
-      stop
+      lfailure = .true.
+      return
       end
 
 
+      subroutine twh_read_label(lfailure,io_unit,label,print_value
+     &     ,idname)
 c     ******************************************************************
 c     * Read label of given name.
 c     * In case of a mismatched label this function halts execution.
 c     * (Use twh_check_label to verify the expected label if necessary).
 c     * Lines beginning with the '#' symbol are ignored.
 c     * Leading blanks are ignored
+c     *                                                                *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_read_label(io_unit,label,print_value,idname)
       implicit none
-
 c     --- variables passed to/from the subroutine
       character*(*) label, idname
       integer io_unit
-      logical print_value
+      logical lfailure,print_value
 
-      call twh_read_label_formatted(io_unit, label, print_value,
+      call twh_read_label_formatted(lfailure,io_unit,label,print_value,
      &      idname, '(a50)')
- 
+      if ( lfailure ) return
+
       return
       end
 
 
+      subroutine twh_read_label_formatted(lfailure,io_unit,label
+     &     ,print_value,idname, format_s)
 c     ******************************************************************
-c     * Read label of given name and specified label format (useful for 
-c     * instances where part of label is variable).
-c     * In case of a mismatched label this function halts execution.
-c     * (Use twh_check_label to verify the expected label if necessary).
-c     * Lines beginning with the '#' symbol are ignored.
-c     * Leading blanks are ignored
+c     * Read label of given name and specified label format (useful for*
+c     * instances where part of label is variable).                    *
+c     * In case of a mismatched label this function halts execution.   *
+c     * (Use twh_check_label to verify the expected label if necessary)*
+c     * Lines beginning with the '#' symbol are ignored.               *
+c     * Leading blanks are ignored                                     *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_read_label_formatted(io_unit,label,print_value,
-     &      idname, format_s)
       implicit none
 
 c     --- variables passed to/from the subroutine
       character*(*) label, idname, format_s
       integer io_unit
-      logical print_value
+      logical lfailure,print_value
 
 c     -- local variables
       character*50 teststring
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
  
       read(io_unit,format_s,ERR=501), teststring
 
@@ -718,7 +765,8 @@ c     -- local variables
          write(STDOUT,*) '  Expected String: ',label
          write(STDOUT,*) '  Found String: ', teststring
          write(STDOUT,*) 'Fatal error, quitting. '
-         stop
+         lfailure = .true.
+         return
       endif
       if (print_value) then
          write(STDOUT,*) label,":"
@@ -726,12 +774,13 @@ c     -- local variables
       return
 
 501   write(STDOUT,*) 'Error reading label in input file unit ',io_unit
-      stop
+      lfailure = .true.
+      return
       end
 
 
 
-      function twh_check_label(io_unit,label)
+      function twh_check_label(lfailure,io_unit,label)
 c     ******************************************************************
 c     * Check whether string in file matches label, and returns        *
 c     * true or false accordingly.  When the funciton returns, the file*
@@ -739,7 +788,7 @@ c     * position remains unchanged -- meaning that this function can be*
 c     * called repeatedly.                                             *
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     *                                                                *
-c     * last modified 03-09-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -747,20 +796,25 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(*) label
+      logical lfailure
       integer io_unit
 c     --- local variables
       character*128 s
 
-      s = twh_peek_label(io_unit)
+      s = twh_peek_label(lfailure,io_unit)
+      if ( lfailure ) goto 345
       if (label .eq. s) then
          twh_check_label = .true.
       else
          twh_check_label = .false.
       endif
       return
+ 345  write(6,*) 'failure in TWH_CHECK_LABEL'
+      twh_check_label = .false.
+      return
       end
 
-      function twh_peek_label(io_unit)
+      function twh_peek_label(lfailure,io_unit)
 c     ******************************************************************
 c     * Read and return label.  When the funciton returns, the file    *
 c     * position remains unchanged -- meaning that normal label/value  *
@@ -768,58 +822,69 @@ c     * reading functions (e.g. twh_read_labeled_integer) can then be  *
 c     * called.                                                        *
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     *                                                                *
-c     * last modified 03-09-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_PEEK_LABEL
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer io_unit
 
-      call twh_skip_comments(io_unit)
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
       read(io_unit,*,ERR=505) twh_peek_label
       backspace(io_unit)
       return
 
 505   write(STDOUT,*) 'Error reading input file unit ',io_unit
-      stop
+      lfailure = .true.
+      return
       end
 
 
-      subroutine twh_skip_comments(io_unit)
+      subroutine twh_skip_comments(lfailure,io_unit)
 c     ******************************************************************
-c     * Advances to the first line which is not a comment.
+c     * Advances to the first line which is not a comment.             *
+c     * last modified 08-04-2001 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-      logical twh_check_comment
+      logical lfailure,twh_check_comment
 
 c     --- variables passed to/from the subroutine
       integer io_unit
 
-900   if (twh_check_comment(io_unit)) then
-         goto 900
-      endif
+      do while ( twh_check_comment(lfailure,io_unit) )
+         if ( lfailure ) return
+      enddo
+
+c900   if (twh_check_comment(io_unit)) then
+c         goto 900
+c      endif
+
       return
       end
 
-      subroutine twh_skip_lines(io_unit,num_lines)
+      subroutine twh_skip_lines(lfailure,io_unit,num_lines)
 c     ******************************************************************
 c     * Reads a number of lines (given by num_lines) which are label   *
 c     * and/or data lines.  Comment lines are ignored and do not count *
 c     * in the num_lines count.                                        *
 c     *                                                                *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer io_unit, num_lines
 c     -- local variables
       integer l
       character*50 stringread
 
       do l=1,num_lines
-         call twh_skip_comments(io_unit)
-         call twh_read_string(io_unit, '', .false.,stringread)
+         call twh_skip_comments(lfailure,io_unit)
+         call twh_read_string(lfailure,io_unit, '', .false.,stringread)
+         if ( lfailure ) return
       enddo
 
       return
@@ -925,7 +990,7 @@ c     --- i now contains the length of initial padding
       end
 
 
-      function twh_check_comment(io_unit)
+      function twh_check_comment(lfailure,io_unit)
 c     ******************************************************************
 c     * Checks whether the current line begins with the '#' symbol, and 
 c     * returns true if it does.
@@ -933,12 +998,13 @@ c     * The file position is rewound if a comment is not found; hence,
 c     * repeated calls will skip through comments, but will not move
 c     * past data.
 c     *                                                                *
-c     * last modified 03-09-2006 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_COMMENT
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer io_unit
 c     --- local variables
       character*1 s
@@ -955,7 +1021,9 @@ c     --- local variables
       endif
 
 510   write(STDOUT,*) 'Error reading input file unit ',io_unit
-      stop
+      twh_check_comment = .false.
+      lfailure = .true.
+      return
       end
 
 

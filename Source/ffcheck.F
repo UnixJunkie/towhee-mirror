@@ -1,8 +1,7 @@
-c     $Id: ffcheck.F,v 1.7 2006/02/09 20:47:33 mattwycz Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2005 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,16 +19,17 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffcheck(style,type)
+      subroutine twh_ffcheck(lfailure,style,type)
 c     ******************************************************************
 c     * checks to see if we have exceeded any arrays                   *
 c     *                                                                *
 c     * originally written 12-19-2002 by M.G. Martin                   *
-c     * last modified 10-18-2005 M.G. Martin                           *
+c     * last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer style,type
 
       if ( style .eq. 0 ) then
@@ -37,65 +37,75 @@ c        --- nonbond
          write(6,*) 'Nonbonded types:',type
          if ( type .gt. NNTYPE ) then
             write(6,*) 'type exceeds NNTYPE'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 1 ) then
 c        --- vibration
          write(6,*) 'Bond types:',type
          if ( type .gt. TVIBMAX ) then
             write(6,*) 'type exceeds TVIBTYPE'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 2 ) then
 c        --- angles
          write(6,*) 'Angle types:',type
          if ( type .gt. TBENMAX ) then
             write(6,*) 'type exceeds TBENMAX'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 3 ) then
 c        --- torsions
          write(6,*) 'Torsion types:',type
          if ( type .gt. TTORMAX ) then
             write(6,*) 'type exceeds TTORMAX'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 4 ) then
 c        --- impropers
          write(6,*) 'Improper types:',type
          if ( type .gt. TIMPMAX ) then
             write(6,*) 'type exceeds TIMPMAX'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 5 ) then
          write(6,*) 'Angle-angle types:',type
          if ( type .gt. TAAMAX ) then
             write(6,*) 'type exceeds TAAMAX'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 6 ) then
 c        --- bond increment
          write(6,*) 'Bond Increment types:',type
          if ( type .gt. TBIMAX ) then
             write(6,*) 'type exceeds TBITYPE'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 7 ) then
 c        --- one-five
          write(6,*) 'One-Five types:',type
          if ( type .gt. TOFMAX ) then
             write(6,*) 'type exceeds TOFMAX'
-            stop
+            lfailure = .true.
+            return
          endif
       elseif ( style .eq. 8 ) then
          write(6,*) 'H-bond types:',type
          if ( type .gt. THBONDMAX ) then
             write(6,*) 'type exceeds THBONDMAX'
-            stop
+            lfailure = .true.
+            return
          endif
       else
          write(6,*) 'FFCHECK: unknown style'
-         stop
+         lfailure = .true.
+         return
       endif
 
 c     --- reset type

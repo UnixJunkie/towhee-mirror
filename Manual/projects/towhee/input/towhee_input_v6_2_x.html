@@ -39,6 +39,9 @@
      </ul>
      <b>Bug reports and feature enhancements for 6.2.x versions</b>
      <ul>
+      <li>6.2.17: Fixed a bug that was causing array overflows when the grand canonical ensemble was combined with more than one simulation box.  Also
+       reworked several subroutines to replace stop statements with more graceful failures.
+      </li>
       <li>6.2.16: Fixed a bug that was causing an infinite value of <b>kalp</b> when using a
        <a href="#coulombstyle"<b>coulombstyle</b></a> value of 'ewald_fixed_cutoff' in combination with a
        <a href="#numboxes"<b>numboxes</b></a> value greater than 1.  Began adding support for new random number generators.
@@ -2709,7 +2712,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 02, 2011<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 05, 2011<!-- #EndDate -->
   </font>
   <br></br>
  </body>

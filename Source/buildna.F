@@ -1,8 +1,7 @@
-c     $Id: buildna.F,v 1.21 2008/11/14 03:05:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     * from the 5'-terminus                                           *
 c     * imolty: molecule type number                                   *
 c     *                                                                *
 c     * originally written 04-10-2003 by C.D. Lorenz                   *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_LABELED_INTEGER
@@ -57,8 +56,9 @@ c      write(6,*) 'start BUILDNA'
 c     --- set lautotorsion
       lautotorsion = .true.
       
-      hterm = twh_read_labeled_integer(4,'terminus',
+      hterm = twh_read_labeled_integer(lfailure,4,'terminus',
      &    .false.,idname)
+      if ( lfailure ) return
 
 c     --- error check hterm
       if ( hterm .eq. 3 ) then
@@ -73,8 +73,9 @@ c     --- error check hterm
          return
       endif
 
-      call twh_read_labeled_string(4,'forcefield',.false.,idname
-     &     ,forcefield)
+      call twh_read_labeled_string(lfailure,4,'forcefield',.false.
+     &     ,idname,forcefield)
+      if ( lfailure ) return
 
 c     --- check for valid forcefield
       if ( forcefield .eq. 'Charmm27' ) then
@@ -85,12 +86,14 @@ c     --- check for valid forcefield
          return
       endif
 
-      call twh_read_label(4,'monomername',.false.,idname)
+      call twh_read_label(lfailure,4,'monomername',.false.,idname)
+      if ( lfailure ) return
 c     --- read in the nucleic acid sequence
       call twh_nunit(GLB_GET,imolty,nunit)
       do imonomer = 1,nunit
-         call twh_read_string(4, 'monomername', .false.
+         call twh_read_string(lfailure,4, 'monomername', .false.
      &        ,pepname(imonomer))
+         if ( lfailure ) return
          write(6,15) 'nucleic acid:',imonomer,'name:',pepname(imonomer)
  15      format(a13,i5,1x,a5,a2)
       enddo
@@ -116,9 +119,10 @@ c           --- build the 3' terminus
             termflag = 'neither'
          endif
          if ( forcefield .eq. 'Charmm27' ) then
-            call twh_polycharmm27na(imolty,iatom,termflag,total,ibondend
-     &           ,imonomer,pepname,atomname,aminoname,shortname
-     &           ,hterm)
+            call twh_polycharmm27na(lfailure,imolty,iatom,termflag
+     &           ,total,ibondend,imonomer,pepname,atomname,aminoname
+     &           ,shortname,hterm)
+            if ( lfailure ) return
          else
             write(6,*) 'BUILDNA: unknown forcefield'
             lfailure = .true.

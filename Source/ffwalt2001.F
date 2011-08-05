@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,19 +21,20 @@ c     * MA  02111-1307, USA.                                           *
 c     *                                                                *
 c     * See the file towhee.F for more information about the code      *
 c     ******************************************************************
-      subroutine ffwalt2001(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nbitypes)
+      subroutine twh_ffwalt2001(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nbitypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the walt2001     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 02-02-2005 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nbitypes
 c     --- local variables
       integer type,jtype,ij,isame
@@ -168,7 +169,8 @@ c     --- interaction with self (3-3)
       call twh_set_nbcoeff(ij,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * bond lengths - Morse                                           *
@@ -210,8 +212,8 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
-
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * angles - harmonic cosine                                       *
@@ -254,7 +256,8 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * torsions - 2-fold cosine                                       *
@@ -277,7 +280,8 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * bond increments                                                *
@@ -300,7 +304,8 @@ c     ******************************************************************
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

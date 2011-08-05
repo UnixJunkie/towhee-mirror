@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,15 +19,17 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffpotter1997(ntypes,nbondtypes,nangletypes,nbitypes)
+      subroutine twh_ffpotter1997(lfailure,ntypes,nbondtypes
+     &     ,nangletypes,nbitypes)
 c     ******************************************************************
 c     * sets up parameters for potter19997                             *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,nbitypes
 c     --- local variables
       character*(FFNAMELEN) ffname
@@ -41,26 +43,31 @@ c     of fluoromethanes" Mol. Phys. 92, 825-833 (1997)
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
       call twh_classical_mixrule(GLB_SET,'LB plus manual')
 
-      call twh_ffpotter1997_nonbond(ffname,ntypes)
-      call twh_ffpotter1997_bond(ffname,nbondtypes)
-      call twh_ffpotter1997_angle(ffname,nangletypes)
-      call twh_ffpotter1997_bond_increment(ffname,nbitypes)
+      call twh_ffpotter1997_nonbond(lfailure,ffname,ntypes)
+      if ( lfailure ) return
+      call twh_ffpotter1997_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffpotter1997_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffpotter1997_bond_increment(lfailure,ffname,nbitypes)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffpotter1997_nonbond(ffname,ntypes)
+      subroutine twh_ffpotter1997_nonbond(lfailure,ffname,ntypes)
 c     ******************************************************************
 c     * sets up the nonbonded parameters for potter1997                *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 04-26-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ntypes
 c     --- local variables
       integer type,ii
@@ -186,22 +193,24 @@ c     --- H(2)
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffpotter1997_bond(ffname,nbondtypes)
+      subroutine twh_ffpotter1997_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * bond lengths for the potter1997 forcefield                     *
 c     * all are rigid                                                  *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 04-26-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type,nsame
@@ -274,21 +283,23 @@ c     --- C-H(1)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffpotter1997_angle(ffname,nangletypes)
+      subroutine twh_ffpotter1997_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets up the angle terms for Potter1997                         *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 10-12-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,nsame
@@ -361,21 +372,24 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffpotter1997_bond_increment(ffname,nbitypes)
+      subroutine twh_ffpotter1997_bond_increment(lfailure,ffname
+     &     ,nbitypes)
 c     ******************************************************************
 c     * bond increments created based upon the charge assignments      *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 04-27-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbitypes
 c     --- local variables
       integer type
@@ -431,7 +445,8 @@ c     --- H(1)-C
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

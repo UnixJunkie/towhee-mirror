@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,15 +19,15 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffreadcharmmfile(lfailure,nbtype,botype,antype,ditype
-     &     ,imtype,ffname)
+      subroutine twh_ffreadcharmmfile(lfailure,nbtype,botype,antype
+     &     ,ditype,imtype,ffname)
 c     ******************************************************************
 c     * reads in a charmm-type force field file and reads it into      *
 c     * corresponding Towhee data structures so that it can create     *
 c     * a Towhee force field file                                      *
 c     *                                                                *
 c     * written by M.G. Martin and C.D. Lorenz 02-18-03                *
-c     * last modifed 10-14-2008 by M.G. Martin                         *
+c     * last modifed 08-04-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -183,7 +183,8 @@ c              *** read in data for nonbond forcefield terms
                else
                   write(6,*) "ERROR: Unknown element type",
      &              catom1(1:1)
-                  stop
+                  lfailure = .true.
+                  return
                endif
                call twh_elementname(GLB_SET,nbtype,elelocal) 
                call twh_mass(GLB_SET,nbtype,masslocal) 

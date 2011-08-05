@@ -1,8 +1,7 @@
-c     $Id: polycharmm27na.F,v 1.13 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,18 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_polycharmm27na(imolty,iatom,termflag,total,ibondend
-     &     ,inucleic,pepname,atomname,aminoname,shortname,hterm)
+      subroutine twh_polycharmm27na(lfailure,imolty,iatom,termflag
+     &     ,total,ibondend,inucleic,pepname,atomname,aminoname
+     &     ,shortname,hterm)
 c     ******************************************************************
 c     * builds the input file for a nucleic acid sequence starting from*
 c     * the N-terminus for the Charmm27 force field                    *
 c     *                                                                *
 c     * originally written 04-10-2003 by C.D. Lorenz                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
 #ifndef DISABLE_POLY
       implicit none
 c     ---- variables passed to/from the subroutine
+      logical lfailure
       integer imolty,iatom,total,ibondend,inucleic
       integer hterm
       character*2 pepname
@@ -67,7 +68,8 @@ c        --- 5' terminal end
                hmain = iatom + 8
             else
                write(6,*) 'ERROR: unknown type of nucleic acid'
-               stop
+               lfailure = .true.
+               return
             endif
             ilinker = iatom+4
          elseif (hterm .eq. 3) then
@@ -77,7 +79,8 @@ c        --- 5' terminal end
                hmain = iatom + 12
             else
                write(6,*) "ERROR: unknown type of nucleic acid"
-               stop
+               lfailure = .true.
+               return
             endif
             ilinker = iatom+8
          endif
@@ -89,7 +92,8 @@ c        --- 5' terminal end
             hmain = iatom + 11
          else
             write(6,*) "ERROR:unknown type of nucleic acid"
-            stop
+            lfailure = .true.
+            return
          endif
          ninsert = 7
          ilinker = iatom+7
@@ -102,7 +106,8 @@ c           --- 3' terminal end
                hmain = iatom + 11
             else
                write(6,*) "ERROR:unknown type of nucleic acid"
-               stop
+               lfailure = .true.
+               return
             endif  
          elseif (hterm .eq. 5) then
             if (deoxy .eq. 0) then
@@ -111,7 +116,8 @@ c           --- 3' terminal end
                hmain = iatom + 15
             else
                write(6,*) "ERROR:unknown type of nucleic acid"
-               stop
+               lfailure = .true.
+               return
             endif  
          endif
          ninsert = 8
@@ -119,7 +125,8 @@ c           --- 3' terminal end
       else
          write(6,*) 'POLYCHARMM27na: unknown termflag'
          write(6,*) termflag
-         stop
+         lfailure = .true.
+         return
       endif   
 c     --- determine which nucleic acid is built this step
       if ( pepname(inucleic) .eq. 'G' .or. 
@@ -402,22 +409,26 @@ c        --- no side chain improper torsions
          write(6,*) 'of a deoxyribonucleotide'
          write(6,*) 'Double check that if simulating RNA'
          write(6,*) 'you want to use uracil base (U)' 
-         stop
+         lfailure = .true.
+         return
       elseif (pepname(inucleic) .eq. 'dU' .or.
      &        pepname(inucleic) .eq. 'du') then
          write(6,*) 'uracil is generally found in the form'
          write(6,*) 'of a ribonucleotide'
          write(6,*) 'Double check that if simulating DNA'
          write(6,*) 'you want to use thymidine base (dT)'
-         stop
+         lfailure = .true.
+         return
       else
          write(6,*) 'invalid nucleotide name ',inucleic
      &        ,' ',pepname(inucleic)
-         stop
+         lfailure = .true.
+         return
       endif
 
-      call twh_aa_nucleic_main_chain(termflag,hterm,total,heavy
+      call twh_aa_nucleic_main_chain(lfailure,termflag,hterm,total,heavy
      &     ,ninsert,hmain,light,iatom,shift,deoxy,imolty,ibondend)
+      if ( lfailure ) return
 
       if ( termflag .eq. '5 prime' ) then
          if (hterm .eq. 5) then
@@ -445,7 +456,8 @@ c           --- 5'-terminus main chain
                call twh_qqatom(GLB_SET,imolty,iatom+5,-0.18d0)
             else
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             atomname(iatom+6) = 'CN7'
             call twh_qqatom(GLB_SET,imolty,iatom+6,0.01d0)
@@ -511,7 +523,8 @@ c           --- 3'-terminus main chain
                call twh_qqatom(GLB_SET,imolty,iatom+9,-0.18d0)
             else
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             atomname(iatom+10) = 'CN7'
             call twh_qqatom(GLB_SET,imolty,iatom+10,0.01d0)
@@ -744,7 +757,8 @@ c           --- 5'-terminus main chain
 c     --- invalid nucleic acid designation
          write(6,*) 'imolty,inucleic,pepname',imolty,inucleic
      &        ,pepname(inucleic),' is not valid'
-         stop
+         lfailure = .true.
+         return
       endif
 c     --- update ibondend for the typical nucleic acids
       if (termflag .eq. '5 prime' ) then
@@ -762,9 +776,10 @@ c     write(6,*) 'finished POLYCHARMM27NA'
       return
       end
 #else
-c     Compilation disabled (for speed) with FFLAGS=-DDISABLE_POLY statement in
-c     ./configure
+c     Compilation disabled (for speed) with FFLAGS=-DDISABLE_POLY
+c     statement in ./configure
       write(6,*) "polycharmm27na disabled (compile flag)"
-      stop
+      lfailure = .true.
+      return
       end
 #endif

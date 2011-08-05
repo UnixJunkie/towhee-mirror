@@ -94,7 +94,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 11-21-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -533,7 +533,8 @@ c              --- hard overlap, zero bfadjust
             else
                vmin = vctry(ip)
                lsoftovr = .false.
-               call twh_getweight(0,vmin,wmin,dpmin,lsoftovr)
+               call twh_getweight(lfailure,0,vmin,wmin,dpmin,lsoftovr)
+               if ( lfailure ) return
                if ( lsoftovr ) then
 c                 --- the energies were far too high in getweight
 c                 --- treat this as an overlap
@@ -668,7 +669,8 @@ c        --- divide out the biasing boltzmann factor
 c        --- divide out the number of nonbond trials
          wrosen = wrosen / dble(nch_nb)
 c        --- rescale the weight
-         call twh_getweight(1,vmin,wrosen,dpmin,lterm)
+         call twh_getweight(lfailure,1,vmin,wrosen,dpmin,lterm)
+         if ( lfailure ) return
          dpscale = dpscale + dpmin
          if ( lterm ) then
             if ( lnew ) then

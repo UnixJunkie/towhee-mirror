@@ -1,8 +1,7 @@
-c     $Id: rwcbmc.F,v 1.38 2010/08/13 21:36:53 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * rwflag is either READ_FLAG or WRITE_FLAG                       *
 c     *                                                                *
 c     * rewritten from writetowhee and readtowhee on 07-29-2005        *
 c     *           by M.G. Martin                                       *
-c     * last modified 07-25-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -90,9 +89,10 @@ c     --- cbmc formulation
       goodstring = 'cbmc_formulation'
       rwformat = '(a22)'
       if ( rwflag .eq. READ_FLAG ) then
-         if ( twh_check_label(rwfile,goodstring) ) then
-            call twh_read_labeled_string(rwfile,goodstring, .false.
-     &           ,idname,cbmc_formulation)
+         if ( twh_check_label(lfailure,rwfile,goodstring) ) then
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           , .false. ,idname,cbmc_formulation)
+            if ( lfailure ) return
          else
 c           --- if not specified then set default
             cbmc_formulation = 'Martin and Frischknecht 2006'
@@ -136,9 +136,10 @@ c     --- cbmc setting style
       rwformat = '(a18)'
       if ( rwflag .eq. READ_FLAG ) then
 
-         if ( twh_check_label(rwfile,goodstring) ) then
-            call twh_read_labeled_string(rwfile,goodstring, .false.
-     &           ,idname,cbmc_setting_style)
+         if ( twh_check_label(lfailure,rwfile,goodstring) ) then
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           , .false. ,idname,cbmc_setting_style)
+            if ( lfailure ) return
          else
 c           --- if not specified then default
             cbmc_setting_style = 'Martin and Frischknecht'
@@ -159,15 +160,17 @@ c           --- if not specified then default
          count = nmolty
          if ( rwflag .eq. READ_FLAG ) then
             ibox = 1
-            call twh_read_labeled_string_array(rwfile
+            call twh_read_labeled_string_array(lfailure,rwfile
      &           ,goodstring,count,.true.,idname,ctemparray)
+            if ( lfailure ) return
             do imolty = 1,nmolty
                call twh_cbmc_nb_one_generation(GLB_SET,ibox,imolty
      &              ,ctemparray(imolty))
             enddo
             do ibox = 2,numboxes
-               call twh_read_string_array(rwfile,goodstring,count
-     &              ,.true.,ctemparray)
+               call twh_read_string_array(lfailure,rwfile,goodstring
+     &              ,count,.true.,ctemparray)
+               if ( lfailure ) return
                do imolty = 1,nmolty
                   call twh_cbmc_nb_one_generation(GLB_SET,ibox,imolty
      &                 ,ctemparray(imolty))
@@ -228,8 +231,9 @@ c                 --- check potentialstyle
                endif
                if ( rwflag .eq. READ_FLAG ) then
 c                 --- read in molecule type to be mapped
-                  mapmolty = twh_read_labeled_integer
-     &                 (rwfile,'mapmolty',.true.,idname)
+                  mapmolty = twh_read_labeled_integer(lfailure
+     &                 ,rwfile,'mapmolty',.true.,idname)
+                  if ( lfailure ) return
                   call twh_mapmolty(GLB_SET,mapmolty)
 c                 --- error check mapmolty
                   if ( mapmolty .lt. 1 .or. mapmolty .gt. nmolty ) then
@@ -247,8 +251,9 @@ c                 --- output mapmolty
 
                if ( rwflag .eq. READ_FLAG ) then
 c                 --- read in lcreatemap logical
-                  lcreatemap = twh_read_labeled_logical(rwfile
+                  lcreatemap = twh_read_labeled_logical(lfailure,rwfile
      &                 ,'lcreatemap',.true.,idname)
+                  if ( lfailure ) return
                   call twh_lcreatemap(GLB_SET,lcreatemap)
                else
 c                 --- output createmap logical
@@ -260,10 +265,12 @@ c                 --- output createmap logical
                if ( lcreatemap ) then
                   if ( rwflag .eq. READ_FLAG ) then
 c                    --- read number of cubelets in each direction
-                     call twh_read_label(rwfile,'cubex cubey cubez'
-     &                    ,.false.,idname)
-                     call twh_read_integer_array(rwfile
+                     call twh_read_label(lfailure,rwfile
+     &                    ,'cubex cubey cubez',.false.,idname)
+                     if ( lfailure ) return
+                     call twh_read_integer_array(lfailure,rwfile
      &                    ,'cubex cubey cubez',3,.false., cube)
+                     if ( lfailure ) return
                      write(6,'(1x,a18,3(i10,1x))') 
      &                    ,'cubex,cubey,cubez:'
      &                    ,cube(1),cube(2),cube(3)
@@ -299,8 +306,9 @@ c                    --- error check
          goodstring = 'nch_nb_one'
          rwformat = '(a10)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring
-     &           ,nmolty,.true.,idname,iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring,nmolty,.true.,idname,iarray)
+            if ( lfailure ) return
 c           --- set and error check
             do imolty = 1,nmolty
                call twh_nch_nb_one(GLB_SET,imolty,iarray(imolty))
@@ -322,8 +330,9 @@ c           --- set and error check
          goodstring = 'nch_nb'
          rwformat = '(a6)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring,
-     &         nmolty, .true., idname, iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring,nmolty, .true., idname, iarray)
+            if ( lfailure ) return
 c           --- set and error check
             do imolty = 1,nmolty
                call twh_nch_nb(GLB_SET,imolty,iarray(imolty))
@@ -346,8 +355,9 @@ c           --- set and error check
             goodstring = 'nch_pre_nb'
             rwformat = '(a10)'
             if ( rwflag .eq. READ_FLAG ) then
-               call twh_read_labeled_integer_array(rwfile,goodstring,
-     &            nmolty, .true., idname, iarray)
+               call twh_read_labeled_integer_array(lfailure,rwfile
+     &              ,goodstring,nmolty, .true., idname, iarray)
+               if ( lfailure ) return
 c              --- set and error check
                do imolty = 1,nmolty
                   call twh_nch_pre_nb(GLB_SET,imolty,iarray(imolty))
@@ -371,8 +381,9 @@ c        --- torsion cb prob distribution style
          goodstring = 'cbmc_dihedral_generation'
          rwformat = '(a24)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_string(rwfile,goodstring, .false.
-     &           ,idname,cbmc_dihedral_generation)
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           , .false. ,idname,cbmc_dihedral_generation)
+            if ( lfailure ) return
             call twh_cbmc_dihedral_generation(GLB_SET
      &           ,cbmc_dihedral_generation)
             write(6,'(a25,1x,a30)') 'cbmc_dihedral_generation:'
@@ -421,8 +432,9 @@ c          --- standard deviations need for this type
             goodstring = 'sdevtor'
             rwformat = '(a7)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_sdevtor(GLB_SET,dvalue)
                write(6,'(a8,f10.5)') 'sdevtor:',dvalue
 c              --- error check
@@ -452,8 +464,9 @@ c           --- dihedral peak weight style
             goodstring = 'dihedral_peak_weight_style'
             rwformat = '(a26)'
             if ( rwflag .eq. READ_FLAG ) then
-               call twh_read_labeled_string(rwfile,goodstring,.false.
-     &              ,idname,ctemp)
+               call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &              ,.false.,idname,ctemp)
+               if ( lfailure ) return
                call twh_dihedral_peak_weight_style(GLB_SET,ctemp)
             else
                write(rwfile,rwformat) goodstring
@@ -465,8 +478,9 @@ c           --- standard deviation multiplier
             goodstring = 'dihedral_sdev_multiplier'
             rwformat = '(a24)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_dihedral_sdev_multiplier(GLB_SET,dvalue)
                write(6,'(a25,f10.5)') 'dihedral_sdev_multiplier:'
      &              ,dvalue
@@ -490,8 +504,9 @@ c           --- ideal linear combination fraction
             goodstring = 'dihedral_ideal_fraction'
             rwformat = '(a23)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_dihedral_ideal_fraction(GLB_SET,dvalue)
                write(6,'(a24,1x,f6.4)') 'dihedral_ideal_fraction:'
      &              ,dvalue
@@ -513,8 +528,9 @@ c        --- information for CBMC inner torsion growth
          goodstring = 'nch_tor'
          rwformat = '(a7)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring,
-     &         nmolty, .true., idname, iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring,nmolty, .true., idname, iarray)
+            if ( lfailure ) return
 c           --- set nch_tor
             do imolty = 1,nmolty
                ivalue = iarray(imolty)
@@ -542,8 +558,9 @@ c        --- information for CBMC torsion growth for fixed endpoint
          goodstring = 'nch_tor_connect'
          rwformat = '(a15)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring,
-     &         nmolty, .true., idname, iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring,nmolty, .true., idname, iarray)
+            if ( lfailure ) return
 c           --- set and error check
             do imolty = 1,nmolty
                call twh_nch_tor_connect(GLB_SET,imolty,iarray(imolty))
@@ -565,8 +582,9 @@ c        --- bend cb prob distribution style
          goodstring = 'cbmc_bend_generation'
          rwformat = '(a20)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_string(rwfile,goodstring, .false.
-     &           ,idname,cbmc_bend_generation)
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           , .false. ,idname,cbmc_bend_generation)
+            if ( lfailure ) return
             call twh_cbmc_bend_generation(GLB_SET,cbmc_bend_generation)
             write(6,'(a21,1x,a30)') 'cbmc_bend_generation:'
      &           ,cbmc_bend_generation
@@ -628,8 +646,9 @@ c           --- standard deviation for use with this style
             goodstring = 'sdevbena'
             rwformat = '(a8)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue =  twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue =  twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_sdevbena(GLB_SET,dvalue)
                write(6,'(a9,f10.5)') 'sdevbena:',dvalue
 c              --- error check
@@ -653,8 +672,9 @@ c           --- standard deviation for use with this style
             goodstring = 'sdevbenb'
             rwformat = '(a8)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue =  twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue =  twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_sdevbenb(GLB_SET,dvalue)
                write(6,'(a9,f10.5)') 'sdevbenb:',dvalue
 c              --- error check
@@ -682,8 +702,9 @@ c           --- need standard deviation multiplier
             goodstring = 'bend_a_sdev_multiplier'
             rwformat = '(a22)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_bend_a_sdev_multiplier(GLB_SET,dvalue)
                write(6,'(a23,1x,f10.5)') 'bend_a_sdev_multiplier:'
      &              ,dvalue
@@ -703,8 +724,9 @@ c           --- need standard deviation multiplier
             goodstring = 'bend_b_sdev_multiplier'
             rwformat = '(a22)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_bend_b_sdev_multiplier(GLB_SET,dvalue)
                write(6,'(a23,1x,f10.5)') 'bend_b_sdev_multiplier:'
      &              ,dvalue
@@ -726,8 +748,9 @@ c           --- need ideal fractions for bend a and b
             goodstring = 'bend_a_ideal_fraction'
             rwformat = '(a21)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_bend_a_ideal_fraction(GLB_SET,dvalue)
                write(6,'(a22,1x,f10.5)') 'bend_a_ideal_fraction:'
      &              ,dvalue
@@ -746,8 +769,9 @@ c           --- need ideal fractions for bend a and b
             goodstring = 'bend_b_ideal_fraction'
             rwformat = '(a21)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_bend_b_ideal_fraction(GLB_SET,dvalue)
                write(6,'(a22,1x,f10.5)') 'bend_b_ideal_fraction:'
      &              ,dvalue
@@ -768,8 +792,9 @@ c        --- information for CBMC bond angle growth
          goodstring = 'nch_bend_a'
          rwformat = '(a10)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring,
-     &         nmolty, .true., idname, iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring, nmolty, .true., idname, iarray)
+            if ( lfailure ) return
 c           --- set and error check
             do imolty = 1,nmolty
                call twh_nch_bend_a(GLB_SET,imolty,iarray(imolty))
@@ -790,8 +815,9 @@ c           --- set and error check
          goodstring = 'nch_bend_b'
          rwformat = '(a10)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring,
-     &         nmolty, .true., idname, iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring,nmolty, .true., idname, iarray)
+            if ( lfailure ) return
 c           --- set anderror check
             do imolty = 1,nmolty
                call twh_nch_bend_b(GLB_SET,imolty,iarray(imolty))
@@ -813,8 +839,9 @@ c        --- vibration cb prob distribution style
          goodstring = 'cbmc_bond_generation'
          rwformat = '(a20)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_string(rwfile,goodstring, .false.
-     &           ,idname,cbmc_bond_generation)
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           , .false. ,idname,cbmc_bond_generation)
+            if ( lfailure ) return
             call twh_cbmc_bond_generation(GLB_SET,cbmc_bond_generation)
             write(6,'(a21,1x,a30)') 'cbmc_bond_generation:'
      &           ,cbmc_bond_generation
@@ -858,8 +885,9 @@ c           --- need vibrang for this type
             goodstring = 'vibrang'
             rwformat = '(a7)'
             if ( rwflag .eq. READ_FLAG ) then
-               call twh_read_labeled_float_array(rwfile,goodstring,
-     &               2, .false., idname, dtemp)
+               call twh_read_labeled_float_array(lfailure,rwfile
+     &              ,goodstring,2, .false., idname, dtemp)
+               if ( lfailure ) return
                call twh_vibrang(GLB_SET,1,dtemp(1))
                call twh_vibrang(GLB_SET,2,dtemp(2))
                write(6,'(a8,2(f10.5,1x))') 'vibrang:',twh_get_vibrang(1)
@@ -879,8 +907,9 @@ c           --- need sdevvib for this type
             goodstring = 'sdevvib'
             rwformat = '(a7)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue =  twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue =  twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_sdevvib(GLB_SET,dvalue)
                write(6,'(a8,f10.5)') 'sdevvib:',dvalue
 c              --- error check
@@ -899,8 +928,9 @@ c           --- need bond_sdev_multiplier for this type
             goodstring = 'bond_sdev_multiplier'
             rwformat = '(a20)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue =  twh_read_labeled_float(rwfile,goodstring
-     &              , .false.,idname)
+               dvalue =  twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .false.,idname)
+               if ( lfailure ) return
                call twh_bond_sdev_multiplier(GLB_SET,dvalue)
                write(6,'(a21,f10.5)') 'bond_sdev_multiplier:',dvalue
 c              --- error check
@@ -920,8 +950,9 @@ c              --- error check
          goodstring = 'nch_vib'
          rwformat = '(a7)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_integer_array(rwfile,goodstring,
-     &         nmolty, .true., idname, iarray)
+            call twh_read_labeled_integer_array(lfailure,rwfile
+     &           ,goodstring,nmolty, .true., idname, iarray)
+            if ( lfailure ) return
 c           --- set and Error checking
             do imolty = 1,nmolty
                call twh_nch_vib(GLB_SET,imolty,iarray(imolty))
@@ -943,8 +974,9 @@ c        --- fixed endpoint bias styles
          goodstring = 'two_bond_fixed_endpoint_bias_style'
          rwformat = '(a34)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_string(rwfile,goodstring, .false.
-     &           ,idname,twobbias_style)
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           , .false. ,idname,twobbias_style)
+            if ( lfailure ) return
             call twh_two_bond_fe_bias_style(GLB_SET,twobbias_style)
             write(6,'(a34,a1,1x,a50)') goodstring,':',twobbias_style
          else
@@ -966,8 +998,9 @@ c           --- this style does not require further input or output
             goodstring = 'two_bond_bias_sdev_multiplier'
             rwformat = '(a30)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue =  twh_read_labeled_float(rwfile,goodstring
-     &              , .true.,idname)
+               dvalue =  twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring, .true.,idname)
+               if ( lfailure ) return
                call twh_two_bond_bias_sdev_multiplier(GLB_SET,dvalue)
             else
                write(rwfile,rwformat) goodstring
@@ -977,8 +1010,9 @@ c           --- this style does not require further input or output
             goodstring = 'two_bond_bias_vibrange'
             rwformat = '(a22)'
             if ( rwflag .eq. READ_FLAG ) then
-               call twh_read_labeled_float_array(rwfile,goodstring,
-     &               2, .true., idname, dtemp)
+               call twh_read_labeled_float_array(lfailure,rwfile
+     &              ,goodstring,2, .true., idname, dtemp)
+               if ( lfailure ) return
                call twh_two_bond_bias_vibrange(GLB_SET,1,dtemp(1))
                call twh_two_bond_bias_vibrange(GLB_SET,2,dtemp(2))
             else
@@ -993,8 +1027,9 @@ c           --- this style does not require further input or output
             goodstring = 'two_bond_bias_sdev_multiplier'
             rwformat = '(a30)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring,.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring,.true.,idname)
+               if ( lfailure ) return
                call twh_two_bond_bias_sdev_multiplier(GLB_SET,dvalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1007,8 +1042,9 @@ c           --- initial values
             goodstring = 'two_bond_bias_initial_value'
             rwformat = '(a27)'
             if ( rwflag .eq. READ_FLAG ) then
-               call twh_read_labeled_string(rwfile,goodstring, .true.
-     &              ,idname,twobbias_init)
+               call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &              , .true. ,idname,twobbias_init)
+               if ( lfailure ) return
                call twh_two_bond_bias_initial_value(GLB_SET
      &              ,twobbias_init)
             else
@@ -1022,8 +1058,9 @@ c           --- compute frequency
             goodstring = 'two_bond_bias_compute_frequency'
             rwformat = '(a31)'
             if ( rwflag .eq. READ_FLAG ) then
-               ivalue = twh_read_labeled_integer(rwfile, goodstring, 
-     &               .true.,idname)
+               ivalue = twh_read_labeled_integer(lfailure,rwfile
+     &              , goodstring, .true.,idname)
+               if ( lfailure ) return
                call twh_two_bond_bias_compute_frequency(GLB_SET,ivalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1034,8 +1071,9 @@ c           --- update frequency
             goodstring = 'two_bond_bias_update_frequency'
             rwformat = '(a30)'
             if ( rwflag .eq. READ_FLAG ) then
-               ivalue = twh_read_labeled_integer(rwfile, goodstring, 
-     &               .true.,idname)
+               ivalue = twh_read_labeled_integer(lfailure,rwfile
+     &              , goodstring, .true.,idname)
+               if ( lfailure ) return
                call twh_two_bond_bias_update_frequency(GLB_SET,ivalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1046,8 +1084,9 @@ c           --- old fraction
             goodstring = 'two_bond_bias_old_fraction'
             rwformat = '(a26)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile, goodstring, 
-     &               .true.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              , goodstring, .true.,idname)
+               if ( lfailure ) return
                call twh_two_bond_bias_old_fraction(GLB_SET,dvalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1066,8 +1105,9 @@ c           --- unknown style
          goodstring = 'three_bond_fixed_endpoint_bias_style'
          rwformat = '(a36)'
          if ( rwflag .eq. READ_FLAG ) then
-            call twh_read_labeled_string(rwfile,goodstring,.false.
-     &           ,idname,threebbias_style)
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           ,.false.,idname,threebbias_style)
+            if ( lfailure ) return
             call twh_three_bond_fe_bias_style(GLB_SET,threebbias_style)
             write(6,'(a36,a1,1x,a50)') goodstring,':',threebbias_style
          else
@@ -1088,8 +1128,9 @@ c           --- no other variables required
             goodstring = 'three_bond_bias_sdev_multiplier'
             rwformat = '(a31)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring,.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring,.true. ,idname)
+               if ( lfailure ) return
                call twh_three_bond_bias_sdev_multiplier(GLB_SET,dvalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1102,8 +1143,9 @@ c           --- no other variables required
             goodstring = 'three_bond_bias_sdev_multiplier'
             rwformat = '(a31)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile,goodstring,.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              ,goodstring,.true.,idname)
+               if ( lfailure ) return
                call twh_three_bond_bias_sdev_multiplier(GLB_SET,dvalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1114,8 +1156,9 @@ c           --- initial value
             goodstring = 'three_bond_bias_initial_value'
             rwformat = '(a30)'
             if ( rwflag .eq. READ_FLAG ) then
-               call twh_read_labeled_string(rwfile, goodstring,.true.
-     &              ,idname,threebbias_init)
+               call twh_read_labeled_string(lfailure,rwfile, goodstring
+     &              ,.true. ,idname,threebbias_init)
+               if ( lfailure ) return
                call twh_three_bond_bias_initial_value(GLB_SET
      &              ,threebbias_init)
             else
@@ -1129,8 +1172,9 @@ c           --- compute frequency
             goodstring = 'three_bond_bias_compute_frequency'
             rwformat = '(a33)'
             if ( rwflag .eq. READ_FLAG ) then
-               ivalue = twh_read_labeled_integer(rwfile,goodstring
-     &              ,.true.,idname)
+               ivalue = twh_read_labeled_integer(lfailure,rwfile
+     &              ,goodstring,.true.,idname)
+               if ( lfailure ) return
                call twh_three_bond_bias_compute_freq(GLB_SET,ivalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1141,8 +1185,9 @@ c           --- update frequency
             goodstring = 'three_bond_bias_update_frequency'
             rwformat = '(a33)'
             if ( rwflag .eq. READ_FLAG ) then
-               ivalue = twh_read_labeled_integer(rwfile,goodstring
-     &              , .true.,idname)
+               ivalue = twh_read_labeled_integer(lfailure,rwfile
+     &              ,goodstring, .true.,idname)
+               if ( lfailure ) return
                call twh_three_bond_bias_update_freq(GLB_SET,ivalue)
             else
                write(rwfile,rwformat) goodstring
@@ -1153,8 +1198,9 @@ c           --- old fraction
             goodstring = 'three_bond_bias_old_fraction'
             rwformat = '(a28)'
             if ( rwflag .eq. READ_FLAG ) then
-               dvalue = twh_read_labeled_float(rwfile, goodstring
-     &              , .true.,idname)
+               dvalue = twh_read_labeled_float(lfailure,rwfile
+     &              , goodstring, .true.,idname)
+               if ( lfailure ) return
                call twh_three_bond_bias_old_fraction(GLB_SET,dvalue)
             else
                write(rwfile,rwformat) goodstring

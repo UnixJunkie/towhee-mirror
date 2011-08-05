@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,14 +19,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffopls1996(lfailure,ntypes,nbondtypes,nangletypes
+      subroutine twh_ffopls1996(lfailure,ntypes,nbondtypes,nangletypes
      &     ,ndihedtypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the OPLS-1996    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 06-29-2006 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -41,9 +41,12 @@ c     --- local variables
 
       call twh_ffopls1996_nonbond(lfailure,ffname,ntypes)
       if ( lfailure ) return
-      call twh_ffopls1996_bond(ffname,nbondtypes)
-      call twh_ffopls1996_angle(ffname,nangletypes)
-      call twh_ffopls1996_dihedral(ffname,ndihedtypes)
+      call twh_ffopls1996_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffopls1996_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffopls1996_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
 
       return
       end
@@ -8257,21 +8260,23 @@ c     --- local variables
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffopls1996_bond(ffname,nbondtypes)
+      subroutine twh_ffopls1996_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * sets up the bond potentials for OPLS-1996                      *
 c     *                                                                *
 c     * originally written 06-30-2006 by M.G. Martin                   *
-c     * last modified 08-02-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type
@@ -10729,20 +10734,23 @@ c     --- U -OU
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
+
       return
       end
 
-      subroutine twh_ffopls1996_angle(ffname,nangletypes)
+      subroutine twh_ffopls1996_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets up the angle terms for OPLS-1996                          *
 c     *                                                                *
 c     * originally written 07-01-2006 by M.G. Martin                   *
-c     * last modified 07-01-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,isame,nbslocal
@@ -10772,20 +10780,23 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
+
       return
       end
 
-      subroutine twh_ffopls1996_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffopls1996_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * OPLS-1996 dihedral                                             *
 c     *                                                                *
 c     * originally written 07-01-2006 by M.G. Martin                   *
-c     * last modified 07-01-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type,isame
@@ -10819,7 +10830,8 @@ c     --- H-C-C-H hydrocarbon all-atom
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end

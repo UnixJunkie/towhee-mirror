@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffdevel(lfailure,ntypes,nbondtypes,nangletypes
+      subroutine twh_ffdevel(lfailure,ntypes,nbondtypes,nangletypes
      &     ,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * holding place for some force field parameters that I'm trying  *
@@ -28,7 +28,7 @@ c     * I don't suggest using them unless you are helping to work on   *
 c     * these parameterizations.                                       *
 c     *                                                                *
 c     * originally written 02-14-2005 by M.G. Martin                   *
-c     * last modified 10-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -44,10 +44,14 @@ c     --- set variables for this forcefield
 
       call twh_ffdevel_nonbond(lfailure,ffname,ntypes)
       if ( lfailure ) return
-      call twh_ffdevel_bond(ffname,nbondtypes)
-      call twh_ffdevel_angle(ffname,nangletypes)
-      call twh_ffdevel_dihedral(ffname,ndihedtypes)
-      call twh_ffdevel_improper(ffname,nimprotypes)
+      call twh_ffdevel_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffdevel_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffdevel_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
+      call twh_ffdevel_improper(lfailure,ffname,nimprotypes)
+      if ( lfailure ) return
 
       return
       end
@@ -55,7 +59,7 @@ c     --- set variables for this forcefield
       subroutine twh_ffdevel_nonbond(lfailure,ffname,ntypes)
 c     ******************************************************************
 c     * originally written 04-29-2008 by M.G. Martin                   *
-c     * last modified 04-30-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -702,21 +706,23 @@ c     (NC) N in tricyanomethanide
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffdevel_bond(ffname,nbondtypes)
+      subroutine twh_ffdevel_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * bond lengths - Harmonic                                        *
 c     *                                                                *
 c     * originally written 04-29-2008 by M.G. Martin                   *
-c     * last modified 04-29-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(*) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type,isame
@@ -1089,21 +1095,23 @@ c     --- set vibnames
       call twh_set_vibnames(type,isame,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffdevel_angle(ffname,nangletypes)
+      subroutine twh_ffdevel_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * angles - harmonic                                              *
 c     *                                                                *
 c     * originally written 04-29-2008 by M.G. Martin                   *
-c     * last modified 04-30-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(*) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,isame
@@ -1866,20 +1874,23 @@ c     --- set nbsame
       call twh_set_bendnames(type,isame,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
+
       return
       end
 
-      subroutine twh_ffdevel_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffdevel_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * torsions - Charmm style                                        *
 c     *                                                                *
 c     * originally written 04-29-2008 by M.G. Martin                   *
-c     * last modified 04-30-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(*) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type,isame
@@ -2647,20 +2658,23 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
+
       return
       end
 
-      subroutine twh_ffdevel_improper(ffname,nimprotypes)
+      subroutine twh_ffdevel_improper(lfailure,ffname,nimprotypes)
 c     ******************************************************************
 c     * improper torsions                                              *
 c     *                                                                *
 c     * originally written 04-29-2008 by M.G. Martin                   *
-c     * last modified 04-30-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(*) ffname
+      logical lfailure
       integer nimprotypes
 c     --- local variables
       integer type,isame
@@ -2732,7 +2746,8 @@ c     --- set nimpsame
       call twh_set_impnames(type,isame,ninlocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
       
       return
       end

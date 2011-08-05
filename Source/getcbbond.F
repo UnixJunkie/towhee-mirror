@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -46,7 +46,7 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 07-25-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -294,7 +294,9 @@ c                 --- sample according to a bounded r^2 distribution
                   length = ((lolimit+twh_random()*hilimit))**onethird
                elseif ( style_code .eq. DIST_GAUSSIAN ) then
 c                 --- sample from a gaussian distribution
-                  length = twh_gaussian(mean,std_dev,lolimit,hilimit)
+                  length = twh_gaussian(lfailure,mean,std_dev
+     &                 ,lolimit,hilimit)
+                  if ( lfailure ) return
                elseif ( style_code .eq. DIST_R_SQ_IDEAL ) then
 c                 --- sample according to ideal r^2 distribution
                   length = hilimit*(twh_random()**onethird)
@@ -454,7 +456,8 @@ c           --- select the old bond length
          endif
 
 c        --- account for vmin
-         call twh_getweight(0,vmin,wmin,dpmin,lterm)
+         call twh_getweight(lfailure,0,vmin,wmin,dpmin,lterm)
+         if ( lfailure ) return
          if ( lterm ) then
 c           --- this really should never happen as the bond length
 c           --- energies should be pretty well behaved. 

@@ -1,8 +1,7 @@
-c     $Id: ffcharmm27.F,v 1.32 2010/05/19 23:30:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,17 +19,18 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffcharmm27(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes)
+      subroutine twh_ffcharmm27(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the charmm27     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 02-10-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
       character*(FFNAMELEN) ffname
@@ -38,29 +38,34 @@ c     --- local variables
       ffname = 'Charmm27'
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
       call twh_classical_mixrule(GLB_SET,'Lorentz-Berthelot')
-
-      call twh_ffcharmm27_nonbond(ffname,ntypes)
-      call twh_ffcharmm27_bond(ffname,nbondtypes)
-      call twh_ffcharmm27_angle(ffname,nangletypes)
-      call twh_ffcharmm27_dihedral(ffname,ndihedtypes)
-      call twh_ffcharmm27_improper(ffname,nimprotypes)
+      call twh_ffcharmm27_nonbond(lfailure,ffname,ntypes)
+      if ( lfailure ) return
+      call twh_ffcharmm27_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffcharmm27_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffcharmm27_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
+      call twh_ffcharmm27_improper(lfailure,ffname,nimprotypes)
+      if ( lfailure ) return
 
       return
       end
 
 
-      subroutine twh_ffcharmm27_nonbond(ffname,ntypes)
+      subroutine twh_ffcharmm27_nonbond(lfailure,ffname,ntypes)
 c     ******************************************************************
 c     * sets up the nonbonded portion of the charmm27 forcefield       *
 c     *                                                                *
 c     * split from the original ffcharmm27 03-05-2006 by M.G. Martin   *
-c     * last modified 06-29-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ntypes
 c     --- local variables
       integer type,ii
@@ -3246,21 +3251,23 @@ c     (SS) thiolate sulfur [par_all27_prot_lipid.inp]
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffcharmm27_bond(ffname,nbondtypes)
+      subroutine twh_ffcharmm27_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * sets up the bond potentials for Charmm27                       *
 c     *                                                                *
 c     * split from original ffcharmm27 03-05-2006 by M.G. Martin       *
-c     * last modified 04-17-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type,isame
@@ -6395,20 +6402,22 @@ c     --- OM - FE [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
       return
       end
 
-      subroutine twh_ffcharmm27_angle(ffname,nangletypes)
+      subroutine twh_ffcharmm27_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets up the angle terms for Charmm27                           *
 c     *                                                                *
 c     * split from original ffcharmm27 03-05-2006 by M.G. Martin       *
-c     * last modified 04-17-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,isame,nbslocal
@@ -14893,20 +14902,22 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
       return
       end
 
-      subroutine twh_ffcharmm27_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffcharmm27_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * Charmm27 standard  dihedral                                    *
 c     *                                                                *
 c     * split from original ffcharmm27 03-05-2006 by M.G. Martin       *
-c     * last modified 04-17-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type,isame
@@ -23055,21 +23066,23 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffcharmm27_improper(ffname,nimprotypes)
+      subroutine twh_ffcharmm27_improper(lfailure,ffname,nimprotypes)
 c     ******************************************************************
 c     * Charmm27 improper harmonic torsions                            *
 c     *                                                                *
 c     * split from ffcharmm27 03-05-2006 by M.G. Martin                *
-c     * last modified 04-17-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nimprotypes
 c     --- local variables
       integer type,isame
@@ -23999,7 +24012,8 @@ c     --- set nimpsame
       call twh_set_impnames(type,nislocal,ninlocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
       
       return
       end

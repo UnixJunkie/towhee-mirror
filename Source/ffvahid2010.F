@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2010-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2010-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffvahid2010(ntypes,nbondtypes,nangletypes,ndihedtypes)
+      subroutine twh_ffvahid2010(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes)
 c     ******************************************************************
 c     * a SPEADMD model implementation based upon the work published in*
 c     * A. Vahid; J. R. Elliott; "Transferable Intermolecular          *
@@ -27,14 +28,14 @@ c     * Potentials for Carboxylic Acids and Their Phase Behavior"      *
 c     * AIChE Journal, 56, 2, 485-505 (2010)                           *
 c     *                                                                *
 c     * originally written 12-03-2005 by M.G. Martin                   *
-c     * last modified 11-15-2010 M.G. Martin                           *
+c     * last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
 c     --- local variables
       character*(FFNAMELEN) ffname
@@ -123,7 +124,8 @@ c     --- initialize type
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * square well bonds                                              *
@@ -148,7 +150,8 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * square well angles                                             *
@@ -183,7 +186,8 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * nonbonded interactions for dihedrals                           *
@@ -204,7 +208,8 @@ c     --- C-C-C-C
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end

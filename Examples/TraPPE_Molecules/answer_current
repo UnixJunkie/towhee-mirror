@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.16 (August 02 2011)
+ MCCCS Towhee - Version 6.2.17 (August 05 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -171,7 +171,6 @@ Total charge for Molecule Type:    1 is:    0.00000
  lpdbnames:  F
    using the TraPPE-UA  force field
  charge_assignment: bond increment                
-Selected random number generator RANLUX with luxury level 3 and seed 1302002.
    Building the input file for molecule type:     2
 unit:    1 name:CH3*(sp3) 
 unit:    2 name:Och(sp3)  
@@ -267,6 +266,12 @@ Unit:    6 nbname: O=c(sp2)   Charge:   -0.45000
 Total charge for Molecule Type:    6 is:    0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
+     for molecule type     1
+     for molecule type     2
+     for molecule type     3
+     for molecule type     4
+     for molecule type     5
+     for molecule type     6
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
@@ -350,6 +355,7 @@ Molecular mass for molecule type     2 is    32.0416 g/mol
 Molecular mass for molecule type     3 is    86.1332 g/mol
 Molecular mass for molecule type     4 is    76.0942 g/mol
 Molecular mass for molecule type     5 is    62.0674 g/mol
+Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 Molecular mass for molecule type     6 is    74.0784 g/mol
  Calling initconf
  RANLUX LUXURY LEVEL SET BY RLUXGO : 3     P= 223

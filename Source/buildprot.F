@@ -1,8 +1,7 @@
-c     $Id: buildprot.F,v 1.25 2008/11/14 03:05:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     * the N-terminus                                                 *
 c     * imolty: molecule type number                                   *
 c     *                                                                *
 c     * originally written 02-15-2001 by M.G. Martin                   *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJIMPROP2
@@ -74,8 +73,9 @@ c     --- local variables
       idname = 'buildprot'
 
       write(6,*) 'Building the protein input file'
-      call twh_read_labeled_string(4, 'forcefield', .false.,idname
-     &     ,forcefield)
+      call twh_read_labeled_string(lfailure,4, 'forcefield', .false.
+     &     ,idname,forcefield)
+      if ( lfailure ) return
 
 c     --- check for valid forcefield
       if ( forcefield .eq. 'Charmm19' ) then
@@ -106,8 +106,9 @@ c     --- check for valid forcefield
       endif
 
 c     --- read in the protein geometry
-      call twh_read_labeled_string(4, 'protgeom', .false.,idname
-     &     ,protgeom)
+      call twh_read_labeled_string(lfailure,4, 'protgeom', .false.
+     &     ,idname,protgeom)
+      if ( lfailure ) return
 
 c     --- make sure protgeom is valid
       if ( protgeom .eq. 'cyclic' ) then
@@ -123,8 +124,9 @@ c     --- make sure protgeom is valid
       endif
 
 c     --- read in the peptide sequence
-      call twh_read_label_formatted(4, 'pepname', .false., idname, 
-     &      '(a7)')
+      call twh_read_label_formatted(lfailure,4, 'pepname', .false.
+     &     , idname, '(a7)')
+      if ( lfailure ) return
       call twh_nunit(GLB_GET,imolty,nunit)
       do ipeptide = 1,nunit
          if ( protgeom .eq. 'cyclic' ) then

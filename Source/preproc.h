@@ -27,8 +27,7 @@
 #define MAXBOX 3
 
 /* numax = maximum number of units/atoms in a molecule (default 2002) */
-/* #define NUMAX 2002 */
-#define NUMAX 2200
+#define NUMAX 2202
 
 /* ntmax = maximum number of types of molecules (default: 6) */
 #define NTMAX 7

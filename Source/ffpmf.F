@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,13 +19,13 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffpmf(lfailure,ntypes)
+      subroutine twh_ffpmf(lfailure,ntypes)
 c     ******************************************************************
 c     * reads in a series of potentials of mean force and turns them   *
 c     * into a forcefield                                              *
 c     *                                                                *
 c     * originally written 09-23-2004 by M.G. Martin                   *
-c     * last modifed 11-15-2010 by M.G. Martin                         *
+c     * last modifed 08-04-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -59,7 +59,8 @@ c     --- get ntypes
       read(5,*) ntypes
       if ( ntypes .gt. MAXTABTYPE ) then
          write(6,*)'error: number of types greater than MAXTABTYPE'
-         stop
+         lfailure = .true.
+         return
       endif
 
 c     --- set nbff
@@ -95,30 +96,36 @@ c           --- get the filename
             if ( lfailure ) return
 
 c           --- read in the pmf version
-            iversion = twh_read_labeled_integer(10,'pmf version',
-     &            .false., idname)
+            iversion = twh_read_labeled_integer(lfailure,10
+     &           ,'pmf version',.false., idname)
+            if ( lfailure ) return
             if ( iversion .ne. nversion ) then
                write(6,*) 'invalid towhee pmf version',iversion
-               stop
+               lfailure = .true.
+               return
             endif
 
 c           --- read in the number of datapoints
-            ipair = twh_read_labeled_integer(10,
+            ipair = twh_read_labeled_integer(lfailure,10,
      &           'datapoints', .false., idname)
+            if ( lfailure ) return
             call twh_table_npair(GLB_SET,ntij,ipair)
             if ( ipair .lt. 1 ) then
                write(6,*) 'datapoints must be positive',ipair
-               stop
+               lfailure = .true.
+               return
             endif
             if ( ipair .gt. MAXTABLE ) then
                write(6,*) 'FFPMF: datapoints exceed MAXTABLE'
                write(6,*) 'datapoints',ipair,'MAXTABLE'
      &              ,MAXTABLE
-               stop
+               lfailure = .true.
+               return
             endif
 
 c           --- read in the data
-            call twh_read_label(10, 'data', .false., idname)
+            call twh_read_label(lfailure,10, 'data', .false., idname)
+            if ( lfailure ) return
             do itable = 1,ipair
                read(10,*) tpairone,tpairtwo
                call twh_table_pair(GLB_SET,1,ntij,itable,tpairone)

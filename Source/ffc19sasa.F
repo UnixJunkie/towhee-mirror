@@ -1,8 +1,7 @@
-c     $Id: ffc19sasa.F,v 1.28 2010/05/19 23:30:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,22 +19,22 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffc19sasa(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes)
+      subroutine twh_ffc19sasa(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the c19sasa      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 02-10-2010 by M.G. martin                        *
+c     * last modified 08-04-2011 by M.G. martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #define FUNCTION_GET_NBCOEFF
 #define FUNCTION_GET_NBNAME
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
       integer ii,type
@@ -782,8 +781,8 @@ c     [param19_eef1.inp]
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
       
       ntypes = type
-      call ffcheck(0,type)
-
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 c     --- setup all of the cross terms explicitly 
       do itrial = 1,2
          do i = 1, ntypes
@@ -1449,7 +1448,8 @@ c     --- S - S [param19_eef1.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
       
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * charmm19 angles simple harmonic                                *
@@ -3020,7 +3020,8 @@ c     --- H - OH2 - H [param19_eef1.inp]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * C19eef1 - the original version from the Neria paper           *
@@ -3647,7 +3648,8 @@ c     --- (from CR1E - X - X - CR1E) [param19_eef1.inp]
       call twh_set_tornames(type,ntslocal,tnlocal)
       
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * C19eef1 improper harmonic torsion                             *
@@ -3984,7 +3986,8 @@ c     --- CH1E - X - X - CH3E [param19_eef1.inp]
       call twh_set_impnames(type,nislocal,ninlocal)
       
       nimprotypes = type
-      call ffcheck(4,type)
-      
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
+     
       return
       end

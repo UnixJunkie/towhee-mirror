@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffjaramillo(ntypes,nbondtypes,nangletypes,ndihedtypes)
+      subroutine twh_ffjaramillo(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the jaramillo    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 7-31-2006 by O. Yazaydin                    *
-c     * last modified 11-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
 c     --- local variables
       integer type,j,ij,isame
@@ -165,7 +166,8 @@ c     --- cross term of F with F (3-3) [jpcb2001]
       call twh_set_nbcoeff(ij,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * bond lengths - simple harmonic                                 *
@@ -218,7 +220,8 @@ c     --- set nvsame
 
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * angles - simple harmonic                                       *
@@ -327,7 +330,8 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * torsions - OPLS style Cosine Series                            *
@@ -354,7 +358,8 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,18 +21,20 @@ c     * MA  02111-1307, USA.                                           *
 c     *                                                                *
 c     * See the file towhee.F for more information about the code      *
 c     ******************************************************************
-      subroutine ffnerdv1(ntypes,nbondtypes,nangletypes,ndihedtypes)
+      subroutine twh_ffnerdv1(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the original     *
 c     * version of the NERD forcefield                                 *
 c     *                                                                *
 c     * originally written 06-29-2004 by N.B. du Preez                 *
-c     * last modified 11-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
 c     --- local variables
       integer ii,type
@@ -275,7 +277,8 @@ c     ethene (CH2) united-atom [mp2000]
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * NERD bond lengths - simple harmonic                            *
@@ -308,7 +311,8 @@ c     --- both sp3 carbon double bond [mp2000]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * NERD angles - simple harmonic                                  *
@@ -383,7 +387,8 @@ c     CH - CH - CH
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * NERD torsions using standard OPLS cosine series                *
@@ -427,7 +432,8 @@ c     Cwild - CH2sp3 CHsp3 - Cwild
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end

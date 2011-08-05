@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -44,7 +44,7 @@ c     * many things have now changed and the original comments are no  *
 c     * longer valid.                                                  *
 c     *                                                                *
 c     * routine originally incorporated on 05-17-2004 by M.G. Martin   *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -80,22 +80,24 @@ c     --- double precision arrays
      &     'Building the nanotube input file for molecule type:',imolty
 c     --- read information from towhee_input
 c     --- forcefield
-      call twh_read_labeled_string(4,'forcefield',.true.,idname
+      call twh_read_labeled_string(lfailure,4,'forcefield',.true.,idname
      &     ,forcefield)
-
+      if ( lfailure ) return
 c     --- read in the repeat atomname
-      call twh_read_labeled_string(4,'atomname',.true.,idname
+      call twh_read_labeled_string(lfailure,4,'atomname',.true.,idname
      &     ,atomname(1))
-
+      if ( lfailure ) return
 c     --- read in the qqatom
-      qtemp = twh_read_labeled_float(4,'qqatom',.false.,
+      qtemp = twh_read_labeled_float(lfailure,4,'qqatom',.false.,
      &    idname)
+      if ( lfailure ) return
       call twh_qqatom(GLB_SET,imolty,1,qtemp)
       write(6,'(a7,f10.5)') 'qqatom:',qtemp
 
 c     --- read in the 'n' parameter
-      n = twh_read_labeled_integer(4,'nanotube_n',.true.,
+      n = twh_read_labeled_integer(lfailure,4,'nanotube_n',.true.,
      &    idname)
+      if ( lfailure ) return
       if ( n .lt. 0 ) then
          write(6,*) 'BUILDNANOTUBE: nanotube_n must be non-negative'
          lfailure = .true.
@@ -103,8 +105,9 @@ c     --- read in the 'n' parameter
       endif
 
 c     --- read in the 'm' parameter
-      m = twh_read_labeled_integer(4,'nanotube_m',.true.,
+      m = twh_read_labeled_integer(lfailure,4,'nanotube_m',.true.,
      &    idname)
+      if ( lfailure ) return
       if ( m .lt. 0 ) then
          write(6,*) 'BUILDNANOTUBE: nanotube_m must be non-negative'
          lfailure = .true.
@@ -112,8 +115,9 @@ c     --- read in the 'm' parameter
       endif
 
 c     --- read in the number of repeat cells
-      ncells = twh_read_labeled_integer(4,'nanotube_ncells',.true.,
-     &    idname)
+      ncells = twh_read_labeled_integer(lfailure,4,'nanotube_ncells'
+     &     ,.true.,idname)
+      if ( lfailure ) return
       if ( ncells .lt. 1 ) then 
          write(6,*) 'BUILDNANOTUBE: nanotube_ncells must be positive'
          lfailure = .true.
@@ -121,8 +125,9 @@ c     --- read in the number of repeat cells
       endif
 
 c     --- read in the atom bond length
-      bondlength = twh_read_labeled_float(4,'nanotube_bondlength',
-     &    .false.,idname)
+      bondlength = twh_read_labeled_float(lfailure,4
+     &     ,'nanotube_bondlength',.false.,idname)
+      if ( lfailure ) return
       write(6,'(a20,f10.5)') 'nanotube_bondlength:',bondlength
       if ( bondlength .le. 0.0d0 ) then
          write(6,*) 'BUILDNANOTUBE: nanotube_bondlength must be postive'

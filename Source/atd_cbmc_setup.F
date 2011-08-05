@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-03-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -55,11 +55,15 @@ c     --- function declarations
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
+      character*20 atest
       character*30 peakstyle
       character*50 twobbias_style,twobbias_init,threebbias_init
       character*50 threebbias_style
 c     --- local logical scalars
-      logical lovrlap,lfound,lrigid,lbond
+      logical lovrlap,lfound,lrigid,lbond,linit
+c     --- local logical arrays
+      logical lyescbmc
+      dimension lyescbmc(NTMAX)
 c     --- local integer parameters
       integer maxextrema
       parameter (maxextrema = 2*(CBMC_MAXTORPEAKS+CBMC_MAXBENDPEAKS))
@@ -69,10 +73,14 @@ c     --- local integer scalars
       integer imax,junitb,kunitb,icrossbend,jbend,kbend,ibondmax
       integer bij_type,bjk_type,iscan_bij,iscan_bjk
       integer type,nmolty,nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
-      integer cbmc_dihedgen_code,style,bonddist,vibtype
+      integer cbmc_dihedgen_code,style,bonddist,vibtype,ivalue,ncompute
+      integer icompute,numboxes,nummol
 #if DEBUG_ATD_CBMC_SETUP
-      integer count,style_code,imgm,ivalue
+      integer count,style_code,imgm
 #endif
+c     --- local integer arrays
+      integer computelist
+      dimension computelist(NTMAX)
 c     --- local dp scalars
       double precision rmax,sum_x,sum_xx,length,theta,truenorm,arbnorm
       double precision energy,weight,sum_w,distone,disttwo,angcos
@@ -84,7 +92,7 @@ c     --- local dp scalars
       double precision twobvibone,twobvibtwo,bond_sdev_multiplier
       double precision benda_mult,bendb_mult,dihed_mult
       double precision viblo,vibhi,onethird,mean,std_dev
-      double precision radtodeg
+      double precision radtodeg,ptest
 #if DEBUG_ATD_CBMC_SETUP
       double precision ideal_frac
       double precision phidisp,pdf_bias,lodim,hidim
@@ -110,6 +118,114 @@ c     --- retrieve constants
       call twh_nmolty(GLB_GET,nmolty)
       call twh_beta(GLB_GET,beta)
 
+c     --- determine which molecules need cbmc parameters
+      do imolty = 1,nmolty
+         lyescbmc(imolty) = .false.
+      enddo
+
+c     --- check for a cbmc init
+      call twh_linit(GLB_GET,linit)
+      if ( linit ) then
+         call twh_numboxes(GLB_GET,numboxes)
+         do imolty = 1,nmolty
+            do ibox = 1,numboxes
+               call twh_initmol(GLB_GET,ibox,imolty,nummol)
+               if ( nummol .gt. 0 ) then
+                  call twh_initstyle(GLB_GET,ibox,imolty,atest)
+                  if ( atest .eq. 'full cbmc' 
+     &                 .or. atest .eq. 'helix cbmc' ) then
+                     lyescbmc(imolty) = .true.
+                  endif
+               endif
+            enddo
+         enddo
+      endif
+
+      do imolty = 1,nmolty
+         call twh_chempotperstep(GLB_GET,imolty,ivalue)
+         if ( ivalue .gt. 0 ) lyescbmc(imolty ) = .true.
+      enddo
+c     --- 2 box cb swap
+      call twh_pm2boxcbswap(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pm2cbswmt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- grand canonical
+      call twh_pmuvtcbswap(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmuvtcbmt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- 1 box cb swap
+      call twh_pm1boxcbswap(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pm1cbswmt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- cb regrowth
+      call twh_pmcb(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmcbmt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- backbone cb regrowth
+      call twh_pmback(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmbkmt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- sidechain cb regrowth
+      call twh_pmcbside(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmcbsidemt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- avb1 regrowth
+      call twh_pmavb1(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmavb1mt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- avb2 regrowth
+      call twh_pmavb2(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmavb2mt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+c     --- avb3 regrowth
+      call twh_pmavb3(GLB_GET,dvalue)
+      if ( dvalue .gt. SMALLEST ) then
+         do imolty = 1,nmolty
+            call twh_pmavb3mt(GLB_GET,imolty,ptest)
+            if ( ptest .gt. SMALLEST ) lyescbmc(imolty) = .true.
+         enddo
+      endif
+
+      ncompute = 0
+      do imolty = 1,nmolty
+         if ( lyescbmc(imolty) ) then
+            ncompute = ncompute + 1
+            computelist(ncompute) = imolty
+         endif
+      enddo
+
 c     --- set ibox to zero so we use the full coulombic energies instead
 c     --- of one scaled by Ewald parameters
       ibox = 0
@@ -125,7 +241,13 @@ c     --- set up information needed to generation trials in a cbmc move
       call twh_max_bond_length(GLB_GET,rmax)
 
       write(6,'(a35)') 'Determining CBMC bond distributions'
-      do imolty = 1,nmolty
+      do icompute = 1,ncompute
+         imolty = computelist(icompute)
+         write(6,'(5x,a17,1x,i5)') 'for molecule type',imolty
+      enddo
+
+      do icompute = 1,ncompute
+         imolty = computelist(icompute)
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
             do ivib = 1,twh_get_invib(imolty,iunit)
@@ -279,7 +401,8 @@ c              --- store the bondnorms
      &        'Determining Autofit Gaussian bend A parameters'
          call twh_bend_a_sdev_multiplier(GLB_GET,benda_mult)
          call twh_bend_b_sdev_multiplier(GLB_GET,bendb_mult)
-         do imolty = 1,nmolty
+         do icompute = 1,ncompute
+            imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
                do ibend = 1,twh_get_inben(imolty,iunit)
@@ -376,7 +499,8 @@ c                 --- assign limits
          enddo
          write(6,'(a46)') 
      &        'Determining Autofit Gaussian bend B parameters'
-         do imolty = 1,nmolty
+         do icompute = 1,ncompute
+            imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
                do ibend = 1,twh_get_inben(imolty,iunit)
@@ -626,7 +750,8 @@ c        --- get the peak weighting style
          call twh_dihedral_sdev_multiplier(GLB_GET,dihed_mult)
          write(6,'(a48)') 
      &        'Determining Autofit Gaussian dihedral parameters'
-         do imolty = 1,nmolty
+         do icompute = 1,ncompute
+            imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
                do itor = 1,twh_get_intor(imolty,iunit)
@@ -959,7 +1084,8 @@ c     --- biasing setup
 c        --- get the vibrange values
          call twh_two_bond_bias_vibrange(GLB_GET,1,twobvibone)
          call twh_two_bond_bias_vibrange(GLB_GET,2,twobvibtwo)
-         do imolty = 1,nmolty
+         do icompute = 1,ncompute
+            imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
                do ibend = 1,twh_get_inben(imolty,iunit)
@@ -1083,7 +1209,8 @@ c                 --- assign the standard deviation
       if ( threebbias_init  .eq. 'autofit gaussian' ) then
          write(6,'(a50)') 
      &        'Determining Autofit Gaussian Three Bond parameters'
-         do imolty = 1,nmolty
+         do icompute = 1,ncompute
+            imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
                do itor = 1,twh_get_intor(imolty,iunit)

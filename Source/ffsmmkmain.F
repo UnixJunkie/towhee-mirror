@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffsmmkmain(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,noftypes)
+      subroutine twh_ffsmmkmain(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,noftypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the mund1996     *
 c     * flexible varient of the SMMK Main force field                  *
 c     *                                                                *
 c     * originally written 12-14-2004 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,noftypes
 c     --- local variables
       integer ii,type,isame
@@ -201,7 +202,8 @@ c     (C) C quaternary carbon [faraday1996]
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * harmonic bond lengths                                          *
@@ -220,8 +222,8 @@ c     [faraday1996]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
-
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * simple harmonic angles                                         *
@@ -261,7 +263,8 @@ c     angle centered on a C [faraday1996]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * opls style torsions                                            *
@@ -325,7 +328,8 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * special 1-5 interactions                                       *
@@ -348,7 +352,8 @@ c     2,2,4,4,6,8,8-heptamethylnonane
       call twh_set_ofnames(type,ofnlocal)
 
       noftypes = type
-      call ffcheck(7,type)
+      call twh_ffcheck(lfailure,7,type)
+      if ( lfailure ) return
 
       return
       end

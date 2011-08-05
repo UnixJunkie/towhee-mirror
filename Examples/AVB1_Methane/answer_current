@@ -1,5 +1,5 @@
 Selected random number generator RANLUX with luxury level 3 and seed 1302002.
- MCCCS Towhee - Version 6.2.16 (August 02 2011)
+ MCCCS Towhee - Version 6.2.17 (August 05 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -121,6 +121,7 @@ cbmc_setting_style: Martin and Frischknecht
 unit:    1 name:CH4        charge:   0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
+     for molecule type     1
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters

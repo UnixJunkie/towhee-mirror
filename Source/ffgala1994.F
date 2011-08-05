@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffgala1994(ntypes,nbondtypes,nbitypes)
+      subroutine twh_ffgala1994(lfailure,ntypes,nbondtypes,nbitypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the gala1994     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 02-08-2005 by M.G. Martin                   *
-c     * last modified 10-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nbitypes
 c     --- local variables
       integer type,ii,isame
@@ -128,7 +128,8 @@ c     Chlorine in Cl2
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * bond lengths - rigid                                           *
@@ -177,7 +178,8 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * bond increments                                                *
@@ -208,7 +210,8 @@ c     ******************************************************************
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

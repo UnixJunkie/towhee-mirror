@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,17 +19,18 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffshukla1987(ntypes)
+      subroutine twh_ffshukla1987(lfailure,ntypes)
 c     ******************************************************************
 c     * sets up parameters for shukla1987                              *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes
 c     --- local variables
       integer ii,type
@@ -141,7 +142,8 @@ c     --- nitrogen dimer
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end

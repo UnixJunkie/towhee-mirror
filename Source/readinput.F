@@ -19,13 +19,13 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_readinput(lfinish)
+      subroutine twh_readinput(lfailure,lfinish)
 c     ******************************************************************
 c     * opens towhee_input and reads in the inputformat                *
 c     * then it calls the appropriate input reading routine            *
 c     *                                                                *
 c     * rewritten 05-15-2002 by M.G. Martin                            *
-c     * last modified 02-08-2011 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "wrapperF.h"
@@ -35,7 +35,7 @@ c     ******************************************************************
 #include "functions.h"
 
 c     --- variables passed to/from the subroutine
-      logical lfinish
+      logical lfailure,lfinish
 c     --- local variables
       logical lallow,loutput
       integer*4 luxvalue,iseed
@@ -73,11 +73,13 @@ c     --- open towhee_altinp
      &     ,'DEFAULT')
       if ( lfinish ) return
 c     --- read in inputformat
-      call twh_read_labeled_string(4,'inputformat',loutput
+      call twh_read_labeled_string(lfailure,4,'inputformat',loutput
      &     ,idname,inputformat)
+      if ( lfailure ) return
 c     --- optional read in the random number seed
-      if (twh_check_label(4,'randomseed')) then
-         call twh_get_randomseed(4, iseed, .false., idname)
+      if (twh_check_label(lfailure,4,'randomseed')) then
+         call twh_get_randomseed(lfailure,4, iseed, .false., idname)
+         if ( lfailure ) return
          if ( iseed .lt. 0 ) then
             write(6,*) 'READINPUT: randomseed must be postitive'
             lfinish = .true.
@@ -88,9 +90,10 @@ c        --- set the global randomseed
       endif
 
 c     --- optional get the random number generator luxury level
-      if ( twh_check_label(4,'random_luxlevel') ) then
-         luxvalue = twh_read_labeled_integer(4,'random_luxlevel'
-     &        ,.true.,idname)
+      if ( twh_check_label(lfailure,4,'random_luxlevel') ) then
+         luxvalue = twh_read_labeled_integer(lfailure,4
+     &        ,'random_luxlevel',.true.,idname)
+         if ( lfailure ) return
 c        --- error check
          if ( luxvalue .lt. 0 .or. luxvalue .gt. 8 ) then
             write(6,*) 'READINPUT: random_luxlevel must be between '
@@ -102,9 +105,10 @@ c        --- error check
       endif
 
 c      --- optional read random_allow_restart
-      if ( twh_check_label(4,'random_allow_restart') ) then
-         lallow = twh_read_labeled_logical(4,'random_allow_restart'
-     &        ,.true.,idname)
+      if ( twh_check_label(lfailure,4,'random_allow_restart') ) then
+         lallow = twh_read_labeled_logical(lfailure,4
+     &        ,'random_allow_restart',.true.,idname)
+         if ( lfailure ) return
          call twh_random_allow_restart(GLB_SET,lallow)
       else
 c        --- use the default value
@@ -144,6 +148,8 @@ c     --- close towhee_input and towhee_altinp
 
 
 
+      subroutine twh_get_randomseed(lfailure,io_unit, randseed
+     &     , print_value, idname)
 c     ******************************************************************
 c     * Returns randomseed.  This value may come from one of two       *
 c     * sources: from the towhee_input file or,                        *
@@ -159,19 +165,16 @@ c     * screen.                                                        *
 c     * idname is the calling subroutine, printed only in case of error*
 c     *                                                                *
 c     * originally written prior to 2006                               *
-c     * last modified 06-25-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_get_randomseed(io_unit, randseed, print_value, 
-     &   idname)
       implicit none
 #include "wrapperF.h"
 #define FUNCTION_CHECK_LABEL
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
       integer randseed, io_unit
-      logical print_value
+      logical lfailure,print_value
       character*(*) idname
 c     --- local variables
       logical lreadwrapper
@@ -181,9 +184,10 @@ c     --- local variables
 c     --- if randomseed comes from wrapper this parameter is allowed,
 c     --- but optional, in towhee_input.  See if it exists,  read it
 c     --- so that its skipped over.
-         if (twh_check_label(io_unit,'randomseed')) then
-            randseed = twh_read_labeled_integer(io_unit,'randomseed'
-     &           ,.false.,idname)
+         if (twh_check_label(lfailure,io_unit,'randomseed')) then
+            randseed = twh_read_labeled_integer(lfailure,io_unit
+     &           ,'randomseed',.false.,idname)
+            if ( lfailure ) return
          endif
 
 c     --- actual value comes from wrapper
@@ -192,8 +196,9 @@ c     --- actual value comes from wrapper
             write(6,*) 'randomseed (from wrapper): ',randseed
          endif
       else
-         randseed = twh_read_labeled_integer(io_unit,'randomseed', 
-     &      print_value, idname)
+         randseed = twh_read_labeled_integer(lfailure,io_unit
+     &        ,'randomseed',print_value, idname)
+         if ( lfailure ) return
       endif
       return
       end

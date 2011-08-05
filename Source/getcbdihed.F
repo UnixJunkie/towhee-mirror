@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 11-19-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -217,7 +217,9 @@ c              --- choose a displacement uniformly
          elseif ( style_code .eq. DIST_GAUSSIAN ) then
 c            --- gaussian distribution
             if ( .not. lfirstold ) then
-               phidisp = twh_gaussian(mean,std_dev,lolimit,hilimit)
+               phidisp = twh_gaussian(lfailure,mean,std_dev
+     &              ,lolimit,hilimit)
+               if ( lfailure ) return
             endif
 c           --- safety check
             if ( phidisp .lt. lolimit .or. phidisp .gt. hilimit ) then
@@ -243,7 +245,9 @@ c                 --- find the appropriate bounds for biasing
                   if ( lfailure ) return
                else
 c                 --- choose from a gaussian distribution
-                  phidisp = twh_gaussian(mean,std_dev,lolimit,hilimit)
+                  phidisp = twh_gaussian(lfailure,mean,std_dev
+     &                 ,lolimit,hilimit)
+                  if ( lfailure ) return
 #if DEBUG_GETCBDIHED
                   write(6,*) 'mean,std_dev,lolimit,hilimit:'
      &                 ,mean,std_dev,lolimit,hilimit
@@ -730,7 +734,8 @@ c     --- accepted coordinates, save them in *torcord
 c     --- divide bsum by ichtor
       w_cbtor = w_cbtor / dble(ichtor)
 c     --- rescale the boltzman weight to account for vmin
-      call twh_getweight(0,vmin,wmin,dpcbtor,lterm)
+      call twh_getweight(lfailure,0,vmin,wmin,dpcbtor,lterm)
+      if ( lfailure ) return
       if ( lterm ) then
 c        --- extremely high energy compared to kT - growth failed
          w_cbtor = 0.0d0

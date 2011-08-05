@@ -4,7 +4,7 @@ c     * contains all of the type declarations for the functions in     *
 c     * towhee                                                         *
 c     *                                                                *
 c     * originally written 11-12-2002 by M.G. Martin                   *
-c     * last modified 07-25-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
 #ifdef FUNCTION_ARCCOS
       double precision twh_arccos

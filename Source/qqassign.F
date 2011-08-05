@@ -1,8 +1,7 @@
-c     $Id: qqassign.F,v 1.12 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,12 +19,12 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_qqassign(imolty,forcefield)
+      subroutine twh_qqassign(lfailure,imolty,forcefield)
 c     ******************************************************************
 c     * makes the charge assignment for a molecule we just assembled   *
 c     *                                                                *
 c     * originally written 12-10-2004 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CBNAME
@@ -39,6 +38,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(*) forcefield
+      logical lfailure
       integer imolty
 c     --- local variables
 c     --- character string scalars
@@ -136,8 +136,9 @@ c              --- search for global wildcard matches
                if ( param .eq. 0 ) then
                   write(6,*) 'parameters not found for bond increment'
                   write(6,*) 'atoms ',iunit,' and ',junit,' vib ',ivib
-                  write(6,*) 'names =',names(1),'==',names(2),'='
-                  stop
+                  write(6,*) 'names [',names(1),'][',names(2),']'
+                  lfailure = .true.
+                  return
                endif
                charge = charge + qadjust
             enddo
@@ -168,7 +169,8 @@ c        --- zero charge on every interaction site
       else
          write(6,*) 'QQASSIGN: unknown charge_assignment'
          write(6,*) charge_assignment
-         stop
+         lfailure = .true.
+         return
       endif
 c      write(6,*) 'finished QQASSIGN'
 

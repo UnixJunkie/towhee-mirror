@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 08-05-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -66,7 +66,7 @@ c     --- integer scalars
       integer iunit,isteps,isafety,iutry,movetype,nmtype
       integer fieldtemp,ntest,testcord,idealchain,uc_count,nmolty,nunit
       integer inix,iniy,iniz,initmol,globalpos,itemp,numboxes
-      integer atomcount
+      integer atomcount,boxtest
 c     --- integer arrays
       integer mcmt,mcmtma
       dimension mcmt(NTMAX,MAXBOX),mcmtma(NTMAX,MAXBOX)
@@ -610,8 +610,11 @@ c     --- are residing in the ideal gas resevoir
          do imolty = 1,nmolty
             call twh_nunit(GLB_GET,imolty,nunit)
             call twh_nmolectyp(GLB_GET,imolty,nmtype)
-            call twh_initmol(GLB_GET,1,imolty,initmol)
-            do ntest = 1,nmtype - initmol
+            do boxtest = 1,numboxes
+               call twh_initmol(GLB_GET,boxtest,imolty,initmol)
+               nmtype = nmtype - initmol
+            enddo
+            do ntest = 1,nmtype
                idealchain = idealchain + 1
                call twh_nboxi(GLB_SET,idealchain,ibox)
                call twh_moltyp(GLB_SET,idealchain,imolty)
@@ -655,7 +658,7 @@ c     * Error conditions:                                              *
 c     *   failure to open file                                         *
 c     *                                                                *
 c     * split from original engmolec 02-14-2006 by MAW                 *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -682,11 +685,12 @@ c     --- we need to open the unit cell file
      &      'OLD','DEFAULT')
       if ( lfailure ) return
 
-      call twh_read_labeled_integer_array(IFILE_UNITCELL,
+      call twh_read_labeled_integer_array(lfailure,IFILE_UNITCELL,
      &   'cell_initmol',nmolty, .true., idname, cell_initmol)
-
-      call twh_read_label(IFILE_UNITCELL,'cell_hmatrix',.false.,
-     &      idname)
+      if ( lfailure ) return
+      call twh_read_label(lfailure,IFILE_UNITCELL,'cell_hmatrix'
+     &     ,.false.,idname)
+      if ( lfailure ) return
       do idim = 1,3
          read(IFILE_UNITCELL,*) (cell_hmatrix(idim,jdim),jdim=1,3)
          write(6,'(a13,3(1x,f10.5))') 'cell_hmatrix:'
@@ -694,8 +698,9 @@ c     --- we need to open the unit cell file
       enddo
 
 c        --- read the coordinates for the unit cell and stash them 
-      call twh_read_label(IFILE_UNITCELL,'cell_coordinates',.false.,
-     &      idname)
+      call twh_read_label(lfailure,IFILE_UNITCELL,'cell_coordinates'
+     &     ,.false.,idname)
+      if ( lfailure ) return
       uc_count = 0
       do imolty = 1,nmolty
          call twh_nunit(GLB_GET,imolty,nunit)

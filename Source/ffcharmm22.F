@@ -1,8 +1,7 @@
-c     $Id: ffcharmm22.F,v 1.30 2010/05/19 23:30:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,20 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffcharmm22(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes)
+      subroutine twh_ffcharmm22(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the charmm22     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 02-10-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
       integer ii,type,isame
@@ -1163,7 +1162,8 @@ c     (SS) thiolate sulfur
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * Charmm22 bond potentials                                       *
@@ -2412,7 +2412,8 @@ c     --- SM - CS
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * charmm22 angles with urey-bradley                              *
@@ -5605,7 +5606,8 @@ C     --- NR1 - CPH2 - HR1
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * Charmm22 standard dihedral                                     *
@@ -8390,7 +8392,8 @@ c     --- X - FE - CM - X
       call twh_set_tornames(type,ntslocal,tnlocal)
       
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * Charmm22 improper harmonic torsions                            *
@@ -8818,7 +8821,8 @@ c     --- OC - X - X - CC
       call twh_set_impnames(type,nislocal,ninlocal)
       
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
       
       return
       end

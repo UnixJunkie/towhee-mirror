@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,16 +19,17 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffshah2004(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nbitypes)
+      subroutine twh_ffshah2004(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nbitypes)
 c     ******************************************************************
 c     * sets up parameters for shah2004                                *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nbitypes
 c     --- local variables
       character*(FFNAMELEN) ffname
@@ -44,27 +45,33 @@ c     (2004) 195-203.
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
       call twh_classical_mixrule(GLB_SET,'Lorentz-Berthelot')
 
-      call twh_ffshah2004_nonbond(ffname,ntypes)
-      call twh_ffshah2004_bond(ffname,nbondtypes)
-      call twh_ffshah2004_angle(ffname,nangletypes)
-      call twh_ffshah2004_dihedral(ffname,ndihedtypes)
-      call twh_ffshah2004_bond_increment(ffname,nbitypes)
+      call twh_ffshah2004_nonbond(lfailure,ffname,ntypes)
+      if ( lfailure ) return
+      call twh_ffshah2004_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffshah2004_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffshah2004_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
+      call twh_ffshah2004_bond_increment(lfailure,ffname,nbitypes)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffshah2004_nonbond(ffname,ntypes)
+      subroutine twh_ffshah2004_nonbond(lfailure,ffname,ntypes)
 c     ******************************************************************
 c     * sets up the nonbonded parameters for shah2004                  *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 04-18-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ntypes
 c     --- local variables
       integer type,ii
@@ -421,23 +428,25 @@ c     --- F6 (specific F term that uses an individual bond length)
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffshah2004_bond(ffname,nbondtypes)
+      subroutine twh_ffshah2004_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * bond lengths for the shah2004 forcefield                       *
 c     * these are not explicitly specified and instead must be         *
 c     * inferred from their example structure                          *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 04-18-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type,nsame
@@ -787,21 +796,23 @@ c     --- P - F (generic)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffshah2004_angle(ffname,nangletypes)
+      subroutine twh_ffshah2004_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets up the angle terms for Shah2004                           *
 c     *                                                                *
 c     * originally written 04-20-2006 by M.G. Martin                   *
-c     * last modified 10-30-2007 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,nsame,index
@@ -1673,21 +1684,23 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffshah2004_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffshah2004_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * dihedral terms for Shah2004                                    *
 c     *                                                                *
 c     * originally written 04-24-2006 by M.G. Martin                   *
-c     * last modified 04-26-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type,nsame,index
@@ -2110,22 +2123,24 @@ c     --- C6-N3-C4-C5
       call twh_set_tornames(type,nsame,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffshah2004_bond_increment(ffname,nbitypes)
+      subroutine twh_ffshah2004_bond_increment(lfailure,ffname,nbitypes)
 c     ******************************************************************
 c     * all of the charges are assigned in the qbasevalue in nonbond so*
 c     * the only thing here is a global wildcard 0.0                   *
 c     *                                                                *
 c     * originally written 04-24-2006 by M.G. Martin                   *
-c     * last modified 04-24-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbitypes
 c     --- local variables
       integer type
@@ -2145,7 +2160,8 @@ c     --- wild
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

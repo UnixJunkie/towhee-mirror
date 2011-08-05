@@ -1,8 +1,7 @@
-c     $Id: readquantum.F,v 1.16 2008/11/14 03:05:38 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     * related to the lcao external_code                              *
 c     * rwflag is either READ_FLAG or WRITE_FLAG                       *
 c     *                                                                *
 c     * originally written 11-01-2004 by M.G. Martin                   *
-c     * last modifed 11-10-2008 by M.G. Martin                         *
+c     * last modifed 08-04-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_LABELED_FLOAT
@@ -65,8 +64,9 @@ c     --- make sure we have compiled the code properly for LCAO
          
       goodstring = 'lcao_functional'
       if ( rwflag .eq. READ_FLAG ) then
-         call twh_read_labeled_string(ifile,goodstring,.true.
+         call twh_read_labeled_string(lfailure,ifile,goodstring,.true.
      &        , idname,twentychar)
+         if ( lfailure ) return
          call twh_lcao_functional(GLB_SET,twentychar)
       else
          rwformat = '(a15)'
@@ -77,8 +77,9 @@ c     --- make sure we have compiled the code properly for LCAO
          
       goodstring = 'lcao_atomtypes'
       if ( rwflag .eq. READ_FLAG ) then
-         lcao_atomtypes = twh_read_labeled_integer(ifile,goodstring,
-     &        .true., idname)
+         lcao_atomtypes = twh_read_labeled_integer(lfailure,ifile
+     &        ,goodstring,.true., idname)
+         if ( lfailure ) return
          call twh_lcao_atomtypes(GLB_SET,lcao_atomtypes)
 c        --- safty check
          if ( lcao_atomtypes .gt. NNTYPE ) then
@@ -95,9 +96,12 @@ c        --- safty check
       
       goodstring = 'lcao_filename'
       if ( rwflag .eq. READ_FLAG ) then
-         call twh_read_label(ifile,goodstring, .false., idname)
+         call twh_read_label(lfailure,ifile,goodstring, .false., idname)
+         if ( lfailure ) return
          do itype = 1,lcao_atomtypes
-            call twh_read_string(ifile,goodstring,.false.,twentychar)
+            call twh_read_string(lfailure,ifile,goodstring,.false.
+     &           ,twentychar)
+            if ( lfailure ) return
             call twh_lcao_filename(GLB_SET,itype,twentychar)
             write(6,'(a14,i3,1x,a1,1x,a50)') 'lcao_filename:'
      &           ,itype,'=',twentychar
@@ -113,8 +117,9 @@ c        --- safty check
 
       goodstring = 'lcao_gridmultiplier'
       if ( rwflag .eq. READ_FLAG ) then
-         dvalue = twh_read_labeled_float(ifile,goodstring,.true.
-     &        , idname)
+         dvalue = twh_read_labeled_float(lfailure,ifile,goodstring
+     &        ,.true.  , idname)
+         if ( lfailure ) return
          call twh_lcao_gridmultiplier(GLB_SET,dvalue)
       else
          rwformat = '(a19)'
@@ -125,8 +130,9 @@ c        --- safty check
 
       goodstring = 'lcao_kgridproduct'
       if ( rwflag .eq. READ_FLAG ) then
-         dvalue = twh_read_labeled_float(ifile,goodstring,.true.
-     &        , idname)
+         dvalue = twh_read_labeled_float(lfailure,ifile,goodstring
+     &        ,.true.  , idname)
+         if ( lfailure ) return
          call twh_lcao_kgridproduct(GLB_SET,dvalue)
       else
          rwformat = '(a17)'

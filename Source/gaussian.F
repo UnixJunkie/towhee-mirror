@@ -1,8 +1,7 @@
-c     $Id: gaussian.F,v 1.7 2008/10/14 14:09:45 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,23 +19,22 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_gaussian(mean,stddev,lolimit,hilimit)
+      function twh_gaussian(lfailure,mean,stddev,lolimit,hilimit)
 c     ******************************************************************
 c     * this function computes two random numbers that come from a     *
 c     * standard normal distribution.  This algorithm was taken from a *
 c     * web page (www.taygeta.com/random/gaussian.html)                *
 c     *                                                                *
 c     * originally written 09-17-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_RANDOM
 #include "functions.h"
-
 c     --- variables passed to/from the function
+      logical lfailure
       double precision mean,stddev,lolimit,hilimit
-
 c     --- local variables
       logical lfound
       integer attempts
@@ -74,7 +72,8 @@ c           --- try the extra
          write(6,*) 'failed to get the gaussian number in 50 attempts'
          write(6,*) 'mean,stddev,lolimit,hilimit',mean,stddev,lolimit
      &        ,hilimit
-         stop
+         lfailure = .true.
+         return
       endif
 
       return

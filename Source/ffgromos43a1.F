@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,21 +19,21 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffgromos43a1(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes)
+      subroutine twh_ffgromos43a1(lfailure,ntypes,nbondtypes
+     &     ,nangletypes,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the gromos43a1   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 11-14-2010 M.G. Martin                           *
+c     * last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #define FUNCTION_GET_NBCOEFF
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
      &        ,nimprotypes
 c     --- local variables
@@ -921,7 +921,8 @@ c     --- element and therefore a different mass
       call twh_bondpatt(GLB_SET,type,bplocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     *****************************************************************
 c     * use the general nonbond terms plus the gromos selection       *
@@ -1422,7 +1423,8 @@ c     --- ClCl4 - ClCl4
       call twh_vibff(GLB_SET,type,ffname)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * 01-46 GROMOS ANGLES harmonic cos                               *
@@ -1799,7 +1801,8 @@ c     --- CLCl4 - CCl4 - CLCl4
       call twh_bendff(GLB_SET,type,ffname)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * GROMOS, Charmm, and Amber parameter decoder                    *
@@ -2100,7 +2103,8 @@ c     --- gromos p is +1
       call twh_torff(GLB_SET,type,ffname)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * 1-3 Gromos oop Improper Harmonic Torsions                      *
@@ -2149,7 +2153,8 @@ c     --- torsional parameter for Gromos heme iron
       call twh_nimpsame(GLB_SET,type,nislocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
 
       return
       end

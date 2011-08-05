@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffdacnisua(ntypes,nbondtypes)
+      subroutine twh_ffdacnisua(lfailure,ntypes,nbondtypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the dacnis-ua    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 11-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes
 c     --- local variables
       integer ii,type
@@ -132,7 +132,8 @@ c     (Ozeo) zeolite Oxygen [includes 0.5 Si mass]
       call twh_bondpatt(GLB_SET,type,bplocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     [CHx](sp3) -- [CHy](sp3,sp2,aro) single bonds
 c     --- from table 1.6 of McMurry Organic Chemistry 3rd edition
@@ -147,7 +148,8 @@ c     --- from table 1.6 of McMurry Organic Chemistry 3rd edition
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
       return
       end

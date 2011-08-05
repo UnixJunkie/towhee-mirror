@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C)2002-2008 Marcus G. Martin                        *
+c     * Copyright (C)2002-2011 Marcus G. Martin                        *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * rwflag must be either READ_FLAG or WRITE_FLAG                  *
 c     *                                                                *
 c     * rewritten from readforcefield and writeforcefield 04-01-2002   *
 c     * by M.G. Martin                                                 *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -124,8 +124,9 @@ c     --- read the towhee_ff version
 c        --- set iversion to the currentffversion
          iversion = currentffversion
       else
-         iversion =  twh_read_labeled_integer(FFUNIT,goodstring,
-     &         .false.,idname)
+         iversion =  twh_read_labeled_integer(lfailure,FFUNIT
+     &        ,goodstring,.false.,idname)
+         if ( lfailure ) return
 
 c        --- cannot work with version earlier than 4
          if ( iversion .lt. 4 ) then
@@ -145,8 +146,9 @@ c     --- number of nonbonded types
          write(FFUNIT,'(a25)') goodstring
          write(FFUNIT,*) ntypes
       else
-         ntypes =  twh_read_labeled_integer(FFUNIT,goodstring,
+         ntypes =  twh_read_labeled_integer(lfailure,FFUNIT,goodstring,
      &         .false.,idname)
+         if ( lfailure ) return
          if ( ntypes + nb_adj .gt. NNTYPE ) then
             write(6,*) 'ntypes,nb_adj, NNTYPE ',ntypes,nb_adj,NNTYPE
             write(6,*) 'RWFORCEFIELD: Number of Nonbonded Types '
@@ -163,7 +165,8 @@ c     --- the nonbonded potential
 c        --- set the localptype to the classical_potential
          localptype = twh_get_classical_potential()
       else
-         call get_potential_type(iversion, localptype)
+         call twh_get_potential_type(lfailure,iversion, localptype)
+         if ( lfailure ) return
       endif
 
       goodstring = 'Classical Mixrule'
@@ -174,8 +177,9 @@ c        --- set the localptype to the classical_potential
       else
          if ( iversion .ge. 7 ) then
 c           --- read in the mixrule and error check
-            call twh_read_labeled_string(FFUNIT,goodstring,
+            call twh_read_labeled_string(lfailure,FFUNIT,goodstring,
      &           .false.,idname,oldmtype)
+            if ( lfailure ) return
 c           --- error check oldmtype against classical_mixrule
             if ( oldmtype .ne. cmlocal 
      &           .and.
@@ -217,8 +221,9 @@ c     --- classical_n value
             write(FFUNIT,'(a11)') goodstring
             write(FFUNIT,*) classical_n
          else
-            itest =  twh_read_labeled_integer(FFUNIT,goodstring,
-     &         .false.,idname)
+            itest =  twh_read_labeled_integer(lfailure,FFUNIT
+     &           ,goodstring,.false.,idname)
+            if ( lfailure ) return
 c           --- safety check in case of multiple potentials
             if ( classical_n .ne. 0 .and. classical_n .ne. itest ) then
                write(6,*) 'RWFORCEFIELD: incompatible classical_n'
@@ -243,8 +248,9 @@ c        --- explicit cross terms logical
             write(FFUNIT,'(a18)') goodstring
             write(FFUNIT,*) lexplicit
          else
-            lexplicit =  twh_read_labeled_logical(FFUNIT,goodstring,
-     &         .false.,idname)
+            lexplicit =  twh_read_labeled_logical(lfailure,FFUNIT
+     &           ,goodstring, .false.,idname)
+            if ( lfailure ) return
          endif
       else
 c        --- set cross term logical based upon classical_mixrule
@@ -256,8 +262,9 @@ c        --- set cross term logical based upon classical_mixrule
       endif
 
       do type = nb_adj+1,nb_adj+ntypes
-         call rw_atom_data(rwflag, type, nb_adj, ntypes, iffnum,
-     &      iversion, lexplicit, lgetcoeffnum, localptype, ncoeff)
+         call twh_rw_atom_data(lfailure,rwflag, type, nb_adj, ntypes
+     &        ,iffnum,iversion,lexplicit,lgetcoeffnum,localptype,ncoeff)
+         if ( lfailure ) return
       enddo
 
 c     --- bond force field information
@@ -266,8 +273,9 @@ c     --- bond force field information
          write(FFUNIT,'(a22)') goodstring
          write(FFUNIT,*) nbondtypes
       else
-         nbondtypes =  twh_read_labeled_integer( FFUNIT,
+         nbondtypes =  twh_read_labeled_integer(lfailure, FFUNIT,
      &         goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       if ( nbondtypes + bond_adj .gt. TVIBMAX ) then
          write(6,*) 'RWFORCEFIELD: Number of Bonded Terms exceeds '
@@ -278,7 +286,8 @@ c     --- bond force field information
       endif
 
       do type = bond_adj+1,bond_adj+nbondtypes
-         call twh_rw_bond_data( iversion, rwflag, type, bond_adj)
+         call twh_rw_bond_data(lfailure,iversion,rwflag,type,bond_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- Angle force field information
@@ -287,8 +296,9 @@ c     --- Angle force field information
          write(FFUNIT,'(a21)') goodstring
          write(FFUNIT,*) nangletypes
       else
-         nangletypes =  twh_read_labeled_integer( FFUNIT,
+         nangletypes =  twh_read_labeled_integer(lfailure, FFUNIT,
      &         goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       if ( nangletypes + angle_adj .gt. TBENMAX ) then
          write(6,*) 'RWFORCEFIELD: Number of Angle Terms exceeds '
@@ -299,7 +309,8 @@ c     --- Angle force field information
       endif
 
       do type = angle_adj+1,angle_adj+nangletypes
-         call rw_angle_data(rwflag, type, iversion, angle_adj)
+         call twh_rw_angle_data(lfailure,rwflag,type,iversion,angle_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- input the regular torsion force field information
@@ -308,8 +319,9 @@ c     --- input the regular torsion force field information
          write(FFUNIT,'(a23)') goodstring
          write(FFUNIT,*) ndihedtypes
       else
-         ndihedtypes =  twh_read_labeled_integer(FFUNIT,
+         ndihedtypes =  twh_read_labeled_integer(lfailure,FFUNIT,
      &         goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       if ( ndihedtypes + dihed_adj .gt. TTORMAX ) then
          write(6,*) 'RWFORCEFIELD: Number of Torsion Terms exceeds '
@@ -320,7 +332,9 @@ c     --- input the regular torsion force field information
       endif
 
       do type = dihed_adj+1,dihed_adj+ndihedtypes
-         call rw_dihedral_data(rwflag, type, iversion, dihed_adj)
+         call twh_rw_dihedral_data(lfailure,rwflag,type,iversion
+     &        ,dihed_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- improper torsion force field information
@@ -329,8 +343,9 @@ c     --- improper torsion force field information
          write(FFUNIT,'(a24)') goodstring
          write(FFUNIT,*) nimprotypes
       else
-         nimprotypes =  twh_read_labeled_integer( FFUNIT,
+         nimprotypes =  twh_read_labeled_integer(lfailure, FFUNIT,
      &         goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       if ( nimprotypes + impr_adj .gt. TIMPMAX ) then
          write(6,*) 'RWFORCEFIELD: Number of Improper Terms exceeds '
@@ -340,7 +355,8 @@ c     --- improper torsion force field information
          stop
       endif
       do type = impr_adj+1,impr_adj+nimprotypes
-         call rw_improper_data( rwflag, type, impr_adj)
+         call twh_rw_improper_data(lfailure, rwflag, type, impr_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- angle-angle force field information
@@ -349,8 +365,9 @@ c     --- angle-angle force field information
          write(FFUNIT,'(a27)') goodstring
          write(FFUNIT,*) naatypes
       else
-         naatypes =  twh_read_labeled_integer( FFUNIT,
+         naatypes =  twh_read_labeled_integer(lfailure, FFUNIT,
      &         goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       if ( naatypes + aa_adj .gt. TAAMAX ) then
          write(6,*) 'RWFORCEFIELD: Number of Angle-Angle Terms exceeds '
@@ -359,7 +376,8 @@ c     --- angle-angle force field information
          stop
       endif
       do type = aa_adj+1,aa_adj+naatypes
-         call rw_angle_angle_data(rwflag, type, aa_adj)
+         call twh_rw_angle_angle_data(lfailure,rwflag, type, aa_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- one-five special interactions
@@ -374,8 +392,9 @@ c        --- was a mistake in the old text string
          write(FFUNIT,*) noftypes
       else
          if ( iversion .ge. 8 ) then
-            noftypes =  twh_read_labeled_integer( FFUNIT,
+            noftypes =  twh_read_labeled_integer(lfailure, FFUNIT,
      &         goodstring, .false.,idname)
+            if ( lfailure ) return
          else
 c           --- set noftypes to 0
             noftypes = 0
@@ -389,7 +408,8 @@ c           --- set noftypes to 0
          stop
       endif
       do type = of_adj+1,of_adj+noftypes
-         call rw_one_five_data(rwflag, type, of_adj)
+         call twh_rw_one_five_data(lfailure,rwflag, type, of_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- bond increments
@@ -399,8 +419,9 @@ c     --- bond increments
          write(FFUNIT,*) nbitypes
       else
          if ( iversion .ge. 7 ) then
-            nbitypes =  twh_read_labeled_integer( FFUNIT,
-     &         goodstring, .false.,idname)
+            nbitypes =  twh_read_labeled_integer(lfailure, FFUNIT,
+     &           goodstring, .false.,idname)
+            if ( lfailure ) return
          else
 c           --- set nbitypes to 0
             nbitypes = 0
@@ -413,7 +434,9 @@ c           --- set nbitypes to 0
          stop
       endif
       do type = bi_adj+1,bi_adj+nbitypes
-         call rw_bond_increment_data(rwflag, iversion, type, bi_adj)
+         call twh_rw_bond_increment_data(lfailure,rwflag,iversion,type
+     &        , bi_adj)
+         if ( lfailure ) return
       enddo
 
 c     --- H-bond data structures (if needed)
@@ -422,13 +445,16 @@ c     --- H-bond data structures (if needed)
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(a22)') goodstring
          else
-            call twh_read_label( FFUNIT, goodstring, .false.,idname)
+            call twh_read_label(lfailure,FFUNIT, goodstring, .false.
+     &           ,idname)
+            if ( lfailure ) return
          endif
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,*) nhbondtypes
          else
-            nhbondtypes = twh_read_integer(FFUNIT,
+            nhbondtypes = twh_read_integer(lfailure,FFUNIT,
      &            goodstring,.false.)
+            if ( lfailure ) return
          endif
          if ( nhbondtypes + hb_adj .gt. THBONDMAX ) then
             write(6,*) 'RWFORCEFIELD: Number of H-bond Types exceeds '
@@ -439,8 +465,8 @@ c     --- H-bond data structures (if needed)
          endif
 
          do type = hb_adj + 1, hb_adj + nhbondtypes
-            call rw_hbond_data( rwflag, type, hb_adj, hbcoeffstart, 
-     &         hbcoeffstop)
+            call twh_rw_hbond_data(lfailure,rwflag,type,hb_adj
+     &           ,hbcoeffstart,hbcoeffstop)
          enddo
       endif
 
@@ -467,18 +493,19 @@ c     --- error jump out
 
       end
 
-      subroutine twh_rwtorloop(type,rwflag)
+      subroutine twh_rwtorloop(lfailure,type,rwflag)
 c     ******************************************************************
 c     * this subroutine reads or writes the ntorloop variable          *
 c     *                                                                *
 c     * originally written 08-20-2004 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NTORLOOP
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
 c     --- variables passed to/from this subroutine
+      logical lfailure
       integer type,rwflag
 c     --- local variables
       integer itemp
@@ -489,8 +516,9 @@ c     --- read or write ntorloop
          write(FFUNIT,'(a23)') goodstring
          write(FFUNIT,*) twh_get_ntorloop(type)
       else
-         itemp = twh_read_labeled_integer( FFUNIT,goodstring, .false.
-     &        ,'rwtorloop')
+         itemp = twh_read_labeled_integer(lfailure, FFUNIT,goodstring
+     &        , .false.,'rwtorloop')
+         if ( lfailure ) return
          call twh_ntorloop(GLB_SET,type,itemp)
       endif
       return
@@ -535,15 +563,15 @@ c           --- set cross terms to the self value
       end
 
 
-      subroutine rw_atom_data(rwflag, type, nb_adj, ntypes, iffnum,
-     &      iversion, lexplicit, lgetcoeffnum, localptype, ncoeff)
+      subroutine twh_rw_atom_data(lfailure,rwflag, type, nb_adj, ntypes
+     &     , iffnum,iversion,lexplicit,lgetcoeffnum,localptype,ncoeff)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     *  ncoeff                                                        *
 c     * Global variables modified by this subroutine::                 *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -564,7 +592,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer rwflag, type, nb_adj, ntypes, iffnum,ncoeff,iversion
-      logical lexplicit,lgetcoeffnum
+      logical lfailure,lexplicit,lgetcoeffnum
       character*30 localptype
 c     --- local variables
       logical ltable
@@ -586,8 +614,9 @@ c     --- double precision scalars
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer(FFUNIT,goodstring,
-     &      .false.,idname)
+         testtype =  twh_read_labeled_integer(lfailure,FFUNIT
+     &        ,goodstring,.false.,idname)
+         if ( lfailure ) return
          if ( type-nb_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch of Atom types'
             stop
@@ -619,8 +648,9 @@ c              --- eam_pair_style
                   call twh_eam_pair_style(GLB_GET,ij,eampairstyle)
                   write(FFUNIT,'(a20)') eampairstyle
                else
-                  call twh_read_labeled_string(FFUNIT,goodstring
-     &                 ,.false.,idname,eampairstyle)
+                  call twh_read_labeled_string(lfailure,FFUNIT
+     &                 ,goodstring,.false.,idname,eampairstyle)
+                  if ( lfailure ) return
                   call twh_eam_pair_style(GLB_SET,ij,eampairstyle)
                endif
 c              --- determine number of nbcoeffs (or equiv)
@@ -661,7 +691,9 @@ c           --- table_pair npair
                call twh_table_npair(GLB_GET,ij,tabnpair)
                write(FFUNIT,*) type,jtype,tabnpair
             else
-               call twh_read_label(FFUNIT,goodstring, .false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring, .false.
+     &              ,idname)
+               if ( lfailure ) return
                read(FFUNIT,*) itest,jtest,tabnpair
                call twh_table_npair(GLB_SET,ij,tabnpair)
 c                 --- safety check
@@ -685,7 +717,9 @@ c           --- table_pair data
             if ( rwflag .eq. WRITE_FLAG ) then
                write(FFUNIT,'(a15)') goodstring
             else
-               call twh_read_label(FFUNIT,goodstring, .false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring, .false.
+     &              ,idname)
+               if ( lfailure ) return
             endif
             call twh_table_npair(GLB_GET,ij,tabnpair)
             do iscan = 1,tabnpair
@@ -707,14 +741,18 @@ c           --- functional form, coefficients in nbcoeff
             if ( rwflag .eq. WRITE_FLAG ) then
                write(FFUNIT,'(a20)') goodstring
             else
-               call twh_read_label(FFUNIT,goodstring, .false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring, .false.
+     &              ,idname)
+               if ( lfailure ) return
             endif
             do icoeff = 1,ncoeff
                if ( rwflag .eq. WRITE_FLAG ) then
                   write(FFUNIT,'(e20.10)') 
      &                 twh_safe_double(twh_get_nbcoeff(icoeff,ij))
                else
-                  dtemp = twh_read_float(FFUNIT,goodstring, .false.)
+                  dtemp = twh_read_float(lfailure,FFUNIT,goodstring
+     &                 , .false.)
+                  if ( lfailure ) return
                   call twh_nbcoeff(GLB_SET,icoeff,ij,dtemp)
                endif
             enddo
@@ -723,7 +761,8 @@ c           --- functional form, coefficients in nbcoeff
 
       if ( localptype .eq. 'Embedded Atom Method' .or.
      &     localptype .eq. 'EAM pair only' ) then
-         call rw_eam_params(rwflag, type, ntypes, iversion)
+         call twh_rw_eam_params(lfailure,rwflag, type, ntypes, iversion)
+         if ( lfailure ) return
       endif
 
 c     --- mass
@@ -732,8 +771,9 @@ c     --- mass
          write(FFUNIT,'(a4)') goodstring
          write(FFUNIT,'(e20.10)') twh_get_mass(type)
       else
-         dtemp = twh_read_labeled_float(FFUNIT,goodstring,.false.
-     &        ,idname)
+         dtemp = twh_read_labeled_float(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_mass(GLB_SET,type,dtemp)
       endif
 c     --- element
@@ -742,8 +782,9 @@ c     --- element
          write(FFUNIT,'(a7)') goodstring
          write(FFUNIT,'(a2)') twh_get_elementname(type)
       else
-         call twh_read_labeled_string( FFUNIT,goodstring,.false.
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring,.false.
      &        ,idname,ename)
+         if ( lfailure ) return
          call twh_elementname(GLB_SET,type,ename)
       endif
 c     --- bond pattern
@@ -752,8 +793,9 @@ c     --- bond pattern
          write(FFUNIT,'(a12)') goodstring
          write(FFUNIT,'(a5)') twh_get_bondpatt(type)
       else
-         call twh_read_labeled_string( FFUNIT,goodstring, .false.
-     &        ,idname,bptemp)
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring
+     &        , .false. ,idname,bptemp)
+         if ( lfailure ) return
          call twh_bondpatt(GLB_SET,type,bptemp)
       endif
 c     --- qbasevalue
@@ -763,8 +805,9 @@ c     --- qbasevalue
          write(FFUNIT,'(e20.10)') twh_get_qbasevalue(type)
       else
          if ( iversion .ge. 7 ) then
-            dtemp = twh_read_labeled_float( FFUNIT,goodstring, .false.
-     &           ,idname)
+            dtemp = twh_read_labeled_float(lfailure, FFUNIT,goodstring
+     &           , .false. ,idname)
+            if ( lfailure ) return
             call twh_qbasevalue(GLB_SET,type,dtemp)
          else
 c              --- older versions did not have this parameter
@@ -780,8 +823,9 @@ c     --- polarizability
          write(FFUNIT,'(e20.10)') dtemp
       else
          if ( iversion .ge. 13 ) then
-            dtemp = twh_read_labeled_float(FFUNIT,goodstring,.false.
-     &           ,idname)
+            dtemp = twh_read_labeled_float(lfailure,FFUNIT,goodstring
+     &           ,.false. ,idname)
+            if ( lfailure ) return
             call twh_polarizability(GLB_SET,type,dtemp)
          else
 c           --- previous versions did not have polarizability, ignore
@@ -795,8 +839,9 @@ c        --- donor-acceptor flag
             call twh_donor_acceptor(GLB_GET,type,conetemp)
             write(FFUNIT,'(a1)') conetemp
          else
-            call twh_read_labeled_string(FFUNIT,goodstring,.false.
-     &           ,idname,conetemp)
+            call twh_read_labeled_string(lfailure,FFUNIT,goodstring
+     &           ,.false. ,idname,conetemp)
+            if ( lfailure ) return
             call twh_donor_acceptor(GLB_SET,type,conetemp)
          endif
       endif
@@ -806,8 +851,9 @@ c     --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_nbff(type)
       else
-         call twh_read_labeled_string(FFUNIT,goodstring,.false.
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring,.false.
      &        ,idname,ctemp)
+         if ( lfailure ) return
          call twh_nbff(GLB_SET,type,ctemp)
       endif
 c        --- input the names of those atoms
@@ -815,7 +861,8 @@ c        --- input the names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label(FFUNIT,goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') twh_get_nbname(type)
@@ -823,13 +870,17 @@ c        --- input the names of those atoms
          write(FFUNIT,'(a10)') twh_get_caname(type)
          write(FFUNIT,'(a10)') twh_get_ctname(type)
       else
-         call twh_read_string(FFUNIT,goodstring,.false.,ctemp)
+         call twh_read_string(lfailure,FFUNIT,goodstring,.false.,ctemp)
+         if ( lfailure ) return
          call twh_nbname(GLB_SET,type,ctemp)
-         call twh_read_string(FFUNIT,goodstring,.false.,ctemp)
+         call twh_read_string(lfailure,FFUNIT,goodstring,.false.,ctemp)
+         if ( lfailure ) return
          call twh_cbname(GLB_SET,type,ctemp)
-         call twh_read_string(FFUNIT,goodstring,.false.,ctemp)
+         call twh_read_string(lfailure,FFUNIT,goodstring,.false.,ctemp)
+         if ( lfailure ) return
          call twh_caname(GLB_SET,type,ctemp)
-         call twh_read_string(FFUNIT,goodstring,.false.,ctemp)
+         call twh_read_string(lfailure,FFUNIT,goodstring,.false.,ctemp)
+         if ( lfailure ) return
          call twh_ctname(GLB_SET,type,ctemp)
       endif
 
@@ -837,12 +888,13 @@ c        --- input the names of those atoms
       end
 
 
-      subroutine twh_rw_bond_data( iversion, rwflag, type, bond_adj)
+      subroutine twh_rw_bond_data(lfailure,iversion,rwflag,type
+     &     , bond_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NVSAME
@@ -854,6 +906,7 @@ c     ******************************************************************
 #define FUNCTION_SAFE_DOUBLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer iversion, rwflag, type, bond_adj
 c     --- local variables
 c     --- integer scalars
@@ -874,8 +927,9 @@ c     --- double precision scalars
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type-bond_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch of Bond types'
             stop
@@ -888,8 +942,9 @@ c     --- double precision scalars
          call twh_vibstyle(GLB_GET,type,vstemp)
          write(FFUNIT,*) vstemp
       else
-         vstemp =  twh_read_labeled_integer( FFUNIT,
+         vstemp =  twh_read_labeled_integer(lfailure, FFUNIT,
      &        goodstring, .false.,idname)
+         if ( lfailure ) return
          call twh_vibstyle(GLB_SET,type,vstemp)
       endif
 
@@ -899,14 +954,16 @@ c     --- double precision scalars
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a17)') goodstring
       else
-         call twh_read_label(FFUNIT,goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       do icoeff = coeffstart,coeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') 
      &           twh_safe_double(twh_get_vibcoeff(type,icoeff))
          else
-            dtemp = twh_read_float(FFUNIT,goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT,goodstring,.false.)
+            if ( lfailure ) return
             call twh_vibcoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -920,7 +977,9 @@ c     --- vibration order for this type of interaction
       else
          if ( iversion .ge. 14 ) then
 c           --- read in the viborder
-            call twh_read_label( FFUNIT, goodstring, .false.,idname)
+            call twh_read_label(lfailure,FFUNIT,goodstring, .false.
+     &           ,idname)
+            if ( lfailure ) return
             read(FFUNIT,'(a10)') order
          else
 c           --- prior versions did not have viborder; set to wild
@@ -935,8 +994,9 @@ c     --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_vibff(type)
       else
-         call twh_read_labeled_string( FFUNIT,goodstring, .false.
-     &        ,idname,ctemp(1))
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring
+     &        , .false.,idname,ctemp(1))
+         if ( lfailure ) return
          call twh_vibff(GLB_SET,type,ctemp(1))
       endif
 
@@ -947,8 +1007,9 @@ c     --- use the same parameters
          write(FFUNIT,'(a38)') goodstring
          write(FFUNIT,*) twh_get_nvsame(type)
       else
-         isame =  twh_read_labeled_integer( FFUNIT,
+         isame =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          call twh_nvsame(GLB_SET,type,isame)
       endif
 c     --- names of those atoms
@@ -956,7 +1017,8 @@ c     --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do isame = 1,twh_get_nvsame(type)
          if ( rwflag .eq. WRITE_FLAG ) then
@@ -974,7 +1036,8 @@ c     --- names of those atoms
       end
 
 
-      subroutine rw_angle_data(rwflag, type, iversion, angle_adj)
+      subroutine twh_rw_angle_data(lfailure,rwflag,type,iversion
+     &     ,angle_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     * Global variables modified by this subroutine::                 *
@@ -982,7 +1045,7 @@ c     *  anglestyle                                                    *
 c     *  bendnames                                                     *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE
@@ -998,6 +1061,7 @@ c     ******************************************************************
 #define FUNCTION_SAFE_DOUBLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, type, iversion
       integer angle_adj
 c     --- local variables
@@ -1018,8 +1082,9 @@ c     --- local variables
          write(FFUNIT,'(a17)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type-angle_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch of Angle types'
             stop
@@ -1037,8 +1102,9 @@ c     --- needed
          write(FFUNIT,'(a11)') goodstring
          write(FFUNIT,*) twh_get_anglestyle(type)
       else
-         itemp =  twh_read_labeled_integer( FFUNIT,goodstring, .false.
-     &        ,idname)
+         itemp =  twh_read_labeled_integer(lfailure, FFUNIT,goodstring
+     &        , .false.,idname)
+         if ( lfailure ) return
          call twh_anglestyle(GLB_SET,type,itemp)
       endif
 
@@ -1054,8 +1120,9 @@ c        --- output bond-angle if needed
             write(FFUNIT,'(a18)') goodstring
             write(FFUNIT,*) twh_get_lbonang(type)
          else
-            lreadtemp =  twh_read_labeled_logical( FFUNIT,
+            lreadtemp =  twh_read_labeled_logical(lfailure, FFUNIT,
      &         goodstring, .false.,idname)
+            if ( lfailure ) return
             call twh_lbonang(GLB_SET,type,lreadtemp)
          endif
          if ( twh_get_lbonang(type) ) then
@@ -1073,14 +1140,18 @@ c                    --- skip three lines as this is no longer needed
             if ( rwflag .eq. WRITE_FLAG ) then
                write(FFUNIT,'(a23)') goodstring
             else
-               call twh_read_label(FFUNIT,goodstring,.false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring,.false.
+     &              ,idname)
+               if ( lfailure ) return
             endif
             do icoeff = ibastart,ibaend
                if ( rwflag .eq. WRITE_FLAG ) then
                   write(FFUNIT,'(e20.10)') 
      &                 twh_safe_double(twh_get_bencoeff(type,icoeff))
                else
-                  dtemp = twh_read_float(FFUNIT, goodstring,.false.)
+                  dtemp = twh_read_float(lfailure,FFUNIT, goodstring
+     &                 ,.false.)
+                  if ( lfailure ) return
                   call twh_bencoeff(GLB_SET,type,icoeff,dtemp)
                endif
             enddo
@@ -1094,8 +1165,9 @@ c        --- output bond-bond if needed
             write(FFUNIT,'(a17)') goodstring
             write(FFUNIT,*) twh_get_lbonbon(type)
          else
-            lreadtemp =  twh_read_labeled_logical( FFUNIT,
+            lreadtemp =  twh_read_labeled_logical(lfailure, FFUNIT,
      &            goodstring, .false.,idname)
+            if ( lfailure ) return
             call twh_lbonbon(GLB_SET,type,lreadtemp)
          endif
          if ( twh_get_lbonbon(type) ) then
@@ -1103,13 +1175,17 @@ c        --- output bond-bond if needed
             if ( rwflag .eq. WRITE_FLAG ) then
                write(FFUNIT,'(a22)') goodstring
             else
-               call twh_read_label(FFUNIT,goodstring,.false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring,.false.
+     &              ,idname)
+               if ( lfailure ) return
             endif
             do icoeff = ibbstart,ibbend
                if ( rwflag .eq. WRITE_FLAG ) then
                   write(FFUNIT,'(e20.10)') twh_get_bencoeff(type,icoeff)
                else
-                  dtemp = twh_read_float(FFUNIT, goodstring,.false.)
+                  dtemp = twh_read_float(lfailure,FFUNIT, goodstring
+     &                 ,.false.)
+                  if ( lfailure ) return
                   call twh_bencoeff(GLB_SET,type,icoeff,dtemp)
                endif
             enddo
@@ -1120,14 +1196,16 @@ c        --- output bond-bond if needed
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a18)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       do icoeff = coeffstart,coeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') 
      &           twh_safe_double(twh_get_bencoeff(type,icoeff))
          else
-            dtemp = twh_read_float(FFUNIT, goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT, goodstring,.false.)
+            if ( lfailure ) return
             call twh_bencoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -1141,7 +1219,9 @@ c     --- angle order for this type of interaction
       else
          if ( iversion .ge. 14 ) then
 c           --- read in the angleorder
-            call twh_read_label( FFUNIT, goodstring, .false.,idname)
+            call twh_read_label(lfailure,FFUNIT,goodstring,.false.
+     &           ,idname)
+            if ( lfailure ) return
             read(FFUNIT,'(a15)') order
          else
 c           --- prior versions did not have angleorder; set to wild
@@ -1156,8 +1236,9 @@ c     --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_bendff(type)
       else
-         call twh_read_labeled_string(FFUNIT,goodstring, .false.
-     &        ,idname,ctemp)
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring
+     &        , .false.,idname,ctemp)
+         if ( lfailure ) return
          call twh_bendff(GLB_SET,type,ctemp)
       endif
 
@@ -1168,8 +1249,9 @@ c        --- use the same parameters
          write(FFUNIT,'(a38)') goodstring
          write(FFUNIT,*) twh_get_nbsame(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_nbsame(GLB_SET,type,itemp)
       endif
 c        --- names of those atoms
@@ -1177,7 +1259,8 @@ c        --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label(FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT, goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do isame = 1,twh_get_nbsame(type)
          if ( rwflag .eq. WRITE_FLAG ) then
@@ -1197,13 +1280,14 @@ c        --- names of those atoms
       end
 
 
-      subroutine rw_dihedral_data(rwflag, type, iversion, dihed_adj)
+      subroutine twh_rw_dihedral_data(lfailure,rwflag,type,iversion
+     &     , dihed_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     * Global variables modified by this subroutine::                 *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LOFTOR
@@ -1220,6 +1304,7 @@ c     ******************************************************************
 #define FUNCTION_SAFE_DOUBLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, type, iversion, dihed_adj
 c     --- local variables
       logical ltorstring,lreadtemp
@@ -1238,8 +1323,9 @@ c     --- local variables
          write(FFUNIT,'(a19)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer(FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure,FFUNIT,
      &         goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type-dihed_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch of Torsion types'
             stop
@@ -1251,8 +1337,9 @@ c     --- local variables
          write(FFUNIT,'(a13)') goodstring
          write(FFUNIT,*) twh_get_torstyle(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          call twh_torstyle(GLB_SET,type,itemp)
       endif
 
@@ -1261,8 +1348,9 @@ c     --- local variables
          write(FFUNIT,'(a24)') goodstring
          write(FFUNIT,*) twh_get_loftor(type)
       else
-         lreadtemp =  twh_read_labeled_logical( FFUNIT,
+         lreadtemp =  twh_read_labeled_logical(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          call twh_loftor(GLB_SET,type,lreadtemp)
       endif
       if ( twh_get_loftor(type) ) then
@@ -1272,27 +1360,33 @@ c     --- local variables
             write(FFUNIT,'(e20.10)') 
      &           twh_safe_double(twh_get_torcoeff(type,-1))
          else
-            dtemp = twh_read_labeled_float(FFUNIT,goodstring, .false.
-     &           ,idname)
+            dtemp = twh_read_labeled_float(lfailure,FFUNIT,goodstring
+     &           , .false. ,idname)
+            if ( lfailure ) return
             call twh_torcoeff(GLB_SET,type,-1,dtemp)
          endif
       endif
 
-      call get_torsion_params(iversion, rwflag, type, coeffstart
-     &     , coeffstop, ltorstring)
+      call twh_get_torsion_params(lfailure,iversion,rwflag,type
+     &     ,coeffstart, coeffstop, ltorstring)
+      if ( lfailure ) return
 
       if ( ltorstring ) then
          goodstring = 'Torsion String Names'
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(a20)') goodstring
          else
-            call twh_read_label(FFUNIT, goodstring, .false.,idname)
+            call twh_read_label(lfailure,FFUNIT, goodstring, .false.
+     &           ,idname)
+            if ( lfailure ) return
          endif
          do icoeff = 1,4
             if ( rwflag .eq. WRITE_FLAG ) then
                write(FFUNIT,'(a10,1x)') twh_get_torstring(type,icoeff)
             else
-               call twh_read_string(FFUNIT,goodstring,.false.,ctemp(1))
+               call twh_read_string(lfailure,FFUNIT,goodstring,.false.
+     &              ,ctemp(1))
+               if ( lfailure ) return
                call twh_torstring(GLB_SET,type,icoeff,ctemp(1))
             endif
          enddo
@@ -1301,14 +1395,16 @@ c     --- local variables
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a20)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do icoeff = coeffstart,coeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') 
      &           twh_safe_double(twh_get_torcoeff(type,icoeff))
          else
-            dtemp = twh_read_float(FFUNIT,goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT,goodstring,.false.)
+            if ( lfailure ) return
             call twh_torcoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -1322,7 +1418,9 @@ c     --- torsion order for this type of interaction
       else
          if ( iversion .ge. 14 ) then
 c           --- read in the torsionorder
-            call twh_read_label( FFUNIT, goodstring, .false.,idname)
+            call twh_read_label(lfailure,FFUNIT,goodstring,.false.
+     &           ,idname)
+            if ( lfailure ) return
             read(FFUNIT,'(a15)') order
          else
 c           --- prior versions did not have torsionorder; set to wild
@@ -1337,8 +1435,9 @@ c     --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_torff(type)
       else
-         call twh_read_labeled_string( FFUNIT,goodstring, .false.
-     &        ,idname,ctemp(1))
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring
+     &        , .false.,idname,ctemp(1))
+         if ( lfailure ) return
          call twh_torff(GLB_SET,type,ctemp(1))
       endif
 c        --- number of atoms in this force field that
@@ -1348,8 +1447,9 @@ c        --- use the same parameters
          write(FFUNIT,'(a38)') goodstring
          write(FFUNIT,*) twh_get_ntsame(type)
       else
-         itemp = twh_read_labeled_integer( FFUNIT,goodstring, .false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure, FFUNIT,goodstring
+     &        , .false.,idname)
+         if ( lfailure ) return
          call twh_ntsame(GLB_SET,type,itemp)
       endif
 c        --- safety check value of ntsame
@@ -1365,7 +1465,8 @@ c        --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do isame = 1,twh_get_ntsame(type)
          if ( rwflag .eq. WRITE_FLAG ) then
@@ -1385,13 +1486,13 @@ c        --- names of those atoms
       end
 
 
-      subroutine rw_improper_data( rwflag, type, impr_adj)
+      subroutine twh_rw_improper_data(lfailure, rwflag, type, impr_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     * Global variables modified by this subroutine::                 *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IMPCOEFF
@@ -1404,6 +1505,7 @@ c     ******************************************************************
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, type, impr_adj
 c     --- local variables
       integer isame,icoeff,iatom,itemp
@@ -1421,8 +1523,9 @@ c     --- local variables
          write(FFUNIT,'(a20)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type-impr_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch of Improper types'
             stop
@@ -1433,8 +1536,9 @@ c     --- local variables
          write(FFUNIT,'(a13)') goodstring
          write(FFUNIT,*) twh_get_impform(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_impform(GLB_SET,type,itemp)
       endif
       goodstring = 'Improper Style'
@@ -1442,8 +1546,9 @@ c     --- local variables
          write(FFUNIT,'(a14)') goodstring
          write(FFUNIT,*) twh_get_impstyle(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_impstyle(GLB_SET,type,itemp)
       endif
 
@@ -1454,13 +1559,15 @@ c     --- local variables
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a21)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do icoeff = coeffstart,coeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') twh_get_impcoeff(type,icoeff)
          else
-            dtemp = twh_read_float(FFUNIT,goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT,goodstring,.false.)
+            if ( lfailure ) return
             call twh_impcoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -1470,8 +1577,9 @@ c        --- force field name
          write(FFUNIT,'(a16)') goodstring 
          write(FFUNIT,'(a10)') twh_get_impff(type)
       else
-         call twh_read_labeled_string( FFUNIT,goodstring,.false.
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring,.false.
      &        ,idname,ctemp(1))
+         if ( lfailure ) return
          call twh_impff(GLB_SET,type,ctemp(1))
       endif
 c        --- number of atoms in this force field that
@@ -1481,8 +1589,9 @@ c        --- use the same parameters
          write(FFUNIT,'(a38)') goodstring
          write(FFUNIT,*) twh_get_nimpsame(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_nimpsame(GLB_SET,type,itemp)
       endif
 c        --- names of those atoms
@@ -1490,7 +1599,8 @@ c        --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do isame = 1,twh_get_nimpsame(type)
          if ( rwflag .eq. WRITE_FLAG ) then
@@ -1507,13 +1617,13 @@ c        --- names of those atoms
       return
       end
 
-      subroutine rw_angle_angle_data(rwflag, type, aa_adj)
+      subroutine twh_rw_angle_angle_data(lfailure,rwflag, type, aa_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     * Global variables modified by this subroutine::                 *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_AACOEFF
@@ -1526,6 +1636,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from this subroutine
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, type, aa_adj
 c     --- local variables
       integer isame,icoeff,iatom
@@ -1543,8 +1654,9 @@ c     --- local variables
          write(FFUNIT,'(a23)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type-aa_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch of Angle-Angle types'
             stop
@@ -1555,8 +1667,9 @@ c     --- local variables
          write(FFUNIT,'(a17)') goodstring
          write(FFUNIT,*) twh_get_aastyle(type)
       else
-         itemp = twh_read_labeled_integer( FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure, FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_aastyle(GLB_SET,type,itemp)
       endif
 
@@ -1578,13 +1691,15 @@ c           --- Compass with explicitly specified angle terms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a24)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do icoeff = coeffstart,coeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') twh_get_aacoeff(type,icoeff)
          else
-            dtemp = twh_read_float(FFUNIT,goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT,goodstring,.false.)
+            if ( lfailure ) return
             call twh_aacoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -1594,8 +1709,9 @@ c        --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_aaff(type)
       else
-         call twh_read_labeled_string( FFUNIT,goodstring,.false.
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring,.false.
      &        ,idname,ctemp(1))
+         if ( lfailure ) return
          call twh_aaff(GLB_SET,type,ctemp(1))
       endif
 c        --- number of atoms in this force field that
@@ -1605,8 +1721,9 @@ c        --- use the same parameters
          write(FFUNIT,'(a38)') goodstring
          write(FFUNIT,*) twh_get_naasame(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_naasame(GLB_SET,type,itemp)
       endif
 c        --- names of those atoms
@@ -1614,7 +1731,8 @@ c        --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do isame = 1,twh_get_naasame(type)
          if ( rwflag .eq. WRITE_FLAG ) then
@@ -1632,12 +1750,12 @@ c        --- names of those atoms
       end
 
 
-      subroutine rw_one_five_data(rwflag, type, of_adj)
+      subroutine twh_rw_one_five_data(lfailure, rwflag, type, of_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_OFCOEFF
@@ -1648,6 +1766,7 @@ c     ******************************************************************
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag,type,itemp,of_adj
 c     --- local variables
       integer coeffstart,coeffstop
@@ -1664,8 +1783,9 @@ c     --- local variables
          write(FFUNIT,'(a20)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type - of_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch One-Five types'
             stop
@@ -1677,8 +1797,9 @@ c     --- local variables
          write(FFUNIT,'(a14)') goodstring
          write(FFUNIT,*) twh_get_ofstyle(type)
       else
-         itemp = twh_read_labeled_integer(FFUNIT,goodstring,.false.
-     &        ,idname)
+         itemp = twh_read_labeled_integer(lfailure,FFUNIT,goodstring
+     &        ,.false.,idname)
+         if ( lfailure ) return
          call twh_ofstyle(GLB_SET,type,itemp)
       endif
       if ( twh_get_ofstyle(type) .eq. 1 ) then
@@ -1699,13 +1820,15 @@ c           --- a/r^12
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a22)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       do icoeff = coeffstart,coeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') twh_get_ofcoeff(type,icoeff)
          else
-            dtemp = twh_read_float(FFUNIT,goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT,goodstring,.false.)
+            if ( lfailure ) return
             call twh_ofcoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -1716,8 +1839,9 @@ c        --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_offf(type)
       else
-         call twh_read_labeled_string(FFUNIT,goodstring,.false.
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring,.false.
      &        ,idname,ctemp(1))
+         if ( lfailure ) return
          call twh_offf(GLB_SET,type,ctemp(1))
       endif
 
@@ -1726,7 +1850,8 @@ c        --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(5(a10,1x))') 
@@ -1742,12 +1867,13 @@ c        --- names of those atoms
       end
 
 
-      subroutine rw_bond_increment_data(rwflag, iversion, type, bi_adj)
+      subroutine twh_rw_bond_increment_data(lfailure,rwflag, iversion
+     &     , type, bi_adj)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_QBIFF
@@ -1758,6 +1884,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from this subroutine
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, iversion, type, bi_adj
 c     --- local variables
       integer iatom
@@ -1775,8 +1902,9 @@ c     --- local variables
          write(FFUNIT,'(a26)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &      goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type-bi_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch Bond Increment types'
             stop
@@ -1788,8 +1916,9 @@ c     --- local variables
          write(FFUNIT,'(a20)') goodstring
          write(FFUNIT,'(e20.10)') twh_get_qbivalue(type)
       else
-         dtemp = twh_read_labeled_float(FFUNIT,goodstring,.false.
-     &        ,idname)
+         dtemp = twh_read_labeled_float(lfailure,FFUNIT,goodstring
+     &        ,.false. ,idname)
+         if ( lfailure ) return
          call twh_qbivalue(GLB_SET,type,dtemp)
       endif
 c     --- bond increment order
@@ -1800,8 +1929,9 @@ c     --- bond increment order
          write(FFUNIT,'(a10)') order
       else
          if ( iversion .ge. 14 ) then
-            call twh_read_labeled_string(FFUNIT,goodstring,.false.
-     &           ,idname,order)
+            call twh_read_labeled_string(lfailure,FFUNIT,goodstring
+     &           ,.false.,idname,order)
+            if ( lfailure ) return
          else
 c           --- older versions did not have bond increment order
             order = 'wild'
@@ -1815,8 +1945,9 @@ c     --- force field name
          write(FFUNIT,'(a16)') goodstring
          write(FFUNIT,'(a10)') twh_get_qbiff(type)
       else
-         call twh_read_labeled_string(FFUNIT,goodstring,.false.
+         call twh_read_labeled_string(lfailure,FFUNIT,goodstring,.false.
      &        ,idname,ctemp(1))
+         if ( lfailure ) return
          call twh_qbiff(GLB_SET,type,ctemp(1))
       endif
 c     --- names of those atoms
@@ -1824,7 +1955,8 @@ c     --- names of those atoms
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a10)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(2(a10,1x))') 
@@ -1837,13 +1969,13 @@ c     --- names of those atoms
       return
       end
 
-      subroutine rw_hbond_data( rwflag, type, hb_adj, hbcoeffstart, 
-     &      hbcoeffstop)
+      subroutine twh_rw_hbond_data( lfailure,rwflag, type, hb_adj
+     &     , hbcoeffstart, hbcoeffstop)
 c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_HBONDCOEFF
@@ -1852,6 +1984,7 @@ c     ******************************************************************
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, type, hb_adj, hbcoeffstart, hbcoeffstop
 c     --- local variables
       integer icoeff,iatom
@@ -1868,8 +2001,9 @@ c     --- local variables
          write(FFUNIT,'(a18)') goodstring
          write(FFUNIT,*) type
       else
-         testtype =  twh_read_labeled_integer( FFUNIT,
+         testtype =  twh_read_labeled_integer(lfailure, FFUNIT,
      &       goodstring, .false.,idname)
+         if ( lfailure ) return
          if ( type - hb_adj .ne. testtype ) then
             write(6,*) 'RWFORCEFIELD: mismatch H-bond types'
             stop
@@ -1884,14 +2018,16 @@ c           --- are set back up in the classical_potential section
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a19)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
 
       do icoeff = hbcoeffstart,hbcoeffstop
          if ( rwflag .eq. WRITE_FLAG ) then
             write(FFUNIT,'(e20.10)') twh_get_hbondcoeff(type,icoeff)
          else
-            dtemp = twh_read_float(FFUNIT,goodstring,.false.)
+            dtemp = twh_read_float(lfailure,FFUNIT,goodstring,.false.)
+            if ( lfailure ) return
             call twh_hbondcoeff(GLB_SET,type,icoeff,dtemp)
          endif
       enddo
@@ -1900,7 +2036,8 @@ c           --- are set back up in the classical_potential section
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a12)') goodstring
       else
-         call twh_read_label( FFUNIT, goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring,.false.,idname)
+         if ( lfailure ) return
       endif
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(2(a10,1x))') 
@@ -1915,7 +2052,7 @@ c           --- are set back up in the classical_potential section
       return
       end
 
-      subroutine get_potential_type(iversion, localptype)
+      subroutine twh_get_potential_type(lfailure,iversion, localptype)
 c     ******************************************************************
 c     * Obtain the potential type                                      *
 c     * Arguments set in this procedure:                               *
@@ -1925,13 +2062,14 @@ c     * Error conditions:                                              *
 c     *  This function will halt upon an error condition               *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_POTENTIAL
 #define FUNCTION_READ_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer iversion
       character*30 localptype
 c     --- local variables
@@ -1943,11 +2081,13 @@ c     --- local variables
 
       idname = 'rwforcefield'
       goodstring = 'Potential Type'
-      call twh_read_label(FFUNIT,goodstring, .false.,idname)
+      call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+      if ( lfailure ) return
       if ( iversion .lt. 6 ) then
 c           --- read in old integer code and translate into current
 c           --- character string
-         iptype = twh_read_integer(FFUNIT,goodstring,.false.)
+         iptype = twh_read_integer(lfailure,FFUNIT,goodstring,.false.)
+         if ( lfailure ) return
          if ( iptype .eq. -3 ) then
             localptype = 'Repulsive Sphere'
          elseif ( iptype .eq. 0 ) then
@@ -1978,7 +2118,9 @@ c           --- character string
          endif
       else
 c           --- read in the text string
-         call twh_read_string(FFUNIT,goodstring,.false.,localptype)
+         call twh_read_string(lfailure,FFUNIT,goodstring,.false.
+     &        ,localptype)
+         if ( lfailure ) return
       endif
       if ( localptype .ne. twh_get_classical_potential() ) then
          lproblem = .true.
@@ -2363,7 +2505,7 @@ c        --- harmonic cosine plus 1-3 nonbond
       end
 
 
-      subroutine get_torsion_params(iversion, rwflag, 
+      subroutine twh_get_torsion_params(lfailure,iversion, rwflag, 
      &   type, coeffstart, coeffstop, ltorstring)
 c     ******************************************************************
 c     * obtain various parameters for given torsion style.             *
@@ -2374,16 +2516,16 @@ c     *  ltorstring                                                    *
 c     * (values of these arguments initialized here)                   *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 01-10-2007 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NTORLOOP
 #define FUNCTION_GET_TORSTYLE
 #include "functions.h"
 c     --- variables passed to/from this subroutine
+      logical lfailure,ltorstring
       integer iversion, rwflag, type
       integer coeffstart, coeffstop
-      logical ltorstring
 
 c     --- local variables
       character*15 idname
@@ -2408,13 +2550,15 @@ c           --- OPLS style cosine series
          coeffstop = 3
       elseif ( torstyle .eq. 3 ) then
 c           --- Gromos/Charmm/Amber cosine series
-         call twh_rwtorloop(type,rwflag)
+         call twh_rwtorloop(lfailure,type,rwflag)
+         if ( lfailure ) return
          coeffstart = 1
          coeffstop = 3*twh_get_ntorloop(type)
       elseif ( torstyle .eq. 4 ) then
 c           --- Gromos/Charmm/Amber cosine series
 c           --- with additional harmonic
-         call twh_rwtorloop(type,rwflag)
+         call twh_rwtorloop(lfailure,type,rwflag)
+         if ( lfailure ) return
          coeffstart = 1
          coeffstop = 3*twh_get_ntorloop(type)+2
       elseif ( torstyle .eq. 5 ) then
@@ -2447,7 +2591,8 @@ c           --- class 2 with explicit terms
          coeffstop = 31
       elseif ( torstyle .eq. 10 ) then
 c           --- cosine power series
-         call twh_rwtorloop(type,rwflag)
+         call twh_rwtorloop(lfailure,type,rwflag)
+         if ( lfailure ) return
          coeffstart = 0
          coeffstop = twh_get_ntorloop(type)
       elseif ( torstyle .eq. 11 ) then
@@ -2456,7 +2601,8 @@ c           --- old UA OPLS style cosine series
          coeffstop = 3
       elseif ( torstyle .eq. 12 ) then
 c           --- NERD Version 3 style cosine series
-         call twh_rwtorloop(type,rwflag)
+         call twh_rwtorloop(lfailure,type,rwflag)
+         if ( lfailure ) return
          coeffstart = 0
          coeffstop = twh_get_ntorloop(type)
       elseif ( torstyle .eq. 13 ) then
@@ -2485,7 +2631,8 @@ c           --- square well
          coeffstop = 3
       elseif ( torstyle .eq. 19 ) then
 c           --- Amber cosine series divided by number of torsions
-         call twh_rwtorloop(type,rwflag)
+         call twh_rwtorloop(lfailure,type,rwflag)
+         if ( lfailure ) return
          coeffstart = 1
          coeffstop = 3*twh_get_ntorloop(type)
       elseif ( torstyle .eq. 20 ) then
@@ -2493,7 +2640,8 @@ c        --- OPLS 4 parameter style cosine series
          coeffstart = 1
          coeffstop = 4
       elseif ( torstyle .eq. 21 ) then
-         call twh_rwtorloop(type,rwflag)
+         call twh_rwtorloop(lfailure,type,rwflag)
+         if ( lfailure ) return
          coeffstart = 0
          coeffstop = twh_get_ntorloop(type)
       elseif ( torstyle .eq. 22 ) then
@@ -2566,17 +2714,19 @@ c           --- 1-cosine
       return
       end
 
-      subroutine rw_eam_params(rwflag, type, ntypes, iversion)
+      subroutine twh_rw_eam_params(lfailure,rwflag,type,ntypes
+     &     ,iversion)
 c     ******************************************************************
 c     * obtain various parameters for given improper torsion style.    *
 c     * Arguments set in this procedure:                               *
 c     * Global arguments set in this procedure:                        *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer rwflag, type, ntypes, iversion
 c     --- local variables
       character*15 idname
@@ -2595,7 +2745,8 @@ c        --- longer write older versions
             stop
          endif
          goodstring = 'eam_dens'
-         call twh_read_label(FFUNIT,goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
          read(FFUNIT,*) itest,eam_ndens
          call twh_eam_ndens(GLB_SET,type,type,eam_ndens)
 c        --- safety check
@@ -2613,13 +2764,15 @@ c        --- safety check
 
 c        --- eam_dens_style
          goodstring = 'eam_dens_style'
-         call twh_read_labeled_string(FFUNIT, goodstring
+         call twh_read_labeled_string(lfailure,FFUNIT, goodstring
      &        , .false.,idname,eamdensstyle)
+         if ( lfailure ) return
          call twh_eam_dens_style(GLB_SET,type,type,eamdensstyle)
 
 c        --- eam_dens data
          goodstring = 'eam_dens_data'
-         call twh_read_label(FFUNIT,goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
          call twh_eam_ndens(GLB_GET,type,type,eam_ndens)
          do iscan = 1,eam_ndens
             read(FFUNIT,*) avalue,bvalue
@@ -2638,7 +2791,9 @@ c        --- embedding density
                call twh_eam_ndens(GLB_GET,jtype,type,eam_ndens)
                write(FFUNIT,*) jtype,type,eam_ndens
             else
-               call twh_read_label(FFUNIT,goodstring, .false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring
+     &              , .false.,idname)
+               if ( lfailure ) return
                read(FFUNIT,*) jtest,itest,eam_ndens
                call twh_eam_ndens(GLB_SET,jtype,type,eam_ndens)
 c              --- safety check
@@ -2664,8 +2819,9 @@ c           --- eam_dens_style
                call twh_eam_dens_style(GLB_GET,jtype,type,eamdensstyle)
                write(FFUNIT,'(a20)') eamdensstyle
             else
-               call twh_read_labeled_string( FFUNIT
+               call twh_read_labeled_string(lfailure, FFUNIT
      &              , goodstring,.false.,idname,eamdensstyle)
+               if ( lfailure ) return
                call twh_eam_dens_style(GLB_SET,jtype,type,eamdensstyle)
             endif
 
@@ -2674,7 +2830,9 @@ c           --- eam_dens data
             if ( rwflag .eq. WRITE_FLAG ) then
                write(FFUNIT,'(a13)') goodstring
             else
-               call twh_read_label(FFUNIT,goodstring, .false.,idname)
+               call twh_read_label(lfailure,FFUNIT,goodstring
+     &              , .false.,idname)
+               if ( lfailure ) return
             endif
             call twh_eam_ndens(GLB_GET,jtype,type,eam_ndens)
             do iscan = 1,eam_ndens
@@ -2698,7 +2856,8 @@ c     --- eam_embed nembed
          call twh_eam_nembed(GLB_GET,type,eam_nembed)
          write(FFUNIT,*) type,eam_nembed
       else
-         call twh_read_label(FFUNIT,goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
          read(FFUNIT,*) itest,eam_nembed
          call twh_eam_nembed(GLB_SET,type,eam_nembed)
 c              --- safety check
@@ -2722,8 +2881,9 @@ c     --- eam_embed_style
          call twh_eam_embed_style(GLB_GET,type,eamembedstyle)
          write(FFUNIT,'(a20)') eamembedstyle
       else
-         call twh_read_labeled_string( FFUNIT,
+         call twh_read_labeled_string(lfailure, FFUNIT,
      &        goodstring, .false.,idname,eamembedstyle)
+         if ( lfailure ) return
          call twh_eam_embed_style(GLB_SET,type,eamembedstyle)
       endif
 
@@ -2732,7 +2892,8 @@ c           --- eam_embed data
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a14)') goodstring
       else
-         call twh_read_label(FFUNIT,goodstring, .false.,idname)
+         call twh_read_label(lfailure,FFUNIT,goodstring, .false.,idname)
+         if ( lfailure ) return
       endif
       call twh_eam_nembed(GLB_GET,type,eam_nembed)
       do iscan = 1,eam_nembed

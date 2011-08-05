@@ -1,8 +1,7 @@
-c     $Id: radialpressure.F,v 1.18 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_radialpressure(pressure,ibox)
+      subroutine twh_radialpressure(lfailure,pressure,ibox)
 c     ******************************************************************
 c     * computes the pressure from a snapshot by using the radial      *
 c     * distribution funtion definition of pressure for hard sphere or *
@@ -35,7 +34,7 @@ c     * implemented it as a curiosity for the discontinuous well       *
 c     * potentials (MGM 06-27-2005)                                    *
 c     *                                                                *
 c     * originally written 06-27-2005 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -43,6 +42,7 @@ c     ******************************************************************
 #define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ibox
       double precision pressure
 c     --- parameters
@@ -191,7 +191,8 @@ c           --- 2.0 sigma boundary
          enddo
       else
          write(6,*) 'RADIALPRESSURE: unknown classical_potential'
-         stop
+         lfailure = .true.
+         return
       endif
 
 c     --- loop over all molecules that are in this box

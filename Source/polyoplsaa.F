@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * builds the input file for an amino acid sequence starting from *
 c     * the N-terminus for the OPLS-aa force field                     *
 c     *                                                                *
 c     * Adapted from the Charmm27 builder by A.A. Chen 9-15-2005       *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
 #ifndef DISABLE_POLY
       implicit none
@@ -286,7 +286,9 @@ c        --- whether this is n-term, c-term, or interior
 c        --- also include some non-standard amino acids that still
 c        --- have the same backbone
          
-         call twh_aa_pepname_generic(termflag,hmain,iatom,ninsert)
+         call twh_aa_pepname_generic(lfailure,termflag,hmain,iatom
+     &        ,ninsert)
+         if ( lfailure ) return
 
          if ( pepname(ipeptide) .eq. 'a0' .or.
      &        pepname(ipeptide) .eq. 'A0' ) then
@@ -1086,7 +1088,8 @@ c           --- no side chain improper torsions
          else
             write(6,*) 'invalid peptide name ',ipeptide
      &           ,' ',pepname(ipeptide)
-            stop
+            lfailure = .true.
+            return
          endif
 
          call twh_aa_pepname_main_chain(lfailure,aminoname,termflag
@@ -1183,7 +1186,8 @@ c           --- OPLS type O-Cn-X-Y = type 2.3
 c           --- invalid amino acid designation
             write(6,*) 'imolty,ipeptide,pepname',imolty,ipeptide
      &           ,pepname(ipeptide),' is not valid'
-            stop
+            lfailure = .true.
+            return
          endif
 c        --- update ibondend for the typical amino acids
          ibondend = iatom+2
@@ -1203,9 +1207,10 @@ c     write(6,*) 'finished POLYOPLSAA'
       end
 
 #else
-c     Compilation disabled (for speed) with FFLAGS=-DDISABLE_POLY statement in
-c     ./configure
+c     Compilation disabled (for speed) with FFLAGS=-DDISABLE_POLY
+c     statement in ./configure
       write(6,*) "polyoplsaa disabled (compile flag)"
-      stop
+      lfailure = .true.
+      return
       end
 #endif

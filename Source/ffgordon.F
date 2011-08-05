@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffgordon(ntypes)
+      subroutine twh_ffgordon(lfailure,ntypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters to test the          *
 c     * gordon n-6 forcefield                                          *
 c     *                                                                *
 c     * originally written 11-30-2004 by M.G. Martin                   *
-c     * last modified 11-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes
 c     --- local variables
       integer ii,type
@@ -69,7 +69,8 @@ c     (CH4_3) Methane CH4 (sp3)  [Tjpcb1998]
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
-
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
+      
       return
       end

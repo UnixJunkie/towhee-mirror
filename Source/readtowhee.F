@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -127,8 +127,9 @@ c     --- set subroutine idname
       idname = 'readtowhee'
 
 c     --- read in ensemble string
-      call twh_read_labeled_string(4,'ensemble',.true.,idname
+      call twh_read_labeled_string(lfailure,4,'ensemble',.true.,idname
      &     ,ensemble_str)
+      if ( lfailure ) return
 c     --- error check ensemble
       if (ensemble_str .eq. 'nvt') then
          ensemble = ENS_NVT
@@ -147,8 +148,9 @@ c     --- set the ensemble
       call twh_ensemble(GLB_SET,ensemble)
 
 c     --- read in temperature 
-      temperature = twh_read_labeled_float(4,'temperature',.true.,
-     &    idname)
+      temperature = twh_read_labeled_float(lfailure,4,'temperature'
+     &     ,.true., idname)
+      if ( lfailure ) return
 c     --- Note: setting temperature automatically sets beta as well
       call twh_temperature(GLB_SET,temperature)
 c     --- error check temperature
@@ -160,8 +162,9 @@ c     --- error check temperature
 
       if ( ensemble .eq. ENS_NPT ) then
 c        --- read in external pressure
-         pressure = twh_read_labeled_float(4,'pressure',
+         pressure = twh_read_labeled_float(lfailure,4,'pressure',
      &     .true., idname)
+         if ( lfailure ) return
 c        --- error check pressure
          if ( pressure .le. 0.0d0 ) then
             write(6,*) 'READTOWHEE: pressure must be positive'
@@ -176,9 +179,10 @@ c        --- convert pressure from kPa to simulation units
 c     --- tmmc_flag = .true. if doing GC-TMMC
       call twh_tmmc_flag(GLB_SET,.false.)
       if ( ensemble .eq. ENS_UVT ) then
-         if (twh_check_label(4,'tmmc_flag')) then
-            lvalue = twh_read_labeled_logical(4, 'tmmc_flag'
+         if (twh_check_label(lfailure,4,'tmmc_flag')) then
+            lvalue = twh_read_labeled_logical(lfailure,4, 'tmmc_flag'
      &           ,.true., idname)
+            if ( lfailure ) return
             call twh_tmmc_flag(GLB_SET,lvalue)
          endif
          call twh_tmmc_flag(GLB_GET,lvalue)
@@ -190,8 +194,9 @@ c     --- tmmc_flag = .true. if doing GC-TMMC
       endif
 
 c     --- read in number of molecule types
-      nmolty = twh_read_labeled_integer(4,'nmolty',.true.,
+      nmolty = twh_read_labeled_integer(lfailure,4,'nmolty',.true.,
      &    idname)
+      if ( lfailure ) return
       call twh_nmolty(GLB_SET,nmolty)
 c     --- error check nmolty
       if ( nmolty .lt. 1 ) then
@@ -221,8 +226,9 @@ c     --- implemented TMMC variant (for now, pure fluids only).
       endif
 
 c     --- read in number of each type of molecule
-      call twh_read_labeled_integer_array(4, 'nmolectyp',
+      call twh_read_labeled_integer_array(lfailure,4, 'nmolectyp',
      &    nmolty, .true., idname, idummy)
+      if ( lfailure ) return
 
 c     --- set the total number of molecules
       nchain = 0
@@ -254,8 +260,9 @@ c     --- error check nmolectyp
 
       if ( ensemble .eq. ENS_UVT ) then
 c        --- read in the chemical potential for each molecule
-         call twh_read_labeled_float_array(4, 'chempot',
+         call twh_read_labeled_float_array(lfailure,4, 'chempot',
      &      nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
 c        --- set the values
          do jmolty = 1,nmolty
             dvalue = dmarray(jmolty)
@@ -264,8 +271,9 @@ c        --- set the values
       endif
 
 c     --- read in the number of simulation boxes
-      numboxes = twh_read_labeled_integer(4,'numboxes',
+      numboxes = twh_read_labeled_integer(lfailure,4,'numboxes',
      &    .true.,idname)
+      if ( lfailure ) return
       call twh_numboxes(GLB_SET,numboxes)
       maxboxes = numboxes
 c     --- error check
@@ -292,8 +300,9 @@ c     --- allocate arrays based on nmolty, numboxes, and nchain
       call twh_allocate_maxmolty_numboxes_nchain(nmolty,maxboxes,nchain)
 
 c     --- read the step style
-      call twh_read_labeled_string(4,'stepstyle',.true.,idname
+      call twh_read_labeled_string(lfailure,4,'stepstyle',.true.,idname
      &     ,stepstyle)
+      if ( lfailure ) return
       call twh_stepstyle(GLB_SET,stepstyle)
 c     --- error check
       if ( ensemble .eq. ENS_UVT .and. stepstyle .ne. 'moves' ) then
@@ -305,7 +314,8 @@ c     --- error check
          
       if ( stepstyle .eq. 'cycles' .or. stepstyle .eq. 'moves' ) then
 c        --- read in number of MC steps
-         call twh_get_nstep(4, nstep, .true., idname)
+         call twh_get_nstep(lfailure,4, nstep, .true., idname)
+         if ( lfailure ) return
          call twh_nstep(GLB_SET,nstep)
 c        --- error check
          if ( nstep .lt. 0 ) then
@@ -320,9 +330,10 @@ c        --- error check
       endif
 
 c     --- determine the controlstyle
-      if ( twh_check_label(4,'controlstyle') ) then
-         call twh_read_labeled_string(4,'controlstyle'
+      if ( twh_check_label(lfailure,4,'controlstyle') ) then
+         call twh_read_labeled_string(lfailure,4,'controlstyle'
      &        ,.true.,idname,controlstyle)
+         if ( lfailure ) return
       else
 c        --- if not specified then default to manual
          controlstyle = 'manual'
@@ -391,9 +402,10 @@ c        --- setting designed to rapidly equilibrate the settings
 
       elseif ( controlstyle .eq. 'manual' ) then
 c        --- read steps between printing output to stdout
-         if (twh_check_label(4,'printfreq')) then
-            printfreq = twh_read_labeled_integer(4,'printfreq',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'printfreq')) then
+            printfreq = twh_read_labeled_integer(lfailure,4,'printfreq'
+     &           ,.true.,idname)
+            if ( lfailure ) return
          else
             printfreq = 0
          endif
@@ -420,39 +432,45 @@ c           --- initialize transition matrix Monte Carlo variables
             call twh_n_tmmc_max(GLB_SET,nchain)
 c           --- read in optional tmmc variabls
             call twh_run_name(GLB_SET,'noname')
-            if ( twh_check_label(4,'n_tmmc_min') ) then
-               n_tmmc_min = twh_read_labeled_integer(4,'n_tmmc_min',
-     &              .false.,idname)
+            if ( twh_check_label(lfailure,4,'n_tmmc_min') ) then
+               n_tmmc_min = twh_read_labeled_integer(lfailure,4
+     &              ,'n_tmmc_min',.false.,idname)
+               if ( lfailure ) return
                call twh_n_tmmc_min(GLB_SET,n_tmmc_min)
             endif
             call twh_n_tmmc_min(GLB_GET,n_tmmc_min)
             call twh_n_tmmc_max(GLB_GET,n_tmmc_max)
             write(6,*) 'N_TMMC_MAX: ', n_tmmc_max
             write(6,*) 'N_TMMC_MIN: ', n_tmmc_min
-            if ( twh_check_label(4,'weight_freq') ) then
-               ivalue = twh_read_labeled_integer(4,'weight_freq',
-     &              .true.,idname)
+            if ( twh_check_label(lfailure,4,'weight_freq') ) then
+               ivalue = twh_read_labeled_integer(lfailure,4
+     &              ,'weight_freq',.true.,idname)
+               if ( lfailure ) return
                call twh_weight_freq(GLB_SET,ivalue)
             endif
-            if ( twh_check_label(4,'c_matrix_freq') ) then
-               ivalue = twh_read_labeled_integer(4,'c_matrix_freq'
-     &              ,.true.,idname)
+            if ( twh_check_label(lfailure,4,'c_matrix_freq') ) then
+               ivalue = twh_read_labeled_integer(lfailure,4
+     &              ,'c_matrix_freq',.true.,idname)
+               if ( lfailure ) return
                call twh_c_matrix_freq(GLB_SET,ivalue)
             endif
-            if ( twh_check_label(4,'run_name') ) then
-               call twh_read_labeled_string(4,'run_name',
+            if ( twh_check_label(lfailure,4,'run_name') ) then
+               call twh_read_labeled_string(lfailure,4,'run_name',
      &              .true.,idname,run_name)
+               if ( lfailure ) return
                call twh_run_name(GLB_SET,run_name)
             endif
             in_c_flag = .false.
-            if (twh_check_label(4,'in_c_flag')) then
-               in_c_flag = twh_read_labeled_logical(4, 'in_c_flag',
-     &              .true., idname)
+            if (twh_check_label(lfailure,4,'in_c_flag')) then
+               in_c_flag = twh_read_labeled_logical(lfailure,4
+     &              , 'in_c_flag',.true., idname)
+               if ( lfailure ) return
             endif
             if ( in_c_flag ) then
-               if ( twh_check_label(4,'in_cfile') ) then
-                  call twh_read_labeled_string(4,'in_cfile',
+               if ( twh_check_label(lfailure,4,'in_cfile') ) then
+                  call twh_read_labeled_string(lfailure,4,'in_cfile',
      &                 .true., idname,in_cfile)
+                  if ( lfailure ) return
                   tmpfile  = in_cfile(1:twh_len_trim(in_cfile))
                   call twh_openfile(lfailure,51,tmpfile,'DEFAULT'
      &                 ,'UNKNOWN','DEFAULT')
@@ -507,9 +525,10 @@ c           --- end of stuff that I think was never used
          endif
 
 c        --- read in size of blocks for block averages
-         if (twh_check_label(4,'blocksize')) then
-            blocksize = twh_read_labeled_integer(4,'blocksize',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'blocksize')) then
+            blocksize = twh_read_labeled_integer(lfailure,4,'blocksize'
+     &           ,.true.,idname)
+            if ( lfailure ) return
 c           --- error check (if = 0, no output)
             if ( blocksize .lt. 0 ) then
                write(6,*) 'READTOWHEE: blocksize must be postive'
@@ -532,9 +551,10 @@ c           --- check for partial block
          endif
 
 c        --- read in steps between movie file output
-         if (twh_check_label(4,'moviefreq')) then
-            moviefreq = twh_read_labeled_integer(4,'moviefreq',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'moviefreq')) then
+            moviefreq = twh_read_labeled_integer(lfailure,4,'moviefreq'
+     &           ,.true.,idname)
+            if ( lfailure ) return
          else
             moviefreq = 0
          endif
@@ -548,9 +568,10 @@ c        --- error check (if = 0 => no movies written)
 
 c        --- read in steps between backup of configuration
 c        --- this is an optional label
-         if (twh_check_label(4,'backupfreq')) then
-            backupfreq = twh_read_labeled_integer(4,'backupfreq',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'backupfreq')) then
+            backupfreq = twh_read_labeled_integer(lfailure,4
+     &           ,'backupfreq',.true.,idname)
+            if ( lfailure ) return
          else
 c           --- default value if not specified
             backupfreq = 0
@@ -564,9 +585,10 @@ c        --- error check (if = 0, no output)
          endif
 
 c         --- read in steps between restart save of configuration
-         if (twh_check_label(4,'restartfreq')) then
-            restartfreq = twh_read_labeled_integer(4,'restartfreq',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'restartfreq')) then
+            restartfreq = twh_read_labeled_integer(lfailure,4
+     &           ,'restartfreq',.true.,idname)
+            if ( lfailure ) return
          else
             restartfreq = 0
          endif
@@ -579,8 +601,9 @@ c        --- error check (if = 0, no output)
          endif
 
 c        --- read in the runoutput variable
-         call twh_read_labeled_string(4,'runoutput',
+         call twh_read_labeled_string(lfailure,4,'runoutput',
      &        .true.,idname,runoutput)
+         if ( lfailure ) return
 c        --- store the runoutput variable
          call twh_runoutput(GLB_SET,runoutput)
 c        --- error check runoutput
@@ -599,9 +622,10 @@ c        --- error check runoutput
          endif
 
 c        --- read pdb output style logical
-         if (twh_check_label(4,'pdb_output_freq')) then
-            pdb_output_freq = twh_read_labeled_integer(4
+         if (twh_check_label(lfailure,4,'pdb_output_freq')) then
+            pdb_output_freq = twh_read_labeled_integer(lfailure,4
      &           ,'pdb_output_freq',.true.,idname)
+            if ( lfailure ) return
             call twh_pdb_output_freq(GLB_SET,pdb_output_freq)
             if ( pdb_output_freq .lt. 0) then
                write(6,*) 'READTOWHEE: pdb_output_freq must be positive'
@@ -614,39 +638,45 @@ c        --- read pdb output style logical
          endif
 
 c        --- optional read in dft output style logical
-         if (twh_check_label(4,'loutdft') ) then
-            loutdft = twh_read_labeled_logical(4,'loutdft',
+         if (twh_check_label(lfailure,4,'loutdft') ) then
+            loutdft = twh_read_labeled_logical(lfailure,4,'loutdft',
      &           .true.,idname)
+            if ( lfailure ) return
             call twh_loutdft(GLB_SET,loutdft)
          endif
 
 c        --- optional read in lammps output style logical
-         if ( twh_check_label(4,'loutlammps') ) then
-            loutlammps = twh_read_labeled_logical(4,'loutlammps',
-     &           .true.,idname)
+         if ( twh_check_label(lfailure,4,'loutlammps') ) then
+            loutlammps = twh_read_labeled_logical(lfailure,4
+     &           ,'loutlammps', .true.,idname)
+            if ( lfailure ) return
             call twh_loutlammps(GLB_SET,loutlammps)
          endif
 c        --- optional read in dlpoly output style logical
-         if (twh_check_label(4,'loutdlpoly')) then
-            loutdlpoly = twh_read_labeled_logical(4,'loutdlpoly',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'loutdlpoly')) then
+            loutdlpoly = twh_read_labeled_logical(lfailure,4
+     &           ,'loutdlpoly', .true.,idname)
+            if ( lfailure ) return
             call twh_loutdlpoly(GLB_SET,loutdlpoly)
          endif
 
          if ( ensemble .eq. ENS_UVT 
-     &        .and. twh_check_label(4,'louthist') ) then
+     &        .and. twh_check_label(lfailure,4,'louthist') ) then
 c           --- read logical for computation of histogram
-            louthist = twh_read_labeled_logical(4,'louthist',
+            louthist = twh_read_labeled_logical(lfailure,4,'louthist',
      &           .true.,idname)
+            if ( lfailure ) return
             call twh_louthist(GLB_SET,louthist)
             if (louthist) then
 c              --- setup files for histogram reweighting
-               ivalue = twh_read_labeled_integer(4,'hist_label',
-     &              .true.,idname)
+               ivalue = twh_read_labeled_integer(lfailure,4
+     &              ,'hist_label',.true.,idname)
+               if ( lfailure ) return
                call twh_hist_label(GLB_SET,ivalue)
                write(ftemp,*) ivalue
-               call twh_read_labeled_string(4,'hist_suffix',
+               call twh_read_labeled_string(lfailure,4,'hist_suffix',
      &              .true.,idname,hist_suffix)
+               if ( lfailure ) return
                call twh_hist_suffix(GLB_SET,hist_suffix)
                read(ftemp,*) fname3
                filename =
@@ -658,8 +688,9 @@ c              --- setup files for histogram reweighting
      &              'towhee_nfl'//fname3(1:twh_len_trim(fname3))
      &              //hist_suffix//'.dat'
                call twh_file_flct(GLB_SET,filename)
-               ivalue = twh_read_labeled_integer(4,'hist_nequil'
-     &              ,.true.,idname)
+               ivalue = twh_read_labeled_integer(lfailure,4
+     &              ,'hist_nequil',.true.,idname)
+               if ( lfailure ) return
                call twh_hist_nequil(GLB_SET,ivalue)
                call twh_file_flct(GLB_GET,filename)
                call twh_openfile(lfailure,50,filename,'DEFAULT'
@@ -681,8 +712,9 @@ c                 --- compute the length of this character string
             if ( louthist ) then
 c              --- read frequency which the histogram information is 
 c              --- calculated
-               histcalcfreq = twh_read_labeled_integer(4,'histcalcfreq',
-     &              .true.,idname)
+               histcalcfreq = twh_read_labeled_integer(lfailure,4
+     &              ,'histcalcfreq',.true.,idname)
+               if ( lfailure ) return
                call twh_histcalcfreq(GLB_SET,histcalcfreq)
 c              --- error check histcalcfreq
                if ( histcalcfreq .le. 0) then
@@ -693,8 +725,9 @@ c              --- error check histcalcfreq
 
 c              --- read frequency which the histogram information is 
 c              --- output to a file
-               histdumpfreq = twh_read_labeled_integer(4,'histdumpfreq',
-     &              .true.,idname)
+               histdumpfreq = twh_read_labeled_integer(lfailure,4
+     &              ,'histdumpfreq',.true.,idname)
+               if ( lfailure ) return
                call twh_histdumpfreq(GLB_SET,histdumpfreq)
 c              --- error check histdumpfreq
                if (histdumpfreq .le. 0) then
@@ -720,9 +753,10 @@ c                 --- histcalcfreq
          endif
 
 c        --- read in number of steps between pressure calculation
-         if (twh_check_label(4,'pressurefreq')) then
-            pressurefreq = twh_read_labeled_integer(4,'pressurefreq',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'pressurefreq')) then
+            pressurefreq = twh_read_labeled_integer(lfailure,4
+     &           ,'pressurefreq',.true.,idname)
+            if ( lfailure ) return
 c           --- error check
             if ( pressurefreq .lt. 0 ) then
                write(6,*) 'READTOWHEE: pressurefreq must be'
@@ -737,9 +771,10 @@ c           --- error check
 
 c        --- read in number of steps between update of translational and
 c        --- rotational maximum displacements
-         if (twh_check_label(4,'trmaxdispfreq')) then
-            trmaxdispfreq = twh_read_labeled_integer(4,'trmaxdispfreq',
-     &           .true.,idname)
+         if (twh_check_label(lfailure,4,'trmaxdispfreq')) then
+            trmaxdispfreq = twh_read_labeled_integer(lfailure,4
+     &           ,'trmaxdispfreq',.true.,idname)
+            if ( lfailure ) return
 c           --- error check (if zero, no updates)
             if ( trmaxdispfreq .lt. 0 ) then
                write(6,*) 'READTOWHEE: trmaxdispfreq must be positive'
@@ -754,9 +789,10 @@ c           --- default to a value of zero to turn off updates
 
 c        --- read in number of steps between update of volume move
 c        --- maximum displacements
-         if (twh_check_label(4,'volmaxdispfreq')) then
-            volmaxdispfreq = twh_read_labeled_integer(4
+         if (twh_check_label(lfailure,4,'volmaxdispfreq')) then
+            volmaxdispfreq = twh_read_labeled_integer(lfailure,4
      &           ,'volmaxdispfreq',.true.,idname)
+            if ( lfailure ) return
 c           --- error check (if zero, no updates)
             if ( volmaxdispfreq .lt. 0 ) then
                write(6,*) 'READTOWHEE: volmaxdispfreq must be positive'
@@ -772,9 +808,10 @@ c           --- default to a value of zero to turn off updates
 
 c     --- optional read in the number of chemical potential
 c     --- measurements to take per step for all of the molecule types
-      if ( twh_check_label(4,'chempotperstep') ) then
-         call twh_read_labeled_integer_array(4, 'chempotperstep',
-     &        nmolty, .true., idname, idummy)
+      if ( twh_check_label(lfailure,4,'chempotperstep') ) then
+         call twh_read_labeled_integer_array(lfailure,4
+     &        , 'chempotperstep',nmolty, .true., idname, idummy)
+         if ( lfailure ) return
 c        --- set
          do imolty = 1,nmolty
             call twh_chempotperstep(GLB_SET,imolty,idummy(imolty))
@@ -822,8 +859,9 @@ c     --- compute vequiv
       call twh_vequiv(GLB_SET,vequiv)
 
 c     --- read in the potential style
-      call twh_read_labeled_string(4,'potentialstyle',.true.,idname
-     &     ,potentialstyle_str)
+      call twh_read_labeled_string(lfailure,4,'potentialstyle',.true.
+     &     ,idname,potentialstyle_str)
+      if ( lfailure ) return
       if (potentialstyle_str .eq. 'internal') then
          call twh_potentialstyle(GLB_SET,POT_INTERNAL)
       elseif (potentialstyle_str .eq. 'external') then
@@ -847,16 +885,18 @@ c     --- read the external potential if required
          if ( lfailure ) return
       endif
 
-      if ( twh_check_label(4,'solvation_style') ) then
+      if ( twh_check_label(lfailure,4,'solvation_style') ) then
 c        --- read in the solvation_style
-         call twh_read_labeled_string(4,'solvation_style',.true.
-     &        ,idname,solvation_style)
+         call twh_read_labeled_string(lfailure,4,'solvation_style'
+     &        ,.true.,idname,solvation_style)
+         if ( lfailure ) return
          call twh_solvation_style(GLB_SET,solvation_style)
          if ( solvation_style .eq. 'internal' .or.
      &        solvation_style .eq. 'external' ) then
 c           --- get the solvation_type
-            call twh_read_labeled_string(4,'solvation_type'
+            call twh_read_labeled_string(lfailure,4,'solvation_type'
      &           ,.true.,idname,solvation_type)
+            if ( lfailure ) return
             call twh_solvation_type(GLB_SET,solvation_type)
          endif
       else
@@ -913,12 +953,14 @@ c     --- error check use of ewald sum with implicit solvent
 
 c     --- read initial setup information.  linit value may come from
 c     --- file or from wrapper data passed from C wrapper
-      call twh_get_linit(4, linit, .true., idname)
+      call twh_get_linit(lfailure,4, linit, .true., idname)
+      if ( lfailure ) return
       call twh_linit(GLB_SET,linit)
 
 c     --- read in the initboxtype
-      call twh_read_labeled_string(4,'initboxtype',.true.,idname
-     &     ,initboxtype)
+      call twh_read_labeled_string(lfailure,4,'initboxtype',.true.
+     &     ,idname,initboxtype)
+      if ( lfailure ) return
       call twh_initboxtype(GLB_SET,initboxtype)
       
 c     --- initialize lgetinitstyle
@@ -949,11 +991,13 @@ c        --- unknown initboxtype
       endif
 
       if ( lgetinitstyle ) then
-         call twh_read_label(4,'initstyle',.false.,idname)
+         call twh_read_label(lfailure,4,'initstyle',.false.,idname)
+         if ( lfailure ) return
          do ibox = 1,numboxes
             write(6,'(a14,i5)') 'initstyle Box:',ibox
-            call twh_read_string_array(4,'initstyle',nmolty,.true.,
-     &         satmp)
+            call twh_read_string_array(lfailure,4,'initstyle',nmolty
+     &           ,.true.,satmp)
+            if ( lfailure ) return
             do imolty=1,nmolty
                initstyle = satmp(imolty)
                call twh_initstyle(GLB_SET,ibox,imolty,initstyle)
@@ -971,8 +1015,9 @@ c        --- initstyle of 'helix cbmc' in either of the boxes
                endif
             enddo
             if ( lfound ) then
-               itest = twh_read_labeled_integer(4,'helix_moltyp',
-     &           .true.,idname)
+               itest = twh_read_labeled_integer(lfailure,4
+     &              ,'helix_moltyp',.true.,idname)
+               if ( lfailure ) return
                if ( itest .ne. imolty ) then
                   write(6,*) 'Mismatch of helix_moltyp'
                   write(6,*) 'Looking for type ',imolty
@@ -980,34 +1025,42 @@ c        --- initstyle of 'helix cbmc' in either of the boxes
                   lfailure = .true.
                   return
                endif
-               dvalue = twh_read_labeled_float(4,'helix_radius',.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,4
+     &              ,'helix_radius',.true. ,idname)
+               if ( lfailure ) return
                call twh_helix_radius(GLB_SET,imolty,dvalue)
-               dvalue = twh_read_labeled_float(4,'helix_angle',.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,4
+     &              ,'helix_angle',.true. ,idname)
+               if ( lfailure ) return
                call twh_helix_angle(GLB_SET,imolty,dvalue)
-               call twh_read_labeled_string(4,'helix_keytype',.true.
-     &              ,idname,tenchar)
+               call twh_read_labeled_string(lfailure,4,'helix_keytype'
+     &              ,.true.,idname,tenchar)
+               if ( lfailure ) return
                call twh_helix_keytype(GLB_SET,imolty,tenchar)
 
-               call twh_read_labeled_string(4,'helix_keyname'
+               call twh_read_labeled_string(lfailure,4,'helix_keyname'
      &              ,.true.,idname,tenchar)
+               if ( lfailure ) return
                call twh_helix_keyname(GLB_SET,imolty,tenchar)
 
-               dvalue = twh_read_labeled_float(4,'helix_conlen',.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,4
+     &              ,'helix_conlen',.true. ,idname)
+               if ( lfailure ) return
                call twh_helix_conlen(GLB_SET,imolty,dvalue)
 
-               dvalue = twh_read_labeled_float(4,'helix_phase',.true.
-     &              ,idname)
+               dvalue = twh_read_labeled_float(lfailure,4
+     &              ,'helix_phase',.true. ,idname)
+               if ( lfailure ) return
                call twh_helix_phase(GLB_SET,imolty,dvalue)
             endif
          enddo
 
-         call twh_read_label(4,'initlattice',.false.,idname)
+         call twh_read_label(lfailure,4,'initlattice',.false.,idname)
+         if ( lfailure ) return
          do ibox = 1,numboxes
-            call twh_read_string_array(4,'initlattice',nmolty,.false.,
-     &         satmp)
+            call twh_read_string_array(lfailure,4,'initlattice',nmolty
+     &           ,.false.,satmp)
+            if ( lfailure ) return
             write(6,66) ibox,(satmp(imolty),imolty=1,nmolty)
  66         format('Box:',1x,i2,1x,'initlattice:',1x,NTMAX(a20,1x))
             do imolty=1,nmolty
@@ -1017,11 +1070,12 @@ c        --- initstyle of 'helix cbmc' in either of the boxes
          enddo
 
 c        --- read in initial number of each type of molecule in each box
-         call twh_read_label(4,'initmol',.false.,idname)
+         call twh_read_label(lfailure,4,'initmol',.false.,idname)
+         if ( lfailure ) return
          do ibox = 1,numboxes
 c           --- read from the file
-            call twh_read_integer_array(4,'initmol',nmolty,.false.,
-     &         iatmp)
+            call twh_read_integer_array(lfailure,4,'initmol',nmolty
+     &           ,.false.,iatmp)
             write(6,6) ibox,'initmol:'
      &           ,(iatmp(imolty),imolty=1,nmolty)
  6          format('Box:',1x,i2,1x,a8,NTMAX(i10,1x))
@@ -1077,10 +1131,12 @@ c        --- is in the range (n_tmmc_min, n_tmmc_max).
       endif
 
 c     --- read initial number of molecules in each direction
-      call twh_read_label(4,'inix iniy iniz',.false.,idname)
+      call twh_read_label(lfailure,4,'inix iniy iniz',.false.,idname)
+      if ( lfailure ) return
       do ibox = 1,numboxes
-         call twh_read_integer_array(4,'inix iniy iniz',3,.false., 
-     &      iatmp)
+         call twh_read_integer_array(lfailure,4,'inix iniy iniz'
+     &        ,3,.false.,iatmp)
+         if ( lfailure ) return
          inix = iatmp(1)
          iniy = iatmp(2)
          iniz = iatmp(3)
@@ -1107,11 +1163,14 @@ c        --- error check
 
       if ( initboxtype .eq. 'dimensions' ) then
 c        --- read in initial box dimensions
-         call twh_read_label(4,'hmatrix',.false.,idname)
+         call twh_read_label(lfailure,4,'hmatrix',.false.,idname)
+         if ( lfailure ) return
          do ibox = 1,numboxes
             do idim = 1,3
 c              --- read box dimensions from a file
-               call twh_read_float_array(4,'hmatrix',3,.false.,fatmp)
+               call twh_read_float_array(lfailure,4,'hmatrix',3
+     &              ,.false.,fatmp)
+               if ( lfailure ) return
                do jdim=1,3
                   call twh_hmatrix(GLB_SET,ibox,idim,jdim,fatmp(jdim))
                enddo
@@ -1125,10 +1184,13 @@ c           --- error check box dimensions
          enddo
       elseif ( initboxtype .eq. 'number density' ) then
 c        --- read in initial box number density
-         call twh_read_label(4,'box_number_density',.false.,idname)
+         call twh_read_label(lfailure,4,'box_number_density',.false.
+     &        ,idname)
+         if ( lfailure ) return
          do ibox = 1,numboxes
-            box_number_density = twh_read_float(4,'box_number_density'
-     &           ,.true.)
+            box_number_density = twh_read_float(lfailure,4
+     &           ,'box_number_density',.true.)
+            if ( lfailure ) return
             call twh_box_number_density(GLB_SET,ibox,box_number_density)
 c           --- error check
             if ( box_number_density .le. 0.0d0 ) then
@@ -1198,13 +1260,16 @@ c     --- isotropic volume move
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c        --- read in probabilities for the 3d volume move
-         if (twh_check_label(4,'pmvol')) then
-            dvalue = twh_read_labeled_float(4,'pmvol',.true.,idname)
+         if (twh_check_label(lfailure,4,'pmvol')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pmvol',.true.
+     &           ,idname)
+            if ( lfailure ) return
             call twh_pmvol(GLB_SET,dvalue)
             if ( twh_get_pmvol() .gt. pmmin ) pmmin = twh_get_pmvol()
 
-            call twh_read_labeled_float_array(4,'pmvlpr',nvmove, .true.
-     &           , idname, dtarray)
+            call twh_read_labeled_float_array(lfailure,4,'pmvlpr'
+     &           ,nvmove, .true. , idname, dtarray)
+            if ( lfailure ) return
             do imove = 1,nvmove
                call twh_pmvlpr(GLB_SET,imove,dtarray(imove))
             enddo
@@ -1223,7 +1288,9 @@ c           --- error check pmvlpr
             endif
 
 c           --- read in the initial 3d volume move maximum displacements
-            dvalue = twh_read_labeled_float(4,'rmvol',.true.,idname)
+            dvalue = twh_read_labeled_float(lfailure,4,'rmvol',.true.
+     &           ,idname)
+            if ( lfailure ) return
 c           --- safety check
             if ( dvalue .le. 0.0d0 ) then
                write(6,*) 'READTOWHEE: rmvol must be positive'
@@ -1234,7 +1301,9 @@ c           --- set all to the initial value
             call twh_rmvol(GLB_INIT,nvmove,dvalue)
             
 c           --- read in the target acceptance rate for 3d volume
-            dvalue = twh_read_labeled_float(4,'tavol',.true.,idname)
+            dvalue = twh_read_labeled_float(lfailure,4,'tavol',.true.
+     &           ,idname)
+            if ( lfailure ) return
 c           --- error check
             if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
                write(6,*) 'READTOWHEE: tavol must be between 0.0 ',
@@ -1249,7 +1318,7 @@ c     user-friendly sanity check.  If pmvol is accidentally in
 c     towhee_input, the optional-label logic will skip all other pm*,
 c     not what we expect.
 c     Catch this condition and complain.
-         if (twh_check_label(4,'pmvol')) then
+         if (twh_check_label(lfailure,4,'pmvol')) then
             write(6,*) 'READTOWHEE: pmvol is permitted only for NPT; ',
      &         'or, NVT and > 1 numboxes'
             lfailure = .true.
@@ -1263,13 +1332,16 @@ c     --- anisotropic volume move
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c        --- read in probabilities for the unit cell adjust move
-         if (twh_check_label(4,'pmcell')) then
-            pmcell = twh_read_labeled_float(4,'pmcell',.true.,idname)
+         if (twh_check_label(lfailure,4,'pmcell')) then
+            pmcell = twh_read_labeled_float(lfailure,4,'pmcell',.true.
+     &           ,idname)
+            if ( lfailure ) return
             call twh_pmcell(GLB_SET,pmcell)
             if ( pmcell .gt. pmmin ) pmmin = pmcell
 
-            call twh_read_labeled_float_array(4,'pmcellpr',
+            call twh_read_labeled_float_array(lfailure,4,'pmcellpr',
      &         nvmove, .true., idname, dtarray)
+            if ( lfailure ) return
 c           --- error check pmcellpr
             pmax = 0.0d0
             do ibox = 1,nvmove
@@ -1285,12 +1357,15 @@ c           --- error check pmcellpr
             endif
             if ( ensemble .eq. ENS_NPT ) then
 c              --- ignore pmcellpt
-               call twh_skip_lines(4,2)
+               call twh_skip_lines(lfailure,4,2)
+               if ( lfailure ) return
             else
 c              --- read in pmcellpt
-               call twh_read_label(4,'pmcellpt',.false.,idname)
+               call twh_read_label(lfailure,4,'pmcellpt',.false.,idname)
+               if ( lfailure ) return
                do ibox = 1,nboxpair
-                  dvalue = twh_read_float(4,'pmcellpt',.false.)
+                  dvalue = twh_read_float(lfailure,4,'pmcellpt',.false.)
+                  if ( lfailure ) return
                   call twh_pmcellpt(GLB_SET,ibox,dvalue)
                   call twh_pairbox(GLB_GET,ibox,1,ivalue)
                   call twh_pairbox(GLB_GET,ibox,2,jvalue)
@@ -1306,8 +1381,11 @@ c              --- read in pmcellpt
                enddo
             endif
 
-c           --- read in the initial unit cell adjustment max displacements
-            dvalue = twh_read_labeled_float(4,'rmcell',.true.,idname)
+c           --- read in the initial unit cell adjustment max
+c           --- displacements
+            dvalue = twh_read_labeled_float(lfailure,4,'rmcell',.true.
+     &           ,idname)
+            if ( lfailure ) return
             if ( dvalue .le. 0.0d0 ) then
                write(6,*) 'READTOWHEE: rmcell must be positive'
                lfailure = .true.
@@ -1317,7 +1395,9 @@ c           --- set all to the initial value
             call twh_rmcell(GLB_INIT,nvmove,3,3,dvalue)
 
 c           --- read in the target acceptance rate for unit cell move
-            dvalue = twh_read_labeled_float(4,'tacell',.true.,idname)
+            dvalue = twh_read_labeled_float(lfailure,4,'tacell',.true.
+     &           ,idname)
+            if ( lfailure ) return
             call twh_tacell(GLB_SET,dvalue)
 c           --- error check
             if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
@@ -1334,13 +1414,15 @@ c     --- 2 box rotational-bias swap
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c        --- read 2-box rotational-bias swap move
-         if (twh_check_label(4,'pm2boxrbswap')) then
-            dvalue = twh_read_labeled_float(4,'pm2boxrbswap',.true.
-     &           ,idname)
+         if (twh_check_label(lfailure,4,'pm2boxrbswap')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pm2boxrbswap'
+     &           ,.true. ,idname)
+            if ( lfailure ) return
             call twh_pm2boxrbswap(GLB_SET,dvalue)
             if ( dvalue .gt. pmmin ) pmmin = dvalue
-            call twh_read_labeled_float_array(4,'pm2rbswmt',
+            call twh_read_labeled_float_array(lfailure,4,'pm2rbswmt',
      &            nmolty, .true., idname, dmarray)
+            if ( lfailure ) return
             do imolty = 1,nmolty
                dvalue = dmarray(imolty)
                call twh_pm2rbswmt(GLB_SET,imolty,dvalue)
@@ -1358,8 +1440,9 @@ c           --- error check pm2rbswmt
                return
             endif
 
-            call twh_read_labeled_float_array(4,'pm2rbswpr',
+            call twh_read_labeled_float_array(lfailure,4,'pm2rbswpr',
      &            nboxpair, .true., idname, dtarray)
+            if ( lfailure ) return
             do imove = 1,nboxpair
                dvalue = dtarray(imove)
                call twh_pm2rbswpr(GLB_SET,imove,dvalue)
@@ -1380,14 +1463,16 @@ c     --- 2 box configurational-bias swap
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c        --- read 2boxcbswap info
-         if (twh_check_label(4,'pm2boxcbswap')) then
-            dvalue = twh_read_labeled_float(4,'pm2boxcbswap',
+         if (twh_check_label(lfailure,4,'pm2boxcbswap')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pm2boxcbswap',
      &         .true., idname)
+            if ( lfailure ) return
             call twh_pm2boxcbswap(GLB_SET,dvalue)
 
             if ( dvalue .gt. pmmin ) pmmin = dvalue
-            call twh_read_labeled_float_array(4,'pm2cbswmt',
+            call twh_read_labeled_float_array(lfailure,4,'pm2cbswmt',
      &            nmolty, .true., idname, dmarray)
+            if ( lfailure ) return
 c           --- error check and set pm2cbswmt
             pmax = 0.0d0
             do imolty = 1,nmolty
@@ -1402,8 +1487,9 @@ c           --- error check and set pm2cbswmt
                return
             endif
 
-            call twh_read_labeled_float_array(4,'pm2cbswpr',
+            call twh_read_labeled_float_array(lfailure,4,'pm2cbswpr',
      &            nboxpair, .true., idname, dtarray)
+            if ( lfailure ) return
             do imove = 1,nboxpair
                dvalue = dtarray(imove)
                call twh_pm2cbswpr(GLB_SET,imove,dvalue)
@@ -1422,14 +1508,16 @@ c           --- error check pm2cbswpr
 c     --- grand canonical insertion/deletion
       if ( ensemble .eq. ENS_UVT ) then
 c        --- read in grand canonical swap move info
-         if (twh_check_label(4,'pmuvtcbswap')) then
-            dvalue = twh_read_labeled_float(4,'pmuvtcbswap',.true.,
-     &         idname)
+         if (twh_check_label(lfailure,4,'pmuvtcbswap')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pmuvtcbswap'
+     &           ,.true., idname)
+            if ( lfailure ) return
             call twh_pmuvtcbswap(GLB_SET,dvalue)
 
             if ( dvalue .gt. pmmin ) pmmin = dvalue
-            call twh_read_labeled_float_array(4,'pmuvtcbmt',nmolty
-     &           ,.true.,idname,dmarray)
+            call twh_read_labeled_float_array(lfailure,4,'pmuvtcbmt'
+     &           ,nmolty ,.true.,idname,dmarray)
+            if ( lfailure ) return
 c           --- set and error check pmuvtcbmt
             pmax = 0.0d0
             do imolty = 1,nmolty
@@ -1448,12 +1536,15 @@ c           --- set and error check pmuvtcbmt
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read intra-box cbswap (single box) info
-      if (twh_check_label(4,'pm1boxcbswap')) then
-         dvalue = twh_read_labeled_float(4,'pm1boxcbswap',.true.,idname)
+      if (twh_check_label(lfailure,4,'pm1boxcbswap')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pm1boxcbswap'
+     &        ,.true.,idname)
+         if ( lfailure ) return
          call twh_pm1boxcbswap(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pm1cbswmt',
+         call twh_read_labeled_float_array(lfailure,4,'pm1cbswmt',
      &       nmolty, .true., idname,dmarray)
+         if ( lfailure ) return
 
 c        --- save and error check pm1cbswmt
          pmax = 0.0d0
@@ -1475,14 +1566,16 @@ c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       npairs = nmolty*(nmolty-1)/2
       if ( npairs .gt. 0 ) then
 c        --- read intra-box center-of-mass switch (single box) info
-         if (twh_check_label(4,'pm1boxcomswitch')) then
-            moveprob = twh_read_labeled_float(4,'pm1boxcomswitch',.true.
-     &           ,idname)
+         if (twh_check_label(lfailure,4,'pm1boxcomswitch')) then
+            moveprob = twh_read_labeled_float(lfailure,4
+     &           ,'pm1boxcomswitch',.true. ,idname)
+            if ( lfailure ) return
             call twh_pm1boxcomswitch(GLB_SET,moveprob)
             if ( moveprob .gt. pmmin ) pmmin = moveprob
             
-            call twh_read_labeled_float_array(4,'pm1comswbox',
+            call twh_read_labeled_float_array(lfailure,4,'pm1comswbox',
      &           numboxes, .true., idname,dboxarray)
+            if ( lfailure ) return
 c           --- error check box probabilities
             pmax = 0.0d0
             do ibox = 1,numboxes
@@ -1502,8 +1595,9 @@ c           --- store the values in pm1comswbox
                call twh_pm1comswbox(GLB_SET,ibox,dboxarray(ibox))
             enddo
             
-            call twh_read_labeled_float_array(4,'pm1comswpair',
+            call twh_read_labeled_float_array(lfailure,4,'pm1comswpair',
      &           npairs, .true., idname,prob_pair_array)
+            if ( lfailure ) return
 c           --- error check box probabilities
             pmax = 0.0d0
             do ipair = 1,npairs
@@ -1528,11 +1622,15 @@ c           --- store the values in pm1comswpair
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read aggregation volume bias move (AVB-1) info
-      if (twh_check_label(4,'pmavb1')) then
-         dvalue = twh_read_labeled_float(4,'pmavb1',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmavb1')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb1',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmavb1(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         dvalue = twh_read_labeled_float(4,'pmavb1in',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb1in',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmavb1in(GLB_SET,dvalue)
 c        --- error check pmavb1in
          if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
@@ -1542,8 +1640,9 @@ c        --- error check pmavb1in
             return
          endif
 
-         call twh_read_labeled_float_array(4, 'pmavb1mt',
+         call twh_read_labeled_float_array(lfailure,4, 'pmavb1mt',
      &        nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmavb1mt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1558,11 +1657,13 @@ c        --- set and error check pmavb1mt
             return
          endif
 
-         call twh_read_label(4,'pmavb1ct',.false.,idname)
+         call twh_read_label(lfailure,4,'pmavb1ct',.false.,idname)
+         if ( lfailure ) return
          do imolty = 1,nmolty
 c        look at pmavbXct
-            call twh_read_float_array(4, 'pmavb1ct',nmolty,.false.
-     &           ,dmarray)
+            call twh_read_float_array(lfailure,4, 'pmavb1ct',nmolty
+     &           ,.false.,dmarray)
+            if ( lfailure ) return
 c           --- error check pmavb1ct
             pmax = 0.0d0
             do jmolty = 1,nmolty
@@ -1581,7 +1682,9 @@ c           --- error check pmavb1ct
             endif
          enddo
 
-         dvalue = twh_read_labeled_float(4,'avb1rad',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'avb1rad',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_avb1rad(GLB_SET,dvalue)
 c        --- error check avb1rad
          if ( dvalue .le. 0.0d0 ) then
@@ -1594,11 +1697,15 @@ c        --- error check avb1rad
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read aggregation volume bias move (AVB-2) info
-      if (twh_check_label(4,'pmavb2')) then
-         dvalue = twh_read_labeled_float(4,'pmavb2',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmavb2')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb2',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmavb2(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         dvalue = twh_read_labeled_float(4,'pmavb2in',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb2in',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmavb2in(GLB_SET,dvalue)
 c        --- error check pmavb2in
          if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
@@ -1608,8 +1715,9 @@ c        --- error check pmavb2in
             return
          endif
 
-         call twh_read_labeled_float_array(4, 'pmavb2mt',
+         call twh_read_labeled_float_array(lfailure,4, 'pmavb2mt',
      &         nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmavb2mt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1624,10 +1732,12 @@ c        --- set and error check pmavb2mt
             return
          endif
 
-         call twh_read_label(4,'pmavb2ct',.false.,idname)
+         call twh_read_label(lfailure,4,'pmavb2ct',.false.,idname)
+         if ( lfailure ) return
          do imolty = 1,nmolty
-            call twh_read_float_array(4, 'pmavb2ct',nmolty,.false.
-     &           ,dmarray)
+            call twh_read_float_array(lfailure,4, 'pmavb2ct',nmolty
+     &           ,.false.,dmarray)
+            if ( lfailure ) return
 c           --- set and error check pmavb2ct
             pmax = 0.0d0
             do jmolty = 1,nmolty
@@ -1646,7 +1756,9 @@ c           --- set and error check pmavb2ct
             endif
          enddo
 
-         dvalue = twh_read_labeled_float(4,'avb2rad',.true., idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'avb2rad',.true.
+     &        , idname)
+         if ( lfailure ) return
          call twh_avb2rad(GLB_SET,dvalue)
 c        --- error check avb2rad
          if ( dvalue .le. 0.0d0 ) then
@@ -1659,13 +1771,16 @@ c        --- error check avb2rad
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read aggregation volume bias move (AVB-3) info
-      if (twh_check_label(4,'pmavb3')) then
-         dvalue = twh_read_labeled_float(4,'pmavb3',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmavb3')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb3',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmavb3(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
 
-         call twh_read_labeled_float_array(4, 'pmavb3mt',
+         call twh_read_labeled_float_array(lfailure,4, 'pmavb3mt',
      &         nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
 c        --- store and error check pmavb3mt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1680,10 +1795,12 @@ c        --- store and error check pmavb3mt
             return
          endif
 
-         call twh_read_label(4,'pmavb3ct',.false.,idname)
+         call twh_read_label(lfailure,4,'pmavb3ct',.false.,idname)
+         if ( lfailure ) return
          do imolty = 1,nmolty
-            call twh_read_float_array(4, 'pmavb3ct',
+            call twh_read_float_array(lfailure,4, 'pmavb3ct',
      &         nmolty, .false., dmarray)
+            if ( lfailure ) return
 c           --- fill in and error check pmavb3ct
             pmax = 0.0d0
             do jmolty = 1,nmolty
@@ -1702,7 +1819,9 @@ c           --- fill in and error check pmavb3ct
             endif
          enddo
 
-         dvalue = twh_read_labeled_float(4,'avb3rad',.true., idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'avb3rad',.true.
+     &        , idname)
+         if ( lfailure ) return
          call twh_avb3rad(GLB_SET,dvalue)
 c        --- error check avb3rad
          if ( dvalue .le. 0.0d0 ) then
@@ -1715,13 +1834,15 @@ c        --- error check avb3rad
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read regular cbmc info
-      if (twh_check_label(4,'pmcb')) then
-         pmcb = twh_read_labeled_float(4,'pmcb',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmcb')) then
+         pmcb = twh_read_labeled_float(lfailure,4,'pmcb',.true.,idname)
+         if ( lfailure ) return
          call twh_pmcb(GLB_SET,pmcb)
          if ( pmcb .gt. pmmin ) pmmin = pmcb
 
-         call twh_read_labeled_float_array(4,'pmcbmt',nmolty,.true.,
-     &        idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmcbmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmcbmt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1736,8 +1857,9 @@ c        --- set and error check pmcbmt
             return
          endif
 
-         call twh_read_labeled_float_array(4,'pmall',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmall',nmolty
+     &        ,.true., idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmall
          do imolty = 1,nmolty
             pmtest = dmarray(imolty)
@@ -1755,12 +1877,15 @@ c        --- set and error check pmall
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read backbone regrowth cbmc info
-      if (twh_check_label(4,'pmback')) then
-         pmtest = twh_read_labeled_float(4,'pmback',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmback')) then
+         pmtest = twh_read_labeled_float(lfailure,4,'pmback',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmback(GLB_SET,pmtest)
          if ( pmtest .gt. pmmin ) pmmin = pmtest
-         call twh_read_labeled_float_array(4,'pmbkmt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmbkmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmbkmt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1779,13 +1904,16 @@ c        --- set and error check pmbkmt
       
 c     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read cbmc sidechain regrowth information
-      if (twh_check_label(4,'pmcbside')) then
-         dvalue = twh_read_labeled_float(4,'pmcbside',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmcbside')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmcbside',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmcbside(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
 
-         call twh_read_labeled_float_array(4,'pmcbsidemt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmcbsidemt'
+     &        ,nmolty,.true.,idname,dmarray)
+         if ( lfailure ) return
          do imolty = 1,nmolty
             call twh_pmcbsidemt(GLB_SET,imolty,dmarray(imolty))
          enddo
@@ -1806,12 +1934,15 @@ c        --- error check pmcbsidemt
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read pivot move info
-      if (twh_check_label(4,'pmpivot')) then
-         dvalue = twh_read_labeled_float(4,'pmpivot',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmpivot')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmpivot',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmpivot(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmpivmt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmpivmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmpivmt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1829,12 +1960,15 @@ c        --- set and error check pmpivmt
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read concerted rotation move info
-      if (twh_check_label(4,'pmconrot')) then
-         dvalue = twh_read_labeled_float(4,'pmconrot',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmconrot')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmconrot',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmconrot(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmcrmt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmcrmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmcrmt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1852,12 +1986,15 @@ c        --- set and error check pmcrmt
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read backbone concerted rotation move info
-      if (twh_check_label(4,'pmcrback')) then
-         dvalue = twh_read_labeled_float(4,'pmcrback',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmcrback')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmcrback',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmcrback(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmcrbmt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmcrbmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmcrbmt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1875,12 +2012,15 @@ c        --- set and error check pmcrbmt
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read in plane shift info
-      if (twh_check_label(4,'pmplane')) then
-         dvalue = twh_read_labeled_float(4,'pmplane',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmplane')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmplane',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmplane(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmplanebox',numboxes,
-     &      .true., idname,dboxarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmplanebox'
+     &        ,numboxes, .true., idname,dboxarray)
+         if ( lfailure ) return
 c        --- set and error check pmplanebox
          pmax = 0.0d0
          do ibox = 1,numboxes
@@ -1894,7 +2034,9 @@ c        --- set and error check pmplanebox
             lfailure = .true.
             return
          endif
-         dvalue = twh_read_labeled_float(4,'planewidth',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'planewidth',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_planewidth(GLB_SET,dvalue)
          if ( dvalue .lt. 0.0d0 ) then
             write(6,*) 'READTOWHEE: planewidth must be greater than',
@@ -1906,12 +2048,15 @@ c        --- set and error check pmplanebox
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read in row shift info
-      if (twh_check_label(4,'pmrow')) then
-         dvalue = twh_read_labeled_float(4,'pmrow',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmrow')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmrow',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmrow(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmrowbox',numboxes,.true.,
-     &      idname,dboxarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmrowbox'
+     &        ,numboxes,.true.,idname,dboxarray)
+         if ( lfailure ) return
 c        --- set and error check pmrowbox
          pmax = 0.0d0
          do ibox = 1,numboxes
@@ -1926,7 +2071,9 @@ c        --- set and error check pmrowbox
             return
          endif
 
-         dvalue = twh_read_labeled_float(4,'rowwidth',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'rowwidth',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_rowwidth(GLB_SET,dvalue)
          if ( dvalue .lt. 0.0d0 ) then
             write(6,*) 'READTOWHEE: rowwidth must be greater than zero'
@@ -1937,12 +2084,15 @@ c        --- set and error check pmrowbox
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read translation of single atom info
-      if (twh_check_label(4,'pmtraat')) then
-         dvalue = twh_read_labeled_float(4,'pmtraat',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmtraat')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmtraat',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmtraat(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmtamt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmtamt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmtamt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -1958,7 +2108,9 @@ c        --- set and error check pmtamt
          endif
 
 c        --- read in the initial atom translation maximum displacements
-         dvalue = twh_read_labeled_float(4,'rmtraa',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'rmtraa',.true.
+     &        ,idname)
+         if ( lfailure ) return
 c        --- error check
          if ( dvalue .le. 0.0d0 ) then
             write(6,*) 'READTOWHEE: rmtraax must be positive'
@@ -1970,7 +2122,9 @@ c        --- value.  For a restart this will be overwritten later
          call twh_rmtraa(GLB_INIT,nmolty,numboxes,dvalue)
 
 c        --- read in the target acceptance rate for atom translate
-         dvalue = twh_read_labeled_float(4,'tatraa',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'tatraa',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_tatraa(GLB_SET,dvalue)
 c        --- error check
          if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
@@ -1983,9 +2137,10 @@ c        --- error check
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- composite move info here
-      if (twh_check_label(4,'pmcomposite')) then
-         dvalue = twh_read_labeled_float(4,'pmcomposite',.true.,
-     &         idname)
+      if (twh_check_label(lfailure,4,'pmcomposite')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmcomposite'
+     &        ,.true.,idname)
+         if ( lfailure ) return
          call twh_pmcomposite(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
 c        --- error check pmcomposite
@@ -1995,8 +2150,9 @@ c        --- error check pmcomposite
             return
          endif
 
-         call twh_read_labeled_float_array(4,'pmcomt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmcomt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmcomt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -2012,7 +2168,9 @@ c        --- set and error check pmcomt
          endif
 
 c        --- read in the initial translation maximum displacements
-         dvalue = twh_read_labeled_float(4,'rmcomtra',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'rmcomtra',.true.
+     &        ,idname)
+         if ( lfailure ) return
 c        --- error check
          if ( dvalue .lt. 0.0d0 ) then
             write(6,*) 'READTOWHEE: rmcomtra must be positive'
@@ -2027,7 +2185,9 @@ c        --- set all of the values for the moltyps to the same value
          enddo
 
 c        --- read in the initial rotation maximum displacements
-         dvalue = twh_read_labeled_float(4,'rmcomrot',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'rmcomrot',.true.
+     &        ,idname)
+         if ( lfailure ) return
 c        --- error check
          if ( dvalue .lt. 0.0d0 ) then
             write(6,*) 'READTOWHEE: rmcomrot must be positive'
@@ -2045,12 +2205,15 @@ c        --- set all of the values for the moltyps to the same value
 
 c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- read translation of center-of-mass info
-      if (twh_check_label(4,'pmtracm')) then
-         dvalue = twh_read_labeled_float(4,'pmtracm',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmtracm')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmtracm',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmtracm(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(4,'pmtcmt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmtcmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmtcmt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -2066,7 +2229,9 @@ c        --- set and error check pmtcmt
          endif
 
 c        --- read in the initial COM translation maximum displacements
-         dvalue = twh_read_labeled_float(4,'rmtrac',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'rmtrac',.true.
+     &        ,idname)
+         if ( lfailure ) return
 c        --- error check
          if ( dvalue .le. 0.0d0 ) then
             write(6,*) 'READTOWHEE: rmtrac must be positive'
@@ -2078,7 +2243,9 @@ c        --- value
          call twh_rmtrac(GLB_INIT,nmolty,numboxes,dvalue)
 
 c        --- read in the target acceptance rate for COM translate
-         dvalue = twh_read_labeled_float(4,'tatrac',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'tatrac',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_tatrac(GLB_SET,dvalue)
 c        --- error check
          if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
@@ -2090,8 +2257,10 @@ c        --- error check
       endif
 
 c     --- read rotation info
-      if (twh_check_label(4,'pmrotate')) then
-         dvalue = twh_read_labeled_float(4,'pmrotate',.true.,idname)
+      if (twh_check_label(lfailure,4,'pmrotate')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmrotate',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_pmrotate(GLB_SET,dvalue)
          if ( dvalue .gt. pmmin ) pmmin = dvalue
 c        --- error check pmrotate
@@ -2100,8 +2269,9 @@ c        --- error check pmrotate
             lfailure = .true.
             return
          endif
-         call twh_read_labeled_float_array(4,'pmromt',nmolty,.true.,
-     &      idname,dmarray)
+         call twh_read_labeled_float_array(lfailure,4,'pmromt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
 c        --- set and error check pmromt
          pmax = 0.0d0
          do imolty = 1,nmolty
@@ -2116,7 +2286,9 @@ c        --- set and error check pmromt
             return
          endif
 c        --- read in the initial rotation maximum displacements
-         dvalue = twh_read_labeled_float(4,'rmrot',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'rmrot',.true.
+     &        ,idname)
+         if ( lfailure ) return
 c        --- error check
          if ( dvalue .le. 0.0d0 ) then
             write(6,*) 'READTOWHEE: rmrot must be positive'
@@ -2131,7 +2303,9 @@ c        --- set all of the values for the moltyps to the same value
          enddo
 
 c        --- read in the target acceptance rate for rotate
-         dvalue = twh_read_labeled_float(4,'tarot',.true.,idname)
+         dvalue = twh_read_labeled_float(lfailure,4,'tarot',.true.
+     &        ,idname)
+         if ( lfailure ) return
          call twh_tarot(GLB_SET,dvalue)
 c        --- error check
          if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
@@ -2175,9 +2349,9 @@ c        --- initialize the molecular mass
          call twh_masstotal(GLB_SET,imolty,0.0d0)
 
 c        --- read input style
-         call twh_read_labeled_string(4,'input_style'
+         call twh_read_labeled_string(lfailure,4,'input_style'
      &        , .true.,idname,input_style)
-
+         if ( lfailure ) return
 c        --- error check input_style with potentialstyle
          if ( ( potentialstyle .eq. POT_EXTERNAL
      &        .and. input_style .ne. 'atomic' ) .or.
@@ -2240,8 +2414,9 @@ c           --- all false, but not an error
 
          if ( lreadnunit ) then
 c           --- read number of units
-            numunits = twh_read_labeled_integer(4,'nunit',.true.,
-     &         idname)
+            numunits = twh_read_labeled_integer(lfailure,4,'nunit'
+     &           ,.true.,idname)
+            if ( lfailure ) return
             call twh_nunit(GLB_SET,imolty,numunits)
 c           --- error check
             if ( numunits .gt. NUMAX ) then
@@ -2270,8 +2445,9 @@ c           --- error check
 
          if ( lreadnmaxcbmc ) then
 c           --- read max units for cbmc
-            ivalue = twh_read_labeled_integer(4,'nmaxcbmc',.true.
-     &           , idname)
+            ivalue = twh_read_labeled_integer(lfailure,4,'nmaxcbmc'
+     &           ,.true., idname)
+            if ( lfailure ) return
             call twh_nmaxcbmc(GLB_SET,imolty,ivalue)
 c           --- error check
             if ( ivalue .le. 0 ) then
@@ -2289,29 +2465,33 @@ c           --- error check
 
          if ( lreadpdbnames ) then
 c           --- read in the pdbnames logical
-            lpdbnames = twh_read_labeled_logical(4,'lpdbnames',.true.
-     &           ,idname)
+            lpdbnames = twh_read_labeled_logical(lfailure,4
+     &           ,'lpdbnames',.true. ,idname)
+            if ( lfailure ) return
          endif
 
          if ( lreadforcefield ) then
 c           --- read in the forcefield
-            call twh_read_labeled_string(4,'forcefield',.false.,
-     &           idname,forcefield)
+            call twh_read_labeled_string(lfailure,4,'forcefield'
+     &           ,.false.,idname,forcefield)
+            if ( lfailure ) return
             write(6,'(a13,a10,a12)') '   using the ',forcefield
      &           ,' force field'
          endif
 
          if ( lreadchargeassign ) then
 c           --- read in the charge_assignment
-            call twh_read_labeled_string(4,'charge_assignment',.true.
-     &           , idname,charge_assignment)
+            call twh_read_labeled_string(lfailure,4,'charge_assignment'
+     &           ,.true. , idname,charge_assignment)
+            if ( lfailure ) return
             call twh_charge_assignment(GLB_SET,imolty,charge_assignment)
          endif
 
          if ( lreadimpassign ) then
 c           --- read in the improper_assignment 
-            call twh_read_labeled_string(4,'improper_assignment'
-     &           ,.true.,idname,imp_assign)
+            call twh_read_labeled_string(lfailure,4
+     &           ,'improper_assignment',.true.,idname,imp_assign)
+            if ( lfailure ) return
          else
 c           --- default to manual
             imp_assign = 'manual'
@@ -2319,8 +2499,9 @@ c           --- default to manual
 
          if ( lreadmatchstyle  ) then
 c           --- read in the match_style
-            call twh_read_labeled_string(4,'match_style'
+            call twh_read_labeled_string(lfailure,4,'match_style'
      &           ,.true.,idname,match_style)
+            if ( lfailure ) return
          else
 c           --- default to standard
             match_style = 'standard'
@@ -2332,7 +2513,7 @@ c           --- complete declaration of all atom types, vibrations
 c           --- , angles, torsions, impropers, angle-angle in terms of 
 c           --- the parameter numbers used in ffbond and ffnonbond
 c           --- see if we need to read in pdb names
-            call twh_read_inpstyle_explicit(imolty,lpdbnames,lfailure)
+            call twh_read_inpstyle_explicit(lfailure,imolty,lpdbnames)
             if ( lfailure ) return
             if ( lpdbnames ) lpdbset(imolty) = .true.
          elseif ( input_style .eq. 'polypeptide builder' ) then
@@ -2375,8 +2556,9 @@ c           --- monatomic molecule
             call twh_nmaxcbmc(GLB_SET,imolty,1)
             call twh_ntype(GLB_SET,imolty,1,imolty)
 c           --- get the element name
-            call twh_read_labeled_string(4,'element',.true.,idname
-     &           ,ename)
+            call twh_read_labeled_string(lfailure,4,'element',.true.
+     &           ,idname,ename)
+            if ( lfailure ) return
             call twh_elementname(GLB_SET,imolty,ename)
 c           --- assign mass
             tenchar = 'getmass'
@@ -2385,8 +2567,9 @@ c           --- assign mass
             if ( lfailure ) return
             call twh_mass(GLB_SET,imolty,localmass)
 c           --- ground state quantum energy per atom
-            dvalue = twh_read_labeled_float(4,'quantum_gsenergy'
-     &           ,.true.,idname)
+            dvalue = twh_read_labeled_float(lfailure,4
+     &           ,'quantum_gsenergy' ,.true.,idname)
+            if ( lfailure ) return
             call twh_quantum_gsenergy(GLB_SET,imolty,dvalue)
          else
             write(6,*) 'READTOWHEE: non-valid input style for moltyp'
@@ -2954,7 +3137,7 @@ c     --- set the thermal debroglie wavelength and uvtfactor
 
 
 
-      subroutine twh_read_inpstyle_explicit(imolty, lpdbnames,lfailure)
+      subroutine twh_read_inpstyle_explicit(lfailure,imolty,lpdbnames)
 c     ******************************************************************
 c     * This subroutine reads in data for inpstyle=0 case (explicit    *
 c     * declaration of all terms).                                     *
@@ -2966,7 +3149,7 @@ c     * lpdbset                                                        *
 c     * lfailure                                                       *
 c     * lpdb, lpdbset, lerror are modified in this subroutine          *
 c     *                                                                *
-c     * last modified 01-31-2011 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_INAA
@@ -2996,14 +3179,17 @@ c     --- double precision scalars
       double precision charge
 
       idname = 'twh_read_inpstyle_explicit'
-      lpdbnames = twh_read_labeled_logical(4,'lpdbnames',.false.,idname)
+      lpdbnames = twh_read_labeled_logical(lfailure,4,'lpdbnames'
+     &     ,.false.,idname)
+      if ( lfailure ) return
 
 c     --- if lpdbnames then don't reset pdbnames 
       call twh_nunit(GLB_GET,imolty,numunits)
       do iunit = 1, numunits
 c        --- read in the atom type
-         call twh_read_atom_type(4,'unit ntype qqatom',ibead,ivalue
-     &        ,charge)
+         call twh_read_atom_type(lfailure,4,'unit ntype qqatom',ibead
+     &        ,ivalue,charge)
+         if ( lfailure ) return
          call twh_ntype(GLB_SET,imolty,iunit,ivalue)
          call twh_qqatom(GLB_SET,imolty,iunit,charge)
          write(6,36) 'bead:',ibead
@@ -3013,8 +3199,10 @@ c        --- read in the atom type
 
          if ( lpdbnames ) then
 c           --- also read in the pdb name
-            call twh_read_pdbname(4,'pdbname aminonum aminoshort',
-     &         pdbname, aminonum,aminoshort)
+            call twh_read_pdbname(lfailure,4
+     &           ,'pdbname aminonum aminoshort',pdbname,aminonum
+     &           ,aminoshort)
+            if ( lfailure ) return
             call twh_pdbname(GLB_SET,imolty,iunit,pdbname)
             call twh_aminonum(GLB_SET,imolty,iunit,aminonum)
             call twh_aminoshort(GLB_SET,imolty,iunit,aminoshort)
@@ -3024,8 +3212,9 @@ c           --- also read in the pdb name
          endif
 
 c        --- read in bond vibrations
-         numvib = twh_read_labeled_integer(4,
+         numvib = twh_read_labeled_integer(lfailure,4,
      &      'vibration', .false., idname)
+         if ( lfailure ) return
          call twh_invib(GLB_SET,imolty,iunit,numvib)
          if ( numvib .gt. NNBOND ) then
             write(6,*) 'imolty:',imolty,'iunit:',iunit,'invib:',numvib
@@ -3034,15 +3223,17 @@ c        --- read in bond vibrations
             return
          endif
          do ivib = 1,numvib
-            call twh_read_integer_array(4,'vibration',
+            call twh_read_integer_array(lfailure,4,'vibration',
      &         2,.false.,iatmp)
+            if ( lfailure ) return
             call twh_ijvib(GLB_SET,imolty,iunit,ivib,iatmp(1))
             call twh_itvib(GLB_SET,imolty,iunit,ivib,iatmp(2))
          enddo
 
 c        --- read in bond bending
-         iatmp(1) = twh_read_labeled_integer(4,'bending', .false.
-     &        , idname)
+         iatmp(1) = twh_read_labeled_integer(lfailure,4,'bending'
+     &        , .false., idname)
+         if ( lfailure ) return
          call twh_inben(GLB_SET,imolty,iunit,iatmp(1))
          if ( twh_get_inben(imolty,iunit) .gt. MAXBEND ) then
             write(6,*) 'READTOWHEE: too many bends'
@@ -3050,8 +3241,9 @@ c        --- read in bond bending
             return
          endif
          do iben = 1, twh_get_inben(imolty,iunit)
-            call twh_read_integer_array(4,'bending',
+            call twh_read_integer_array(lfailure,4,'bending',
      &         4,.false.,iatmp)
+            if ( lfailure ) return
             call twh_ijben2(GLB_SET,imolty,iunit,iben,iatmp(1))
             call twh_ijben3(GLB_SET,imolty,iunit,iben,iatmp(2))
             if ( iatmp(3) .lt. 1 ) then
@@ -3066,8 +3258,9 @@ c        --- read in bond bending
          enddo
 
 c        --- read in torsions
-         iatmp(1) = twh_read_labeled_integer(4,'torsion', .false.
-     &        , idname)
+         iatmp(1) = twh_read_labeled_integer(lfailure,4,'torsion'
+     &        , .false., idname)
+         if ( lfailure ) return
          call twh_intor(GLB_SET,imolty,iunit,iatmp(1))
          if ( twh_get_intor(imolty,iunit) .gt. MAXTOR ) then
             write(6,*) 'READTOWHEE: too many torsions'
@@ -3075,8 +3268,9 @@ c        --- read in torsions
             return
          endif
          do itor = 1, twh_get_intor(imolty,iunit)
-            call twh_read_integer_array(4,'torsion',
+            call twh_read_integer_array(lfailure,4,'torsion',
      &         4,.false.,iatmp)
+            if ( lfailure ) return
             call twh_ijtor2(GLB_SET,imolty,iunit,itor,iatmp(1))
             call twh_ijtor3(GLB_SET,imolty,iunit,itor,iatmp(2))
             call twh_ijtor4(GLB_SET,imolty,iunit,itor,iatmp(3))
@@ -3086,8 +3280,9 @@ c        --- read in torsions
 c        --- angle - angle (compass)
 c        --- specified from atom J in the following format K I L
 c        --- where the angle - angle is K-J-I and K-J-L
-         iatmp(1) = twh_read_labeled_integer(4,'angle-angle', .false.
-     &        , idname)
+         iatmp(1) = twh_read_labeled_integer(lfailure,4,'angle-angle'
+     &        , .false., idname)
+         if ( lfailure ) return
          call twh_inaa(GLB_SET,imolty,iunit,iatmp(1))
          if ( twh_get_inaa(imolty,iunit) .gt. MAXAA ) then
             write(6,*) 'READTOWHEE: too many angle-angle terms'
@@ -3095,8 +3290,9 @@ c        --- where the angle - angle is K-J-I and K-J-L
             return
          endif
          do iaa = 1,twh_get_inaa(imolty,iunit)
-            call twh_read_integer_array(4,'angle-angle',
+            call twh_read_integer_array(lfailure,4,'angle-angle',
      &         4,.false.,iatmp)
+            if ( lfailure ) return
             call twh_ijaa0(GLB_SET,imolty,iunit,iaa,iatmp(1))
             call twh_ijaa1(GLB_SET,imolty,iunit,iaa,iatmp(2))
             call twh_ijaa2(GLB_SET,imolty,iunit,iaa,iatmp(3))
@@ -3104,8 +3300,9 @@ c        --- where the angle - angle is K-J-I and K-J-L
          enddo
 
 c        --- read in improper torsions
-         iatmp(1) = twh_read_labeled_integer(4,'improper torsion'
-     &        , .false., idname)
+         iatmp(1) = twh_read_labeled_integer(lfailure,4
+     &        ,'improper torsion', .false., idname)
+         if ( lfailure ) return
          call twh_inimprop(GLB_SET,imolty,iunit,iatmp(1))
          if ( twh_get_inimprop(imolty,iunit) .gt. MAXIMPROP ) then
             write(6,*) 'READTOWHEE: too many improper torsions'
@@ -3113,8 +3310,9 @@ c        --- read in improper torsions
             return
          endif
          do itor = 1, twh_get_inimprop(imolty,iunit)
-            call twh_read_integer_array(4,'improper torsion',4,.false.
-     &           ,iatmp)
+            call twh_read_integer_array(lfailure,4,'improper torsion'
+     &           ,4,.false.,iatmp)
+            if ( lfailure ) return
             call twh_ijimprop2(GLB_SET,imolty,iunit,itor,iatmp(1))
             call twh_ijimprop3(GLB_SET,imolty,iunit,itor,iatmp(2))
             call twh_ijimprop4(GLB_SET,imolty,iunit,itor,iatmp(3))
@@ -3123,39 +3321,44 @@ c        --- read in improper torsions
       enddo
       end
 
-c     *******************************************************
-c     * A convenience function for reading atom type information
-c     * Skips all comments.
-c     * Reads two integers and a double precision
-c     * 
-c     * Variables:
-c     * io_unit specifies the file number to read from
-c     * label is the label we expect
-c     * ibead, ntype, charge are returned values
-c     *                                                                *
-c     * last modified 11-14-2006 by M.G. Martin                        *
+      subroutine twh_read_atom_type(lfailure,io_unit,label,ibead
+     &     ,ntype,charge)
 c     ******************************************************************
-      subroutine twh_read_atom_type(io_unit,label,
-     &    ibead, ntype, charge)
+c     * A convenience function for reading atom type information       *
+c     * Skips all comments.                                            *
+c     * Reads two integers and a double precision                      *
+c     *                                                                *
+c     * Variables:                                                     *
+c     * io_unit specifies the file number to read from                 *
+c     * label is the label we expect                                   *
+c     * ibead, ntype, charge are returned values                       *
+c     *                                                                *
+c     * last modified 08-04-2011 by M.G. Martin                        *
+c     ******************************************************************
       implicit none
-
 c     --- variables passed to/from the subroutine
       character*(*) label
+      logical lfailure
       integer io_unit, ibead, ntype
       double precision charge
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,'twh_read_atom_type')
-      call twh_skip_comments(io_unit)
+      call twh_read_label(lfailure,io_unit,label,.false.
+     &     ,'twh_read_atom_type')
+      if ( lfailure ) return
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
       read(io_unit,*,ERR=100) ibead, ntype, charge
       return
 
-
 c     --- get here in case of read error
 100   write(6, *) "Error reading data for label ",label
-      stop
+      lfailure = .true.
+      return
       end
 
+      subroutine twh_read_pdbname(lfailure,io_unit,label,pdbname
+     &     ,aminonum,aminoshort)
 c     ******************************************************************
 c     * A convenience function for reading atom type information       *
 c     * Skips all comments.                                            *
@@ -3165,26 +3368,32 @@ c     * Variables:                                                     *
 c     * io_unit specifies the file number to read from                 *
 c     * label is the label we expect                                   *
 c     * pdbname, aminonum, aminoshort are returned values              *
-c     * last modified 10-03-2008 by M.G. Martin                        *
+c     *                                                                *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_read_pdbname(io_unit,label,pdbname, aminonum
-     &     , aminoshort)
       implicit none
 c     --- variables passed to/from the subroutine
       character*(*) label, pdbname, aminoshort
+      logical lfailure
       integer io_unit, aminonum
 
 c     --- Confirm correct label
-      call twh_read_label(io_unit,label,.false.,'twh_read_pdbname')
-      call twh_skip_comments(io_unit)
+      call twh_read_label(lfailure,io_unit,label,.false.
+     &     ,'twh_read_pdbname')
+      if ( lfailure ) return
+      call twh_skip_comments(lfailure,io_unit)
+      if ( lfailure ) return
       read(io_unit,*,ERR=100) pdbname, aminonum, aminoshort
       return
 
 c     --- get here in case of read error
 100   write(6, *) "Error reading data array for label ",label
-      stop
+      lfailure = .true.
+      return
       end
 
+      subroutine twh_get_linit(lfailure,io_unit, l_init, print_value, 
+     &   idname)
 c     ******************************************************************
 c     * Returns linit.  This value may come from one of two sources:   *
 c     * from the towhee_input file or, if lreadwrapper is set (in a    *
@@ -3201,10 +3410,8 @@ c     * screen.                                                        *
 c     * idname is the calling subroutine, printed only in case of error*
 c     *                                                                *
 c     * originally prior to 2007                                       *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_get_linit(io_unit, l_init, print_value, 
-     &   idname)
       implicit none
 #include "wrapperF.h"
 #define FUNCTION_CHECK_LABEL
@@ -3212,7 +3419,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer io_unit
-      logical l_init,print_value
+      logical lfailure,l_init,print_value
       character*(*) idname
 c     --- local variables
       logical lreadwrapper
@@ -3222,9 +3429,10 @@ c     --- local variables
 c     --- if linit comes from wrapper, then this parameter is allowed,
 c     --- but optional, in towhee_input.  See if it exists,  read it
 c     --- so that its skipped over.
-         if (twh_check_label(io_unit,'linit')) then
-            l_init = twh_read_labeled_logical(io_unit,'linit', .false.,
-     &         idname)
+         if (twh_check_label(lfailure,io_unit,'linit')) then
+            l_init = twh_read_labeled_logical(lfailure,io_unit
+     &           ,'linit', .false.,idname)
+            if ( lfailure ) return
          endif
 
 c     --- actual value comes from wrapper
@@ -3233,12 +3441,15 @@ c     --- actual value comes from wrapper
             write(6,*) 'linit (from wrapper): ',l_init
          endif
       else
-         l_init = twh_read_labeled_logical(io_unit,'linit', print_value
-     &        ,idname)
+         l_init = twh_read_labeled_logical(lfailure,io_unit,'linit'
+     &        , print_value,idname)
+         if ( lfailure ) return
       endif
       return
       end
 
+      subroutine twh_get_nstep(lfailure,io_unit, num_steps, print_value
+     &     , idname)
 c     ******************************************************************
 c     * Returns num_steps.  This value may come from one of two sources*
 c     * from the towhee_input file or,                                 *
@@ -3255,10 +3466,8 @@ c     *   the screen.                                                  *
 c     * idname is the calling subroutine, printed only in case of error*
 c     *                                                                *
 c     * originally written prior to 2007                               *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
-      subroutine twh_get_nstep(io_unit, num_steps, print_value, 
-     &   idname)
       implicit none
 #include "wrapperF.h"
 #define FUNCTION_CHECK_LABEL
@@ -3266,7 +3475,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer io_unit,num_steps
-      logical print_value
+      logical lfailure,print_value
       character*(*) idname
 c     --- local variables
       logical lreadwrapper
@@ -3276,9 +3485,10 @@ c     --- local variables
 c     --- if num_steps comes from wrapper, then this parameter is allowed,
 c     --- but optional, in towhee_input.  See if it exists,  read it
 c     --- so that its skipped over.
-         if (twh_check_label(io_unit,'nstep')) then
-            num_steps = twh_read_labeled_integer(io_unit,'nstep'
-     &           ,.false.,idname)
+         if (twh_check_label(lfailure,io_unit,'nstep')) then
+            num_steps = twh_read_labeled_integer(lfailure,io_unit
+     &           ,'nstep',.false.,idname)
+            if ( lfailure ) return
          endif
 
 c     --- actual value comes from wrapper
@@ -3287,8 +3497,9 @@ c     --- actual value comes from wrapper
             write(6,*) 'nstep (from wrapper): ',num_steps
          endif
       else
-         num_steps = twh_read_labeled_integer(io_unit,'nstep'
+         num_steps = twh_read_labeled_integer(lfailure,io_unit,'nstep'
      &        ,print_value,idname)
+         if ( lfailure ) return
       endif
       return
       end

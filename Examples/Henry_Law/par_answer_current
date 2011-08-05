@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 6.2.16 (August 02 2011)
+ MCCCS Towhee - Version 6.2.17 (August 05 2011)
  Copyright (C) <2011> Marcus G. Martin
  Code Contributors for 2011: Marcus G. Martin;
  Copyright (C) <2010> Marcus G. Martin
@@ -264,6 +264,11 @@ Unit:    3 nbname: O_co2      Charge:   -0.35000
 Total charge for Molecule Type:    5 is:    0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
+     for molecule type     1
+     for molecule type     2
+     for molecule type     3
+     for molecule type     4
+     for molecule type     5
  Determining cyclic subunits for molecule type          1
  Determining cyclic subunits for molecule type          2
  Determining cyclic subunits for molecule type          3

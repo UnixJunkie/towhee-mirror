@@ -70,7 +70,7 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -196,7 +196,9 @@ c     ---  check the molecule count
 
          if ( lewald ) then
 c     TODO: add foreign energy terms here
-            call twh_engtotal_ewald( vrecipsum, sself, correct, ibox )
+            call twh_engtotal_ewald(lfailure,vrecipsum,sself,correct
+     &           , ibox )
+            if ( lfailure ) return
          endif
 
          call twh_engtotal_intrachain(lfailure,vintra, velectintra
@@ -759,7 +761,8 @@ c        --- add up the embedding energy
       end
 
 
-      subroutine twh_engtotal_ewald( vrecipsum, sself, correct, ibox )
+      subroutine twh_engtotal_ewald(lfailure,vrecipsum,sself,correct
+     &     , ibox )
 c     ******************************************************************
 c     * calculates the self and correction ewald terms.                *
 c     * Note that coulomb potential scaling (scp_scale_coulomb) is not *
@@ -780,7 +783,7 @@ c     * Error conditions:                                              *
 c     *  none                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -791,8 +794,9 @@ c     ******************************************************************
 #define FUNCTION_LINCLUDE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      double precision vrecipsum, sself, correct
+      logical lfailure
       integer ibox
+      double precision vrecipsum, sself, correct
 c     --- local variables
       integer ichain,imolty,ii,jj,nchain,numiunit
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
@@ -804,7 +808,8 @@ c     --- retrieve constants
       sself = 0.0d0
       correct = 0.0d0
 
-      call twh_recipsum(ibox,vrecipsum)
+      call twh_recipsum(lfailure,ibox,vrecipsum)
+      if ( lfailure ) return
 c        --- update self terms and correction terms
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1,nchain

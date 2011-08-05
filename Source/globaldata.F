@@ -6097,7 +6097,7 @@ c     ******************************************************************
 c     * returns the atom position in the coordinate arrays             *
 c     *                                                                *
 c     * originally written 03-25-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETATOMNUM
@@ -6106,9 +6106,6 @@ c     --- variables passed to the function
       integer ichain,iunit,globalpos
 
       call twh_globalpos(GLB_GET,ichain,globalpos)
-      if ( globalpos .eq. 0 ) then
-         write(6,*) 'ichain,globalpos:',ichain,globalpos
-      endif
       twh_getatomnum = globalpos + 3*(iunit-1)
       return
       end

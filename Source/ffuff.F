@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,8 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffuff(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes)
+      subroutine twh_ffuff(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes,nimprotypes)
 c     ******************************************************************
 c     * sets up all of the force field parameters for the uff          *
 c     * forcefield                                                     *
@@ -28,7 +28,7 @@ c     * Note: UFF is a bit odd in that it transforms its basic         *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-01-2004 by M.G. Martin                   *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -40,8 +40,8 @@ c     ******************************************************************
 #define FUNCTION_GET_ELEMENTNAME
 #define FUNCTION_GET_NBCOEFF
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
       logical lfound,lgsixj,lgsixk
@@ -3273,7 +3273,8 @@ c     --- default value for period 6 is 0.1
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * transform into nonbond                                         *
@@ -3316,7 +3317,8 @@ c           --- were already set above
          else
             write(6,*) 'FFUFF: unknown classical_potential'
             write(6,*) twh_get_classical_potential()
-            stop
+            lfailure = .true.
+            return
          endif
       enddo
 
@@ -3389,7 +3391,8 @@ c           --- set the rest of the information for this vibration
       enddo
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * angles                                                         *
@@ -3452,7 +3455,8 @@ c           --- set lookup information about this angle
       enddo
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * dihedrals                                                      *
@@ -3644,7 +3648,8 @@ c     --- quadruple wildcard torsion)
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
 c     ******************************************************************
 c     * impropers                                                      *
@@ -3873,7 +3878,8 @@ c     --- set nimpsame
       call twh_set_impnames(type,nislocal,ninlocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
-      
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
+
       return
       end

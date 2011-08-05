@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * computed the energy using quantum mechanics                    *
 c     *                                                                *
 c     * originally written 11-04-2004 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -53,7 +53,8 @@ c        --- output the lcao.in file with the coordinates
       if ( natoms .eq. 0 ) then
          vquantum = 0.0d0
       else
-         call twh_quantumwrapper(vquantum)
+         call twh_quantumwrapper(lfailure,vquantum)
+         if ( lfailure ) return
 c        --- subtract the base atom energy
          vquantum = vquantum - gsenergy
 #if DEBUG_QUANTUMENERGY
@@ -64,19 +65,20 @@ c        --- subtract the base atom energy
       return
       end
 
-      subroutine twh_quantumwrapper(vquantum)
+      subroutine twh_quantumwrapper(lfailure,vquantum)
 c     ******************************************************************
 c     * handles the call to the quantum mechanics codes that are       *
 c     * compiled as libraries                                          *
 c     *                                                                *
 c     * originally written 02-13-2005 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #ifdef USEMPI
 #include "mpif.h"
 #endif
 c     --- variables passed to/from the subroutine
+      logical lfailure
       double precision vquantum
 c     --- local variables
 #ifdef USEMPI
@@ -93,7 +95,8 @@ c     --- local variables
 c     --- check error condition
       if ( ierr .eq. 1 ) then
          write(6,*) 'QUANTUMWRAPPER: error with broadcast'
-         stop
+         lfailure = .true.
+         return
       endif
 #endif
 
@@ -106,12 +109,14 @@ c        --- convert into Kelvins
          vquantum = vquantum*CON_RYDBERGTOEV*CON_EVTOK
 #else
          write(6,*) 'QUANTUMENERGY: LCAO not enabled'
-         stop
+         lfailure = .true.
+         return
 #endif
       else
          write(6,*) 'QUANTUMENERGY: unknown externalcode'
          write(6,*) externalcode
-         stop
+         lfailure = .true.
+         return
       endif
 
       return

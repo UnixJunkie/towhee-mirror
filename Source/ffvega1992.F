@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffvega1992(ntypes,nbondtypes,nangletypes,ndihedtypes)
+      subroutine twh_ffvega1992(lfailure,ntypes,nbondtypes,nangletypes
+     &     ,ndihedtypes)
 c     ******************************************************************
 c     * sets up a square well potential for the vega1992 force field   *
 c     * this force field was used in a study of square well monomers   *
@@ -28,7 +29,7 @@ c     * I added some default values for the bonded terms for those who *
 c     * might want to study square well chains                         *
 c     *                                                                *
 c     * originally written 06-24-2005 by M.G. Martin                   *
-c     * last modified 11-15-2010 M.G. Martin                           *
+c     * last modified 08-04-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -36,6 +37,7 @@ c     ******************************************************************
 #define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
 c     --- local variables
       integer ii,jj,itype,jtype,type
@@ -172,7 +174,8 @@ c     --- set the mass so that the g/ml becomes a reduced number density
       call twh_set_nbcoeff(ii,nbclocal) 
       
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
 c     --- bond potentials
 c     --- fixed bond length that is the average of the inner hard 
@@ -199,7 +202,8 @@ c           --- use the bond names of those types
       enddo
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
        
 c     --- angle potentials nonbond interaction for all
       type = type + 1
@@ -213,7 +217,8 @@ c     wild - wild - wild
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
 c     --- torsion potentials nonbond interaction for all
       type = type + 1
@@ -231,7 +236,8 @@ c     --- wild - wild - wild - wild
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end

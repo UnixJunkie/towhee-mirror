@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,16 +19,17 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine ffmorrow2002(ntypes,nbondtypes,nangletypes,ndihedtypes
-     &        ,nimprotypes,nbitypes)
+      subroutine twh_ffmorrow2002(lfailure,ntypes,nbondtypes
+     &     ,nangletypes,ndihedtypes,nimprotypes,nbitypes)
 c     ******************************************************************
 c     * sets up parameters for morrow2002                              *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 11-14-2010 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
      &        ,nimprotypes,nbitypes
 c     --- local variables
@@ -46,28 +47,35 @@ c     "Erratum 2002, Vol. 106B" J. Phys. Chem. B 107, 9160 (2003)
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
       call twh_classical_mixrule(GLB_SET,'Lorentz-Berthelot')
 
-      call twh_ffmorrow2002_nonbond(ffname,ntypes)
-      call twh_ffmorrow2002_bond(ffname,nbondtypes)
-      call twh_ffmorrow2002_angle(ffname,nangletypes)
-      call twh_ffmorrow2002_dihedral(ffname,ndihedtypes)
-      call twh_ffmorrow2002_improper(ffname,nimprotypes)
-      call twh_ffmorrow2002_bond_increment(ffname,nbitypes)
+      call twh_ffmorrow2002_nonbond(lfailure,ffname,ntypes)
+      if ( lfailure ) return
+      call twh_ffmorrow2002_bond(lfailure,ffname,nbondtypes)
+      if ( lfailure ) return
+      call twh_ffmorrow2002_angle(lfailure,ffname,nangletypes)
+      if ( lfailure ) return
+      call twh_ffmorrow2002_dihedral(lfailure,ffname,ndihedtypes)
+      if ( lfailure ) return
+      call twh_ffmorrow2002_improper(lfailure,ffname,nimprotypes)
+      if ( lfailure ) return
+      call twh_ffmorrow2002_bond_increment(lfailure,ffname,nbitypes)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmorrow2002_nonbond(ffname,ntypes)
+      subroutine twh_ffmorrow2002_nonbond(lfailure,ffname,ntypes)
 c     ******************************************************************
 c     * sets up the nonbonded parameters for morrow2002                *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 04-21-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ntypes
 c     --- local variables
       integer type,ii
@@ -710,23 +718,25 @@ c     --- P1
       call twh_set_nbcoeff(ii,nbclocal) 
 
       ntypes = type
-      call ffcheck(0,type)
+      call twh_ffcheck(lfailure,0,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmorrow2002_bond(ffname,nbondtypes)
+      subroutine twh_ffmorrow2002_bond(lfailure,ffname,nbondtypes)
 c     ******************************************************************
 c     * bond lengths for the morrow2002 forcefield                     *
 c     * these are not explicitly specified and instead must be         *
 c     * inferred from their example structure                          *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 04-20-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbondtypes
 c     --- local variables
       integer type,nsame
@@ -996,21 +1006,23 @@ c     --- P - F6
       call twh_set_vibnames(type,nsame,vnlocal)
 
       nbondtypes = type
-      call ffcheck(1,type)
+      call twh_ffcheck(lfailure,1,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmorrow2002_angle(ffname,nangletypes)
+      subroutine twh_ffmorrow2002_angle(lfailure,ffname,nangletypes)
 c     ******************************************************************
 c     * sets up the angle terms for Morrow2002                         *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 04-24-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nangletypes
 c     --- local variables
       integer type,nsame
@@ -1436,21 +1448,23 @@ c     --- F-P-F
       call twh_set_bendnames(type,nsame,bnlocal)
 
       nangletypes = type
-      call ffcheck(2,type)
+      call twh_ffcheck(lfailure,2,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmorrow2002_dihedral(ffname,ndihedtypes)
+      subroutine twh_ffmorrow2002_dihedral(lfailure,ffname,ndihedtypes)
 c     ******************************************************************
 c     * Morrow2002 cosine series dihedral                              *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 04-21-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer ndihedtypes
 c     --- local variables
       integer type,nsame
@@ -1926,21 +1940,23 @@ c     --- set ntsame
       call twh_set_tornames(type,nsame,tnlocal)
       
       ndihedtypes = type
-      call ffcheck(3,type)
+      call twh_ffcheck(lfailure,3,type)
+      if ( lfailure ) return
 
       return
       end
 
-      subroutine twh_ffmorrow2002_improper(ffname,nimprotypes)
+      subroutine twh_ffmorrow2002_improper(lfailure,ffname,nimprotypes)
 c     ******************************************************************
 c     * Morrow 2002 improper torsions                                  *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 04-24-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nimprotypes
 c     --- local variables
       integer type,nsame
@@ -2006,12 +2022,14 @@ c     --- N1,3-C4,5-C2-C6,7
       call twh_set_impnames(type,nsame,ninlocal)
 
       nimprotypes = type
-      call ffcheck(4,type)
+      call twh_ffcheck(lfailure,4,type)
+      if ( lfailure ) return
       
       return
       end
 
-      subroutine twh_ffmorrow2002_bond_increment(ffname,nbitypes)
+      subroutine twh_ffmorrow2002_bond_increment(lfailure,ffname
+     &     ,nbitypes)
 c     ******************************************************************
 c     * the bond increments for the Morrow2002 force field             *
 c     * mostly set to null has we have directly assigned the charges   *
@@ -2019,11 +2037,12 @@ c     * for bmim in the qbase so a zero default wildcard, but using the*
 c     * bond increments for PF6-                                       *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 04-19-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*(FFNAMELEN) ffname
+      logical lfailure
       integer nbitypes
 c     --- local variables
       integer type
@@ -2106,7 +2125,8 @@ c     --- default zero wildcards
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type
-      call ffcheck(6,type)
+      call twh_ffcheck(lfailure,6,type)
+      if ( lfailure ) return
 
       return
       end

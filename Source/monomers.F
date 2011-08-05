@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,19 +27,20 @@ c     *                                                                *
 c     * originally written 03-25-2006 by M.G. Martin                   *
 c     * last modified 10-13-2008 by M.G. Martin                        *
 c     ******************************************************************
-
-      subroutine twh_aa_nucleic_main_chain(termflag,hterm,total,heavy
-     &     ,ninsert,hmain,light,iatom,shift,deoxy,imolty,ibondend)
+      subroutine twh_aa_nucleic_main_chain(lfailure,termflag,hterm
+     &     ,total,heavy,ninsert,hmain,light,iatom,shift,deoxy,imolty
+     &     ,ibondend)
 c     ******************************************************************
 c     * sets up the communal bond information for the nucleic acid main*
 c     * chain portion of the monomers for the nucleic acid builder     *
 c     *                                                                *
 c     * split from polycharmm27na 03-27-2006 by M.G. Martin            *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       character*20 termflag
+      logical lfailure
       integer hterm,total,heavy,ninsert,hmain,light,iatom,shift,deoxy
       integer imolty,ibondend
 
@@ -86,7 +87,8 @@ c           --- if doing deoxidized nucleic acids then don't have O2'
                call twh_ijvib(GLB_SET,imolty,iatom+5,4,hmain+heavy+6)
             else   
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             call twh_invib(GLB_SET,imolty,iatom+6,4)
             call twh_ijvib(GLB_SET,imolty,iatom+6,1,iatom+5)
@@ -121,7 +123,8 @@ c           --- if doing deoxidized nucleic acids then don't have O2'
                call twh_ijvib(GLB_SET,imolty,hmain+heavy+6,1,iatom+5)
             else
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             call twh_invib(GLB_SET,imolty,hmain+heavy+7,1)
             call twh_ijvib(GLB_SET,imolty,hmain+heavy+7,1,iatom+6)
@@ -196,7 +199,8 @@ c           --- if doing deoxidized nucleic acids then don't have O2'
                call twh_ijvib(GLB_SET,imolty,iatom+9,4,hmain+heavy+6)
             else   
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             call twh_invib(GLB_SET,imolty,iatom+10,4)
             call twh_ijvib(GLB_SET,imolty,iatom+10,1,iatom+9)
@@ -231,7 +235,8 @@ c           --- if doing deoxidized nucleic acids then don't have O2'
                call twh_ijvib(GLB_SET,imolty,hmain+heavy+6,1,iatom+9)
             else
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             call twh_invib(GLB_SET,imolty,hmain+heavy+7,1)
             call twh_ijvib(GLB_SET,imolty,hmain+heavy+7,1,iatom+10)
@@ -308,7 +313,8 @@ c        --- if doing deoxidized nucleic acids then don't have O2'
             call twh_ijvib(GLB_SET,imolty,iatom+8,4,hmain+heavy+5)
          else
             write(6,*) "Illegal value of deoxy",deoxy
-            stop
+            lfailure = .true.
+            return
          endif
          call twh_invib(GLB_SET,imolty,iatom+9,4)
          call twh_ijvib(GLB_SET,imolty,iatom+9,1,iatom+10)
@@ -413,7 +419,8 @@ c           --- if doing deoxidized nucleic acids then don't have O2'
                call twh_ijvib(GLB_SET,imolty,iatom+8,4,hmain+heavy+5)
             else 
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             call twh_invib(GLB_SET,imolty,iatom+9,4)
             call twh_ijvib(GLB_SET,imolty,iatom+9,1,iatom+8)
@@ -520,7 +527,8 @@ c           --- if doing deoxidized nucleic acids then don't have O2'
                call twh_ijvib(GLB_SET,imolty,iatom+8,4,hmain+heavy+5)
             else 
                write(6,*) "Illegal value of deoxy",deoxy
-               stop
+               lfailure = .true.
+               return
             endif
             call twh_invib(GLB_SET,imolty,iatom+9,4)
             call twh_ijvib(GLB_SET,imolty,iatom+9,1,iatom+8)
@@ -600,7 +608,8 @@ c           --- pdb names
 c        --- invalid termflag
          write(6,*) 'AA_NUCLEIC_MAIN_CHAIN: invalid termflag'
          write(6,*) termflag
-         stop
+         lfailure = .true.
+         return
       endif
 
       return
@@ -1013,15 +1022,17 @@ c     --- assign pdb names
       return
       end
 
-      subroutine twh_aa_pepname_generic(termflag,hmain,iatom,ninsert)
+      subroutine twh_aa_pepname_generic(lfailure,termflag,hmain,iatom
+     &     ,ninsert)
 c     ******************************************************************
 c     * sets up the generic information for most all-atom peptides     *
 c     *                                                                *
 c     * split from polyamber96 03-25-2006 by M.G. Martin               *
-c     * last modified 03-25-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer termflag,hmain,iatom,ninsert
 
       if ( termflag .eq. -1 ) then
@@ -1041,7 +1052,8 @@ c        --- all atom force field
          ninsert = 3
       else
          write(6,*) 'AA_PEPNAME_GENERIC: unknown termflag:',termflag
-         stop
+         lfailure = .true.
+         return
       endif
 
       return
@@ -1212,7 +1224,8 @@ c        --- pdb names
          endif
       else
          write(6,*) 'AA_PEPNAME_MAIN_CHAIN unknown termflag:',termflag
-         stop
+         lfailure = .true.
+         return
       endif
 
       return
@@ -2502,7 +2515,7 @@ c     * the polypeptide builder                                        *
 c     * p0: proline                                                    *
 c     *                                                                *
 c     * split from polyamber96 03-25-2006 by M.G. Martin               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -2522,7 +2535,8 @@ c        --- set icb
 c        --- set iha
          iha = iatom+9
          total = 16
-         call twh_polysafetycheck(iatom,total)
+         call twh_polysafetycheck(lfailure,iatom,total)
+         if ( lfailure ) return
 c        --- vibrations
          call twh_invib(GLB_SET,imolty,iatom,4)
          call twh_ijvib(GLB_SET,imolty,iatom,1,iatom+1)
@@ -2597,7 +2611,8 @@ c        --- set icb
 c        --- set iha
          iha = iatom+7
          total = 14
-         call twh_polysafetycheck(iatom,total)
+         call twh_polysafetycheck(lfailure,iatom,total)
+         if ( lfailure ) return
 c        --- vibrations
          call twh_invib(GLB_SET,imolty,iatom,3)
          call twh_ijvib(GLB_SET,imolty,iatom,1,ibondend)
@@ -2665,7 +2680,8 @@ c        --- set icb
 c        --- set iha
          iha = iatom+8
          total = 15
-         call twh_polysafetycheck(iatom,total)
+         call twh_polysafetycheck(lfailure,iatom,total)
+         if ( lfailure ) return
 c        --- vibrations
          call twh_invib(GLB_SET,imolty,iatom,3)
          call twh_ijvib(GLB_SET,imolty,iatom,1,ibondend)
@@ -3309,7 +3325,7 @@ c     * the polypeptide builder                                        *
 c     * za: acetylated N-terminus                                      *
 c     *                                                                *
 c     * split from polyamber96 03-25-2006 by M.G. Martin               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3331,7 +3347,8 @@ c        --- problem, can only have ace on N-term end
       aminoname = 'acetylated cap on N-terminus'
       shortname = 'ACE'
       total = 6
-      call twh_polysafetycheck(iatom,total)
+      call twh_polysafetycheck(lfailure,iatom,total)
+      if ( lfailure ) return
 c     --- vibrations
       call twh_invib(GLB_SET,imolty,iatom,3)
       call twh_ijvib(GLB_SET,imolty,iatom,1,iatom+1)
@@ -3370,7 +3387,7 @@ c     * the polypeptide builder                                        *
 c     * ze: ethanolamine cap on C-terminus                             *
 c     *                                                                *
 c     * split from polycharmm22 03-27-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3391,7 +3408,8 @@ c        --- problem, can only have ethanolamine on C-term end
       aminoname = 'ethanolamine cap on C-terminus'
       shortname = 'ETA'
       total = 10
-      call twh_polysafetycheck(iatom,total)
+      call twh_polysafetycheck(lfailure,iatom,total)
+      if ( lfailure ) return
 c     --- vibrations
       call twh_invib(GLB_SET,imolty,iatom,3)
       call twh_ijvib(GLB_SET,imolty,iatom,1,ibondend)
@@ -3445,7 +3463,7 @@ c     * the polypeptide builder                                        *
 c     * zf: formaldahyde cap on N-terminus                             *
 c     *                                                                *
 c     * split from polycharmm22 03-27-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3466,7 +3484,8 @@ c        --- problem, can only have formaldehyde on N-term end
       aminoname = 'formaldehyde cap on N-terminus'
       shortname = 'FOR'
       total = 3
-      call twh_polysafetycheck(iatom,total)
+      call twh_polysafetycheck(lfailure,iatom,total)
+      if ( lfailure ) return
 c     --- vibrations
       call twh_invib(GLB_SET,imolty,iatom,3)
       call twh_ijvib(GLB_SET,imolty,iatom,1,iatom+1)
@@ -3493,7 +3512,7 @@ c     * the polypeptide builder                                        *
 c     * zm: amidated C-terminus                                        *
 c     *                                                                *
 c     * split from polyamber96 03-25-2006 by M.G. Martin               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3514,7 +3533,8 @@ c        --- problem, can only be on C-term end
       aminoname = 'Amidated term'
       shortname = 'NHE'
       total = 3
-      call twh_polysafetycheck(iatom,total)
+      call twh_polysafetycheck(lfailure,iatom,total)
+      if ( lfailure ) return
 c     --- vibrations
       call twh_invib(GLB_SET,imolty,iatom,3)
       call twh_ijvib(GLB_SET,imolty,iatom,1,ibondend)
@@ -3540,7 +3560,7 @@ c     * the polypeptide builder                                        *
 c     * zn: N-methylamide cap on C-terminus                            *
 c     *                                                                *
 c     * split from polycharmm22 03-27-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3561,7 +3581,8 @@ c        --- problem, can only have N-methylamide on C-term end
       aminoname = 'N-methylamide'
       shortname = 'NMA'
       total = 6
-      call twh_polysafetycheck(iatom,total)
+      call twh_polysafetycheck(lfailure,iatom,total)
+      if ( lfailure ) return
 c     --- vibrations
       call twh_invib(GLB_SET,imolty,iatom,3)
       call twh_ijvib(GLB_SET,imolty,iatom,1,ibondend)
@@ -3591,15 +3612,17 @@ c     --- pdb names
       return
       end
 
-      subroutine twh_ua_pepname_generic(termflag,hmain,iatom,ninsert)
+      subroutine twh_ua_pepname_generic(lfailure,termflag,hmain,iatom
+     &     ,ninsert)
 c     ******************************************************************
 c     * sets up the generic information for most united-atom peptides  *
 c     *                                                                *
 c     * split from polycharmm19 03-27-2006 by M.G. Martin              *
-c     * last modified 03-27-2006 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer termflag,hmain,iatom,ninsert
 
       if ( termflag .eq. -1 ) then
@@ -3618,7 +3641,9 @@ c        --- c-terminus
 c        --- lump H on to C
          ninsert = 2
       else
-         stop 'invalid termflag'
+         write(6,*) 'invalid termflag'
+         lfailure = .true.
+         return
       endif
 
       return

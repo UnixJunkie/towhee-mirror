@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_getweight(style, vin, wout, dpscale, lterm )
+      subroutine twh_getweight(lfailure,style,vin,wout,dpscale,lterm )
 c     ******************************************************************
 c     * turns an energy into a rosenbluth weight that has been scaled  *
 c     * dpscale times by scalelog in order that wout is nonzero within *
@@ -28,13 +28,13 @@ c     * style: 0 input is an engery, returns weight and scale          *
 c     * style: 1 input is a weight, returns adjusted weight and scale  *
 c     *                                                                *
 c     * originally written 05-21-2001 by M.G. Martin                   *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-04-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      logical lterm
+      logical lfailure,lterm
       integer style
       double precision vin,wout,dpscale
 c     --- parameters
@@ -57,7 +57,8 @@ c              --- energy is overwhelmingly negative: this really should
 c              --- not happen and it messes up the code
                write(6,*) 'GETWEIGHT: vin is overwhelmingly negative'
                write(6,*) 'not sure how this could happen, vin',vin
-               stop
+               lfailure = .true.
+               return
             endif
 c           --- scale to keep the weight under control
             iscale = -idint(-vratio)
@@ -100,7 +101,8 @@ c           --- multiply by scalelolog to adjust
          if ( isafety .eq. 10 ) lterm = .true.
       else
          write(6,*) 'GETWEIGHT: invalid style ',style
-         stop
+         lfailure = .true.
+         return
       endif
 
       return
