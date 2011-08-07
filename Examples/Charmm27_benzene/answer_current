@@ -1,6 +1,6 @@
- MCCCS Towhee - Version 6.2.17 (August 05 2011)
+ MCCCS Towhee - Version 6.2.18 (August 06 2011)
  Copyright (C) <2011> Marcus G. Martin
- Code Contributors for 2011: Marcus G. Martin;
+ Code Contributors for 2011: Marcus G. Martin; Suleiman Oloriegbe;
  Copyright (C) <2010> Marcus G. Martin
  Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin; Loukas Peristeras;
  Copyright (C) <2009> Marcus G. Martin
@@ -191,8 +191,8 @@ Type:  34 Style: Amber/Charmm/Gromos Cosine Series n:   1
 Type:  63 Style: Amber/Charmm/Gromos Cosine Series n:   1
           Index  1    k:    2113.5 m:2.0 d: 3.1415927
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
-Type:  64 Style: Amber/Charmm/Gromos Cosine Series n:   1
 Selected random number generator RANLUX with luxury level 3 and seed 1302002.
+Type:  64 Style: Amber/Charmm/Gromos Cosine Series n:   1
           Index  1    k:    1207.7 m:2.0 d: 3.1415927
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
 Improper Torsion Types

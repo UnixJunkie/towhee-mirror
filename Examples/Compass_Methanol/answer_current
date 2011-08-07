@@ -1,6 +1,6 @@
- MCCCS Towhee - Version 6.2.17 (August 05 2011)
+ MCCCS Towhee - Version 6.2.18 (August 06 2011)
  Copyright (C) <2011> Marcus G. Martin
- Code Contributors for 2011: Marcus G. Martin;
+ Code Contributors for 2011: Marcus G. Martin; Suleiman Oloriegbe;
  Copyright (C) <2010> Marcus G. Martin
  Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin; Loukas Peristeras;
  Copyright (C) <2009> Marcus G. Martin
@@ -194,8 +194,8 @@ Type:  56 Style: Compass  Angle:    108.728
           Bond-Bond Constant  11673.568
 Type:  60 Style: Compass  Angle:    105.800
           Constants:    26522.6   -6093.4   -4965.8
-           c4         14381.930  h1          9524.733
 Selected random number generator RANLUX with luxury level 3 and seed 1302002.
+           c4         14381.930  h1          9524.733
           Bond-Bond Constant  -4875.112
 Angle-Angle Types
 Type:  11 Style: Compass  k:      -158.9

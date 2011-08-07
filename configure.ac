@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
 # Project name, version, and POC
-AC_INIT(towhee,6.2.17,towhee-bugs@lists.sourceforge.net)
+AC_INIT(towhee,6.2.18,towhee-bugs@lists.sourceforge.net)
 AC_CONFIG_SRCDIR(Source)
 AC_CONFIG_AUX_DIR(install)
 

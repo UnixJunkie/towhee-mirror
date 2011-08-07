@@ -1,6 +1,6 @@
- MCCCS Towhee - Version 6.2.17 (August 05 2011)
+ MCCCS Towhee - Version 6.2.18 (August 06 2011)
  Copyright (C) <2011> Marcus G. Martin
- Code Contributors for 2011: Marcus G. Martin;
+ Code Contributors for 2011: Marcus G. Martin; Suleiman Oloriegbe;
  Copyright (C) <2010> Marcus G. Martin
  Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin; Loukas Peristeras;
  Copyright (C) <2009> Marcus G. Martin
@@ -190,8 +190,8 @@ unit:    4 name:O          charge:   0.00000
    Building the input file for molecule type:     2
 unit:    1 name:C n        charge:   0.50000
 unit:    2 name:HC~3       charge:   0.00000
-unit:    3 name:O          charge:  -0.50000
 Selected random number generator RANLUX with luxury level 3 and seed 1302002.
+unit:    3 name:O          charge:  -0.50000
 unit:    4 name:N          charge:  -0.76000
 unit:    5 name:H          charge:   0.38000
 unit:    6 name:H          charge:   0.38000

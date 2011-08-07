@@ -23,18 +23,19 @@ c     ******************************************************************
 c     * writes out the introductory information about Towhee           *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 08-05-2011 by M.G. Martin                        *
+c     * last modified 08-06-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 
 c     --- Output some information about the code
       write(6,'(1x,a)')
-     &     'MCCCS Towhee - Version 6.2.17 (August 05 2011)'
+     &     'MCCCS Towhee - Version 6.2.18 (August 06 2011)'
 c     --- 2011 copyright plus code contributors
       write(6,'(1x,a)') 'Copyright (C) <2011> Marcus G. Martin'
-      write(6,'(2(1x,a))')
+      write(6,'(3(1x,a))')
      &     'Code Contributors for 2011:'
      &     ,'Marcus G. Martin;'
+     &     ,'Suleiman Oloriegbe;'
 c     --- 2010 copyright plus code contributors
       write(6,'(1x,a)') 'Copyright (C) <2010> Marcus G. Martin'
       write(6,'(5(1x,a))')

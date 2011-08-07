@@ -26,7 +26,7 @@ c     * corresponding Towhee data structures ao that it can create     *
 c     * a Towhee force field file                                      *
 c     *                                                                *
 c     * originally written 03-27-2003 by M.G. Martin                   *
-c     * last modifed 08-04-2011 by M.G. Martin                         *
+c     * last modifed 08-05-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -161,7 +161,7 @@ c           --- this is not valid for the first point, which we are
 c           --- going to remove
             do ir = 2,nr
 c              --- set the second index of table_pair
-               call twh_table_pair(GLB_SET,1,cross,ir,dtemp)
+               call twh_table_pair(GLB_GET,1,cross,ir,dtemp)
                dvalue = CON_EVTOK*tableread(ir) / dtemp
                call twh_table_pair(GLB_SET,2,cross,ir-1,dvalue)
 c              --- shift the value down one slot for the first index
