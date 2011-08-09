@@ -1,10 +1,9 @@
-c     $Id: pupdate.F,v 1.35 2008/10/15 14:16:34 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     ******************************************************************
 c     * this subroutine performs all of the end of block operations    *
 c     *                                                                *
 c     * orignally taken out of old monola in 1998 by M.G. Martin       *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-08-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -50,6 +49,7 @@ c     --- calculation of block averages
 c     --- end this block
       call twh_averages(lfailure,AVG_END_OF_BLOCK,keycode,ibox,imolty
      &     ,invalue,nblock)
+
       if ( lfailure ) return
       call twh_runoutput(GLB_GET,routput)
       if ( routput .eq. 'full' .or. routput .eq. 'blocks' ) then
@@ -166,6 +166,6 @@ c           --- radius of gyration
             enddo
          enddo
       endif
-      
+
       return
       end

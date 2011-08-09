@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-08-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -540,16 +540,6 @@ c           --- error check (if = 0, no output)
          endif
          call twh_blocksize(GLB_SET,blocksize)
 
-c        --- set numblock based on the blocksize
-         if (blocksize .ne. 0) then
-            numblock = nstep/blocksize
-c           --- check for partial block
-            if ( mod(nstep,blocksize) .ne. 0 ) then
-               numblock = numblock + 1
-            endif
-            call twh_allocate_blocks(MAXBAPROP,numblock)
-         endif
-
 c        --- read in steps between movie file output
          if (twh_check_label(lfailure,4,'moviefreq')) then
             moviefreq = twh_read_labeled_integer(lfailure,4,'moviefreq'
@@ -845,6 +835,17 @@ c     --- error check
             return
          endif
       enddo
+
+c     --- set numblock and allocate based on the blocksize
+      call twh_blocksize(GLB_GET,blocksize)
+      if (blocksize .ne. 0) then
+         numblock = nstep/blocksize
+c        --- check for partial block
+         if ( mod(nstep,blocksize) .ne. 0 ) then
+            numblock = numblock + 1
+         endif
+         call twh_allocate_blocks(MAXBAPROP,numblock)
+      endif
 
 c     --- set up some safety features, these are now hardwired after
 c     --- running some tests to find good values

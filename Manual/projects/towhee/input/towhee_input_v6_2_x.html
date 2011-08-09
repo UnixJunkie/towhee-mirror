@@ -39,6 +39,10 @@
      </ul>
      <b>Bug reports and feature enhancements for 6.2.x versions</b>
      <ul>
+      <li>6.2.19: Fixed a memory allocation bug that was causing a segmentation fault when used with 'equilibration' or 'production settings of the
+       <a href="#controlstyle"><b>controlstyle</b></a>.  Fixed a typo in this manual page that was missing the negative sign in front of the log term
+       for the equation that describes how <b>kmax</b> is computed for the 'ewald_fixed_cutoff' setting of <a href="#coulombstyle"><b>coulombstyle</b></a>.
+      </li>
       <li>6.2.18: Added missing Example files Au_Cu_Switch/towhee_coords and FENE_Hexamer/towhee_template to the distribution.  Fixed a reported bug in 
        the ffreadsetflfile subroutine that was likely introduced in 2008.  Updates to the manual pages
        <a href="../towhee_pubs.html">Towhee Publications</a> and <a href="../towhee_presentations.html">Towhee Presentations</a>.
@@ -624,7 +628,7 @@
                 <li>'ewald_fixed_cutoff' if you want to use point charges with an Ewald sum that utilizes a constant electrostatic cutoff (<b>rcelect</b>)
                  and adjusts the number of inverse space vectors (<b>kmax</b>) according to the following heuristic.
                  <dt>alpha = ( 1.35 - 0.15 log[<b>ewald_prec</b>]) / <b>rcelect</b></dt>
-                 <dt>kmax = ( alpha * Max[box length] / &pi;) * (log[<b>ewald_prec</b>])<sup>0.5</sup></dt>
+                 <dt>kmax = ( alpha * Max[box length] / &pi;) * (-log[<b>ewald_prec</b>])<sup>0.5</sup></dt>
                  When using this option you will also need to list the following variables.
                  <ul>
                   <dt><a name="ewald_prec"><b>ewald_prec (double precision)</b></a> 
@@ -2716,7 +2720,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 06, 2011<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 08, 2011<!-- #EndDate -->
   </font>
   <br></br>
  </body>
