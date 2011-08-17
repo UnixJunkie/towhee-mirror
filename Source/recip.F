@@ -1,10 +1,9 @@
-c     $Id: recip.F,v 1.11 2007/11/08 16:14:54 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2002 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     ******************************************************************
 c     * updates the reciprocal ewald-sum.                              *
 c     *                                                                *
 c     * rewritten on 06-25-1999 by Bin Chen.                           *
-c     * last modified 11-05-2007 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to and from the subroutine

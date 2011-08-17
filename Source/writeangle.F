@@ -1,8 +1,7 @@
-c     $Id: writeangle.F,v 1.20 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     * the file index                                                 *
 c     * index: file index for output                                   *
 c     *                                                                *
 c     * originally written 02-22-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 M.G. Martin                           *
+c     * last modified 08-09-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE

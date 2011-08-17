@@ -27,8 +27,8 @@ c     * while x2 and everything downstream from it are rotated some    *
 c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
-c     * M.G. Martin and C.D. Lorenz 10-16-2002                         *
-c     * last modifed in 04-21-2011 by M.G. Martin                      *
+c     * originally written by M.G. Martin and C.D. Lorenz 10-16-2002   *
+c     * last modifed in 08-09-2011 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -98,7 +98,7 @@ c     --- select a molecule type at random
 
 c     --- select a chain of the determined molecule type
       call twh_ensemble(GLB_GET,ensemble)
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
 c        --- take from box 1
          activebox = 1
 c        --- see if there are any molecules of this type in active box

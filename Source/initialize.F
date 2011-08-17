@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -39,8 +39,9 @@ c     --- local variables
       double precision dvalue,twopi
 
 c     --- default values for random number generation
-      call twh_randomseed(GLB_SET,1302002)
+      call twh_random_code(GLB_SET,RNG_DX_1597_2_7)
       call twh_random_luxlevel(GLB_SET,3)
+      call twh_random_seed(GLB_SET,1302002)
       call twh_random_allow_restart(GLB_SET,.true.)
 c     --- set the names of the stress tensor components
       call twh_pcomp(GLB_SET,0,'Pressure')

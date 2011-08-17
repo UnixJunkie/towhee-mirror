@@ -1,8 +1,7 @@
-c     $Id: inverthmatrix.F,v 1.11 2008/10/14 14:09:45 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +25,7 @@ c     * inverts the hmatrix for a particular box                       *
 c     * also computes the boxvolume and stores it                      *
 c     *                                                                *
 c     * originally written 12-13-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CROSSPRODUCT

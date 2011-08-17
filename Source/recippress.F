@@ -1,10 +1,9 @@
-c     $Id: recippress.F,v 1.12 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * calculates the reciprocal space contribution to pressure using *
 c     * thermodynamic definition. See J. Chem. Phys. Vol. 109 P2791.   *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen                         *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI

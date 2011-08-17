@@ -35,11 +35,11 @@
  * lambda_lj) from data passed which has no analogy in towhee_input (and whose
  * visibility is not controlled by lreadwrapper in mainloop.F), such as
  * towhee_input_file.
- * last modified 07-02-2009 by M.G. Martin
+ * last modified 08-16-2011 by M.G. Martin
  */
 typedef struct {
     double lambda_lj, lambda_c;
-    int num_steps, num_foreign_lambda, randomseed;
+    int num_steps, num_foreign_lambda, random_seed;
     int linit, lredirect_stdout;
 } wrapper;
 

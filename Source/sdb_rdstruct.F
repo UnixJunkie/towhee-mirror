@@ -1,4 +1,3 @@
-c     $Id: sdb_rdstruct.F,v 1.5 2006/03/04 02:00:11 marcus_martin Exp $
 c     ******************************************************************
 c     * SDB: Utilities for handling the sdb database format            *
 c     * Copyright (C) 2004-2006 Marcus G. Martin, Peter A. Schultz     *

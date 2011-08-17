@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 10-26-2008 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -89,12 +89,12 @@ c     --- character string arrays
       character*10 pair_list
       dimension pair_list(CROSSTYPEMAX,2)
 c     --- small integer scalars
-      integer*4 randomseed,luxlevel
+      integer*4 random_seed,luxlevel
 c     --- integer scalars
       integer iatom,ivib,ibend,itor,iaa,ibox,jmolty,idim,jdim,iorder
       integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile,nmolty
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
-      integer aminonum,potentialstyle,numboxes
+      integer aminonum,potentialstyle,numboxes,rng_code
       integer npair,inix,iniy,iniz,nvmove,ensemble
 c     --- integer arrays
       integer idummy
@@ -127,19 +127,35 @@ c        --- output all of the towhee_input file except for the
 c        --- molecule information
          write(15,'(a11)') 'inputformat'
          write(15,'(a1,a6,a1)') char(39),'Towhee',char(39)
-         call twh_randomseed(GLB_GET,randomseed)
-         write(15,'(a10)') 'randomseed'
-         write(15,*) randomseed
-         call twh_random_luxlevel(GLB_GET,luxlevel)
-         write(15,'(a15)') 'random_luxlevel'
-         write(15,*) luxlevel
+         call twh_random_code(GLB_GET,rng_code)
+         write(15,'(a23)') 'random_number_generator'
+         if ( rng_code .eq. RNG_RANLUX ) then
+            write(15,'(a1,a6,a1)') char(39),'RANLUX',char(39)
+            call twh_random_luxlevel(GLB_GET,luxlevel)
+            write(15,'(a15)') 'random_luxlevel'
+            write(15,*) luxlevel
+         elseif ( rng_code .eq. RNG_DX_1597_2_7 ) then
+            write(15,'(a1,a11,a1)') char(39),'DX-1597-2-7',char(39)
+         elseif ( rng_code .eq. RNG_KISS99 ) then
+            write(15,'(a1,a6,a1)') char(39),'KISS99',char(39)
+         elseif ( rng_code .eq. RNG_MRG32K3A ) then
+            write(15,'(a1,a8,a1)') char(39),'MRG32k3a',char(39)
+         else
+            write(6,*) 'WRITETOWHEE: unknown random_code'
+            write(6,*) rng_code
+            lfailure = .true.
+            return
+         endif
+         call twh_random_seed(GLB_GET,random_seed)
+         write(15,'(a11)') 'random_seed'
+         write(15,*) random_seed
          call twh_random_allow_restart(GLB_GET,lvalue)
          write(15,'(a20)') 'random_allow_restart'
          write(15,'(L1)') lvalue
 
          if (ensemble .eq. ENS_NPT) ensemble_str='npt'
          if (ensemble .eq. ENS_NVT) ensemble_str='nvt'
-         if (ensemble .eq. ENS_UVT) ensemble_str='uvt'
+         if (ensemble .eq. ENS_muVT) ensemble_str='uvt'
          write(15,'(a8)') 'ensemble'
          write(15,'(a1,a30,a1)') char(39),ensemble_str,char(39)
 
@@ -160,7 +176,7 @@ c        --- molecule information
             call twh_nmolectyp(GLB_GET,jmolty,idummy(jmolty))
          enddo
          write(15,*) (idummy(jmolty),jmolty=1,nmolty)
-         if ( ensemble .eq. ENS_UVT ) then
+         if ( ensemble .eq. ENS_muVT ) then
             write(15,'(a7)') 'chempot'
             do jmolty = 1,nmolty
                call twh_chempot(GLB_GET,jmolty,dmarray(jmolty))
@@ -209,7 +225,7 @@ c        --- molecule information
          write(15,'(a10)') 'loutdlpoly'
          call twh_loutdlpoly(GLB_GET,loutdlpoly)
          write(15,*) loutdlpoly
-         if ( ensemble .eq. ENS_UVT ) then
+         if ( ensemble .eq. ENS_muVT ) then
             write(15,'(a8)') 'louthist'
             call twh_louthist(GLB_GET,louthist)
             write(15,*) louthist
@@ -806,7 +822,7 @@ c                 --- output the helix_* varibles
             endif
          endif
 
-         if ( ensemble .eq. ENS_UVT ) then
+         if ( ensemble .eq. ENS_muVT ) then
             write(15,'(a11)') 'pmuvtcbswap'
             call twh_pmuvtcbswap(GLB_GET,dvalue)
             write(15,*) dvalue

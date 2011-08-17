@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 08-08-2011 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -55,7 +55,7 @@ c     --- logical scalars
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
       logical loutlammps,lshift,ltailc,lcoulomb,lewald,ldualcutoff
-      logical in_c_flag,lfieldcoords
+      logical in_c_flag,lfieldcoords,lallow
 c     --- logical arrays
       logical lpdbset
       dimension lpdbset(NTMAX)
@@ -71,7 +71,7 @@ c     --- character string scalars
       character*15 idname
       character*20 runoutput,solvation_style,solvation_type,initboxtype
       character*20 initstyle,initlattice,controlstyle,keyname
-      character*30 ftemp,filename,ctemp,ensemble_str
+      character*30 ftemp,filename,ctemp,ensemble_str,rng_str
       character*30 potentialstyle_str,charge_assignment
       character*30 imp_assign,match_style
       character*50 tmpfile,input_style,run_name,in_cfile
@@ -90,7 +90,8 @@ c     --- integer scalars
       integer backlist,numboxes,nvmove,ensemble,histcalcfreq,nener
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
-      integer maxnumtor,numtor,numblock
+      integer maxnumtor,numtor,numblock,rng_code
+      integer*4 luxvalue,iseed
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -126,6 +127,74 @@ c     --- double precision arrays
 c     --- set subroutine idname
       idname = 'readtowhee'
 
+c     --- optional read in the random number generator
+      if ( twh_check_label(lfailure,4,'random_number_generator') ) then
+         call twh_read_labeled_string(lfailure,4
+     &        ,'random_number_generator',.true.,idname
+     &        ,rng_str)
+         if ( rng_str .eq. 'RANLUX' ) then
+            rng_code = RNG_RANLUX
+
+c           --- optional get the random number generator luxury level
+            if ( twh_check_label(lfailure,4,'random_luxlevel') ) then
+               luxvalue = twh_read_labeled_integer(lfailure,4
+     &              ,'random_luxlevel',.true.,idname)
+               if ( lfailure ) return
+c              --- error check
+               if ( luxvalue .lt. 0 .or. luxvalue .gt. 4 ) then
+                  write(6,*) 'READINPUT: random_luxlevel must be'
+     &                 ,' between 0 and 4 inclusive'
+                  lfailure = .true.
+                  return
+               endif
+               call twh_random_luxlevel(GLB_SET,luxvalue)
+            endif
+         elseif ( rng_str .eq. 'DX-1597-2-7' ) then
+            rng_code = RNG_DX_1597_2_7
+         elseif ( rng_str .eq. 'KISS99' ) then
+            rng_code = RNG_KISS99
+         elseif ( rng_str .eq. 'MRG32k3a' ) then
+            rng_code = RNG_MRG32K3A
+         else
+            write(6,*) 'READTOWHEE: unknown random_number_generator'
+            write(6,'(a)') rng_str
+            lfailure = .true.
+            return
+         endif
+c        --- store the random number generator code
+         call twh_random_code(GLB_SET,rng_code)
+      endif
+
+c     --- optional read in the random number seed
+      if (twh_check_label(lfailure,4,'random_seed')) then
+         call twh_get_random_seed(lfailure,4, iseed, .false., idname)
+         if ( lfailure ) return
+         if ( iseed .lt. 0 ) then
+            write(6,*) 'READINPUT: random_seed must be postitive'
+            lfailure = .true.
+            return
+         endif
+c        --- set the global random_seed
+         call twh_random_seed(GLB_SET,iseed)
+      endif
+
+c      --- optional read random_allow_restart
+      if ( twh_check_label(lfailure,4,'random_allow_restart') ) then
+         lallow = twh_read_labeled_logical(lfailure,4
+     &        ,'random_allow_restart',.true.,idname)
+         if ( lfailure ) return
+         call twh_random_allow_restart(GLB_SET,lallow)
+      else
+c        --- use the default value
+         call twh_random_allow_restart(GLB_GET,lallow)
+      endif
+c     --- see if we are forcing initialiation here
+      if ( .not. lallow ) then
+c        --- initialize random number generator now
+         call twh_init_random_single(lfailure)
+         if ( lfailure ) return
+      endif
+
 c     --- read in ensemble string
       call twh_read_labeled_string(lfailure,4,'ensemble',.true.,idname
      &     ,ensemble_str)
@@ -136,7 +205,7 @@ c     --- error check ensemble
       elseif (ensemble_str .eq. 'npt') then
          ensemble = ENS_NPT
       elseif (ensemble_str .eq. 'uvt') then
-         ensemble = ENS_UVT
+         ensemble = ENS_muVT
       elseif ( ensemble_str .eq. 'pseudo-bubble' ) then
          ensemble = ENS_BUBBLE
       else
@@ -178,7 +247,7 @@ c        --- convert pressure from kPa to simulation units
 
 c     --- tmmc_flag = .true. if doing GC-TMMC
       call twh_tmmc_flag(GLB_SET,.false.)
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
          if (twh_check_label(lfailure,4,'tmmc_flag')) then
             lvalue = twh_read_labeled_logical(lfailure,4, 'tmmc_flag'
      &           ,.true., idname)
@@ -186,7 +255,7 @@ c     --- tmmc_flag = .true. if doing GC-TMMC
             call twh_tmmc_flag(GLB_SET,lvalue)
          endif
          call twh_tmmc_flag(GLB_GET,lvalue)
-         if ((ensemble.ne.ENS_UVT).and. lvalue ) then
+         if ((ensemble.ne.ENS_muVT).and. lvalue ) then
             write(6,*) 'READTOWHEE: can only do tmmc in uVT Ens.'
             lfailure = .true.
             return
@@ -258,7 +327,7 @@ c     --- error check nmolectyp
          if ( nmtype .eq. 0 ) lhenry = .true.
       enddo
 
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
 c        --- read in the chemical potential for each molecule
          call twh_read_labeled_float_array(lfailure,4, 'chempot',
      &      nmolty, .true., idname, dmarray)
@@ -305,7 +374,7 @@ c     --- read the step style
       if ( lfailure ) return
       call twh_stepstyle(GLB_SET,stepstyle)
 c     --- error check
-      if ( ensemble .eq. ENS_UVT .and. stepstyle .ne. 'moves' ) then
+      if ( ensemble .eq. ENS_muVT .and. stepstyle .ne. 'moves' ) then
          write(6,*) 'READTOWHEE: stepstyle must be moves when using the'
          write(6,*) 'grand canonical ensemble. cycles is ill defined'
          lfailure = .true. 
@@ -650,7 +719,7 @@ c        --- optional read in dlpoly output style logical
             call twh_loutdlpoly(GLB_SET,loutdlpoly)
          endif
 
-         if ( ensemble .eq. ENS_UVT 
+         if ( ensemble .eq. ENS_muVT 
      &        .and. twh_check_label(lfailure,4,'louthist') ) then
 c           --- read logical for computation of histogram
             louthist = twh_read_labeled_logical(lfailure,4,'louthist',
@@ -1099,9 +1168,9 @@ c        --- error check initmol against nmolectyp
                itest = itest + initmol
             enddo
             call twh_nmolectyp(GLB_GET,imolty,nmtype)
-            if ( ( ensemble .ne. ENS_UVT .and. 
+            if ( ( ensemble .ne. ENS_muVT .and. 
      &           itest .ne. nmtype )
-     &           .or. (ensemble .eq. ENS_UVT 
+     &           .or. (ensemble .eq. ENS_muVT 
      &           .and. itest .gt. nmtype) ) then
                write(6,*) 'READTOWHEE: moltyp does not match initmol'
                write(6,*) 'imolty ',imolty
@@ -1507,7 +1576,7 @@ c           --- error check pm2cbswpr
       endif
 
 c     --- grand canonical insertion/deletion
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
 c        --- read in grand canonical swap move info
          if (twh_check_label(lfailure,4,'pmuvtcbswap')) then
             dvalue = twh_read_labeled_float(lfailure,4,'pmuvtcbswap'
@@ -2791,7 +2860,7 @@ c     --- Begin outputting information about the simulation
          else
             write(6,*) 'Canonical Gibbs ensemble'
          endif
-      elseif ( ensemble .eq. ENS_UVT ) then
+      elseif ( ensemble .eq. ENS_muVT ) then
          write(6,*) 'Grand Canonical ensemble'
       else
          write(6,*) 'READTOWHEE: unknown ensemble'
@@ -3110,7 +3179,7 @@ c     --- set the thermal debroglie wavelength and uvtfactor
          call twh_masstotal(GLB_GET,imolty,masstotal)
          dvalue = 17.458d0/( dsqrt(masstotal*temperature ))
          call twh_debroglie(GLB_SET,imolty,dvalue)
-         if ( ensemble .eq. ENS_UVT ) then
+         if ( ensemble .eq. ENS_muVT ) then
             call twh_chempot(GLB_GET,imolty,chempot)
             uvtfactor = twh_expon(chempot*beta)/
      &           (dvalue*dvalue*dvalue)
@@ -3118,7 +3187,7 @@ c     --- set the thermal debroglie wavelength and uvtfactor
          endif
       enddo 
       call twh_louthist(GLB_GET,louthist)
-      if (ensemble .eq. ENS_UVT .and. louthist) then
+      if (ensemble .eq. ENS_muVT .and. louthist) then
          call twh_file_his(GLB_GET,filename)
          call twh_openfile(lfailure,51,filename,'DEFAULT','UNKNOWN'
      &        ,'DEFAULT')
@@ -3502,5 +3571,175 @@ c     --- actual value comes from wrapper
      &        ,print_value,idname)
          if ( lfailure ) return
       endif
+      return
+      end
+
+      subroutine twh_get_random_seed(lfailure,io_unit, randseed
+     &     , print_value, idname)
+c     ******************************************************************
+c     * Returns random_seed.  This value may come from one of two      *
+c     * sources: from the towhee_input file or,                        *
+c     * if lreadwrapper is set (in a call to towheemainloop) from      *
+c     * variables set (by the C wrapper) in the wrapper common block.  *
+c     *                                                                *
+c     * Variables:                                                     *
+c     * io_unit specifies the file number to read from randseed is set *
+c     * by this subroutine.  This local variable will typically be     *
+c     * assigned to the appropriate global variable by the caller.     *
+c     * print_value specifies whether the label and value output to    *
+c     * screen.                                                        *
+c     * idname is the calling subroutine, printed only in case of error*
+c     *                                                                *
+c     * originally written prior to 2006                               *
+c     * last modified 08-16-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+#include "wrapperF.h"
+#define FUNCTION_CHECK_LABEL
+#define FUNCTION_READ_LABELED_INTEGER
+#include "functions.h"
+c     --- variables passed to/from the subroutine
+      integer randseed, io_unit
+      logical lfailure,print_value
+      character*(*) idname
+c     --- local variables
+      logical lreadwrapper
+
+      call twh_lreadwrapper(GLB_GET,lreadwrapper)
+      if (lreadwrapper) then
+c     --- if random_seed comes from wrapper this parameter is allowed,
+c     --- but optional, in towhee_input.  See if it exists,  read it
+c     --- so that its skipped over.
+         if (twh_check_label(lfailure,io_unit,'random_seed')) then
+            randseed = twh_read_labeled_integer(lfailure,io_unit
+     &           ,'random_seed',.false.,idname)
+            if ( lfailure ) return
+         endif
+
+c     --- actual value comes from wrapper
+         randseed = wrap_random_seed
+         if (print_value) then
+            write(6,*) 'random_seed (from wrapper): ',randseed
+         endif
+      else
+         randseed = twh_read_labeled_integer(lfailure,io_unit
+     &        ,'random_seed',print_value, idname)
+         if ( lfailure ) return
+      endif
+      return
+      end
+
+      
+      subroutine twh_init_random_single(lfailure)
+c     ******************************************************************
+c     * initializes the random number generator using a single integer *
+c     * seed                                                           *
+c     *                                                                *
+c     * originally written 11-13-2006 by M.G. Martin                   *
+c     * last modified 08-16-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+#define FUNCTION_RANDOM
+#include "functions.h"
+c     --- variables passed to/from the subroutine
+      logical lfailure
+c     --- local variables
+      integer*4 iseed
+      integer itest,rng_code,luxlevel
+      double precision tenmilsum
+      double precision rtest
+      dimension rtest(5)
+
+c     --- retrieve constants
+      call twh_random_code(GLB_GET,rng_code)
+      call twh_random_seed(GLB_GET,iseed)
+      if ( rng_code .eq. RNG_RANLUX ) then
+         call twh_random_luxlevel(GLB_GET,luxlevel)
+         write(6,'(a,1x,a,1x,i1,1x,a,1x,i10)')
+     &        'Selected random number generator RANLUX with luxury'
+     &        ,'level',luxlevel,'and single integer seed',iseed
+      elseif ( rng_code .eq. RNG_DX_1597_2_7 ) then
+         write(6,'(a,1x,a,1x,i10)')
+     &        'Selected random number generator DX-1597-2-7 and single'
+     &        ,'integer seed',iseed
+      elseif ( rng_code .eq. RNG_KISS99 ) then
+         write(6,'(a,1x,a,1x,i10)')
+     &        'Selected random number generator KISS99 and single'
+     &        ,'integer seed',iseed
+      elseif ( rng_code .eq. RNG_MRG32K3A ) then
+         write(6,'(a,1x,a,1x,i10)')
+     &        'Selected random number generator MRG32k3a and single'
+     &        ,'integer seed',iseed
+      else
+         write(6,*) 'TWH_INIT_RANDOM_SINGLE: tried to initialize'
+     &        ,' unknown random number generator with code:',rng_code
+         lfailure = .true.
+         return
+      endif
+      call rnginit(rng_code,iseed)
+      write(6,'(a,1x,a)')
+     &     'Testing random number generator using'
+     &     ,'the single integer seed'
+c     --- print random numbers
+      do itest=1,5
+         rtest(itest) = twh_random()
+      enddo
+      write(6,'(2x,5f10.6)') (rtest(itest),itest=1,5)
+c     --- random number test
+      tenmilsum = 0.0d0
+      do itest = 1,10000000
+         tenmilsum = tenmilsum + twh_random()
+      enddo
+      write(6,'(a,1x,f20.10)')
+     &     '10 million RNG sum (approximately 5 million):'
+     &     ,tenmilsum
+
+      return
+      end
+
+      
+      subroutine twh_restart_random(lfailure,rng_code,nrng,irng)
+c     ******************************************************************
+c     * restarts the random number generator using the full array of   *
+c     * integer seeds                                                  *
+c     *                                                                *
+c     * originally written 08-16-2011 by M.G. Martin                   *
+c     * last modified 08-16-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      logical lfailure
+      integer rng_code,nrng
+      integer irng
+      dimension irng(nrng)
+c     --- local variables
+      integer luxlevel
+
+c     --- retrieve constants
+      if ( rng_code .eq. RNG_RANLUX ) then
+         call twh_random_luxlevel(GLB_GET,luxlevel)
+         write(6,'(a,1x,a,1x,i1,1x,a)')
+     &        'Restarting random number generator RANLUX with luxury'
+     &        ,'level',luxlevel,'from integer seed array'
+      elseif ( rng_code .eq. RNG_DX_1597_2_7 ) then
+         write(6,'(a,1x,a)')
+     &        'Restarting random number generator DX-1597-2-7'
+     &        ,'from integer seed array'
+      elseif ( rng_code .eq. RNG_KISS99 ) then
+         write(6,'(a,1x,a)')
+     &        'Restarting random number generator KISS99'
+     &        ,'from integer seed array'
+      elseif ( rng_code .eq. RNG_MRG32K3A ) then
+         write(6,'(a,1x,a)')
+     &        'Restarting random number generator MRG32k3a'
+     &        ,'from integer seed array'
+      else
+         write(6,*) 'TWH_RESTART_RANDOM: tried to restart'
+     &        ,' unknown random number generator with code:',rng_code
+         lfailure = .true.
+         return
+      endif
+      call rngrestart(rng_code,nrng,irng)
+
       return
       end

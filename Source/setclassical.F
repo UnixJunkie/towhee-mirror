@@ -1,8 +1,7 @@
-c     $Id: setclassical.F,v 1.46 2008/10/31 15:44:55 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * regard to the lhere function                                   *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 10-23-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE

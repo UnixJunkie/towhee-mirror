@@ -1,10 +1,9 @@
-c     $Id: rotate.F,v 1.46 2010/09/04 13:46:31 lperi Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,7 +30,7 @@ c     * rotate chooses one of the three space-fixed axes at random     *
 c     * and rotates the molecule around this axis.                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed in 10-14-2008 by M.G. Martin                      *
+c     * last modifed in 08-09-2011 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -91,7 +90,7 @@ c     --- select a chain type at random
 #endif
       
       call twh_ensemble(GLB_GET,ensemble)
-      if (ensemble .eq. ENS_UVT) then
+      if (ensemble .eq. ENS_muVT) then
 c        --- for grand canonical ensemble only want to perform move on
 c        --- molecules actually in the 'real' system box (box = 1)
          ibox = 1         

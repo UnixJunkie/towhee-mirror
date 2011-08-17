@@ -27,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -79,7 +79,7 @@ c     --- select a chain at random
       enddo
 
       call twh_ensemble(GLB_GET,ensemble)
-      if (ensemble .eq. ENS_UVT) then
+      if (ensemble .eq. ENS_muVT) then
 c        --- grand canonical ensemble box 1 is the actual system
          ibox = 1
 c        --- see if there are any molecules of this type in active box

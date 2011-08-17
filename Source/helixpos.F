@@ -1,7 +1,6 @@
-c     $Id: helixpos.F,v 1.4 2006/05/14 23:10:53 marcus_martin Exp $
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2005 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -36,7 +35,7 @@ c     *   returns the Cartesian coordinates of the indexed position in *
 c     *   helix using the array x(3)                                   *
 c     *                                                                *
 c     * originally written 07-01-2004 by Steve Lustig                  *
-c     * last modified 05-13-2005 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine

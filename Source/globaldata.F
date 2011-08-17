@@ -14006,27 +14006,27 @@ c     --- information variables
       return
       end
 
-      subroutine twh_randomseed(flag,ivalue)
+      subroutine twh_random_seed(flag,ivalue)
 c     ******************************************************************
 c     * the random number generator single integer seed                *
 c     *                                                                *
 c     * originally written 11-13-2006 by M.G. Martin                   *
-c     * last modified 11-13-2006 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       integer flag
       integer*4 ivalue
 c     --- information variables
-      integer*4 randomseed
-      save randomseed
+      integer*4 random_seed
+      save random_seed
 
       if ( flag .eq. GLB_SET ) then
-         randomseed = ivalue
+         random_seed = ivalue
       elseif ( flag .eq. GLB_GET ) then
-         ivalue = randomseed
+         ivalue = random_seed
       else
-         write(6,*) 'RANDOMSEED: invalid global flag',flag
+         write(6,*) 'RANDOM_SEED: invalid global flag',flag
          stop
       endif
 
@@ -14195,6 +14195,32 @@ c     --- information variables
          restartfreq = ivalue
       else
          write(6,*) 'RESTARTFREQ: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_random_code(flag,ivalue)
+c     ******************************************************************
+c     * integer code for the random number generator                   *
+c     *                                                                *
+c     * originally written 08-12-2011 by M.G. Martin                   *
+c     * last modified 08-15-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,ivalue
+c     --- information variables
+      integer random_code
+      save random_code
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = random_code
+      elseif ( flag .eq. GLB_SET ) then
+         random_code = ivalue
+      else
+         write(6,*) 'RANDOM_CODE: invalid global flag',flag
          stop
       endif
 
@@ -15909,6 +15935,32 @@ c     --- information variables
       else
          write(6,*) 'VECPREV: invalid global flag',flag
          stop
+      endif
+
+      return
+      end
+
+      subroutine twh_version(flag,cvalue)
+c     ******************************************************************
+c     * string describing the version number                           *
+c     *                                                                *
+c     * originally written 08-09-2011 by M.G. Martin                   *
+c     * last modified 08-09-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag
+      character*(*) cvalue
+c     --- storage values
+      character*7 version
+      save version
+
+      if ( flag .eq. GLB_SET ) then
+         version = cvalue
+      elseif ( flag .eq. GLB_GET ) then
+         cvalue = version
+      else
+         write(6,*) 'VERSION: invalid global flag',flag
       endif
 
       return

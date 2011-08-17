@@ -9,6 +9,7 @@ input \
 potentype \
 utils 
 EXTRA_DIST = \
+citation_manual.html \
 canyon_towhee.jpg \
 developersmanual.html \
 index.html \

@@ -1,8 +1,7 @@
-c     $Id: setcbdihed.F,v 1.23 2008/12/08 07:15:40 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +28,7 @@ c     * sets up the logic arrays needed to do the dihedral selection   *
 c     * for configurational-bias                                       *
 c     *                                                                *
 c     * originally split from rosenbluth 08-07-2002 by M.G. Martin     *
-c     * last modified 12-07-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_BONDPATT

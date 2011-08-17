@@ -1,8 +1,7 @@
-c     $Id: vembed.F,v 1.14 2008/10/08 20:53:07 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +24,7 @@ c     ******************************************************************
 c     * computes the embedding function for the EAM potential          *
 c     *                                                                *
 c     * originally written 11-19-2003 by  M.G. Martin                  *
-c     * last update 10-02-2008 by M.G. Martin                          *
+c     * last update 08-09-2011 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_VEMBED

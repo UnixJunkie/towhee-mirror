@@ -1,7 +1,6 @@
-c     $Id: uniformbox.F,v 1.6 2006/03/04 02:00:11 marcus_martin Exp $
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +23,7 @@ c     ******************************************************************
 c     * selects an atom uniformly from the volume of a simulation box  *
 c     *                                                                *
 c     * originally written 12-13-2001 by M.G. Martin                   *
-c     * last modified 03-03-2006 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM

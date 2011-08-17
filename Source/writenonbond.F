@@ -1,8 +1,7 @@
-c     $Id: writenonbond.F,v 1.36 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * ifile: file index for output                                   *
 c     * lerror: logical used if there is a problem                     *
 c     *                                                                *
 c     * originally split out of readtowhee 08-16-2004 by M.G. Martin   *
-c     * last modified 10-13-2008 M.G. Martin                           *
+c     * last modified 08-09-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE

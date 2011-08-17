@@ -1,7 +1,6 @@
-c     $Id: sdb_config.F,v 1.6 2006/11/12 23:58:18 marcus_martin Exp $
 c     ******************************************************************
 c     * SDB: Utilities for handling the sdb database format            *
-c     * Copyright (C) 2004-2006 Marcus G. Martin, Peter A. Schultz     *
+c     * Copyright (C) 2004-2011 Marcus G. Martin, Peter A. Schultz     *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *

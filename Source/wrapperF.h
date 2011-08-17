@@ -1,7 +1,6 @@
-c     $Id: wrapperF.h,v 1.5 2009/07/21 16:20:52 marcus_martin Exp $
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2005 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +18,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-c     * last modified 07-02-2009 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
 c 
 c  * definitions for data passed between towhee.c and mainloop.F
@@ -31,12 +30,12 @@ c  called
 c
 c  The common blocks shared with the C wrapper are /wrap/ and /swrap/
       double precision wrap_lambda_lj,wrap_lambda_c
-      integer wrap_nstep,wrap_num_foreign_lambda,wrap_randomseed
+      integer wrap_nstep,wrap_num_foreign_lambda,wrap_random_seed
       logical wrap_linit, wrap_lredirect_stdout
 
       common /wrap/ wrap_lambda_lj,wrap_lambda_c
      &,wrap_nstep
-     &,wrap_num_foreign_lambda,wrap_randomseed
+     &,wrap_num_foreign_lambda,wrap_random_seed
      &,wrap_linit, wrap_lredirect_stdout
 
 c     --- strings must be in a separate common block

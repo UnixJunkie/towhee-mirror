@@ -1,11 +1,10 @@
-c     $Id: linclude.F,v 1.9 2007/12/16 04:44:02 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
 c     * see the file license.gpl for the full license information      *
-c     * Copyright (C) 2000-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
 c     * modify it under the terms of the GNU General Public License    *
@@ -33,7 +32,7 @@ c     * considered to be non-bonded interactions for the purposes of   *
 c     * setting up this table                                          *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed 12-03-2007 by M.G. Martin                         *
+c     * last modifed 08-09-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJBEN3

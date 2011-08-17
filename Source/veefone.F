@@ -1,9 +1,8 @@
-c     $Id: veefone.F,v 1.19 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 #define SOLVTYPE 17
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +27,7 @@ c     * function (EEF1) as descriped in Lazaridis and Karplus,         *
 c     * Proteins 35, 133-152 (1999)                                    *
 c     *                                                                *
 c     * originally written 11-04-2002 by M.G. Martin and C.D. Lorenz   *
-c     * last update 10-13-2008 by M.G. Martin                          *
+c     * last update 08-09-2011 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE

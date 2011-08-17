@@ -1,6 +1,6 @@
 <html>
  <head>
-  <title>MCCCS Towhee (towhee_input Version 6.2.x)</title>
+  <title>MCCCS Towhee (towhee_input Version 7.0.x)</title>
  </head>
   
  <body bgcolor="#FFFFFF" text="#000000">
@@ -8,7 +8,7 @@
    <tr> 
     <td colspan="2" height="29"> 
      <div align="center"> <font size="5"> <b><font face="Arial, Helvetica,sans-serif">
-      <a name="top"></a>MCCCS Towhee (towhee_input Version 6.2.x)</font></b></font>
+      <a name="top"></a>MCCCS Towhee (towhee_input Version 7.0.x)</font></b></font>
      </div>
     </td>
    </tr>
@@ -23,7 +23,7 @@
     <td width="700" valign="top">
      <b>Overview</b>
      <ul>
-      This section covers the variables that are set in the towhee_input file Version 6.2.x. Each variable is listed along with its type 
+      This section covers the variables that are set in the towhee_input file Version 7.0.x. Each variable is listed along with its type 
       (logical, character, integer, or double precision). towhee_input is the main input file for Towhee and is generally the only file 
       that needs to be edited on a regular basis. It has a regimented style to the input. The variables are described here in the order 
       they appear in this file. Please look at one of the example files (available with the code package) for the precise file format. 
@@ -37,98 +37,26 @@
       Some variables are optional.  If the variable name is not included in towhee_input it will be set to the specified default value.
       Optional input file values are marked as <em>optional parameter</em>.
      </ul>
-     <b>Bug reports and feature enhancements for 6.2.x versions</b>
+     <b>Bug reports and feature enhancements for 7.0.x versions</b>
      <ul>
-      <li>6.2.19: Fixed a memory allocation bug that was causing a segmentation fault when used with 'equilibration' or 'production settings of the
-       <a href="#controlstyle"><b>controlstyle</b></a>.  Fixed a typo in this manual page that was missing the negative sign in front of the log term
-       for the equation that describes how <b>kmax</b> is computed for the 'ewald_fixed_cutoff' setting of <a href="#coulombstyle"><b>coulombstyle</b></a>.
-      </li>
-      <li>6.2.18: Added missing Example files Au_Cu_Switch/towhee_coords and FENE_Hexamer/towhee_template to the distribution.  Fixed a reported bug in 
-       the ffreadsetflfile subroutine that was likely introduced in 2008.  Updates to the manual pages
-       <a href="../towhee_pubs.html">Towhee Publications</a> and <a href="../towhee_presentations.html">Towhee Presentations</a>.
-      </li>
-      <li>6.2.17: Fixed a bug that was causing array overflows when the grand canonical ensemble was combined with more than one simulation box.  Also
-       reworked several subroutines to replace stop statements with more graceful failures.
-      </li>
-      <li>6.2.16: Fixed a bug that was causing an infinite value of <b>kalp</b> when using a
-       <a href="#coulombstyle"<b>coulombstyle</b></a> value of 'ewald_fixed_cutoff' in combination with a
-       <a href="#numboxes"<b>numboxes</b></a> value greater than 1.  Began adding support for new random number generators.
-      </li>
-      <li>6.2.15: <a href="../algorithm/cbmc.html">Configurational-bias</a> moves now have support for three membered rings and should no longer give an
-       error message when attempting to regrow molecules with any ring structure.  The code repository has moved from cvs to svn after the old service 
-       ceased functioning at the code home at SourceForge.
-      </li>
-      <li>6.2.14: Added a new parameter (<a href="../code/code_manual.html#MMBOND"><b>MMBOND</b></a>) to the <a href = "../code/code_manual.html">preproc.h</a>
-       file as the term that controls the maximum number of all of the intramolecular multi-atom interactions except the number of vibrations.  This allowed
-       the default value of <a href="../code/code_manual.html#NNBOND"><b>NNBOND</b></a> to increase to 6 for simulation of some small molecule ions without
-       the dimensions of all of the other intramolecular interactions to become overly large.  Made minor changes to the files that create the forcefields to 
-       reduce spurious warning messages.  Fixed some small problems as the Sodium ion and Zinc ion did not have the names specified in the 
-       <a href ="../forcefields/dreiding.html">DREIDING</a> force field manual page.
-      </li>
-      <li>6.2.13: Several small internal changes to the code to improve compilation with certain compilers.</li>
-      <li>6.2.12: All <a href="../towhee_ff.html#bond_infinite_square_well">Infinite Square Well bond</a> types are now automatically set so
-       configurational-bias moves will use a <a href="../algorithm/cbmc.html#bond_dist_r_sq_with_bounds">R squared with bounds</a> distribution, with bounds
-       set to the lowest and highest bond lengths that have a non-infinite energy.
-       All <a href="../towhee_ff.html#angle_infinite_square_well">Infinite Square Well angle</a> types are now automatically set so configurational-bias moves 
-       will use a <a href="../algorithm/cbmc.html#angle_dist_bounded_sine">bounded Sine distribution</a>.
-       Fixed the intra-box center-of-mass switch move (controlled by <a href="#pm1boxcomswitch"><b>pm1boxcomswitch</b></a>) to resolve a problem that 
-       was occurring when using that move in combination with multiple simulation boxes.
-      </li>
-      <li>6.2.11: Resolved a minor bug that was outputting a spurious error message (introduced in 6.2.10) sometimes when performing moves on 
-       molecules with rigid bond lengths.
-      </li>
-      <li>6.2.10: Removed the special case for the grand canonical ensemble for the default settings of the <a href="#pressurefreq"><b>pressurefreq</b></a>
-       parameter.  Modified the treatment of rigid bond lengths and rigid bending angles in the <a href="../algorithm/cbmc.html">CBMC algorithm</a> yet again,
-       now treating those discrete number of allowable bond length or bending angles separately from the continuous potentials.  Anyone using fixed bond
-       lengths or bending angles will see a shift in the <a href="../algorithm/chemicalpotential.html">chemical potentials</a>.  This should also address
-       the noise in the chemical potential issues that were surfacing when using force fields with rigid bending angles of 180 degrees.
-      </li>
-      <li>6.2.9: Fixed an incorrect format statement in the <a href="../utils/pdb2towhee.html">pdb2towhee</a> utility addressing
-       <a href="https://sourceforge.net/projects/towhee/forums/forum/298241/topic/3693800">forum topic 3693800</a>.
-       Rewrote some faulty allocation statements related to the 'energy bias' option of the <a href="#cbmc_nb_one_generation"><b>cbmc_nb_one_generation</b></a>
-       variable to address 
-       <a href="https://sourceforge.net/projects/towhee/forums/forum/298241/topic/3511354">forum topic 298241</a>.
-      </li>
-      <li>6.2.8: Removed a spurious return statement from allocate.F that was causing compilation problems on some platforms.  Also began 
-       cleaning up some of the files in the forcefield generation utility and discovered that the 
-       <a href="../forcefields/c19eef1.html">C19eef1</a> and 
-       <a href="../forcefields/c19sasa.html">C19sasa</a> forcefields were previously
-       assigning atom type ' F' instead of atom type 'Fe' for iron due to a formatting error.
-      </li>
-      <li>6.2.7: Minor changes to the manual</li>
-      <li>6.2.6: More internal data structure changes.  Began moving some multidimensional arrays to the new globalinfo.c routines.  Removed 
-       the NMAX value from <a href="../code/code_manual.html#preproc">preproc.h</a>.
-      </li>
-      <li>6.2.5: Fixed a minor change that accidentally renamed the fitcoex utility as fitvlcc when moving it back to the Utils directory.<li>
-      <li>6.2.4: Added a Makefile to create all of the <a href="../utils/utility_summary.html">utility programs</a>.  Moved the fitcoex utility from
-       the Source directory back to its original home in the Utils directory.  Updated the manual pages for the utility programs.
-      </li>
-      <li>6.2.3: Some minor internal changes and updates to the manual.</li>
-      <li>6.2.2: Added a new configure line option (--enable-fix-GNU) to remove the double underscore problem seen when compiling on some GNU platforms.
-       Minor bug fixes to the <a href="../utils/fitcoex.html">fitcoex</a> manual page to better describe the required file format.
-      </li>
-      <li>6.2.1: Minor changes internal to the code to improve compilation on some platforms.</li>
-      <li>6.2.0: Replaced the <b>cbmc_style</b> and <b>coupled_decoupled_form</b> variables with the new
-       <i>optional parameter</i> <a href="#cbmc_formulation"><b>cbmc_formulation</b></a>.  Made <a href="#cbmc_setting_style"><b>cbmc_setting_style</b></a>
-       an <i>optional parameter</i> that currently has a default of 'Martin and Frischknecht 2006'.
-       Changed many of the examples to use the new default settings instead of the manually specified CBMC settings.
-       Resolved a minor bug in engatom.F so that the declaration of dimtrials now
-       occurs before it is used to dimension any arrays.  Resolved a problem with the angle selection involving multiple rigid angles centered on the
-       same atom so that cases where the mathematics does not have a solution are handled as a hard overlap instead of triggering a code failure.
-       This can occur when there are multiple rigid angles plus one or more flexible angles centered on the same atom.
-       Resolved a minor bug that ommitted the new globalinfo.c routine from the list of files required to compile the forcefield utility.
-       Discovered that the MM2 bond potential is not well formed and has a maximum one third of an Angstrom above the equilibrium bond length and then
-       heades towards negative infinity afterwards.  Modified the MM2 bond potential so it now has an infinite energy for bond lengths greater than
-       the equilibrium bond length plus one third of an Angstrom.  Modified the input utilities so now all spaces and tabs prior to the variable names are
-       automatically stripped before checking to see if the names listed in towhee_input match up with the expected values.  There is no longer any 
-       spacing requirement for subvariables.
+      <li>7.0.0: Added the <a href="../citation_manual.html">Citation Manual</a> page along with the related towhee_citation output file.  Reordered the
+       <a href="../examples/example_manual.html">Examples</a> by ensemble.  Added the <a href="#random_number_generator"><b>random_number_generator</b></a>
+       parameter with default value of 'DX-1597-2-7' along with the old 'RANLUX' and new random number generator options of 'KISS99' and 'MRG32k3a'.
+       Made <a href="#random_luxlevel"><b>random_luxlevel</b></a> a parameter that is only required for
+       the 'RANLUX' setting of <a href="#random_number_generator"><b>random_number_generator</b></a>.  Renamed the old <b>randomseed</b> to the new
+       <a href="#random_seed"><b>random_seed</b></a>.
       </li>
      </ul>
    
-     <b>towhee_input file differences from version 6.1.x</b> 
+     <b>towhee_input file differences from version 6.2.x</b> 
      <ul>
-      <li>Replaced the <b>cbmc_style</b> and <b>coupled_decoupled_form</b> variables with the new
-       <a href="#cbmc_formulation"><b>cbmc_formulation</b></a> variable.
+      <li>
+       Properly accounted for the changes in the towhee_final/towhee_initial caused by the additional random number generators.
+       Added the <a href="#random_number_generator"><b>random_number_generator</b></a> parameter.
+       Made <a href="#random_luxlevel"><b>random_luxlevel</b></a> a parameter that is only required for
+       the 'RANLUX' setting of <a href="#random_number_generator"><b>random_number_generator</b></a>.  Renamed the old <b>randomseed</b> to the new
+       <a href="#random_seed"><b>random_seed</b></a>.  Note that if you have towhee_initial/towhee_final restart files that were created by versions
+       6.2.16 through 6.2.19 then you need to edit the first line of those to be -6 instead of 6 in order to properly read those files into version 7.
       </li>
      </ul>
    
@@ -137,7 +65,7 @@
       Links to other towhee_input information pages, described elsewhere on this page:
       <ul>
        <li> Nonbonded potential types are described in the <a href="../potentype/towhee_input_classical_potential.html">classical_potential</a> section.</li>
-       <li> Information used to describe molecule-specific forcefield information is in the <a href="#inpstyle">inpstyle</a> section.</li>
+       <li> Information used to describe molecule-specific forcefield information is in the <a href="#input_style">input_style</a> section.</li>
        <li> Various constants declared at compile-time found in <a href="../code/code_manual.html#preproc">preproc.h</a>.</li>
       </ul>
      </p>
@@ -150,32 +78,58 @@
         <li>'LAMMPS' : reads in the input variables from the lammps_input and lammps_data files.  Outputs files suitable for use with Towhee.</li>
        </ul>
       </dt>
-     
-      <dt><a name="randomseed"><b>randomseed (integer)</b> <em>optional parameter</em></a>
+
+      <dt><a name="random_number_generator"><b>random_number_generator (character string of size 20)</b> <em>optional parameter</em></a>
        <ul>
-        <li>The 32 bit integer seed that is used to initialize the ranlux random number generator.  Must be positive.  Default value is 1302002.</li>
+        <li>'DX-1597-2-7': (default value) uses the DX-1597-2-7 pseudorandom number generator described in
+         <a href="../references.html#deng_2005">Deng 2005</a> with a period of approximately 10<sup>14903</sup>.
+        </li>
+
+        <li>'KISS99': uses a version of the Keep it Simple Stupid pseudorandom number generator originally posted to an internet newsgroup by G. Marsaglia.
+         This has a period of approximately 10<sup>9</sup>.
+        </li>
+
+        <li>'MRG32k3a': uses the MRG32k3a pseudorandom number generator described in
+         <a href="../references.html#lecuyer_1999">l'Ecuyer 1999</a> with a period of approximately 10<sup>57</sup>.
+        </li>
+
+        <li>'RANLUX': uses the RANLUX psuedorandom number generator as described by 
+         <a href="../references.html#luscher_1994">L&#252scher 1994</a> and implemented by 
+         <a href="../references.html#james_1994">James 1994</a> with a period of approximately 10<sup>171</sup>.  
+         <dt>When using this setting the following optional parameter is available
+          <ul>
+           <dt><a name="random_luxlevel"><b>random_luxlevel (integer)</b> <em>optional parameter</em></a>
+            <ul>
+             An integer value that defines the luxury level used by the pseudorandom number generator.
+             See <a href="../references.html#james_1994">James 1994</a> for more information about the luxury level.
+             <li>0: Does not discard any pseudorandom numbers from the sequence.</li>
+             <li>1: Periodically discards 24 pseudorandom numbers from the sequence.</li>
+             <li>2: Periodically discards 73 pseudorandom numbers from the sequence.</li>
+             <li>3: (default value) Periodically discards 199 pseudorandom numbers from the sequence.</li>
+             <li>4: Periodically discards 365 pseudorandom numbers from the sequence.</li>
+            </ul>
+           </dt>
+          </ul>
+         </dt>
+        </li>
+
+       </ul>
+      </dt>
+
+      <dt><a name="random_seed"><b>random_seed (integer)</b> <em>optional parameter</em></a>
+       <ul>
+        <li>The 32 bit integer seed that is used to initialize the psuedorandom number generator when not performing a restart.  Must be positive.  Default value is 1302002.</li>
        </ul>
       </dt>
      
-      <dt><a name="random_luxlevel"><b>random_luxlevel (integer)</b> <em>optional parameter</em></a>
-       <ul>
-        An integer value that defines the luxury level used by the random number generator.
-        See <a href="../references.html#james_1994">James 1994</a> for more information about the luxury level.
-        <li>0: Does not discard any pseudorandom numbers from the sequence.</li>
-        <li>1: Periodically discards 24 pseudorandom numbers from the sequence.</li>
-        <li>2: Periodically discards 73 pseudorandom numbers from the sequence.</li>
-        <li>3: (default value) Periodically discards 199 pseudorandom numbers from the sequence.</li>
-        <li>4: Periodically discards 365 pseudorandom numbers from the sequence.</li>
-       </ul>
-      </dt>
      
       <dt><a name="random_allow_restart"><b>random_allow_restart (logical)</b> <em>optional parameter</em></a>
        <ul>
-        <li>.TRUE. (default value) if you want to restart the random number generator from the sequence of integers in towhee_initial if possible.
+        <li>.TRUE. (default value) if you want to restart the pseudorandom number generator from the sequence of integers in towhee_initial if possible.
          This is done when the simulation is restarting from a towhee_initial file generated by Version 5.0.0 or later.  If this
-         is not possible then Towhee will initialize the random number generator using the <a href="#randomseed"><b>randomseed</b></a>.
+         is not possible then Towhee will initialize the pseudorandom number generator using the <a href="#random_seed"><b>random_seed</b></a>.
         </li>
-        <li>.FALSE. if you always want to initialize the random number generator using the <a href="#randomseed"><b>randomseed</b></a>.</li>
+        <li>.FALSE. if you always want to initialize the pseudorandom number generator using the <a href="#random_seed"><b>random_seed</b></a>.</li>
        </ul>
       </dt>
      
@@ -951,8 +905,8 @@
                    <ul>
                     <dt><a name="ljfname"><b>ljfname (character*6)</b></a> 
                      <ul>
-                      <li> The name of the atom.  This must match up with the atom names listed in the <b>inpstyle</b>=2 portion of each molecule that is
-                       interacting with this wall.  If you are not using that <b>inpstyle</b> this will still work except you will need to know the atom
+                      <li> The name of the atom.  This must match up with the atom names listed in the <b>inpust_style</b>=2 portion of each molecule that is
+                       interacting with this wall.  If you are not using that <b>input_style</b> this will still work except you will need to know the atom
                        names in the appropriate towhee_ff_* files.
                       </li>
                      </ul>
@@ -1036,8 +990,8 @@
                    <ul>
                     <dt><a name="steele name"><b>steele name (character*6)</b></a> 
                      <ul>
-                      <li> The name of the atom.  This must match up with the atom names listed in the <b>inpstyle</b>=2 portion of each molecule that is
-                       interacting with this wall.  If you are not using that <b>inpstyle</b> this will still work except you will need to know the atom
+                      <li> The name of the atom.  This must match up with the atom names listed in the <b>input_style</b>=2 portion of each molecule that is
+                       interacting with this wall.  If you are not using that <b>input_style</b> this will still work except you will need to know the atom
                        names in the appropriate towhee_ff_whatever files.
                       </li>
                      </ul>
@@ -1168,7 +1122,7 @@
         <li>'coords': The coordinates for each atom are read from <a href="../usersmanual.html#towhee_coords">towhee_coords</a>.
          This is useful if you are starting from a different file format (such as pdb), or have another code for building an initial configuration.
         </li>
-        <li>'nanotube': The coordinates for each atom are read from towhee_nanotube.  This file is generated by the Towhee code if you use the inpstyle for
+        <li>'nanotube': The coordinates for each atom are read from towhee_nanotube.  This file is generated by the Towhee code if you use the input_style for
          carbon nanotubes.  This template is then replicated throughout the simulation box to generate an initial conformation.
         </li>
         <li>'helix cbmc': The molecule is generated by placing some of the backbone atoms onto a helix and then growing the rest of the atoms using CBMC.
@@ -1194,10 +1148,10 @@
            <ul>
             <li>'element' compares the <b>helix_keyname</b> with the character*2 variable element that contains the 2 letter elemental code for each atom.</li>
             <li>'nbname' compares the <b>helix_keyname</b> with the character*10 variable nbname that contains the 10 character code for each atom type.
-             This is the same variable that is used when inputting the atom names with the Atom-based connectivity map (<b>inpstyle</b>=2).
+             This is the same variable that is used when inputting the atom names with the Atom-based connectivity map (<b>input_style</b>=2).
             </li>
             <li>'pdbname' compares the <b>helix_keyname</b> with the character*4 variable pdbname that contains the 4 character code used in the pdb format
-             output.  This is most suitable for use with the Polypeptide builder (<b>inpstyle</b>=1) or the Nucleic acid builder (<b>inpstyle</b>=4).
+             output.  This is most suitable for use with the Polypeptide builder (<b>input_style</b>=1) or the Nucleic acid builder (<b>input_style</b>=4).
             </li>
            </ul>
           </dt>
@@ -1287,7 +1241,7 @@
       <hr></hr>
       <a name="pm_header">
       <li>Note: the pm* variables are used to determine which move type to perform every time we want to do a Monte Carlo move. A move is selected 
-       by choosing a random number between 0.0 and 1.0 and then going down the list of pm* until you find one which has a value higher than the random number.
+       by choosing a pseudorandom number between 0.0 and 1.0 and then going down the list of pm* until you find one which has a value higher than the pseudorandom number.
        At least one of the variables must be set to 1.0.  A similar procedure is performed when we want to determine which boxes or molecule types 
        to perform the selected move upon. These are done using the pm**pr and pm**mt arrays.
        <p></p> 
@@ -2693,19 +2647,19 @@
 
       <p>&nbsp;</p>
       <dt>The final section of towhee_input contains the information that is used to construct the forcefield for the molecule types in the 
-       system. The choice of inpstyle determines which other variables are required to describe the molecule.  Click on the appropriate link for each
-       inpstyle to learn about the remaining variables that are required for each case.
+       system. The choice of input_style determines which other variables are required to describe the molecule.  Click on the appropriate link for each
+       input_style to learn about the remaining variables that are required for each case.
       </dt> 
 
       <dt><a name="input_style"><b>input_style (character*50)</b></a> 
        <ul>
-        <li>'explicit' : <a href="../inpstyle/inpstyle_0.html">Explicit declaration of all terms</a> (formerly <b>inpstyle</b> 0)</li>
-        <li>'polypeptide builder' : <a href="../inpstyle/inpstyle_1.html">Polypeptide builder</a> (formerly <b>inpstyle</b> 1)</li>
-        <li>'basic connectivity map' : <a href="../inpstyle/inpstyle_2.html">Basic Atom-based connectivity map</a> (formerly <b>inpstyle</b> 2)</li>
-        <li>'nucleic acid builder' : <a href="../inpstyle/inpstyle_3.html">Nucleic acid builder</a> (formerly <b>inpstyle</b> 3)</li>
-        <li>'nanotube builder' : <a href="../inpstyle/inpstyle_4.html">Nanotube builder</a> (formerly <b>inpstyle</b> 4)</li>
+        <li>'explicit' : <a href="../inpstyle/inpstyle_0.html">Explicit declaration of all terms</a> (formerly <b>input_style</b> 0)</li>
+        <li>'polypeptide builder' : <a href="../inpstyle/inpstyle_1.html">Polypeptide builder</a> (formerly <b>input_style</b> 1)</li>
+        <li>'basic connectivity map' : <a href="../inpstyle/inpstyle_2.html">Basic Atom-based connectivity map</a> (formerly <b>input_style</b> 2)</li>
+        <li>'nucleic acid builder' : <a href="../inpstyle/inpstyle_3.html">Nucleic acid builder</a> (formerly <b>input_style</b> 3)</li>
+        <li>'nanotube builder' : <a href="../inpstyle/inpstyle_4.html">Nanotube builder</a> (formerly <b>input_style</b> 4)</li>
         <li>'atomic' <a href="../inpstyle/inpstyle_5.html">Atomic only: typically for use with external quantum energy calcaultions</a> 
-         (formerly <b>inpstyle</b> 5)
+         (formerly <b>input_style</b> 5)
         </li>
         <li>'advanced connectivity map' : <a href="../inpstyle/inpstyle_6.html">Advanced Atom-based connectivity map</a></li>
        </ul>
@@ -2720,7 +2674,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 12, 2011<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 17, 2011<!-- #EndDate -->
   </font>
   <br></br>
  </body>

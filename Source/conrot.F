@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -175,7 +175,7 @@ c     --- select a molecule type at random
 
 c     --- select a chain of the determined molecule type
       call twh_ensemble(GLB_GET,ensemble)
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
 c        --- box 1
          ibox = 1
 c        --- make sure this type exists in box 1

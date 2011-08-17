@@ -66,6 +66,7 @@ towhee_SOURCES =  \
 		cbregrow.F \
 		checkhmatrix.F \
 		checkstruc.F \
+		citations.F \
 		compare.F \
 		comparestruc.F \
 		composite.F \
@@ -136,7 +137,7 @@ towhee_SOURCES =  \
 		qqassign.F \
 		quantumenergy.F \
 		radialpressure.F \
-		random.F \
+		ranlux.F \
 		readclassical.F \
 		readinput.F \
 		readlammps.F \
@@ -363,6 +364,7 @@ carttoarb.o: preproc.h carttoarb.F
 cbregrow.o: preproc.h functions.h cbregrow.F
 checkhmatrix.o: preproc.h functions.h checkhmatrix.F
 checkstruc.o: preproc.h functions.h checkstruc.F 
+citations.o: preproc.h citations.F
 compare.o: preproc.h functions.h compare.F 
 comparestruc.o: preproc.h functions.h comparestruc.F
 composite.o: preproc.h composite.F
@@ -516,7 +518,7 @@ pupdate.o: preproc.h pupdate.F
 qqassign.o: preproc.h functions.h qqassign.F
 quantumenergy.o: preproc.h quantumenergy.F
 radialpressure.o: preproc.h functions.h radialpressure.F
-random.o: random.F
+ranlux.o: ranlux.F
 readclassical.o: preproc.h functions.h wrapperF.h readclassical.F
 readinput.o: preproc.h wrapperF.h functions.h readinput.F
 readlammps.o: preproc.h functions.h readlammps.F
@@ -586,7 +588,7 @@ writebond.o: preproc.h functions.h writebond.F
 writedlpoly.o: preproc.h functions.h writedlpoly.F
 writedynamo.o: preproc.h functions.h writedynamo.F
 writeimproper.o: preproc.h functions.h writeimproper.F 
-writeintro.o: writeintro.F 
+writeintro.o: preproc.h writeintro.F 
 writelammps.o: preproc.h functions.h writelammps.F
 writelcao.o: preproc.h functions.h writelcao.F
 writemovie.o: preproc.h functions.h writemovie.F
@@ -606,7 +608,7 @@ globalinfo.o: globalc.h preproc.h globalinfo.c
 jobfarm.o: globalc.h jobfarm.c
 mrg32k3a.o: globalc.h mrg32k3a.c
 rex.o: globalc.h rex.c
-rnginit.o: globalc.h rnginit.c
+rnginit.o: globalc.h preproc.h rnginit.c
 scaled_potential_data.o: globalc.h scaled_potential_data.c
 sturm.o: sturm.c
 towhee.o: globalc.h towhee.c wrapperC.h

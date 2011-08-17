@@ -35,7 +35,7 @@ c     *              does not get overwritten every time               *
 c     *           if rwflag is RW_READ then 'flag'is the atomcount     *
 c     *                                                                *
 c     * rewritten 04-13-2004 by M.G. Martin from writeconf & readtowhee*
-c     * last modified 02-08-2011 by M.G. Martin                        *
+c     * last modified 08-17-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -50,13 +50,14 @@ c     --- character string scalars
       character*14 stepchar
       character*30 filename
 c     --- logical scalars
-      logical lvalue
+      logical lvalue,lsaverng,lnegative
 c     --- integer scalars
       integer ibox,imolty,iunit,ichain,iversion,idim,jdim,ilarge
       integer nnstep,itest,ncount,istart,iend,ntest,ipart,nboxi,jtest
       integer activechain,iadjust,currentversion,nmtype
       integer nmolty,nboxpair,ivalue,jvalue,nunit,nchbox,ncmt
-      integer globalpos,itemp,numboxes,nvmove,ensemble
+      integer globalpos,itemp,numboxes,nvmove,ensemble,rng_code
+      integer input_code
 c     --- integer arrays
       integer nu_temp
       dimension nu_temp(NTMAX)
@@ -110,8 +111,9 @@ c        --- open the file
       endif
 
 c     --- set the currentversion
-      currentversion = 6
+      currentversion = 7
 
+      lnegative = .false.
       if ( rwflag .eq. WRITE_FLAG ) then
 c        --- current version number
          iversion = currentversion
@@ -122,33 +124,101 @@ c        --- read in the version number of this file
          read(8,*) iversion
          write(6,'(a16,i5)') 'Initial version:',iversion
 c        --- make sure we have a legal iversion
-         if ( iversion .lt. 0 .or. iversion .gt. currentversion ) then
+         if ( iversion .lt. 0 ) then
+            lnegative = .true.
+            iversion = abs(iversion)
+         endif
+         if ( iversion .gt. currentversion ) then
             write(6,*) 'RWCONF: unknown version in towhee_initial'
             lfailure = .true.
             return
          endif
       endif
 
+c     --- random number generator information
       if ( rwflag .eq. WRITE_FLAG ) then
+c        --- output the integer code for the random number generator
+         call twh_random_code(GLB_GET,rng_code)
+         write(8,*) rng_code
 c        --- get the sequence of nrng 32-bit integers required for a 
 c        --- clean restart of the random number generator
-         call twh_random_luxlevel(GLB_GET,irng(1))
-         call rngsave(nrng,irng)
+         if ( rng_code .eq. RNG_RANLUX ) then
+            call twh_random_luxlevel(GLB_GET,irng(1))
+         endif
+         call rngsave(rng_code,nrng,irng)
          write(8,*) nrng
          write(8,*) (irng(itest),itest=1,nrng)
       else
          if ( iversion .ge. 5 ) then
+            if ( iversion .eq. 5 .or. iversion .eq. 6 ) then
+c              --- only had the lux random number generator
+c              --- read in the sequence of 32-bit integers
+               rng_code = RNG_RANLUX
+            else
+c              --- read in the random number generator code
+               read(8,*) rng_code
+            endif
+c           --- check this against the rng_code in towhee_input
+            call twh_random_code(GLB_GET,input_code)
+            if ( rng_code .ne. input_code ) then
+c              --- mismatch of input and initial rng_code
+               write(6,'(a,1x,i5,1x,a,1x,i5)') 
+     &              'towhee_input random number generator'
+     &              ,input_code
+     &              ,'overrides towhee_initial random number generator'
+     &              ,rng_code
+               lsaverng = .false.
+c              --- initialize using the towhee_input rng
+               call twh_init_random_single(lfailure)
+               if ( lfailure ) return
+            else
+               lsaverng = .true.
+            endif
 c           --- read in the sequence of 32-bit integers
-            read(8,*) nrng
-            read(8,*) (irng(itest),itest=1,nrng)
-c           --- if restarts are allowed then initialize the RNG
+            if ( iversion .eq. 6 .and. lnegative ) then
+c              --- special version that was output just for 6.2.16
+c              --- through 6.2.19
+               read(8,*) nrng
+               istart = 1
+            elseif ( iversion .eq. 5 .or. iversion .eq. 6 ) then
+c              --- always used 26 integers for ranlux
+               nrng = 26
+c              --- store the current luxlevel in first position
+               call twh_random_luxlevel(GLB_GET,irng(1))
+               istart = 2
+            else
+c              --- starting with version 7 read from file
+               read(8,*) nrng
+               istart = 1
+            endif
+c           --- read the integer restart array
+            read(8,*) (irng(itest),itest=istart,nrng)
+            if ( iversion .eq. 6 .or. lnegative ) then
+c              --- luxlevel was stored in the first position
+               call twh_random_luxlevel(GLB_SET,irng(1))
+c              --- shift down
+               do istart = 1,nrng-1
+                  irng(istart) = irng(istart+1)
+               enddo
+c              --- shift down nrng
+               nrng = nrng - 1
+            endif
+
+c           --- if restarts are allowed and we have a matching RNG code
+c           --- then initialize the RNG
             call twh_random_allow_restart(GLB_GET,lvalue)
-            if ( lvalue ) call rngrestart(nrng,irng)
+            if ( lvalue .and. lsaverng ) then
+               call twh_restart_random(lfailure,rng_code,nrng,irng)
+               if ( lfailure ) return
+            endif
          else
 c           --- there are not any old values to restart with, use the
-c           --- randomseed approach if restarts were allowed
+c           --- random_seed approach if restarts were allowed
             call twh_random_allow_restart(GLB_GET,lvalue)
-            if ( lvalue ) call twh_init_random_single()
+            if ( lvalue ) then
+               call twh_init_random_single(lfailure)
+               if ( lfailure ) return
+            endif
          endif
       endif
 
@@ -389,8 +459,9 @@ c        --- not in the ideal chain box
 c        --- check that number of particles in towhee_input and 
 c        --- towhee_initial agree 
          read(8,*) activechain
-         if ( ( ensemble .ne. ENS_UVT .and. activechain .ne. nchain ) 
-     &        .or.( ensemble .eq. ENS_UVT .and. activechain .gt. nchain)
+         if ( ( ensemble .ne. ENS_muVT .and. activechain .ne. nchain ) 
+     &        .or.
+     &        ( ensemble .eq. ENS_muVT .and. activechain .gt. nchain)
      &        ) then
             write(6,*)
      &           'RWCONF: conflicting information in towhee_initial'
@@ -511,7 +582,7 @@ c        --- check that number of particles of each type is consistent
             enddo
 
             call twh_nmolectyp(GLB_GET,imolty,nmtype)
-            if ( ensemble .eq. ENS_UVT ) then
+            if ( ensemble .eq. ENS_muVT ) then
 c              --- first check that we have a positive surplus
                if ( itest .gt. nmtype ) then
                   write(6,*) 'RWCONF: more molecules in towhee_initial'

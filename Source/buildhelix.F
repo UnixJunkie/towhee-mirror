@@ -1,8 +1,7 @@
-c     $Id: buildhelix.F,v 1.13 2008/10/15 14:16:34 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +25,7 @@ c     * places certain key atoms onto a helix for molecule type imolty *
 c     * stores the results in the coordinates according to testcord    *
 c     *                                                                *
 c     * originally written 08-03-2004 by M.G. Martin                   *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME

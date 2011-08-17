@@ -23,9 +23,9 @@ c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       function dranlux()
 c     ******************************************************************
-c     * this function is just a front for calling whichever random     *
-c     * number generator that we wish to use.  Right now we are using  *
-c     * the ranlux generator as posted on the web by Phillip Helbiq    *
+c     * this function has been rewritten to generate pseudorandom      *
+c     * numbers just for the RANLUX algorithm using a modified version *
+c     * of the ranlux generator as posted on the web by Phillip Helbiq *
 c     * Note: we use the luxury levels defined in                      *
 c     * F. James; "RANLUX: A Fortran implementation of the high-quality*
 c     * pseudorandom number generator of Luscher", Comp. Phys. Comm.   *
@@ -36,7 +36,7 @@ c     * for lattice field-theory simulations" Comp. Phys. Comm.        *
 c     * 79 100-110 (1994).                                             *
 c     *                                                                *
 c     * completely rewritten 08-07-2003 by M.G. Martin                 *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- function declaration
@@ -52,7 +52,7 @@ c     --- for compatability with all of the other routines
 
       call ranlux(stuff,1)
       dranlux = stuff(1)
-c      write(6,*) "RANDOM: returning ", dranlux
+
       return
       end
 
@@ -279,7 +279,7 @@ c     ******************************************************************
 c     * routine to input and float integer seeds from previous run     *
 c     * if block added by Phillip Helbig after correpondence with James*
 c     *                                                                *
-c     * last updated 11-10-2006 by M.G. Martin                         *
+c     * last updated 08-15-2011 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -303,8 +303,6 @@ c     --- real arrays
 
       call ranlux_notyet(GLB_GET,notyet)
       if (notyet) then
-         write(6,'(A)')  ' PROPER RESULTS ONLY WITH INITIALISATION FROM 
-     $        25 INTEGERS OBTAINED WITH RLUXUT'
          notyet = .FALSE.
          call ranlux_notyet(GLB_SET,notyet)
       endif
@@ -318,7 +316,7 @@ c     --- real arrays
       call ranlux_next(GLB_SET,1,next(1))
       twomtwelve = twomtwentyfour * 4096.
       write(6,'(A)') 
-     &     ' FULL INITIALIZATION OF RANLUX WITH 25 INTEGERS:'
+     &     'Full initialization of RANLUX with 25 Integers:'
       write(6,'(5X,5I12)') isdext
       do I= 1, 24
          seeds(I) = REAL(isdext(I))*twomtwentyfour
@@ -343,7 +341,7 @@ c     --- real arrays
          nskip = ranlux_ndskip(luxlev)
          call ranlux_nskip(GLB_SET,nskip)
          write (6,'(A,I2)') 
-     &        ' RANLUX LUXURY LEVEL SET BY RLUXIN TO: ',
+     &        ' RANLUX luxury level set by RLUXIN to: ',
      +        luxlev
       elseif (luxlev .GE. 24) then
          nskip = luxlev - 24

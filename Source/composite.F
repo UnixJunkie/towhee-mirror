@@ -1,4 +1,3 @@
-c     $Id: composite.F,v 1.21 2009/06/26 17:23:35 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
@@ -30,7 +29,7 @@ c     * number of successful trial moves is stored in acscomp          *
 c     *                                                                *
 c     * based closely on the code trancom.F and rotate.F               *
 c     * originally written 03-23-2005 by MAW                           *
-c     * last modified 06-23-2009 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -91,7 +90,7 @@ c     --- select a molecule type at random
 c     --- for grand canonical ensemble only want to perform move on
 c     --- molecules actually in the 'real' system box (box = 1)
       call twh_ensemble(GLB_GET,ensemble)
-      if (ensemble .eq. ENS_UVT) then
+      if (ensemble .eq. ENS_muVT) then
          ibox = 1         
 c        --- see if there are any molecules of this type in active box
          call twh_ncmt(GLB_GET,ibox,imolty,ncmt)

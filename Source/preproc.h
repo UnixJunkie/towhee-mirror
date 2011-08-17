@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 02-04-2011 by M.G. Martin */
+/* last significant modification 08-15-2011 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -27,7 +27,7 @@
 #define MAXBOX 3
 
 /* numax = maximum number of units/atoms in a molecule (default 2002) */
-#define NUMAX 2002
+#define NUMAX 2202
 
 /* ntmax = maximum number of types of molecules (default: 6) */
 #define NTMAX 7
@@ -389,7 +389,7 @@
 /* Values of ensemble -- (numerical values arbitrary) */
 #define ENS_NVT 156
 #define ENS_NPT 157
-#define ENS_UVT 158
+#define ENS_muVT 158
 #define ENS_BUBBLE 159
 
 /* values for pressurestyle.  Values arbitrary.*/
@@ -538,6 +538,12 @@
 #define SWAP_RB_INTER 6
 #define SWAP_CHEMPOT_BOX 7
 #define SWAP_CHEMPOT_ISO 8
+
+/* random number generator codes, arbitary but do not change */
+#define RNG_RANLUX 0
+#define RNG_DX_1597_2_7 5
+#define RNG_KISS99 7
+#define RNG_MRG32K3A 8
 
 /* logical integers */
 #define LOG_TRUE 1

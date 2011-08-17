@@ -72,7 +72,7 @@ c     *     towhee_parallel.                                           *
 c     * outputmode -- if .ne. 0, loutput = false -> quiet mode         *
 c     *                                                                *
 c     * split from the original twh_mainloop 06-25-2009 by M.G. Martin *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-11-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -168,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-12-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -516,7 +516,7 @@ c           --- this calculation is slightly more expensive.
 
 c        --- histogram/tmmc data processing
          call twh_louthist(GLB_GET,louthist)
-         if ( ensemble .eq. ENS_UVT .and. louthist) then
+         if ( ensemble .eq. ENS_muVT .and. louthist) then
             call twh_boxvinter(GLB_GET,1,vinter)
             call twh_boxvintra(GLB_GET,1,vintra)
             call twh_boxvbond(GLB_GET,1,vvib)
@@ -1715,25 +1715,38 @@ c     --- output the final configuration as a pdb file
          call twh_writepdb(lfailure,nstep)
          if ( lfailure ) return
       endif
+c     --- output the citations information
+      call twh_citations(lfailure)
+      if ( lfailure ) return
+         
 c     --- output the final configuration as a tramonto file
       call twh_loutdft(GLB_GET,loutdft)
       if ( loutdft ) then
          do ibox = 1,numboxes
             call twh_writetramonto(lfailure,CRD_REAL,ibox,0,chaininfo)
-            if ( lfailure ) return
+            if ( lfailure ) then
+               write(6,*) 'MAINLOOP: Problem writing final DFT files'
+               return
+            endif
          enddo
       endif
 c     --- output the final configuration as a lammps file
       call twh_loutlammps(GLB_GET,loutlammps)
       if ( loutlammps ) then
          call twh_writelammps(lfailure)
-         if ( lfailure ) return
+         if ( lfailure ) then
+            write(6,*) 'MAINLOOP: problem writing final lammps file'
+            return
+         endif
       endif
 c     --- output the final configuration as a dlpoly file
       call twh_loutdlpoly(GLB_GET,loutdlpoly)
       if ( loutdlpoly ) then
          call twh_writedlpoly(lfailure)
-         if ( lfailure ) return
+         if ( lfailure ) then
+            write(6,*) 'MAINLOOP: problem writing final dlpoly file'
+            return
+         endif
       endif
 c     --- output the final fixed endpoint SAFE parameters
       if ( two_bond_bias_update_frequency .ne. 0 .or.
@@ -1741,7 +1754,7 @@ c     --- output the final fixed endpoint SAFE parameters
          call twh_rwsafe(lfailure,WRITE_FLAG)
          if ( lfailure ) return
       endif
-         
+
       if ( lredirect_stdout ) then
 c        --- close the general output file
          close(6)

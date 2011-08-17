@@ -1,9 +1,8 @@
-c     $Id: sphere.F,v 1.5 2006/03/04 02:00:11 marcus_martin Exp $
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     * calculates a random vector on the unit sphere                  *
 c     * uses a rejection method to get the vector on the sphere        *
 c     *                                                                *
 c     * originally written 02-03-1998 by M.G. Martin                   *
-c     * last modified 03-03-2006 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM

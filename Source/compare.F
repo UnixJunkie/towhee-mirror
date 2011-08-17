@@ -1,8 +1,7 @@
-c     $Id: compare.F,v 1.7 2006/07/22 04:32:16 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2006 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -38,13 +37,14 @@ c     *                                                                *
 c     * See                                                            *
 c     * http://www.lahey.com/float.htm                                 *
 c     * and                                                            *
-c     * http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+c     * http://www.cygnus-software.com/papers/comparingfloats/         *
+c     *        comparingfloats.htm                                     *
 c     * for discussion of safe compares.                               *
 c     ******************************************************************
 
 c     ******************************************************************
 c     * originally written 2-01-2005 by MAW                            *
-c     * last modified 03-09-2006  by M.G. Martin                       *
+c     * last modified 08-09-2011  by M.G. Martin                       *
 c     ******************************************************************
 #ifdef SAFE_COMPARE
 

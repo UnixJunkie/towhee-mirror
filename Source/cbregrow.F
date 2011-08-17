@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -137,7 +137,7 @@ c           --- use the sidechainge matrix fo finding a molecule type
       enddo
 
       call twh_ensemble(GLB_GET,ensemble)
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
 c        --- grand canonical, take from box 1
          ibox = 1
 c        --- make sure some molecules of this type are in box 1

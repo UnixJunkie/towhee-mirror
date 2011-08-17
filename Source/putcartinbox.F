@@ -1,8 +1,7 @@
-c     $Id: putcartinbox.F,v 1.7 2006/11/12 23:58:18 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2006 Marcus G. Martin,                      *
+c     * Copyright (C) 2001-2011 Marcus G. Martin,                      *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +24,7 @@ c     ******************************************************************
 c     * puts the atom inside the central simulation box                *
 c     *                                                                *
 c     * originally written 12-11-2001 by M.G. Martin                   *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 

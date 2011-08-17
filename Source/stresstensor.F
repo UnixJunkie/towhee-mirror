@@ -1,8 +1,7 @@
-c     $Id: stresstensor.F,v 1.39 2008/10/14 14:09:46 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -43,7 +42,7 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -90,7 +89,7 @@ c     --- initialize stress tensor
       enddo
 c     --- stress tensor meaningless in box 0 if grand canonical
       call twh_ensemble(GLB_GET,ensemble)
-      if ( ensemble .eq. ENS_UVT .and. ibox .eq. 0 ) return
+      if ( ensemble .eq. ENS_muVT .and. ibox .eq. 0 ) return
 
 c     --- retrieve constants
       call twh_temperature(GLB_GET,temperature)

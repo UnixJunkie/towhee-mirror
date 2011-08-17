@@ -1,8 +1,7 @@
-c     $Id: vonefive.F,v 1.10 2009/05/01 16:04:59 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,7 +30,7 @@ c     *  1: use the inner cuttoff, unless rcut < rcutin                *
 c     *  3: compute 1-4 interaction using rcutin and special 1-4 params*
 c     *                                                                *
 c     * originally written as vnonbond 2-18-2000 by M.G. Martin        *
-c     * last update 04-21-2008 by M.G. Martin                          *
+c     * last update 08-09-2011 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_OFCOEFF

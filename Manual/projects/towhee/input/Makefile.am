@@ -52,4 +52,5 @@ towhee_input_v5_2_x.html \
 towhee_input_v5_2_x.html \
 towhee_input_v6_0_x.html \
 towhee_input_v6_1_x.html \
-towhee_input_v6_2_x.html
+towhee_input_v6_2_x.html \
+towhee_input_v7_0_x.html

@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-05-2011 by M.G. Martin                        *
+c     * last modified 08-16-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -105,7 +105,8 @@ c     --- set testflag to use the single molecule coordinates
       call twh_random_allow_restart(GLB_GET,lallow)
       if ( lallow ) then
 c        --- initialize the random number generator on a singe integer
-         call twh_init_random_single()
+         call twh_init_random_single(lfailure)
+         if ( lfailure ) return
       endif
 
       call twh_initboxtype(GLB_GET,initboxtype)
@@ -604,7 +605,7 @@ c        --- unit cells matches the number of molecules set by nchain
 c     --- need to setup the data structures for any molecules that 
 c     --- are residing in the ideal gas resevoir
       call twh_ensemble(GLB_GET,ensemble)
-      if ( ensemble .eq. ENS_UVT ) then
+      if ( ensemble .eq. ENS_muVT ) then
          ibox = 0
          idealchain = ichain
          do imolty = 1,nmolty

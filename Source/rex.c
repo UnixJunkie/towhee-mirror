@@ -302,10 +302,10 @@ void run_rex_client(user_args *args, rex_params *paramwrap, int rank)
     /* Create the random seed to pass, or read it from args->random_seed.
      * if args->random_seed == -1, create a random random seed. */
     if (args->random_seed == -1)
-      wrap_.randomseed = (int) random();
+      wrap_.random_seed = (int) random();
     else {
       printf("Using passed random seed %d\n", args->random_seed);
-      wrap_.randomseed = args->random_seed;
+      wrap_.random_seed = args->random_seed;
     }
 
     if (round == 1) {

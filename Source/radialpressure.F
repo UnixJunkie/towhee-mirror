@@ -34,7 +34,7 @@ c     * implemented it as a curiosity for the discontinuous well       *
 c     * potentials (MGM 06-27-2005)                                    *
 c     *                                                                *
 c     * originally written 06-27-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -90,7 +90,7 @@ c     --- safety check to make sure we don't have coulomb
 
 c     --- no pressure in the ideal box of grand canonical
       call twh_ensemble(GLB_GET,ensemble)
-      if ( ensemble .eq. ENS_UVT .and. ibox .eq. 0 ) return
+      if ( ensemble .eq. ENS_muVT .and. ibox .eq. 0 ) return
 
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)

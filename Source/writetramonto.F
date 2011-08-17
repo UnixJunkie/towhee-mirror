@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * the Tramonto classical density functional theory program.      *
 c     * this is done only for box one in the simulation                *
 c     *                                                                *
 c     * originally written 07-11-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 M.G. Martin                           *
+c     * last modified 08-12-2011 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define DEBUG_WRITETRAMONTO 0
@@ -62,12 +62,18 @@ c     --- open dft_surfaces.dat and dft_decode.dat
          filename = 'dft_decode.dat'
          call twh_openfile(lfailure,71,filename,'DEFAULT','UNKNOWN'
      &        ,'DEFAULT')
-         if ( lfailure ) return
+         if ( lfailure ) then
+            write(6,*) 'WRITETRAMONTO: failure to open file'
+            return
+         endif
       endif
       filename = 'dft_surfaces.dat'
       call twh_openfile(lfailure,72,filename,'DEFAULT','UNKNOWN'
      &     ,'DEFAULT')
-      if ( lfailure ) return
+      if ( lfailure ) then
+         write(6,*) 'WRITETRAMONTO: failure to open file'
+         return
+      endif
 c     --- output the information for the non-special chains
       call twh_nmolty(GLB_GET,nmolty)
       do imolty = 1,nmolty
@@ -87,7 +93,10 @@ c     --- output the information for the non-special chains
                do iunit = 1,nunit
                   call twh_writetramonto_atom(lfailure,ichain,imolty
      &                 ,iunit,count,CRD_REAL,atomcode)
-                  if ( lfailure ) return
+                  if ( lfailure ) then
+                     write(6,*) 'WRITETRAMONTO: failure in tram_atom'
+                     return
+                  endif
                enddo
             endif
          enddo
@@ -102,7 +111,10 @@ c     --- output the information for the special chains
             do iunit = 1,nunit
                call twh_writetramonto_atom(lfailure,ichain,imolty,iunit
      &              ,count,testcrd,atomcode)
-               if ( lfailure ) return
+               if ( lfailure ) then
+                  write(6,*) 'WRITETRAMNTO: failure in tram atom spec'
+                  return
+               endif
             enddo
          endif
       enddo
@@ -125,7 +137,7 @@ c     * writes out the information for a single atom in the tramonto   *
 c     * format                                                         *
 c     *                                                                *
 c     * originally written 08-04-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_POTENTIAL
@@ -160,7 +172,7 @@ c              --- LJ 12-6 output
      &              ,twh_get_nbcoeff(2,ij)
             else
 c              --- not coded up for tramonto yet
-               write(71,*) 'classical_potential'
+               write(6,*) 'WRITETRAMONTO_ATOM: classical_potential '
      &              ,twh_get_classical_potential()
      &              ,'not coded up for tramonto output.'
                lfailure = .true.

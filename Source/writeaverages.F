@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs all of the final running and block averages            *
 c     *                                                                *
 c     * split from mainloop on 05-12-2005 by M.G. Martin               *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -933,7 +933,7 @@ c        --- number density
 
 c        --- henry law inferred from the insertion chempot and total
 c        --- number density
-         if ( numboxes .eq. 1 .and. ensemble .ne. ENS_UVT ) then
+         if ( numboxes .eq. 1 .and. ensemble .ne. ENS_muVT ) then
             ibox = 1
 c           --- compute henry law coeffs for each block from the blocks
 c           --- of number density (computed above) and chemical pot.

@@ -1,10 +1,9 @@
-c     $Id: trancom.F,v 1.46 2008/11/29 00:03:16 marcus_martin Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +29,7 @@ c     * number of attempts stored in bntractemp                        *
 c     * number of successful trial moves is stored in bstractemp       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -92,7 +91,7 @@ c     --- select a molecule type at random
 c     --- for grand canonical ensemble only want to perform move on
 c     --- molecules actually in the 'real' system box (box = 1)
       call twh_ensemble(GLB_GET,ensemble)
-      if (ensemble .eq. ENS_UVT) then
+      if (ensemble .eq. ENS_muVT) then
          ibox = 1         
 c        --- see if there are any molecules of this type in active box
          call twh_ncmt(GLB_GET,ibox,imolty,ncmt)
