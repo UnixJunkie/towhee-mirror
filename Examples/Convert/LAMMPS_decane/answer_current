@@ -1,6 +1,6 @@
- MCCCS Towhee - Version 6.2.19 (August 09 2011)
+ MCCCS Towhee - Version 7.0.0   (August 17 2001)    
  Copyright (C) <2011> Marcus G. Martin
- Code Contributors for 2011: Marcus G. Martin; Suleiman Oloriegbe;
+ Code Contributors for 2011: Fred James; Marcus G. Martin; Suleiman Oloriegbe;
  Copyright (C) <2010> Marcus G. Martin
  Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin; Loukas Peristeras;
  Copyright (C) <2009> Marcus G. Martin
@@ -48,7 +48,7 @@
  Reading from towhee_input file: towhee_input                                                                                        
  in directory: current directory
  inputformat: Towhee         
- random_luxlevel:            3
+ random_number_generator: DX-1597-2-7                   
  random_allow_restart:  T
  ensemble: nvt                           
  temperature:  480.000    
@@ -202,7 +202,6 @@ Improper Torsion Types
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
-Selected random number generator RANLUX with luxury level 3 and seed 1302002.
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
      with an Ewald sum 
@@ -210,10 +209,10 @@ Selected random number generator RANLUX with luxury level 3 and seed 1302002.
 
 Molecular mass for molecule type     1 is   142.2838 g/mol
  Calling initconf
- RANLUX LUXURY LEVEL SET BY RLUXGO : 3     P= 223
- RANLUX INITIALIZED BY RLUXGO FROM SEEDS     1302002           0           0
- Testing random number generator
-    0.354084  0.719681  0.403250  0.706761  0.174308
+Selected random number generator DX-1597-2-7 and single integer seed    1302002
+Testing random number generator using the single integer seed
+    0.812479  0.687663  0.080298  0.200888  0.516914
+10 million RNG sum (approximately 5 million):   4999978.2264809748
 Box idim hinverse:    1 1    0.03436    0.00000    0.00000
 Box idim hinverse:    1 2    0.00000    0.03436    0.00000
 Box idim hinverse:    1 3    0.00000    0.00000    0.03436
@@ -322,3 +321,4 @@ Molecules of type   1 :         64
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
  total classical            403112.0505 [K]           801.070653 [kcal/mol]
+Please see towhee_citations for a list of suggested citations for this simulation

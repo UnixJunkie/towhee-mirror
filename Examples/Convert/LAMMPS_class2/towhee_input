@@ -1,9 +1,9 @@
 inputformat
 'Towhee'
-randomseed
+random_number_generator
+'DX-1597-2-7'
+random_seed
      1302002
-random_luxlevel
-           3
 random_allow_restart
 T
 ensemble

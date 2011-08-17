@@ -1,7 +1,6 @@
-Selected random number generator RANLUX with luxury level 1 and seed 1.
- MCCCS Towhee - Version 6.2.19 (August 09 2011)
+ MCCCS Towhee - Version 7.0.0   (August 17 2001)    
  Copyright (C) <2011> Marcus G. Martin
- Code Contributors for 2011: Marcus G. Martin; Suleiman Oloriegbe;
+ Code Contributors for 2011: Fred James; Marcus G. Martin; Suleiman Oloriegbe;
  Copyright (C) <2010> Marcus G. Martin
  Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin; Loukas Peristeras;
  Copyright (C) <2009> Marcus G. Martin
@@ -49,12 +48,15 @@ Selected random number generator RANLUX with luxury level 1 and seed 1.
  Reading from towhee_input file: towhee_input                                                                                        
  in directory: current directory
  inputformat: Towhee         
+ random_number_generator: RANLUX                        
  random_luxlevel:            1
  random_allow_restart:  F
+Selected random number generator RANLUX with luxury level 1 and single integer seed      12345
  RANLUX LUXURY LEVEL SET BY RLUXGO : 1     P=  48
- RANLUX INITIALIZED BY RLUXGO FROM SEEDS           1           0           0
- Testing random number generator
-    0.945895  0.473478  0.951528  0.429720  0.091274
+ RANLUX INITIALIZED BY RLUXGO FROM SEEDS       12345           0           0
+Testing random number generator using the single integer seed
+    0.075406  0.146752  0.623058  0.935186  0.836728
+10 million RNG sum (approximately 5 million):   5000066.5471291253
  ensemble: uvt                           
  temperature:  500.000    
  tmmc_flag:  T
@@ -298,11 +300,11 @@ Molecules of type   1 :          0
  +++++ start of markov chain +++++
 
 Move       Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
-      1000 B: 1 -0.1115E+02  0.8000E+04          0.0     1
-      2000 B: 1 -0.3993E+04  0.8000E+04          0.0     5
-      3000 B: 1 -0.5178E+04  0.8000E+04          0.0     6
-      4000 B: 1 -0.8219E+04  0.8000E+04          0.0    11
-      5000 B: 1 -0.1499E+02  0.8000E+04          0.0     2
+      1000 B: 1 -0.9280E+03  0.8000E+04          0.0     4
+      2000 B: 1 -0.2562E+04  0.8000E+04          0.0     2
+      3000 B: 1 -0.1098E+02  0.8000E+04          0.0     1
+      4000 B: 1 -0.1031E+03  0.8000E+04          0.0     2
+      5000 B: 1 -0.5251E+04  0.8000E+04          0.0     4
 
  +++++ end of markov chain +++++
 
@@ -314,18 +316,18 @@ Box:     1
 
 * Grand Canonical Ensemble SWAP Moves *
 Molecule type:     1
-  From box  1 to box  0 Attempted:    1673 Grown:    1472 Accepted:     738
-  From box  0 to box  1 Attempted:    1617 Grown:    1617 Accepted:     740
+  From box  1 to box  0 Attempted:    1627 Grown:    1380 Accepted:     822
+  From box  0 to box  1 Attempted:    1601 Grown:    1601 Accepted:     826
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:            605. Accepted:            551. Accepted:  91.074 %
+Molecule:  1 Box: 1 Attempts:            687. Accepted:            646. Accepted:  94.032 %
 
 * Rotation Moves *
-Molecule:  1 Box: 1 Attempts:            911. Accepted:            889. Accepted:  97.585 %
+Molecule:  1 Box: 1 Attempts:            832. Accepted:            824. Accepted:  99.038 %
 
 Final Energies for Box     1
-Total molecules in this box          2
-Molecules of type   1 :          2
+Total molecules in this box          4
+Molecules of type   1 :          4
  total vibration            0.000 [K]         0.00000 [kcal/mol]
     regular                 0.000 [K]         0.00000 [kcal/mol]
     bond-bond(1-2)          0.000 [K]         0.00000 [kcal/mol]
@@ -335,47 +337,48 @@ Molecules of type   1 :          2
  total torsion              0.000 [K]         0.00000 [kcal/mol]
     regular                 0.000 [K]         0.00000 [kcal/mol]
     improper                0.000 [K]         0.00000 [kcal/mol]
- total nonbond             -1.067 [K]        -0.00212 [kcal/mol]
+ total nonbond            807.556 [K]         1.60479 [kcal/mol]
     intramolecular          0.000 [K]         0.00000 [kcal/mol]
-    2-body nonbond         -0.737 [K]        -0.00147 [kcal/mol]
+    2-body nonbond        808.874 [K]         1.60741 [kcal/mol]
     3-body nonbond          0.000 [K]         0.00000 [kcal/mol]
-    tail correct.          -0.329 [K]        -0.00065 [kcal/mol]
- total coulombic          -13.926 [K]        -0.02767 [kcal/mol]
-    real space              2.833 [K]         0.00563 [kcal/mol]
+    tail correct.          -1.318 [K]        -0.00262 [kcal/mol]
+ total coulombic        -6058.692 [K]       -12.03993 [kcal/mol]
+    real space          -5835.186 [K]       -11.59577 [kcal/mol]
       intramolec.           0.000 [K]         0.00000 [kcal/mol]
-      intermolec.           2.833 [K]         0.00563 [kcal/mol]
-    self               -56893.477 [K]      -113.05962 [kcal/mol]
-    correction          56199.494 [K]       111.68052 [kcal/mol]
-    recip sum             677.224 [K]         1.34579 [kcal/mol]
+      intermolec.       -5835.186 [K]       -11.59577 [kcal/mol]
+    self              -113786.954 [K]      -226.11924 [kcal/mol]
+    correction         112398.988 [K]       223.36105 [kcal/mol]
+    recip sum            1164.461 [K]         2.31403 [kcal/mol]
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical           -14.99257720 [K]        -0.0297934869 [kcal/mol]
+ total classical             -5251.1358 [K]           -10.435140 [kcal/mol]
 Averages               Units Type       Box  1
  Volume                 nm^3       0.80000E+01
  Volume^2               nm^6       0.64000E+02
- Molecule Number                1        3.450
- Molar Volume         ml/mol       0.13964E+04
- Specific Density       g/ml        0.01290074
- Number Density         nm-3    1      0.43125
- Mole Fraction                  1    0.8890000
+ Molecule Number                1        2.408
+ Molar Volume         ml/mol       0.20007E+04
+ Specific Density       g/ml        0.00900434
+ Number Density         nm-3    1      0.30100
+ Mole Fraction                  1    0.8556000
  Radius of Gyration        A    1    0.0000000
- Ideal Pressure          kPa       0.29779E+04
- Ideal p_i <N/V>kT       kPa    1  0.29779E+04
- Total Classical           K       -0.2441E+04
- Inter vdw                 K        0.5039E+03
+ Ideal Pressure          kPa       0.20785E+04
+ Ideal p_i <N/V>kT       kPa    1  0.20785E+04
+ Total Classical           K       -0.9198E+03
+ Inter vdw                 K        0.1721E+03
  Angle                     K        0.0000E+00
  Torsion                   K        0.0000E+00
  Intra vdw                 K        0.0000E+00
  External Field            K        0.0000E+00
  Vibration                 K        0.0000E+00
- Coulomb                   K       -0.2945E+04
- Tail vdw                  K       -0.1502E+01
+ Coulomb                   K       -0.1092E+04
+ Tail vdw                  K       -0.7706E+00
  Solvation                 K        0.0000E+00
- u (Density)               K    1    -6414.066
- u (NVT Insertion)         K    1     -105.756
- u (NpT Insertion)         K    1     -105.756
- u (Den. + NVT Insert)     K    1    -6519.822
- u (Den. + NpT Insert)     K    1    -6519.822
- u (Gibbs Total)           K    1    -6568.785
- G: Sum{<u_i><N_i>}   kJ/mol       -0.1884E+03
- U                    kJ/mol       -0.2030E+02
+ u (Density)               K    1    -6593.854
+ u (NVT Insertion)         K    1      -48.663
+ u (NpT Insertion)         K    1      -48.663
+ u (Den. + NVT Insert)     K    1    -6642.518
+ u (Den. + NpT Insert)     K    1    -6642.518
+ u (Gibbs Total)           K    1    -6612.712
+ G: Sum{<u_i><N_i>}   kJ/mol       -0.1324E+03
+ U                    kJ/mol       -0.7647E+01
+Please see towhee_citations for a list of suggested citations for this simulation

@@ -1,7 +1,6 @@
-Selected random number generator RANLUX with luxury level 1 and seed 1.
- MCCCS Towhee - Version 6.2.19 (August 09 2011)
+ MCCCS Towhee - Version 7.0.0   (August 17 2001)    
  Copyright (C) <2011> Marcus G. Martin
- Code Contributors for 2011: Marcus G. Martin; Suleiman Oloriegbe;
+ Code Contributors for 2011: Fred James; Marcus G. Martin; Suleiman Oloriegbe;
  Copyright (C) <2010> Marcus G. Martin
  Code Contributors for 2010: Rene Haber; Andrej Lajovic; Marcus G. Martin; Loukas Peristeras;
  Copyright (C) <2009> Marcus G. Martin
@@ -49,12 +48,15 @@ Selected random number generator RANLUX with luxury level 1 and seed 1.
  Reading from towhee_input file: towhee_input                                                                                        
  in directory: current directory
  inputformat: Towhee         
+ random_number_generator: RANLUX                        
  random_luxlevel:            1
  random_allow_restart:  F
+Selected random number generator RANLUX with luxury level 1 and single integer seed      12345
  RANLUX LUXURY LEVEL SET BY RLUXGO : 1     P=  48
- RANLUX INITIALIZED BY RLUXGO FROM SEEDS           1           0           0
- Testing random number generator
-    0.945895  0.473478  0.951528  0.429720  0.091274
+ RANLUX INITIALIZED BY RLUXGO FROM SEEDS       12345           0           0
+Testing random number generator using the single integer seed
+    0.075406  0.146752  0.623058  0.935186  0.836728
+10 million RNG sum (approximately 5 million):   5000066.5471291253
  ensemble: uvt                           
  temperature:  1.00000    
  tmmc_flag:  T
@@ -241,7 +243,7 @@ Molecules of type   1 :          0
  +++++ start of markov chain +++++
 
 Move       Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
-      1000 B: 1 -0.1946E+02  0.3430E+03          0.0    26
+      1000 B: 1 -0.2930E+01  0.3430E+03          0.0    18
 
  +++++ end of markov chain +++++
 
@@ -253,15 +255,15 @@ Box:     1
 
 * Grand Canonical Ensemble SWAP Moves *
 Molecule type:     1
-  From box  1 to box  0 Attempted:     337 Grown:     336 Accepted:     217
-  From box  0 to box  1 Attempted:     342 Grown:     342 Accepted:     243
+  From box  1 to box  0 Attempted:     341 Grown:     338 Accepted:     245
+  From box  0 to box  1 Attempted:     360 Grown:     360 Accepted:     263
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:            321. Accepted:            271. Accepted:  84.424 %
+Molecule:  1 Box: 1 Attempts:            299. Accepted:            248. Accepted:  82.943 %
 
 Final Energies for Box     1
-Total molecules in this box         26
-Molecules of type   1 :         26
+Total molecules in this box         18
+Molecules of type   1 :         18
  total vibration            0.000 [K]         0.00000 [kcal/mol]
     regular                 0.000 [K]         0.00000 [kcal/mol]
     bond-bond(1-2)          0.000 [K]         0.00000 [kcal/mol]
@@ -271,26 +273,26 @@ Molecules of type   1 :         26
  total torsion              0.000 [K]         0.00000 [kcal/mol]
     regular                 0.000 [K]         0.00000 [kcal/mol]
     improper                0.000 [K]         0.00000 [kcal/mol]
- total nonbond            -19.459 [K]        -0.03867 [kcal/mol]
+ total nonbond             -2.930 [K]        -0.00582 [kcal/mol]
     intramolecular          0.000 [K]         0.00000 [kcal/mol]
-    2-body nonbond        -19.459 [K]        -0.03867 [kcal/mol]
+    2-body nonbond         -2.930 [K]        -0.00582 [kcal/mol]
     3-body nonbond          0.000 [K]         0.00000 [kcal/mol]
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical           -19.45872994 [K]        -0.0386686964 [kcal/mol]
+ total classical            -2.93005229 [K]        -0.0058226463 [kcal/mol]
 Averages               Units Type       Box  1
  Volume                 nm^3       0.34300E+00
  Volume^2               nm^6       0.11765E+00
- Molecule Number                1       23.973
- Molar Volume         ml/mol       0.86162E+01
- Specific Density       g/ml        0.06989214
- Number Density         nm-3    1     69.89213
- Mole Fraction                  1    0.9990000
+ Molecule Number                1       21.219
+ Molar Volume         ml/mol       0.97345E+01
+ Specific Density       g/ml        0.06186298
+ Number Density         nm-3    1     61.86297
+ Mole Fraction                  1    0.9970000
  Radius of Gyration        A    1    0.0000000
- Ideal Pressure          kPa       0.96525E+03
- Ideal p_i <N/V>kT       kPa    1  0.96525E+03
- Total Classical           K       -0.1460E+02
- Inter vdw                 K       -0.1460E+02
+ Ideal Pressure          kPa       0.85437E+03
+ Ideal p_i <N/V>kT       kPa    1  0.85437E+03
+ Total Classical           K       -0.1212E+02
+ Inter vdw                 K       -0.1212E+02
  Angle                     K        0.0000E+00
  Torsion                   K        0.0000E+00
  Intra vdw                 K        0.0000E+00
@@ -299,11 +301,12 @@ Averages               Units Type       Box  1
  Coulomb                   K        0.0000E+00
  Tail vdw                  K        0.0000E+00
  Solvation                 K        0.0000E+00
- u (Density)               K    1        6.679
- u (NVT Insertion)         K    1       -0.641
- u (NpT Insertion)         K    1       -0.641
- u (Den. + NVT Insert)     K    1        6.039
- u (Den. + NpT Insert)     K    1        6.039
- u (Gibbs Total)           K    1        5.956
- G: Sum{<u_i><N_i>}   kJ/mol        0.1187E+01
- U                    kJ/mol       -0.1213E+00
+ u (Density)               K    1        6.557
+ u (NVT Insertion)         K    1       -0.635
+ u (NpT Insertion)         K    1       -0.635
+ u (Den. + NVT Insert)     K    1        5.922
+ u (Den. + NpT Insert)     K    1        5.922
+ u (Gibbs Total)           K    1        5.828
+ G: Sum{<u_i><N_i>}   kJ/mol        0.1028E+01
+ U                    kJ/mol       -0.1007E+00
+Please see towhee_citations for a list of suggested citations for this simulation

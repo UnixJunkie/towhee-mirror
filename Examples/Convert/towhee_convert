@@ -1,9 +1,3 @@
 inputformat
 'LAMMPS'
-randomseed
-1302002
-random_luxlevel
-3
-random_allow_restart
-T
 

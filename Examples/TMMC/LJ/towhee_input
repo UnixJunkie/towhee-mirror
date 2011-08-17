@@ -1,9 +1,11 @@
 inputformat
 'Towhee'
-randomseed
-1
+random_number_generator
+'RANLUX'
 random_luxlevel
 1
+random_seed
+12345
 random_allow_restart
 .false.
 ensemble
