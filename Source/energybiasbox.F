@@ -26,7 +26,7 @@ c     * handles the non-uniform generation of an atom position using   *
 c     * the energy-biasing map                                         *
 c     *                                                                *
 c     * split from swapmoves 11-02-2007 by M.G. Martin                 *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-17-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -79,6 +79,8 @@ c                    --- (1/V) / cweight = 1 / (V * cweight)
       else
 c        --- transform into arb coords
          call twh_carttoarb(ibox,xxx,yyy,zzz,aaa,bbb,ccc)
+c        --- make sure this is in the central box
+         call twh_putarbinbox(aaa,bbb,ccc)
 c        --- evaluate the biasing correction for the old position
          iaa = idint(aaa/asize) + 1
          ibb = idint(bbb/bsize) + 1

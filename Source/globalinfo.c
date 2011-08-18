@@ -124,7 +124,7 @@ void **twh_allocate2dMatrix(size_t size, int M, int N) {
 int twh_1ddouble(int ptr_index, int * flag, const int index, double * value)
 /* the template for 1 dimensional double array storage
    originally written 12-04-2008 by M.G. Martin
-   last modified 06-24-2009 by M.G. Martin
+   last modified 08-17-2011 by M.G. Martin
 */
 {
   int count;
@@ -163,7 +163,9 @@ int twh_1ddouble(int ptr_index, int * flag, const int index, double * value)
     *value = ptr_local[index];
 #if SAFE_COMPARE
     if ( index > double_bounds[ptr_index] || index < 0 ) {
-      printf("out of bounds in 1ddouble GET ptr_index %d \n",ptr_index);
+      printf("out of bounds in 1ddouble GET ptr_index %d flag %d index %d value %f"
+	     ,ptr_index,*flag,index,*value);
+      printf(" double_bounds[ptr_index] %d \n",double_bounds[ptr_index]);
       exit(EXIT_FAILURE);
     }
 #endif
@@ -214,7 +216,9 @@ int twh_1ddouble(int ptr_index, int * flag, const int index, double * value)
     }
 #if SAFE_COMPARE
     if ( index > double_bounds[ptr_index] || index < 0 ) {
-      printf("out of bounds in 1ddouble GET ptr_index %d \n",ptr_index);
+      printf("out of bounds in 1ddouble GET ptr_index %d flag %d index %d value %f \n"
+	     ,ptr_index,*flag,index,*value);
+      printf("double_bounds[ptr_index] %d \n",double_bounds[ptr_index]);
       exit(EXIT_FAILURE);
     }
 #endif

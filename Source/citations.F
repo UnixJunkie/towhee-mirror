@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * writes out the suggested citations for a Towhee simulation     *
 c     *                                                                *
 c     * originally written 08-09-2001 by M.G. Martin                   *
-c     * last modified 08-16-2011 by M.G. Martin                        *
+c     * last modified 08-17-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -35,6 +35,7 @@ c     --- local variables
       character*7 version
       character*20 filename
       integer citefile,citecount,numboxes,ensemble,rng_code,luxlevel
+      integer icount,imove,ncount,nvmove
 
 c     --- output message to the standard out (or redirect)
       write(6,'(a,1x,a)')
@@ -156,10 +157,11 @@ c     --- Ensemble
 
       elseif ( ensemble .eq. ENS_NPT .and. numboxes .eq. 1 ) then
          citecount = citecount + 1
-         write(citefile,'(a1,i2,a1,a,i2,a1)')
-     &        '[',citecount,']'
+         write(citefile,'(a,i2,a1)')
      &        ,'... in the isobaric-isothermal ensemble [',citecount,']'
-         write(citefile,'(a)') 'I. R. McDonald;'
+         write(citefile,'(a1,i2,a1,1x,a)')
+     &        '[',citecount,']'
+     &        ,'I. R. McDonald;'
          write(citefile,'(a1,a41,1x,a22,a1)')
      &        char(34),'NpT-ensemble Monte Carlo calculations for'
      &        ,'binary liquid mixtures',char(34)
@@ -220,6 +222,31 @@ c        --- second Gibbs ensemble reference
       else
          write(citefile,*) 'citations: unknown ensemble'
       endif
+
+      write(citefile,*)
+c     --- volume move
+      call twh_nvmove(GLB_GET,nvmove)
+      ncount = 0
+      do imove = 1,nvmove
+         call twh_acnvol(GLB_GET,imove,icount)
+         ncount = ncount + icount
+      enddo
+      if ( ncount .gt. 0 .and. ensemble .eq. ENS_NPT ) then
+         citecount = citecount + 1
+         write(citefile,'(a,i2,a1)')
+     &        'Constant pressure volume moves [',citecount,']'
+c        --- algorithm from the original NPT paper
+         write(citefile,'(a1,i2,a1,1x,a)')
+     &        '[',citecount,']'
+     &        ,'I. R. McDonald;'
+         write(citefile,'(a1,a41,1x,a22,a1)')
+     &        char(34),'NpT-ensemble Monte Carlo calculations for'
+     &        ,'binary liquid mixtures',char(34)
+         write(citefile,'(a)') 'Mol. Phys. 23 41-58 (1972)'
+      endif
+
+
+
 
 
 c     --- close file
