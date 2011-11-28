@@ -35,9 +35,12 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * originally written in 1995                                     *
-c     * last modified 08-02-2011 by M.G.Martin                         *
+c     * last modified 11-27-2011 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
+c     --- debug toggle
+#define DEBUG_VOLNPT 0
+c     --- functions
 #define FUNCTION_EXPON
 #define FUNCTION_GET_NBOXI
 #define FUNCTION_GET_PMVLPR
@@ -58,6 +61,7 @@ c     --- integer scalars
       integer ichain,iunit,imolty,boxvch,ibox,cpnumber,numboxes
       integer idim,jdim,movevector,ivector,jvector,icount,nchain
       integer nmolty,nunit,nchbox,ncmt,potentialstyle,keycode
+      integer nfield,ifield,fieldbox
 c     --- double precision scalars
       double precision volo,deltav,sfact,vinterb,vintrab,vvibb,vbendb
       double precision voln,vintern,vtailn,vextn,velectn,vintran,vtorb
@@ -73,7 +77,9 @@ c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
 
-c      write(6,*) 'start VOLNPT'
+#if DEBUG_VOLNPT
+      write(6,*) 'start VOLNPT'
+#endif
 
 c     --- retrieve constants
       call twh_cp_number(GLB_GET,cpnumber)
@@ -115,6 +121,19 @@ c        --- determine which of the 9 quantities to alter
 c        --- increment the number of attemped unit cell changes
          call twh_bncell(GLB_INCR,boxvch,movevector,1.0d0)
       endif
+
+c     --- check for external fields in this box
+      call twh_nfield(GLB_GET,nfield)
+      do ifield = 1,nfield
+         call twh_fieldint(GLB_GET,ifield,1,fieldbox)
+         if ( fieldbox .eq. boxvch ) then
+c           --- automatic rejection, print warning
+            write(6,*) 'Cannot perform a volume change move in a box'
+     &           ,' that has an external field'
+            write(6,*) 'Automatic rejection in box:',boxvch
+            return
+         endif
+      enddo
 
 c     --- store old box lengths, volume, configuration etc
 c     --- in the box of volume change
@@ -349,7 +368,9 @@ c           --- burn a random number
             endif
          endif
       endif
-c      write(6,*) 'dele, laccept',dele,laccept
+#if DEBUG_VOLNPT      
+      write(6,*) 'dele, laccept',dele,laccept
+#endif
       if ( laccept ) then
          if ( movetype .eq. 1 ) then
 c           --- increment the number of accepted volume moves
