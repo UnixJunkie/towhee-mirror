@@ -123,6 +123,7 @@ cbmc_eqn_nb_one_2.gif \
 cbmc_eqn_nb_one_2.tex \
 cbmc_eqn_nb_one_3.gif \
 cbmc_eqn_nb_one_3.tex \
+chemicalpotential.html \
 montecarlo.html \
 mc_eqn_1.gif \
 mc_eqn_1.tex \
