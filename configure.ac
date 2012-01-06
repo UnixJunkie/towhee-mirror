@@ -50,6 +50,15 @@ AC_ARG_ENABLE(internal,
        *) AC_MSG_ERROR(bad value ${enableval} for --enable-internal) ;;
      esac;echo "UseInternal is $UseInternal"],[UseInternal=false])
 
+# Define the argument to configure script to enable openkim
+AC_ARG_ENABLE(openkim,
+     [  --enable-openkim   Compile version using openkim libraries],
+     [case "${enableval}" in
+       yes) UseOpenkim=true ;;
+       no)  UseOpenkim=false ;;
+       *) AC_MSG_ERROR(bad value ${enableval} for --enable-openkim) ;;
+     esac;echo "UseOpenkim is $UseOpenkim"],[UseOpenkim=false])
+
 # Define the argument to configure script to enable tramonto
 AC_ARG_ENABLE(tramonto,
      [  --enable-tramonto   Compile version using tramonto libraries],
@@ -100,6 +109,7 @@ AC_ARG_ENABLE(command-line-args,
 AM_CONDITIONAL(UseLINKSPIRIT, test x$UseLINKSPIRIT = xtrue)
 AM_CONDITIONAL(UseLINKSQUALL, test x$UseLINKSQUALL = xtrue)
 AM_CONDITIONAL(UseMPI, test x$UseMPI = xtrue)
+AM_CONDITIONAL(UseOpenkim, test x$UseOpenkim = xtrue)
 AM_CONDITIONAL(UseTramonto, test x$UseTramonto = xtrue)
 AM_CONDITIONAL(UseInternal, test x$UseInternal = xtrue)
 AM_CONDITIONAL(UseLCAO, test x$UseLCAO = xtrue)
@@ -136,6 +146,11 @@ if test x$UseLINKSQUALL = xtrue ; then
   # Include the srnsquall link-line
   LIBS="${LIBS} -L/opt/acml/pgi64/lib"
   LIBS="${LIBS} -llcao -lscalapack -lblacsCinit -lblacsF77init -lblacs -lacml" 
+fi
+# extra items for UseOpenkim
+if test x$UseOpenkim = xtrue ; then
+  # Include the Openkim libraries
+  LIBS="${LIBS} -L../lib -lkimfull"
 fi
 # extra items for UseTramonto
 if test x$UseTramonto = xtrue ; then

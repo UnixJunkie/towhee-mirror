@@ -8927,6 +8927,33 @@ c     --- storage variable
       return
       end
 
+      subroutine twh_kim_model(flag,cvalue)
+c     ******************************************************************
+c     * character string for the kim model                             *
+c     *                                                                *
+c     * originally written 12-02-2011 by M.G. Martin                   *
+c     * last modified 12-02-2011 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag
+      character*(*) cvalue
+c     --- information variables
+      character*(50) kim_model
+      save kim_model
+
+      if ( flag .eq. GLB_SET ) then
+         kim_model = cvalue
+      elseif ( flag .eq. GLB_GET ) then
+         cvalue = kim_model
+      else
+         write(6,*) 'KIM_MODEL: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_lbackbone(flag,imolty,iunit,lvalue)
 c     ******************************************************************
 c     * logical that states whether an atom is along a protein backbone*

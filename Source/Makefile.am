@@ -8,6 +8,11 @@ if UseMPI
 MPI_CPPFLAGS = -DUSEMPI
 MPI_LIBS = $(MPILIBS)
 endif
+# If configured with --enable-openkim, set the flag
+if UseOpenkim
+OK_CPPFLAGS = -DUSEOPENKIM
+INCLUDES = -I../inc
+endif
 # If configured with --enable-tramonto, set the flag
 if UseTramonto
 T_CPPFLAGS = -DUSETRAMONTO
@@ -37,7 +42,7 @@ endif
 #DM_CPPFLAGS = -DUSE_DYNAMIC_MEMORY
 #endif
 
-AM_CPPFLAGS = $(MPI_CPPFLAGS) $(T_CPPFLAGS) $(LCAO_CPPFLAGS) $(I_CPPFLAGS)
+AM_CPPFLAGS = $(MPI_CPPFLAGS) $(OK_CPPFLAGS) $(T_CPPFLAGS) $(LCAO_CPPFLAGS) $(I_CPPFLAGS)
 AM_CPPFLAGS += $(SC_CPPFLAGS) $(CLA_CPPFLAGS) $(DM_CPPFLAGS)
 AM_FFLAGS += $(SC_FFLAGS) $(FG_FFLAGS) $(DM_FFLAGS)
 LIBS = $(MPI_LIBS)
