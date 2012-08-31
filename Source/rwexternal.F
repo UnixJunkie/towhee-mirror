@@ -26,9 +26,10 @@ c     * related to the external potential style                        *
 c     * rwflag is either READ_FLAG or WRITE_FLAG                       *
 c     *                                                                *
 c     * rewritten from readquantum 01-12-2007 by M.G. Martin           *
-c     * last modifed 01-06-2012 by M.G. Martin                         *
+c     * last modifed 01-10-2012 by M.G. Martin                         *
 c     ******************************************************************
 #ifdef USEOPENKIM
+#include "KIMstatus.h"
       use KIMservice
 #endif
       implicit none
@@ -37,13 +38,13 @@ c     --- variables passed to/from the subroutine
       integer ifile,rwflag
 c     --- local variables
       character*15 idname,rwformat
-      character*20 externalcode
+      character*20 external_code
       character*50 goodstring,kim_model
 c     --- cray pointers
 #ifdef USEOPENKIM
+      integer ierr
       integer(kind=kim_intptr) pkim
 #endif
-      integer ierr
 
 c     --- check rwflag
       if ( rwflag .ne. READ_FLAG .and. rwflag .ne. WRITE_FLAG ) then
@@ -58,20 +59,20 @@ c     --- set subroutine idname
       goodstring = 'external_code'
       if ( rwflag .eq. READ_FLAG ) then
          call twh_read_labeled_string(lfailure,ifile,goodstring,.true.
-     &        ,idname,externalcode)
+     &        ,idname,external_code)
          if ( lfailure ) return
-         call twh_external_code(GLB_SET,externalcode)
+         call twh_external_code(GLB_SET,external_code)
       else
          rwformat = '(a11)'
          write(ifile,rwformat) goodstring
-         call twh_external_code(GLB_GET,externalcode)
-         write(ifile,'(a1,a20,a1)') char(39),externalcode,char(39)
+         call twh_external_code(GLB_GET,external_code)
+         write(ifile,'(a1,a20,a1)') char(39),external_code,char(39)
       endif
 
-      if ( externalcode .eq. 'lcao' ) then
+      if ( external_code .eq. 'lcao' ) then
          call twh_readquantum(lfailure,rwflag,ifile)
          if ( lfailure ) return
-      elseif ( externalcode .eq. 'KIM' ) then
+      elseif ( external_code .eq. 'KIM' ) then
          goodstring = 'kim_model'
          if ( rwflag .eq. READ_FLAG ) then
             call twh_read_labeled_string(lfailure,ifile,goodstring
@@ -85,10 +86,15 @@ c     --- set subroutine idname
             write(ifile,'(a1,a,a1)') kim_model
          endif
          
-         write(6,*) 'KIM not yet implemented'
-
 #ifdef USEOPENKIM
          ierr = kim_api_init_f(pkim,'test_towhee',kim_model)
+         call twh_pointerkim(GLB_SET,pkim)
+         if ( ierr .lt. KIM_STATUS_OK ) then
+            call kim_api_report_error_f(__LINE__,__FILE__
+     &           ,"kim_api_init_f",ierr)
+            lfailure = .true.
+            return
+         endif
 #endif
       else
          write(6,*) 'RWEXTERNAL: invalid external_code'

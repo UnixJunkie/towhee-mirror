@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * computes the angle-angle cross term for a given angle-angle    *
 c     * type and the single angle types plus the two angles            *
 c     *                                                                *
 c     * originally written 02-24-2000 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -48,7 +48,7 @@ c     --- local variables
       double precision distone,disttwo
 
 c     --- get the angles
-      if ( cordstyle .eq. 0 ) then
+      if ( cordstyle .eq. AA_COORD ) then
 c        --- compute angles from the cords
 c        --- compute the aa1 - aa0 - aa2 angle
          call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
@@ -65,7 +65,7 @@ c        --- compute the aa1 - aa0 - aa3 angle (xone is the same)
          disttwo = twh_distance(xtwo,ytwo,ztwo)
          angtwo = twh_arccos( (xone*xtwo + yone*ytwo + zone*ztwo)
      &        /(distone*disttwo) )
-      elseif ( cordstyle .eq. 1 ) then
+      elseif ( cordstyle .eq. AA_ANGLE ) then
 c        --- use the angles that were passed to the function
          angone = twh_arccos(angle(1))
          angtwo = twh_arccos(angle(2))

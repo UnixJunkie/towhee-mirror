@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -70,7 +70,7 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 01-09-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -89,6 +89,8 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lmadelung,ltailc,lcoulomb,lewald
+c     --- character scalars
+      character*20 external_code
 c     --- integer scalars
       integer ichain, nmcount, cutstyle,ispecial,flagon,l
       integer classical_potnum,nchain,nmolty,nchbox
@@ -242,21 +244,30 @@ c        --- foreign energies add terms which do not change with lambda
             vforeign(l)=vforeign(l) + vtmp
          enddo
 
-
       endif
 
 c     --- compute external energies
       if ( potentialstyle .eq. POT_EXTERNAL ) then
-         ispecial = 0
-         flagon = 0
-         chaininfo(1,1)=-1
-         chaininfo(1,2)=-1
-         chaininfo(1,3)=-1
-         call twh_quantumenergy(lfailure,ibox,flagon,1,chaininfo
-     &                          ,vquantum)
-c         call twh_quantumenergy(lfailure,ibox,ispecial,flagon,0,-1
-c     &        ,vquantum)
-         if ( lfailure ) return
+         call twh_external_code(GLB_GET,external_code)
+         if ( external_code .eq. 'lcao' ) then
+            ispecial = 0
+            flagon = 0
+            chaininfo(1,1)=-1
+            chaininfo(1,2)=-1
+            chaininfo(1,3)=-1
+            call twh_quantumenergy(lfailure,ibox,flagon,1,chaininfo
+     &           ,vquantum)
+            if ( lfailure ) return
+         elseif ( external_code .eq. 'KIM' ) then
+            write(6,*) 'hey, should compute this'
+            lfailure = .true.
+            return
+         else
+            write(6,*) 'ENGTOTAL: unknown external_code'
+            write(6,*) external_code
+            lfailure = .true.
+            return
+         endif
       endif
          
       if ( lprint ) then
@@ -1009,7 +1020,7 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1096,6 +1107,8 @@ c                       --- completely through the periodic box
                         write(6,*) 'overlap vibration'
                         write(6,*) 'ichain,imolty,ii,ip1'
      &                          ,ichain,imolty,ii,ip1
+                        write(6,*) 'bond length:',dist
+                        write(6,*) 'bond type:',it
                         return
                      endif
                   endif
@@ -1137,19 +1150,19 @@ c           --- bond bond cross terms
                   do jjben = 1,twh_get_inbnbn(imolty,ii)
                      ip1 = twh_get_ijbnbn1(imolty,ii,jjben)
                      ip2 = twh_get_ijbnbn2(imolty,ii,jjben)
-c                       --- compute and store first bond length
+c                    --- compute and store first bond length
                      call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip1
      &                    ,rxuj,ryuj,rzuj)
                      call twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj
      &                       ,rzuj,rxuij,ryuij,rzuij )
                      length(1) = twh_distance(rxuij,ryuij,rzuij)
-c                       --- compute and store second bond length
+c                    --- compute and store second bond length
                      call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip2
      &                    ,rxuj,ryuj,rzuj)
                      call twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj
      &                       ,rzuj,rxuij,ryuij,rzuij )
                      length(2) = twh_distance(rxuij,ryuij,rzuij)
-c                       --- compute energy as a bond vibration term
+c                    --- compute energy as a bond vibration term
                      vbondbond = vbondbond+twh_vbonbon(imolty,ii
      &                       ,jjben,length)
                   enddo
@@ -1199,8 +1212,8 @@ c           --- angle angle cross terms
                   enddo
 c                    --- compute the angle-angle energy
                   vangleangle = vangleangle 
-     &                    + twh_vangang(0,ibox,imolty,ii,iitor,angle
-     &                    ,xtmp,ytmp,ztmp)
+     &                 + twh_vangang(AA_COORD,ibox,imolty,ii,iitor
+     &                 ,angle,xtmp,ytmp,ztmp)
                enddo
             enddo                   
 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -935,7 +935,7 @@ c     * ichain in the activebox for terms that involve any of the atoms*
 c     * in the atomlist                                                *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -957,7 +957,8 @@ c     --- logical scalars
 c     --- integer scalars
       integer iatomlist,iatom,jatom,ibnbn,nbnbn,testlist,testunit
       integer imolty,ioldnew,targetcord,targetatom,iatomcord,jatomcord
-      integer nvib,ivib
+      integer nvib,ivib,tbbone,tbbtwo,keyatom
+      integer keyatomcord,oneatomcord,twoatomcord
 c     --- double precision scalars
       double precision rx,ry,rz
 c     --- double precision arrays
@@ -967,6 +968,7 @@ c     --- double precision arrays
       dimension length(2)
 
       call twh_moltyp(GLB_GET,ichain,imolty)
+
 c     --- on the first pass compute all bond-bond interactions that
 c     --- have an end on an atomlist atom
 c     --- just need to check to make sure we do not double count when
@@ -1014,7 +1016,7 @@ c                    --- and iatom
                      length(1) = twh_distance(rx,ry,rz)
 c                    --- compute the second distance between iatom and
 c                    --- jatom
-                     call twh_mimage(activebox,xpos(2),ypos(2),zpos(2)
+                     call twh_mimage(activebox,xpos(1),ypos(1),zpos(1)
      &                    ,xpos(3),ypos(3),zpos(3),rx,ry,rz)
                      length(2) = twh_distance(rx,ry,rz)
 c                    --- compute bond-bond energy
@@ -1027,68 +1029,93 @@ c                    --- compute bond-bond energy
       enddo
 
 c     --- on the second pass we want to find bond-bond terms that have
-c     --- the atomlist in the central position
-c     --- to avoid double counting we must make sure that none of the
-c     --- other atomlist atoms are involved as those would have been
-c     --- handled above
+c     --- the atomlist in the bnbn1 or bnbn2 position
+c     --- to avoid double counting we must make sure that the keyatom
+c     --- is not one of the other atomlist atoms (handled above)
+c     --- and if both the bnbn1 and bnbn2 atoms are atomlist atoms we
+c     --- only compute if our current targetatom is in the bnbn1 spot
       do iatomlist = 1,natommove
          targetatom = atomlist(iatomlist,3)
 c        --- check the neighbors of the targetatom
          call twh_invib(GLB_GET,imolty,targetatom,nvib)
          do ivib = 1,nvib
 c           --- get the neighboring atom
-            call twh_ijvib(GLB_GET,imolty,targetatom,ivib,iatom)
+            call twh_ijvib(GLB_GET,imolty,targetatom,ivib,keyatom)
 c           --- make sure this is not in the atomlist
-            if ( .not. twh_in_atomlist(iatom,natommove,atomlist) ) then
+            if ( .not. twh_in_atomlist(keyatom,natommove,atomlist)
+     &           ) then
 c              --- determine the number of bond-bond terms coming from
-c              --- that atom
-               call twh_inbnbn(GLB_GET,imolty,iatom,nbnbn)
+c              --- the keyatom
+               call twh_inbnbn(GLB_GET,imolty,keyatom,nbnbn)
                do ibnbn = 1,nbnbn
-c                 --- see if the central bond-bond is targetatom
-                  call twh_ijbnbn1(GLB_GET,imolty,iatom,ibnbn,testunit)
-                  if ( testunit .eq. targetatom ) then
-c                    --- find the jatom
-                     call twh_ijbnbn2(GLB_GET,imolty,iatom,ibnbn,jatom)
-c                    --- make sure jatom is not in the atomlist
-                     if ( .not. twh_in_atomlist(jatom,natommove
-     &                    ,atomlist) 
-     &                    .and. iatom .lt. jatom ) then
-c                       --- valid bond-bond to evalulate
-                        do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
-c                          --- targetatom cord is in the atomlist
-                           targetcord = atomlist(iatomlist,ioldnew)
-c                          --- iatom is not in the atomlist
-                           iatomcord = globalcord(ioldnew)
-c                          --- jatom is not in the atomlist
-                           jatomcord = globalcord(ioldnew)
-c                          --- fetch iatom
-                           call twh_coordinates(GLB_GET,iatomcord,ichain
-     &                          ,iatom,xpos(1),ypos(1),zpos(1))
-c                          --- fetch targetatom
-                           call twh_coordinates(GLB_GET,targetcord
-     &                          ,ichain,targetatom,xpos(2),ypos(2)
-     &                          ,zpos(2))
-c                          --- fetch jatom
-                           call twh_coordinates(GLB_GET,jatomcord,ichain
-     &                          ,jatom,xpos(3),ypos(3),zpos(3))
-c                          --- compute the first distance between iatom
+c                 --- set default to not compute
+                  lcompute = .false.
+c                 --- check the first atom
+                  call twh_ijbnbn1(GLB_GET,imolty,keyatom,ibnbn,tbbone)
+c                 --- check the second atom
+                  call twh_ijbnbn2(GLB_GET,imolty,keyatom,ibnbn,tbbtwo)
+                  if ( tbbone .eq. targetatom ) then
+c                    --- we always compute if bnbn1 is targetatom
+                     lcompute = .true.
+                  elseif ( tbbtwo .eq. targetatom ) then
+c                    --- compute so long as tbbone is not in atomlist
+                     if ( .not. twh_in_atomlist(tbbone,natommove
+     &                    ,atomlist) ) then
+                        lcompute = .true.
+                     endif
+                  endif
+
+                  if ( lcompute ) then
+c                    --- valid bond-bond to evalulate
+                     do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+c                       --- keyatom cord is not in the atomlist
+                        keyatomcord = globalcord(ioldnew)
+                        if ( tbbone .eq. targetatom ) then
+c                          --- oneatom is in the atomlist at iatomlist
+                           oneatomcord = atomlist(iatomlist,ioldnew)
+                        else
+c                          --- only valid compute if targetatom is not
+c                          --- in tbbone is non-atomlist atom in tbbone
+                           oneatomcord = globalcord(ioldnew)
+                        endif
+                        if ( tbbtwo .eq. targetatom ) then
+c                          --- twoatom is in the atomlist at iatomlist
+                           twoatomcord = atomlist(iatomlist,ioldnew)
+                        else
+c                          --- could be either atomlist or globalcord
+                           twoatomcord = twh_get_atomlist_cord(tbbtwo
+     &                          ,ioldnew,natommove,atomlist,globalcord)
+                        endif
+                        if ( keyatomcord .ne. CRD_NONE .and.
+     &                       oneatomcord .ne. CRD_NONE .and.
+     &                       twoatomcord .ne. CRD_NONE ) then
+c                          --- fetch keyatom
+                           call twh_coordinates(GLB_GET,keyatomcord
+     &                          ,ichain,keyatom,xpos(1),ypos(1),zpos(1))
+c                          --- fetch oneatom
+                           call twh_coordinates(GLB_GET,oneatomcord
+     &                          ,ichain,tbbone,xpos(2),ypos(2),zpos(2))
+c                          --- fetch twoatom
+                           call twh_coordinates(GLB_GET,twoatomcord
+     &                          ,ichain,tbbtwo,xpos(3),ypos(3),zpos(3))
+c                          --- compute the distance between keyatom
 c                          --- and targetatom
                            call twh_mimage(activebox,xpos(1),ypos(1)
      &                          ,zpos(1),xpos(2),ypos(2),zpos(2)
      &                          ,rx,ry,rz)
                            length(1) = twh_distance(rx,ry,rz)
-c                          --- compute the second distance between 
-c                          --- targetatom and jatom
-                           call twh_mimage(activebox,xpos(2),ypos(2)
-     &                          ,zpos(2),xpos(3),ypos(3),zpos(3)
+c                          --- compute the distance between 
+c                          --- keyatom and jatom
+                           call twh_mimage(activebox,xpos(1),ypos(1)
+     &                          ,zpos(1),xpos(3),ypos(3),zpos(3)
      &                          ,rx,ry,rz)
                            length(2) = twh_distance(rx,ry,rz)
 c                          --- compute energy change
                            dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                          *twh_vbonbon(imolty,iatom,ibnbn
+     &                          *twh_vbonbon(imolty,keyatom,ibnbn
      &                          ,length)
-                        enddo
-                     endif
+                        endif
+                     enddo
                   endif
                enddo
             endif
@@ -1263,7 +1290,7 @@ c     * molecule ichain in the activebox for terms that involve any of *
 c     * the atoms in the atomlist                                      *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1293,7 +1320,7 @@ c     --- double precision arrays
 
       call twh_moltyp(GLB_GET,ichain,imolty)
 c     --- compute from coordinates
-      aastyle = 1
+      aastyle = AA_COORD
 
 c     --- on the first pass compute all angle-angle interactions that
 c     --- start from an atomlist atom
@@ -1384,6 +1411,7 @@ c                 --- previously in the atomlist
                         lcompute = .false.
                      endif
                   enddo
+
                   if ( lcompute ) then
 c                    --- valid angle-angle, compute energy
                      do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)

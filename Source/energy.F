@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -417,7 +417,7 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJAA0
@@ -456,7 +456,7 @@ c     --- double precision arrays
             enddo
 c           --- compute the angle-angle energy
             v_ben = v_ben + 
-     &            twh_vangang(0,ibox,imolty,iunit,itor,dumangle
+     &            twh_vangang(AA_COORD,ibox,imolty,iunit,itor,dumangle
      &            ,xtmp,ytmp,ztmp)
          enddo
       enddo                   
@@ -580,6 +580,9 @@ c           --- compute and store second bond length
             length(2) = twh_distance(rxuij,ryuij,rzuij)
 c           --- compute energy as a bond vibration term
             v_vib = v_vib + twh_vbonbon(imolty,iunit,iben,length)
+            if ( (iunit .eq. 456) .or. (ip1 .eq. 456) .or. 
+     &           (ip2 .eq. 456) ) then
+            endif
          enddo
       enddo
 

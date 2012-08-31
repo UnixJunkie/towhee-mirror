@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 08-15-2011 by M.G. Martin */
+/* last significant modification 08-30-2012 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -422,6 +422,10 @@
 #define ORD_FORWARD 1
 #define ORD_NULL 0
 #define ORD_REVERSE -1
+
+/* angle angle compute style.  Values arbitrary */
+#define AA_COORD 0
+#define AA_ANGLE 1
 
 /* average flags: the numerical values are arbitrary */
 #define AVG_INCREMENT 1 

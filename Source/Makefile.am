@@ -11,7 +11,7 @@ endif
 # If configured with --enable-openkim, set the flag
 if UseOpenkim
 OK_CPPFLAGS = -DUSEOPENKIM
-INCLUDES = -I../inc
+INCLUDES = -I${KIM_DIR}KIM_API
 endif
 # If configured with --enable-tramonto, set the flag
 if UseTramonto

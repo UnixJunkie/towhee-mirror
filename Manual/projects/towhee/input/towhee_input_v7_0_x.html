@@ -39,6 +39,7 @@
      </ul>
      <b>Bug reports and feature enhancements for 7.0.x versions</b>
      <ul>
+      <li>7.0.3: Bug fix for the single-atom translation move so it now works properly with Class 2 force fields.</li>
       <li>7.0.2: Minor change so that constant pressure volume moves attempted in a simulation box that has an external field are automatically rejected.</li>
       <li>7.0.1: Bug fix for the energy-bias option to insure the target atom is always in the central simulation box, this was causing an occasional out-of-bounds 
        error previously.
@@ -1029,6 +1030,19 @@
          <ul>
           <dt><a name="external_code"><b>external_code (character*20)</b></a>
            <ul>
+            <li>'KIM': uses the <a href="https://openkim.org">Knowledgebase of Interatomic Models</a> to compute the energy.  Use of this option
+             requires special compilation to include the KIM library.  Please see the <a href="../code/code_manual.html#enable_openkim">Code Manual</a> for 
+             detailed instructions on how to compile Towhee to include this KIM libraries.  When using this option you must also include the
+             following variables.
+             <ul>
+              <dt><a name="kim_model"><b>kim_model (character*50)</b></a>
+               <ul>
+                The name of the KIM model to use to compute the energy.  Please see the
+                <a href="https://openkim.org">Open Knowledgebase of Interatomic Models</a> site for more information about the available models.
+               </ul>
+              </dt>
+             </ul>
+            </li>
             <li>'lcao': uses the lcao code of Peter Schultz, also known as <a href="http://dft.sandia.gov/Quest/">Quest</a> or SeqQuest, to compute the
              quantum mechanical energy.  Use of this option requires the placement of several libraries into the /towheebase/lib directory (use of symbolic
              links is also acceptable in that directory).  The code must be compiled with the '--enable-lcao' option in order to link in these libraries.
@@ -2678,7 +2692,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->November 28, 2011<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 30, 2012<!-- #EndDate -->
   </font>
   <br></br>
  </body>

@@ -52,7 +52,7 @@ AC_ARG_ENABLE(internal,
 
 # Define the argument to configure script to enable openkim
 AC_ARG_ENABLE(openkim,
-     [  --enable-openkim   Compile version using openkim libraries],
+     [  --enable-openkim   Compile version linking openkim],
      [case "${enableval}" in
        yes) UseOpenkim=true ;;
        no)  UseOpenkim=false ;;
@@ -109,9 +109,9 @@ AC_ARG_ENABLE(command-line-args,
 AM_CONDITIONAL(UseLINKSPIRIT, test x$UseLINKSPIRIT = xtrue)
 AM_CONDITIONAL(UseLINKSQUALL, test x$UseLINKSQUALL = xtrue)
 AM_CONDITIONAL(UseMPI, test x$UseMPI = xtrue)
+AM_CONDITIONAL(UseInternal, test x$UseInternal = xtrue)
 AM_CONDITIONAL(UseOpenkim, test x$UseOpenkim = xtrue)
 AM_CONDITIONAL(UseTramonto, test x$UseTramonto = xtrue)
-AM_CONDITIONAL(UseInternal, test x$UseInternal = xtrue)
 AM_CONDITIONAL(UseLCAO, test x$UseLCAO = xtrue)
 AM_CONDITIONAL(UseSafeCompare, test x$UseSafeCompare = xtrue)
 AM_CONDITIONAL(UseFixGNU, test x$UseFixGNU = xtrue)
@@ -147,11 +147,6 @@ if test x$UseLINKSQUALL = xtrue ; then
   LIBS="${LIBS} -L/opt/acml/pgi64/lib"
   LIBS="${LIBS} -llcao -lscalapack -lblacsCinit -lblacsF77init -lblacs -lacml" 
 fi
-# extra items for UseOpenkim
-if test x$UseOpenkim = xtrue ; then
-  # Include the Openkim libraries
-  LIBS="${LIBS} -L../lib -lkimfull"
-fi
 # extra items for UseTramonto
 if test x$UseTramonto = xtrue ; then
   # Include the Tramonto libraries
@@ -167,6 +162,12 @@ fi
 if test x$UseInternal = xtrue ; then
   # Nothing happens here
   LIBS="${LIBS}"
+fi
+# extra items for UseOpenkim
+if test x$UseOpenkim = xtrue ; then
+  # Include the Openkim libraries
+   LIBS="${LIBS} -L${KIM_DIR}KIM_API"
+   LIBS="${LIBS} -lkim -lkimmodels -lstdc++"
 fi
 # extra items for UseSafeCompare
 if test x$UseSafeCompare = xtrue ; then

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -422,7 +422,7 @@ c              --- extract positional information
 c              --- assign angle-angle index
                call twh_aaind(GLB_GET,iaa,it)
                vxaa(itor) = vxaa(itor) 
-     &              + twh_vangang(0,ibox,imolty,ttype,it,dumangle
+     &              + twh_vangang(AA_COORD,ibox,imolty,ttype,it,dumangle
      &              ,xttmp,yttmp,zttmp)
             enddo
 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -710,8 +710,8 @@ c                             --- assign positions
                               enddo
 c                             --- compute angle-angle energy   
                               dvbend = dvbend + dvpm(ioldnew)*
-     &                             twh_vangang(0,ibox,imolty,iuone,
-     &                             iaa,ddum2,xtmp,ytmp,ztmp)
+     &                             twh_vangang(AA_COORD,ibox,imolty
+     &                             ,iuone,iaa,ddum2,xtmp,ytmp,ztmp)
                            enddo
                         endif
                      enddo

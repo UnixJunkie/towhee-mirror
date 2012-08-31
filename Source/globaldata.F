@@ -13636,6 +13636,35 @@ c     --- information variables
       return
       end
 
+#ifdef USEOPENKIM
+      subroutine twh_pointerkim(flag,ivalue)
+c     ******************************************************************
+c     * special integer pointer for use with openkim                   *
+c     *                                                                *
+c     * originally written 01-10-2012 by M.G. Martin                   *
+c     * last modified 01-10-2012 by M.G. Martin                        *
+c     ******************************************************************
+      use KIMservice
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag
+      integer (kind=kim_intptr) ivalue
+c     --- local variables
+      integer (kind=kim_intptr) pointerkim
+      save pointerkim
+      if ( flag .eq. GLB_GET ) then
+         ivalue = pointerkim
+      elseif ( flag .eq. GLB_SET ) then
+         pointerkim = ivalue
+      else
+         write(6,*) 'POINTKIM: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+#endif
+
       subroutine twh_potentialstyle(flag,ivalue)
 c     ******************************************************************
 c     * the integer the specifies whether we are using an internal or  *

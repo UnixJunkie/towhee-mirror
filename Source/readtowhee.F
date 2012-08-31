@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 08-16-2011 by M.G. Martin                        *
+c     * last modified 01-09-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -71,6 +71,7 @@ c     --- character string scalars
       character*15 idname
       character*20 runoutput,solvation_style,solvation_type,initboxtype
       character*20 initstyle,initlattice,controlstyle,keyname
+      character*20 external_code
       character*30 ftemp,filename,ctemp,ensemble_str,rng_str
       character*30 potentialstyle_str,charge_assignment
       character*30 imp_assign,match_style
@@ -2751,16 +2752,29 @@ c        --- meant for proteins
       if ( potentialstyle .eq. POT_EXTERNAL ) then
 c        --- not much external stuff to set up so still doing it here
 c        --- if this gets larger then will split into a separate routine
-         call twh_nener(GLB_GET,nener)
-         nener = nener + 1
-         keyname = 'Total Quantum'
-         call twh_vname(GLB_SET,nener,keyname)
-         call twh_nener(GLB_SET,nener)
-c        --- set the pressurestyle to thermodynamic
-         call twh_pressurestyle(GLB_SET,PRES_THERMO)
 c        --- set the minimum box dimension to 1.0 just for use when
 c        --- updating the maximum translational displacements
          call twh_minboxdim(GLB_SET,1.0d0)
+c        --- set the pressurestyle to thermodynamic
+         call twh_pressurestyle(GLB_SET,PRES_THERMO)
+         call twh_nener(GLB_GET,nener)
+         nener = nener + 1
+         call twh_external_code(GLB_GET,external_code)
+         if ( external_code .eq. 'lcao' ) then
+            keyname = 'Total Quantum'
+            call twh_vname(GLB_SET,nener,keyname)
+            call twh_nener(GLB_SET,nener)
+         elseif ( external_code .eq. 'KIM' ) then
+            keyname = 'Total KIM'
+            call twh_vname(GLB_SET,nener,keyname)
+            call twh_nener(GLB_SET,nener)
+         else
+            write(6,*) 'READTOWHEE: unknown external_code'
+            write(6,*) external_code
+            lfailure = .true.
+            return
+         endif
+
       endif
 c     --- fetch the minboxdim
       call twh_minboxdim(GLB_GET,minboxdim)

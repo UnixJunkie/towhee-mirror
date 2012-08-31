@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,12 +27,13 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 01-27-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
 #define FUNCTION_RANDOM
 #include "functions.h"
+#define DEBUG_TRANATOM 0
 c     --- varibles passed to/from the subroutine
       logical lfailure
 c     --- local variables
@@ -78,6 +79,10 @@ c     --- select a chain at random
          endif
       enddo
 
+#if DEBUG_TRANATOM
+      write(6,*) 'tranatom imolty:',imolty
+#endif
+
       call twh_ensemble(GLB_GET,ensemble)
       if (ensemble .eq. ENS_muVT) then
 c        --- grand canonical ensemble box 1 is the actual system
@@ -100,6 +105,10 @@ c     --- store number of units in the molecule
       call twh_nunit(GLB_GET,imolty,units)
 c     --- choose an atom at random from the molecule
       atom = idint(twh_random()*units) + 1
+
+#if DEBUG_TRANATOM
+      write(6,*) 'TRANATOM atom:',atom
+#endif
 
 c     --- move atom in a random direction
       call twh_sphere(rxdisp,rydisp,rzdisp)
@@ -244,7 +253,9 @@ c        --- burn a random number
 c     --- else the move is rejected as the probability is so low that
 c     --- we can get underflow errors
       if ( laccept ) then
-c         write(6,*) 'TRANATOM move accepted',ichain,atom
+#if DEBUG_TRANATOM
+         write(6,*) 'TRANATOM move accepted',ichain,atom
+#endif
 c        --- update acceptance accumulators
          call twh_batraa(GLB_INCR,imolty,ibox,1.0d0)
 c        --- update energies

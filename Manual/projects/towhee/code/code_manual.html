@@ -138,6 +138,20 @@
          Quest code compiled as a library.  See the <a href="http://dft.sandia.gov/Quest/">Quest</a> web site for more information.
         </dt>
        </li>
+       <li><a name="enable_openkim"><b>./configure --enable-openkim</b></a>
+        <dt>
+         Links the <a href="https://openkim.org">Open Knowledgebase of Interatomic Models</a> libraries into Towhee to all the use of them as an 
+         external potential.
+        </dt>
+        <ul>
+         <li>Requires a compiled version of openkim with the $KIM_DIR shell variable set to the location of the openkim installation.  Remember
+          to include the trailing / on the directory name as required by the KIM installation.
+         </li>
+         <li>Create a KIM model library using the following command
+          <dt>ar -r ${KIM_DIR}KIM_API/libkimmodels.a ${KIM_DIR}*/*/model*.o</dt>
+         </li>
+        </ul>
+       </li>
        <li><b>./configure --disable-command-line-args</b>
         <dt>Removes the ability of the code to read command line arguments.  This also defaults to a parallel style of "jobfarm" when combined with
          an --enable-mpi configure option.  This option exists for users whose machines are unable to properly handle command line arguments, especially
@@ -1207,7 +1221,7 @@
     <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
     <br></br>
     <i>Last updated:</i> 
-    <!-- #BeginDate format:Am1 -->November 15, 2010<!-- #EndDate -->
+    <!-- #BeginDate format:Am1 -->January 09, 2012<!-- #EndDate -->
    </font>
   <br></br>
  </body>

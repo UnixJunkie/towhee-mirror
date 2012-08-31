@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-30-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -637,7 +637,7 @@ c                    --- reverse order
                      cosang(1) = dcos(bendang)
                   endif
                   vang(itrial) = vang(itrial)
-     &                 + twh_vangang(1,ibox,imolty
+     &                 + twh_vangang(AA_ANGLE,ibox,imolty
      &                 ,iufrom,ic,cosang,ddum4,ddum4,ddum4)
                enddo
             endif
@@ -1325,8 +1325,8 @@ c                 --- this is iuprev
                cosang(1) = crossang(iczero,icone)
                cosang(2) = crossang(iczero,ictwo)
                vphi(itrial) = vphi(itrial) 
-     &              + twh_vangang(1,ibox,imolty,iufrom,ic,cosang,ddum4
-     &              ,ddum4,ddum4)
+     &              + twh_vangang(AA_ANGLE,ibox,imolty,iufrom,ic,cosang
+     &              ,ddum4,ddum4,ddum4)
             enddo
 c           --- calculate energy for regular torsions that involve a
 c           --- 3-membered ring that we just formed
