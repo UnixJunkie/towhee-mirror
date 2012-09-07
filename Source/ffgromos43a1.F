@@ -26,7 +26,9 @@ c     * sets up all of the force field parameters for the gromos43a1   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 08-04-2011 M.G. Martin                           *
+c     * last modified 09-07-2012 Amir Vahid                            *
+c     * to include parameters from Bordat et al.                       * 
+c     * Chem. Phys. Lett. 374 (2003) 201-205 for DMSO                  *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
