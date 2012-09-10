@@ -123,11 +123,16 @@ c     --- set up the Gromos selection matrix
       data (select(37,i),i=1,47) /35*1,0,1,0,5*1,1/
       data (select(38,i),i=1,47) /35*1,0,0,6*1,1/
       data (select(39,i),i=1,47) /39*1,0,0,2*1,1/
-      data (select(40,i),i=1,47) /38*1,0,1,0,2*1,1/
-      data (select(41,i),i=1,47) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
+	  data (select(40,i),i=1,47) /39*1,0,0,2*1,1/
+      data (select(41,i),i=1,47) /38*1,0,1,0,2*1,1/
+	  data (select(42,i),i=1,47) /38*1,0,1,0,2*1,1/
+      data (select(43,i),i=1,47) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,1,1,1,1*1,2,2,1,4*1,0,1,2*1,2/
-      data (select(42,i),i=1,47) /47*1/
-      data (select(43,i),i=1,47) /47*1/
+      data (select(44,i),i=1,47) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
+     &     ,2,2,2,2,1*1,1,1,1,1*1,2,2,1,4*1,0,1,2*1,2/
+
+      data (select(45,i),i=1,47) /47*1/
+      data (select(46,i),i=1,47) /47*1/
       data (select(47,i),i=1,47) /47*1/
 c     --- end of the Gromos selection matrix
 
@@ -1402,17 +1407,33 @@ c     --- ODmso - SDmso
       vclocal(1) = (8.04d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
-
-c     --- SDmso - CDmso
+	  
+c     --- ODmsoMod - SDmsoMod
       type = 39
+      call twh_vibstyle(GLB_SET,type,3)
+      vclocal(0) = 1.53d0
+      vclocal(1) = (8.04d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+	  
+c     --- SDmso - CDmso
+      type = 40
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 1.95d0
       vclocal(1) = (4.95d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
 
+c     --- SDmsoMod - CDmsoMod
+      type = 41
+      call twh_vibstyle(GLB_SET,type,3)
+      vclocal(0) = 1.95d0
+      vclocal(1) = (4.95d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+	  
 c     --- CCl4 - ClCl4
-      type = 40
+      type = 42
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 1.76d0
       vclocal(1) = (8.10d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1420,7 +1441,7 @@ c     --- CCl4 - ClCl4
       call twh_vibff(GLB_SET,type,ffname)
 
 c     --- HW - HW 
-      type = 41
+      type = 43
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 1.63299d0
       vclocal(1) = (8.71d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1428,7 +1449,7 @@ c     --- HW - HW
       call twh_vibff(GLB_SET,type,ffname)
 
 c     --- HChl - CLChl
-      type = 42
+      type = 44
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 2.33839d0
       vclocal(1) = (2.68d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1436,7 +1457,7 @@ c     --- HChl - CLChl
       call twh_vibff(GLB_SET,type,ffname)
 
 c     --- ClChl - ClChl
-      type = 43
+      type = 45
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 2.90283d0
       vclocal(1) = (2.98d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1444,23 +1465,39 @@ c     --- ClChl - ClChl
       call twh_vibff(GLB_SET,type,ffname)
 
 c     --- ODmso - CDmso
-      type = 47
+      type = 46
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 2.80412d0
       vclocal(1) = (2.39d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
 
+c     --- ODmsoMod - CDmsoMod
+      type = 47
+      call twh_vibstyle(GLB_SET,type,3)
+      vclocal(0) = 2.80412d0
+      vclocal(1) = (2.39d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+	  
 c     --- CDmso - CDmso
-      type = 45
+      type = 48
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 2.92993d0
       vclocal(1) = (2.19d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
 
+c     --- CDmsoMod - CDmsoMod
+      type = 49
+      call twh_vibstyle(GLB_SET,type,3)
+      vclocal(0) = 2.92993d0
+      vclocal(1) = (2.19d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+	  
 c     --- HMet - CMet (I have no idea what this means)
-      type = 46
+      type = 50
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 1.98842d0
       vclocal(1) = (3.97d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1468,7 +1505,7 @@ c     --- HMet - CMet (I have no idea what this means)
       call twh_vibff(GLB_SET,type,ffname)
 
 c     --- ClCl4 - ClCl4
-      type = 47
+      type = 51
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 2.87407d0
       vclocal(1) = (3.04d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1829,16 +1866,32 @@ c     --- CDmso - SDmso - CDmso
       call twh_set_bencoeff(type,bclocal) 
       call twh_bendff(GLB_SET,type,ffname)
 
+c     --- CDmsoMod - SDmsoMod - CDmsoMod
+      type = 44
+      call twh_anglestyle(GLB_SET,type,3)
+      bclocal(0) = 97.4d0
+      bclocal(1) = (469.0d0)*(0.5d0)*(CON_KJTOK)
+      call twh_set_bencoeff(type,bclocal) 
+      call twh_bendff(GLB_SET,type,ffname)
+	  
 c     --- CDmso - SDmso - ODmso
-      type = 47
+      type = 45
       call twh_anglestyle(GLB_SET,type,3)
       bclocal(0) = 106.75d0
       bclocal(1) = (503.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
       call twh_bendff(GLB_SET,type,ffname)
 
+c     --- CDmsoMod - SDmsoMod - ODmsoMod
+      type = 46
+      call twh_anglestyle(GLB_SET,type,3)
+      bclocal(0) = 106.75d0
+      bclocal(1) = (503.0d0)*(0.5d0)*(CON_KJTOK)
+      call twh_set_bencoeff(type,bclocal) 
+      call twh_bendff(GLB_SET,type,ffname)
+	  
 c     --- HMet - OMet - CMet
-      type = 45
+      type = 47
       call twh_anglestyle(GLB_SET,type,3)
       bclocal(0) = 108.53d0
       bclocal(1) = (443.0d0)*(0.5d0)*(CON_KJTOK)
@@ -1846,7 +1899,7 @@ c     --- HMet - OMet - CMet
       call twh_bendff(GLB_SET,type,ffname)
 
 c     --- CLCl4 - CCl4 - CLCl4
-      type = 46
+      type = 48
       call twh_anglestyle(GLB_SET,type,3)
       bclocal(0) = 109.5d0
       bclocal(1) = (618.0d0)*(0.5d0)*(CON_KJTOK)
