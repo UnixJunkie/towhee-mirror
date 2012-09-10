@@ -29,6 +29,8 @@ c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
 c     * last modified 09-07-2012 Amir Vahid                            *
 c     * to include parameters from Bordat et al.                       * 
 c     * Chem. Phys. Lett. 374 (2003) 201-205 for DMSO                  *
+c     * Note that there is not any exceptions in these cases and       *
+c     * Lorentz-Berthelot combining rule is retained                   *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -45,7 +47,7 @@ c     --- local variables
       dimension vclocal(MINVIBCOEFF:MAXVIBCOEFF)
       integer i,j,ii,jj,ij,type
       integer jlo,jhi,itrial,select,isel,jsel
-      dimension select(44,44)
+      dimension select(47,47)
       double precision csixi,csixj,ctwvi,ctwvj,csixt,ctwvt
       double precision bclocal
       dimension bclocal(MINBENDCOEFF:MAXBENDCOEFF)
@@ -62,71 +64,71 @@ c     --- local variables
       integer nislocal 
       double precision onepi
 c     --- set up the Gromos selection matrix
-      data (select(1,i),i=1,44) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(1,i),i=1,47) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,1,1,1,1*1,2,2,1,5*1,1,2*1,2/
-      data (select(2,i),i=1,44) /1,1,2,2,2,2,3,2,3,3,10*1,3,3,3
+      data (select(2,i),i=1,47) /1,1,2,2,2,2,3,2,3,3,10*1,3,3,3
      &     ,3,3,3,3,1*1,1,1,1,1*1,2,3,1,5*1,1,2*1,3/
-      data (select(3,i),i=1,44) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(3,i),i=1,47) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,2,2,2,1*1,2,2,2,5*1,2,2*1,2/
-      data (select(4,i),i=1,44) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(4,i),i=1,47) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,2,2,2,1*1,2,2,2,5*1,2,2*1,2/
-      data (select(5,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(5,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(6,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(6,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(7,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(7,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(8,i),i=1,44) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(8,i),i=1,47) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,2,2,2,1*1,2,2,2,5*1,2,2*1,2/
-      data (select(9,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(9,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(10,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(10,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(11,i),i=1,44) /44*1/ 
-      data (select(12,i),i=1,44) /44*1/ 
-      data (select(13,i),i=1,44) /44*1/ 
-      data (select(14,i),i=1,44) /44*1/ 
-      data (select(15,i),i=1,44) /44*1/ 
-      data (select(16,i),i=1,44) /44*1/ 
-      data (select(17,i),i=1,44) /44*1/ 
-      data (select(18,i),i=1,44) /44*1/ 
-      data (select(19,i),i=1,44) /44*1/ 
-      data (select(20,i),i=1,44) /44*1/ 
-      data (select(21,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(11,i),i=1,47) /47*1/ 
+      data (select(12,i),i=1,47) /47*1/ 
+      data (select(13,i),i=1,47) /47*1/ 
+      data (select(14,i),i=1,47) /47*1/ 
+      data (select(15,i),i=1,47) /47*1/ 
+      data (select(16,i),i=1,47) /47*1/ 
+      data (select(17,i),i=1,47) /47*1/ 
+      data (select(18,i),i=1,47) /47*1/ 
+      data (select(19,i),i=1,47) /47*1/ 
+      data (select(20,i),i=1,47) /47*1/ 
+      data (select(21,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(22,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(22,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(23,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(23,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(24,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(24,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(25,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(25,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(26,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(26,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(27,i),i=1,44) /44*1/
-      data (select(28,i),i=1,44) /44*1/
-      data (select(29,i),i=1,44) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(27,i),i=1,47) /47*1/
+      data (select(28,i),i=1,47) /47*1/
+      data (select(29,i),i=1,47) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,1,1,1,1*1,2,2,1,5*1,1,2*1,2/
-      data (select(30,i),i=1,44) /44*1/
-      data (select(31,i),i=1,44) /44*1/
-      data (select(32,i),i=1,44) /44*1/
-      data (select(33,i),i=1,44) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(30,i),i=1,47) /47*1/
+      data (select(31,i),i=1,47) /47*1/
+      data (select(32,i),i=1,47) /47*1/
+      data (select(33,i),i=1,47) /2,2,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,2,2,2,1*1,2,2,2,5*1,2,2*1,2/
-      data (select(34,i),i=1,44) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
+      data (select(34,i),i=1,47) /2,2,2,2,1,1,1,2,1,1,10*1,1,1,1
      &     ,1,1,1,1,1*1,2,2,2,1*1,2,1,2,5*1,2,2*1,1/
-      data (select(35,i),i=1,44) /1,1,2,2,2,2,3,2,3,3,10*1,3,3,3
+      data (select(35,i),i=1,47) /1,1,2,2,2,2,3,2,3,3,10*1,3,3,3
      &     ,3,3,3,3,1*1,1,1,1,1*1,2,3,1,5*1,1,2*1,3/
-      data (select(36,i),i=1,44) /36*1,0,0,5*1,1/
-      data (select(37,i),i=1,44) /35*1,0,1,0,5*1,1/
-      data (select(38,i),i=1,44) /35*1,0,0,6*1,1/
-      data (select(39,i),i=1,44) /39*1,0,0,2*1,1/
-      data (select(40,i),i=1,44) /38*1,0,1,0,2*1,1/
-      data (select(41,i),i=1,44) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
+      data (select(36,i),i=1,47) /36*1,0,0,5*1,1/
+      data (select(37,i),i=1,47) /35*1,0,1,0,5*1,1/
+      data (select(38,i),i=1,47) /35*1,0,0,6*1,1/
+      data (select(39,i),i=1,47) /39*1,0,0,2*1,1/
+      data (select(40,i),i=1,47) /38*1,0,1,0,2*1,1/
+      data (select(41,i),i=1,47) /1,1,2,2,2,2,2,2,2,2,10*1,2,2,2
      &     ,2,2,2,2,1*1,1,1,1,1*1,2,2,1,4*1,0,1,2*1,2/
-      data (select(42,i),i=1,44) /44*1/
-      data (select(43,i),i=1,44) /44*1/
-      data (select(44,i),i=1,44) /44*1/
+      data (select(42,i),i=1,47) /47*1/
+      data (select(43,i),i=1,47) /47*1/
+      data (select(47,i),i=1,47) /47*1/
 c     --- end of the Gromos selection matrix
 
       ffname = 'Gromos43A1'
@@ -143,11 +145,11 @@ c     are using the Gromos mixrule you have to use only the Gromos
 c     force field
 
 c     **************************************************************
-c     * 1-44 GROMOS force field Gromos 96 43A1                     *
+c     * 1-47 GROMOS force field Gromos 96 43A1                     *
 c     **************************************************************
 c     the type numbers now are the same as the gromos manual numbers
 c     parameters are listed using gromos units (except for Si which 
-c     is given number 44 so it can have a different mass from P
+c     is given number 47 so it can have a different mass from P
 c     --- csix: sqrt[ kJ nm^6 / mol ]
 c     --- ctwelve: 10^(-3) sqrt[ kJ nm^12 / mol ]
 c     selection matrix:
@@ -828,7 +830,7 @@ c     (SDmso) Sulphur in DMSO [Gromos manual]
       ii = twh_getnbtype(type,type)
       nbclocal(1) = 0.10277d0
       nbclocal(2) = 4.6366d0
-      masslocal = 1.0079d0
+      masslocal = 32.065d0
       elelocal = ' S'
       call twh_set_nbcoeff(ii,nbclocal) 
       call twh_mass(GLB_SET,type,masslocal) 
@@ -838,9 +840,25 @@ c     (SDmso) Sulphur in DMSO [Gromos manual]
       call twh_nbname(GLB_SET,type,nbnlocal)
       bplocal = 'sp3'
       call twh_bondpatt(GLB_SET,type,bplocal) 
-      
-c     (CDmso) CH3 group in DMSO [Gromos manual]
+
+c     (SDmsoMod) Sulphur in DMSO [Bordat et al.]
       type = 40
+      ii = twh_getnbtype(type,type)
+      nbclocal(1) = 0.10277d0
+      nbclocal(2) = 4.6366d0
+      masslocal = 32.065d0
+      elelocal = ' S'
+      call twh_set_nbcoeff(ii,nbclocal) 
+      call twh_mass(GLB_SET,type,masslocal) 
+      call twh_elementname(GLB_SET,type,elelocal) 
+      call twh_nbff(GLB_SET,type,ffname)
+      nbnlocal ='SDmsoMod'
+      call twh_nbname(GLB_SET,type,nbnlocal)
+      bplocal = 'sp3'
+      call twh_bondpatt(GLB_SET,type,bplocal) 
+
+c     (CDmso) CH3 group in DMSO [Gromos manual]
+      type = 41
       ii = twh_getnbtype(type,type)
       nbclocal(1) = 0.095139d0
       nbclocal(2) = 4.6645d0
@@ -854,9 +872,25 @@ c     (CDmso) CH3 group in DMSO [Gromos manual]
       call twh_nbname(GLB_SET,type,nbnlocal)
       bplocal = 'sp3'
       call twh_bondpatt(GLB_SET,type,bplocal) 
+
+c     (CDmsoMod) CH3 group in DMSO [Bordat et al.]
+      type = 42
+      ii = twh_getnbtype(type,type)
+      nbclocal(1) = 0.10143d0
+      nbclocal(2) = 5.3021d0
+      masslocal = 15.0347d0
+      elelocal = ' C'
+      call twh_set_nbcoeff(ii,nbclocal) 
+      call twh_mass(GLB_SET,type,masslocal) 
+      call twh_elementname(GLB_SET,type,elelocal) 
+      call twh_nbff(GLB_SET,type,ffname)
+      nbnlocal ='CDmsoMod'
+      call twh_nbname(GLB_SET,type,nbnlocal)
+      bplocal = 'sp3'
+      call twh_bondpatt(GLB_SET,type,bplocal) 
       
 c     (ODmso) Oxygen in DMSO [Gromos manual]
-      type = 41
+      type = 43
       ii = twh_getnbtype(type,type)
       nbclocal(1) = 0.047652d0
       nbclocal(2) = 0.86686d0
@@ -871,9 +905,26 @@ c     (ODmso) Oxygen in DMSO [Gromos manual]
       call twh_nbname(GLB_SET,type,nbnlocal)
       bplocal = 'sp3'
       call twh_bondpatt(GLB_SET,type,bplocal) 
+
+c     (ODmsoMod) Oxygen in DMSO [Bordat et al.]
+      type = 44
+      ii = twh_getnbtype(type,type)
+      nbclocal(1) = 0.047652d0
+      nbclocal(2) = 0.86686d0
+      nbclocal(3) = 1.125d0
+      masslocal = 15.999d0
+      elelocal = ' O'
+      call twh_set_nbcoeff(ii,nbclocal) 
+      call twh_mass(GLB_SET,type,masslocal) 
+      call twh_elementname(GLB_SET,type,elelocal) 
+      call twh_nbff(GLB_SET,type,ffname)
+      nbnlocal ='ODmsoMod'
+      call twh_nbname(GLB_SET,type,nbnlocal)
+      bplocal = 'sp3'
+      call twh_bondpatt(GLB_SET,type,bplocal) 
       
 c     (CCl4) Carbon in carbontetrachloride [Gromos manual]
-      type = 42
+      type = 45
       ii = twh_getnbtype(type,type)
       nbclocal(1) = 0.051292d0
       nbclocal(2) = 2.7568d0
@@ -889,7 +940,7 @@ c     (CCl4) Carbon in carbontetrachloride [Gromos manual]
       call twh_bondpatt(GLB_SET,type,bplocal) 
       
 c     (ClCl4) Chlorine in carbontetrachloride [Gromos manual]
-      type = 43
+      type = 46
       ii = twh_getnbtype(type,type)
       nbclocal(1) = 0.087201d0
       nbclocal(2) = 3.5732d0
@@ -907,7 +958,7 @@ c     (ClCl4) Chlorine in carbontetrachloride [Gromos manual]
 c     (Si) silicon [Gromos manual]
 c     --- this has the same parameters as P(type127) but a different
 c     --- element and therefore a different mass
-      type = 44
+      type = 47
       ii = twh_getnbtype(type,type)
       nbclocal(1) = 0.1214d0
       nbclocal(2) = 4.711d0
@@ -955,8 +1006,8 @@ c              --- we are setting up all of the self terms
                ii = twh_getnbtype(i,i)
                jj = twh_getnbtype(j,j)
                ij = twh_getnbtype(i,j)
-c              --- which currently range only up to type 44
-               if ( i .le. 44 .and. j .le. 44 ) then
+c              --- which currently range only up to type 47
+               if ( i .le. 47 .and. j .le. 47 ) then
 c                 --- compute the gromos selection matrix
                   isel = select(i,j)
                   jsel = select(j,i)
@@ -974,16 +1025,16 @@ c                    --- special cross term: consult if list
      &                       (i .eq. 38 .and. j .eq. 37)) then
                         csixt = 0.6493d-3
                         ctwvt = 0.3266d0
-                     elseif ( (i .eq. 39 .and. j .eq. 40) .or.
-     &                       (i .eq. 40 .and. j .eq. 39)) then
+                     elseif ( (i .eq. 39 .and. j .eq. 41) .or.
+     &                       (i .eq. 41 .and. j .eq. 39)) then
                         csixt = 9.7827d-3
                         ctwvt = 21.6523d0
-                     elseif ( (i .eq. 39 .and. j .eq. 41) .or.
-     &                       (i .eq. 41 .and. j .eq. 39) ) then
+                     elseif ( (i .eq. 39 .and. j .eq. 43) .or.
+     &                       (i .eq. 43 .and. j .eq. 39) ) then
                         csixt = 5.2442d-3
                         ctwvt = 4.6094d0
-                     elseif ( (i .eq. 40 .and. j .eq. 41) .or.
-     &                       (i .eq. 41 .and. j .eq. 40) ) then
+                     elseif ( (i .eq. 41 .and. j .eq. 43) .or.
+     &                       (i .eq. 43 .and. j .eq. 41) ) then
                         csixt = 4.9187d-3
                         ctwvt = 4.7597d0
                      endif
@@ -1393,7 +1444,7 @@ c     --- ClChl - ClChl
       call twh_vibff(GLB_SET,type,ffname)
 
 c     --- ODmso - CDmso
-      type = 44
+      type = 47
       call twh_vibstyle(GLB_SET,type,3)
       vclocal(0) = 2.80412d0
       vclocal(1) = (2.39d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
@@ -1779,7 +1830,7 @@ c     --- CDmso - SDmso - CDmso
       call twh_bendff(GLB_SET,type,ffname)
 
 c     --- CDmso - SDmso - ODmso
-      type = 44
+      type = 47
       call twh_anglestyle(GLB_SET,type,3)
       bclocal(0) = 106.75d0
       bclocal(1) = (503.0d0)*(0.5d0)*(CON_KJTOK)
