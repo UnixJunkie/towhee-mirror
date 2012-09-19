@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * handles the non-uniform generation of an atom position using   *
 c     * the energy-biasing map                                         *
 c     *                                                                *
 c     * split from swapmoves 11-02-2007 by M.G. Martin                 *
-c     * last modified 08-17-2011 by M.G. Martin                        *
+c     * last modified 09-18-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -38,15 +38,16 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       integer iaa,ibb,icc,cubea,cubeb,cubec,cubeindex
       double precision rndeb,cweight,asize,bsize,csize
-      double precision totbias,bvolume,aaa,bbb,ccc
+      double precision totbias,aaa,bbb,ccc,dcubes
 
 c     --- retrieve biasing values
       call twh_cubelet(GLB_GET,cubea,cubeb,cubec)
-      call twh_boxvolume(GLB_GET,ibox,bvolume)
 c     --- compute the cubelet sizes
       asize = 1.0d0/dble(cubea)
       bsize = 1.0d0/dble(cubeb)
       csize = 1.0d0/dble(cubec)
+c     --- compute number of cubelets for biasing
+      dcubes = dble(cubea*cubeb*cubec)
 
       if ( lgenerate ) then
 c        --- select a position according to the energy bias
@@ -67,10 +68,12 @@ c                    --- generate in arbitrary coordinates
 c                    --- transform to cartesian coordinates
                      call twh_arbtocart(ibox,aaa,bbb,ccc,xxx,yyy,zzz)
 c                    --- bias factor back to uniform (in this case 1/V)
-c                    --- p_uniform = 1/V
-c                    --- p_gen = cweight
-c                    --- (1/V) / cweight = 1 / (V * cweight)
-                     bias = 1.0d0/(cweight*bvolume)
+c                    --- p_uniform = 1/Vbox
+c                    --- p_gen = cweight* (1/Vcubelet)
+c                    --- p_uniform/p_gen = 1 / (cweight * Vbox/Vcubelet)
+c                    --- Vbox / Vcubelet = number of cubes
+c                    --- bias = 1 / (cweight * cubes)
+                     bias = 1.0d0/(cweight*dcubes)
                      return
                   endif
                enddo
@@ -87,9 +90,8 @@ c        --- evaluate the biasing correction for the old position
          icc = idint(ccc/csize) + 1
          call twh_cubelet_index(iaa,ibb,icc,cubeindex)
          call twh_cubeletweight(GLB_GET,cubeindex,cweight)
-c        --- normalize back to uniform (in this case 1/V)
-c        --- (1/V) / cweight = 1 / (V * cweight)
-         bias = 1.0d0/(cweight*bvolume)
+c        --- normalize back to uniform
+         bias = 1.0d0/(cweight*dcubes)
          return
       endif
 
@@ -97,6 +99,7 @@ c     --- if we got here then we did not find the correct biasing box
 c     --- this is a fatal error
       write(6,*) 'ENERGYBOXBIAS: matching subcube not found'
       write(6,*) 'lgenerate:',lgenerate
+      write(6,*) 'cubea,cubeb,cubec:',cubea,cubeb,cubec
       write(6,*) 'this is a fatal error'
       lfailure = .true.
 

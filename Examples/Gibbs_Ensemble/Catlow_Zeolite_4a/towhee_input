@@ -4244,35 +4244,35 @@ forcefield
 'CatlowFaux'
 charge_assignment
 'manual'
-unit ntype qqdefault
+unit ntype qqatom
 1    'Cc'    -0.4
 vibration
 4
 2 3 4 5
 improper torsion
 0
-unit ntype qqdefault
+unit ntype qqatom
 2    'Hc'    0.1
 vibration
 1
 1
 improper torsion
 0
-unit ntype qqdefault
+unit ntype qqatom
 3    'Hc'    0.1
 vibration
 1
 1
 improper torsion
 0
-unit ntype qqdefault
+unit ntype qqatom
 4    'Hc'    0.1
 vibration
 1
 1
 improper torsion
 0
-unit ntype qqdefault
+unit ntype qqatom
 5    'Hc'    0.1
 vibration
 1

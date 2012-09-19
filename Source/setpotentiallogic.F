@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2007 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * sets up all of the input and output logical related to the     *
 c     * classical_potential                                            *
 c     *                                                                *
 c     * split out of readclassical on 04-13-2005 by M.G. Martin        *
-c     * last modified 12-05-2008 by M.G. Martin                        *
+c     * last modified 08-31-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine

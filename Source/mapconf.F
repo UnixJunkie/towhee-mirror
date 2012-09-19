@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this subroutine creates or reads a towhee_map file             *
 c     *                                                                *
 c     * originally created 02-2006 by O. Yazaydin                      *
-c     * last modified 05-19-2010 by M.G. Martin                        *
+c     * last modified 09-18-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -143,6 +143,23 @@ c                 --- increment the totalweight
             enddo
          enddo 
 
+         if ( totalweight .lt. SMALLEST ) then
+            write(6,*) 'MAPCONF: total Rosenbluth weight low:'
+     &           ,totalweight
+            write(6,*) 'using a uniform distribution of cubes instead'
+            cweight = 1.0d0
+            totalweight = 0.0d0
+            do iaa = 1,cubea
+               do ibb = 1,cubeb
+                  do icc = 1,cubec
+                     call twh_cubelet_index(iaa,ibb,icc,cubeindex)
+                     call twh_cubeletweight(GLB_SET,cubeindex,cweight)
+                     totalweight = totalweight + cweight
+                  enddo
+               enddo
+            enddo
+         endif
+
 c        --- normallize the distribution
          dcube = dble(cubea)*dble(cubeb)*dble(cubec)
          cweighttotal = 0.0d0
@@ -165,6 +182,11 @@ c                 --- add up weights to double check
 
          write(6,'(a22,1x,f12.10)') 'MAPCONF: cweighttotal:'
      &        ,cweighttotal
+         if ( dabs(cweighttotal-1.0d0) .gt. 1.0d-5 ) then
+            write(6,*) 'Normalization failed'
+            lfailure = .true.
+            return
+         endif
 c        --- write the map information to the file 
          call twh_openfile(lfailure,68,'towhee_map','DEFAULT',
      &        'UNKNOWN','DEFAULT')

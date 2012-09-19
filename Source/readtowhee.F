@@ -3233,7 +3233,7 @@ c     * lpdbset                                                        *
 c     * lfailure                                                       *
 c     * lpdb, lpdbset, lerror are modified in this subroutine          *
 c     *                                                                *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-31-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_INAA
@@ -3292,7 +3292,7 @@ c           --- also read in the pdb name
             call twh_aminoshort(GLB_SET,imolty,iunit,aminoshort)
             write(6,37) 'pdbname:',pdbname
      &           ,'aminonum:',aminonum,'aminoshort:',aminoshort
-37               format(a8,1x,a4,1x,a9,1x,i10,1x,a11,1x,i10)
+37               format(a8,1x,a4,1x,a9,1x,i10,1x,a11,1x,a3)
          endif
 
 c        --- read in bond vibrations

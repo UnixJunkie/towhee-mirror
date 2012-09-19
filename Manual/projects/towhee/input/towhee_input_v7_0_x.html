@@ -39,6 +39,14 @@
      </ul>
      <b>Bug reports and feature enhancements for 7.0.x versions</b>
      <ul>
+      <li>7.0.4: Significant bug fix for the 'energy bias' option for the <a href="#cbmc_nb_one_generation"><b>cbmc_nb_one_generation</b></a>.  All previous versions were not
+       properly applying the bias correction for the number of cells in the energy biasing.
+       Minor cosmetic changes to some of the Example towhee_input files.  
+       Changed the <a href="../potentype/towhee_input_classical_potential.html">classical_potential</a>
+       manual to reflect there is no <b>ltailc</b> variable with the Weeks-Chandler-Anderson potential.  The formatting of this towhee_input manual was fixed
+       to better reflect the variables that are required with the 'explicit' option of <a href="#cbmc_setting_style"><b>cbmc_setting_style</b></a>.
+       Minor bug fix for the <a href="../forcefields/gromos43a1.html">Gromos43A1</a> forcefield to properly set the mass for (39 : SDmso) sulfur in DMSO.
+      </li>
       <li>7.0.3: Bug fix for the single-atom translation move so it now works properly with Class 2 force fields.</li>
       <li>7.0.2: Minor change so that constant pressure volume moves attempted in a simulation box that has an external field are automatically rejected.</li>
       <li>7.0.1: Bug fix for the energy-bias option to insure the target atom is always in the central simulation box, this was causing an occasional out-of-bounds 
@@ -2140,11 +2148,11 @@
            </ul>
           </dt>
 
+
           <dt><a name="nch_pre_nb"><b>nch_pre_nb (integer) [one value for each molecule type]</b></a> 
-           <dt>This variable is only required when the <b>cbmc_formulation</b> is 'Martin and Frischknecht 2006'</dt>
            <ul>
-            <li>The number of trials for a selection procedure that takes place after the dihedral selection, but before the nonbond selection when using a 
-             <b>cbmc_formulation</b> of 'Martin and Frischknecht 2006'.  
+            <li>This variable is only required when the <b>cbmc_formulation</b> is 'Martin and Frischknecht 2006'.  The number of trials for a selection
+             procedure that takes place after the dihedral selection, but before the nonbond selection.
             </li>
            </ul>
           </dt>
@@ -2663,6 +2671,7 @@
        </ul>
       </dt>
 
+      <hr></hr>
       <p>&nbsp;</p>
       <dt>The final section of towhee_input contains the information that is used to construct the forcefield for the molecule types in the 
        system. The choice of input_style determines which other variables are required to describe the molecule.  Click on the appropriate link for each
@@ -2692,7 +2701,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 30, 2012<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->September 18, 2012<!-- #EndDate -->
   </font>
   <br></br>
  </body>
