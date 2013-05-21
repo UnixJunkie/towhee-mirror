@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 01-09-2012 by M.G. Martin                        *
+c     * last modified 02-05-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -156,6 +156,8 @@ c              --- error check
             rng_code = RNG_KISS99
          elseif ( rng_str .eq. 'MRG32k3a' ) then
             rng_code = RNG_MRG32K3A
+         elseif ( rng_str .eq. 'debug' ) then
+            rng_code = RNG_DEBUG
          else
             write(6,*) 'READTOWHEE: unknown random_number_generator'
             write(6,'(a)') rng_str
@@ -3650,7 +3652,7 @@ c     * initializes the random number generator using a single integer *
 c     * seed                                                           *
 c     *                                                                *
 c     * originally written 11-13-2006 by M.G. Martin                   *
-c     * last modified 08-16-2011 by M.G. Martin                        *
+c     * last modified 02-05-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -3672,6 +3674,10 @@ c     --- retrieve constants
          write(6,'(a,1x,a,1x,i1,1x,a,1x,i10)')
      &        'Selected random number generator RANLUX with luxury'
      &        ,'level',luxlevel,'and single integer seed',iseed
+      elseif ( rng_code .eq. RNG_DEBUG ) then
+         write(6,'(a46,1x,a19)')
+     &        'Selected random number generator DEBUG that is'
+     &        ,'not remotely random'
       elseif ( rng_code .eq. RNG_DX_1597_2_7 ) then
          write(6,'(a,1x,a,1x,i10)')
      &        'Selected random number generator DX-1597-2-7 and single'

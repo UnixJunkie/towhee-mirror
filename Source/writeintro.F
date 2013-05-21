@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,18 +24,24 @@ c     ******************************************************************
 c     * writes out the introductory information about Towhee           *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 09-18-2012 by M.G. Martin                        *
+c     * last modified 05-02-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
       character*7 version
       character*20 date
 
-      version = '7.0.4'
+      version = '7.0.5'
       call twh_version(GLB_SET,version)
-      date = '(September 18 2012)'
+      date = '(April 05 2013)'
 c     --- Output some information about the code
       write(6,'(1x,a22,1x,a,1x,a)') 'MCCCS Towhee - Version',version
      &     ,date
+c     --- 2013 copyright plus code contributors
+      write(6,'(1x,a)') 'Copyright (C) <2013> Marcus G. Martin'
+      write(6,'(3(1x,a))')
+     &     'Code Contributors for 2013:'
+     &     ,'Wesley Emeneker;'
+     &     ,'Marcus G. Martin;'
 c     --- 2012 copyright plus code contributors
       write(6,'(1x,a)') 'Copyright (C) <2012> Marcus G. Martin'
       write(6,'(2(1x,a))')

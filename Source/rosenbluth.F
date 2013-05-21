@@ -94,7 +94,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 11-06-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -299,7 +299,6 @@ c           --- cannot take advantage of only doing them once
             lfailure = .true.
             return
          endif
-
          do ip = 1,nch_nb
             if ( cbmc_form_code .eq. CBMC_FORM_MS1999_MT2004 ) then
 c              --- just have to call a decoupled torsion selection 
@@ -401,7 +400,6 @@ c                 --- perform the biased selection to get inner dihed
      &                 ,phishift,w_cbtor,vcbvib,vcbbend,vcbtor,bfcbbias
      &                 ,xtorcord,ytorcord,ztorcord,torkey)
                   if ( lfailure ) return
-
 c                 --- check for walk termination
  100              if ( lovrangle .or. ldihedterm ) then
                      lovrprenb(iouter) = .true.
@@ -588,6 +586,9 @@ c        --- compute the nonbonded rosenbluth weight
      &              -dpscale_nb)
             endif
             w_nb = w_nb + bfactor(ip)
+#if DEBUG_ROSENBLUTH
+            write(6,*) 'ip,bfactor(ip):',ip,bfactor(ip)
+#endif
          enddo
 c        --- possible that all were hard overlaps
          if ( lterm ) then
@@ -647,6 +648,15 @@ c           --- if we got to this point the w_nb sum must be 0
 
  180     continue
 
+c        --- divide out the biasing boltzmann factor
+         w_nb = w_nb / boltzbias(iwalk)
+c        --- divide out the number of nonbond trials
+         w_nb = w_nb / dble(nch_nb)
+
+#if DEBUG_ROSENBLUTH
+         write(6,*) 'Rosenbluth w_nb:',w_nb
+#endif
+
          if ( cbmc_form_code .eq. CBMC_FORM_MS1999_MT2004 ) then
 c           --- update rosenbluth weight - include angle and
 c           --- bond weights
@@ -664,10 +674,7 @@ c           --- update rosenbluth weight - only nonbonded wieght
             lfailure = .true.
             return
          endif
-c        --- divide out the biasing boltzmann factor
-         wrosen = wrosen / boltzbias(iwalk)
-c        --- divide out the number of nonbond trials
-         wrosen = wrosen / dble(nch_nb)
+
 c        --- rescale the weight
          call twh_getweight(lfailure,1,vmin,wrosen,dpmin,lterm)
          if ( lfailure ) return

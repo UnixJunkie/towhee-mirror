@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 08-16-2011 by M.G. Martin                        *
+c     * last modified 02-05-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -140,6 +140,8 @@ c        --- molecule information
             write(15,'(a1,a6,a1)') char(39),'KISS99',char(39)
          elseif ( rng_code .eq. RNG_MRG32K3A ) then
             write(15,'(a1,a8,a1)') char(39),'MRG32k3a',char(39)
+         elseif ( rng_code .eq. RNG_DEBUG ) then
+            write(15,'(a1,a5,a1)') char(39),'debug',char(39)
          else
             write(6,*) 'WRITETOWHEE: unknown random_code'
             write(6,*) rng_code

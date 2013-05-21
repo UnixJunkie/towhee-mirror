@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2012 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * this subroutine keeps track of all simulation averages         *
 c     *                                                                *
 c     * originally written 10-25-2004 by M.G. Martin                   *
-c     * last modified 02-04-2011 by M.G. Martin                        *
+c     * last modified 09-21-2012 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_LT
@@ -242,7 +242,7 @@ c        --- return the number of completed blocks
 
       else
 c        --- unknown updatetype
-         write(6,*) 'AVERAGES: unkown updatetype'
+         write(6,*) 'AVERAGES: unknown updatetype'
          write(6,*) updatetype
          lfailure = .true.
          return

@@ -120,6 +120,7 @@ c     --- double precision scalars
       double precision scalelolog,boxvolume,debroglie,uvtfactor
       double precision d_tmmc_weight,log_e,dvalue,tmmc_one,tmmc_zero
       double precision tmmc_negone
+      double precision ectotal,beta
 c     --- double precision arrays
       double precision dvctot
       dimension dvctot(2)
@@ -511,14 +512,6 @@ c        --- select a chain in boxtest(1) at random
 c           --- warn users if this is uvt and the empty box is the 
 c           --- ideal gas
             if ( boxtest(1) .eq. 0 ) then
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-c TMMC Modification:                                   c
-c                                                      c
-c Removed this warning for tmmc. In uVT, the empty     c
-c simulation-box state is routinely visited. Thus,     c
-c this warning message gets annoying and potentially   c
-c takes up space (if standard output is a file).       c
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             IF (.NOT.tmmc_flag) THEN
                write(6,*) 'WARNING: no molecule remain in the ideal gas'
      &              ,' for molecule type ',imolty
@@ -700,7 +693,7 @@ c           --- the identical schedule
             if ( lfailure ) return
          endif
 #if DEBUG_SWAPMOVES
-      write(6,*) 'swapmoves finished schedule'
+      write(6,*) 'swapmoves finished schedule imolty,iutry',imolty,iutry
 #endif
 
 c        --- perform the molecule growth for the inserted molecule
@@ -718,7 +711,17 @@ c           --- grow the rest of the molecule using configurational-bias
          endif
 
 #if DEBUG_SWAPMOVES
-      write(6,*) 'swapmoves back from rosenbluth lnew:',lnew
+      write(6,*) 'swapmoves back from rosenbluth lnew, wrosen:',lnew
+     &        ,wrosen(icordflag)
+      write(6,*) 'vrostot:',vrostot(icordflag)
+      write(6,*) 'vrosvib:',vrosvib(icordflag)
+      write(6,*) 'vrosang:',vrosang(icordflag)
+      write(6,*) 'vrostor:',vrostor(icordflag)
+      write(6,*) 'vrosext:',vrosext(icordflag)
+      write(6,*) 'vrosintra:',vrosintra(icordflag)
+      write(6,*) 'vrosinter:',vrosinter(icordflag)
+      write(6,*) 'vroselect:',vroselect(icordflag)
+      write(6,*) 'vrosewald:',vrosewald(icordflag)
 #endif
 
 c        --- termination of cbmc attempt due to walk termination
@@ -787,15 +790,6 @@ c              --- nothing to do in the old box
                   chaininfo(1,CRD_OLD) = CRD_NONE
                endif
             endif
-#if DEBUG_SWAPMOVES
-            write(6,*) 'ibox,activebox,nchainmove:',ibox,activebox
-     &         ,nchainmove
-            write(6,*) 'lempty:',lempty
-            do imove = 1,nchainmove
-               write(6,*) 'imove,chaininfo:',imove,chaininfo(imove,1)
-     &              ,chaininfo(imove,2),chaininfo(imove,3)
-            enddo
-#endif
             if ( lcompute ) then
                call twh_energy_change(lfailure,activebox,nchainmove
      &              ,chaininfo,ltermtest,lpartial,lgetcom,lintra,lbonded
@@ -805,6 +799,7 @@ c              --- nothing to do in the old box
      &              ,dvf,ddvdl_lj,ddvdl_c)
                if ( lfailure ) return
 #if DEBUG_SWAPMOVES
+               write(6,*) 'energy change corrections'
                write(6,*) 'ibox,activebox:',ibox,activebox
                write(6,*) 'dvctot:',dvctot(ibox)
                write(6,*) 'dvintra:',dvintra(ibox)
@@ -857,15 +852,14 @@ c           --- "new" portion
             elseif ( potentialstyle .eq. POT_EXTERNAL ) then
                vtest = dvquantum(ibox)
             endif
+c           --- For the old box the energy change sign needs to be 
+c           --- reversed
             if ( ibox .eq. 1 ) vtest = -vtest
 c           --- safely convert this into a rosenbluth weight
             call twh_getweight(lfailure,0,vtest,wmin,dpmin
      &           ,ltermtest(ibox))
             if ( lfailure ) return
-c           --- this part is very sneaky - when ibox is 1 we are 
-c           --- storing the negative energy change in the "old" part
-c           --- otherwise storing the positive energy change in the 
-c           --- new part. 
+
             waddtest(ibox) = waddtest(ibox)*wmin
             dpscaletest(ibox) = dpscaletest(ibox) + dpmin
          enddo
@@ -1184,6 +1178,11 @@ c        --- the system out of the specified macrostate space.
       write(6,*) 'vrosang:',vrosang
       write(6,*) 'vrosext:',vrosext
 #endif
+
+      wratio = 10.0**(wdlog)
+      ectotal = vrostot(2)-vrostot(1)+dvctot(1)
+      call twh_beta(GLB_GET,beta)
+
       if ( laccept ) then
 #if DEBUG_SWAPMOVES
       write(6,*) 'SWAPMOVES MOVE ACCEPTED'
@@ -1779,7 +1778,6 @@ c        --- there is some trickery in the grand canonical ensemble
             bsum = 0.0d0 
 #if DEBUG_SWAPMOVES
       write(6,*) 'w1test:',w1test
-      write(6,*) 'rbf:',rbf
 #endif
             do ip = 1, nch_nb_one
                if ( .not. lnbterm(ip) ) then
@@ -1817,6 +1815,7 @@ c     --- save the energies for the selected walk
          v1tottest(icordflag) = vqtry(iwalk)
       endif
 #if DEBUG_SWAPMOVES
+      write(6,*) 'after initial atom insertion'
       write(6,*) 'icordflag,iwalk:',icordflag,iwalk
       write(6,*) 'vctry:',vctry(iwalk)
       write(6,*) 'vtrext:',vtrext(iwalk)

@@ -963,3 +963,18 @@ c     --- information variables
 
       return
       end
+
+      function rngdebug()
+c     ******************************************************************
+c     * a not at all random option for the RNG used just for debugging *
+c     *                                                                *
+c     * originally written 02-05-2013 by M.G. Martin                   *
+c     * last modified 02-05-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+      double precision rngdebug
+
+      rngdebug = 0.3d0
+
+      return
+      end

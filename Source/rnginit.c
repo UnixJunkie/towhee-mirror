@@ -89,6 +89,7 @@ void rnginit_(int *rngchoice, int *seed) {
   void mrgini(int);
   void twh_random_luxlevel_(int *, int *);
   double dranlux_(void);
+  double rngdebug_(void);
   double dx1597(void);
   double kiss99_(void);
   double mrg32k3a(void);
@@ -100,6 +101,9 @@ void rnginit_(int *rngchoice, int *seed) {
     twh_rngpointer = dranlux_;
     twh_random_luxlevel_(&get,&luxlevel);
     rluxgo_(&luxlevel,seed,&zero,&zero);
+    return;
+  case RNG_DEBUG:
+    twh_rngpointer = rngdebug_;
     return;
   case RNG_DX_1597_2_7:
     twh_rngpointer = dx1597;
@@ -130,6 +134,9 @@ void rngsave_(int * rngchoice, int *nrng, UI *irng) {
   case RNG_RANLUX:
     rluxut_(irng+1);
     *nrng = 26;
+    return;
+  case RNG_DEBUG:
+    *nrng = 0;
     return;
   case RNG_DX_1597_2_7:
     dxsave(nrng, irng);

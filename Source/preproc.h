@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 08-30-2012 by M.G. Martin */
+/* last significant modification 02-05-2013 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -545,6 +545,7 @@
 
 /* random number generator codes, arbitary but do not change */
 #define RNG_RANLUX 0
+#define RNG_DEBUG 1
 #define RNG_DX_1597_2_7 5
 #define RNG_KISS99 7
 #define RNG_MRG32K3A 8

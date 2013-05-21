@@ -39,6 +39,8 @@ cbmc_eqn_bend_b_4.tex \
 cbmc_eqn_bend_b_4.gif \
 cbmc_eqn_bend_b_5.tex \
 cbmc_eqn_bend_b_5.gif \
+cbmc_eqn_bend_b_6.tex \
+cbmc_eqn_bend_b_6.gif \
 cbmc_eqn_bond_1.gif \
 cbmc_eqn_bond_1.tex \
 cbmc_eqn_bond_2.gif \

@@ -39,6 +39,8 @@
      </ul>
      <b>Bug reports and feature enhancements for 7.0.x versions</b>
      <ul>
+      <li>7.0.5: Many small updates to the manual.  Some new entries in the towhee_citations output file.  Bug patch reported by Wesley Emeneker incorporated to resolve an 
+       issue where </li>
       <li>7.0.4: Significant bug fix for the 'energy bias' option for the <a href="#cbmc_nb_one_generation"><b>cbmc_nb_one_generation</b></a>.  All previous versions were not
        properly applying the bias correction for the number of cells in the energy biasing.
        Minor cosmetic changes to some of the Example towhee_input files.  
@@ -1503,7 +1505,7 @@
        <ul>
         <dt><a name="pmavb1in"><b>pmavb1in (double precision)</b></a> 
          <ul>
-          <li> Probability of trying to move a molecule into an inner region for aggregation volume bias move of type 1.</li>
+          <li> Probability of trying to move a molecule into an inner region for aggregation volume bias move of type 1.  Must be strictly between 0.0 and 1.0.</li>
          </ul>
         </dt>
 
@@ -1547,7 +1549,7 @@
        <ul>
         <dt><a name="pmavb2in"><b>pmavb2in (double precision)</b></a> 
          <ul>
-          <li> Probability of trying to move a molecule into an inner region for aggregation volume bias move of type 2.</li>
+          <li> Probability of trying to move a molecule into an inner region for aggregation volume bias move of type 2.  Must be strictly between 0.0 and 1.0.</li>
          </ul>
         </dt>
         <dt><a name="pmavb2mt"><b>pmavb2mt (double precision)</b></a> 
@@ -1595,7 +1597,7 @@
         <dt><a name="pmavb3ct"><b>pmavb3ct (double precision)</b></a> 
          <ul>
           <li> Probability of performing an aggregation volume bias move of type 3 where the molecule target is of a certain type.  The molecule that is moved
-           is chosen according to <b>pmavb1mt</b> and then the type of molecule that is used as a reference for determining the inner and outer regions is
+           is chosen according to <b>pmavb3mt</b> and then the type of molecule that is used as a reference for determining the inner and outer regions is
            found using this variable.  This is a two dimensional array and uses one line of text for each type of molecule in the system.
           </li>
          </ul>
@@ -1986,7 +1988,7 @@
         </li>
         <li>'default ideal': sets up all of the configurational-bias variables according to a general set of default values using the 'ideal' generation
          styles.  This option sets the following variables for all molecule types in the system.  For more information about these variables see the explicit
-         setting for this variable).
+         setting for this variable.
          <ul>
           <dt><b>cbmc_bond_generation</b> = 'r^2 with bounds'</dt>
           <dt><b>cbmc_bend_generation</b> = 'ideal'</dt>
@@ -2006,8 +2008,9 @@
          </ul>
         </li>
         <li>'widom ideal': sets up all of the configurational-bias variables according to a general set of default values using the 'ideal' generation styles
-         in such a manner that the chemical potential is computed correctly using the normal widom insertion.  This option sets the following variables for
-         all molecule types in the system.  For more information about these variables see the explicit setting for this variable).
+         a single growth trial for all of the nonbonded selections following the (now discredited) belief that this was the only
+         way to insure the chemical potential was computed correctly using the normal Widom insertion method.  This option sets the following variables for
+         all molecule types in the system.  For more information about these variables see the explicit setting for this variable.
          <ul>
           <dt><b>cbmc_bond_generation</b> = 'r^2 with bounds'</dt>
           <dt><b>cbmc_bend_generation</b> = 'ideal'</dt>
@@ -2028,7 +2031,7 @@
         </li>
         <li>'Martin and Thompson FPE 2004': sets up all of the configurational-bias variables to the values used in 
          <a href="../references.html#martin_thompson_2004">Martin and Thompson 2004</a>.  This option sets the following variables for all molecule types
-         in the system.  For more information about these variables see the explicit setting for this variable).
+         in the system.  For more information about these variables see the explicit setting for this variable.
          <ul>
           <dt><b>cbmc_bond_generation</b> = 'r^2 with bounds'</dt>
           <dt><b>cbmc_bend_generation</b> = 'ideal'</dt>
@@ -2048,7 +2051,7 @@
          </ul>
         </li>
         <li>'default autofit gaussian': sets up all of the configurational-bias variables to autofit gaussian settings.  This option sets the following
-         variables for all molecule types in the system.  For more information about these variables see the explicit setting for this variable).
+         variables for all molecule types in the system.  For more information about these variables see the explicit setting for this variable.
          <ul>
           <dt><b>cbmc_bond_generation</b> = 'autofit gaussian'</dt>
           <dt><b>bond_sdev_multiplier</b> = 1.0d0</dt>
@@ -2701,7 +2704,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->September 18, 2012<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->March 28, 2013<!-- #EndDate -->
   </font>
   <br></br>
  </body>

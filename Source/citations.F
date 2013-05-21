@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2011-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2011-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * writes out the suggested citations for a Towhee simulation     *
 c     *                                                                *
 c     * originally written 08-09-2011 by M.G. Martin                   *
-c     * last modified 01-06-2012 by M.G. Martin                        *
+c     * last modified 03-28-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -34,8 +34,11 @@ c     --- local variables
       character*3 ensstring
       character*7 version
       character*20 filename
+      logical lnone
       integer citefile,citecount,numboxes,ensemble,rng_code,luxlevel
       integer icount,imove,ncount,nvmove,ibox,jbox,imolty,nmolty
+      integer ivector
+      double precision dcount,dncount
 
 c     --- output message to the standard out (or redirect)
       write(6,'(a,1x,a)')
@@ -147,8 +150,8 @@ c     --- Ensemble
      &        '... in the Canonical ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a,1x,a)')
      &        '[',citecount,']'
-     &        ,'N. Metropolis; A. W. Rosenbluth; M. N. Rosenbluth'
-     &        ,'A. H. Teller; E. Teller;'
+     &        ,'N. Metropolis; A.W. Rosenbluth; M.N. Rosenbluth'
+     &        ,'A.H. Teller; E. Teller;'
          write(citefile,'(a1,a38,1x,a18,a1)') 
      &        char(34),'Equation of State Calculations by Fast'
      &        ,'Computing Machines',char(34)
@@ -161,7 +164,7 @@ c     --- Ensemble
      &        ,'... in the isobaric-isothermal ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a)')
      &        '[',citecount,']'
-     &        ,'I. R. McDonald;'
+     &        ,'I.R. McDonald;'
          write(citefile,'(a1,a41,1x,a22,a1)')
      &        char(34),'NpT-ensemble Monte Carlo calculations for'
      &        ,'binary liquid mixtures',char(34)
@@ -173,7 +176,7 @@ c     --- Ensemble
      &        '... in the Grand Canonical ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a)')
      &        '[',citecount,']'
-     &        ,'G. E. Norman; V. S. Filinov;'
+     &        ,'G.E. Norman; V.S. Filinov;'
          write(citefile,'(a1,a,1x,a,a1)') 
      &        char(34)
      &        ,'Investigations of Phase Transitions by a Monte-Carlo'
@@ -196,7 +199,7 @@ c     --- Ensemble
 c        --- first Gibbs ensemble reference
          write(citefile,'(a1,i2,a1,1x,a)') 
      &        '[',citecount,']'
-     &        , 'A. Z. Panagiotopoulos;'
+     &        , 'A.Z. Panagiotopoulos;'
          write(citefile,'(a1,a,1x,a,1x,a,a1)')
      &        char(34),'Direct determination of phase coexistence'
      &        ,'properties of fluids by Monte Carlo simulation in'
@@ -208,8 +211,8 @@ c        --- update citecount for the extra citation
 c        --- second Gibbs ensemble reference
          write(citefile,'(a1,i2,a1,1x,a,1x,a)') 
      &        '[',citecount,']'
-     &        , 'A. Z. Panagiotopoulos; N. Quirke; M. Stapleton;'
-     &        ,'D. J. Tildesley;'
+     &        , 'A.Z. Panagiotopoulos; N. Quirke; M. Stapleton;'
+     &        ,'D.J. Tildesley;'
          write(citefile,'(a1,a,1x,a,1x,a,a1)')
      &        char(34)
      &        ,'Phase equilibria by simulation in the Gibbs ensemble:'
@@ -225,7 +228,7 @@ c        --- second Gibbs ensemble reference
 
       write(citefile,*)
 
-c     --- volume move
+c     --- isotropic volume move
       call twh_nvmove(GLB_GET,nvmove)
       ncount = 0
       do imove = 1,nvmove
@@ -240,7 +243,7 @@ c     --- volume move
 c           --- algorithm from the original NPT paper
             write(citefile,'(a1,i2,a1,1x,a)')
      &           '[',citecount,']'
-     &           ,'I. R. McDonald;'
+     &           ,'I.R. McDonald;'
             write(citefile,'(a1,a41,1x,a22,a1)')
      &           char(34),'NpT-ensemble Monte Carlo calculations for'
      &           ,'binary liquid mixtures',char(34)
@@ -253,7 +256,7 @@ c           --- algorithm from the original NPT paper
 c           --- first Gibbs ensemble reference
             write(citefile,'(a1,i2,a1,1x,a)') 
      &           '[',citecount,']'
-     &           , 'A. Z. Panagiotopoulos;'
+     &           , 'A.Z. Panagiotopoulos;'
             write(citefile,'(a1,a,1x,a,1x,a,a1)')
      &           char(34),'Direct determination of phase coexistence'
      &           ,'properties of fluids by Monte Carlo simulation in'
@@ -263,6 +266,34 @@ c           --- first Gibbs ensemble reference
             write(citefile,*) 'Towhee adjusts the volume based on the'
      &           ,' logarithm of the ratios of box volumes'
          endif
+      endif
+
+c     --- anisotropic volume move
+      call twh_nvmove(GLB_GET,nvmove)
+      dncount = 0.0d0
+      do imove = 1,nvmove
+         do ivector = 1,9
+            call twh_acncell(GLB_GET,imove,ivector,dcount)
+            dncount = dncount + dcount
+         enddo
+      enddo
+      if ( dcount .gt. 0.5d0 ) then
+c        --- update citecount for the extra citation
+         citecount = citecount + 1
+            write(citefile,'(a,i2,a1)')
+     &           'Anisotropic volume change move [',citecount,']'
+c        --- anisotropic volume move reference
+         write(citefile,'(a1,i2,a1,1x,a)') 
+     &        '[',citecount,']'
+     &        , 'S. Yashonath; C.N.R. Rao;'
+         write(citefile,'(a1,a,1x,a,a1)')
+     &        char(34)
+     &        ,'A Monte Carlo study of crystal structure'
+     &        ,'transformations'
+     &        ,char(34)
+         write(citefile,'(a)')
+     &        'Mol. Phys. 54 245-251 (1985)'
+
       endif
 
 c     --- rotational-bias
@@ -284,7 +315,7 @@ c     --- rotational-bias
 c        --- original rotational-bias paper
          write(citefile,'(a1,i2,a1,1x,a,1x,a)')
      &        '[',citecount,']'
-     &        ,'R. F. Cracknell; D. Nicholson; N. G. Parsonage;'
+     &        ,'R.F. Cracknell; D. Nicholson; N.G. Parsonage;'
      &        ,'H. Evans;'
          write(citefile,'(a1,a,2(1x,a),a)')
      &        char(34)
@@ -295,8 +326,36 @@ c        --- original rotational-bias paper
          write(citefile,'(a)') 'Mol. Phys. 71 931-943 (1990)'
       endif
 
-
-
+c     --- 2 box cbmc molecule transfer
+c     --- determine if any cbswaps were attempted
+      lnone = .true.
+      call twh_nmolty(GLB_GET,nmolty)
+      do imolty = 1, nmolty
+         do ibox = 1, numboxes
+            do jbox = 1,numboxes
+               call twh_bncbswap(GLB_GET,imolty,ibox,jbox,icount)
+               if ( icount .ne. 0 ) lnone = .false.
+            enddo
+         enddo
+      enddo
+      if ( .not. lnone ) then
+         write(citefile,*)
+         citecount = citecount + 1
+         write(citefile,'(a,i2,a1)')
+     &        'Configurational-bias molecule transfer move ['
+     &        ,citecount,']'
+c        --- original configuration-bias molecule transfer paper
+         write(citefile,'(a1,i2,a1,1x,a)')
+     &        '[',citecount,']'
+     &        ,'G.C.A.M. Mooij; D. Frenkel; B. Smit;'
+         write(citefile,'(a1,a,(1x,a),a1)')
+     &        char(34)
+     &        ,'Direct Simulation of phase equilibria of chain'
+     &        ,'molecules'
+     &        ,char(34)
+         write(citefile,'(a)')
+     &        'J. Phys. Condens. Matter 4 L255-L259 (1992)'
+      endif
 
 c     --- close file
       close(citefile)

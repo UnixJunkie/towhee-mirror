@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.
 */
 /*
-  last modified 06-25-2009 by M.G. Martin
+  last modified 05-02-2013 by M.G. Martin
   handles all of the global variables for the c routines
 */
 #include "preproc.h"
@@ -71,11 +71,15 @@ void twh_time_array(int flag, int timer, double * dptr)
 void *twh_allocateVector(size_t size, int M) {
   void *x;
 
-  if (!(x = malloc(size * M))) {
+  /*It appears that sometimes memory is used before being set.
+    twh_com(GLB_GET, ..., xcmi, ycmi, zcmi) in initconf.F appears
+    to be one such case. Towhee expects that memory will be zeroed before use.
+    calloc() zeroes memory.
+  */
+  if (!(x = calloc(M,size))) {
     fprintf(stderr, "Fatal memory allocation error\n");
     exit(1);
   }
-
   return x;
 }
 
@@ -111,8 +115,12 @@ void **twh_allocate2dMatrix(size_t size, int M, int N) {
     exit(1);
   }
 
+
+  /*Towhee expects that memory will be zeroed before use.
+    calloc() zeroes memory
+  */
   for (i = 0; i < M; i++)
-    if (!(x[i] = (void*) malloc(size * N))) {
+    if (!(x[i] = (void*) calloc(N,size))) {
       fprintf(stderr, "Fatal memory allocation error\n");
       exit(1);
     }
