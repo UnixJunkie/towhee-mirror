@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,7 +32,7 @@ c     *   CRD_SINGLE compute ctrmas for one molecule using single crds *
 c     * ibox is the box of the chain                                   *
 c     * ichain is the chain number.                                    *
 c     * originally written in 1996 by M.G. Martin                      *
-c     * last modified 11-10-2008 by M.G. Martin                        *
+c     * last modified 07-15-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -47,7 +47,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lrescale,lwarn,lnewrcmu,ladjust,lfound,lperiodic
-      logical lxx,lyy,lzz,lreset
+      logical lxx,lyy,lzz,lreset,lbondgraph
 c     --- integer scalars
       integer iunit,imolty,nunit,stt,edd,flagon,itype,iflag,nchain
       integer testchain,cenunit,itogo,itest,junit,ivib,nvib,endunit
@@ -113,6 +113,7 @@ c     --- move.
          call twh_moltyp(GLB_GET,testchain,imolty)
          call twh_nunit(GLB_GET,imolty,nunit)
          call twh_masstotal(GLB_GET,imolty,masstotal)
+         call twh_lbondgraph(GLB_GET,imolty,lbondgraph)
 c         ----- Check if testchain is in the correct box
          if ( twh_get_nboxi(testchain) .eq. ibox) then
             if ( mtype .eq. CTR_INITIAL ) then
@@ -167,15 +168,25 @@ c              --- that exists.
                do while ( itogo .gt. 0 ) 
                   itest = itest + 1
                   call twh_glist(GLB_GET,itest,testunit)
-c                 --- see if the testunit has any neighbors that exist
-                  call twh_invib(GLB_GET,imolty,testunit,nvib)
-                  lfound = .false.
-                  ivib = 0
-                  do while ( .not. lfound .and. ivib .lt. nvib )
-                     ivib = ivib + 1
-                     call twh_ijvib(GLB_GET,imolty,testunit,ivib,junit)
-                     call twh_lexist(GLB_GET,junit,lfound)
-                  enddo
+                  if ( lbondgraph ) then
+c                    --- for a bondgraph molecule, see if the testunit
+c                    --- has any neighbors that exist
+                     call twh_invib(GLB_GET,imolty,testunit,nvib)
+                     lfound = .false.
+                     ivib = 0
+                     do while ( .not. lfound .and. ivib .lt. nvib )
+                        ivib = ivib + 1
+                        call twh_ijvib(GLB_GET,imolty,testunit,ivib
+     &                       ,junit)
+                        call twh_lexist(GLB_GET,junit,lfound)
+                     enddo
+                  else
+c                    --- for a non bondgraph molecule always place in
+c                    --- the same reference as cenunit
+                     junit = cenunit
+                     lfound = .true.
+                  endif
+
                   if ( lfound ) then
 c                    --- junit is a neighbor that exists, put this atom
 c                    --- into the same reference frame

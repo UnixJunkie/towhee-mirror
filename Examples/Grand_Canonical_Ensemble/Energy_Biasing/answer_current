@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (April 05 2013)     
+ MCCCS Towhee - Version 7.0.5   (July 15 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -770,6 +770,8 @@ unit:  576 name:O
    Building the input file for molecule type:     2
 unit:    1 name:CH4       
  Verifying input structures are consistent
+Molecule type    1 unit      2  not connected via bonding graph to atom 1
+  therefore Monte Carlo moves will not be allowed to alter atom positions for this molecule type
 Determining CBMC bond distributions
      for molecule type     2
  Determining cyclic subunits for molecule type          1
@@ -879,7 +881,7 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1       11.17076
+BA Box: 1 Radius of Gyration Type:  1       11.26903
 BA Box: 1 Radius of Gyration Type:  2        0.00000
        300 B: 1 -0.4411E+05  0.1066E+05          0.0     1   23
        400 B: 1 -0.4777E+05  0.1066E+05          0.0     1   25
@@ -911,7 +913,7 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1       11.17076
+BA Box: 1 Radius of Gyration Type:  1       11.26903
 BA Box: 1 Radius of Gyration Type:  2        0.00000
        500 B: 1 -0.4721E+05  0.1066E+05          0.0     1   26
        600 B: 1 -0.4721E+05  0.1066E+05          0.0     1   26
@@ -943,7 +945,7 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1       11.17076
+BA Box: 1 Radius of Gyration Type:  1       11.26903
 BA Box: 1 Radius of Gyration Type:  2        0.00000
        700 B: 1 -0.4721E+05  0.1066E+05          0.0     1   26
        800 B: 1 -0.4721E+05  0.1066E+05          0.0     1   26
@@ -975,7 +977,7 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1       11.17076
+BA Box: 1 Radius of Gyration Type:  1       11.26903
 BA Box: 1 Radius of Gyration Type:  2        0.00000
        900 B: 1 -0.4721E+05  0.1066E+05          0.0     1   26
       1000 B: 1 -0.4902E+05  0.1066E+05          0.0     1   26
@@ -1007,7 +1009,7 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1       11.17076
+BA Box: 1 Radius of Gyration Type:  1       11.26903
 BA Box: 1 Radius of Gyration Type:  2        0.00000
 
  +++++ end of markov chain +++++
@@ -1056,7 +1058,7 @@ Averages               Units Type       Box  1
  Number Density         nm-3    2      2.15743
  Mole Fraction                  1    0.0495055
  Mole Fraction                  2    0.9504945
- Radius of Gyration        A    1   11.1707565
+ Radius of Gyration        A    1   11.2690269
  Radius of Gyration        A    2    0.0000000
  Ideal Pressure          kPa       0.92700E+04
  Ideal p_i <N/V>kT       kPa    1  0.38644E+03
@@ -1101,7 +1103,7 @@ Block Averages (  5 blocks) Units Type Box Average      Standard Deviation
  Mole Fraction                       2   1    0.9504945    0.0228610
  Molarity                       M    1   1  0.15590E+00  0.00000E+00
  Molarity                       M    2   1  0.35838E+01  0.75019E+00
- Radius of Gyration             A    1   1     11.17076      0.00000
+ Radius of Gyration             A    1   1     11.26903      0.00000
  Radius of Gyration             A    2   1      0.00000      0.00000
 
  -----block averages ------

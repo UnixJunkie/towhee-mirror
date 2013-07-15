@@ -39,8 +39,11 @@
      </ul>
      <b>Bug reports and feature enhancements for 7.0.x versions</b>
      <ul>
-      <li>7.0.5: Many small updates to the manual.  Some new entries in the towhee_citations output file.  Bug patch reported by Wesley Emeneker incorporated to resolve an 
-       issue where </li>
+      <li>7.0.5: Many small updates to the manual.  Some new entries in the towhee_citations output file.  Bug patch reported by Wesley Emeneker incorporated and expanded upon 
+       to resolve a issues related to molecules that are not fully bonded (such as zeolites for adsorption simulations).  Towhee now checks for those molecules, no 
+       longer has an overflow when placing all their atoms in the central box at the start of a simulation, and checks to make sure no moves are attempted that change the atom positions
+       of those molecules.
+      </li>
       <li>7.0.4: Significant bug fix for the 'energy bias' option for the <a href="#cbmc_nb_one_generation"><b>cbmc_nb_one_generation</b></a>.  All previous versions were not
        properly applying the bias correction for the number of cells in the energy biasing.
        Minor cosmetic changes to some of the Example towhee_input files.  

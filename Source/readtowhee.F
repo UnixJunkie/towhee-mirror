@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 02-05-2013 by M.G. Martin                        *
+c     * last modified 07-15-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -55,7 +55,7 @@ c     --- logical scalars
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
       logical loutlammps,lshift,ltailc,lcoulomb,lewald,ldualcutoff
-      logical in_c_flag,lfieldcoords,lallow
+      logical in_c_flag,lfieldcoords,lallow,lbondgraph
 c     --- logical arrays
       logical lpdbset
       dimension lpdbset(NTMAX)
@@ -107,7 +107,7 @@ c     --- double precision scalars
       double precision dvalue,pmcb,pmtest,vequiv,scalecut,scalehilog
       double precision moveprob,eefreftemp,temperature,beta,kalp,calp
       double precision box_number_density,pmcell,masstotal,scalelolog
-      double precision minboxdim,chempot,uvtfactor
+      double precision minboxdim,chempot,uvtfactor,pmtype
       double precision cm_ii_one,cm_ii_zero,cm_ii_negone
       double precision cm_jj_one,cm_jj_zero,cm_jj_negone
       double precision xtemp,ytemp,ztemp
@@ -2922,6 +2922,149 @@ c     --- Begin outputting information about the simulation
  40      format(a32,1x,i5,1x,a2,1x,f10.4,1x,a5)
       enddo
 
+c     --- check to make sure we are not attempting moves on any
+c     --- molecule that is not a bonded graph
+ 67   format('Molecule type',1x,i4,1x
+     &     ,'is not a true bonded graph molecule and'
+     &     ,1x
+     &     ,'has a nonzero move probability of'
+     &     ,1x,f12.10,1x,'for the',1x,a) 
+      do imolty = 1,nmolty
+         call twh_lbondgraph(GLB_GET,imolty,lbondgraph)
+         if ( .not. lbondgraph ) then
+c           --- check every individual move type to make sure none
+c           --- are performed on this molecule type
+
+c           --- 2 box rotational bias
+            call twh_pm2boxrbswap(GLB_GET,pmtest)
+            call twh_pm2rbswmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'2 box rbswap move'
+               lfailure = .true.
+               return
+            endif
+c           --- 2 box configurational bias
+            call twh_pm2boxcbswap(GLB_GET,pmtest)
+            call twh_pm2cbswmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'2 box cbswap move'
+               lfailure = .true.
+               return
+            endif
+c           --- uvt swap
+            call twh_pmuvtcbswap(GLB_GET,pmtest)
+            call twh_pmuvtcbmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'uvtswap move'
+               lfailure = .true.
+               return
+            endif
+c           --- 1box cb swap
+            call twh_pm1boxcbswap(GLB_GET,pmtest)
+            call twh_pm1cbswmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'1 box cbswap move'
+               lfailure = .true.
+               return
+            endif
+c           --- cb move
+            call twh_pmcb(GLB_GET,pmtest)
+            call twh_pmcbmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'configurational-bias move'
+               lfailure = .true.
+               return
+            endif
+c           --- backbone cb move
+            call twh_pmback(GLB_GET,pmtest)
+            call twh_pmbkmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'backbone cb move'
+               lfailure = .true.
+               return
+            endif
+c           --- sidechain cb move
+            call twh_pmcbside(GLB_GET,pmtest)
+            call twh_pmcbsidemt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'sidechain cb move'
+               lfailure = .true.
+               return
+            endif
+c           --- pivot move
+            call twh_pmpivot(GLB_GET,pmtest)
+            call twh_pmpivmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'pivot move'
+               lfailure = .true.
+               return
+            endif
+c           --- concerted rotation move
+            call twh_pmconrot(GLB_GET,pmtest)
+            call twh_pmcrmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'concerted rotation move'
+               lfailure = .true.
+               return
+            endif
+c           --- cr backbone move
+            call twh_pmcrback(GLB_GET,pmtest)
+            call twh_pmcrbmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'cr backbone move'
+               lfailure = .true.
+               return
+            endif
+c           --- single atom translation move
+            call twh_pmtraat(GLB_GET,pmtest)
+            call twh_pmtamt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'single-atom translation move'
+               lfailure = .true.
+               return
+            endif
+c           --- composite move
+            call twh_pmcomposite(GLB_GET,pmtest)
+            call twh_pmcomt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'composite move'
+               lfailure = .true.
+               return
+            endif
+c           --- com translation move
+            call twh_pmtracm(GLB_GET,pmtest)
+            call twh_pmtcmt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'com translation move'
+               lfailure = .true.
+               return
+            endif
+c           --- rotation move
+            call twh_pmrotate(GLB_GET,pmtest)
+            call twh_pmromt(GLB_GET,imolty,pmtype)
+            dvalue = pmtest*pmtype
+            if ( (dvalue) .gt. SMALLEST ) then
+               write(6,67) imolty,dvalue,'rotation move'
+               lfailure = .true.
+               return
+            endif
+
+         endif
+      enddo
+
 c     --- get or generate the initial configuration of the system
       if ( linit ) then
 c        --- generate a new initial configuration
@@ -2970,7 +3113,7 @@ c        --- error check box dimensions
 c        --- invert this matrix
          call twh_inverthmatrix(ibox)
       endif
-      
+
 c     --- check to see if we need the fieldcoords
       lfieldcoords = .false.
       call twh_nfield(GLB_GET,nfield)
@@ -3037,6 +3180,7 @@ c     --- set idummy counter to 0
       do imolty = 1,nmolty
          idummy(imolty)=0
       enddo
+
 c     --- set up parall
 c     --- parall is a map from a given molecule type (imolty) and nth 
 c     --- instance of that type to ichain, which identifies a given
@@ -3235,7 +3379,7 @@ c     * lpdbset                                                        *
 c     * lfailure                                                       *
 c     * lpdb, lpdbset, lerror are modified in this subroutine          *
 c     *                                                                *
-c     * last modified 08-31-2012 by M.G. Martin                        *
+c     * last modified 05-29-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_INAA
@@ -3301,13 +3445,13 @@ c        --- read in bond vibrations
          numvib = twh_read_labeled_integer(lfailure,4,
      &      'vibration', .false., idname)
          if ( lfailure ) return
-         call twh_invib(GLB_SET,imolty,iunit,numvib)
          if ( numvib .gt. NNBOND ) then
             write(6,*) 'imolty:',imolty,'iunit:',iunit,'invib:',numvib
             write(6,*) 'READTOWHEE: too many vibrations'
             lfailure = .true.
             return
          endif
+         call twh_invib(GLB_SET,imolty,iunit,numvib)
          do ivib = 1,numvib
             call twh_read_integer_array(lfailure,4,'vibration',
      &         2,.false.,iatmp)

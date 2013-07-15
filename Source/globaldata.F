@@ -9016,6 +9016,40 @@ c     --- information variables
       return
       end
 
+      subroutine twh_lbondgraph(flag,imolty,lvalue)
+c     ******************************************************************
+c     * logical that is true if the data structure for this molecule   *
+c     * type is a fully bonded graph, and therefore a valid molecule   *
+c     * false if it it not fully bonded and just a collection of atoms *
+c     * this can occur for pretend molecules that are the porous       *
+c     * material in an adsorption study                                *
+c     *                                                                *
+c     * originally written 07-15-2013 by M.G. Martin                   *
+c     * last modified 07-15-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,imolty
+      logical lvalue
+c     --- information variables
+      logical lbondgraph
+      dimension lbondgraph(NTMAX)
+      save lbondgraph
+
+      if ( flag .eq. GLB_GET ) then
+         lvalue = lbondgraph(imolty)
+      elseif ( flag .eq. GLB_SET ) then
+         lbondgraph(imolty) = lvalue
+      else
+         write(6,*) 'LBONDGRAPH: invalid flag:',flag
+         stop
+      endif
+
+      return
+      end
+
+
+
       subroutine twh_lbonbon(flag,ibtype,lvalue)
 c     ******************************************************************
 c     * bond-bond interaction logical for each angle type              *

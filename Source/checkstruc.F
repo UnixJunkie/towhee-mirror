@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * it then sets up some arrays of information that is useful when *
 c     * computing bending angles, and torsions                         *
 c     *                                                                *
 c     * Originally written 12-15-2000 by M.G. Martin                   *
-c     * Last modified 01-31-2011 by M.G. Martin                        *
+c     * Last modified 07-15-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1069,6 +1069,84 @@ c     --- bonds to an atom for its hybridization then we are in trouble
             endif
          enddo
       enddo
+
+c     --- check that the molecule is fully connected and there is no
+c     --- subset of the molecule that is not connected to the rest.
+      do imolty = 1, nmolty
+         call twh_nunit(GLB_GET,imolty,nunit)
+         call twh_checkconnect(imolty,nunit)
+         if ( lfailure ) return
+      enddo
+
+      return
+      end
+
+      subroutine twh_checkconnect(imolty,nunit)
+c     ******************************************************************
+c     * checks the bonding pattern of a molecule to make sure it is    *
+c     * fully connected.  Stores this information in lbondgraph        *
+c     *                                                                *
+c     * originally written 05-30-2013 by M.G. Martin                   *
+c     * last modified 07-15-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer imolty,nunit
+c     --- local variables
+      logical lexist,lbondgraph
+      integer workcount,ivib,numvib,iother,icount,icurrent,iunit
+      integer worklist
+      dimension worklist(nunit*NNBOND)
+
+c     --- initialise lexist to all false
+      call twh_lexist(GLB_INIT,nunit,.false.)
+c     --- start with atom 1 and progress through the bonded stucture
+      workcount = 1
+      worklist(workcount) = 1
+
+      do while ( workcount .gt. 0 ) 
+         icurrent = worklist(1)
+         call twh_lexist(GLB_GET,icurrent,lexist)
+         if ( lexist ) then
+c           --- this unit has already been found to exist and tested
+c           --- nothing else to do here
+         else
+c           --- add all of the atoms bonded to icurrent to the worklist
+            call twh_invib(GLB_GET,imolty,icurrent,numvib)
+            do ivib = 1,numvib
+               call twh_ijvib(GLB_GET,imolty,icurrent,ivib,iother)
+               workcount = workcount + 1
+               worklist(workcount) = iother
+            enddo
+c           --- set this atom to exist
+            call twh_lexist(GLB_SET,icurrent,.true.)
+         endif
+c        --- decrement and shift the worklist
+         do icount = 1,workcount - 1
+            worklist(icount) = worklist(icount+1)
+         enddo
+         workcount = workcount - 1
+      enddo
+
+      lbondgraph = .true.
+      do iunit = 1,nunit
+         call twh_lexist(GLB_GET,iunit,lexist)
+         if ( .not. lexist ) then
+c           --- this atom was never found in the pattern
+c           --- warn on first occurance
+            if ( lbondgraph ) then
+               write(6,'(a,1x,i4,1x,a,1x,i6,1x,a)')
+     &              'Molecule type',imolty,'unit'
+     &              ,iunit,' not connected via bonding graph to atom 1'
+               write(6,'(2x,a,1x,a)')
+     &              'therefore Monte Carlo moves will not be allowed'
+     &              ,'to alter atom positions for this molecule type'
+               lbondgraph = .false.
+            endif
+         endif
+      enddo
+c     --- set lbondgraph
+      call twh_lbondgraph(GLB_SET,imolty,lbondgraph)
 
       return
       end

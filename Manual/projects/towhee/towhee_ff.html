@@ -103,17 +103,17 @@
            </dt>
            <li>'Ackland 3-part': The pair potential is a complicated 3 part function as described in 
             <a href="references.html#mendelev_et_al_2003">Mendelev <i>et al.</i> 2003</a>.
-            <dt>if r < nb(1) then</dt>
+            <dt>if r < nbcoeff(1) then</dt>
             <ul>
-             <dt>x = r/nb(4)</dt>
+             <dt>x = r/nbcoeff(4)</dt>
              <dt><i>u</i><sub>pair</sub> = ( 0.1818 * exp[-3.2 * x] + 0.5099 * exp[-0.9423 * x]
-               + 0.2802 * exp[-0.4029 * x] + 0.02817 * exp[-0.2016 * x] ) * nb(3) / r
+               + 0.2802 * exp[-0.4029 * x] + 0.02817 * exp[-0.2016 * x] ) * nbcoeff(3) / r
              </dt>
             </ul>
-            <dt>elseif r < nb(2) then</dt>
+            <dt>elseif r < nbcoeff(2) then</dt>
             <ul>
-             <dt>x = nb(5) + nb(6) * r + nb(7) * r<sup>2</sup> + nb(8) * r<sup>3</sup></dt>
-             <dt><i>u</i><sub>pair</sub> = nb(9) * exp[x]</dt>
+             <dt>x = nbcoeff(5) + nbcoeff(6) * r + nbcoeff(7) * r<sup>2</sup> + nbcoeff(8) * r<sup>3</sup></dt>
+             <dt><i>u</i><sub>pair</sub> = nbcoeff(9) * exp[x]</dt>
             </ul>
             <dt>else</dt>
             <ul>
@@ -124,16 +124,16 @@
            </li>
            <li>'Ackland Power': The pair potential is a complicated 3 part function as described in 
             <a href="references.html#ackland_et_al_2004">Ackland <i>et al.</i> 2004</a>.
-            <dt>if r < nb(1) then</dt>
+            <dt>if r < nbcoeff(1) then</dt>
             <ul>
              <dt><i>u</i><sub>pair</sub> = ( nbcoeff(4) * exp[nbcoeff(5) * r] + nbcoeff(6) * exp[nbcoeff(7) * r] + nbcoeff(8) * exp[nbcoeff(9) * r] 
-              + nbcoeff(10) * exp[nbcoeff(11) * r] ) * nb(3) / r
+              + nbcoeff(10) * exp[nbcoeff(11) * r] ) * nbcoeff(3) / r
              </dt>
             </ul>
-            <dt>elseif r < nb(2) then</dt>
+            <dt>elseif r < nbcoeff(2) then</dt>
             <ul>
-             <dt>x = nb(12) + nb(13) * r + nb(14) * r<sup>2</sup> + nb(15) * r<sup>3</sup></dt>
-             <dt><i>u</i><sub>pair</sub> = nb(16) * exp[x]</dt>
+             <dt>x = nbcoeff(12) + nbcoeff(13) * r + nbcoeff(14) * r<sup>2</sup> + nbcoeff(15) * r<sup>3</sup></dt>
+             <dt><i>u</i><sub>pair</sub> = nbcoeff(16) * exp[x]</dt>
             </ul>
             <dt>else</dt>
             <ul>
@@ -1230,7 +1230,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 30, 2012<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->June 24, 2013<!-- #EndDate -->
   </font> 
   <br></br>
  </body>
