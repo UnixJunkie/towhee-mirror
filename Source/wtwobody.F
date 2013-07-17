@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_wtwobody( rijsq,ntii,ntjj,lovrlap )
+      function twh_wtwobody(lfailure,rijsq,ntii,ntjj,lovrlap )
 c     ******************************************************************
 c     * Computes the intermolecular pair virial function divided by r^2*
 c     * as defined by equation 2.60 in Allen and Tildesley             *
@@ -27,11 +27,13 @@ c     * w(r) = r dv(r)/dr                                              *
 c     * w(r)/r^2 = (dv(r)/dr) /r                                       *
 c     *                                                                *
 c     * originally written (as ftwobody) 07-03-2002 by M.G. Martin     *
-c     * last update 08-09-2011 by M.G. Martin                          *
+c     * last update 07-17-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
+#define FUNCTION_CMP_GT
 #define FUNCTION_CMP_LT
 #define FUNCTION_EXPON
+#define FUNCTION_EXTRACTPAIR
 #define FUNCTION_GETNBTYPE
 #define FUNCTION_GET_HBONDCOEFF
 #define FUNCTION_GET_NATIVE_LAMBDA
@@ -40,7 +42,7 @@ c     ******************************************************************
 #define FUNCTION_WTWOBODY
 #include "functions.h"
 c     --- variables passed to/from the function
-      logical lovrlap
+      logical lfailure,lovrlap
       integer ntii,ntjj
       double precision rijsq
 c     --- local variables
@@ -50,12 +52,14 @@ c     --- logical scalars
       logical lcontinue
 c     --- integer scalars
       integer ntij,icoeff,ipower,hbtype,classical_n,cpnumber
+      integer aindex
 c     --- double precision scalars
-      double precision srsix,srthree,rij,lambda
+      double precision srsix,srthree,rij,lambda,rdiff,rtest,rvalue
       double precision rinvfour,rinveight,soverr
       double precision rinvthree,rinvsix,rinvnine,rinvtwelve,wca_cutsq
       double precision x,acklandphi,acklandphiprime,xprime,ainv,onethird
       double precision cbrt_two,tpairone,tpairtwo,rcutsq,rminsq
+      double precision avalue
 c     --- functions
       double precision wtb_lennard_jones
 
@@ -290,9 +294,71 @@ c              --- recreate the heaviside and save some expense)
                   endif
                enddo
             endif
+         elseif ( eampairstyle .eq. 'Belashchenko 5-8' ) then
+c           --- Belashchenko Heaviside power series
+c           --- doing this in declining distance in an attempt to only
+c           --- fetch the minimum required parameters
+            rij = dsqrt(rijsq)
+            if (twh_cmp_gt(rij, twh_get_nbcoeff(6,ntij)) ) then
+c              --- beyond the cutoff distance, zero interaction
+               twh_wtwobody = 0.0d0
+            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(1,ntij)) ) then
+c              --- below r1, use a different potential
+               rtest = twh_get_nbcoeff(1,ntij)
+               twh_wtwobody = (- twh_get_nbcoeff(8,ntij)
+     &              - twh_get_nbcoeff(9,ntij)*twh_get_nbcoeff(10,ntij)
+     &              *twh_expon(twh_get_nbcoeff(10,ntij)*(rtest-rij))
+     &              )/rij
+            else
+c              --- between r1 and r6, power series
+               if ( twh_cmp_lt(rij, twh_get_nbcoeff(2,ntij)) ) then
+c                 --- between r1 and r2
+                  rvalue = twh_get_nbcoeff(2,ntij)
+                  aindex = 11
+               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(3,ntij)) ) then
+c                 --- between r2 and r3
+                  rvalue = twh_get_nbcoeff(3,ntij)
+                  aindex = 20
+               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(4,ntij)) ) then
+c                 --- between r3 and r4
+                  rvalue = twh_get_nbcoeff(4,ntij)
+                  aindex = 29
+               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(5,ntij)) ) then
+c                 --- between r4 and r5
+                  rvalue = twh_get_nbcoeff(5,ntij)
+                  aindex = 38
+               else
+c                 --- between r5 and r6
+                  rvalue = twh_get_nbcoeff(6,ntij)
+                  aindex = 47
+               endif
+c              --- compute the power series
+               rdiff = rij - rvalue
+c              --- can skip power 0 as it has a 0 deriviative
+c              --- power 1 rdiff is 1.0 (rdiff**(1-1))
+               ipower = 1
+               call twh_nbcoeff(GLB_GET,aindex+ipower,ntij,avalue)
+               twh_wtwobody = twh_wtwobody + avalue/rij
+               do ipower = 2,8
+                  call twh_nbcoeff(GLB_GET,aindex+ipower,ntij,avalue)
+                  twh_wtwobody = twh_wtwobody
+     &                 + dble(ipower)*avalue*(rdiff**(ipower-1))/rij
+               enddo
+            endif   
+         elseif ( eampairstyle .eq. 'table' ) then
+c          --- compute the derivatives from the tabulated potential
+            rij = dsqrt(rijsq)
+            twh_wtwobody = twh_extractpair(lfailure,INTERP_DERIV
+     &           ,ntij,rij,lovrlap)/rij
+            if ( lfailure ) return
          elseif ( eampairstyle .eq. 'none' ) then
 c           --- no energy, no forces
             twh_wtwobody = 0.0d0
+         else
+            write(6,*) 'WTWOBODY: unknown eam_pair_style'
+            write(6,*) eampairstyle
+            lfailure = .true.
+            return
          endif
       elseif ( cpnumber .eq. CP_EXPONENTIAL_6 ) then
 c        --- exponential-6 forces

@@ -668,6 +668,8 @@ c              --- determine number of nbcoeffs (or equiv)
                elseif ( eampairstyle .eq. 'Ackland Power' ) then
                   ncoeff = 16
                   ltable = .true.
+               elseif ( eampairstyle .eq. 'Belashchenko 5-8' ) then
+                  ncoeff = 55
                elseif ( eampairstyle .eq. 'none' ) then
                   ncoeff = 0
                else
@@ -2722,18 +2724,19 @@ c     * Arguments set in this procedure:                               *
 c     * Global arguments set in this procedure:                        *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-16-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer rwflag, type, ntypes, iversion
 c     --- local variables
+      logical lneedthree
       character*15 idname
       character*20 eamembedstyle,eamdensstyle
       character*50 goodstring
       integer jtype,itest,jtest,iscan,eam_ndens,eam_nembed
-      double precision avalue,bvalue
+      double precision avalue,bvalue,cvalue
 
       idname = 'rwforcefield'
       if ( iversion .lt. 9 ) then
@@ -2887,7 +2890,14 @@ c     --- eam_embed_style
          call twh_eam_embed_style(GLB_SET,type,eamembedstyle)
       endif
 
-c           --- eam_embed data
+c     --- check eam_embed_style to see if it one that requires 3
+      if ( eamembedstyle .eq. 'Belashchenko 10 rho' ) then
+         lneedthree = .true.
+      else
+         lneedthree = .false.
+      endif
+
+c     --- eam_embed data
       goodstring = 'eam_embed_data'
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a14)') goodstring
@@ -2900,14 +2910,26 @@ c           --- eam_embed data
          if ( rwflag .eq. WRITE_FLAG ) then
             call twh_eam_embed(GLB_GET,1,type,iscan,avalue)
             call twh_eam_embed(GLB_GET,2,type,iscan,bvalue)
-            write(FFUNIT,'(e20.10,1x,e20.10)') avalue,bvalue
+            if ( lneedthree ) then
+               call twh_eam_embed(GLB_GET,3,type,iscan,cvalue)
+               write(FFUNIT,'(e20.10,1x,e20.10,1x,e20.10)')
+     &              avalue,bvalue,cvalue
+            else
+               write(FFUNIT,'(e20.10,1x,e20.10)') avalue,bvalue
+            endif
          else
-            read(FFUNIT,*) avalue,bvalue
+            if ( lneedthree ) then
+               read(FFUNIT,*) avalue,bvalue,cvalue
+            else
+               read(FFUNIT,*) avalue,bvalue
+            endif
             call twh_eam_embed(GLB_SET,1,type,iscan,avalue)
             call twh_eam_embed(GLB_SET,2,type,iscan,bvalue)
+            if ( lneedthree ) then
+               call twh_eam_embed(GLB_SET,3,type,iscan,cvalue)
+            endif
          endif
       enddo
 
       return
       end
-

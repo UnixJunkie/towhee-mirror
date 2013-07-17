@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * regard to the lhere function                                   *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-15-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -266,13 +266,19 @@ c                 --- check eam_dens
                         if ( eamdens .gt. minboxdim ) then
                            minboxdim = eamdens
                         endif
-                     elseif (eamdensstyle .eq. 'Ackland cubic sum') then
+                     elseif (eamdensstyle .eq. 'Ackland cubic sum'
+     &                       .or. eamdensstyle .eq. 'exponential' ) then
                         call twh_eam_ndens(GLB_GET,jtype,itype,ntot)
                         call twh_eam_dens(GLB_GET,1,jtype,itype,ntot
      &                       ,eamdens)
                         if ( eamdens .gt .minboxdim ) then
                            minboxdim = eamdens
                         endif
+                     else 
+                        write(6,*) 'SETCLASSICAL:unknown eam_dens_style'
+                        write(6,*) eamdensstyle
+                        lfailure = .true.
+                        return
                      endif
                   enddo
                endif
@@ -286,6 +292,15 @@ c              --- check table_pair
                         call twh_table_npair(GLB_GET,cross,ntot)
                         call twh_table_pair(GLB_GET,1,cross,ntot,tpair)
                         if ( tpair .gt. minboxdim ) minboxdim = tpair
+                     elseif ( eampairstyle .eq. 'Belashchenko 5-8') then
+c                       --- the final rho value is the limit (nb 6)
+                        call twh_nbcoeff(GLB_GET,6,cross,tpair)
+                        if ( tpair .gt. minboxdim ) minboxdim = tpair
+                     else
+                        write(6,*) 'SETCLASSICAL:unknown eam_pair_style'
+                        write(6,*) eampairstyle
+                        lfailure = .true.
+                        return
                      endif
                   endif
                enddo

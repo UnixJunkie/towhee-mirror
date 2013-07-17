@@ -1,8 +1,7 @@
-c     $Id: vtwobody.F,v 1.66 2009/02/03 19:38:03 lperi Exp $
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +38,7 @@ c     * otherwise.  (see scaled_potential.F)                           *
 c     * value returned is in units of [K]                              *
 c     *                                                                *
 c     * originally written as vnonbond 2-18-2000 by M.G. Martin        *
-c     * last update 11-26-2008 by M.G. Martin                          *
+c     * last update 07-16-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -69,13 +68,14 @@ c     --- logical scalars
       logical scp_eval_derivative,lshift
 c     --- integer scalars
       integer ntij,icoeff,ipower,hbtype,l,scp_num_foreign_lambda
-      integer tabnpair
+      integer tabnpair,aindex
 c     --- double precision scalars
       double precision srsix,srthree,srnine,rij,rovers,rmaxsq,adelr
       double precision rinvthree,rinvsix,rinvnine,rinvtwelve,rinvten
       double precision sigoverr,x,acklandphi,scalefactor,wca_cutsq
       double precision rijseven,aaa,bbb,ccc,ddd,onethird,cbrt_two
-      double precision tpair,rminsq
+      double precision tpair,rminsq,rvalue,rcurrent,rdiff
+      double precision avalue
 c     --- functions
       double precision vtb_lennard_jones,vtb_scaled_lj
 
@@ -367,7 +367,8 @@ c        --- embedded atom pair potential portion
          rij = dsqrt(rijsq)
          call twh_eam_pair_style(GLB_GET,ntij,eampairstyle)
          if ( eampairstyle .eq. 'table' ) then
-            twh_vtwobody = twh_extractpair(lfailure,ntij,rij,lovrlap)
+            twh_vtwobody = twh_extractpair(lfailure,INTERP_NORMAL
+     &           ,ntij,rij,lovrlap)
             if ( lfailure ) return
          elseif ( eampairstyle .eq. 'exponential' ) then
             twh_vtwobody = twh_get_nbcoeff(1,ntij)
@@ -479,6 +480,54 @@ c                    --- decrement index and check it is still valid
 c                    --- out of bounds entry, the loop is complete
                      lcontinue = .false.
                   endif
+               enddo
+            endif
+         elseif ( eampairstyle .eq. 'Belashchenko 5-8' ) then
+c           --- Belashchenko Heaviside power series
+c           --- doing this in declining distance in an attempt to only
+c           --- fetch the minimum required parameters
+            if (twh_cmp_gt(rij, twh_get_nbcoeff(6,ntij)) ) then
+c              --- beyond the cutoff distance, zero energy
+               twh_vtwobody = 0.0d0
+            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(1,ntij)) ) then
+c              --- below r1, use a different potential
+               rvalue = twh_get_nbcoeff(1,ntij)
+               twh_vtwobody = twh_get_nbcoeff(7,ntij) 
+     &              + twh_get_nbcoeff(8,ntij)*(rvalue-rij)
+     &              + twh_get_nbcoeff(9,ntij)*
+     &              (twh_expon(twh_get_nbcoeff(10,ntij)*(rvalue-rij))
+     &              -1.0d0)
+            else
+c              --- between r1 and r6, power series
+               if ( twh_cmp_lt(rij, twh_get_nbcoeff(2,ntij)) ) then
+c                 --- between r1 and r2
+                  rvalue = twh_get_nbcoeff(2,ntij)
+                  aindex = 11
+               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(3,ntij)) ) then
+c                 --- between r2 and r3
+                  rvalue = twh_get_nbcoeff(3,ntij)
+                  aindex = 20
+               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(4,ntij)) ) then
+c                 --- between r3 and r4
+                  rvalue = twh_get_nbcoeff(4,ntij)
+                  aindex = 29
+               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(5,ntij)) ) then
+c                 --- between r4 and r5
+                  rvalue = twh_get_nbcoeff(5,ntij)
+                  aindex = 38
+               else
+c                 --- between r5 and r6
+                  rvalue = twh_get_nbcoeff(6,ntij)
+                  aindex = 47
+               endif
+c              --- compute the power series
+               rdiff = rij - rvalue
+               rcurrent = 1.0d0
+               do ipower = 0,8
+                  call twh_nbcoeff(GLB_GET,aindex+ipower,ntij,avalue)
+                  twh_vtwobody = twh_vtwobody + avalue*rcurrent
+c                 --- update rcurrent for the next interation
+                  rcurrent = rcurrent*rdiff
                enddo
             endif
          elseif ( eampairstyle .eq. 'none' ) then
@@ -631,7 +680,8 @@ c        --- stillinger-weber potential
 c        --- tabulated pair potential
          ntij = twh_getnbtype(ntii,ntjj)
          rij = dsqrt(rijsq)
-         twh_vtwobody = twh_extractpair(lfailure,ntij,rij,lovrlap)
+         twh_vtwobody = twh_extractpair(lfailure,INTERP_NORMAL
+     &        ,ntij,rij,lovrlap)
          if ( lfailure ) return
       elseif ( classical_pot_num .eq. CP_BUFFERED_14_7 ) then
 c        --- buffered 14-7 potential

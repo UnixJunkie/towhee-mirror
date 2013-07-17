@@ -18,7 +18,7 @@
     <td width="697" valign="top"> <b>Overview</b> 
      <ul>
       This section described the format that is used to specify Towhee force field files (towhee_ff) for the current version of those file 
-      (currently force field version 14, which began in code version 5.1.0).  This documentation was last updated for version 6.2.0.
+      (currently force field version 14, which began in code version 5.1.0).  This documentation was last updated for version 7.0.5.
       Files for many commonly used force fields are provided with the download package and if you are using one of those you do not need to know the
       details of this section.  However, this feature also allows the user to utilize their own force field parameters without having to modify the code
       themselves.  The formatting for this file is extremely sensitive and the user is encouraged to look at the examples in the ForceFields directory.  
@@ -183,7 +183,7 @@
            <li>These values are listed for any non-tabular potential and they contain all of the nonbonded coefficients.  These are listed with one
             coefficient per line.  The number of nonbonded coefficients depends upon the 
             <a href="potentype/towhee_input_classical_potential.html"><b>classical_potential</b></a>.  
-            The native units of the code are used (Kelvin for energy, Angstrom for distances).  If the '<b>Classical Mixrule</b>' is 'Explicit' 
+            The native units of the code are used (Kelvin for energy, &#8491; for distances).  If the '<b>Classical Mixrule</b>' is 'Explicit' 
             then the cross terms must be explicitly declared for all interactions of this atom type with any atom type that has a larger Atom 
             Type Number.  Otherwise the nonbonded coefficients are listed only for self-interaction and the mixing rule will set the cross terms.
            </li>
@@ -207,10 +207,10 @@
          <ul>
           <dt>The style of the EAM density interaction for this atom type.  There are several options currently supported by Towhee.</dt>
           <li>'Ackland cubic sum'
-          <dt><i>rho</i> = Sum<sub>i = 1,eam_ndens</sub> eam_dens(2,i) * [eam_dens(1,i) - r]<sup>3</sup> * Heaviside[eam_dens(1,i)-r]</dt>
+          <dt>&#961;(r<sub>ij</sub>) = Sum<sub>i = 1,eam_ndens</sub> eam_dens(2,i) * [eam_dens(1,i) - r]<sup>3</sup> * Heaviside[eam_dens(1,i)-r]</dt>
           </li>
           <li>'exponential': The density is described by an exponential function.
-          <dt><i>rho = A e<sup>B r<sub>ij</sub></sup>.</i></dt>
+          <dt>&#961;(r<sub>ij</sub>) = eam_dens(1,2) e<sup>eam_dens(2,2) r<sub>ij</sub></sup> for r<sub>ij</sub> &lt eam_dens(2,1), and 0 otherwise.</dt>
           </li>
           <li>'table': This is the traditional way of describing EAM density information and presents a table of data that is interpolated to determine
           the density for any distance.
@@ -222,14 +222,14 @@
           <dt>The values used to determine the embedding density.  The meanings are different depending on the setting of <b>eam_dens_style</b> above.
           In all cases there are a number of lines equal to the value set in <b>eam_dens</b>
           </dt>
-          <li>'table': Each line contains two values.  The first is the distance (Angstroms) and the second is the corresponding embedding density
+          <li>'table': Each line contains two values.  The first is the distance (&#8491;) and the second is the corresponding embedding density
           (arbitrary units).
           </li>
           <li>'exponential': The embedding density is described by an exponential function.  The format is a bit clumsy as the first line
           contains a dummy value and then the <i>A</i> prefactor (arbitrary units).  
-          The second line contains a dummy value and then the <i>B</i> exponential factor (inverse Angstroms).
+          The second line contains the cutoff distance for the density potential (&#8491;) and then the <i>B</i> exponential factor (inverse &#8491;).
           </li>
-          <li>'Ackland cubic sum':  Each line contains two values.  The first is a distance (Angstroms) and the second is a density prefactor
+          <li>'Ackland cubic sum':  Each line contains two values.  The first is a distance (&#8491;) and the second is a density prefactor
           (arbitrary units).
           </li>
          </ul>
@@ -249,8 +249,20 @@
           <li>'table': This is the traditional way of describing EAM embedding function information and presents a table of data that is interpolated to
           determine the embedding function energy for any density.
           </li>
-          <li>'Ackland 2-term': <i>u</i><sub>embed</sub>(<i>rho</i>) = eam_embed(1,1) * 
-          [ - <i>rho</i><sup>0.5</sup> + eam_embed(2,1) * <i>rho</i><sup>2</sup> ]
+          <li>'Ackland 2-term': <i>u</i><sub>embed</sub>(&#961;(r<sub>ij</sub>)) = eam_embed(1,1) * 
+          [ - &#961;<sup>0.5</sup> + eam_embed(2,1) * &#961;<sup>2</sup>(r<sub>ij</sub>) ]
+          </li>
+          <li>'Belashchenko': <i>u</i><sub>embed</sub>(&#961;(r<sub>ij</sub>)) 
+           <ul>
+            <dt>
+             = eam_embed_data(4,1) * <span style="white-space: nowrap; font-size:larger">&radic;<span style="text-decoration:overline;">&nbsp; &#961;&nbsp;</span></span>(r<sub>ij</sub>)
+             + eam_embed_data(4,2) * &#961(r<sub>ij</sub>) for r<sub>ij</sub> &lt eam_embed_data(5,1),
+            </dt>
+            <dt>
+             = eam_embed_data(1,2) + eam_embed_data(2,2) * [&#961;(r<sub>ij</sub>) - eam_embed_data(5,2)]<sup>2</sup> + eam_embed_data(3,2)*[&#961;(r<sub>ij</sub>) - eam_embed_data(5,2)]<sup>3</sup>
+             otherwise.
+            </dt>
+           </ul>
           </li>
          </ul>
         </dt>
@@ -264,6 +276,7 @@
           function energy (Kelvin/k<sub>b</sub>).
           </li>
           <li>'Ackland 2-term': A single line that contains a prefactor (eam_embed(1,1)) and a square factor (eam_embed(2,1) as described above.</li>
+          <li>'Belashchenko': 5 lines where the first 4 lines contain the energy terms (K) and the fifth line contains the density terms (arbitrary units) as described above.</li>
          </ul>
         </dt>
         <dt>End of the special 'Embedded Atom Method'  section.</dt>
@@ -297,7 +310,7 @@
        </dt>
        <dt><b>'Polarizability' (a14) [double precision]</b>
         <ul>
-         <li>The polarizability of each atom type for use with some of the classical mixing rules.  Expressed in units of cubic Angstroms.</li>
+         <li>The polarizability of each atom type for use with some of the classical mixing rules.  Expressed in units of cubic &#8491;.</li>
         </ul>
        </dt>
        <dt><b>'Force Field Name' (a16) [character string a10]</b>
@@ -1136,7 +1149,7 @@
           <dt>U<sub>nonbond</sub> = 4 * ofcoeff(2) * [ (ofcoeff(1)/r)<sup>12</sup> - (ofcoeff(1)/r)<sup>6</sup> - Shift]</dt>
           <dt>Where the parameters are as follows.</dt>
           <ul>
-           <li>ofcoeff(1): sigma in units of Angstroms.</li>
+           <li>ofcoeff(1): sigma in units of &#8491;.</li>
            <li>ofcoeff(2): epsilon in units of Kelvin.</li>
            <li>Shift: computed automatically by the code if we are using a shifted potential.</li>
           </ul>
@@ -1147,7 +1160,7 @@
           <dt>U<sub>nonbond</sub> = ofcoeff(1) / r<sup>12</sup></dt>
           <dt>Where the parameter is as follows.</dt>
           <ul>
-           <li>ofcoeff(1): energy term in units of Kelvin * Angstroms<sup>12</sup>.</li>
+           <li>ofcoeff(1): energy term in units of Kelvin * &#8491;<sup>12</sup>.</li>
           </ul>
          </ul>
          </li>

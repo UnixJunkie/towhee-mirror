@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (April 05 2013)     
+ MCCCS Towhee - Version 7.0.5   (July 17 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -186,7 +186,7 @@ Molecules of type   2 :       2000
  solvation                  0.000 [K]         0.00000 [kcal/mol]
  total classical         -10968957.8608 [K]        -21797.686843 [kcal/mol]
  Total energy [eV] -945.237    
- initial virial pressure in box  1 =     1151975.37
+ initial virial pressure in box  1 =    84172259.36
 
  +++++ start of markov chain +++++
 

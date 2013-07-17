@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 02-05-2013 by M.G. Martin */
+/* last significant modification 07-16-2013 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -180,7 +180,7 @@
 
 /* array dimensions for the nonbonded coefficients (nbcoeff) */
 #define MINNBCOEFF 0
-#define MAXNBCOEFF 18
+#define MAXNBCOEFF 55
 
 /* array dimensions for the vibration coefficients (vibcoeff)*/
 #define MINVIBCOEFF 0
@@ -542,6 +542,10 @@
 #define SWAP_RB_INTER 6
 #define SWAP_CHEMPOT_BOX 7
 #define SWAP_CHEMPOT_ISO 8
+
+/* interpolate codes */
+#define INTERP_NORMAL 0
+#define INTERP_DERIV 1
 
 /* random number generator codes, arbitary but do not change */
 #define RNG_RANLUX 0

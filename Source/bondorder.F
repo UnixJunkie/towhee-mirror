@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * computes the bondorder between two atoms in a multi-body force *
 c     * field                                                          *
 c     *                                                                *
 c     * originally written 06-26-2002 by  M.G. Martin                  *
-c     * last update 08-09-2011 by M.G. Martin                          *
+c     * last update 07-15-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -45,7 +45,7 @@ c     --- logical scalars
 c     --- integer scalars
       integer ntij,looptype_a,looptype_b,loop,icoeff,potnum
 c     --- double precision scalars
-      double precision bloop,x,eamdensone,eamdenstwo,rcut
+      double precision bloop,x,eamdensone,eamdenstwo,rcut,maxdist
 
 c     --- retrieve constants
       call twh_rcut(GLB_GET,rcut)
@@ -84,15 +84,24 @@ c        --- get the two densities
                call twh_eam_dens_style(GLB_GET,looptype_a,looptype_b
      &              ,eamdensstyle)
                if ( eamdensstyle .eq. 'table' ) then
-                  bloop = twh_extractdens(lfailure,looptype_a,looptype_b
+                  bloop = twh_extractdens(lfailure,INTERP_NORMAL
+     &                 ,looptype_a,looptype_b
      &                 ,rij)
                   if ( lfailure ) return
                elseif ( eamdensstyle .eq. 'exponential' ) then
-                  call twh_eam_dens(GLB_GET,2,looptype_a,looptype_b,1
-     &                 ,eamdensone)
-                  call twh_eam_dens(GLB_GET,2,looptype_a,looptype_b,2
-     &                 ,eamdenstwo)
-                  bloop = eamdensone * twh_expon(eamdenstwo*rij)
+c                 --- check maximum cutoff
+                  call twh_eam_dens(GLB_GET,1,looptype_a,looptype_b,2
+     &                 ,maxdist)
+                  if ( rij .le. maxdist ) then
+c                    --- compute density
+                     call twh_eam_dens(GLB_GET,2,looptype_a,looptype_b,1
+     &                    ,eamdensone)
+                     call twh_eam_dens(GLB_GET,2,looptype_a,looptype_b,2
+     &                    ,eamdenstwo)
+                     bloop = eamdensone * twh_expon(eamdenstwo*rij)
+                  else
+                     bloop = 0.0d0
+                  endif
                elseif ( eamdensstyle .eq. 'Ackland cubic sum' ) then
 c                 --- cubic sum with heaviside (using a while loop to 
 c                 --- recreate the heaviside and save some expense)

@@ -3,6 +3,8 @@ ackl2004.html \
 alavi2005.html \
 amber_param96.html \
 aqvist.html \
+belash2006.html \
+belash2013.html \
 c19eef1.html \
 c19sasa.html \
 c27rigid.html \

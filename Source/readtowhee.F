@@ -866,6 +866,12 @@ c           --- default to a value of zero to turn off updates
             volmaxdispfreq = 0
          endif
          call twh_volmaxdispfreq(GLB_SET,volmaxdispfreq)
+      else
+c        --- unknown controlstyle
+         write(6,*) 'READTOWHEE: unknown controlstyle'
+         write(6,*) controlstyle
+         lfailure = .true.
+         return
       endif
 
 c     --- optional read in the number of chemical potential

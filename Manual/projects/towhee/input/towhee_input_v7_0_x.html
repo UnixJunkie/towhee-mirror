@@ -42,7 +42,10 @@
       <li>7.0.5: Many small updates to the manual.  Some new entries in the towhee_citations output file.  Bug patch reported by Wesley Emeneker incorporated and expanded upon 
        to resolve a issues related to molecules that are not fully bonded (such as zeolites for adsorption simulations).  Towhee now checks for those molecules, no 
        longer has an overflow when placing all their atoms in the central box at the start of a simulation, and checks to make sure no moves are attempted that change the atom positions
-       of those molecules.
+       of those molecules.  Implemented the <a href="../forcefields/belash2006.html">Belashchenko 2006</a> embedded atom method forcefield for mercury.  Found several places where the
+       error checking of the various EAM options was lacking and implemented the proper virial calulation for use with tabulated potentials.  Implemented the
+       <a href="../forcefields/belash2013.html">Belashchenko 2013</a> embedded atom method forcefield for mercury, but there is a problem with the pair potential as published that is currently
+       unresolved.  Updated <a href="../towhee_pubs.html">Towhee publications</a> for years 2001 through 2004.
       </li>
       <li>7.0.4: Significant bug fix for the 'energy bias' option for the <a href="#cbmc_nb_one_generation"><b>cbmc_nb_one_generation</b></a>.  All previous versions were not
        properly applying the bias correction for the number of cells in the energy biasing.
@@ -2707,7 +2710,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->March 28, 2013<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->July 16, 2013<!-- #EndDate -->
   </font>
   <br></br>
  </body>

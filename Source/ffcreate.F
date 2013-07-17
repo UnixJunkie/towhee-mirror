@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -45,7 +45,7 @@ c     ******************************************************************
 c     * controls the generation of the forcefield files                *
 c     *                                                                *
 c     * originally written 06-21-2002 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-16-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBSAME
@@ -117,6 +117,14 @@ c     --- add a forcefield to the list
 c     --- add a forcefield to the list
       nff = nff + 1
       fflist(nff) =  'Aqvist'
+      ffoutput(nff) = .true.
+c     --- add a forcefield to the list
+      nff = nff + 1
+      fflist(nff) =  'Belash2006'
+      ffoutput(nff) = .true.
+c     --- add a forcefield to the list
+      nff = nff + 1
+      fflist(nff) =  'Belash2013'
       ffoutput(nff) = .true.
 c     --- add a forcefield to the list
       nff = nff + 1
@@ -489,6 +497,10 @@ c        --- initialize the counters
      &           ,ndihedtypes,nimprotypes)
          elseif ( forcefield .eq. 'Aqvist' ) then
             call twh_ffaqvist(lfailure,ntypes)
+         elseif ( forcefield .eq. 'Belash2006' ) then
+            call twh_ffbelash2006(lfailure,ntypes)
+         elseif ( forcefield .eq. 'Belash2013' ) then
+            call twh_ffbelash2013(lfailure,ntypes)
          elseif ( forcefield .eq. 'CatlowFaux' ) then
             call twh_ffcatlowfaux(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes)

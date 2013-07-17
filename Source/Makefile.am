@@ -246,6 +246,8 @@ forcefield_SOURCES  = \
 		ffalavi2005.F \
 		ffamber96.F \
 		ffaqvist.F \
+		ffbelash2006.F \
+		ffbelash2013.F \
 		ffc19eef1.F \
 		ffc19sasa.F \
 		ffc27rigid.F \
@@ -393,6 +395,8 @@ ffackl2004.o: preproc.h functions.h ffackl2004.F
 ffalavi2005.o: preproc.h functions.h ffalavi2005.F
 ffamber96.o: preproc.h functions.h ffamber96.F
 ffaqvist.o: preproc.h functions.h ffaqvist.F
+ffbelash2006.o: preproc.h functions.h ffbelash2006.F
+ffbelash2013.o: preproc.h functions.h ffbelash2013.F
 ffc19eef1.o: preproc.h functions.h ffc19eef1.F
 ffc19sasa.o: preproc.h functions.h ffc19sasa.F
 ffc27rigid.o: preproc.h functions.h ffc27rigid.F
