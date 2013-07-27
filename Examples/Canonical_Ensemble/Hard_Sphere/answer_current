@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: nvt                           
@@ -72,7 +72,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_HardSphere                                                        
+/towheebase/ForceFields/towhee_ff_HardSphere                                                                            
  classical_potential: Hard Sphere                   
  READCLASSICAL: pot_num:     9 potential name: Hard Sphere                   
  classical_mixrule: Arithmetic                    
@@ -124,8 +124,8 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
- Determining cyclic subunits for molecule type          2
+Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          2
 Default total charge on molecule   1 is   0.00000
 Default total charge on molecule   2 is   0.00000
 Total charge in the simulation system:   0.00000
@@ -137,6 +137,13 @@ Torsion Types
    No Torsion Types
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Hard Sphere potential
+u(r) = infinity for r < sigma
+u(r) = 0 for r > sigma
+Num. Atom(i)    Num. Atom(j)      sigma
+   1 hs1.0         1 hs1.0        1.000
  Canonical ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -157,14 +164,6 @@ INITCONF: building template for molecule type:    1
 Initial Structure Growth Trial:    1
 INITCONF: building template for molecule type:    2
 Initial Structure Growth Trial:    1
- Finished initconf
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Hard Sphere potential
-u(r) = infinity for r < sigma
-u(r) = 0 for r > sigma
-Num. Atom(i)    Num. Atom(j)      sigma
-   1 hs1.0         1 hs1.0        1.000
 
 Number of MC cycles:                  100
 Number of molecules:                 1000

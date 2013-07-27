@@ -39,6 +39,15 @@
      </ul>
      <b>Bug reports and feature enhancements for 7.0.x versions</b>
      <ul>
+      <li>7.0.6: Realized the pair virial calculation algorithm is invalid for non-pair potentials unfortunately only after implementing several multibody virial equations.  Embedded-atom method 
+       calculations now automatically turn off the virial pressure calculation and instead report only the thermodynamic pressure results.  Modified the output to towhee_vlcc so that it now outputs
+       the virial or radial pressure and then also the thermodynamic pressure.  Modified the <a href="../utils/fitcoex.html">fitcoex</a> utility so it now can compute pressure curves using either the
+       virial or thermodynamic pressure.
+       Updated the <a href="../forcefields/gordon.html">Gordon</a> force field and nonbonded pair potential so that it works properly for the molecules studied in 
+       <a href="../references.html#gordon_2006">Gordon 2006</a> paper.
+       Updated the <a href="../forcefields/belash2013.html">Belashchenko 2013</a> force field to correct a typographical error in the published a<sub>4,5</sub> parameter.
+       Replaced string compares with #define integer compares for the Embedded-atom method potential and observed a speedup of around 20% for some iron test cases.
+      </li>
       <li>7.0.5: Many small updates to the manual.  Some new entries in the towhee_citations output file.  Bug patch reported by Wesley Emeneker incorporated and expanded upon 
        to resolve a issues related to molecules that are not fully bonded (such as zeolites for adsorption simulations).  Towhee now checks for those molecules, no 
        longer has an overflow when placing all their atoms in the central box at the start of a simulation, and checks to make sure no moves are attempted that change the atom positions

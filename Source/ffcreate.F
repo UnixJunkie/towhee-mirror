@@ -45,7 +45,7 @@ c     ******************************************************************
 c     * controls the generation of the forcefield files                *
 c     *                                                                *
 c     * originally written 06-21-2002 by M.G. Martin                   *
-c     * last modified 07-16-2013 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBSAME
@@ -578,7 +578,8 @@ c        --- initialize the counters
          elseif ( forcefield .eq. 'Gala1994' ) then
             call twh_ffgala1994(lfailure,ntypes,nbondtypes,nbitypes)
          elseif ( forcefield .eq. 'Gordon' ) then
-            call twh_ffgordon(lfailure,ntypes)
+            call twh_ffgordon(lfailure,ntypes,nbondtypes,nangletypes
+     &           ,ndihedtypes)
          elseif ( forcefield .eq. 'Gromos43A1' ) then
             call twh_ffgromos43a1(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nimprotypes)

@@ -1,7 +1,6 @@
-c     $Id: fitvlcc.F,v 1.7 2009/06/11 03:50:44 marcus_martin Exp $
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2007 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,15 +38,16 @@ c     *                                                                *
 c     * This code has been passed around for over a decade and I'm not *
 c     * sure who originally wrote it.  It has been extensively         *
 c     * modified from its original form                                *
-c     * last modified 01-31-2007 by M.G. Martin                        *
+c     * last modified 07-26-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
       character*30 fileroot,name,fitvars
       common /filestuff/ fileroot
-      logical lpressure,lfitnonlinear,lfitrectilinear,lfound
+      logical lfitnonlinear,lfitrectilinear,lfound
       logical ltransformexp,lfit_a0_a1_b0_b1
-      integer inp,ns,i
-      double precision beta,tc_rect,dtc_rect
+      integer inp,ns,i,pressoption
+      double precision beta,tc,dtc,dumma,dummb
+      double precision slope,sm,intercept,sb
 c     --- dp arrays
       double precision temperature,rhog,errg,rhol,errl
       dimension  temperature(MAXDATA),rhog(MAXDATA),errg(MAXDATA)
@@ -67,8 +67,9 @@ c     --- dp arrays
       name = '.sim'
       call twh_openappendfile(inp,name)
 
-      write(6,*) 'Process vapor pressure data (T or F)?'
-      read(5,*) lpressure
+      write(6,*) 'Vapor pressure analysis (0 for none, 1 for virial '
+     &     ,'2 for thermodynamic pressure)'
+      read(5,*) pressoption
       write(6,*) 'Input minimum temperature for plots'
       read(5,*) tmin
       write(6,*) 
@@ -81,12 +82,16 @@ c     --- dp arrays
       i = 0
       do while ( i .lt. MAXDATA .and. .not. lfound )
          i = i + 1
-         if ( lpressure ) then
-c           --- also read in the pressure information (new format)
+         if ( pressoption .eq. 1 ) then
+c           --- also read in the virial pressure information
             read(inp,*) temperature(I),rhog(I),errg(I)
      &           ,rhol(I),errl(I),press(i),errp(i)
+         elseif ( pressoption .eq. 2 ) then
+c           --- read in the thermodynamic pressure information
+            read(inp,*) temperature(I),rhog(I),errg(I)
+     &           ,rhol(I),errl(I),dumma,dummb,press(i),errp(i)
          else
-c           --- just read in the density data (old format)
+c           --- just read in the density data
             read(inp,*) temperature(I),rhog(I),errg(I),rhol(I),errl(I)
          endif
          if (temperature(I) .EQ. 0.0d0 ) then
@@ -117,46 +122,8 @@ c     --- plot simulation results
       close(22)
       close(23)
 
-      write(6,*) 'Do you wish to transform experimental data into'
-     &     ,' a plotable format?'
-      read(5,*) ltransformexp
-      if ( ltransformexp ) call transformexpdata(beta)
-
-c     --- see if we want to do a rectilinear fit
-      write(6,*) 'Do you wish to fit to the following equations?'
-      write(6,*) 'tau = 1 - T/Tc'
-      write(6,*) 'rho_diff = a_0 tau^beta'
-      write(6,*) 'rho_diam = rho_c + b_1 tau'
-      read(5,*) lfitrectilinear
-      if ( lfitrectilinear ) then
-         call rectilinearfit(ns,rhog,rhol,rhoa,errg,errl,erra
-     &        ,temperature,beta,tmin,tc_rect,dtc_rect)
-      endif
-
-c     --- see if we want to try a nonlinear fit
-      write(6,*) 'Do you wish to fit to the following equations?'
-      write(6,*) 'tau = 1 - T/Tc'
-      write(6,*) 'rho_diff = a_0 tau^beta'
-      write(6,*) 'rho_diam = rho_c + b_0 tau^(1-alpha) + b_1 tau'
-      read(5,*) lfitnonlinear
-      if ( lfitnonlinear ) then
-         fitvars = 'a_0 b_0 b_1'
-         call nonlinearfit(ns,rhog,rhol,temperature,tmin,fitvars)
-      endif
-
-c     --- see if we want to try an expanded fit
-      write(6,*) 'Do you wish to fit to the following equations?'
-      write(6,*) 'tau = 1 - T/Tc'
-      write(6,*) 'rho_diff = a_0 tau^beta + a_1 tau^(beta + delta)'
-      write(6,*) 'rho_diam = rho_c + b_0 tau^(1-alpha) + b_1 tau'
-      read(5,*) lfit_a0_a1_b0_b1
-      if ( lfit_a0_a1_b0_b1 ) then
-         fitvars = 'a_0 a_1 b_0 b_1'
-         call nonlinearfit(ns,rhog,rhol,temperature,tmin,fitvars)
-      endif
-
 c     --- vapor pressure transformation
-      if ( lpressure ) then
+      if ( pressoption .eq. 1 .or. pressoption .eq. 2 ) then
 c        --- open the vapor pressure files
          name = '.tvp'
          call twh_openappendfile(35,name)
@@ -173,8 +140,61 @@ c           --- transform data for claus-clap fit
          close(35)
          close(36)
 c        --- call the least squares fitting for CC
-         call ccfit(ns,xxx,yyy,www,tc_rect,dtc_rect)
+         call ccfit(ns,xxx,yyy,www,slope,sm,intercept,sb)
       endif
+      write(6,*)
+      write(6,*) 'Do you wish to transform experimental data into'
+     &     ,' a plotable format?'
+      read(5,*) ltransformexp
+      if ( ltransformexp ) call transformexpdata(beta)
+
+c     --- see if we want to do a rectilinear fit
+      write(6,*) 'Do you wish to fit to the following equations?'
+      write(6,*) 'tau = 1 - T/Tc'
+      write(6,*) 'rho_diff = a_0 tau^beta'
+      write(6,*) 'rho_diam = rho_c + b_1 tau'
+      read(5,*) lfitrectilinear
+      if ( lfitrectilinear ) then
+         call rectilinearfit(ns,rhog,rhol,rhoa,errg,errl,erra
+     &        ,temperature,beta,tmin,tc,dtc)
+c        --- output critical pressure
+         if ( pressoption .ne. 0 ) then
+            call critpress(tc,dtc,slope,sm,intercept,sb)
+         endif
+      endif
+
+c     --- see if we want to try a nonlinear fit
+      write(6,*) 'Do you wish to fit to the following equations?'
+      write(6,*) 'tau = 1 - T/Tc'
+      write(6,*) 'rho_diff = a_0 tau^beta'
+      write(6,*) 'rho_diam = rho_c + b_0 tau^(1-alpha) + b_1 tau'
+      read(5,*) lfitnonlinear
+      if ( lfitnonlinear ) then
+         fitvars = 'a_0 b_0 b_1'
+         call nonlinearfit(ns,rhog,rhol,temperature,tmin,fitvars
+     &        ,tc)
+c        --- output critical pressure (use the rectilinear dtc)
+         if ( pressoption .ne. 0 ) then
+            call critpress(tc,dtc,slope,sm,intercept,sb)
+         endif
+      endif
+
+c     --- see if we want to try an expanded fit
+      write(6,*) 'Do you wish to fit to the following equations?'
+      write(6,*) 'tau = 1 - T/Tc'
+      write(6,*) 'rho_diff = a_0 tau^beta + a_1 tau^(beta + delta)'
+      write(6,*) 'rho_diam = rho_c + b_0 tau^(1-alpha) + b_1 tau'
+      read(5,*) lfit_a0_a1_b0_b1
+      if ( lfit_a0_a1_b0_b1 ) then
+         fitvars = 'a_0 a_1 b_0 b_1'
+         call nonlinearfit(ns,rhog,rhol,temperature,tmin,fitvars
+     &        ,tc)
+c        --- output critical pressure (use the rectilinear dtc)
+         if ( pressoption .ne. 0 ) then
+            call critpress(tc,dtc,slope,sm,intercept,sb)
+         endif
+      endif
+
 
 c     --- close the input and output files
       close(11)
@@ -370,17 +390,22 @@ c     --- open the file
       return
       end
 
-      subroutine ccfit(npoint,xxx,yyy,www,temp,deltemp)
+      subroutine ccfit(npoint,xxx,yyy,www,slope,sm,intercept,sb)
+c     ******************************************************************
+c     * fits the pressures to a linear equation                        *
+c     *                                                                *
+c     * last modified 07-26-2013 by M.G. Martin                        *
+c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       integer npoint
-      double precision temp,deltemp
       double precision xxx(npoint),yyy(npoint),www(npoint)
+      double precision slope,sm,intercept,sb
 c     --- local variables
       integer i
-      double precision sumx,sumy,sumw,sumdw,slope,intercept,di
+      double precision sumx,sumy,sumw,sumdw,di
       dimension di(npoint)
-      double precision sm,sb,press,delpress,tboil,deltboil,pboil
+      double precision press,delpress,tboil,deltboil,pboil
       double precision hvap,dhvap
 c     Weighted linear least squares fit
       
@@ -433,11 +458,6 @@ c     Weighted linear least squares fit
       write(6,*) 'INTERCEPT = ', intercept,  '  +/-  ', sb
       write(6,*)
 
-      press = dexp(slope/temp + intercept)
-      delpress = dsqrt( ((slope/temp)**2)*
-     &     (  (sm/slope)**2 + (deltemp/temp)**2 ) + sb**2 ) 
-      delpress = delpress*press
-      write(6,*) 'Critical pressure [kPa]',press,' error',delpress 
 c     --- transform the slope into a heat of vaporization
       hvap = -slope*8.314d0/1000.0d0
       dhvap = dabs((sm/slope)*hvap)
@@ -450,6 +470,28 @@ c     --- estimate boiling point from this relationship
      &     + (sb/(dlog(pboil)-intercept))**2)
       write(6,*) 'Boiling Point [K] ',tboil,' error',deltboil
 
+
+      return
+      end
+
+      subroutine critpress(temp,deltemp,slope,sm,intercept,sb)
+c     ******************************************************************
+c     * computes the critical pressure using the simple linear fit     *
+c     *                                                                *
+c     * split out of old routines 07-26-2013 by M.G. Martin            *
+c     * last modified 07-26-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed in/out of the subroutine
+      double precision temp,deltemp,slope,sm,intercept,sb
+c     --- local variables
+      double precision press,delpress
+
+      press = dexp(slope/temp + intercept)
+      delpress = dsqrt( ((slope/temp)**2)*
+     &     (  (sm/slope)**2 + (deltemp/temp)**2 ) + sb**2 ) 
+      delpress = delpress*press
+      write(6,*) 'Critical pressure [kPa]:',press,' error',delpress 
 
       return
       end
@@ -660,7 +702,8 @@ c     --- close rectilinear fit output files
       return
       end
 
-      subroutine nonlinearfit(ndata,rhog,rhol,temperature,tmin,fitvars)
+      subroutine nonlinearfit(ndata,rhog,rhol,temperature,tmin,fitvars
+     &     ,besttemp)
 c     ******************************************************************
 c     * uses a combination of linear least squares plus a searching    *
 c     * algorithm to find the best fit to a more complicated expression*
@@ -740,7 +783,7 @@ c        --- always utilize a single value for beta
       endif
 
       if ( .not. lscanbeta ) then
-         write(6,*) 'Input a value for beta (typical 0.32)'
+         write(6,*) 'Input a value for beta (typical 0.325)'
          read(5,*) fitbeta
          if ( fitbeta .le. 0.0d0 ) then
             write(6,*) 'Error: beta must be positive'

@@ -22,13 +22,12 @@
     </td>
     <td width="697" valign="top"> <b>Overview</b> 
       <ul>
-        This section covers a force field parameterized to work with the Gordon n-6 potential.  Right 
-	now this is mostly a placeholder, but efforts are currently underway to determine parameters 
-	for several functional groups.  Check back later and see if any progress has occurred.
+       This section covers a force field parameterized by Peter A. Gordon to work with the Gordon n-6 potential.  There are multiple parameters for united-atom methane, plus 
+       parameters for n-alkanes.
       </ul>
-      <b>References for Gordon</b> 
+      <b>References for <a href="../references.html#force_fields_gordon">Gordon</b></b> 
       <ul>
-        Nothing yet to report.
+       <li><a href="../references.html#gordon_2006">Gordon 2006</a></li>
       </ul>	
       <b>Gordon in Towhee</b> 
       <ul>
@@ -38,12 +37,19 @@
 	Please note that the capitalization and spacing pattern is important 
 	and must be followed exactly as listed here.
 	<ul>
-          <li><b>'CH4_3'</b> : methane taken from the TraPPE-UA potential</li>
+          <li><b>'CH4n9'</b> : United-atom methane using a replulsive term of power 9.</li>
+          <li><b>'CH4n10'</b> : United-atom methane using a replulsive term of power 10.</li>
+          <li><b>'CH4n11'</b> : United-atom methane using a replulsive term of power 11.  This was found to give the best balance of vapor-liquid and viscosity predictions.</li>
+          <li><b>'CH4n12'</b> : United-atom methane using a replulsive term of power 12.</li>
+          <li><b>'CH4n18'</b> : United-atom methane using a replulsive term of power 18.</li>
+          <li><b>'CH4n40'</b> : United-atom methane using a replulsive term of power 40.</li>
+          <li><b>'CH3n14'</b> : United-atom methyl using a replulsive term of power 14.  Used for their n-alkane simuations.</li>
+          <li><b>'CH2n14'</b> : United-atom methylene using a replulsive term of power 20.  Used for their n-alkane simuations.</li>
 	</ul>
       </ul>
       <b>Coulombic interactions</b> 
       <ul>
-        Nothing yet to report.
+        Coulombic terms were not used in this forcefield.
       </ul>
       <a href="../towhee_capabilities.html">Return to the Towhee Capabilities web page</a> 
       <p>&nbsp;</p>
@@ -54,7 +60,7 @@
 <i><font size="2">Send comments to:</font></i> <font size="2"> 
 <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a><br>
 <i>Last updated:</i> 
-<!-- #BeginDate format:Am1 -->September 07, 2005<!-- #EndDate -->
+<!-- #BeginDate format:Am1 -->July 19, 2013<!-- #EndDate -->
 </font> <br>
 </body>
 </html>

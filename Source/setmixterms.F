@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -735,7 +735,7 @@ c     * sets the nbcoeffs according to the Lorentz-Berthelot mixing    *
 c     * rules                                                          *
 c     *                                                                *
 c     * split from setmixterms 04-26-2006 by M.G. Martin               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETSIGN
@@ -746,9 +746,10 @@ c     --- variables passed to/from the subroutine
       character*(*) localcp,localcm
       integer ii,jj,ij
 c     --- local variables
-      integer classical_n,icoeff,tabnpairi,tabnpairj
+      integer icoeff,tabnpairi,tabnpairj
       double precision dtemp,gorfact,sigma,soverr,rminimum
       double precision valuei,valuej,tpairii,tpairij,tpairjj
+      double precision powrn
 
 c     --- Lorentz-Berthelot rules 
       if ( localcp .eq. 'Lennard-Jones'
@@ -799,7 +800,6 @@ c        --- geometric mean of the attractive well depth
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,3,ij,dtemp)
       elseif ( localcp .eq. 'Gordon n-6' ) then
-         call twh_classical_n(GLB_GET,classical_n)
 c        --- sigma with arithmetic mean
          dtemp = 0.5d0*(twh_get_nbcoeff(1,ii)
      &        + twh_get_nbcoeff(1,jj))
@@ -810,22 +810,27 @@ c        --- epsilon with geometric mean
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,2,ij,dtemp)
+c        --- n with geometric mean
+         call twh_nbcoeff(GLB_GET,3,ii,valuei)
+         call twh_nbcoeff(GLB_GET,3,jj,valuej)
+         call twh_geometricmean(lfailure,valuei,valuej,powrn)
+         if ( lfailure ) return
+         call twh_nbcoeff(GLB_SET,3,ij,powrn)
 c        --- compute the gordon (n/6)^(1/(n-6)) factor
-         gorfact = (dble(classical_n)/6.0d0)
-     &        **(1.0d0/(dble(classical_n-6)))
+         gorfact = (powrn/6.0d0)**(1.0d0/(powrn-6.0d0))
 c        --- store a(n)
          dtemp = twh_get_nbcoeff(1,ij)*
      &        (2.0d0**(1.0d0/6.0d0) - gorfact)
-         call twh_nbcoeff(GLB_SET,3,ij,dtemp)
+         call twh_nbcoeff(GLB_SET,4,ij,dtemp)
 c        --- compute rminimum
-         rminimum = twh_get_nbcoeff(3,ij)
+         rminimum = twh_get_nbcoeff(4,ij)
      &        + gorfact*twh_get_nbcoeff(1,ij)
          soverr = twh_get_nbcoeff(1,ij)
-     &        /(rminimum-twh_get_nbcoeff(3,ij))
+     &        /(rminimum-twh_get_nbcoeff(4,ij))
 c        --- store 4 epsilon c(n)
          dtemp = -twh_get_nbcoeff(2,ij)*(1.0d0/
-     &        (soverr**classical_n - soverr**6))
-         call twh_nbcoeff(GLB_SET,4,ij,dtemp)
+     &        (soverr**powrn - soverr**6))
+         call twh_nbcoeff(GLB_SET,5,ij,dtemp)
       elseif ( localcp .eq. 'Multiwell' .or.
      &        localcp .eq. 'Repulsive Multiwell'
      &        ) then

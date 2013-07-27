@@ -27,7 +27,7 @@ c     * regard to the lhere function                                   *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 07-15-2013 by M.G. Martin                        *
+c     * last modified 07-26-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -432,7 +432,6 @@ c     --- set the pressurestyle
      &     .or. cpnumber .eq. CP_UFF_12_6
      &     .or. cpnumber .eq. CP_9_6
      &     .or. cpnumber .eq. CP_12_9_6
-     &     .or. cpnumber .eq. CP_EMBEDDED_ATOM_METHOD
      &     .or. cpnumber .eq. CP_EAM_PAIR_ONLY
      &     .or. cpnumber .eq. CP_EXPONENTIAL_6
      &     .or. cpnumber .eq. CP_EXPONENTIAL_12_6

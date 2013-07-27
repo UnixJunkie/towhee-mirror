@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: nvt                           
@@ -72,7 +72,7 @@ No output of updates or block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Vink2001                                                          
+/towheebase/ForceFields/towhee_ff_Vink2001                                                                              
  classical_potential: Stillinger-Weber              
  READCLASSICAL: pot_num:    18 potential name: Stillinger-Weber              
  classical_mixrule: Explicit                      
@@ -140,7 +140,7 @@ unit:    1 name:Si
  Verifying input structures are consistent
 Determining CBMC bond distributions
      for molecule type     1
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -151,6 +151,16 @@ Torsion Types
    No Torsion Types
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Stillinger-Weber potential
+U = nbcoeff(1)*[nbcoeff(2)*Sum u2(rij) + nbcoeff(7)*Sum u3(rij,rjk)]
+u2(r_ij) = [nbcoeff(3)*(r_ij/nbcoeff(4)^-nbcoeff(5) - 1] * Exp{1/[(r_ij/nbcoeff(4) - nbcoeff(6))]} * Heaviside(nbcoeff(6) - [r_ij/nbcoeff(4)])
+u3(r_ij,r_jk) = exp[ nbcoeff(8)/{r_ij/nbcoeff(4) - nbcoeff(6)} + nbcoeff(8)/{r_jk/nbcoeff(4) - nbcoeff(6)}] * (cos(theta_ijk)-nbcoeff(9))^2
+   * Heaviside(nbcoeff(6) - r_ij/nbcoeff(4)) * Heaviside(nbcoeff(6) - r_jk/nbcoeff(4))
+
+-i- -j- nbcoeff(1) nb(2) nb(3) nb(4) nb(5) nb(6) nb(7) nb(8) nb(9)
+  1   1 0.1913E+05  7.05  0.60  2.10  4.00  1.80 31.50  1.20 -0.33
  Canonical Gibbs ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -189,16 +199,6 @@ molecule type:     1
  Box  2 hmatrix(2,x):        0.00000     124.14584       0.00000
  Box  2 hmatrix(3,x):        0.00000       0.00000     124.14584
 
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Stillinger-Weber potential
-U = nbcoeff(1)*[nbcoeff(2)*Sum u2(rij) + nbcoeff(7)*Sum u3(rij,rjk)]
-u2(r_ij) = [nbcoeff(3)*(r_ij/nbcoeff(4)^-nbcoeff(5) - 1] * Exp{1/[(r_ij/nbcoeff(4) - nbcoeff(6))]} * Heaviside(nbcoeff(6) - [r_ij/nbcoeff(4)])
-u3(r_ij,r_jk) = exp[ nbcoeff(8)/{r_ij/nbcoeff(4) - nbcoeff(6)} + nbcoeff(8)/{r_jk/nbcoeff(4) - nbcoeff(6)}] * (cos(theta_ijk)-nbcoeff(9))^2
-   * Heaviside(nbcoeff(6) - r_ij/nbcoeff(4)) * Heaviside(nbcoeff(6) - r_jk/nbcoeff(4))
-
--i- -j- nbcoeff(1) nb(2) nb(3) nb(4) nb(5) nb(6) nb(7) nb(8) nb(9)
-  1   1 0.1913E+05  7.05  0.60  2.10  4.00  1.80 31.50  1.20 -0.33
 
 Number of MC cycles:                    1
 Number of molecules:                  800

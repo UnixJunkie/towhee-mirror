@@ -103,21 +103,21 @@
            </dt>
            <li>'Ackland 3-part': The pair potential is a complicated 3 part function as described in 
             <a href="references.html#mendelev_et_al_2003">Mendelev <i>et al.</i> 2003</a>.
-            <dt>if r < nbcoeff(1) then</dt>
+	    If r &lt; nbcoeff(1)
             <ul>
              <dt>x = r/nbcoeff(4)</dt>
              <dt><i>u</i><sub>pair</sub> = ( 0.1818 * exp[-3.2 * x] + 0.5099 * exp[-0.9423 * x]
                + 0.2802 * exp[-0.4029 * x] + 0.02817 * exp[-0.2016 * x] ) * nbcoeff(3) / r
              </dt>
             </ul>
-            <dt>elseif r < nbcoeff(2) then</dt>
+            <dt>elseif r &lt; nbcoeff(2) then</dt>
             <ul>
              <dt>x = nbcoeff(5) + nbcoeff(6) * r + nbcoeff(7) * r<sup>2</sup> + nbcoeff(8) * r<sup>3</sup></dt>
              <dt><i>u</i><sub>pair</sub> = nbcoeff(9) * exp[x]</dt>
             </ul>
             <dt>else</dt>
             <ul>
-             <dt><i>u</i><sub>pair</sub> = Sum<sub>i = 1,table_npair</sub> table_pair(2,i) * [table_pair(1,i) - r]<sup>3</sup>
+             <dt><i>u</i><sub>pair</sub> = &#8721;<sub>i = 1,table_npair</sub> table_pair(2,i) * [table_pair(1,i) - r]<sup>3</sup>
               * Heaviside[table_pair(1,i)-r]
              </dt>
             </ul>
@@ -137,16 +137,28 @@
             </ul>
             <dt>else</dt>
             <ul>
-             <dt><i>u</i><sub>pair</sub> = Sum<sub>i = 1,table_npair</sub> table_pair(2,i) * 
+             <dt><i>u</i><sub>pair</sub> = &#8721;<sub>i = 1,table_npair</sub> table_pair(2,i) * 
               [table_pair(1,i) - r]<sup>i+3</sup> * Heaviside[table_pair(1,i)-r]
              </dt>
             </ul>
            </li>
+           <li>'Belashchenko 5-8': Two part pair potential as described in <a href="references.html#belashchenko_2013">Belashchenko 2013</a>.
+            <dt>if r < r<sub>1</sub> (where r<sub>1</sub> is nbcoeff(1)) then</dt>
+            <ul>
+             <dt><i>u</i><sub>pair</sub> = nbcoeff(7) + nbcoeff(8) * (r<sub>1</sub> - r) + nbcoeff(9)*(exp[nbcoeff(10)*(r<sub>1</sub>-r)]-1)</dt>
+            </ul>
+            <dt>else</dt>
+            <ul>
+             <dt><i>u</i><sub>pair</sub> = &#8721;<sub>i = 1,5</sub> &#8721;<sub>m=0,8</sub> a<sub>i,m</sub> (r - r<sub>i+1</sub>)<sup>m</sup> Heaviside[r<sub>i</sub>,r<sub>i+1</sub>]</dt>
+            </ul>
+            <dt>where the r<sub>i</sub> are stored in nbcoeff(i) for i=1,6</dt>
+            <dt>and a<sub>i,m</sub> are stored in nbcoeff(2 + 9*i + m) for i = 1,5 and m = 0,8</dt>
+           </li>
            <li>'exponential': The pair potential is described by an exponential function.
-            <dt><i>u</i><sub>pair</sub> = nb<sub>1</sub> e<sup>[nb<sub>2</sub> r<sub>ij</sub>]</sup>.</dt>
+            <dt><i>u</i><sub>pair</sub> = nbcoeff(1) e<sup>[nbcoeff(2) r<sub>ij</sub>]</sup>.</dt>
            </li>
            <li>'morse': The pair potential is described by the Morse function.
-            <dt><i>u</i><sub>pair</sub> = nb<sub>1</sub> * { exp[-2 nb<sub>2</sub> (r - nb<sub>3</sub>)] - 2 exp[-nb<sub>2</sub> (r-nb<sub>3</sub>)]}</dt>
+            <dt><i>u</i><sub>pair</sub> = nbcoeff(1) * { exp[-2 nbcoeff(2) (r - nbcoeff(3))] - 2 exp[-nbcoeff(2) (r-nbcoeff(3))]}</dt>
            </li>
            <li>'table': This is the traditional way of describing EAM potential information and presents a table of data that is interpolated to
             determine the energy for any distance.
@@ -207,7 +219,7 @@
          <ul>
           <dt>The style of the EAM density interaction for this atom type.  There are several options currently supported by Towhee.</dt>
           <li>'Ackland cubic sum'
-          <dt>&#961;(r<sub>ij</sub>) = Sum<sub>i = 1,eam_ndens</sub> eam_dens(2,i) * [eam_dens(1,i) - r]<sup>3</sup> * Heaviside[eam_dens(1,i)-r]</dt>
+          <dt>&#961;(r<sub>ij</sub>) = &#8721;<sub>i = 1,eam_ndens</sub> eam_dens(2,i) * [eam_dens(1,i) - r]<sup>3</sup> * Heaviside[eam_dens(1,i)-r]</dt>
           </li>
           <li>'exponential': The density is described by an exponential function.
           <dt>&#961;(r<sub>ij</sub>) = eam_dens(1,2) e<sup>eam_dens(2,2) r<sub>ij</sub></sup> for r<sub>ij</sub> &lt eam_dens(2,1), and 0 otherwise.</dt>
@@ -246,23 +258,72 @@
           <dt>Only listed for <b>classical_potential</b> 'Embedded Atom Method'.  The style of the EAM embedding function for this atom type.  Currently 
           supported options are listed below.
           </dt>
-          <li>'table': This is the traditional way of describing EAM embedding function information and presents a table of data that is interpolated to
-          determine the embedding function energy for any density.
-          </li>
-          <li>'Ackland 2-term': <i>u</i><sub>embed</sub>(&#961;(r<sub>ij</sub>)) = eam_embed(1,1) * 
-          [ - &#961;<sup>0.5</sup> + eam_embed(2,1) * &#961;<sup>2</sup>(r<sub>ij</sub>) ]
-          </li>
-          <li>'Belashchenko': <i>u</i><sub>embed</sub>(&#961;(r<sub>ij</sub>)) 
+          <li>'Belashchenko': u<sub>embed</sub>(&#961;(r<sub>ij</sub>)) 
            <ul>
             <dt>
              = eam_embed_data(4,1) * <span style="white-space: nowrap; font-size:larger">&radic;<span style="text-decoration:overline;">&nbsp; &#961;&nbsp;</span></span>(r<sub>ij</sub>)
-             + eam_embed_data(4,2) * &#961(r<sub>ij</sub>) for r<sub>ij</sub> &lt eam_embed_data(5,1),
+             + eam_embed_data(4,2) * &#961(r<sub>ij</sub>)
+	     <ul>for 0 &le; &#961(r<sub>ij</sub>) &lt eam_embed_data(5,1)</ul>
             </dt>
             <dt>
              = eam_embed_data(1,2) + eam_embed_data(2,2) * [&#961;(r<sub>ij</sub>) - eam_embed_data(5,2)]<sup>2</sup> + eam_embed_data(3,2)*[&#961;(r<sub>ij</sub>) - eam_embed_data(5,2)]<sup>3</sup>
-             otherwise.
+             <ul>for eam_embed_data(5,1) &le; &#961(r<sub>ij</sub>)</ul>
             </dt>
            </ul>
+          </li>
+	  <li>'Belashchenko 10 rho': 
+	   <ul>
+	     <dt>belrho(0) = eam_embed_data(11,1)</dt>
+	     <dt>belrho(1) = eam_embed_data(11,2)</dt>
+	     <dt>belrho(2) = eam_embed_data(11,3)</dt>
+	     <dt>belrho(3) = eam_embed_data(12,1)</dt>
+	     <dt>belrho(4) = eam_embed_data(12,2)</dt>
+	     <dt>belrho(5) = eam_embed_data(12,3)</dt>
+	     <dt>belrho(6) = eam_embed_data(13,1)</dt>
+	     <dt>belrho(7) = eam_embed_data(13,2)</dt>
+	     <dt>belrho(8) = eam_embed_data(13,3)</dt>
+	     <dt>belrho(9) = eam_embed_data(14,1)</dt>
+	   </ul>
+	   u<sub>embed</sub>(&#961;(r<sub>ij</sub>)) 
+           <ul>
+	     <dt>
+	       = [eam_embed_data(8,1) + eam_embed_data(8,2) * (&#961;(r<sub>ij</sub>) - belrho(7)) + eam_embed_data(8,3) * (&#961;(r<sub>ij</sub>) - belrho(7))<sup>2</sup>] 
+	       * [2*&#961;(r<sub>ij</sub>)/belrho(7) - {&#961;(r<sub>ij</sub>)/belrho(7)}<sup>2</sup>]
+	       <ul>for 0 &lt; &#961;(r<sub>ij</sub>) &lt; belrho(7)</ul>
+	     </dt>
+	     <dt>
+	       = eam_embed_data(i,1) + (&#961;(r<sub>ij</sub>) - belrho(i-1)) * [eam_embed_data(i,2) + eam_embed_data(i,3)*(&#961;(r<sub>ij</sub>)-belrho(i-1))]
+	       <ul>for belrho(i) &le; &#961;(r<sub>ij</sub>) &lt; belrho(i-1) where 2 &le; i &le; 7</ul>
+	     </dt>
+	     <dt>
+	       = eam_embed_data(1,1) + eam_embed_data(3,1) * (&#961;(r<sub>ij</sub>) - belrho(0))<sup>2</sup>
+	       <ul>for belrho(1) &le; &#961;(r<sub>ij</sub>) &lt; belrho(8).</ul>
+	     </dt>
+	     <dt>
+	       = eam_embed_data(9,1) + eam_embed_data(9,2) * [&#961;(r<sub>ij</sub>) - belrho(8)] + eam_embed_data(9,3)*[&#961;(r<sub>ij</sub>) - belrho(8)]<sup>eam_embed_data(14,2)</sup>
+	       <ul>for belrho(8) &le; &#961;(r<sub>ij</sub>) &lt; belrho(9)</ul>
+	     </dt>
+	     <dt>
+	       = eam_embed_data(10,1) + eam_embed_data(10,2) * [&#961;(r<sub>ij</sub>) - belrho(9)] + eam_embed_data(10,3)*[&#961;(r<sub>ij</sub>) - belrho(9)]<sup>eam_embed_data(14,3)</sup>
+	       <ul>for belrho(9) &le; &#961;(r<sub>ij</sub>)</ul>
+	     </dt>
+           </ul>
+          </li>
+	  <li>'logarithmic': u<sub>embed</sub>(&#961;(r<sub>ij</sub>)) = &#961;(r<sub>ij</sub>) * (eam_embed_data(1,2) * ln[&#961;(r<sub>ij</sub>)] + eam_embed_data(2,2))</li>
+	  <li>'power 0.5 and 2': u<sub>embed</sub>(&#961;(r<sub>ij</sub>)) = 
+	    eam_embed_data(1,2) <span style="white-space: nowrap; font-size:larger">&radic;<span style="text-decoration:overline;">&nbsp; &#961;&nbsp;</span></span>(r<sub>ij</sub>)
+	    + eam_embed_data(2,2) *[&#961;(r<sub>ij</sub>)]<sup>2</sup>
+          </li>
+	  <li>'power 0.5, 2, and 4': u<sub>embed</sub>(&#961;(r<sub>ij</sub>)) = 
+	    eam_embed_data(1,2) <span style="white-space: nowrap; font-size:larger">&radic;<span style="text-decoration:overline;">&nbsp; &#961;&nbsp;</span></span>(r<sub>ij</sub>)
+	    + eam_embed_data(2,2) *[&#961;(r<sub>ij</sub>)]<sup>2</sup>
+	    + eam_embed_data(3,2) *[&#961;(r<sub>ij</sub>)]<sup>4</sup>
+          </li>
+	  <li>'squareroot': u<sub>ebmed</sub>(&#961;(r<sub>ij</sub>)) = eam_embed_data(2,2) * &#961;(r<sub>ij</sub>)
+	    - eam_embed_data(1,2) <span style="white-space: nowrap; font-size:larger">&radic;<span style="text-decoration:overline;">&nbsp; &#961;&nbsp;</span></span>(r<sub>ij</sub>)
+          </li>
+          <li>'table': This is the traditional way of describing EAM embedding function information and presents a table of data that is interpolated to
+          determine the embedding function energy for any density.
           </li>
          </ul>
         </dt>
@@ -748,13 +809,13 @@
          </li>
          <li>3: Gromos/Charmm/Amber style Cosine Series
          <ul>
-          <dt>U<sub>torsion</sub>(&phi;) = Sum<sup>i=1,ntorloop</sup> torcoeff(3*(i-1)+1) * [ 1 + Cos(torcoeff(3*(i-1)+2)&phi; - torcoeff(3*(i-1)+3))]</dt>
+          <dt>U<sub>torsion</sub>(&phi;) = &#8721;<sup>i=1,ntorloop</sup> torcoeff(3*(i-1)+1) * [ 1 + Cos(torcoeff(3*(i-1)+2)&phi; - torcoeff(3*(i-1)+3))]</dt>
          </ul>
          </li>
          <li>4: Gromos/Charmm/Amber style Cosine Series plus a harmonic term that Charmm traditionally calls an improper term despite the fact that
          the bonding pattern is that of a regular torsion.
          <ul>
-          <dt>U<sub>torsion</sub>(&phi;) = [Sum<sup>i=1,ntorloop</sup> torcoeff(3*(i-1)+1)
+          <dt>U<sub>torsion</sub>(&phi;) = [&#8721;<sup>i=1,ntorloop</sup> torcoeff(3*(i-1)+1)
            * [ 1 + Cos(torcoeff(3*(i-1)+2)&phi; - torcoeff(3*(i-1)+3))]]
           </dt>
           <dt>+ torcoeff(3*ntorloop+1) * [ &phi; - torcoeff(3*ntorloop+2)]^2</dt>
@@ -816,7 +877,7 @@
          <li>10: Cosine Power Series.
          <ul>
           <dt>Note that there are actually ntorloop+1 parameters required as this sum runs from a power of 0 to a power of ntorloop.</dt>
-          <dt>U<sub>torsion</sub>(&phi;) = Sum<sup>i=0,ntorloop</sup> torcoeff(i)*Cos<sup>i</sup>(&phi;)</dt>
+          <dt>U<sub>torsion</sub>(&phi;) = &#8721;<sup>i=0,ntorloop</sup> torcoeff(i)*Cos<sup>i</sup>(&phi;)</dt>
          </ul>
          </li>
          <li>11: Old style OPLS Cosine Series.
@@ -824,9 +885,9 @@
           <dt>U<sub>torsion</sub>(&phi;) = torcoeff(0) + torcoeff(1)*[1 + Cos(&phi;)] + torcoeff(2)*[1 - Cos(2&phi;)] + torcoeff(3)*[1 + Cos(3&phi;)]</dt>
          </ul>
          </li>
-         <li>12: Sum2003 Cosine Series.
+         <li>12: Sun2003 Cosine Series.
          <ul>
-          <dt>U<sub>torsion</sub>(&phi;) = Sum<sup>i=0,ntorloop</sup> torcoeff(i+1) * [ 1 - Cos{i*(&phi; - torcoeff(0))}]</dt>
+          <dt>U<sub>torsion</sub>(&phi;) = &#8721;<sup>i=0,ntorloop</sup> torcoeff(i+1) * [ 1 - Cos{i*(&phi; - torcoeff(0))}]</dt>
          </ul>
          </li>
          <li>13: Old OPLS Two term Cosine Series.
@@ -870,8 +931,8 @@
          </li>
          <li>19: Amber / Number of Torsions
          <ul>
-          <dt>tottor(jk) = Sum of all torsions that share j and k as the central atoms</dt>
-          <dt>U<sub>torsion</sub>(&phi;) = Sum<sup>i=1,ntorloop</sup> torcoeff(3*(i-1)+1) * 
+          <dt>tottor(jk) = &#8721; of all torsions that share j and k as the central atoms</dt>
+          <dt>U<sub>torsion</sub>(&phi;) = &#8721;<sup>i=1,ntorloop</sup> torcoeff(3*(i-1)+1) * 
            [ 1 + Cos(torcoeff(3*(i-1)+2)&phi; - torcoeff(3*(i-1)+3))] / tottor(jk)
           </dt>
          </ul>

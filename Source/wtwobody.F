@@ -27,7 +27,7 @@ c     * w(r) = r dv(r)/dr                                              *
 c     * w(r)/r^2 = (dv(r)/dr) /r                                       *
 c     *                                                                *
 c     * originally written (as ftwobody) 07-03-2002 by M.G. Martin     *
-c     * last update 07-17-2013 by M.G. Martin                          *
+c     * last update 07-21-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -46,20 +46,17 @@ c     --- variables passed to/from the function
       integer ntii,ntjj
       double precision rijsq
 c     --- local variables
-c     --- character string scalars
-      character*20 eampairstyle
 c     --- logical scalars
       logical lcontinue
 c     --- integer scalars
-      integer ntij,icoeff,ipower,hbtype,classical_n,cpnumber
-      integer aindex
+      integer ntij,icoeff,ipower,hbtype,cpnumber,aindex,eampairnum
 c     --- double precision scalars
       double precision srsix,srthree,rij,lambda,rdiff,rtest,rvalue
       double precision rinvfour,rinveight,soverr
       double precision rinvthree,rinvsix,rinvnine,rinvtwelve,wca_cutsq
       double precision x,acklandphi,acklandphiprime,xprime,ainv,onethird
       double precision cbrt_two,tpairone,tpairtwo,rcutsq,rminsq
-      double precision avalue
+      double precision avalue,powrn
 c     --- functions
       double precision wtb_lennard_jones
 
@@ -176,8 +173,8 @@ c        --- 12-9-6 potential
       elseif ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD .or.
      &        cpnumber .eq. CP_EAM_PAIR_ONLY ) then
 c        --- the pair potential part of Embedded Atom
-         call twh_eam_pair_style(GLB_GET,ntij,eampairstyle)
-         if ( eampairstyle .eq. 'Ackland 3-part' ) then
+         call twh_eam_pair_number(GLB_GET,ntij,eampairnum)
+         if ( eampairnum .eq. EAM_PAIR_ACKLANDTP ) then
             rij = dsqrt(rijsq)
             if ( rij .lt. twh_get_nbcoeff(1,ntij) ) then
 c                 --- coulombic type repulsion
@@ -232,7 +229,7 @@ c                 --- recreate the heaviside and save some expense)
                   endif
                enddo
             endif
-         elseif ( eampairstyle .eq. 'Ackland Power' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_ACKLANDPOW ) then
 c           --- complicated pair potential that has 3 different forms
 c           --- depending upon the distances
             rij = dsqrt(rijsq)
@@ -294,7 +291,7 @@ c              --- recreate the heaviside and save some expense)
                   endif
                enddo
             endif
-         elseif ( eampairstyle .eq. 'Belashchenko 5-8' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_BELASHFE ) then
 c           --- Belashchenko Heaviside power series
 c           --- doing this in declining distance in an attempt to only
 c           --- fetch the minimum required parameters
@@ -345,18 +342,18 @@ c              --- power 1 rdiff is 1.0 (rdiff**(1-1))
      &                 + dble(ipower)*avalue*(rdiff**(ipower-1))/rij
                enddo
             endif   
-         elseif ( eampairstyle .eq. 'table' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_TABLE ) then
 c          --- compute the derivatives from the tabulated potential
             rij = dsqrt(rijsq)
             twh_wtwobody = twh_extractpair(lfailure,INTERP_DERIV
      &           ,ntij,rij,lovrlap)/rij
             if ( lfailure ) return
-         elseif ( eampairstyle .eq. 'none' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_NONE ) then
 c           --- no energy, no forces
             twh_wtwobody = 0.0d0
          else
-            write(6,*) 'WTWOBODY: unknown eam_pair_style'
-            write(6,*) eampairstyle
+            write(6,*) 'WTWOBODY: unknown eam_pair_num'
+            write(6,*) eampairnum
             lfailure = .true.
             return
          endif
@@ -390,13 +387,13 @@ c        --- exp-6 with LJ 12
          if ( rijsq .lt. rminsq ) then
             lovrlap = .true.
          elseif ( rijsq .lt. rcutsq ) then
-            call twh_classical_n(GLB_GET,classical_n)
+            call twh_nbcoeff(GLB_GET,3,ntij,powrn)
             rij = dsqrt(rijsq)
             soverr = twh_get_nbcoeff(1,ntij)
-     &           /(rij - twh_get_nbcoeff(3,ntij))
-            twh_wtwobody = (twh_get_nbcoeff(4,ntij)
+     &           /(rij - twh_get_nbcoeff(4,ntij))
+            twh_wtwobody = (twh_get_nbcoeff(5,ntij)
      &           /(twh_get_nbcoeff(1,ntij)*rij))*(6.0d0*(soverr**7)
-     &           -dble(classical_n)*(soverr**(classical_n+1)))
+     &           -powrn*(soverr**(powrn+1.0d0)))
          endif
       else
          write(6,*) 'WTWOBODY: undefined classical potential'

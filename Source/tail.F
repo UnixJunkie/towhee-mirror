@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -37,7 +37,7 @@ c     * corp = -(2/3) Pi Integral(rcut,infinity) r*r*w(r)dr            *
 c     *      where w(r) = r dv(r)/dr                                   *
 c     *                                                                *
 c     * originally written 02-13-2001 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -50,11 +50,11 @@ c     --- local variables
 c     --- character string scalars
       character*30 localcp
 c     --- integer scalars
-      integer imolty,jmolty,ii,jj,ntii,ntjj,ntij,hbtype,classical_n
+      integer imolty,jmolty,ii,jj,ntii,ntjj,ntij,hbtype
       integer nmolty,numiunit,numjunit
 c     --- double precision scalars
-      double precision rci3,ndub,overra,onepi,aaa,bbb,twopi,dvalue
-      double precision rcut
+      double precision rci3,overra,onepi,aaa,bbb,twopi,dvalue
+      double precision rcut,sigma,powrn,aofn,fecofn
 
 c     --- get the classical potential
       localcp = twh_get_classical_potential()
@@ -212,46 +212,36 @@ c                    --- exp-6 plus LJ 12
      &                    + (2.0d0*twh_get_nbcoeff(3,ntij))/(rcut**3) )
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
                   elseif ( localcp .eq. 'Gordon n-6' ) then
-                     call twh_classical_n(GLB_GET,classical_n)
-                     ndub = dble(classical_n)
-                     overra = 1.0d0/(rcut - twh_get_nbcoeff(3,ntij))
+                     call twh_nbcoeff(GLB_GET,1,ntij,sigma)
+                     call twh_nbcoeff(GLB_GET,3,ntij,powrn)
+                     call twh_nbcoeff(GLB_GET,4,ntij,aofn)
+                     call twh_nbcoeff(GLB_GET,5,ntij,fecofn)
+                     overra = 1.0d0/(rcut - aofn)
 c                    --- from Peter Gordon 11-29-2004
-                     dvalue = twopi*twh_get_nbcoeff(4,ntij)*(
-     &                    (twh_get_nbcoeff(1,ntij)**classical_n)*(
-     &                    (1.0d0/(ndub-3.0d0))*(overra**(classical_n-3))
-     &                    + ( (2.0d0*twh_get_nbcoeff(3,ntij))
-     &                    /(ndub-2.0d0) )
-     &                    * (overra**(classical_n-2))
-     &                    + ( (twh_get_nbcoeff(3,ntij)**2)/(ndub-1.0d0))
-     &                    * (overra**(classical_n-1))  )
-     &                    - (twh_get_nbcoeff(1,ntij)**6)*(
-     &                    (1.0d0/3.0d0)*(overra**3)
-     &                    + (twh_get_nbcoeff(3,ntij)/2.0d0)*(overra**4)
-     &                    +((twh_get_nbcoeff(3,ntij)**2)/5.0d0)
-     &                    *(overra**5) ))
+                     dvalue = twopi*fecofn*((sigma**powrn)*(
+     &                    (1.0d0/(powrn-3.0d0))*(overra**(powrn-3.0d0))
+     &                    + ( (2.0d0*aofn)/(powrn-2.0d0) )
+     &                    * (overra**(powrn-2.0d0))
+     &                    + ((aofn**2)/(powrn-1.0d0)
+     &                    )*(overra**(powrn-1.0d0)) )
+     &                    - (sigma**6)*((1.0d0/3.0d0)*(overra**3)
+     &                    + (aofn/2.0d0)*(overra**4)
+     &                    +((aofn**2)/5.0d0)*(overra**5) ))
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
 c                    --- from Peter Gordon 
-                     dvalue = (twopi * twh_get_nbcoeff(4,ntij)/3.0d0)
-     &                    *(
-     &                    ndub*(twh_get_nbcoeff(1,ntij)**classical_n)*( 
-     &                    (1.0d0/(ndub-3.0d0))
-     &                    *(overra**(classical_n-3))
-     &                    + (3.0d0*twh_get_nbcoeff(3,ntij)/(ndub-2.0d0))
-     &                    *(overra**(classical_n-2))
-     &                    + (3.0d0*(twh_get_nbcoeff(3,ntij)**2)
-     &                    /(ndub-1.0d0))
-     &                    *(overra**(classical_n-1))
-     &                    + ((twh_get_nbcoeff(3,ntij)**3)/ndub)
-     &                    *(overra**classical_n)
-     &                    )
-     &                    - 6.0d0*(twh_get_nbcoeff(1,ntij)**6) *(
+                     dvalue = (twopi * fecofn/3.0d0)*(
+     &                    powrn*(sigma**powrn)*((1.0d0/(powrn-3.0d0))
+     &                    *(overra**(powrn-3))
+     &                    +(3.0d0*aofn/(powrn-2.0d0)
+     &                    )*(overra**(powrn-2.0d0))
+     &                    + (3.0d0*(aofn**2)/(powrn-1.0d0))
+     &                    *(overra**(powrn-1.0d0))
+     &                    + ((aofn**3)/powrn)*(overra**powrn) )
+     &                    - 6.0d0*(sigma**6) *(
      &                    (1.0d0/3.0d0)*overra**3
-     &                    + (3.0d0*twh_get_nbcoeff(3,ntij)/4.0d0)
-     &                    *overra**4
-     &                    + (3.0d0*(twh_get_nbcoeff(3,ntij)**2)/5.0d0)
-     &                    *overra**5
-     &                    + ((twh_get_nbcoeff(3,ntij)**3)/6.0d0)
-     &                    *overra**6 ) )
+     &                    + (3.0d0*aofn/4.0d0)*overra**4
+     &                    + (3.0d0*(aofn**2)/5.0d0)*overra**5
+     &                    + ((aofn**3)/6.0d0)*overra**6 ) )
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
                   elseif ( localcp .eq. 'Double Exponential' ) then
 c                    --- repulsive part

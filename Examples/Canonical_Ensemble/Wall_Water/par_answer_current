@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
- in directory: /towheebase/Examples/Canonical_Ensemble/Wall_Water/                                                 
+ Reading from towhee_input file: towhee_input                                                                                                            
+ in directory: /towheebase/Examples/Canonical_Ensemble/Wall_Water/                                                                     
  inputformat: Towhee         
  ensemble: nvt                           
  temperature:  300.000    
@@ -72,7 +72,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_SPC-E                                                             
+/towheebase/ForceFields/towhee_ff_SPC-E                                                                                 
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: Lorentz-Berthelot             
@@ -178,7 +178,7 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -189,6 +189,15 @@ Torsion Types
    No Torsion Types
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 12-6 potential
+    with a shift to zero at the cut-off
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
+Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
+   1 OW            1 OW             3.1656    78.1970    -0.3144     0.0000     0.0000
+   1 OW            2 HW             1.5828     0.0000     0.0000     0.0000     0.0000
+   2 HW            2 HW             0.0000     0.0000     0.0000     0.0000     0.0000
  Canonical ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -222,15 +231,6 @@ molecule type:     1
 
 Box:     1 Initial calp:    0.25254
 Box:     1 Initial kmax:     5
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Lennard-Jones 12-6 potential
-    with a shift to zero at the cut-off
-u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
-Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
-   1 OW            1 OW             3.1656    78.1970    -0.3144     0.0000     0.0000
-   1 OW            2 HW             1.5828     0.0000     0.0000     0.0000     0.0000
-   2 HW            2 HW             0.0000     0.0000     0.0000     0.0000     0.0000
 
 Number of MC cycles:                   10
 Number of molecules:                  570

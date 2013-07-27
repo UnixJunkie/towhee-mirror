@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: nvt                           
@@ -74,8 +74,8 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            2
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Charmm27                                                          
-/towheebase/ForceFields/towhee_ff_Aqvist                                                            
+/towheebase/ForceFields/towhee_ff_Charmm27                                                                              
+/towheebase/ForceFields/towhee_ff_Aqvist                                                                                
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: Lorentz-Berthelot             
@@ -235,8 +235,8 @@ unit:   73 name:HA         charge:   0.09000
 unit:    1 name:Ca+2       charge:   2.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
- Determining cyclic subunits for molecule type          1
- Determining cyclic subunits for molecule type          2
+Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          2
 Default total charge on molecule   1 is  -2.00000
 Default total charge on molecule   2 is   2.00000
 Total charge in the simulation system:   0.00000
@@ -314,28 +314,6 @@ Type:   7 Style: Harmonic  Angle:3.1416 k    10064.3
 Type:   8 Style: Harmonic  Angle:0.0000 k    14794.6
 Type:  15 Style: Harmonic  Angle:0.0000 k    16455.2
 Type:  36 Style: Harmonic  Angle:0.0000 k    69142.0
- Canonical ensemble
- 3-dimensional periodic box
- Additional Center-of-Mass cutoff
- Dual Cutoff Configurational-bias Monte Carlo
- Coupled-decoupled Configurational-bias MC
- Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
-     including the real-space terms up to half the shortest box length
-
-Molecular mass for molecule type     1 is   691.2300 g/mol
-Molecular mass for molecule type     2 is    40.0800 g/mol
- Calling initconf
-Selected random number generator DX-1597-2-7 and single integer seed    1302002
-Testing random number generator using the single integer seed
-    0.812479  0.687663  0.080298  0.200888  0.516914
-10 million RNG sum (approximately 5 million):   4999978.2264809748
-Box idim hinverse:    1 1    0.01000    0.00000    0.00000
-Box idim hinverse:    1 2    0.00000    0.01000    0.00000
-Box idim hinverse:    1 3    0.00000    0.00000    0.01000
-Box:     1 Initial calp:    0.05600
-Box:     1 Initial kmax:     5
- Finished initconf
 Energies exclusively from internal potentials
 Nonbonded Force Field
 Lennard-Jones 12-6 potential
@@ -419,6 +397,27 @@ Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     
  125 OC          125 OC             3.0291    60.3860     0.0000     3.0291    60.3860
  125 OC          151 Ca+2           2.7205   116.8924     0.0000     1.5145     0.0000
  151 Ca+2        151 Ca+2           2.4120   226.2750     0.0000     0.0000     0.0000
+ Canonical ensemble
+ 3-dimensional periodic box
+ Additional Center-of-Mass cutoff
+ Dual Cutoff Configurational-bias Monte Carlo
+ Coupled-decoupled Configurational-bias MC
+ Coulombic inter- and intra-molecular interactions
+     with an Ewald sum 
+     including the real-space terms up to half the shortest box length
+
+Molecular mass for molecule type     1 is   691.2300 g/mol
+Molecular mass for molecule type     2 is    40.0800 g/mol
+ Calling initconf
+Selected random number generator DX-1597-2-7 and single integer seed    1302002
+Testing random number generator using the single integer seed
+    0.812479  0.687663  0.080298  0.200888  0.516914
+10 million RNG sum (approximately 5 million):   4999978.2264809748
+Box idim hinverse:    1 1    0.01000    0.00000    0.00000
+Box idim hinverse:    1 2    0.00000    0.01000    0.00000
+Box idim hinverse:    1 3    0.00000    0.00000    0.01000
+Box:     1 Initial calp:    0.05600
+Box:     1 Initial kmax:     5
 
 Number of MC cycles:                  100
 Number of molecules:                    2

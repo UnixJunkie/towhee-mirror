@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this file contains all of the globally accessed data structures*
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 06-24-2009 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -3622,32 +3622,6 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_classical_n(flag,ivalue)
-c     ******************************************************************
-c     * the power of the repulsive portion for certain nonbonded types *
-c     *                                                                *
-c     * originally written 04-17-2006 by M.G. Martin                   *
-c     * last modified 04-17-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      integer flag,ivalue
-c     --- storage variable
-      integer classical_n
-      save classical_n
-
-      if ( flag .eq. GLB_GET ) then
-         ivalue = classical_n
-      elseif ( flag .eq. GLB_SET ) then
-         classical_n = ivalue
-      else
-         write(6,*) 'CLASSICAL_N unknown flag:',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_classical_potential(flag,cvalue)
 c     ******************************************************************
 c     * the classical potential expressed as a text string             *
@@ -4742,6 +4716,33 @@ c     --- storage variable
       return
       end
 
+      subroutine twh_eam_dens_num(flag,itype,jtype,ivalue)
+c     ******************************************************************
+c     * integer code for the style of the EAM density potential        *
+c     *                                                                *
+c     * originally written 07-21-2013 by M.G. Martin                   *
+c     * last modified 07-21-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,itype,jtype,ivalue
+c     --- storage variable
+      integer eam_dens_num
+      dimension eam_dens_num(MAXTABTYPE,MAXTABTYPE)
+      save eam_dens_num
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = eam_dens_num(itype,jtype)
+      elseif ( flag .eq. GLB_SET ) then
+         eam_dens_num(itype,jtype) = ivalue
+      else
+         write(6,*) 'EAM_DENS_NUM unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_eam_dens_style(flag,itype,jtype,cvalue)
 c     ******************************************************************
 c     * style of the EAM density potential                             *
@@ -4762,6 +4763,8 @@ c     --- storage variable
          cvalue = eam_dens_style(itype,jtype)
       elseif ( flag .eq. GLB_SET ) then
          eam_dens_style(itype,jtype) = cvalue
+c        --- set this eam_dens_num as well
+         call twh_set_eamdensnum(cvalue,itype,jtype)
       else
          write(6,*) 'EAM_DENS_STYLE unknown flag:',flag
          stop
@@ -4808,12 +4811,39 @@ c     --- storage variable
       return
       end
 
+      subroutine twh_eam_embed_num(flag,itype,ivalue)
+c     ******************************************************************
+c     * integer code for the EAM embedding style                       *
+c     *                                                                *
+c     * originally written 07-21-2013 by M.G. Martin                   *
+c     * last modified 07-21-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,itype,ivalue
+c     --- storage variable
+      integer eam_embed_num
+      dimension eam_embed_num(MAXTABTYPE)
+      save eam_embed_num
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = eam_embed_num(itype)
+      elseif ( flag .eq. GLB_SET ) then
+         eam_embed_num(itype) = ivalue
+      else
+         write(6,*) 'EAM_EMBED_NUM unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_eam_embed_style(flag,itype,cvalue)
 c     ******************************************************************
 c     * style of the EAM embedding style                               *
 c     *                                                                *
 c     * originally written 10-03-2008 by M.G. Martin                   *
-c     * last modified 10-03-2008 by M.G. Martin                        *
+c     * last modified 07-22-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -4828,6 +4858,7 @@ c     --- storage variable
          cvalue = eam_embed_style(itype)
       elseif ( flag .eq. GLB_SET ) then
          eam_embed_style(itype) = cvalue
+         call twh_set_eamembednum(cvalue,itype)
       else
          write(6,*) 'EAM_EMBED_STYLE unknown flag:',flag
          stop
@@ -4905,12 +4936,38 @@ c     --- storage variable
       return
       end
 
+      subroutine twh_eam_pair_number(flag,ipair,ivalue)
+c     ******************************************************************
+c     * the eam pair potential expressed as an integer                 *
+c     *                                                                *
+c     * originally written 07-20-2013 by M.G. Martin                   *
+c     * last modified 07-20-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,ipair,ivalue
+c     --- storage variable
+      integer eam_pair_number
+      dimension eam_pair_number((MAXTABTYPE*MAXTABTYPE+MAXTABTYPE)/2)
+      save eam_pair_number
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = eam_pair_number(ipair)
+      elseif ( flag .eq. GLB_SET ) then
+         eam_pair_number(ipair) = ivalue
+      else
+         write(6,*) 'EAM_PAIR_NUMBER unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
       subroutine twh_eam_pair_style(flag,ipair,cvalue)
 c     ******************************************************************
 c     * style for each pair of atoms in the EAM potential              *
 c     *                                                                *
 c     * originally written 10-03-2008 by M.G. Martin                   *
-c     * last modified 10-03-2008 by M.G. Martin                        *
+c     * last modified 07-21-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -4920,11 +4977,21 @@ c     --- storage variable
       character*20 eam_pair_style
       dimension eam_pair_style((MAXTABTYPE*MAXTABTYPE+MAXTABTYPE)/2)
       save eam_pair_style
+c     --- local variables
+      integer icount
 
       if ( flag .eq. GLB_GET ) then
          cvalue = eam_pair_style(ipair)
       elseif ( flag .eq. GLB_SET ) then
          eam_pair_style(ipair) = cvalue
+c        --- also set eam_pair_num
+         call twh_set_eampairnum(cvalue,ipair)
+      elseif ( flag .eq. GLB_INIT ) then
+         do icount = 1,ipair
+            eam_pair_style(icount) = cvalue
+c           --- also set eam_pair_num
+            call twh_set_eampairnum(cvalue,icount)
+         enddo
       else
          write(6,*) 'EAM_PAIR_STYLE unknown flag:',flag
          stop

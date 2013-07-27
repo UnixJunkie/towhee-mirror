@@ -28,6 +28,7 @@
 
 /* numax = maximum number of units/atoms in a molecule (default 2002) */
 #define NUMAX 2202
+/* #define NUMAX 2 */
 
 /* ntmax = maximum number of types of molecules (default: 6) */
 #define NTMAX 7
@@ -157,7 +158,7 @@
 
 /* maxdirlength = maximum number of characters in the directory length
    this is used with some of the parallel features */
-#define MAXDIRLENGTH 100
+#define MAXDIRLENGTH 120
 
 /* MAXIMPLICITYPE = maximum number of types of atoms for the implicit 
    force fields */
@@ -285,6 +286,30 @@
 #define CP_BUFFERED_14_7 25
 #define CP_DOUBLE_EXPONENTIAL 26
 #define CP_DRUKKER_H_BOND 27
+
+/* eam pair integer conversions, arbitrary values */
+#define EAM_PAIR_NONE 0
+#define EAM_PAIR_ACKLANDTP 1
+#define EAM_PAIR_ACKLANDPOW 2
+#define EAM_PAIR_EXPON 3
+#define EAM_PAIR_MORSE 4
+#define EAM_PAIR_TABLE 5
+#define EAM_PAIR_BELASHFE 6
+
+/* eam density integer conversions, arbitrary values */
+#define EAM_DENS_NONE 0
+#define EAM_DENS_ACKLAND 1
+#define EAM_DENS_EXPON 2
+#define EAM_DENS_TABLE 3
+
+/* eam embed integer conversion, arbitrary values */
+#define EAM_EMBED_BELASH 1
+#define EAM_EMBED_BELASHTRHO 2
+#define EAM_EMBED_LOGARITHMIC 3
+#define EAM_EMBED_POWHT 4
+#define EAM_EMBED_POWHTF 5
+#define EAM_EMBED_SR 6
+#define EAM_EMBED_TABLE 7
 
 /* solvation types */
 #define SOLV_NONE 0

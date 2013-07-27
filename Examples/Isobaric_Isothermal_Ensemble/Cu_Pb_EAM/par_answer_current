@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
- in directory: /towheebase/Examples/Isobaric_Isothermal_Ensemble/Cu_Pb_EAM/                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
+ in directory: /towheebase/Examples/Isobaric_Isothermal_Ensemble/Cu_Pb_EAM/                                                            
  inputformat: Towhee         
  ensemble: npt                           
  temperature:  1000.00    
@@ -64,7 +64,7 @@
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Hoyt2003                                                          
+/towheebase/ForceFields/towhee_ff_Hoyt2003                                                                              
  classical_potential: Embedded Atom Method          
  READCLASSICAL: pot_num:   111 potential name: Embedded Atom Method          
  interpolatestyle: cubicspline         
@@ -120,8 +120,8 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
- Determining cyclic subunits for molecule type          2
+Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          2
 Default total charge on molecule   1 is   0.00000
 Default total charge on molecule   2 is   0.00000
 Total charge in the simulation system:   0.00000
@@ -135,6 +135,21 @@ Improper Torsion Types
    No Improper Types
 SETCLASSICAL: adjusted rcut to be the maximum distance from tabulated potential
 New rcut value is    5.76565
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Embedded-Atom potential
+U = eam_pair(r) + eam_embed[ Sum[eam_dens(r)] ]
+Num. Atom(i)    Num. Atom(j)    eam_dens(r) style
+   1 Pb            1 Pb         table               
+   1 Pb            2 Cu         table               
+   2 Cu            2 Cu         table               
+Num. Atom(i)    Num. Atom(j)    eam_pair(r) style
+   1 Pb            1 Pb         table               
+   1 Pb            2 Cu         table               
+   2 Cu            2 Cu         table               
+Num. Atom(i)                    eam_embed(rho) style
+   1 Pb                         table               
+   2 Cu                         table               
  Isobaric-isothermal ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -150,15 +165,10 @@ Testing random number generator using the single integer seed
 Box idim hinverse:    1 1    0.02753    0.00000    0.00000
 Box idim hinverse:    1 2    0.00000    0.02752    0.00000
 Box idim hinverse:    1 3    0.00000    0.00000    0.02753
- Finished initconf
  initial readtowhee
  ibox,testchain,nunit            1         1865            1
  xold,yold,zold  12.7207      23.4282      36.3239    
  dx,dy,dz  0.00000      0.00000     -36.3232    
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Embedded-Atom potential
-U = eam_pair(r) + eam_embed[ Sum[eam_dens(r)] ]
 
 Number of MC cycles:                    0
 Number of molecules:                 4000
@@ -186,7 +196,6 @@ Molecules of type   2 :       2000
  solvation                  0.000 [K]         0.00000 [kcal/mol]
  total classical         -10968957.8608 [K]        -21797.686843 [kcal/mol]
  Total energy [eV] -945.237    
- initial virial pressure in box  1 =    84172259.36
 
  +++++ start of markov chain +++++
 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * also determines the index of each molecule for use in an       *
 c     * interior regrowth                                              *
 c     *                                                                *
 c     * completely rewritten 10-09-2002 by C.D. Lorenz                 *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit  none
 #define FUNCTION_GET_INVIB
@@ -56,7 +56,7 @@ c     --- other stuff
       integer nrings,ibackbone
       character*4 name
 
-      write(6,'(a46,1x,i10)') 
+      write(6,'(a,1x,i10)') 
      &     'Determining cyclic subunits for molecule type'
      &     ,imolty
 

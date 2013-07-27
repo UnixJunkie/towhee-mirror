@@ -222,7 +222,6 @@ towhee_SOURCES =  \
 		writetorsion.F \
 		writetowhee.F \
 		writetramonto.F \
-		wmultibody.F \
 		wtwobody.F \
 		control.c \
 		dx-1597-2-7.c \
@@ -608,7 +607,6 @@ writeruntime.o: preproc.h writeruntime.F
 writetorsion.o: preproc.h functions.h writetorsion.F
 writetowhee.o: preproc.h functions.h writetowhee.F
 writetramonto.o: preproc.h functions.h writetramonto.F
-wmultibody.o: preproc.h functions.h wmultibody.F
 wtwobody.o: preproc.h functions.h wtwobody.F
 ###C dependencies
 control.o: globalc.h control.c

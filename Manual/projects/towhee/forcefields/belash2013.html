@@ -38,17 +38,15 @@
 
       <b>Typos and comments for Belash2013</b> 
       <ul>
-       There are some typographical errors in the Belashchenko 2013 paper.  Here I docuent places where my implementation does not completely agree with what is 
-       written in the Belashchenko 2013 paper.
+       There are some typographical errors in the Belashchenko 2013 paper.  Here I document places where my implementation does not agree with what is written in the Belashchenko 2013 paper.
        <li>
         Equation (7) of <a href="../references.html#belashchenko_2013">Belashchenko 2013</a> states the range for this portion of the Embedding function as
         &#961;<sub>1</sub> &le; &#961; &le; &#961;<sub>6</sub>.  That range is certainly incorrect as &#961;<sub>6</sub> &lt; &#961;<sub>1</sub> as stated in the text of that paper, and also
         from looking at the specific values of those parameters in that paper.  The implementation in Towhee assumes the author meant a range of &#961;<sub>1</sub> &le; &#961; &le; &#961;<sub>8</sub>.
        </li>
        <li>
-        The pair interactions suffer a discontinuity when crossing the 4.60 &#8491; distance subintervals.  The error appears to be in the stated parameters of Interval number 4 in Table 1 of
-        <a href="../references.html#belashchenko_2013">Belashchenko 2013</a>.  Towhee currently has the implementation as stated in that paper, but users are strongly cautioned that this is 
-        clearly incorrect and the potential will almost certainly not properly reproduce the potential as intended by the author.
+        There is a typographical error in the parameters listed in Table 1 of <a href="../references.html#belashchenko_2013">Belashchenko 2013</a>.  Starting with version 7.0.6 Towhee uses the correct 
+	value of a<sub>4,5</sub> = -0.11066271548233 * 10<sup>1</sup> instead of the listed value of a<sub>4,5</sub> = -0.11066271548233 * 10<sup>0</sup> (personal communication with D. Belashchenko).
        </li>
       </ul>
 
@@ -79,7 +77,7 @@
 <i><font size="2">Send comments to:</font></i> <font size="2"> 
 <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a><br>
 <i>Last updated:</i> 
-<!-- #BeginDate format:Am1 -->September 07, 2005<!-- #EndDate -->
+<!-- #BeginDate format:Am1 -->July 27, 2013<!-- #EndDate -->
 </font> <br>
 </body>
 </html>

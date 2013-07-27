@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
- in directory: /towheebase/Examples/Canonical_Ensemble/TraPPE_Molecules/                                           
+ Reading from towhee_input file: towhee_input                                                                                                            
+ in directory: /towheebase/Examples/Canonical_Ensemble/TraPPE_Molecules/                                                               
  inputformat: Towhee         
  ensemble: nvt                           
  temperature:  400.000    
@@ -72,7 +72,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_TraPPE-UA                                                         
+/towheebase/ForceFields/towhee_ff_TraPPE-UA                                                                             
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: Lorentz-Berthelot             
@@ -277,12 +277,12 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
- Determining cyclic subunits for molecule type          2
- Determining cyclic subunits for molecule type          3
- Determining cyclic subunits for molecule type          4
- Determining cyclic subunits for molecule type          5
- Determining cyclic subunits for molecule type          6
+Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          2
+Determining cyclic subunits for molecule type          3
+Determining cyclic subunits for molecule type          4
+Determining cyclic subunits for molecule type          5
+Determining cyclic subunits for molecule type          6
 Default total charge on molecule   1 is   0.00000
 Default total charge on molecule   2 is   0.00000
 Default total charge on molecule   3 is   0.00000
@@ -343,44 +343,6 @@ Improper Torsion Types
 Special One-Five Types
 Type:   1 Atom(i): Ho         Atom(j): Occ(sp3)   A/r^12: 0.4000E+08
 Type:   2 Atom(i): Ho         Atom(j): Och(sp3)   A/r^12: 0.7500E+08
- Canonical ensemble
- 3-dimensional periodic box
- Additional Center-of-Mass cutoff
- Dual Cutoff Configurational-bias Monte Carlo
- Coupled-decoupled Configurational-bias MC
- Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
-     including the real-space terms up to half the shortest box length
-
-Molecular mass for molecule type     1 is   226.4446 g/mol
-Molecular mass for molecule type     2 is    32.0416 g/mol
-Molecular mass for molecule type     3 is    86.1332 g/mol
-Molecular mass for molecule type     4 is    76.0942 g/mol
-Molecular mass for molecule type     5 is    62.0674 g/mol
-Molecular mass for molecule type     6 is    74.0784 g/mol
- Calling initconf
-Selected random number generator DX-1597-2-7 and single integer seed    1302002
-Testing random number generator using the single integer seed
-    0.812479  0.687663  0.080298  0.200888  0.516914
-10 million RNG sum (approximately 5 million):   4999978.2264809748
-Box idim hinverse:    1 1    0.02500    0.00000    0.00000
-Box idim hinverse:    1 2    0.00000    0.02500    0.00000
-Box idim hinverse:    1 3    0.00000    0.00000    0.02500
-Box:     1 Initial calp:    0.14000
-Box:     1 Initial kmax:     5
-INITCONF: building template for molecule type:    1
-Initial Structure Growth Trial:    1
-INITCONF: building template for molecule type:    2
-Initial Structure Growth Trial:    1
-INITCONF: building template for molecule type:    3
-Initial Structure Growth Trial:    1
-INITCONF: building template for molecule type:    4
-Initial Structure Growth Trial:    1
-INITCONF: building template for molecule type:    5
-Initial Structure Growth Trial:    1
-INITCONF: building template for molecule type:    6
-Initial Structure Growth Trial:    1
- Finished initconf
 Energies exclusively from internal potentials
 Nonbonded Force Field
 Lennard-Jones 12-6 potential
@@ -453,6 +415,43 @@ Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     
   24 Occ(sp3)     24 Occ(sp3)       2.8000    55.0000     0.0000     0.0000     0.0000
   24 Occ(sp3)     25 O=c(sp2)       2.9250    65.9166     0.0000     0.0000     0.0000
   25 O=c(sp2)     25 O=c(sp2)       3.0500    79.0000     0.0000     0.0000     0.0000
+ Canonical ensemble
+ 3-dimensional periodic box
+ Additional Center-of-Mass cutoff
+ Dual Cutoff Configurational-bias Monte Carlo
+ Coupled-decoupled Configurational-bias MC
+ Coulombic inter- and intra-molecular interactions
+     with an Ewald sum 
+     including the real-space terms up to half the shortest box length
+
+Molecular mass for molecule type     1 is   226.4446 g/mol
+Molecular mass for molecule type     2 is    32.0416 g/mol
+Molecular mass for molecule type     3 is    86.1332 g/mol
+Molecular mass for molecule type     4 is    76.0942 g/mol
+Molecular mass for molecule type     5 is    62.0674 g/mol
+Molecular mass for molecule type     6 is    74.0784 g/mol
+ Calling initconf
+Selected random number generator DX-1597-2-7 and single integer seed    1302002
+Testing random number generator using the single integer seed
+    0.812479  0.687663  0.080298  0.200888  0.516914
+10 million RNG sum (approximately 5 million):   4999978.2264809748
+Box idim hinverse:    1 1    0.02500    0.00000    0.00000
+Box idim hinverse:    1 2    0.00000    0.02500    0.00000
+Box idim hinverse:    1 3    0.00000    0.00000    0.02500
+Box:     1 Initial calp:    0.14000
+Box:     1 Initial kmax:     5
+INITCONF: building template for molecule type:    1
+Initial Structure Growth Trial:    1
+INITCONF: building template for molecule type:    2
+Initial Structure Growth Trial:    1
+INITCONF: building template for molecule type:    3
+Initial Structure Growth Trial:    1
+INITCONF: building template for molecule type:    4
+Initial Structure Growth Trial:    1
+INITCONF: building template for molecule type:    5
+Initial Structure Growth Trial:    1
+INITCONF: building template for molecule type:    6
+Initial Structure Growth Trial:    1
 
 Number of MC cycles:                   10
 Number of molecules:                    6

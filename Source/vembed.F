@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * computes the embedding function for the EAM potential          *
 c     *                                                                *
 c     * originally written 11-19-2003 by  M.G. Martin                  *
-c     * last update 07-16-2013 by M.G. Martin                          *
+c     * last update 07-22-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_LT
@@ -36,8 +36,7 @@ c     --- variables passed to/from the function
       integer ntii
       double precision density
 c     --- local variables
-      character*20 eamembedstyle
-      integer eamindex
+      integer eamindex,eamembednum
       double precision dsq,embedone,embedtwo,embedthr
       double precision rhomin,rhozero,eamalpha,eambeta,densdiff
       double precision belm,beln,bela,belb,belc,densratio
@@ -45,38 +44,8 @@ c     --- double precision arrays
       double precision belrho
       dimension belrho(0:9)
 
-      call twh_eam_embed_style(GLB_GET,ntii,eamembedstyle)
-      if ( eamembedstyle .eq. 'table' ) then
-         twh_vembed = twh_extractembed(lfailure,INTERP_NORMAL
-     &        ,ntii,density)
-         if ( lfailure ) return
-      elseif ( eamembedstyle .eq. 'logarithmic') then
-c        --- functional form from JJ Hoyt and J Zimmerman
-c        --- f(density) = density*(a*ln(density)+b)
-         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
-         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
-         twh_vembed = density*((embedone*log(density))+embedtwo)
-      elseif ( eamembedstyle .eq. 'squareroot') then
-c        --- functional form from JJ Hoyt and J Zimmerman
-c        --- f(density) = b*density - a*(sqrt(density))
-         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
-         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
-         twh_vembed = (embedtwo*density) - (embedone*dsqrt(density))
-      elseif ( eamembedstyle .eq. 'power 0.5 and 2' ) then
-c        --- Ackland two terms of square root and square
-         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
-         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
-         twh_vembed = embedone * dsqrt(density) 
-     &        + embedtwo*density*density 
-      elseif ( eamembedstyle .eq. 'power 0.5, 2, and 4' ) then
-c        --- power series with 0.5, 2, and 4 powers
-         dsq = density*density
-         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
-         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
-         call twh_eam_embed(GLB_GET,2,ntii,3,embedthr)
-         twh_vembed = embedone * dsqrt(density)
-     &        + embedtwo*dsq + embedthr*dsq*dsq
-      elseif ( eamembedstyle .eq. 'Belashchenko' ) then
+      call twh_eam_embed_num(GLB_GET,ntii,eamembednum)
+      if ( eamembednum .eq. EAM_EMBED_BELASH ) then
          call twh_eam_embed(GLB_GET,1,ntii,5,rhomin)
          if ( density .lt. rhomin ) then
 c           --- if rho < rhomin then v = alpha*sqrt(rho) + beta*rho
@@ -94,7 +63,7 @@ c           --- a0 + a1*(rho-rho0)^2 + a3*(rho-rho0)^3
             twh_vembed = embedone + embedtwo*(dsq)
      &           + embedthr*dsq*densdiff
          endif
-      elseif ( eamembedstyle .eq. 'Belashchenko 10 rho' ) then
+      elseif ( eamembednum .eq. EAM_EMBED_BELASHTRHO ) then
 c        --- Belaschenko piecewise potential based on the density
          call twh_eam_embed(GLB_GET,1,ntii,11,belrho(0))
          call twh_eam_embed(GLB_GET,2,ntii,11,belrho(1))
@@ -161,10 +130,40 @@ c           --- very high density, beyond belrho(9)
             densdiff = density - belrho(9)
             twh_vembed = bela + belb*densdiff + belc*(densdiff**beln)
          endif
+      elseif ( eamembednum .eq. EAM_EMBED_LOGARITHMIC ) then
+c        --- functional form from JJ Hoyt and J Zimmerman
+c        --- f(density) = density*(a*ln(density)+b)
+         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
+         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
+         twh_vembed = density*((embedone*log(density))+embedtwo)
+      elseif ( eamembednum .eq. EAM_EMBED_POWHT ) then
+c        --- Ackland two terms of square root and square
+         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
+         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
+         twh_vembed = embedone * dsqrt(density) 
+     &        + embedtwo*density*density 
+      elseif ( eamembednum .eq. EAM_EMBED_POWHTF ) then
+c        --- power series with 0.5, 2, and 4 powers
+         dsq = density*density
+         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
+         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
+         call twh_eam_embed(GLB_GET,2,ntii,3,embedthr)
+         twh_vembed = embedone * dsqrt(density)
+     &        + embedtwo*dsq + embedthr*dsq*dsq
+      elseif ( eamembednum .eq. EAM_EMBED_SR ) then
+c        --- functional form from JJ Hoyt and J Zimmerman
+c        --- f(density) = b*density - a*(sqrt(density))
+         call twh_eam_embed(GLB_GET,2,ntii,1,embedone)
+         call twh_eam_embed(GLB_GET,2,ntii,2,embedtwo)
+         twh_vembed = (embedtwo*density) - (embedone*dsqrt(density))
+      elseif ( eamembednum .eq. EAM_EMBED_TABLE ) then
+         twh_vembed = twh_extractembed(lfailure,INTERP_NORMAL
+     &        ,ntii,density)
+         if ( lfailure ) return
       else
          write(6,*) 'VEMBED: invalid eam_embed_style'
          write(6,*) 'ntii',ntii
-     &        ,'eam_embed+style=',eamembedstyle,'='
+     &        ,'eam_embed_num:',eamembednum
          stop
       endif
 

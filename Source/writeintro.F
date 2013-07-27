@@ -24,15 +24,15 @@ c     ******************************************************************
 c     * writes out the introductory information about Towhee           *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 07-17-2013 by M.G. Martin                        *
+c     * last modified 07-27-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
       character*7 version
       character*20 date
 
-      version = '7.0.5'
+      version = '7.0.6'
       call twh_version(GLB_SET,version)
-      date = '(July 17 2013)'
+      date = '(July 27 2013)'
 c     --- Output some information about the code
       write(6,'(1x,a22,1x,a,1x,a)') 'MCCCS Towhee - Version',version
      &     ,date

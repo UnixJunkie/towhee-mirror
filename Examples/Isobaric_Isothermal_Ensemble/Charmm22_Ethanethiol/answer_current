@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: npt                           
@@ -75,7 +75,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Charmm22                                                          
+/towheebase/ForceFields/towhee_ff_Charmm22                                                                              
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: Lorentz-Berthelot             
@@ -186,7 +186,7 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -222,6 +222,27 @@ Type:  41 Style: Amber/Charmm/Gromos Cosine Series n:   1
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 12-6 potential
+    with tail corrections
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
+Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
+   8 CT2           8 CT2            3.8754    27.6769     0.0000     3.3854     5.0322
+   8 CT2          18 CT3            3.7730    33.3796     0.0000     3.3854     5.0322
+   8 CT2          23 HA             3.1137    17.5044     0.0000     2.8687     7.4639
+   8 CT2          29 HS             2.3386    37.3195     0.0000     2.0936    15.9131
+   8 CT2          49 S              3.7195    79.1667     0.0000     3.4745    33.7568
+  18 CT3          18 CT3            3.6705    40.2573     0.0000     3.3854     5.0322
+  18 CT3          23 HA             3.0112    21.1111     0.0000     2.8687     7.4639
+  18 CT3          29 HS             2.2362    45.0091     0.0000     2.0936    15.9131
+  18 CT3          49 S              3.6170    95.4786     0.0000     3.4745    33.7568
+  23 HA           23 HA             2.3520    11.0708     0.0000     2.3520    11.0708
+  23 HA           29 HS             1.5769    23.6030     0.0000     1.5769    23.6030
+  23 HA           49 S              2.9578    50.0694     0.0000     2.9578    50.0694
+  29 HS           29 HS             0.8018    50.3217     0.0000     0.8018    50.3217
+  29 HS           49 S              2.1827   106.7484     0.0000     2.1827   106.7484
+  49 S            49 S              3.5636   226.4475     0.0000     3.5636   226.4475
  Isobaric-isothermal ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -257,27 +278,6 @@ molecule type:     1
 
 Box:     1 Initial calp:    0.25327
 Box:     1 Initial kmax:     5
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Lennard-Jones 12-6 potential
-    with tail corrections
-u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
-Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
-   8 CT2           8 CT2            3.8754    27.6769     0.0000     3.3854     5.0322
-   8 CT2          18 CT3            3.7730    33.3796     0.0000     3.3854     5.0322
-   8 CT2          23 HA             3.1137    17.5044     0.0000     2.8687     7.4639
-   8 CT2          29 HS             2.3386    37.3195     0.0000     2.0936    15.9131
-   8 CT2          49 S              3.7195    79.1667     0.0000     3.4745    33.7568
-  18 CT3          18 CT3            3.6705    40.2573     0.0000     3.3854     5.0322
-  18 CT3          23 HA             3.0112    21.1111     0.0000     2.8687     7.4639
-  18 CT3          29 HS             2.2362    45.0091     0.0000     2.0936    15.9131
-  18 CT3          49 S              3.6170    95.4786     0.0000     3.4745    33.7568
-  23 HA           23 HA             2.3520    11.0708     0.0000     2.3520    11.0708
-  23 HA           29 HS             1.5769    23.6030     0.0000     1.5769    23.6030
-  23 HA           49 S              2.9578    50.0694     0.0000     2.9578    50.0694
-  29 HS           29 HS             0.8018    50.3217     0.0000     0.8018    50.3217
-  29 HS           49 S              2.1827   106.7484     0.0000     2.1827   106.7484
-  49 S            49 S              3.5636   226.4475     0.0000     3.5636   226.4475
 
 Number of MC cycles:                    1
 Number of molecules:                   90

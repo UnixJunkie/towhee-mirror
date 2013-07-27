@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: npt                           
@@ -73,7 +73,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Gromos43A1                                                        
+/towheebase/ForceFields/towhee_ff_Gromos43A1                                                                            
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: Explicit                      
@@ -136,7 +136,7 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -156,6 +156,18 @@ Type:  17 Style: Amber/Charmm/Gromos Cosine Series n:   1
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 12-6 potential
+    with a shift to zero at the cut-off
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
+Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
+  13 CH2          13 CH2            3.9199    58.8835    -0.1134     3.3855    94.3285
+  13 CH2          14 CH3            3.8974    72.0135    -0.1340     3.4299   105.0798
+  13 CH2          20 S              3.6008   116.1783    -0.1345     3.3464   147.0448
+  14 CH3          14 CH3            3.8750    88.0714    -0.1583     3.4748   117.0565
+  14 CH3          20 S              3.5801   142.0842    -0.1589     3.3902   163.8045
+  20 S            20 S              3.3077   229.2220    -0.1595     3.3077   229.2220
  Isobaric-isothermal ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -191,18 +203,6 @@ molecule type:     1
 
 Box:     1 Initial calp:    0.17385
 Box:     1 Initial kmax:     5
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Lennard-Jones 12-6 potential
-    with a shift to zero at the cut-off
-u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
-Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
-  13 CH2          13 CH2            3.9199    58.8835    -0.1134     3.3855    94.3285
-  13 CH2          14 CH3            3.8974    72.0135    -0.1340     3.4299   105.0798
-  13 CH2          20 S              3.6008   116.1783    -0.1345     3.3464   147.0448
-  14 CH3          14 CH3            3.8750    88.0714    -0.1583     3.4748   117.0565
-  14 CH3          20 S              3.5801   142.0842    -0.1589     3.3902   163.8045
-  20 S            20 S              3.3077   229.2220    -0.1595     3.3077   229.2220
 
 Number of MC cycles:                    1
 Number of molecules:                  180

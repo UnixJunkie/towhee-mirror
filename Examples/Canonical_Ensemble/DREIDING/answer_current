@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: nvt                           
@@ -72,7 +72,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_DREIDING                                                          
+/towheebase/ForceFields/towhee_ff_DREIDING                                                                              
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: Geometric                     
@@ -171,7 +171,7 @@ unit:   12 name:H_         charge:   0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
      for molecule type     1
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -185,6 +185,14 @@ Type:   64 Style: K[1 - Cos(n (phi - phi_0))]
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
 Improper Torsion Types
 Type:   1 Style: k[1 - Cos(phi)]   k: 6709.5547
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 12-6 potential
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
+Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
+   1 H_            1 H_             2.8464     7.6489     0.0000     2.8464     7.6489
+   1 H_            6 C_R            3.1441    19.1323     0.0000     3.1441    19.1323
+   6 C_R           6 C_R            3.4730    47.8559     0.0000     3.4730    47.8559
  Canonical ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -202,15 +210,6 @@ Box idim hinverse:    1 2    0.00000    0.03333    0.00000
 Box idim hinverse:    1 3    0.00000    0.00000    0.03333
 INITCONF: building template for molecule type:    1
 Initial Structure Growth Trial:    1
- Finished initconf
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Lennard-Jones 12-6 potential
-u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
-Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
-   1 H_            1 H_             2.8464     7.6489     0.0000     2.8464     7.6489
-   1 H_            6 C_R            3.1441    19.1323     0.0000     3.1441    19.1323
-   6 C_R           6 C_R            3.4730    47.8559     0.0000     3.4730    47.8559
 
 Number of MC cycles:                10000
 Number of molecules:                    1

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C)2002-2011 Marcus G. Martin                        *
+c     * Copyright (C)2002-2013 Marcus G. Martin                        *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * rwflag must be either READ_FLAG or WRITE_FLAG                  *
 c     *                                                                *
 c     * rewritten from readforcefield and writeforcefield 04-01-2002   *
 c     * by M.G. Martin                                                 *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -48,11 +48,11 @@ c     --- variables passed to/from the subroutine
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
       integer naatypes,iffnum,nbitypes,noftypes,nhbondtypes
 c     --- local variables
-      logical lexplicit,lgetcoeffnum,lclassn
+      logical lexplicit,lgetcoeffnum
       logical lrwhbond
       integer type, currentffversion,iversion,ncoeff
       integer nb_adj,bond_adj,angle_adj,dihed_adj,impr_adj,aa_adj,bi_adj
-      integer itest,of_adj,hb_adj,classical_n
+      integer of_adj,hb_adj
       integer hbcoeffstart,hbcoeffstop
       character*15 idname
       character*30 localptype,oldmtype,cmlocal
@@ -205,36 +205,12 @@ c     --- for many of the potentials the number of nbcoeffs is constant
 c     --- in that case, this number is set here.  Otherwise it is set
 c     --- later
       lgetcoeffnum = .false.
-      lclassn = .false.
 c     --- initialze the hbond logical to false as it is almost never 
 c     --- used.  If it is needed it will be reset to true in get_ncoeff
       lrwhbond = .false.
 
       ncoeff = twh_get_ncoeff(localptype, iversion, lrwhbond
-     &     , lgetcoeffnum,lclassn, hbcoeffstart, hbcoeffstop)
-
-c     --- classical_n value
-      if ( lclassn ) then
-         call twh_classical_n(GLB_GET,classical_n)
-         goodstring = 'Classical N'
-         if ( rwflag .eq. WRITE_FLAG ) then
-            write(FFUNIT,'(a11)') goodstring
-            write(FFUNIT,*) classical_n
-         else
-            itest =  twh_read_labeled_integer(lfailure,FFUNIT
-     &           ,goodstring,.false.,idname)
-            if ( lfailure ) return
-c           --- safety check in case of multiple potentials
-            if ( classical_n .ne. 0 .and. classical_n .ne. itest ) then
-               write(6,*) 'RWFORCEFIELD: incompatible classical_n'
-               write(6,*) 'First value:',classical_n
-               write(6,*) 'Value for iffnum ',iffnum,' is:',itest
-               stop
-            endif
-c           --- set classical_n to itest
-            call twh_classical_n(GLB_SET,itest)
-         endif
-      endif
+     &     , lgetcoeffnum, hbcoeffstart, hbcoeffstop)
 
       if ( iversion .lt. 7 ) then
 c        --- explicit cross terms logical
@@ -2179,14 +2155,14 @@ c              --- these use the same parameters
       end
 
       function twh_get_ncoeff(localptype, iversion, lrwhbond
-     &     ,lgetcoeffnum,lclassn, hbcoeffstart, hbcoeffstop)
+     &     ,lgetcoeffnum, hbcoeffstart, hbcoeffstop)
 c     ******************************************************************
 c     * Return the number of coefficients for a given potential.       *
 c     * In certain cases, lrwhbond, lgetcoeffnum, hbcoeffstart and     *
 c     * hbcoeffstop are set as well.                                   *
 c     *                                                                *
 c     * split from rwforcefield 02-21-2006 by MAW                      *
-c     * last modified 11-15-2010 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NCOEFF
@@ -2194,7 +2170,7 @@ c     ******************************************************************
 c     --- variables passed to/from this subroutine
       integer iversion, hbcoeffstart, hbcoeffstop
       character*30 localptype
-      logical lrwhbond, lgetcoeffnum, lclassn
+      logical lrwhbond, lgetcoeffnum
 
 c     --- initialize
       twh_get_ncoeff = 0
@@ -2262,8 +2238,7 @@ c        --- must explcitly declare cross terms
          twh_get_ncoeff = 4
       elseif ( localptype .eq. 'Gordon n-6' ) then
 c        --- Peter Gordon's modified n-6 potential
-         twh_get_ncoeff = 2
-         lclassn = .true.
+         twh_get_ncoeff = 3
       elseif ( localptype .eq. 'Hard Sphere' .or. 
      &        localptype .eq. 'Repulsive Sphere' ) then
 c        --- hard sphere

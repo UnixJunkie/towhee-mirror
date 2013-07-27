@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 08-16-2011 by M.G. Martin                        *
+c     * last modified 07-21-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -367,7 +367,6 @@ c     --- initialize hbond
 
 c     --- initialize nonbonded parameters for traditional potentials
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
-      call twh_classical_n(GLB_SET,0)
       ij = twh_getnbtype(NNTYPE,NNTYPE)
       call twh_nbcoeff(GLB_INIT,MAXNBCOEFF,ij,0.0d0)
       call twh_mass(GLB_INIT,NNTYPE,0.0d0)
@@ -392,6 +391,8 @@ c     --- initialize eam parameters
      &     ,((MAXTABTYPE*MAXTABTYPE+MAXTABTYPE)/2),0)
       call twh_eam_ndens(GLB_INIT,MAXTABTYPE,MAXTABTYPE,0)
       call twh_eam_nembed(GLB_INIT,MAXTABTYPE,0)
+      call twh_eam_pair_style(GLB_INIT
+     &     ,(MAXTABTYPE*MAXTABTYPE+MAXTABTYPE)/2,'none')
       call twh_table_pair(GLB_INIT,3
      &     ,((MAXTABTYPE*MAXTABTYPE+MAXTABTYPE)/2),MAXTABLE,0.0d0)
       call twh_eam_dens(GLB_INIT,3,MAXTABTYPE,MAXTABTYPE,MAXTABLE,0.0d0)

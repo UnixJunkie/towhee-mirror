@@ -25,7 +25,7 @@ c     * computes the bondorder between two atoms in a multi-body force *
 c     * field                                                          *
 c     *                                                                *
 c     * originally written 06-26-2002 by  M.G. Martin                  *
-c     * last update 07-15-2013 by M.G. Martin                          *
+c     * last update 07-21-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -38,12 +38,10 @@ c     --- variables passed to/from the subroutine
       integer ntii,ntjj
       double precision rij,bij,bji
 c     --- local variables
-c     --- character string scalars
-      character*20 eamdensstyle
 c     --- logical scalars
       logical lcontinue
 c     --- integer scalars
-      integer ntij,looptype_a,looptype_b,loop,icoeff,potnum
+      integer ntij,looptype_a,looptype_b,loop,icoeff,potnum,eamdensnum
 c     --- double precision scalars
       double precision bloop,x,eamdensone,eamdenstwo,rcut,maxdist
 
@@ -81,14 +79,14 @@ c        --- get the two densities
                   looptype_a = ntjj
                   looptype_b = ntii
                endif
-               call twh_eam_dens_style(GLB_GET,looptype_a,looptype_b
-     &              ,eamdensstyle)
-               if ( eamdensstyle .eq. 'table' ) then
+               call twh_eam_dens_num(GLB_GET,looptype_a,looptype_b
+     &              ,eamdensnum)
+               if ( eamdensnum .eq. EAM_DENS_TABLE ) then
                   bloop = twh_extractdens(lfailure,INTERP_NORMAL
      &                 ,looptype_a,looptype_b
      &                 ,rij)
                   if ( lfailure ) return
-               elseif ( eamdensstyle .eq. 'exponential' ) then
+               elseif ( eamdensnum .eq. EAM_DENS_EXPON ) then
 c                 --- check maximum cutoff
                   call twh_eam_dens(GLB_GET,1,looptype_a,looptype_b,2
      &                 ,maxdist)
@@ -102,7 +100,7 @@ c                    --- compute density
                   else
                      bloop = 0.0d0
                   endif
-               elseif ( eamdensstyle .eq. 'Ackland cubic sum' ) then
+               elseif ( eamdensnum .eq. EAM_DENS_ACKLAND ) then
 c                 --- cubic sum with heaviside (using a while loop to 
 c                 --- recreate the heaviside and save some expense)
                   bloop = 0.0d0
@@ -131,13 +129,13 @@ c                       --- is finished
                         lcontinue = .false.
                      endif
                   enddo
-               elseif ( eamdensstyle .eq. 'none' ) then
+               elseif ( eamdensnum .eq. EAM_DENS_NONE ) then
 c                  --- no contribution to the density
                   bloop = 0.0d0
                else
-                  write(6,*) 'BONDORDER: unknown eam_dens_style'
+                  write(6,*) 'BONDORDER: unknown eam_dens_num'
                   write(6,*) 'looptype(a,b)',looptype_a,looptype_b
-     &                 ,'eam_dens_style','=',eamdensstyle,'='
+     &                 ,'eam_dens_num:',eamdensnum
                   lfailure = .true.
                   return
                endif

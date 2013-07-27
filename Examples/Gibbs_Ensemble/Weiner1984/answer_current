@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: npt                           
@@ -73,7 +73,7 @@ No output of updates or block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Weiner1984                                                        
+/towheebase/ForceFields/towhee_ff_Weiner1984                                                                            
  classical_potential: 12-6 plus 12-10 H-bond        
  READCLASSICAL: pot_num:     5 potential name: 12-6 plus 12-10 H-bond        
  classical_mixrule: Lorentz-Berthelot             
@@ -192,7 +192,7 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -212,6 +212,22 @@ Type:  23 Style: Amber Cosine Series / Total Torsions n:   1
           with 1-4 vdw and scaled (0.500) 1-4 coulomb
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+12-6 LJ plus 12-10 Hydrogen bond potential
+    with tail corrections
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] + C/(r^12) - D/(r^10) - shift
+Num. Atom(i)    Num. Atom(j)      sigma epsilon   shift 1-4 sig 1-4 eps         C         D     1-4 C     1-4 D
+   3 C2            3 C2           3.430  60.386   0.000   3.430  30.193 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+   3 C2           12 CH           3.363  52.296   0.000   3.363  26.148 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+   3 C2           23 HO           2.606  24.652   0.000   2.606  12.326 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+   3 C2           36 OH           3.185  67.514   0.000   3.185  33.757 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+  12 CH           12 CH           3.296  45.289   0.000   3.296  22.645 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+  12 CH           23 HO           2.539  21.350   0.000   2.539  10.675 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+  12 CH           36 OH           3.118  58.468   0.000   3.118  29.234 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+  23 HO           23 HO           1.782  10.064   0.000   1.782   5.032 0.000E+00 0.000E+00 0.000E+00 0.000E+00
+  23 HO           36 OH           2.361  27.562   0.000   2.361  13.781 0.380E+07 0.120E+07 0.190E+07 0.600E+06
+  36 OH           36 OH           2.940  75.482   0.000   2.940  37.741 0.000E+00 0.000E+00 0.000E+00 0.000E+00
  Isobaric-isothermal Gibbs ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -253,22 +269,6 @@ molecule type:     1
  Box  2 hmatrix(2,x):        0.00000     129.51811       0.00000
  Box  2 hmatrix(3,x):        0.00000       0.00000     129.51811
 
-Energies exclusively from internal potentials
-Nonbonded Force Field
-12-6 LJ plus 12-10 Hydrogen bond potential
-    with tail corrections
-u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] + C/(r^12) - D/(r^10) - shift
-Num. Atom(i)    Num. Atom(j)      sigma epsilon   shift 1-4 sig 1-4 eps         C         D     1-4 C     1-4 D
-   3 C2            3 C2           3.430  60.386   0.000   3.430  30.193 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-   3 C2           12 CH           3.363  52.296   0.000   3.363  26.148 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-   3 C2           23 HO           2.606  24.652   0.000   2.606  12.326 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-   3 C2           36 OH           3.185  67.514   0.000   3.185  33.757 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-  12 CH           12 CH           3.296  45.289   0.000   3.296  22.645 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-  12 CH           23 HO           2.539  21.350   0.000   2.539  10.675 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-  12 CH           36 OH           3.118  58.468   0.000   3.118  29.234 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-  23 HO           23 HO           1.782  10.064   0.000   1.782   5.032 0.000E+00 0.000E+00 0.000E+00 0.000E+00
-  23 HO           36 OH           2.361  27.562   0.000   2.361  13.781 0.380E+07 0.120E+07 0.190E+07 0.600E+06
-  36 OH           36 OH           2.940  75.482   0.000   2.940  37.741 0.000E+00 0.000E+00 0.000E+00 0.000E+00
 
 Number of MC cycles:                    1
 Number of molecules:                  100

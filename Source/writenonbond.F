@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * ifile: file index for output                                   *
 c     * lerror: logical used if there is a problem                     *
 c     *                                                                *
 c     * originally split out of readtowhee 08-16-2004 by M.G. Martin   *
-c     * last modified 08-09-2011 M.G. Martin                           *
+c     * last modified 07-17-2013 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -45,6 +45,8 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical ltesti,ltestj,lshift,ltailc
+c     --- character string scalars
+      character*20 eamdstyle,eampstyle,eamestyle
 c     --- integer scalars
       integer itype,jtype,ij,itemp,icoeff,hbtype,cpnumber,iswmax
       integer potentialstyle,tabnpair
@@ -233,6 +235,47 @@ c     --- output information about the nonbonded potential parameters
       elseif ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD ) then
          write(ifile,'(a)') 
      &        'U = eam_pair(r) + eam_embed[ Sum[eam_dens(r)] ]'
+         write(ifile,'(a4,1x,a7,4x,a4,1x,a7,4x,a17)') 
+     &        'Num.','Atom(i)','Num.','Atom(j)','eam_dens(r) style'
+         do itype = 1,NNTYPE
+            ltesti = twh_get_lhere(itype)
+            do jtype = itype,NNTYPE
+               ltestj = twh_get_lhere(jtype)
+               if ( ltesti .and. ltestj ) then
+                  call twh_eam_dens_style(GLB_GET,itype,jtype,eamdstyle)
+                  write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,a20)') 
+     &                 itype,twh_get_nbname(itype)
+     &                 ,jtype,twh_get_nbname(jtype)
+     &                 ,eamdstyle
+               endif
+            enddo
+         enddo
+         write(ifile,'(a4,1x,a7,4x,a4,1x,a7,4x,a17)') 
+     &        'Num.','Atom(i)','Num.','Atom(j)','eam_pair(r) style'
+         do itype = 1,NNTYPE
+            ltesti = twh_get_lhere(itype)
+            do jtype = itype,NNTYPE
+               ltestj = twh_get_lhere(jtype)
+               if ( ltesti .and. ltestj ) then
+                  ij = twh_getnbtype(itype,jtype)
+                  call twh_eam_pair_style(GLB_GET,ij,eampstyle)
+                  write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,a20)') 
+     &                 itype,twh_get_nbname(itype)
+     &                 ,jtype,twh_get_nbname(jtype)
+     &                 ,eampstyle
+               endif
+            enddo
+         enddo
+         write(ifile,'(a4,1x,a7,20x,a)') 
+     &        'Num.','Atom(i)','eam_embed(rho) style'
+         do itype = 1,NNTYPE
+            ltesti = twh_get_lhere(itype)
+            if ( ltesti ) then
+               call twh_eam_embed_style(GLB_GET,itype,eamestyle)
+               write(ifile,'(i4,1x,a10,17x,a20)') 
+     &              itype,twh_get_nbname(itype),eamestyle
+            endif
+         enddo
       elseif ( cpnumber .eq. CP_EXPONENTIAL_12_6 ) then
          write(ifile,'(a)') 'u(r) = A/r^6 + B exp(C r) + D/r^12 - S '
          write(ifile,'(a4,1x,a7,3x,1x,a4,1x,a7,3x,2(1x,a12)
@@ -290,20 +333,20 @@ c                 --- make sure rcutin is larger than expmin
          write(ifile,'(a,1x,a)')
      &        'u(r) = 4*epsilon*c(n)[{sigma/(r-a(n)}^n'
      &        ,'- {sigma/(r-a(n)}^n] - shift'
-         write(ifile,'(a4,1x,a7,3x,1x,a4,1x,a7,3x,3(1x,a7))') 
+         write(ifile,'(a4,1x,a7,3x,1x,a4,1x,a7,3x,4(1x,a7))') 
      &        'Num.','Atom(i)','Num.','Atom(j)','sigma','epsilon'
-     &        ,'shift'
+     &        ,'n','shift'
          do itype = 1,NNTYPE
             ltesti = twh_get_lhere(itype)
             do jtype = itype,NNTYPE
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
-                  write(ifile,'(i4,1x,a10,1x,i4,1x,a10,3(1x,f7.3))') 
+                  write(ifile,'(i4,1x,a10,1x,i4,1x,a10,4(1x,f7.3))') 
      &                 itype,twh_get_nbname(itype)
      &                 ,jtype,twh_get_nbname(jtype)
      &                 ,twh_get_nbcoeff(1,ij),twh_get_nbcoeff(2,ij)
-     &                 ,twh_get_nbcoeff(0,ij)
+     &                 ,twh_get_nbcoeff(3,ij),twh_get_nbcoeff(0,ij)
                endif
             enddo
          enddo

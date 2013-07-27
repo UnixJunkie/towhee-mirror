@@ -42,7 +42,7 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 07-17-2013 by M.G. Martin                        *
+c     * last modified 07-26-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -71,7 +71,7 @@ c     --- double precision scalars
       double precision rijsq,rhosq,rij,w_ab,xcmi,ycmi,zcmi
       double precision rcm,rcmsq,rcmi,volsq,temperature,corp
       double precision rx_ij,ry_ij,rz_ij,xcmj,ycmj,zcmj,rcmj,rcelect
-      double precision boxvolume,wmulti
+      double precision boxvolume
 c     --- double precision arrays
       double precision repress
       dimension repress(6)
@@ -206,11 +206,6 @@ c                                --- overlap is OK if we're scaling
                                  endif
                               endif
                            endif
-c                          --- compute multibody pair contribution
-                           call twh_wmultibody(lfailure,rijsq,ntii,ntjj
-     &                          ,ichain,jchain,wmulti)
-                           if ( lfailure ) return
-                           w_ab = w_ab + wmulti
                            stress(1) = stress(1) + w_ab * rx_ab * rx_ij
                            stress(2) = stress(2) + w_ab * ry_ab * ry_ij
                            stress(3) = stress(3) + w_ab * rz_ab * rz_ij

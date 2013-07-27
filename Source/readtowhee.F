@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 07-15-2013 by M.G. Martin                        *
+c     * last modified 07-19-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -2784,6 +2784,18 @@ c        --- set the pressurestyle to thermodynamic
          endif
 
       endif
+
+c     --- output potentialstyle
+      if ( potentialstyle .eq. POT_INTERNAL ) then
+         write(6,'(a)') 'Energies exclusively from internal potentials'
+      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
+         write(6,'(a)') 'Energies exclusively from external potentials'
+      endif
+
+c     --- output information about nonbonded
+      call twh_writenonbond(6,lfailure)
+      if ( lfailure ) return
+
 c     --- fetch the minboxdim
       call twh_minboxdim(GLB_GET,minboxdim)
 
@@ -3080,7 +3092,6 @@ c        --- generate a new initial configuration
             write(6,*) 'READTOWHEE: there was an error in initconf'
             return
          endif
-         write(6,*) 'Finished initconf'
       else
 c        --- read the initial conformation from a file
          call twh_rwconf(lfailure,nchain,READ_FLAG,0,atomcount)
@@ -3227,16 +3238,7 @@ c     --- initialize movie file
          if ( lfailure ) return
       endif
 
-c     --- output potentialstyle
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         write(6,'(a)') 'Energies exclusively from internal potentials'
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         write(6,'(a)') 'Energies exclusively from external potentials'
-      endif
-
-c     --- output information about nonbonded
-      call twh_writenonbond(6,lfailure)
-      if ( lfailure ) return
+c     OLD LOCATION OF NONBOND OUTPUT
 
 c     --- write input data to stdout
       write(6,*)

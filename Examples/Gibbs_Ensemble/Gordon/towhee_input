@@ -214,7 +214,7 @@ forcefield
 charge_assignment
 'manual'
 unit ntype qqatom
-1    'CH4_3'   0.0d0
+1    'CH4n12'   0.0d0
 vibration
 0
 improper torsion

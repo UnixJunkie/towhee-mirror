@@ -252,6 +252,126 @@ c        --- detect errors
       return
       end
 
+      subroutine twh_set_eamdensnum(clocal,ipair,jpair)
+c     ******************************************************************
+c     * translates the eam_dens_style into a defined integer to speed  *
+c     * the compares                                                   *
+c     *                                                                *
+c     * originally written 07-20-2013 by M.G. Martin                   *
+c     * last modified 07-21-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      character*(*) clocal
+      integer ipair,jpair
+c     --- local variables
+      integer eam_dens_num
+
+c     --- these definitions must match those in preproc.h
+c     --- note all tabular potentials are numbered > 100
+      if ( clocal .eq. 'Ackland cubic sum' ) then
+         eam_dens_num = EAM_DENS_ACKLAND
+      elseif ( clocal .eq. 'exponential' ) then
+         eam_dens_num = EAM_DENS_EXPON
+      elseif ( clocal .eq. 'table' ) then
+         eam_dens_num = EAM_DENS_TABLE
+      elseif ( clocal .eq. 'none' ) then
+         eam_dens_num = EAM_DENS_NONE
+      else 
+         write(6,*) 'SET_EAMDENSNUM: invalid eamdensnum'
+         write(6,'(a)') clocal
+         stop
+      endif
+
+      call twh_eam_dens_num(GLB_SET,ipair,jpair,eam_dens_num)
+
+      return
+      end
+
+      subroutine twh_set_eamembednum(clocal,ipair)
+c     ******************************************************************
+c     * translates the eam_embed_style into a defined integer to speed *
+c     * the compares                                                   *
+c     *                                                                *
+c     * originally written 07-21-2013 by M.G. Martin                   *
+c     * last modified 07-21-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      character*(*) clocal
+      integer ipair
+c     --- local variables
+      integer itest
+
+c     --- these definitions must match those in preproc.h
+c     --- note all tabular potentials are numbered > 100
+      if ( clocal .eq. 'Belashchenko' ) then
+         itest = EAM_EMBED_BELASH
+      elseif ( clocal .eq. 'Belashchenko 10 rho' ) then
+         itest = EAM_EMBED_BELASHTRHO
+      elseif ( clocal .eq. 'logarithmic' ) then
+         itest = EAM_EMBED_LOGARITHMIC
+      elseif ( clocal .eq. 'power 0.5 and 2' ) then
+         itest = EAM_EMBED_POWHT
+      elseif ( clocal .eq. 'power 0.5, 2, and 4' ) then
+         itest = EAM_EMBED_POWHTF
+      elseif ( clocal .eq. 'squareroot' ) then
+         itest = EAM_EMBED_SR
+      elseif ( clocal .eq. 'table' ) then
+         itest = EAM_EMBED_TABLE
+      else 
+         write(6,*) 'SET_EAMEMBEDNUM: invalid eamembedstyle'
+         write(6,'(a)') clocal
+         stop
+      endif
+
+      call twh_eam_embed_num(GLB_SET,ipair,itest)
+
+      return
+      end
+
+      subroutine twh_set_eampairnum(clocal,ipair)
+c     ******************************************************************
+c     * translates the eam_pair_style into a defined integer to speed  *
+c     * the compares                                                   *
+c     *                                                                *
+c     * originally written 07-20-2013 by M.G. Martin                   *
+c     * last modified 07-21-2013 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      character*(*) clocal
+      integer ipair
+c     --- local variables
+      integer eam_pair_num
+
+c     --- these definitions must match those in preproc.h
+c     --- note all tabular potentials are numbered > 100
+      if ( clocal .eq. 'Ackland 3-part' ) then
+         eam_pair_num = EAM_PAIR_ACKLANDTP
+      elseif ( clocal .eq. 'Ackland Power' ) then
+         eam_pair_num = EAM_PAIR_ACKLANDPOW
+      elseif ( clocal .eq. 'exponential' ) then
+         eam_pair_num = EAM_PAIR_EXPON
+      elseif ( clocal .eq. 'morse' ) then
+         eam_pair_num = EAM_PAIR_MORSE
+      elseif ( clocal .eq. 'table' ) then
+         eam_pair_num = EAM_PAIR_TABLE
+      elseif ( clocal .eq. 'Belashchenko 5-8' ) then
+         eam_pair_num = EAM_PAIR_BELASHFE
+      elseif ( clocal .eq. 'none' ) then
+         eam_pair_num = EAM_PAIR_NONE
+      else 
+         write(6,*) 'SET_EAMPAIRNUM: invalid eampairnum'
+         write(6,'(a)') clocal
+         stop
+      endif
+
+      call twh_eam_pair_number(GLB_SET,ipair,eam_pair_num)
+
+      return
+      end
+
       subroutine twh_set_hbondcoeff(itype,coeffarray)
 c     ******************************************************************
 c     * sets up all of the coefficients for a single special hbond type*

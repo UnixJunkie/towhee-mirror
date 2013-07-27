@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs all of the final running and block averages            *
 c     *                                                                *
 c     * split from mainloop on 05-12-2005 by M.G. Martin               *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-24-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -50,7 +50,7 @@ c     --- double precision arrays
       double precision molvol,speden,acvol
       dimension molvol(MAXBOX),speden(MAXBOX),acvol(MAXBOX)
       double precision baver
-      dimension baver(6+NTMAX)
+      dimension baver(8+NTMAX)
       double precision tpressure
       dimension tpressure(MAXBOX)
       double precision idealp
@@ -1210,18 +1210,26 @@ c           --- liquid std, vapor pressure, vapor p std
             if ( lfailure ) return
             if ( pressurestyle .eq. PRES_VIRIAL .or.
      &           pressurestyle .eq. PRES_RADIAL ) then
+c              --- virial or radial pressure
                keycode = AC_PRESSURE
-            elseif ( pressurestyle .eq. PRES_THERMO ) then
-               keycode = AC_THERMO_PRESSURE
+               call twh_averages(lfailure,AVG_EXTRACT_BLOCK_AVG,keycode
+     &              ,ivap,imolty,baver(5),nblock)
+               if ( lfailure ) return
+               call twh_averages(lfailure,AVG_EXTRACT_BLOCK_STD,keycode
+     &              ,ivap,imolty,baver(6),nblock)
+               if ( lfailure ) return
             endif
+c           --- thermodynamic pressure
+            keycode = AC_THERMO_PRESSURE
             call twh_averages(lfailure,AVG_EXTRACT_BLOCK_AVG,keycode
-     &           ,ivap,imolty,baver(5),nblock)
+     &           ,ivap,imolty,baver(7),nblock)
             if ( lfailure ) return
             call twh_averages(lfailure,AVG_EXTRACT_BLOCK_STD,keycode
-     &           ,ivap,imolty,baver(6),nblock)
+     &           ,ivap,imolty,baver(8),nblock)
             if ( lfailure ) return
-            write(41,1401) temperature,(baver(zz),zz=1,6)
- 1401       format(g20.10,6(1x,e10.5))
+
+            write(41,1401) temperature,(baver(zz),zz=1,8)
+ 1401       format(g20.10,8(1x,e12.6))
             close(41)
          endif
 

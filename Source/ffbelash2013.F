@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * sets up parameters for the belash2013 forcefield               *
 c     *                                                                *
 c     * originally written 07-16-2013 by M.G. Martin                   *
-c     * last modified 07-16-2013 by M.G. Martin                        *
+c     * last modified 07-27-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -202,7 +202,9 @@ c     --- a44
       nbclocal(isame) = -0.63905669655741d0*CON_EVTOK
 c     --- a45
       isame = isame + 1
-      nbclocal(isame) = -0.11066271548233d0*CON_EVTOK
+c     --- typo in the paper (Belashchenko per comm 7-2013
+      nbclocal(isame) = -0.11066271548233d1*CON_EVTOK
+c     --- nbclocal(isame) = -0.11066271548233d0*CON_EVTOK
 c     --- a46
       isame = isame + 1
       nbclocal(isame) = -0.10219966911147d1*CON_EVTOK
@@ -238,7 +240,7 @@ c     --- a57
       nbclocal(isame) = -0.78960959177628d-1*CON_EVTOK
 c     --- a58
       isame = isame + 1
-      nbclocal(isame) = -0.79477007838712d-2*CON_EVTOK
+      nbclocal(isame) = - 0.79477007838712d-2*CON_EVTOK
       call twh_set_nbcoeff(ii,nbclocal) 
 
 c     --- density with self

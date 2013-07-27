@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
- in directory: /towheebase/Examples/Gibbs_Ensemble/Catlow_Zeolite_4a/                                              
+ Reading from towhee_input file: towhee_input                                                                                                            
+ in directory: /towheebase/Examples/Gibbs_Ensemble/Catlow_Zeolite_4a/                                                                  
  inputformat: Towhee         
  ensemble: npt                           
  temperature:  300.000    
@@ -73,7 +73,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_CatlowFaux                                                        
+/towheebase/ForceFields/towhee_ff_CatlowFaux                                                                            
  classical_potential: Exponential-12-6              
  READCLASSICAL: pot_num:    12 potential name: Exponential-12-6              
  classical_mixrule: Explicit                      
@@ -766,9 +766,9 @@ unit:    5 name:Hc         charge:   0.10000
  Verifying input structures are consistent
 Determining CBMC bond distributions
      for molecule type     3
- Determining cyclic subunits for molecule type          1
- Determining cyclic subunits for molecule type          2
- Determining cyclic subunits for molecule type          3
+Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          2
+Determining cyclic subunits for molecule type          3
 Default total charge on molecule   1 is -96.00000
 Default total charge on molecule   2 is   1.00000
 Default total charge on molecule   3 is   0.00000
@@ -786,6 +786,33 @@ Type:   2 Style: CatlowFaux Nonbonded terms only
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Exponential + LJ 12 + LJ 6 potential
+    with a shift to zero at the cut-off
+u(r) = A/r^6 + B exp(C r) + D/r^12 - S 
+Num. Atom(i)    Num. Atom(j)               A            B        C            D        S
+   1 OZ            1 OZ            -246594.5  264163677.0 -6.71141          0.0 -0.08258
+   1 OZ            2 Si            -580222.4          0.0  1.00000   13345116.3 -0.19431
+   1 OZ            3 Al                  0.0          0.0  1.00000   15085783.7  0.00000
+   1 OZ            4 Na                  0.0   67733312.1 -4.18936          0.0  0.00000
+   1 OZ            7 Cc            -204864.9          0.0  1.00000  127648939.0 -0.06859
+   1 OZ            8 Hc             -64656.5          0.0  1.00000   18061164.4 -0.02165
+   2 Si            2 Si                  0.0          0.0  1.00000          0.0  0.00000
+   2 Si            3 Al                  0.0          0.0  1.00000          0.0  0.00000
+   2 Si            4 Na                  0.0          0.0  1.00000          0.0  0.00000
+   2 Si            7 Cc                  0.0          0.0  1.00000          0.0  0.00000
+   2 Si            8 Hc                  0.0          0.0  1.00000          0.0  0.00000
+   3 Al            3 Al                  0.0          0.0  1.00000          0.0  0.00000
+   3 Al            4 Na                  0.0          0.0  1.00000          0.0  0.00000
+   3 Al            7 Cc                  0.0          0.0  1.00000          0.0  0.00000
+   3 Al            8 Hc                  0.0          0.0  1.00000          0.0  0.00000
+   4 Na            4 Na                  0.0          0.0  1.00000          0.0  0.00000
+   4 Na            7 Cc             -39919.3          0.0  1.00000   24320390.7 -0.01337
+   4 Na            8 Hc             -14134.2          0.0  1.00000    3360532.4 -0.00473
+   7 Cc            7 Cc            -209962.8          0.0  1.00000  228514809.7 -0.07029
+   7 Cc            8 Hc             -67787.4          0.0  1.00000   32492457.2 -0.02270
+   8 Hc            8 Hc             -23054.6          0.0  1.00000    4465856.2 -0.00772
  Isobaric-isothermal Gibbs ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -914,33 +941,6 @@ Box:     2 Initial kmax:     5
  ibox,testchain,nunit            2          291            5
  xold,yold,zold  51.5190      103.059      105.659    
  dx,dy,dz  0.00000      0.00000     -104.867    
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Exponential + LJ 12 + LJ 6 potential
-    with a shift to zero at the cut-off
-u(r) = A/r^6 + B exp(C r) + D/r^12 - S 
-Num. Atom(i)    Num. Atom(j)               A            B        C            D        S
-   1 OZ            1 OZ            -246594.5  264163677.0 -6.71141          0.0 -0.08258
-   1 OZ            2 Si            -580222.4          0.0  1.00000   13345116.3 -0.19431
-   1 OZ            3 Al                  0.0          0.0  1.00000   15085783.7  0.00000
-   1 OZ            4 Na                  0.0   67733312.1 -4.18936          0.0  0.00000
-   1 OZ            7 Cc            -204864.9          0.0  1.00000  127648939.0 -0.06859
-   1 OZ            8 Hc             -64656.5          0.0  1.00000   18061164.4 -0.02165
-   2 Si            2 Si                  0.0          0.0  1.00000          0.0  0.00000
-   2 Si            3 Al                  0.0          0.0  1.00000          0.0  0.00000
-   2 Si            4 Na                  0.0          0.0  1.00000          0.0  0.00000
-   2 Si            7 Cc                  0.0          0.0  1.00000          0.0  0.00000
-   2 Si            8 Hc                  0.0          0.0  1.00000          0.0  0.00000
-   3 Al            3 Al                  0.0          0.0  1.00000          0.0  0.00000
-   3 Al            4 Na                  0.0          0.0  1.00000          0.0  0.00000
-   3 Al            7 Cc                  0.0          0.0  1.00000          0.0  0.00000
-   3 Al            8 Hc                  0.0          0.0  1.00000          0.0  0.00000
-   4 Na            4 Na                  0.0          0.0  1.00000          0.0  0.00000
-   4 Na            7 Cc             -39919.3          0.0  1.00000   24320390.7 -0.01337
-   4 Na            8 Hc             -14134.2          0.0  1.00000    3360532.4 -0.00473
-   7 Cc            7 Cc            -209962.8          0.0  1.00000  228514809.7 -0.07029
-   7 Cc            8 Hc             -67787.4          0.0  1.00000   32492457.2 -0.02270
-   8 Hc            8 Hc             -23054.6          0.0  1.00000    4465856.2 -0.00772
 
 Number of MC cycles:                    1
 Number of molecules:                  297

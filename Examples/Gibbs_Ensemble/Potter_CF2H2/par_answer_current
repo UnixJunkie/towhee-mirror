@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
- in directory: /towheebase/Examples/Gibbs_Ensemble/Potter_CF2H2/                                                   
+ Reading from towhee_input file: towhee_input                                                                                                            
+ in directory: /towheebase/Examples/Gibbs_Ensemble/Potter_CF2H2/                                                                       
  inputformat: Towhee         
  ensemble: nvt                           
  temperature:  265.000    
@@ -72,7 +72,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Potter1997                                                        
+/towheebase/ForceFields/towhee_ff_Potter1997                                                                            
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
  classical_mixrule: LB plus manual                
@@ -186,7 +186,7 @@ Determining CBMC bond distributions
 Determining Autofit Gaussian bend A parameters
 Determining Autofit Gaussian bend B parameters
 Determining Autofit Gaussian dihedral parameters
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -200,6 +200,18 @@ Torsion Types
    No Torsion Types
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 12-6 potential
+    with tail corrections
+u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
+Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
+   1 C             1 C              3.1500    54.6000     0.0000     0.0000     0.0000
+   1 C             2 F(2)           3.0625    46.7333     0.0000     0.0000     0.0000
+   1 C             6 H(2)           2.6600    23.3666     0.0000     0.0000     0.0000
+   2 F(2)          2 F(2)           2.9750    40.0000     0.0000     0.0000     0.0000
+   2 F(2)          6 H(2)           2.3000    22.3600     0.0000     0.0000     0.0000
+   6 H(2)          6 H(2)           2.1700    10.0000     0.0000     0.0000     0.0000
  Canonical Gibbs ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -220,19 +232,6 @@ Box idim hinverse:    2 2    0.00000    0.01667    0.00000
 Box idim hinverse:    2 3    0.00000    0.00000    0.01667
 INITCONF: building template for molecule type:    1
 Initial Structure Growth Trial:    1
- Finished initconf
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Lennard-Jones 12-6 potential
-    with tail corrections
-u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
-Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
-   1 C             1 C              3.1500    54.6000     0.0000     0.0000     0.0000
-   1 C             2 F(2)           3.0625    46.7333     0.0000     0.0000     0.0000
-   1 C             6 H(2)           2.6600    23.3666     0.0000     0.0000     0.0000
-   2 F(2)          2 F(2)           2.9750    40.0000     0.0000     0.0000     0.0000
-   2 F(2)          6 H(2)           2.3000    22.3600     0.0000     0.0000     0.0000
-   6 H(2)          6 H(2)           2.1700    10.0000     0.0000     0.0000     0.0000
 
 Number of MC cycles:                    1
 Number of molecules:                  340

@@ -174,10 +174,9 @@ am_towhee_OBJECTS = accumulateaverages.$(OBJEXT) allocate.$(OBJEXT) \
 	writenonbond.$(OBJEXT) writeonefive.$(OBJEXT) \
 	writepdb.$(OBJEXT) writeruntime.$(OBJEXT) \
 	writetorsion.$(OBJEXT) writetowhee.$(OBJEXT) \
-	writetramonto.$(OBJEXT) wmultibody.$(OBJEXT) \
-	wtwobody.$(OBJEXT) control.$(OBJEXT) dx-1597-2-7.$(OBJEXT) \
-	globalinfo.$(OBJEXT) jobfarm.$(OBJEXT) mrg32k3a.$(OBJEXT) \
-	rex.$(OBJEXT) rnginit.$(OBJEXT) \
+	writetramonto.$(OBJEXT) wtwobody.$(OBJEXT) control.$(OBJEXT) \
+	dx-1597-2-7.$(OBJEXT) globalinfo.$(OBJEXT) jobfarm.$(OBJEXT) \
+	mrg32k3a.$(OBJEXT) rex.$(OBJEXT) rnginit.$(OBJEXT) \
 	scaled_potential_data.$(OBJEXT) sturm.$(OBJEXT) \
 	towhee.$(OBJEXT)
 towhee_OBJECTS = $(am_towhee_OBJECTS)
@@ -501,7 +500,6 @@ towhee_SOURCES = \
 		writetorsion.F \
 		writetowhee.F \
 		writetramonto.F \
-		wmultibody.F \
 		wtwobody.F \
 		control.c \
 		dx-1597-2-7.c \
@@ -1204,7 +1202,6 @@ writeruntime.o: preproc.h writeruntime.F
 writetorsion.o: preproc.h functions.h writetorsion.F
 writetowhee.o: preproc.h functions.h writetowhee.F
 writetramonto.o: preproc.h functions.h writetramonto.F
-wmultibody.o: preproc.h functions.h wmultibody.F
 wtwobody.o: preproc.h functions.h wtwobody.F
 ###C dependencies
 control.o: globalc.h control.c

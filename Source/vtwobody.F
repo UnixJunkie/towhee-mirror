@@ -38,7 +38,7 @@ c     * otherwise.  (see scaled_potential.F)                           *
 c     * value returned is in units of [K]                              *
 c     *                                                                *
 c     * originally written as vnonbond 2-18-2000 by M.G. Martin        *
-c     * last update 07-16-2013 by M.G. Martin                          *
+c     * last update 07-21-2013 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -57,25 +57,23 @@ c     --- debugging flag
 #define DEBUG_VTWOBODY 0
 c     --- variables passed to/from the function
       logical lfailure,lovrlap
-      integer ntii,ntjj,cutstyle,classical_n,classical_pot_num
+      integer ntii,ntjj,cutstyle,classical_pot_num
       double precision rijsq, dvtwobody, vforeign
       dimension vforeign(MAX_FOREIGN_LAMBDA)
 c     --- local variables
-c     --- character string scalars
-      character*20 eampairstyle
 c     --- logical scalars
       logical lonefour,lfound,lcontinue,scp_scale_twobody
       logical scp_eval_derivative,lshift
 c     --- integer scalars
       integer ntij,icoeff,ipower,hbtype,l,scp_num_foreign_lambda
-      integer tabnpair,aindex
+      integer tabnpair,aindex,eampairnum
 c     --- double precision scalars
       double precision srsix,srthree,srnine,rij,rovers,rmaxsq,adelr
       double precision rinvthree,rinvsix,rinvnine,rinvtwelve,rinvten
       double precision sigoverr,x,acklandphi,scalefactor,wca_cutsq
       double precision rijseven,aaa,bbb,ccc,ddd,onethird,cbrt_two
       double precision tpair,rminsq,rvalue,rcurrent,rdiff
-      double precision avalue
+      double precision avalue,powrn
 c     --- functions
       double precision vtb_lennard_jones,vtb_scaled_lj
 
@@ -365,22 +363,22 @@ c        --- the square of the diameter is stored in nbcoeff(2)
 c        --- embedded atom pair potential portion
          ntij = twh_getnbtype(ntii,ntjj)
          rij = dsqrt(rijsq)
-         call twh_eam_pair_style(GLB_GET,ntij,eampairstyle)
-         if ( eampairstyle .eq. 'table' ) then
+         call twh_eam_pair_number(GLB_GET,ntij,eampairnum)
+         if ( eampairnum .eq. EAM_PAIR_TABLE ) then
             twh_vtwobody = twh_extractpair(lfailure,INTERP_NORMAL
      &           ,ntij,rij,lovrlap)
             if ( lfailure ) return
-         elseif ( eampairstyle .eq. 'exponential' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_EXPON ) then
             twh_vtwobody = twh_get_nbcoeff(1,ntij)
      &           *twh_expon(twh_get_nbcoeff(2,ntij)*rij)
-         elseif ( eampairstyle .eq. 'morse' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_MORSE ) then
 c           --- uses a 3 parameter function that is a generalized
 c           --- morse potential
             adelr = twh_get_nbcoeff(2,ntij)
      &           *(rij - twh_get_nbcoeff(3,ntij))
             twh_vtwobody = twh_get_nbcoeff(1,ntij)
      &           *( twh_expon(-2.0d0*adelr) - 2.0d0*twh_expon(-adelr))
-         elseif ( eampairstyle .eq. 'Ackland 3-part' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_ACKLANDTP ) then
 c           --- complicated pair potential that has 3 different forms
 c           --- depending upon the distances
             if ( rij .eq. 0.0d0 ) then
@@ -429,7 +427,7 @@ c                    --- out of bounds, this loop is finished
                   endif
                enddo
             endif
-         elseif ( eampairstyle .eq. 'Ackland Power' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_ACKLANDPOW ) then
 c           --- complicated pair potential that has 3 different forms
 c           --- depending upon the distances
             rij = dsqrt(rijsq)
@@ -482,7 +480,7 @@ c                    --- out of bounds entry, the loop is complete
                   endif
                enddo
             endif
-         elseif ( eampairstyle .eq. 'Belashchenko 5-8' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_BELASHFE ) then
 c           --- Belashchenko Heaviside power series
 c           --- doing this in declining distance in an attempt to only
 c           --- fetch the minimum required parameters
@@ -530,13 +528,13 @@ c                 --- update rcurrent for the next interation
                   rcurrent = rcurrent*rdiff
                enddo
             endif
-         elseif ( eampairstyle .eq. 'none' ) then
+         elseif ( eampairnum .eq. EAM_PAIR_NONE ) then
 c           --- no pair interactions
             twh_vtwobody = 0.0d0
          else
-            write(6,*) 'VTWOBODY: non defined eam_pair_style'
+            write(6,*) 'VTWOBODY: non defined eam_pair_num'
             write(6,*) 'ntii,ntjj,ntij',ntii,ntjj,ntij
-            write(6,*) 'eam_pair_style =',eampairstyle,'='
+            write(6,*) 'eam_pair_num:',eampairnum
             lfailure = .true.
             return
          endif
@@ -564,18 +562,18 @@ c        --- ffnonbond or towhee_ff
 c        --- Gordon modified n-6 potential
 c        v = 4 e c(n) * [ (sigma/(r-a(n)))^n - (sigma/(r-a(n)))^6 ]
 c        nb(1) stores sigma
-c        nb(3) stores a(n)
-c        nb(4) stores 4 e c(n)
+c        nb(3) stores n
+c        nb(4) stores a(n)
+c        nb(5) stores 4 e c(n)
          if (twh_cmp_lt(rijsq, rminsq)) then
             lovrlap = .true.
          else
             ntij = twh_getnbtype(ntii,ntjj)
             sigoverr = twh_get_nbcoeff(1,ntij)
-     &           /(dsqrt(rijsq) - twh_get_nbcoeff(3,ntij))
-            call twh_classical_n(GLB_GET,classical_n)
-            twh_vtwobody = twh_get_nbcoeff(4,ntij)
-     &           *( sigoverr**classical_n
-     &           - sigoverr**6 )
+     &           /(dsqrt(rijsq) - twh_get_nbcoeff(4,ntij))
+            call twh_nbcoeff(GLB_GET,3,ntij,powrn)
+            twh_vtwobody = twh_get_nbcoeff(5,ntij)
+     &           *( sigoverr**powrn - sigoverr**6 )
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
                twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,7 +49,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
+ Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
  inputformat: Towhee         
  ensemble: nvt                           
@@ -72,7 +72,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_COMPASSv1                                                         
+/towheebase/ForceFields/towhee_ff_COMPASSv1                                                                             
  classical_potential: 9-6                           
  READCLASSICAL: pot_num:     6 potential name: 9-6                           
  classical_mixrule: Sixth Power                   
@@ -175,7 +175,7 @@ Unit:    6 nbname: h1o        Charge:    0.42000
 Total charge for Molecule Type:    1 is:    0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -216,6 +216,21 @@ Type:  54 Style: Compass with Class 2 cross terms
           with 1-4 vdw and scaled (1.000) 1-4 coulomb
 Improper Torsion Types
    No Improper Types
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Lennard-Jones 9-6 potential
+u(r) = epsilon*[2*(Ro/r)^9 - 3*(Ro/r)^6] - S
+Num. Atom(i)    Num. Atom(j)         Ro epsilon       S
+   5 h1            5 h1           2.878  11.574   0.000
+   5 h1           29 c4o          3.496  14.429   0.000
+   5 h1           30 h1o          2.565   0.733   0.000
+   5 h1           33 o2h          3.319  19.348   0.000
+  29 c4o          29 c4o          3.815  34.219   0.000
+  29 c4o          30 h1o          3.399   0.543   0.000
+  29 c4o          33 o2h          3.707  39.929   0.000
+  30 h1o          30 h1o          1.087   4.026   0.000
+  30 h1o          33 o2h          3.190   0.780   0.000
+  33 o2h          33 o2h          3.580  48.309   0.000
  Canonical ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -233,22 +248,6 @@ Testing random number generator using the single integer seed
 Box idim hinverse:    1 1    0.02500    0.00000    0.00000
 Box idim hinverse:    1 2    0.00000    0.02500    0.00000
 Box idim hinverse:    1 3    0.00000    0.00000    0.02500
- Finished initconf
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Lennard-Jones 9-6 potential
-u(r) = epsilon*[2*(Ro/r)^9 - 3*(Ro/r)^6] - S
-Num. Atom(i)    Num. Atom(j)         Ro epsilon       S
-   5 h1            5 h1           2.878  11.574   0.000
-   5 h1           29 c4o          3.496  14.429   0.000
-   5 h1           30 h1o          2.565   0.733   0.000
-   5 h1           33 o2h          3.319  19.348   0.000
-  29 c4o          29 c4o          3.815  34.219   0.000
-  29 c4o          30 h1o          3.399   0.543   0.000
-  29 c4o          33 o2h          3.707  39.929   0.000
-  30 h1o          30 h1o          1.087   4.026   0.000
-  30 h1o          33 o2h          3.190   0.780   0.000
-  33 o2h          33 o2h          3.580  48.309   0.000
 
 Number of MC cycles:                    0
 Number of molecules:                    1

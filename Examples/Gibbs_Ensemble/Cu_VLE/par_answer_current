@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.5   (July 17 2013)      
+ MCCCS Towhee - Version 7.0.6   (July 27 2013)      
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- Reading from towhee_input file: towhee_input                                                                                        
- in directory: /towheebase/Examples/Gibbs_Ensemble/Cu_VLE/                                                         
+ Reading from towhee_input file: towhee_input                                                                                                            
+ in directory: /towheebase/Examples/Gibbs_Ensemble/Cu_VLE/                                                                             
  inputformat: Towhee         
  ensemble: nvt                           
  temperature:  3000.00    
@@ -73,7 +73,7 @@ Full output of updates and block averages
  potentialstyle: internal                      
  ffnumber:            1
  ff_filename:
-/towheebase/ForceFields/towhee_ff_Hoyt2003                                                          
+/towheebase/ForceFields/towhee_ff_Hoyt2003                                                                              
  classical_potential: Embedded Atom Method          
  READCLASSICAL: pot_num:   111 potential name: Embedded Atom Method          
  interpolatestyle: cubicspline         
@@ -156,7 +156,7 @@ unit:    1 name:Cu         charge:   0.00000
  Verifying input structures are consistent
 Determining CBMC bond distributions
      for molecule type     1
- Determining cyclic subunits for molecule type          1
+Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
@@ -169,6 +169,16 @@ Improper Torsion Types
    No Improper Types
 SETCLASSICAL: adjusted rcut to be the maximum distance from tabulated potential
 New rcut value is    5.76565
+Energies exclusively from internal potentials
+Nonbonded Force Field
+Embedded-Atom potential
+U = eam_pair(r) + eam_embed[ Sum[eam_dens(r)] ]
+Num. Atom(i)    Num. Atom(j)    eam_dens(r) style
+   2 Cu            2 Cu         table               
+Num. Atom(i)    Num. Atom(j)    eam_pair(r) style
+   2 Cu            2 Cu         table               
+Num. Atom(i)                    eam_embed(rho) style
+   2 Cu                         table               
  Canonical Gibbs ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -188,11 +198,6 @@ Box idim hinverse:    2 2    0.00000    0.01000    0.00000
 Box idim hinverse:    2 3    0.00000    0.00000    0.01000
 INITCONF: building template for molecule type:    1
 Initial Structure Growth Trial:    1
- Finished initconf
-Energies exclusively from internal potentials
-Nonbonded Force Field
-Embedded-Atom potential
-U = eam_pair(r) + eam_embed[ Sum[eam_dens(r)] ]
 
 Number of MC cycles:                   10
 Number of molecules:                  300
@@ -238,8 +243,6 @@ Molecules of type   1 :        100
  solvation                  0.000 [K]         0.00000 [kcal/mol]
  total classical             0.00000000 [K]         0.0000000000 [kcal/mol]
  Total energy [eV]  0.00000    
- initial virial pressure in box  1 =    -7244218.30
- initial virial pressure in box  2 =        4141.99
 
  +++++ start of markov chain +++++
 
@@ -249,71 +252,71 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
  Translate COM             81.        46.   0.567901
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             50.        49.   0.980000
-         1 B: 1 -0.7008E+07  0.3088E+04   -7244218.3   201
-           B: 2 -0.6803E+05  0.1000E+07       4142.0    99
+         1 B: 1 -0.7008E+07  0.3088E+04          0.0   201
+           B: 2 -0.6803E+05  0.1000E+07          0.0    99
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             85.        45.   0.601307
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             43.        39.   1.777674
-         2 B: 1 -0.7079E+07  0.3088E+04   -7244218.3   204
-           B: 2 -0.9938E+05  0.1000E+07       4142.0    96
+         2 B: 1 -0.7079E+07  0.3088E+04          0.0   204
+           B: 2 -0.9938E+05  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             81.        47.   0.697813
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             39.        35.   3.190698
-         3 B: 1 -0.7049E+07  0.3088E+04   -7244218.3   204
-           B: 2 -0.2096E+06  0.1000E+07       4142.0    96
+         3 B: 1 -0.7049E+07  0.3088E+04          0.0   204
+           B: 2 -0.2096E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             76.        31.   0.569269
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             30.        28.   5.955969
-         4 B: 1 -0.7029E+07  0.3088E+04   -7244218.3   204
-           B: 2 -0.2285E+06  0.1000E+07       4142.0    96
+         4 B: 1 -0.7029E+07  0.3088E+04          0.0   204
+           B: 2 -0.2285E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             84.        43.   0.582823
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             29.        22.   9.036643
-         5 B: 1 -0.6997E+07  0.3088E+04   -7244218.3   204
-           B: 2 -0.2973E+06  0.1000E+07       4142.0    96
+         5 B: 1 -0.6997E+07  0.3088E+04          0.0   204
+           B: 2 -0.2973E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             79.        42.   0.619710
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             29.        19.  11.531302
-         6 B: 1 -0.6962E+07  0.3088E+04   -7244218.3   204
-           B: 2 -0.3849E+06  0.1000E+07       4142.0    96
+         6 B: 1 -0.6962E+07  0.3088E+04          0.0   204
+           B: 2 -0.3849E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             95.        61.   0.795838
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             33.        25.  11.531302
-         7 B: 1 -0.6926E+07  0.3088E+04   -7244218.3   204
-           B: 2 -0.4138E+06  0.1000E+07       4142.0    96
+         7 B: 1 -0.6926E+07  0.3088E+04          0.0   204
+           B: 2 -0.4138E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             79.        27.   0.543991
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             35.        25.  11.531302
-         8 B: 1 -0.6900E+07  0.3153E+04   -7244218.3   204
-           B: 2 -0.4685E+06  0.1000E+07       4142.0    96
+         8 B: 1 -0.6900E+07  0.3153E+04          0.0   204
+           B: 2 -0.4685E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             86.        44.   0.556642
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             39.        20.  11.531302
-         9 B: 1 -0.6884E+07  0.3193E+04   -7244218.3   205
-           B: 2 -0.5182E+06  0.1000E+07       4142.0    95
+         9 B: 1 -0.6884E+07  0.3193E+04          0.0   205
+           B: 2 -0.5182E+06  0.1000E+07          0.0    95
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             69.        38.   0.613113
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM             32.        21.  11.531302
-        10 B: 1 -0.6899E+07  0.3193E+04   -7244218.3   206
-           B: 2 -0.5536E+06  0.1000E+07       4142.0    94
+        10 B: 1 -0.6899E+07  0.3193E+04          0.0   206
+           B: 2 -0.5536E+06  0.1000E+07          0.0    94
 
  +++++ end of markov chain +++++
 

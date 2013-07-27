@@ -24,7 +24,7 @@
   this parallel function is used to run a list of jobs on one 
   or more processors.
   originally split out of towhee.c 08-08-2003 by M.G. Martin
-  last modified 06-25-2009 by M.G. Martin
+  last modified 07-26-2013 by M.G. Martin
 */
 #include "preproc.h"
 #include "globalc.h"
@@ -73,7 +73,7 @@ void jobfarm(FILE * tp_fp, int outputmode, int myproc)
       /* initialize directory and get next input directory */
       directory[0] = '\0';
       fscanf(tp_fp,"%s",directory);   
-      
+      printf("%s \n",directory);
       if (feof(tp_fp)) {
         printf ("Insufficient entries in towhee_parallel file\n");
         break;
@@ -90,12 +90,19 @@ void jobfarm(FILE * tp_fp, int outputmode, int myproc)
           break;
         }
         strcat(directory,"/");
+	dirlength++;
       }
       
       /* append input file name to directory */
+      if ( dirlength + 12 > MAXDIRLENGTH )
+        {
+          printf("Maxiumum directory length exceeded for job # %d\n", 
+		 jobcount);
+	  printf("Need to increase maxdirlength to at least %d \n"
+		 ,dirlength+12);
+          break;
+        }
       strcat(directory,"towhee_input");
-      
-      printf("%s\n",directory);
       
       /* make sure candidate input file can be opened */
       if (!(fd = fopen(directory,"r")))
@@ -163,13 +170,15 @@ void jobfarm(FILE * tp_fp, int outputmode, int myproc)
       }
       else {
         /* last job or I'm the only worker - time to do it myself */
+        /* initialize this clock */
+        timekeeper(0,2,jobcount);
+	/* start the clock */
         timekeeper(1,2,jobcount);
+        printf("Job # %d submitted to node %d \n",jobcount,myproc);
         towheemainloop_(&jobcount,&outputmode,&zero,&pstyle);
         timekeeper(2,2,jobcount);
         /* output timing information */
         timekeeper(3,2,jobcount);
-        /* reinitialize this clock */
-        timekeeper(0,2,jobcount);
       }
     }
     /* master lets all the nodes know that we are done */
