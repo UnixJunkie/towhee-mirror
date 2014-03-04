@@ -633,6 +633,25 @@ c     --- enthalpy of vaporization (pV/n=RT)
          write(6,'(1x,a15,6x,a6,6x,e12.4)') 'H_vap (pV/n=RT)'
      &        ,'kJ/mol',value
       endif
+c     --- heat of vaporization (thermodynamic pressure and final avg)
+      if ( nmolty .eq. 1 .and. numboxes .eq. 2 ) then
+         if (speden(1) .lt. speden(2)) then
+            ivap = 1
+            iliq = 2
+         else
+            ivap = 2
+            iliq = 1
+         endif
+c        --- uterm was computed above
+         value = (uterm(ivap)/acnbox(ivap,1))
+     &        - (uterm(iliq)/acnbox(iliq,1))
+     &        + (6.02d23/1.0d30)*tpressure(ivap)
+     &        *( (acvol(ivap)/acnbox(ivap,1))
+     &        - (acvol(iliq)/acnbox(iliq,1)) )
+         write(6,'(1x,a16,5x,a6,6x,e12.4)') 'H_vap (thermo p)'
+     &        ,'kJ/mol',value
+      endif
+
 c     --- chemical potential of isolated molecule
       do imolty = 1, nmolty
          call twh_nmolectyp(GLB_GET,imolty,nmtype)

@@ -1,4 +1,6 @@
- MCCCS Towhee - Version 7.0.6   (July 27 2013)      
+ MCCCS Towhee - Version 7.0.7   (March 04 2014)     
+ Copyright (C) <2014> Marcus G. Martin
+ Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -659,6 +661,7 @@ Averages               Units Type       Box  1      Box  2
  H_vap (Direct)       kJ/mol        0.5891E-02
  H_vap (vapor p)      kJ/mol        0.2609E-02
  H_vap (pV/n=RT)      kJ/mol        0.2261E-01
+ H_vap (thermo p)     kJ/mol        0.2207E-02
 
 Block Averages (  5 blocks) Units Type Box Average      Standard Deviation
  Specific Density            g/ml        1  0.21883E+00  0.63635E-02

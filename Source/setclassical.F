@@ -19,15 +19,13 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_setclassical(lfailure,loverride,numtypes)
+      subroutine twh_setclassical(lfailure,numtypes)
 c     ******************************************************************
 c     * sets up many variables for classical potentials                *
-c     * if loverride is true then all combinations are computed without*
-c     * regard to the lhere function                                   *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 07-26-2013 by M.G. Martin                        *
+c     * last modified 07-30-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -42,7 +40,7 @@ c     ******************************************************************
 #include "functions.h"
 
 c     --- variables passed to/from the subroutine
-      logical lfailure,loverride
+      logical lfailure
       integer numtypes
 c     --- local variables
 c     --- logical scalars
@@ -213,7 +211,7 @@ c        --- find the largest diameter, or at least 1.0
          do itype = 1,numtypes
             do jtype = itype,numtypes
                if ( twh_get_lhere(itype) .and. twh_get_lhere(jtype)
-     &              .or. loverride ) then
+     &              ) then
                   ij = twh_getnbtype(itype,jtype)
                   if ( twh_get_nbcoeff(1,ij) .gt. minboxdim ) then
                      minboxdim = twh_get_nbcoeff(1,ij)
@@ -231,7 +229,7 @@ c        --- stillinger-weber: find the smallest "a" parameter
          do itype = 1,numtypes
             do jtype = itype,numtypes
                if ( twh_get_lhere(itype) .and. twh_get_lhere(jtype)
-     &              .or. loverride ) then
+     &              ) then
                   ij = twh_getnbtype(itype,jtype)
                   swcut = twh_get_nbcoeff(6,ij)*twh_get_nbcoeff(4,ij)
                   if ( swcut .gt. rcut ) then
@@ -253,38 +251,42 @@ c        --- embedded-atom, find the largest distance in any of
 c        --- the splines
          minboxdim = 0.0d0
          do itype = 1,numtypes
-            if ( twh_get_lhere(itype) .or. loverride ) then
+            if ( twh_get_lhere(itype) ) then
                if ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD ) then
 c                 --- check eam_dens
                   do jtype = 1,numtypes
-                     call twh_eam_dens_style(GLB_GET,jtype,itype
-     &                    ,eamdensstyle)
-                     if ( eamdensstyle .eq. 'table' ) then
-                        call twh_eam_ndens(GLB_GET,jtype,itype,ntot)
-                        call twh_eam_dens(GLB_GET,1,jtype,itype,ntot
-     &                       ,eamdens)
-                        if ( eamdens .gt. minboxdim ) then
-                           minboxdim = eamdens
+                     if ( twh_get_lhere(jtype) ) then
+                        call twh_eam_dens_style(GLB_GET,jtype,itype
+     &                       ,eamdensstyle)
+                        if ( eamdensstyle .eq. 'table' ) then
+                           call twh_eam_ndens(GLB_GET,jtype,itype,ntot)
+                           call twh_eam_dens(GLB_GET,1,jtype,itype,ntot
+     &                          ,eamdens)
+                           if ( eamdens .gt. minboxdim ) then
+                              minboxdim = eamdens
+                           endif
+                        elseif (eamdensstyle .eq. 'Ackland cubic sum'
+     &                          .or. eamdensstyle .eq. 'exponential'
+     &                          ) then
+                           call twh_eam_ndens(GLB_GET,jtype,itype,ntot)
+                           call twh_eam_dens(GLB_GET,1,jtype,itype,ntot
+     &                          ,eamdens)
+                           if ( eamdens .gt .minboxdim ) then
+                              minboxdim = eamdens
+                           endif
+                        else 
+                           write(6,*) 'SETCLASSICAL:unknown'
+     &                          ,' eam_dens_style'
+                           write(6,*) eamdensstyle
+                           lfailure = .true.
+                           return
                         endif
-                     elseif (eamdensstyle .eq. 'Ackland cubic sum'
-     &                       .or. eamdensstyle .eq. 'exponential' ) then
-                        call twh_eam_ndens(GLB_GET,jtype,itype,ntot)
-                        call twh_eam_dens(GLB_GET,1,jtype,itype,ntot
-     &                       ,eamdens)
-                        if ( eamdens .gt .minboxdim ) then
-                           minboxdim = eamdens
-                        endif
-                     else 
-                        write(6,*) 'SETCLASSICAL:unknown eam_dens_style'
-                        write(6,*) eamdensstyle
-                        lfailure = .true.
-                        return
                      endif
                   enddo
                endif
 c              --- check table_pair
                do jtype = itype,numtypes
-                  if ( twh_get_lhere(jtype) .or. loverride ) then
+                  if ( twh_get_lhere(jtype) ) then
                      cross = twh_getnbtype(itype,jtype)
                      call twh_eam_pair_style(GLB_GET,cross,eampairstyle)
                      if ( eampairstyle .eq. 'table' .or.
@@ -335,7 +337,7 @@ c        --- at this point as we have already called setmixterms
          do itype = 1,numtypes
             do jtype = itype,numtypes
                if ( twh_get_lhere(itype) .and. twh_get_lhere(jtype)
-     &              .or. loverride ) then
+     &              ) then
                   ij = twh_getnbtype(itype,jtype)
                   if ( twh_get_nbcoeff(2,ij) .gt. minboxdim ) then
                      minboxdim = twh_get_nbcoeff(2,ij)
@@ -353,10 +355,10 @@ c        --- tabulated potential find the largest distance in any of
 c        --- the tables
          minboxdim = 0.0d0
          do itype = 1,numtypes
-            if ( twh_get_lhere(itype) .or. loverride ) then
+            if ( twh_get_lhere(itype) ) then
 c              --- check table_pair
                do jtype = itype,numtypes
-                  if ( twh_get_lhere(jtype) .or. loverride ) then
+                  if ( twh_get_lhere(jtype) ) then
                      cross = twh_getnbtype(itype,jtype)
                      call twh_table_npair(GLB_GET,cross,ntot)
                      call twh_table_pair(GLB_GET,1,cross,ntot,tpair)
@@ -377,9 +379,9 @@ c        --- set minboxdim to twice rcut
 c        --- find the largest distance of any of the wells
          minboxdim = 0.0d0
          do itype = 1,numtypes
-            if ( twh_get_lhere(itype) .or. loverride ) then
+            if ( twh_get_lhere(itype) ) then
                do jtype = itype,numtypes
-                  if ( twh_get_lhere(jtype) .or. loverride ) then
+                  if ( twh_get_lhere(jtype) ) then
                      cross = twh_getnbtype(itype,jtype)
                      dist = dsqrt(twh_get_nbcoeff(11,cross))
                      if ( dist .gt. minboxdim ) minboxdim = dist

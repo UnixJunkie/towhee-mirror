@@ -30,7 +30,7 @@ c     * last modified 08-09-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
-#define DEBUG_BUILDPARTIAL 1
+#define DEBUG_BUILDPARTIAL 0
 c     ---- variables passed to/from the subroutine
       logical lfailure
       integer imolty,testcord,ifile

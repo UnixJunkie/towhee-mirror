@@ -72,7 +72,7 @@ c     *     towhee_parallel.                                           *
 c     * outputmode -- if .ne. 0, loutput = false -> quiet mode         *
 c     *                                                                *
 c     * split from the original twh_mainloop 06-25-2009 by M.G. Martin *
-c     * last modified 08-11-2011 by M.G. Martin                        *
+c     * last modified 03-03-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -148,9 +148,9 @@ c           --- close the general output file
 c     --- assign all of the averages
       call twh_initaverages(lfailure)
       if ( lfailure ) return
-
 c     --- fetch some useful values
       call twh_nchain(GLB_GET,nchain)
+
       call twh_mainloop_main(lfailure,lredirect_stdout,nchain)
 
       return

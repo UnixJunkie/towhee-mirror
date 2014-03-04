@@ -324,15 +324,13 @@ c     *   May halt program                                             *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 03-03-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
 #define FUNCTION_VCOULOMB
 #define FUNCTION_VTWOBODY
 #include "functions.h"
-c     --- set debug toggle
-#define DEBUG_VENGTOTAL_TWOBODY 0
 c     --- variables passed to/from the subroutine
       double precision velectinter, vtwointer, maddist
       double precision dl_twointer, dl_elect
@@ -358,14 +356,6 @@ c     --- vforeign
       double precision vf, vfelec, vftwo
       dimension vf(MAX_FOREIGN_LAMBDA), vfelec(MAX_FOREIGN_LAMBDA), 
      &      vftwo(MAX_FOREIGN_LAMBDA)
-
-c     --- debug variables
-#if DEBUG_VENGTOTAL_TWOBODY
-      integer testchain
-      double precision testvinter,vtestmgm
-      testchain = 257
-      testvinter = 0.0d0
-#endif
 
 c     --- retrieve constants
       call twh_constant_qqfact(GLB_GET,qqfact)
@@ -463,19 +453,6 @@ c                          --- minimum image the pair separation
      &                              + twh_vtwobody(lfailure,rijsq,ntii
      &                                ,ntjj,cutstyle,lovrlap,vf,dvdl)
                                  if ( lfailure ) return
-#if DEBUG_VENGTOTAL_TWOBODY
-                                 if ( ichain .eq. testchain .or.
-     &                                jchain .eq. testchain ) then
-                                    vtestmgm = twh_vtwobody(lfailure
-     &                                   ,rijsq,ntii,ntjj,cutstyle
-     &                                   ,lovrlap,vf,dvdl)
-                                    if ( lfailure ) return
-                                    testvinter = testvinter + vtestmgm
-                                    write(6,*) 'ichain,ii:',ichain,ii
-                                    write(6,*) 'jchain,jj:',jchain,jj
-                                    write(6,*) 'vtest:',vtestmgm
-                                 endif
-#endif
                                  dl_twointer = dl_twointer + dvdl
                                  do l = 1, scp_num_foreign_lambda
                                     vftwo(l)=vftwo(l) + vf(l)
@@ -527,11 +504,6 @@ c                    --- lcompute
       do l=1,MAX_FOREIGN_LAMBDA
          vforeign(l) = vfelec(l) + vftwo(l)
       enddo
-
-#if DEBUG_VENGTOTAL_TWOBODY
-      write(6,*) 'VENGTOTAL_TWOBODY: testchain:',testchain
-      write(6,*) 'VENGTOTAL_TWOBODY: testvinter:',testvinter
-#endif
 
       return
       end
@@ -1638,7 +1610,7 @@ c     --- variables passed to/from the subroutine
          write(6,*) 'intermolecular overlap'
          call twh_rminsq(GLB_GET,rminsq)
          write(6,*) 'rijsq rminsq',rijsq,rminsq
-         write(6,*) 'rij',dsqrt(rijsq)
+         write(6,*) 'rij:',dsqrt(rijsq),' rmin:',dsqrt(rminsq)
          write(6,*) 'chain, unit',ichain,ii
          write(6,*) 'i-pos', rxui,ryui,rzui
          write(6,*) 'jchain jj',jchain,jj

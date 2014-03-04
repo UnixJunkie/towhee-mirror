@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 07-30-2013 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -51,7 +51,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lpdbnames,lfound,lvalid,lreadnunit,lreadnmaxcbmc,louthist
-      logical lhenry,lgetinitstyle,loverride,linit,lusecom,lvalue
+      logical lhenry,lgetinitstyle,linit,lusecom,lvalue
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
       logical loutlammps,lshift,ltailc,lcoulomb,lewald,ldualcutoff
@@ -2753,8 +2753,7 @@ c        --- meant for proteins
       enddo
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
-         loverride = .false.
-         call twh_setclassical(lfailure,loverride,numtypes)
+         call twh_setclassical(lfailure,numtypes)
          if ( lfailure ) return
       endif
       if ( potentialstyle .eq. POT_EXTERNAL ) then

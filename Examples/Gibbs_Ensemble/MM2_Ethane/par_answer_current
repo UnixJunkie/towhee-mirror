@@ -1,4 +1,6 @@
- MCCCS Towhee - Version 7.0.6   (July 27 2013)      
+ MCCCS Towhee - Version 7.0.7   (March 04 2014)     
+ Copyright (C) <2014> Marcus G. Martin
+ Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
  Code Contributors for 2013: Wesley Emeneker; Marcus G. Martin;
  Copyright (C) <2012> Marcus G. Martin
@@ -386,4 +388,5 @@ Averages               Units Type       Box  1      Box  2
  G: Sum{<u_i><N_i>}   kJ/mol        0.4933E+04  0.6903E+04
  U                    kJ/mol        0.3231E+03  0.1843E+04
  H_vap (pV/n=RT)      kJ/mol        0.1263E+02
+ H_vap (thermo p)     kJ/mol        0.1268E+02
 Please see towhee_citations for a list of suggested citations for this simulation
