@@ -366,6 +366,7 @@ void run_rex_client(user_args *args, rex_params *paramwrap, int rank)
  * Write the "lambda map" file in the 'round'-level directory.  This file
  * tells us what lambda key is associated with each client.
  * Returns 0 on success, 1 on failure.
+ * last modified 03-06-2014 by M.G. Martin
  */
 int write_lambda_file(const int* J, const rex_params *p, const char* base, int round, const char* fn) {
   FILE *fp;
@@ -381,8 +382,8 @@ int write_lambda_file(const int* J, const rex_params *p, const char* base, int r
   }
 
   /* Append "/" and fn to fullname */
-  (void)strncat(fullname, "/", MAXDIRLENGTH);
-  (void)strncat(fullname, fn, MAXDIRLENGTH);
+  (void)strncat(fullname, "/", MAXDIRLENGTH - strlen(fullname) - 1);
+  (void)strncat(fullname, fn, MAXDIRLENGTH - strlen(fullname) - 1);
 
   /* Now open the file */
   if (!(fp=fopen(fullname,"w"))) {
@@ -420,6 +421,7 @@ int write_lambda_file(const int* J, const rex_params *p, const char* base, int r
  * Be sure to set wrap_.linit to TRUE.
  * 
  * Return value is the error code: 0 for success, 1 for failure.
+ * last modified 03-07-2014 by M.G. Martin
  */
 int populate_directory_initial(char* dirname, const char* base, int rank) {
     char output_file[MAXDIRLENGTH];
@@ -432,8 +434,8 @@ int populate_directory_initial(char* dirname, const char* base, int rank) {
 
     /* create output filename */
     (void)strncpy(output_file,dirname, MAXDIRLENGTH);
-    (void)strncat(output_file, "/", MAXDIRLENGTH);
-    (void)strncat(output_file, coords_fn, MAXDIRLENGTH);
+    (void)strncat(output_file, "/", MAXDIRLENGTH - strlen(output_file) - 1);
+    (void)strncat(output_file, coords_fn, MAXDIRLENGTH - strlen(output_file) - strlen(coords_fn));
     if (copy_file(coords_fn, output_file) == 1) {
         printf("populate_directory_initial: Error reported in copying \
 file %s to %s\n", coords_fn, output_file);
@@ -454,6 +456,7 @@ file %s to %s\n", coords_fn, output_file);
  * Be sure to set wrap_.linit to FALSE.
  * 
  * Return value is the error code: 0 for success, 1 for failure.
+ * last modified 03-07-2014 by M.G. Martin
  */
 int populate_directory_restart(char* dirname, const char* base, int round, int rank) {
     char old_dirname[MAXDIRLENGTH];
@@ -476,13 +479,13 @@ int populate_directory_restart(char* dirname, const char* base, int round, int r
 
     /* create input filename */
     (void)strncpy(old_output_file,old_dirname, MAXDIRLENGTH);
-    (void)strncat(old_output_file, "/", MAXDIRLENGTH);
-    (void)strncat(old_output_file, in_fn, MAXDIRLENGTH);
+    (void)strncat(old_output_file, "/", MAXDIRLENGTH - strlen(old_output_file) - 1);
+    (void)strncat(old_output_file, in_fn, MAXDIRLENGTH - strlen(old_output_file) - strlen(in_fn));
 
     /* create output filename */
     (void)strncpy(output_file,dirname, MAXDIRLENGTH);
-    (void)strncat(output_file, "/", MAXDIRLENGTH);
-    (void)strncat(output_file, out_fn, MAXDIRLENGTH);
+    (void)strncat(output_file, "/", MAXDIRLENGTH - strlen(output_file) - 1);
+    (void)strncat(output_file, out_fn, MAXDIRLENGTH - strlen(output_file) - strlen(out_fn));
     if (copy_file(old_output_file, output_file) == 1) {
         printf("populate_directory_initial: Error reported in copying \
 file %s to %s\n", old_output_file, output_file);

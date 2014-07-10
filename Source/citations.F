@@ -62,9 +62,20 @@ c     --- The code
       write(citefile,*)
       citecount = citecount + 1
       call twh_version(GLB_GET,version)
-      write(citefile,'(a40,1x,a7,1x,a17,i2,a1)') 
+      write(citefile,'(a40,1x,a7,1x,a17,2(i2,a1))') 
      &     'Simulations were performed using version',version
-     &     ,'of MCCCS Towhee [',citecount,']'
+     &     ,'of MCCCS Towhee ['
+     &     ,citecount,',',citecount+1,']'
+      write(citefile,'(a1,i2,a1,1x,a)') 
+     &     '[',citecount,']'
+     &     , 'M.G. Martin;'
+      write(citefile,'(a1,a,a1)')
+     &     char(34)
+     &     ,'MCCCS Towhee: a tool for Monte Carlo molecular simulation'
+     &     ,char(34)
+      write(citefile,'(a)')
+     &     'Mol. Simulat. 39 1212-1222 (2013)'
+      citecount = citecount + 1
       write(citefile,'(a,i2,a)')
      &     '[',citecount,'] http://towhee.sourceforge.net'
 

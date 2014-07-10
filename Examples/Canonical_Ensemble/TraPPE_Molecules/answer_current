@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.7   (March 04 2014)     
+ MCCCS Towhee - Version 7.0.7   (July 10 2014)      
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -834,12 +834,12 @@ Averages               Units Type       Box  1
  Molecule Number                6        1.000
  Molar Volume         ml/mol       0.64235E+04
  Specific Density       g/ml        0.01444846
- Number Density         nm-3    1      0.01563
- Number Density         nm-3    2      0.01563
- Number Density         nm-3    3      0.01563
- Number Density         nm-3    4      0.01563
- Number Density         nm-3    5      0.01563
- Number Density         nm-3    6      0.01563
+ Number Density         nm-3    1      0.01562
+ Number Density         nm-3    2      0.01562
+ Number Density         nm-3    3      0.01562
+ Number Density         nm-3    4      0.01562
+ Number Density         nm-3    5      0.01562
+ Number Density         nm-3    6      0.01562
  Mole Fraction                  1    0.1666667
  Mole Fraction                  2    0.1666667
  Mole Fraction                  3    0.1666667

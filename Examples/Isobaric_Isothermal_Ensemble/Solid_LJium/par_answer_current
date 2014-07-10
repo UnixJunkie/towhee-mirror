@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.7   (March 04 2014)     
+ MCCCS Towhee - Version 7.0.7   (July 10 2014)      
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -638,12 +638,12 @@ Box:     1
   hmatrix(3,x)      -1.24149       0.04308       6.05459
 
 * Unit Cell Perturbation Moves *
- Box  1 H-matrix(1,1) Tries:          16. Acp. Ratio:  0.563 Max Disp.: 0.240E-01
+ Box  1 H-matrix(1,1) Tries:          16. Acp. Ratio:  0.562 Max Disp.: 0.240E-01
  Box  1 H-matrix(1,2) Tries:          15. Acp. Ratio:  0.400 Max Disp.: 0.533E-01
  Box  1 H-matrix(1,3) Tries:          10. Acp. Ratio:  0.600 Max Disp.: 0.107E+00
  Box  1 H-matrix(2,1) Tries:          12. Acp. Ratio:  0.667 Max Disp.: 0.667E-02
  Box  1 H-matrix(2,2) Tries:           8. Acp. Ratio:  0.500 Max Disp.: 0.533E-02
- Box  1 H-matrix(2,3) Tries:          16. Acp. Ratio:  0.563 Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,3) Tries:          16. Acp. Ratio:  0.562 Max Disp.: 0.160E+00
  Box  1 H-matrix(3,1) Tries:          14. Acp. Ratio:  0.571 Max Disp.: 0.640E+00
  Box  1 H-matrix(3,2) Tries:           4. Acp. Ratio:  0.500 Max Disp.: 0.400E-01
  Box  1 H-matrix(3,3) Tries:          10. Acp. Ratio:  0.600 Max Disp.: 0.800E-02

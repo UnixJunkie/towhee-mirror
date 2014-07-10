@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.7   (March 04 2014)     
+ MCCCS Towhee - Version 7.0.7   (July 10 2014)      
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -267,12 +267,12 @@ Molecules of type   1 :          1
 
 Move       Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
         10 B: 1  0.8509E+04  0.1065E+05        330.6     2
-        20 B: 1 -0.5047E-10  0.1065E+05         -0.0     0
+        20 B: 1 -0.4774E-10  0.1065E+05         -0.0     0
 Block Averages (BA) for block     1
 BA Box: 1 Volume [A^3] 0.10648000E+05
 BA Box: 1 V^2 [A^6] 0.11337990E+09
 BA Box: 1 Specific density [g/ml] 0.44549722E-02
-BA Box: 1 Virial Pressure      [kPa] -.35214661E-30
+BA Box: 1 Virial Pressure      [kPa] -.31447844E-30
 BA Box: 1 Total Classical 0.41682802E+04
 BA Box: 1 Inter vdw       -.53337635E+02
 BA Box: 1 Angle           0.14746976E+04
@@ -286,12 +286,12 @@ BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.14223660E+05
 BA Box: 1 Number density [nm-3] Type   1 0.89218633E-01
 BA Box: 1 Mol Fraction Type   1 0.80000000E+00
-BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.19862971E-30
-BA Box: 1 Stress Tensor Virial S_yy          [kPa] -.56574747E-30
-BA Box: 1 Stress Tensor Virial S_zz          [kPa] -.29206265E-30
-BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.41556415E-30
-BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.58964227E-30
-BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.24768446E-30
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.15769703E-30
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] -.59361339E-30
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] -.19212490E-30
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.46238888E-30
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.47945469E-30
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.24652882E-30
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
 BA Box: 1 Radius of Gyration Type:  1        0.97377
         30 B: 1  0.3418E+04  0.1065E+05         -0.0     1
@@ -350,7 +350,7 @@ BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.34802281E+03
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.34802190E+03
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] -.16751354E+01
 BA Box: 1 Radius of Gyration Type:  1        0.95285
-        70 B: 1  0.1994E-10  0.1065E+05        330.6     0
+        70 B: 1  0.2449E-10  0.1065E+05        330.6     0
         80 B: 1  0.4463E+04  0.1065E+05        330.6     1
 Block Averages (BA) for block     4
 BA Box: 1 Volume [A^3] 0.10648000E+05
@@ -534,7 +534,7 @@ Block Averages (  5 blocks) Units Type Box Average      Standard Deviation
  -----block averages ------
 Box:    1
 Block Energy         Density        Virial Press.  Mol fracs
-    1 0.41682802E+04 0.44549722E-02 -.35214661E-30 0.80000000
+    1 0.41682802E+04 0.44549722E-02 -.31447844E-30 0.80000000
     2 0.48248050E+04 0.51583888E-02 0.63660097E+03 0.60000000
     3 0.84485602E+04 0.86754721E-02 0.33063568E+03 1.00000000
     4 0.13485582E+04 0.14068333E-02 0.33063386E+03 0.30000000

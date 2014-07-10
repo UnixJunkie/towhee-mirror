@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.7   (March 04 2014)     
+ MCCCS Towhee - Version 7.0.7   (July 10 2014)      
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -692,7 +692,7 @@ Molecules of type   2 :          1
  total coulombic     -1053120.532 [K]     -2092.77781 [kcal/mol]
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical         659520702.7388 [K]       1310609.989294 [kcal/mol]
+ total classical         659520702.7389 [K]       1310609.989295 [kcal/mol]
  initial virial pressure in box  1 =          24.29
 
  +++++ start of markov chain +++++
@@ -917,7 +917,7 @@ Molecules of type   2 :          1
  total coulombic     -1067197.307 [K]     -2120.75140 [kcal/mol]
  external field             0.000 [K]         0.00000 [kcal/mol]
  solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical         441672612.2682 [K]        877698.812536 [kcal/mol]
+ total classical         441672612.2683 [K]        877698.812536 [kcal/mol]
 Averages               Units Type       Box  1
  Volume                 nm^3       0.10000E+04
  Volume^2               nm^6       0.10000E+07
