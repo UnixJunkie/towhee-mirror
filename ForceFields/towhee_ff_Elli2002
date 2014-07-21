@@ -1,5 +1,5 @@
 towhee_ff Version
-          14
+          15
 Number of Nonbonded Types
            9
 Potential Type
@@ -256,7 +256,6 @@ Bond Type Number
 Bond Style
           10
 Bond Coefficients
-    0.1540000000E+01
     0.1360000000E+01
     0.1720000000E+01
     0.0000000000E+00
@@ -273,7 +272,6 @@ Bond Type Number
 Bond Style
           10
 Bond Coefficients
-    0.1470000000E+01
     0.1290000000E+01
     0.1650000000E+01
     0.0000000000E+00
