@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2008-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2008-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the Richar1995   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 08-11-2008 M.G. Martin                      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -419,7 +419,7 @@ c     * Fixed bond lengths                                             *
 c     ******************************************************************
 
       type =  type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 0.549d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -430,7 +430,7 @@ c     --- Nitrogen with its midpoint
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type =  type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 0.604d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -441,16 +441,16 @@ c     --- Oxygen with its midpoint
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
 c     ******************************************************************
-c     * null bond lengths                                              *
+c     * no interaction for bond lengths                                *
 c     ******************************************************************
 c     --- zeolite bonds that do not interact as the zeolite is rigid
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,8)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_NONE)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
       nvslocal = 0
-c     --- everything else is a null interaction
+c     --- everything else is no interaction
 c     --- Si - Oz
       nvslocal = nvslocal + 1
       vnlocal(nvslocal,1) = 'Si'
@@ -470,7 +470,7 @@ c     * rigid angles                                                   *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       bclocal(0) = 180.0d0
       bclocal(1) = 1.0d-5
       call twh_set_bencoeff(type,bclocal) 
@@ -483,11 +483,11 @@ c     --- O2 and N2 dimers are modeled as trimers with a midpoint
       call twh_set_bendnames(type,nbslocal,bnlocal)
       
 c     ******************************************************************
-c     * null angles                                                    *
+c     * no interactions angles                                         *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,11)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NONE)
       call twh_set_bencoeff(type,bclocal) 
       call twh_bendff(GLB_SET,type,ffname)
       nbslocal = 1

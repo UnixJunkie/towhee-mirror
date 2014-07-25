@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.7   (July 10 2014)      
+ MCCCS Towhee - Version 7.1.0   (July 25 2014)      
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -97,6 +97,7 @@ Box idim hmatrix:    1 3    0.00000    0.00000   36.32319
  pmtcmt:  1.00000     1.00000    
  rmtrac: 0.500000    
  tatrac: 0.500000    
+cbmc_analysis: normal                        
 cbmc_formulation: Martin and Frischknecht 2006                                
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
@@ -118,10 +119,7 @@ unit:    1 name:Cu         charge:   0.00000
    Building the input file for molecule type:     2
 unit:    1 name:Pb         charge:   0.00000
  Verifying input structures are consistent
-Determining CBMC bond distributions
-Determining Autofit Gaussian bend A parameters
-Determining Autofit Gaussian bend B parameters
-Determining Autofit Gaussian dihedral parameters
+Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full details
 Determining cyclic subunits for molecule type          1
 Determining cyclic subunits for molecule type          2
 Default total charge on molecule   1 is   0.00000

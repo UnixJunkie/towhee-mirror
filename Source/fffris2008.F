@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2008-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2008-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * the fris2008 forcefield for carbon nanotubes                   *
 c     *                                                                *
 c     * originally written 04-26-2007 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -101,7 +101,7 @@ c     * bond lengths - Morse                                           *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,9)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_MORSE)
       vclocal(0) = 1.418d0
       vclocal(1) = (478.9d0)*CON_KJTOK
       vclocal(2) = -(2.1867d0)
@@ -125,7 +125,7 @@ c     * angles - harmonic cosine                                       *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.00d0
       bclocal(1) = (562.2d0)*(0.5d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 

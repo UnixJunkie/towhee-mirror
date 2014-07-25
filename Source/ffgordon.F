@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters to test the          *
 c     * gordon n-6 forcefield                                          *
 c     *                                                                *
 c     * originally written 11-30-2004 by M.G. Martin                   *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -241,7 +241,7 @@ c     --- uses TraPPE-UA intramolecular terms
 c     TraPPE fixed bond length [TraPPE-1]
 c     [CHx](sp3) -- [CHy](sp3,sp2,aro) single bonds
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.54d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -259,7 +259,7 @@ c     --- set nvsame
 
 c     --- harmonic angles from TraPPE-UA
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.0d0
       bclocal(1) = (62500.0d0)*(0.5d0)
       call twh_set_bencoeff(type,bclocal) 

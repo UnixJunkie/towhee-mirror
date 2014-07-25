@@ -100,9 +100,9 @@ am_forcefield_OBJECTS = arccos.$(OBJEXT) averages.$(OBJEXT) \
 	ffwielop1985.$(OBJEXT) getelement.$(OBJEXT) \
 	getnbtype.$(OBJEXT) globalaccess.$(OBJEXT) \
 	globaldata.$(OBJEXT) initialize.$(OBJEXT) \
-	inverthmatrix.$(OBJEXT) openfile.$(OBJEXT) readutils.$(OBJEXT) \
-	rwforcefield.$(OBJEXT) scaled_potential.$(OBJEXT) \
-	globalinfo.$(OBJEXT)
+	inverselawofcosine.$(OBJEXT) inverthmatrix.$(OBJEXT) \
+	openfile.$(OBJEXT) readutils.$(OBJEXT) rwforcefield.$(OBJEXT) \
+	scaled_potential.$(OBJEXT) globalinfo.$(OBJEXT)
 forcefield_OBJECTS = $(am_forcefield_OBJECTS)
 forcefield_LDADD = $(LDADD)
 forcefield_DEPENDENCIES =
@@ -612,6 +612,7 @@ forcefield_SOURCES = \
 		globalaccess.F \
 		globaldata.F \
 		initialize.F \
+		inverselawofcosine.F \
 		inverthmatrix.F \
 		openfile.F \
 		readutils.F \

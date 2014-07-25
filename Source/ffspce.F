@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up all of the force field parameters for the SPC/E        *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -127,7 +127,7 @@ c     --- H.J.C. Berendsen; J.R. Grigera; T.P. Straatsma;
 c     --- "The Missing Term in Effective Pair Potentials"
 c     --- J. Phys. Chem. 91, 6269-6271 (1987).
       type =  type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.0d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -145,7 +145,7 @@ c     * Rigid angle for SPC-E water at the tetrahedral position        *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       bclocal(0) = 109.47d0
       bclocal(1) = 1d-5
       call twh_set_bencoeff(type,bclocal) 

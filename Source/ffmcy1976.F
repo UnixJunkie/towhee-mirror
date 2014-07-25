@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2007-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2007-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the MCY          *
 c     * forcefield for water                                           *
 c     *                                                                *
 c     * originally written in 2006 by Jianhui Li                       *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -287,7 +287,7 @@ c     ******************************************************************
 
       type = 0
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 0.9572d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -305,7 +305,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = (0.487741d0)*(CON_BOHRRADIUS)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -321,7 +321,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = (0.505783d0)*(CON_BOHRRADIUS)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * sets up all of the force field parameters for the original     *
 c     * version of the NERD forcefield                                 *
 c     *                                                                *
 c     * originally written 06-29-2004 by N.B. du Preez                 *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -286,7 +286,7 @@ c     ******************************************************************
 
 c     C-C single bond between carbons
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.54d0
       vclocal(1) = (0.5d0)*(96500d0)
       call twh_set_vibcoeffs(type,vclocal)
@@ -299,7 +299,7 @@ c     --- both sp3 hybrids carbon single bond [jcp1998]
 
 c     C=C double bond between carbons
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.34d0
       vclocal(1) = (0.5d0)*(96500d0)
       call twh_set_vibcoeffs(type,vclocal)
@@ -320,7 +320,7 @@ c     ******************************************************************
 
 c     C* - CH2sp3 - C* [jcp1998]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.0d0
       bclocal(1) = (0.5d0)*(62500d0)
       call twh_set_bencoeff(type,bclocal) 
@@ -354,7 +354,7 @@ c     CH - CH2 - CH
 
 c     C* - CHsp3 - C* centered at a CH unit [mp2000]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.4d0
       bclocal(1) = (0.5d0)*(62500d0)
       call twh_set_bencoeff(type,bclocal) 

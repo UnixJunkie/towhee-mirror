@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2010-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2010-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * Potentials for Carboxylic Acids and Their Phase Behavior"      *
 c     * AIChE Journal, 56, 2, 485-505 (2010)                           *
 c     *                                                                *
 c     * originally written 12-03-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 M.G. Martin                           *
+c     * last modified 07-18-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -132,12 +132,10 @@ c     * square well bonds                                              *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,10)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_SQUARE_WELL)
       vclocal(1) = (0.137d0)*(10.0d0)
       vclocal(2) = (0.173d0)*(10.0d0)
       vclocal(3) = 0.0d0
-c     --- set the "bond length" to the average of the walls
-      vclocal(0) = 0.5d0*(vclocal(1) + vclocal(2))
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
       isame = 0
@@ -160,7 +158,7 @@ c     ******************************************************************
       call twh_constant_pi(GLB_GET,onepi)
        
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,13)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SQUARE_WELL)
 c     --- set the walls
       bclocal(1) = (0.236d0)*(10.0d0)
       bclocal(2) = (0.272d0)*(10.0d0)

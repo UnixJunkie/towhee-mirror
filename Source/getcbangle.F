@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 07-24-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -59,7 +59,6 @@ c     ******************************************************************
 #define FUNCTION_EXPON
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_BENCOEFF
 #define FUNCTION_GET_BONDPATT
 #define FUNCTION_GET_IJAA0
 #define FUNCTION_GET_IJAA1
@@ -112,7 +111,7 @@ c     --- integer scalars
       integer ivib,numvib,vibtype,vibstyle,nbend,ibend
       integer fgp_index,gpf_index,ifind,itrial,itest,numtor
       integer threecode,fourcode,ntmtorsion
-      integer cordstyle
+      integer cordstyle,angleadist
 c     --- integer arrays
       integer imptot
       dimension imptot(NNBOND)
@@ -299,8 +298,6 @@ c              --- get out of loop so we don't count this again
  12      continue
       enddo
 
-c     --- set lo and hi limits for gaussian selection
-
 c     --- determine the iugrow-iufrom-iuprev angles 
       do count = angstart,ntogrow
 c        --- initialize lmin which tells us if we have a minimum yet
@@ -384,81 +381,6 @@ c        --- find the angle type for iugrow-iufrom-iuprev
                   lfound = .true.
                   index = ibend
                   type = twh_get_itben(imolty,iugrow,ibend)
-                  call twh_anglestyle(GLB_GET,type,angle_style)
-                  if ( lthreemem .and. vibstyle .eq. 0 ) then
-c                    --- rigid bond, so a delta distribution based
-c                    --- on the rigid bond length to compute the allowed
-c                    --- angle
-                     style_code = DIST_DELTA
-                     npeaks = 1
-c                    --- use the allowed bond length, plus the other
-c                    --- lengths to compute the allowed angle
-                     call twh_vibcoeff(GLB_GET,vibtype,0,testlen)
-                     anglec = twh_inverselawofcosine(testlen,distance
-     &                    ,distgrow)
-                     angle = twh_arccos(anglec)
-                     delta_angle(1) = angle
-                     delta_anglec(1) = anglec
-                  elseif ( angle_style .eq. 0 ) then
-c                    --- rigid angle, so we flip the usual process of
-c                    --- sampling based on the angle and weighting on
-c                    --- the Boltzman weight to sampling based upon
-c                    --- a discrete distribution consisting of every 
-c                    --- angle that has a non-zero Boltzman weight
-c                    --- and then weighting based upon the angle
-c                    --- distribution plus the Boltzman weight
-                     style_code = DIST_DELTA
-c                    --- only one possible angle in angle A
-                     npeaks = 1
-                     angle = twh_get_bencoeff(type,0)
-                     anglec = dcos(angle)
-                     delta_angle(1) = angle
-                     delta_anglec(1) = anglec
-c                    --- with a single choice there is no reason to 
-c                    --- sample more than the possibilities
-                     nchoice = npeaks
-                     lrandelta = .false.
-                  elseif ( angle_style .eq. 13 ) then
-c                    --- narrow range of allowed angles depending on
-c                    --- the bond lengths and allowed distances
-                     style_code = DIST_BOUNDED_SINE
-                     call twh_bencoeff(GLB_GET,type,1,distlo)
-                     lobound = twh_inverselawofcosine(distance,
-     &                    distgrow,distlo)
-                     call twh_bencoeff(GLB_GET,type,2,disthi)
-                     hibound = twh_inverselawofcosine(distance,
-     &                    distgrow,disthi)
-                  elseif ( cbmc_bendgen_code .eq. CBMC_IDEAL ) then
-                     style_code = DIST_SINE
-                     npeaks = 0
-                  elseif ( cbmc_bendgen_code .eq. CBMC_GLOBAL_GAUSSIAN
-     &                    )then
-                     style_code = DIST_GAUSSIAN
-                     npeaks = 1
-                     mean = twh_get_bencoeff(type,0)
-                     call twh_sdevbena(GLB_GET,std_dev)
-                     lolimit = 0.0d0
-                     hilimit = onepi
-                  elseif ( cbmc_bendgen_code .eq. CBMC_AUTOFIT_GAUSSIAN
-     &                    .or. cbmc_bendgen_code .eq. 
-     &                    CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN ) then
-                     npeaks = 1
-                     ipeak = 1
-                     call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,ibend
-     &                    ,ibend,ipeak,1,mean)
-                     call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,ibend
-     &                    ,ibend,ipeak,2,std_dev)
-                     call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,ibend
-     &                    ,ibend,ipeak,3,lolimit)
-                     call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,ibend
-     &                    ,ibend,ipeak,4,hilimit)
-                     if ( cbmc_bendgen_code .eq. CBMC_AUTOFIT_GAUSSIAN
-     &                    ) then
-                        style_code = DIST_GAUSSIAN
-                     else
-                        style_code = DIST_SINE_GAUSSIAN
-                     endif
-                  endif
                endif
             endif
          enddo
@@ -468,6 +390,102 @@ c                    --- the bond lengths and allowed distances
      &           ,iufrom,iuprev
             lfailure = .true.
             return
+         endif
+
+         call twh_anglestyle(GLB_GET,type,angle_style)
+         call twh_cbmcbenddist(GLB_GET,imolty,iugrow,index,index
+     &        ,angleadist)
+         if ( angleadist .eq. DIST_TRIANGLE ) then
+c           --- rigid connects the two end of this angle to make a 
+c           --- triangle.  Use a delta distribution based on the rigid
+c           --- bond length to compute the allowed angle
+            style_code = DIST_DELTA
+            call twh_cbmcbendcount(GLB_GET,imolty,iugrow,index,index
+     &           ,npeaks)
+            do ipeak = 1,npeaks
+c              --- combine the allowed bond lengths with existing
+c              --- lengths to compute the allowed angle
+               call twh_vibcoeff(GLB_GET,vibtype,0,testlen)
+               call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index,index
+     &              ,ipeak,1,testlen)
+               anglec = twh_inverselawofcosine(testlen,distance
+     &              ,distgrow)
+               angle = twh_arccos(anglec)
+               delta_angle(ipeak) = angle
+               delta_anglec(ipeak) = anglec
+            enddo
+         elseif ( angleadist .eq. DIST_DELTA ) then
+c           --- rigid angle, so we flip the usual process of
+c           --- sampling based on the angle and weighting on
+c           --- the Boltzman weight to sampling based upon
+c           --- a discrete distribution consisting of every 
+c           --- angle that has a non-zero Boltzman weight
+c           --- and then weighting based upon the angle
+c           --- distribution plus the Boltzman weight
+            style_code = DIST_DELTA
+            call twh_cbmcbendcount(GLB_GET,imolty,iugrow,index,index
+     &           ,npeaks)
+            do ipeak = 1,npeaks
+               call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index
+     &              ,index,ipeak,1,angle)
+               anglec = dcos(angle)
+               delta_angle(ipeak) = angle
+               delta_anglec(ipeak) = anglec
+            enddo
+c           --- no reason to sample more than the finite number of
+c           --- possible angles
+            if ( nchoice .ge. npeaks ) then
+               nchoice = npeaks
+               lrandelta = .false.
+            endif
+         elseif ( angleadist .eq. DIST_BOUNDED_SINE ) then
+c           --- narrow range of allowed angles depending on
+c           --- the bond lengths and allowed distances
+            style_code = DIST_BOUNDED_SINE
+            call twh_cbmcbendcount(GLB_GET,imolty,iugrow,index,index
+     &           ,npeaks)
+            if ( npeaks .ne. 1 ) then
+               write(6,*) 'GETCBANGLE: too many peaks for bounded_sine'
+               write(6,*) 'imolty,iugrow,index,npeaks:',imolty,iugrow
+     &              ,index,npeaks
+               lfailure = .true.
+               return
+            endif
+            call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index,index
+     &           ,npeaks,1,distlo)
+            call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index,index
+     &           ,npeaks,2,disthi)
+            lobound = twh_inverselawofcosine(distance,
+     &           distgrow,distlo)
+            hibound = twh_inverselawofcosine(distance,
+     &           distgrow,disthi)
+         elseif ( angleadist .eq. DIST_SINE ) then
+            style_code = DIST_SINE
+            npeaks = 0
+         elseif ( angleadist .eq. DIST_GAUSSIAN ) then
+            if ( cbmc_bendgen_code
+     &           .eq. CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN ) then
+               style_code = DIST_SINE_GAUSSIAN
+            else
+               style_code = DIST_GAUSSIAN
+            endif
+            call twh_cbmcbendcount(GLB_GET,imolty,iugrow,index
+     &           ,index,npeaks)
+            if ( npeaks .ne. 1 ) then
+               write(6,*) 'GETCBANGLE: angle A unsure how to handle'
+     &              ,' multiple npeaks for Gaussian'
+               write(6,*) 'npeaks:',npeaks
+               lfailure = .true.
+               return
+            endif
+            call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index
+     &           ,index,npeaks,1,mean)
+            call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index
+     &           ,index,npeaks,2,std_dev)
+            call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index
+     &           ,index,npeaks,3,lolimit)
+            call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index
+     &           ,index,npeaks,4,hilimit)
          endif
 
 c        --- compute trial angles and energies
@@ -493,13 +511,13 @@ c                 --- peaks.
 c                    --- fewer trials than finite allowed angles, select
 c                    --- one at random
                      ipeak = idint(twh_random()*dble(npeaks)) + 1
-                     angle = delta_angle(ipeak)
                   else
 c                    --- No need for randomness as we can sample
 c                    --- the full distribution
-                     angle = delta_angle(itrial)
+                     ipeak = itrial
                   endif
-                  anglec = delta_anglec(itrial)
+                  angle = delta_angle(ipeak)
+                  anglec = delta_anglec(ipeak)
                else
                   if ( style_code .eq. DIST_SINE_GAUSSIAN ) then
                      rdecide = twh_random()
@@ -891,7 +909,7 @@ c                 --- bond between growing beads found
 c                 --- check the bond type
                   call twh_itvib(GLB_GET,imolty,iutest,ivib,vibtype)
                   call twh_vibstyle(GLB_GET,vibtype,vibstyle)
-                  if ( vibstyle .eq. 1 ) then
+                  if ( vibstyle .eq. BOND_STYLE_FIXED ) then
                      lrigid = .true.
 c                    --- get the rigid bond length
                      call twh_vibcoeff(GLB_GET,vibtype,0,testlen)
@@ -923,7 +941,7 @@ c                       --- check the style of the angle
                         call twh_itben(GLB_GET,imolty,iugrow,iangle
      &                       ,type)
                         call twh_anglestyle(GLB_GET,type,angle_style)
-                        if ( angle_style .eq. 0 ) then
+                        if ( angle_style .eq. ANG_STYLE_RIGID ) then
                            lrigid = .true.
 c                          --- all rigid angles, will not change 
                            delta_key = aaa

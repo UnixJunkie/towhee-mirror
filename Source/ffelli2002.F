@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,7 +31,7 @@ c     *       the nonbonded types                                      *
 c     * angles and torsions are strictly nonbonded interactions        *
 c     *                                                                *
 c     * originally written 04-11-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -441,12 +441,10 @@ c     * square well bonds                                              *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,10)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_SQUARE_WELL)
       vclocal(1) = 1.36d0
       vclocal(2) = 1.72d0
       vclocal(3) = 0.0d0
-c     --- set the "bond length" to the average of the walls
-      vclocal(0) = 0.5d0*(vclocal(1) + vclocal(2))
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
       isame = 0
@@ -459,12 +457,10 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,10)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_SQUARE_WELL)
       vclocal(1) = 1.29d0
       vclocal(2) = 1.65d0
       vclocal(3) = 0.0d0
-c     --- set the "bond length" to the average of the walls
-      vclocal(0) = 0.5d0*(vclocal(1) + vclocal(2))
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
       isame = 0
@@ -487,7 +483,7 @@ c     ******************************************************************
       call twh_constant_pi(GLB_GET,onepi)
        
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,13)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SQUARE_WELL)
 c     --- set the walls
       bclocal(1) = 2.3356d0
       bclocal(2) = 2.7156d0
@@ -513,7 +509,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,13)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SQUARE_WELL)
 c     --- set the walls
       bclocal(1) = 2.36d0
       bclocal(2) = 2.74d0

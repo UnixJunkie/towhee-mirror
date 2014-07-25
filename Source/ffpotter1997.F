@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for potter19997                             *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -205,7 +205,7 @@ c     * bond lengths for the potter1997 forcefield                     *
 c     * all are rigid                                                  *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -223,7 +223,7 @@ c     --- initialize types
       type = 0
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.360d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -235,7 +235,7 @@ c     --- C-F(2)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.340d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -247,7 +247,7 @@ c     --- C-F(3)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.335d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -259,7 +259,7 @@ c     --- C-F(4)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.090d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -271,7 +271,7 @@ c     --- C-H(2)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.080d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -294,7 +294,7 @@ c     ******************************************************************
 c     * sets up the angle terms for Potter1997                         *
 c     *                                                                *
 c     * originally written 04-26-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
@@ -312,7 +312,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.61d0
       bclocal(1) = 232.3d0*(0.5d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -327,7 +327,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.63d0
       bclocal(1) = 478.4d0*(0.5d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -352,7 +352,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.64d0
       bclocal(1) = 323.1d0*(0.5d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 

@@ -8,4 +8,5 @@ Henry_Law \
 Ideal_Chain \
 OPLS_Propanamide \
 SMMKmain_2244688nonane \
-Solid_LJium
+Solid_LJium \
+Wielop1985_Ethyleneoxide

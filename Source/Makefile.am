@@ -334,6 +334,7 @@ forcefield_SOURCES  = \
 		globalaccess.F \
 		globaldata.F \
 		initialize.F \
+		inverselawofcosine.F \
 		inverthmatrix.F \
 		openfile.F \
 		readutils.F \

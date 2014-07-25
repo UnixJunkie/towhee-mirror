@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the EPM family   *
 c     * of CO2 forcefields                                             *
 c     *                                                                *
 c     * originally written 02-08-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -218,7 +218,7 @@ c     * fixed bond lengths                                             *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.161d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -236,7 +236,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.149d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -258,7 +258,7 @@ c     * fixed angles                                                   *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       bclocal(0) = 180.0d0
       bclocal(1) = 1.0d-5
       call twh_set_bencoeff(type,bclocal) 
@@ -278,7 +278,7 @@ c     * harmonic angles                                                *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 180.0d0
       bclocal(1) = (0.5d0)*(1275.0d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -294,7 +294,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 180.0d0
       bclocal(1) = (0.5d0)*(1236.0d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 

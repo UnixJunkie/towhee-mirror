@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this file contains all of the globally accessed data structures*
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 07-19-2014 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -2714,31 +2714,34 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_cbbonddist(flag,itype,ivalue)
+      subroutine twh_cbbonddist(flag,imolty,iunit,ivib,ivalue)
 c     ******************************************************************
-c     * distribution to use when generating each type of bond in a cbmc*
-c     * move                                                           *
+c     * distribution to use when generating each bond in a cbmc move   *
 c     *                                                                *
 c     * originally written 07-25-2010 by M.G. Martin                   *
-c     * last modified 07-25-2010 by M.G. Martin                        *
+c     * last modified 07-16-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      integer flag,itype,ivalue
+      integer flag,imolty,iunit,ivib,ivalue
 c     --- local variables
-      integer itemp
+      integer imtemp,iutemp,ivtemp
 c     --- information variables
       integer cbbonddist
-      dimension cbbonddist(TVIBMAX)
+      dimension cbbonddist(NTMAX,NUMAX,NNBOND)
       save cbbonddist
 
       if ( flag .eq. GLB_SET ) then
-         cbbonddist(itype) = ivalue
+         cbbonddist(imolty,iunit,ivib) = ivalue
       elseif ( flag .eq. GLB_GET ) then
-         ivalue = cbbonddist(itype)
+         ivalue = cbbonddist(imolty,iunit,ivib)
       elseif ( flag .eq. GLB_INIT ) then
-         do itemp = 1,itype
-            cbbonddist(itemp) = ivalue
+         do imtemp = 1,imolty
+            do iutemp = 1,iunit
+               do ivtemp = 1,ivib
+                  cbbonddist(imtemp,iutemp,ivtemp) = ivalue
+               enddo
+            enddo
          enddo
       else
          write(6,*) 'CBBONDDIST: invalid global flag',flag
@@ -2748,6 +2751,32 @@ c     --- information variables
       return
       end
 
+      subroutine twh_cbmc_analysis(flag,cvalue)
+c     ******************************************************************
+c     * character string describing the CBMC analysis level            *
+c     *                                                                *
+c     * originally written 07-16-2014 by M.G. Martin                   *
+c     * last modified 07-16-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag
+      character*(*) cvalue
+c     --- storage variable
+      character*30 cbmc_analysis
+      save cbmc_analysis
+
+      if ( flag .eq. GLB_GET ) then
+         cvalue = cbmc_analysis
+      elseif ( flag .eq. GLB_SET ) then
+         cbmc_analysis = cvalue
+      else
+         write(6,*) 'CBMC_ANALYSIS unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
 
       subroutine twh_cbmc_atomname_list(flag,imolty,iunit,ivalue)
 c     ******************************************************************
@@ -2962,6 +2991,35 @@ c     --- storage variable
          cbmc_dihedgen_code = ivalue
       else
          write(6,*) 'CBMC_DIHEDGEN_CODE unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_cbmc_fit_strategy(flag,cvalue)
+c     ******************************************************************
+c     * character string describing the CBMC strategy for the lower    *
+c     * level terms to use when fitting higher level terms.            *
+c     * e.g. what bond length to use when fitting angle distributions  *
+c     *                                                                *
+c     * originally written 07-19-2014 by M.G. Martin                   *
+c     * last modified 07-19-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag
+      character*(*) cvalue
+c     --- storage variable
+      character*30 cbmc_fit_strategy
+      save cbmc_fit_strategy
+
+      if ( flag .eq. GLB_GET ) then
+         cvalue = cbmc_fit_strategy
+      elseif ( flag .eq. GLB_SET ) then
+         cbmc_fit_strategy = cvalue
+      else
+         write(6,*) 'CBMC_FIT_STRATEGY unknown flag:',flag
          stop
       endif
 
@@ -3232,6 +3290,47 @@ c     --- storage variable
       return
       end
 
+      subroutine twh_cbmcbenddist(flag,imolty,iunit,ibend,jbend,ivalue)
+c     ******************************************************************
+c     * integer code for the arbitrary trial distribution form to use  *
+c     * when generating this angle either for step A or step B         *
+c     *                                                                *
+c     * originally written 07-14-2014 by M.G. Martin                   *
+c     * last modified 07-14-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,imolty,iunit,ibend,jbend,ivalue
+c     --- local variables
+      integer imtemp,iutemp,ibtemp,ijtemp
+c     --- storage variable
+      integer cbmcbenddist
+      dimension cbmcbenddist(NTMAX,NUMAX,MAXBEND,MAXBEND)
+      save cbmcbenddist
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = cbmcbenddist(imolty,iunit,ibend,jbend)
+      elseif ( flag .eq. GLB_SET ) then
+         cbmcbenddist(imolty,iunit,ibend,jbend) = ivalue
+      elseif ( flag .eq. GLB_INIT ) then
+         do imtemp = 1,imolty
+            do iutemp = 1,iunit
+               do ibtemp = 1,ibend
+                  do ijtemp = 1,jbend
+                     cbmcbenddist(imtemp,iutemp,ibtemp,ijtemp) 
+     &                    = DIST_NULL
+                  enddo
+               enddo
+            enddo
+         enddo
+      else
+         write(6,*) 'CBMCBENDDIST unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_cbmcbendinfo(flag,imolty,iunit,ibend,jbend,ipeak
      &     ,iparam,dvalue)
 c     ******************************************************************
@@ -3286,7 +3385,7 @@ c     * information required to describe the functions used to         *
 c     * generation trial bond distributions                            *
 c     *                                                                *
 c     * originally written 10-13-2008 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3296,7 +3395,7 @@ c     --- local variables
       integer imtemp,iutemp,ibtemp,iptemp
 c     --- storage variable
       double precision cbmcbondinfo
-      dimension cbmcbondinfo(NTMAX,NUMAX,NNBOND,CBMCMAXBOND)
+      dimension cbmcbondinfo(NTMAX,NUMAX,NNBOND,0:CBMCMAXBOND)
       save cbmcbondinfo
 
       if ( flag .eq. GLB_GET ) then
@@ -3307,7 +3406,7 @@ c     --- storage variable
          do imtemp = 1,imolty
             do iutemp = 1,iunit
                do ibtemp = 1,ibond
-                  do iptemp = 1,iparam
+                  do iptemp = 0,iparam
                      cbmcbondinfo(imtemp,iutemp,ibtemp,iptemp) = dvalue
                   enddo
                enddo

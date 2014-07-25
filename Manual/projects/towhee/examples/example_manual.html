@@ -19,6 +19,8 @@
     <td width="697" valign="top"> <b>Overview</b> 
      <ul>
       This section describes the examples included with the current download version of Towhee and gives some tips for getting started with these examples.
+      The examples are intended as a place to get started, as well as doubling as the test suite for code validation.  They are almost universally set to much too short
+      of a simulation run to produce statistically useful output for publication, but many of them are otherwise setup properly for performing "real work".
      </ul>
 
      <b>History of the Examples</b>
@@ -130,7 +132,10 @@
 
        <li><a name="FENE_Hexamer">Canonical_Ensemble/FENE_Hexamer</a>
         <ul>
-         A toy problem using the FENE bond potential for a simple Lennard-Jones hexamer.
+         A toy problem using the FENE bond potential for a simple Lennard-Jones hexamer.  This example was rebuilt to use the FENE bonds
+         (<a href="../references.html#kremer_grest_1990">Kremer and Grest 1990</a>) that were implemented into the <a href="../forcefields/ljium.html">Lennard-Jonesium</a> force field
+         starting with version 7.1.0.
+         Provides a test of configurational-bias with FENE bonds.
         </ul>
        </li>
 
@@ -290,6 +295,16 @@
         </ul>
        </li>
 
+       <li><a name="Wielop1985_Ethyleneoxide">Isobaric_Isothermal/Wielop1985_Ethyleneoxide</a>
+        <ul>
+         A simulation of the <a href="../forcefields/wielop1985.html">Wielop1985</a> rigid ethyleneoxide model A with the same system size 
+         as in the original <a href="../references.html#wielopolski_smith_1985">Wielopolski and Smith 1985</a> paper, but utlizes the isobaric-isothermal ensemble instead of the canoncal
+         ensemble.
+         Provides a test of the configurational-bias regrowth logic for rigid three membered rings.
+         This example was first included in version 7.1.0.
+        </ul>
+       </li>
+
       </ul>
 
       <b>Gibbs Ensemble</b>
@@ -310,6 +325,15 @@
        <li><a name="Cu_VLE">Gibbs_Ensemble/Cu_VLE</a>
         <ul>
          A two box simulation using the embedded atom potential to compute vapor-liquid coexistence for copper.
+        </ul>
+       </li>
+
+       <li><a name="Cui2002_Hexane">Gibbs_Ensemble/Cui2002_Hexane</a>
+        <ul>
+         A two box simulation using the <a href="../forcefields/cui2002.html">Cui2002</a> force field for n-hexane.  This force field uses many potential
+         forms that are atypical, as they all involve multi-well square well potentials for not just the nonbond interactions, but the bonded terms as well.
+         Provides a test of configurational-bias with all of the square well intramolecular potentials.
+         This example was first included in version 7.1.0.
         </ul>
        </li>
 
@@ -477,7 +501,8 @@
 
        <li><a name="DFT_Field">DFT_Field</a>
         <ul>
-         Test case that combines Towhee with the Tramonto package as an implicit solvent.  The Tramonto package is not yet publicly available.
+         Test case that combines Towhee with the Tramonto package as an implicit solvent.  This test case is one of the few that is not included in the test suite
+         and is therefore likely to be out of date.
         </ul>
        </li>
 
@@ -516,7 +541,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 11, 2011<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->July 23, 2014<!-- #EndDate -->
   </font>
   <br></br>
  </body>

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.0.7   (July 10 2014)      
+ MCCCS Towhee - Version 7.1.0   (July 25 2014)      
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -107,12 +107,14 @@ Box idim hmatrix:    1 2    0.00000  100.00000    0.00000
 Box idim hmatrix:    1 3    0.00000    0.00000  100.00000
  pmpivot:  1.00000    
  pmpivmt:  1.00000    
+cbmc_analysis: normal                        
 cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004         
  Original Coupled-Decoupled formulation from
  M.G. Martin; J.I. Siepmann; J. Phys. Chem. B103 2977-2980 (1999)
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: explicit                      
+cbmc_fit_strategy: equilibrium                   
  cbmc_nb_one_generation                            : uniform                       
  nch_nb_one                                        :           10
  nch_nb                                            :           10
@@ -156,7 +158,7 @@ nucleic acid:    3 name:A
 nucleic acid:    4 name:U 
 nucleic acid:    5 name:G 
  Verifying input structures are consistent
-Determining CBMC bond distributions
+Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full details
 Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is  -5.00000
 Total charge in the simulation system:  -5.00000

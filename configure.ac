@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
 # Project name, version, and POC
-AC_INIT(towhee,7.0.7,towhee-bugs@lists.sourceforge.net)
+AC_INIT(towhee,7.1.0,towhee-bugs@lists.sourceforge.net)
 AC_CONFIG_SRCDIR(Source)
 AC_CONFIG_AUX_DIR(install)
 
@@ -277,10 +277,12 @@ Examples/Isobaric_Isothermal_Ensemble/Ideal_Chain/Makefile \
 Examples/Isobaric_Isothermal_Ensemble/OPLS_Propanamide/Makefile \
 Examples/Isobaric_Isothermal_Ensemble/SMMKmain_2244688nonane/Makefile \
 Examples/Isobaric_Isothermal_Ensemble/Solid_LJium/Makefile \
+Examples/Isobaric_Isothermal_Ensemble/Wielop1985_Ethyleneoxide/Makefile \
 Examples/Gibbs_Ensemble/Makefile \
 Examples/Gibbs_Ensemble/Amber_IsoPropanol/Makefile \
 Examples/Gibbs_Ensemble/Catlow_Zeolite_4a/Makefile \
 Examples/Gibbs_Ensemble/Cu_VLE/Makefile \
+Examples/Gibbs_Ensemble/Cui2002_Hexane/Makefile \
 Examples/Gibbs_Ensemble/Dubb_Zeolite/Makefile \
 Examples/Gibbs_Ensemble/EPM_VLCC/Makefile \
 Examples/Gibbs_Ensemble/Gordon/Makefile \

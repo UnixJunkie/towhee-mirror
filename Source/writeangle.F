@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * the file index                                                 *
 c     * index: file index for output                                   *
 c     *                                                                *
 c     * originally written 02-22-2002 by M.G. Martin                   *
-c     * last modified 08-09-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE
@@ -53,26 +53,26 @@ c     --- retrieve constant
          if ( twh_get_lbendhere(type) )  then
             lfound = .true.
             style = twh_get_anglestyle(type)
-            if ( style .eq. 0 ) then
+            if ( style .eq. ANG_STYLE_RIGID ) then
                write(index,10) type,radtodeg*twh_get_bencoeff(type,0)
  10            format('Type: ',i3,1x,'Style: Fixed Angle  Angle: '
      &              ,f10.3)
-            elseif ( style .eq. 1 ) then
+            elseif ( style .eq. ANG_STYLE_HARMONIC ) then
                write(index,11) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1)
  11            format('Type: ',i3,1x,'Style: Standard Harmonic'
      &              ,'  Angle: ',f10.3,1x,'Constant: ',f10.1)
-            elseif ( style .eq. 2 ) then
+            elseif ( style .eq. ANG_STYLE_DREIDING ) then
                write(index,21) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1)
  21            format('Type: ',i3,1x,'Style: 1 - Cosine'
      &              ,'  Angle: ',f10.3,1x,'Constant: ',f10.1)
-            elseif ( style .eq. 3 ) then
+            elseif ( style .eq. ANG_STYLE_HARM_COS ) then
                write(index,31) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1)
  31            format('Type: ',i3,1x,'Style: Harmonic Cosine Angle: '
      &              ,f10.3,1x,'Constant: ',f10.1)
-            elseif ( style .eq. 4 ) then
+            elseif ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
                call twh_bendnames(GLB_GET,type,1,1,namea)
                call twh_bendnames(GLB_GET,type,1,3,nameb)
                write(index,41) type,radtodeg*twh_get_bencoeff(type,0)
@@ -83,23 +83,23 @@ c     --- retrieve constant
  41            format('Type: ',i3,1x,'Style: Compass  Angle: ',f10.3
      &              ,/,10x,'Constants: ',3f10.1,/,11x,a,f10.3,2x,a,f10.3
      &              ,/,10x,'Bond-Bond Constant ',f10.3)
-            elseif ( style .eq. 5 ) then
+            elseif ( style .eq. ANG_STYLE_CHARMM_UB ) then
                write(index,51) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1),twh_get_bencoeff(type,2)
      &              ,twh_get_bencoeff(type,3)
  51            format('Type: ',i3,1x,'Style: Charmm   Angle: ',f10.3
      &              ,1x,'Constant: ',f10.1,/,10x,'UB Length: ',f6.4
      &              ,1x,'Constant: ',f10.1)
-            elseif ( style .eq. 6 ) then
+            elseif ( style .eq. ANG_STYLE_NONBOND ) then
                write(index,61) type
  61            format('Type: ',i3,1x,'Style: Nonbonded Interaction')
-            elseif ( style .eq. 7 ) then
+            elseif ( style .eq. ANG_STYLE_NB_HARM ) then
                write(index,71) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1)
  71            format('Type: ',i3,1x,'Style: Harmonic plus Nonbonded '
      &              ,'Interaction'
      &              ,/,10x,'Angle: ',f10.3,'Constant: ',f10.1)
-            elseif ( style .eq. 8 ) then
+            elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
                write(index,81) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1),twh_get_bencoeff(type,2)
      &              ,twh_get_bencoeff(type,3),twh_get_bencoeff(type,4)
@@ -113,7 +113,7 @@ c     --- retrieve constant
      &              ,' d2:',f10.3,/
      &              ,10x,'Bond-Bond Constants k: ',f10.3,' d1:',f10.3
      &              ,' d2:',f10.3)
-            elseif ( style .eq. 9 ) then
+            elseif ( style .eq. ANG_STYLE_FOURIER ) then
                write(index,91)'Type:',type
      &              ,'Style: UFF One Term Fourier Expansion'
      &              ,'K (1 + m Cos(n theta))'
@@ -124,7 +124,7 @@ c     --- retrieve constant
  91            format(a5,1x,i4,1x,a37,1x,a22,/
      &              ,11x,a6,1x,f10.3,1x,a2,1x,f5.2,1x,a2,1x,f4.1)
                call writeanglek(type)
-            elseif ( style .eq. 10 ) then
+            elseif ( style .eq. ANG_STYLE_TTFOURIER ) then
                write(index,101) 'Type:',type
      &              ,'Style: UFF Three Term Fourier Expansion','Angle:'
      &              ,radtodeg*twh_get_bencoeff(type,0)
@@ -134,10 +134,10 @@ c     --- retrieve constant
  101           format(a5,1x,i4,1x,a39,/,11x,a6,1x,f7.3
      &              ,3(1x,a3,1x,f10.3))
                call writeanglek(type)
-            elseif ( style .eq. 11 ) then
+            elseif ( style .eq. ANG_STYLE_NONE ) then
                write(index,111) type
  111            format('Type: ',i3,1x,'Style: No Interaction')
-            elseif ( style .eq. 12 ) then
+            elseif ( style .eq. ANG_STYLE_SIXTH_AUTO ) then
                call twh_bendnames(GLB_GET,type,1,1,namea)
                call twh_bendnames(GLB_GET,type,1,3,nameb)
                write(index,121) type,radtodeg*twh_get_bencoeff(type,0)
@@ -150,7 +150,7 @@ c     --- retrieve constant
      &              ,10x,'Angle-Bond Logical',1x,l1,1x
      &              ,'Atom A:',1x,a10,1x,'Atom B:',1x,a10,1x,/
      &              ,10x,'Angle-Bond Constant:',f10.3)
-            elseif ( style .eq. 13 ) then
+            elseif ( style .eq. ANG_STYLE_SQUARE_WELL ) then
                write(index,131) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1),twh_get_bencoeff(type,2)
      &              ,twh_get_bencoeff(type,3)
@@ -159,7 +159,7 @@ c     --- retrieve constant
      &              ,10x,'Minimum Distance:',1x,f6.3
      &              ,1x,'Maximum Distance:',1x,f6.3,1x,'Well Depth:'
      &              ,1x,f10.5)
-            elseif ( style .eq. 14 ) then
+            elseif ( style .eq. ANG_STYLE_MULTI_RIGID ) then
                write(index,141) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,radtodeg*twh_get_bencoeff(type,1)
      &              ,twh_get_bencoeff(type,2)
@@ -167,7 +167,7 @@ c     --- retrieve constant
      &              ,10x,'Angle(1):',1x,f10.3,/
      &              ,10x,'Angle(2):',1x,f10.3,/
      &              ,10x,'Tolerance:',1x,e10.5)
-            elseif ( style .eq. 15 ) then
+            elseif ( style .eq. ANG_STYLE_MMFF ) then
                write(index,151) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1),twh_get_bencoeff(type,2)
  151           format('Type:',1x,i4,1x,'Style: MMFF Cubic',/
@@ -183,7 +183,7 @@ c     --- retrieve constant
                call twh_angleorder(GLB_GET,type,order)
                write(index,154) order
  154           format(10x,'Angle Order:',1x,a15)
-            elseif ( style .eq. 16 ) then
+            elseif ( style .eq. ANG_STYLE_HARM_COS_OT ) then
                write(index,161) type,radtodeg*twh_get_bencoeff(type,0)
      &              ,twh_get_bencoeff(type,1)
  161           format('Type: ',i3,1x

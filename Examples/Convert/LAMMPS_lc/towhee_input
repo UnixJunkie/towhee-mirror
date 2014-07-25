@@ -202,6 +202,8 @@ pmrotate
           0.5000
           tarot
           0.5000
+cbmc_analysis
+'normal                        '
 cbmc_formulation      
 'Martin and Frischknecht 2006                                '
 cbmc_setting_style

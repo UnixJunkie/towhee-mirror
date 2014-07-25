@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up all of the force field parameters for the dacnis-ua    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -138,7 +138,7 @@ c     (Ozeo) zeolite Oxygen [includes 0.5 Si mass]
 c     [CHx](sp3) -- [CHy](sp3,sp2,aro) single bonds
 c     --- from table 1.6 of McMurry Organic Chemistry 3rd edition
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.54d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)

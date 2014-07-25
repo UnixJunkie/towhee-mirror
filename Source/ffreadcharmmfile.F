@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * corresponding Towhee data structures so that it can create     *
 c     * a Towhee force field file                                      *
 c     *                                                                *
 c     * written by M.G. Martin and C.D. Lorenz 02-18-03                *
-c     * last modifed 08-04-2011 by M.G. Martin                         *
+c     * last modifed 07-21-2014 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -192,7 +192,7 @@ c              *** read in data for nonbond forcefield terms
 c              *** read in data for bond forcefield terms
                read(34,*) catom1,catom2,kb,bo
                botype = botype + 1
-               call twh_vibstyle(GLB_SET,botype,2)
+               call twh_vibstyle(GLB_SET,botype,BOND_STYLE_HARMONIC)
                vclocal(0) = bo
                vclocal(1) = kb*(CON_KCALTOK)
                call twh_set_vibcoeffs(botype,vclocal)
@@ -205,7 +205,7 @@ c              *** read in data for bond forcefield terms
 c              *** read in data for angle forcefield terms
                read(34,*) catom1,catom2,catom3,ktheta,thetao
                antype = antype + 1
-               call twh_anglestyle(GLB_SET,antype,1)
+               call twh_anglestyle(GLB_SET,antype,ANG_STYLE_HARMONIC)
                bclocal(0) = thetao
                bclocal(1) = ktheta * (CON_KCALTOK)
                call twh_set_bencoeff(antype,bclocal)

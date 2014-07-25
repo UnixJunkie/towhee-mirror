@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the charmm22fe   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 08-01-2006 by O. Yazaydin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -263,7 +263,7 @@ c     ******************************************************************
 
 c     --- F1 - CF1
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3740d0
       vclocal(1) = (420.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -275,7 +275,7 @@ c     --- F1 - CF1
 
 c     --- F2 - CF2
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3530d0
       vclocal(1) = (349.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -287,7 +287,7 @@ c     --- F2 - CF2
 
 c     --- F3 - CF3
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.340d0
       vclocal(1) = (265.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -299,7 +299,7 @@ c     --- F3 - CF3
 
 c     --- CF1 - CT3
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.520d0
       vclocal(1) = (170.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -311,7 +311,7 @@ c     --- CF1 - CT3
 
 c     --- CF2 - CT3
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.520d0
       vclocal(1) = (198.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -323,7 +323,7 @@ c     --- CF2 - CT3
 
 c     --- CF3 - CT3
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.520d0
       vclocal(1) = (250.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -344,7 +344,7 @@ c     --- CF3 - CF1
 
 c     --- CF1 - HF1
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0828d0
       vclocal(1) = (342.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -356,7 +356,7 @@ c     --- CF1 - HF1
 
 c     --- CF2 - HF2
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0828d0
       vclocal(1) = (346.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -376,7 +376,7 @@ c     ******************************************************************
 
       type = type + 1
 c     --- F2 - CF2 - F2
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 107.0d0
       bclocal(1) = (150.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.170d0
@@ -391,7 +391,7 @@ c     --- F2 - CF2 - F2
 
       type = type + 1
 c     --- F3 - CF3 - F3
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 107.0d0
       bclocal(1) = (118.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.155d0
@@ -406,7 +406,7 @@ c     --- F3 - CF3 - F3
 
       type = type + 1
 c     --- F1 - CF1 - CT3
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 112.0d0
       bclocal(1) = (44.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.369d0
@@ -428,7 +428,7 @@ c     --- F1 - CF1 - CF3
 
       type = type + 1
 c     --- F2 - CF2 - CT3
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 112.0d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.357d0
@@ -443,7 +443,7 @@ c     --- F2 - CF2 - CT3
 
       type = type + 1
 c     --- F3 - CF3 - CT3
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 112.0d0
       bclocal(1) = (42.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.357d0
@@ -469,7 +469,7 @@ c     --- F3 - CF3 - CF1
 
       type = type + 1
 c     --- CT3 - CF1 - HF1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 112.0d0
       bclocal(1) = (31.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.168d0
@@ -490,7 +490,7 @@ c     it is not in the original charmm supplementary file
 
       type = type + 1
 c     --- CT3 - CF2 - HF2
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 112.0d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.168d0
@@ -505,7 +505,7 @@ c     --- CT3 - CF2 - HF2
 
       type = type + 1
 c     --- F1 - CF1 - HF1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 108.89d0
       bclocal(1) = (57.5d0)*(CON_KCALTOK)
       bclocal(2) = 1.997d0
@@ -520,7 +520,7 @@ c     --- F1 - CF1 - HF1
 
       type = type + 1
 c     --- F2 - CF2 - HF2
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 108.89d0
       bclocal(1) = (41.9d0)*(CON_KCALTOK)
       bclocal(2) = 1.980d0
@@ -535,7 +535,7 @@ c     --- F2 - CF2 - HF2
 
       type = type + 1
 c     --- HF1 - CF1 - HF1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 108.40d0
       bclocal(1) = (35.5d0)*(CON_KCALTOK)
       bclocal(2) = 1.746d0
@@ -556,7 +556,7 @@ c     ******************************************************************
 
       type = type + 1
 c     --- CF3 - CF1 - CF3
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 114.0d0
       bclocal(1) = (53.35d0)*(CON_KCALTOK)
       bclocal(2) = 2.561d0

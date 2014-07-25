@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the CatlowFaux   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 08-04-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -438,7 +438,7 @@ c     --- H.J.C. Berendsen; J.R. Grigera; T.P. Straatsma;
 c     --- "The Missing Term in Effective Pair Potentials"
 c     --- J. Phys. Chem. 91, 6269-6271 (1987).
       type =  type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.0d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -454,7 +454,7 @@ c     --- Faux zeolite 4A has bond bending interactions, yet no bonds
 c     --- need to use this bond type to make the logic come out OK
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,7)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_NONBOND)
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
       nvslocal = 2
@@ -472,7 +472,7 @@ c     --- M. Leslie J. Chem. Soc. Faraday Tran. 1999 87(13) 1947-1950.
 
 c     --- Cc - Cc alkane carbon-carbon bond
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4057d0
       vclocal(1) = 0.5d0*(60.0d0)*CON_EVTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -484,7 +484,7 @@ c     --- Cc - Cc alkane carbon-carbon bond
 
 c     --- Cc - Hc alkane carbon-hydrogen bond
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.054d0
       vclocal(1) = 0.5d0*(31.0d0)*CON_EVTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -506,7 +506,7 @@ c     --- only the angle type matters as this uses the nonbond
 c     --- interaction between whichever two beads make up the ends of 
 c     --- the angle
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,6)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NONBOND)
       bclocal(0) = 90.0d0
       call twh_set_bencoeff(type,bclocal) 
       call twh_bendff(GLB_SET,type,ffname)
@@ -532,7 +532,7 @@ c     --- personal communication 02-12-2001 M.G. Martin with D.A. Faux
 c     --- these are listed for angles Si-OZ-Al and Al-Si-OZ, but that 
 c     --- is a typo.  They are really for the OZ-Si-OZ and OZ-Al-OZ
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,7)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NB_HARM)
       bclocal(0) = 109.47d0
       bclocal(1) = (4.5815)*(0.5d0)*(CON_EVTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -561,7 +561,7 @@ c     --- Cc-Cc-Cc hydrocarbon
 c     --- Hc-Cc-Cc hydrocarbon
 c     --- Hc-Cc-Hc hydrocarbon
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.47d0
       bclocal(1) = (3.39d0)*(0.5d0)*CON_EVTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -583,7 +583,7 @@ c     ******************************************************************
 c     * Rigid angle for SPC-E water at the tetrahedral position        *
 c     ******************************************************************
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       bclocal(0) = 109.47d0
       bclocal(1) = 1d-5
       call twh_set_bencoeff(type,bclocal) 

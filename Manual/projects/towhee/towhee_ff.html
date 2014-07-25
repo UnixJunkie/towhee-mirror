@@ -18,7 +18,7 @@
     <td width="697" valign="top"> <b>Overview</b> 
      <ul>
       This section described the format that is used to specify Towhee force field files (towhee_ff) for the current version of those file 
-      (currently force field version 14, which began in code version 5.1.0).  This documentation was last updated for version 7.0.5.
+      (currently force field version 15, starting with code version 7.1.0).  This documentation was last updated for version 7.1.0.
       Files for many commonly used force fields are provided with the download package and if you are using one of those you do not need to know the
       details of this section.  However, this feature also allows the user to utilize their own force field parameters without having to modify the code
       themselves.  The formatting for this file is extremely sensitive and the user is encouraged to look at the examples in the ForceFields directory.  
@@ -26,6 +26,7 @@
      </ul>
      <b>Differences from previous versions</b>
      <ul>
+      <li>Version 14: had a vibcoeff(0) value listed for the Square Well Bond Type.</li>
       <li>Version 13: did not have the <b>Vibration Order</b> variable for each vibration type, the <b>Angle Order</b> variable for each
        angle type, the <b>Torsion Order</b> variable for each torsion type, or the <b>Bond Increment Order</b> for each bond increment type.
        It also included the deprecated <b>Bond-Angle Strings</b> variables for certain class 2 angle potentials.
@@ -406,7 +407,8 @@
        <dt><b>'Bond Style' (a10) [integer]</b>
         <ul>
          <li> The number coresponding to the bond style.  Below is a list of Bond Styles, their potential form, and the required vibcoeffs.
-          The equilibrium bond length is always listed in vibcoeff(0).
+          Previously, the configurational-bias algorithm required the equilibrium bond length term for any bond potential to be stored in vibcoeff(0), but this is no longer mandatory starting
+          with version 7.1.0.
          </li>
          <ul>
           <li>1: Fixed Bond Length
@@ -462,9 +464,7 @@
           </li>
           <li><a name="bond_infinite_square_well">10: Infinite Square Well</a>
            <ul>
-            <dt>vibcoeff(0) should be set to the arithmetic mean of vibcoeff(1) and vibcoeff(2) for use with certain configurational-bias options despite
-             not explicitly appearing in the energy calculation.
-            </dt>
+            <dt>vibcoeff(0) is no longer listed for this potential starting with version 7.1.0</dt>
             <dt>U<sub>bond</sub> = infinity if length < vibcoeff(1)</dt>
             <dt>U<sub>bond</sub> = vibcoeff(3) if vibcoeff(1) <= length <= vibcoeff(2)</dt>
             <dt>U<sub>bond</sub> = infinity if vibcoeff(2) < length</dt>
@@ -474,6 +474,15 @@
            <ul>
             <dt>U<sub>bond</sub> = vibcoeff(1)*[ length - vibcoeff(0) ]<sup>2</sup>
              + U<sub>nonbond</sub>(r<sub>ij</sub>) + U<sub>electrostatic</sub>(r<sub>ij</sub>)
+            </dt>
+           </ul>
+          </li>
+          <li>12: FENE plus nonbonded interactions (Reference: <a href="references.html#kremer_grest_1990">Kremer and Grest, 1990</a>
+           <ul>
+            <dt>U<sub>bond</sub> = - 0.5 * vibcoeff(2) * vibcoeff(1)<sup>2</sup> * ln[ 1.0 - (length/(vibcoeff(1)))<sup>2</sup> ]
+             + U<sub>nonbond</sub>(r<sub>ij</sub>) + U<sub>electrostatic</sub>(r<sub>ij</sub>) if length < vibcoeff(1).
+            </dt>
+            <dt>U<sub>bond</sub> = Infinity otherwise.
             </dt>
            </ul>
           </li>
@@ -604,8 +613,10 @@
          </li>
          <li>7: Nonbonded Terms between the 1-3 atoms plus a harmonic angle
           <ul>
-           The angle energies are the nonbonded van der Waals, the nonbonded coulomb terms, and the following.</dt>
-           <dt>U<sub>angle</sub>(&theta;) = bencoeff(1)*[ &theta; - bencoeff(0)]<sup>2</sup></dt>
+           The angle energies are the nonbonded van der Waals, the nonbonded coulomb terms, and the following.
+           <ul>
+            <dt>U<sub>angle</sub>(&theta;) = bencoeff(1)*[ &theta; - bencoeff(0)]<sup>2</sup></dt>
+           </ul>
           </ul>
          </li>
          <li>8: Compass Quartic Angle with explicit ordering of terms
@@ -683,8 +694,8 @@
          </li>
          <li>14: Multiple Allowed Rigid Angles
           <ul>
-           U<sub>angle</sub>(&theta;) = Infinity, if <b>|</b> (&theta; - bencoeff(0)) <b>|</b> > bencoeff(2)</dt>
-           AND <b>|</b> (&theta; - bencoeff(1)) <b>|</b> &gt; bencoeff(2).
+           U<sub>angle</sub>(&theta;) = Infinity, if <b>|</b>(&theta; - bencoeff(0))<b>|</b> &gt; bencoeff(2)
+            <ul>and <b>|</b>(&theta; - bencoeff(1))<b>|</b> &gt; bencoeff(2).</ul>
            <dt>U<sub>angle</sub> = 0 otherwise.</dt>
           </ul>
          <li>15: MMFF Cubic with bond-angle cross terms
@@ -1304,7 +1315,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->June 24, 2013<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->July 18, 2014<!-- #EndDate -->
   </font> 
   <br></br>
  </body>

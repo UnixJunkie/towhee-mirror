@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +30,7 @@ c     * the parameters listed here are those noted as hybrid/UA in that*
 c     * paper                                                          *
 c     *                                                                *
 c     * originally written 10-13-2003 by M.G. Martin                   *
-c     * last modified 08-04-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -201,7 +201,7 @@ c     --- bond potentials
 c     --- simple harmonic
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.64d0
       vclocal(1) = (350.12d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -213,7 +213,7 @@ c     --- Si-O
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.90d0
       vclocal(1) = (189.65d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -234,7 +234,7 @@ c     --- Note: there is a typo in their paper.  The units for
 c     --- the angle potential are in fact kcal/mol rad^2
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 146.46d0
       bclocal(1) = (14.14d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -247,7 +247,7 @@ c     --- Si-O-Si
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.82d0
       bclocal(1) = (94.5d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -260,7 +260,7 @@ c     --- O-Si-O
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.24d0
       bclocal(1) = (49.97d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -273,7 +273,7 @@ c     --- CH3-Si-CH3
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.69d0
       bclocal(1) = (49.97d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2007-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2007-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,11 +25,12 @@ c     ******************************************************************
 c     * sets up all of the force field parameters for Wielop1985       *
 c     *                                                                *
 c     * originally written 01-12-2007 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-24-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
 #define FUNCTION_GETNBTYPE
+#define FUNCTION_INVERSELAWOFCOSINE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
@@ -160,7 +161,7 @@ c     * Fixed bond length
 c     ******************************************************************
 
       type =  type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.431d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -174,7 +175,7 @@ c     ******************************************************************
       call twh_set_vibnames(type,isame,vnlocal)
 
       type =  type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.466d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -198,11 +199,11 @@ c     ******************************************************************
       call twh_constant_pi(GLB_GET,onepi)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       aaa = 1.431d0
-      bbb = (0.5d0)*(1.466d0)
-      ccc = dsqrt(aaa*aaa - bbb*bbb)
-      cosangle = (ccc*ccc - aaa*aaa - bbb*bbb)/(-2.0d0*aaa*bbb)
+      bbb = 1.466d0
+      ccc = 1.431d0
+      cosangle = twh_inverselawofcosine(aaa,bbb,ccc)
       bclocal(0) = twh_arccos(cosangle)*180.0d0/onepi
       bclocal(1) = 1d-5
       call twh_set_bencoeff(type,bclocal) 
@@ -215,11 +216,11 @@ c     ******************************************************************
       call twh_set_bendnames(type,isame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       aaa = 1.431d0
-      bbb = (0.5d0)*(1.431d0)
-      ccc = dsqrt(aaa*aaa - bbb*bbb)
-      cosangle = (ccc*ccc - aaa*aaa - bbb*bbb)/(-2.0d0*aaa*bbb)
+      bbb = 1.431d0
+      ccc = 1.466d0
+      cosangle = twh_inverselawofcosine(aaa,bbb,ccc)
       bclocal(0) = twh_arccos(cosangle)*180.0d0/onepi
       bclocal(1) = 1d-5
       call twh_set_bencoeff(type,bclocal) 

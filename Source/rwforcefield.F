@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C)2002-2013 Marcus G. Martin                        *
+c     * Copyright (C)2002-2014 Marcus G. Martin                        *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * rwflag must be either READ_FLAG or WRITE_FLAG                  *
 c     *                                                                *
 c     * rewritten from readforcefield and writeforcefield 04-01-2002   *
 c     * by M.G. Martin                                                 *
-c     * last modified 07-21-2013 by M.G. Martin                        *
+c     * last modified 07-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -73,7 +73,7 @@ c     --- local variables
 c     --- set subroutine idname
       idname = 'rwforcefield'
 c     --- set the current version of towhee_ff
-      currentffversion = 14
+      currentffversion = 15
 c     --- open the forcefield file
       if ( rwflag .eq. WRITE_FLAG ) then
 c        --- writing a forcefield file
@@ -872,7 +872,7 @@ c     ******************************************************************
 c     * Arguments modified by this subroutine:                         *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-14-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NVSAME
@@ -926,7 +926,8 @@ c     --- double precision scalars
          call twh_vibstyle(GLB_SET,type,vstemp)
       endif
 
-      call get_vibration_params(type,vstemp,coeffstart, coeffstop)
+      call twh_get_vibration_params(iversion,type,vstemp,coeffstart
+     &     , coeffstop)
 
       goodstring = 'Bond Coefficients'
       if ( rwflag .eq. WRITE_FLAG ) then
@@ -2162,7 +2163,7 @@ c     * In certain cases, lrwhbond, lgetcoeffnum, hbcoeffstart and     *
 c     * hbcoeffstop are set as well.                                   *
 c     *                                                                *
 c     * split from rwforcefield 02-21-2006 by MAW                      *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 07-11-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NCOEFF
@@ -2262,6 +2263,9 @@ c        --- tabulated pair potential
       elseif ( localptype .eq. 'UFF 12-6' ) then
 c        --- UFF Lennard-Jones potential with a bunch of other params
          twh_get_ncoeff = 12
+      elseif ( localptype .eq. 'Weeks-Chandler-Anderson' ) then
+c        --- truncated and shifted Lennard-Jones
+         twh_get_ncoeff = 4
       elseif ( localptype .eq. 'wild' ) then
 c        --- matches with everything, no coefficients
          twh_get_ncoeff = 0
@@ -2275,7 +2279,7 @@ c        --- matches with everything, no coefficients
       end
 
 
-      subroutine get_vibration_params(type, vibstyle, 
+      subroutine twh_get_vibration_params(iversion,type, vibstyle, 
      &   coeffstart, coeffstop)
 c     ******************************************************************
 c     * Returns the index limits for vibstyle coefficients, given a    *
@@ -2286,60 +2290,65 @@ c     *  coeffstop                                                     *
 c     * Both arguments are initialized here.                           *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 09-21-2007 by M.G. Martin                        *
+c     * last modified 07-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
-      integer type, vibstyle, coeffstart, coeffstop
+      integer iversion,type, vibstyle, coeffstart, coeffstop
 
-      if ( vibstyle .eq. 1 ) then
+      if ( vibstyle .eq. BOND_STYLE_FIXED ) then
 c           --- fixed bond style
          coeffstart = 0
          coeffstop = 0
-      elseif ( vibstyle .eq. 2 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_HARMONIC ) then
 c           --- standard harmonic
          coeffstart = 0
          coeffstop = 1
-      elseif ( vibstyle .eq. 3 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_GROMOS ) then
 c           --- Gromos quartic
          coeffstart = 0
          coeffstop = 1
-      elseif ( vibstyle .eq. 4 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_NONLINEAR ) then
 c           --- nonlinear
          coeffstart = 0
          coeffstop = 2
-      elseif ( vibstyle .eq. 5 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_MMTWO ) then
 c           --- MM2
          coeffstart = 0
          coeffstop = 1
-      elseif ( vibstyle .eq. 6 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_COMPASS ) then
 c           --- Compass quartic
          coeffstart = 0
          coeffstop = 3
-      elseif ( vibstyle .eq. 7 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_NONBOND ) then
 c           --- pure nonbond
          coeffstart = 0
          coeffstop = -1
-      elseif ( vibstyle .eq. 8 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_NONE ) then
 c           --- no interactions
          coeffstart = 0
          coeffstop = -1
-      elseif ( vibstyle .eq. 9 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_MORSE ) then
 c           --- morse
          coeffstart = 0
          coeffstop = 2
-      elseif ( vibstyle .eq. 10 ) then
-c           --- infinite square well
-         coeffstart = 0
+      elseif ( vibstyle .eq. BOND_STYLE_SQUARE_WELL ) then
+c        --- infinite square well
+         if ( iversion .le. 14 ) then
+c           --- had a dummy value of vib(0)
+            coeffstart = 0
+         else
+c           --- vib(0) no longer required
+            coeffstart = 1
+         endif
          coeffstop = 3
-      elseif ( vibstyle .eq. 11 ) then
+      elseif ( vibstyle .eq. BOND_STYLE_HARMONIC_NONBOND ) then
 c           --- standard harmonic plus nonbond
          coeffstart = 0
          coeffstop = 1
-      elseif ( vibstyle .eq. 12 ) then
-c        --- Frank Heilmann, BASF AG
+      elseif ( vibstyle .eq. BOND_STYLE_FENE ) then
 c        --- FENE for CG models
-         coeffstart = 0
+         coeffstart = 1
          coeffstop = 2
       else
          write(6,*) 'RWFORCEFIELD: invalid vibstyle'
@@ -2362,7 +2371,7 @@ c     *  lrwbondangle, lbastring, lrwbondbond                          *
 c     *  are set depending on angle style.                             *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 01-17-2007 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
@@ -2374,23 +2383,23 @@ c     --- variables passed to/from this subroutine
 
 c     --- number of coefficients does not include the equilibrium
 c     --- angle (coeff 0)
-      if ( anglestyle .eq. 0 ) then
+      if ( anglestyle .eq. ANG_STYLE_RIGID ) then
 c           --- rigid angle
          coeffstart = 0
          coeffstop = 1
-      elseif ( anglestyle .eq. 1 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_HARMONIC ) then
 c           --- standard harmonic
          coeffstart = 0
          coeffstop = 1
-      elseif ( anglestyle .eq. 2 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_DREIDING ) then
 c           --- 1 + Cosine
          coeffstart = 0
          coeffstop = 1
-      elseif ( anglestyle .eq. 3 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_HARM_COS ) then
 c           --- harmonic cosine
          coeffstart = 0
          coeffstop = 1
-      elseif ( anglestyle .eq. 4 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_COMPASS_AUTO ) then
 c           --- Compass quartic with clever atom determination
          coeffstart = 0
          coeffstop = 3
@@ -2403,19 +2412,19 @@ c        --- no longer used, but required to read the old versions
          lrwbondbond = .true.
          ibbstart = 6
          ibbend = 6
-      elseif ( anglestyle .eq. 5 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_CHARMM_UB ) then
 c           --- Charmm harmonic with Urey-Bradley
          coeffstart = 0
          coeffstop = 3
-      elseif ( anglestyle .eq. 6 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_NONBOND ) then
 c           --- nonbonded interactions, no coefficients
          coeffstart = 0
          coeffstop = -1
-      elseif ( anglestyle .eq. 7 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_NB_HARM ) then
 c           --- harmonic plus vdw and coulombic
          coeffstart = 0
          coeffstop = 1
-      elseif ( anglestyle .eq. 8 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_COMPASS_EX ) then
 c           --- Compass quartic with explicit terms
          coeffstart = 0
          coeffstop = 3
@@ -2425,7 +2434,7 @@ c           --- Compass quartic with explicit terms
          lrwbondbond = .true.
          ibbstart = 8
          ibbend = 10
-      elseif ( anglestyle .eq. 9 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_FOURIER ) then
 c           --- UFF style Fourier expansion plus single term
          coeffstart = 0
          coeffstop = 2
@@ -2437,15 +2446,15 @@ c           --- safety check as this style changed going from v9 to v10
      &           ,' forcefield'
             stop
          endif
-      elseif ( anglestyle .eq. 10 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_TTFOURIER ) then
 c           --- UFF style 3 term Fourier expansion
          coeffstart = 0
          coeffstop = 3
-      elseif ( anglestyle .eq. 11 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_NONE ) then
 c           --- no interaction
          coeffstart = 0
          coeffstop = -1
-      elseif ( anglestyle .eq. 12 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_SIXTH_AUTO ) then
 c           --- MM2 with cross terms
          coeffstart = 0
          coeffstop = 2
@@ -2454,22 +2463,22 @@ c           --- MM2 with cross terms
          lrwbondangle = .true.
 c        --- no longer used, but required to read the old versions
          lbastring = .true.
-      elseif ( anglestyle .eq. 13 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_SQUARE_WELL ) then
 c           --- infinite square well
          coeffstart = 0
          coeffstop = 3
-      elseif ( anglestyle .eq. 14 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_MULTI_RIGID ) then
 c        --- multiple rigid angles
          coeffstart = 0
          coeffstop = 2
-      elseif ( anglestyle .eq. 15 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_MMFF ) then
 c        --- MMF cubic plus bond-stretch
          coeffstart = 0
          coeffstop = 2
          lrwbondangle = .true.
          ibastart = 3
          ibaend = 4
-      elseif ( anglestyle .eq. 16 ) then
+      elseif ( anglestyle .eq. ANG_STYLE_HARM_COS_OT ) then
 c        --- harmonic cosine plus 1-3 nonbond
          coeffstart = 0
          coeffstop = 1

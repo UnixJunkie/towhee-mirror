@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * appropriate constants                                          *
 c     * also converts degrees into radians for the bending terms       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 08-09-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -54,13 +54,14 @@ c     --- character string scalars
       character*30 localcp,localcm
 c     --- integer scalars
       integer idist,imax,itype,jtype,ii,jj,ij,itrial,jlo,jhi
-      integer iben,hbtype,id,nadjust,iadjust,icoeff
+      integer hbtype,id,nadjust,iadjust,icoeff,itest,style
 c     --- double precision scalars
       double precision maxval,test,dist,rpos,dv,dtemp
       double precision esigsix,esigtwelve,polari,polarj,denom
       double precision valuei,valuej,twopi
       double precision ai,aj,alphai,alphaj,gi,gj,nni,nnj,power,bbb
       double precision epsscale,radscale,gamma,nbbeta,rii,rjj,rij,rcut
+      double precision dvibone,dvibtwo,dvibthree
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
@@ -654,21 +655,34 @@ c              --- set exp-min-sq
             enddo
          enddo
       endif
+
+c     --- setup any additional required vibrations
+      do itest = 1,TVIBMAX
+         call twh_vibstyle(GLB_GET,itest,style)
+         if ( style .eq. BOND_STYLE_FENE ) then
+c           --- setup vib(3)
+            call twh_vibcoeff(GLB_GET,itest,1,dvibone)
+            call twh_vibcoeff(GLB_GET,itest,2,dvibtwo)
+            dvibthree = -0.5d0 * dvibtwo * dvibone*dvibone
+            call twh_vibcoeff(GLB_SET,itest,3,dvibthree)
+         endif
+      enddo
       
 c     --- change degrees into radians and assign cosine of angle
-      do iben = 1, TBENMAX
-         dtemp = twh_get_bencoeff(iben,0)*twopi/360.0d0
-         if ( twh_get_anglestyle(iben) .eq. 6 ) then
+      do itest = 1, TBENMAX
+         dtemp = twh_get_bencoeff(itest,0)*twopi/360.0d0
+         if ( twh_get_anglestyle(itest) .eq. ANG_STYLE_NONBOND ) then
 c           --- there is no bencoeff 0 value so use a default of Pi/2
             dtemp = twopi/4.0d0
          endif
-         call twh_bencoeff(GLB_SET,iben,0,dtemp)
-         dtemp = dcos(twh_get_bencoeff(iben,0))
-         call twh_bencoeff(GLB_SET,iben,-1,dtemp)
-         if ( twh_get_anglestyle(iben) .eq. 14 ) then
+         call twh_bencoeff(GLB_SET,itest,0,dtemp)
+         dtemp = dcos(twh_get_bencoeff(itest,0))
+         call twh_bencoeff(GLB_SET,itest,-1,dtemp)
+         if ( twh_get_anglestyle(itest)
+     &        .eq. ANG_STYLE_MULTI_RIGID ) then
 c           --- also need to convert term 1 for multiple angle
-            dtemp = twh_get_bencoeff(iben,1)*twopi/360.0d0
-            call twh_bencoeff(GLB_SET,iben,1,dtemp)
+            dtemp = twh_get_bencoeff(itest,1)*twopi/360.0d0
+            call twh_bencoeff(GLB_SET,itest,1,dtemp)
          endif
       enddo
 

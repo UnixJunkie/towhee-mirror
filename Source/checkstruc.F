@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * it then sets up some arrays of information that is useful when *
 c     * computing bending angles, and torsions                         *
 c     *                                                                *
 c     * Originally written 12-15-2000 by M.G. Martin                   *
-c     * Last modified 07-15-2013 by M.G. Martin                        *
+c     * Last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -645,8 +645,9 @@ c                 --- do not double count as we are on the center atom
                   endif
                endif
                atype = twh_get_itben(imolty,iunit,iben)
-               if ( twh_get_anglestyle(atype) .eq. 9 .or.
-     &              twh_get_anglestyle(atype) .eq. 10 ) then
+               if ( twh_get_anglestyle(atype) .eq. ANG_STYLE_FOURIER
+     &              .or. twh_get_anglestyle(atype)
+     &              .eq. ANG_STYLE_TTFOURIER ) then
 c                 --- this only works with the UFF 12-6 classical
 c                 --- potential
                   if ( twh_get_classical_potential() 
@@ -685,7 +686,8 @@ c                 --- set benprefact
      &                 *(zi*zk/(rik**5))*( 
      &                 3.0d0*rij*rjk*(1.0d0 - dcos(theta)**2)
      &                 - rik*rik*dcos(theta))
-                  if ( twh_get_anglestyle(atype) .eq. 9 ) then
+                  if ( twh_get_anglestyle(atype)
+     &                 .eq. ANG_STYLE_FOURIER ) then
 c                    --- divide out by n^2
                      itemp = twh_get_itben(imolty,iunit,iben)
                      dvalue = dvalue/(twh_get_bencoeff(itemp,1)**2)

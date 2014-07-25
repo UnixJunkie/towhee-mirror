@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for a generic Hard Sphere forcefield        *
 c     *                                                                *
 c     * originally written 08-11-2004 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -326,7 +326,7 @@ c     ******************************************************************
 
 c     --- fixed bond length of 1.0
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.0d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -345,7 +345,7 @@ c     --- set nvsame
 
 c     --- fixed bond length of 0.75
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 0.75d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -356,7 +356,7 @@ c     --- fixed bond length of 0.75
 
 c     --- fixed bond length of 0.5
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 0.5d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -367,7 +367,7 @@ c     --- fixed bond length of 0.5
 
 c     --- harmonic bond lengths for idea chain example
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0d0
       vclocal(1) = 100643.323d0
       call twh_set_vibcoeffs(type,vclocal)
@@ -379,7 +379,7 @@ c     --- harmonic bond lengths for idea chain example
 
 c     --- O-H for our hard sphere version of TIP3P-like water
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 0.9572d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -398,7 +398,7 @@ c     --- set nvsame
 
 c     --- fixed bond length to make the atoms tangent
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.45d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -424,7 +424,7 @@ c     * nonbonded bending interactions                                 *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,6)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NONBOND)
       call twh_set_bencoeff(type,bclocal) 
       call twh_bendff(GLB_SET,type,ffname)
       nbslocal = 1
@@ -434,7 +434,7 @@ c     ******************************************************************
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,6)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NONBOND)
       call twh_set_bencoeff(type,bclocal) 
       call twh_bendff(GLB_SET,type,ffname)
       ii = 0
@@ -458,7 +458,7 @@ c     * rigid angles                                                   *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       bclocal(0) = 104.52d0
       bclocal(1) = 1d-5
       call twh_set_bencoeff(type,bclocal)
@@ -479,7 +479,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
       bclocal(0) = 60.0d0
       bclocal(1) = 1d-5
       call twh_set_bencoeff(type,bclocal)

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for a generic Lennard-Jones forcefield      *
 c     *                                                                *
 c     * originally written 08-11-2004 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -80,6 +80,27 @@ c     --- default lennard-jonesium (1,1)
       ctnlocal = 'lj'
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
+c     --- FENE lennard-jonesium (1,1)
+      type = type + 1
+      ii = twh_getnbtype(type,type)
+      nbclocal(1) = 1.0d0
+      nbclocal(2) = 1.0d0
+      nbclocal(3) = 1.0d0
+      nbclocal(4) = 1.0d0
+      masslocal = 0.60220457d0
+      elelocal = 'lj'
+      bplocal = 'null'
+      call twh_set_nbcoeff(ii,nbclocal) 
+      call twh_mass(GLB_SET,type,masslocal) 
+      call twh_elementname(GLB_SET,type,elelocal) 
+      call twh_bondpatt(GLB_SET,type,bplocal) 
+      call twh_nbff(GLB_SET,type,ffname)
+      nbnlocal ='lj1.0_FENE'
+      cbnlocal = 'ljFENE'
+      canlocal = 'lj'
+      ctnlocal = 'lj'
+      call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
+
       ntypes = type
       call twh_ffcheck(lfailure,0,type)
       if ( lfailure ) return
@@ -90,13 +111,25 @@ c     ******************************************************************
 
 c     --- fixed bond length of 1
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.0d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
       nvslocal = 1
       vnlocal(1,1) = 'lj'
       vnlocal(1,2) = 'lj'
+      call twh_set_vibnames(type,nvslocal,vnlocal)
+
+c     --- FENE [Kremer & Grest J. Chem. Phys. 92, 5057-5086 (1990)]
+      type = type + 1
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FENE)
+      vclocal(1) = 1.5d0
+      vclocal(2) = 30.0d0
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+      nvslocal = 1
+      vnlocal(1,1) = 'ljFENE'
+      vnlocal(1,2) = 'ljFENE'
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       nbondtypes = type
@@ -108,7 +141,7 @@ c     * nonbonded bending interactions                                 *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,6)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NONBOND)
       call twh_bendff(GLB_SET,type,ffname)
       nbslocal = 1
       bnlocal(1,1) = 'lj'

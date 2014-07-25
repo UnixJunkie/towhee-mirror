@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * sets up all of the force field parameters for version 3 of the *
 c     * NERD forcefield                                                *
 c     *                                                                *
 c     * rewritten from ffnerdv2 08-20-2004 by M.G. Martin              *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -519,7 +519,7 @@ c     ******************************************************************
 
 c     C-C single bond between carbons
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.54d0
 c     --- force constant changed in [jpcb2004]
       vclocal(1) = (0.5d0)*(2800d0)*CON_KJTOK
@@ -538,7 +538,7 @@ c     --- sp3 carbon with sp3 carbon single bond [jcp2201a]
 
 c     C=C double bond between carbons
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.34d0
       vclocal(1) = (0.5d0)*(96500d0)
       call twh_set_vibcoeffs(type,vclocal)
@@ -551,7 +551,7 @@ c     --- both sp3 carbon double bond [mp2000]
 
 c     S-H in SH2
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.365d0
       vclocal(1) = (0.5d0)*(96500d0)
       call twh_set_vibcoeffs(type,vclocal)
@@ -564,7 +564,7 @@ c     --- S-H [jpcb2003]
 
 c     CH2-O in alcohols
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.428d0
       vclocal(1) = (0.5d0)*(3300d0)*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -577,7 +577,7 @@ c     --- Csp3 - Osp3 [jpcb2004]
 
 c     O-H in alcohols
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 0.961d0
       vclocal(1) = (0.5d0)*(5200d0)*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -598,7 +598,7 @@ c     ******************************************************************
 
 c     C* - CH2sp3 - C* new parameters in [jpcb2004]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.0d0
       bclocal(1) = (0.5d0)*(760d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -660,7 +660,7 @@ c     --- set nbsame
 
 c     C* - CHsp3 - C* centered at a CH [mp2000] or a C [jcp2001b]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.4d0
       bclocal(1) = (0.5d0)*(62500d0)
       call twh_set_bencoeff(type,bclocal) 
@@ -772,7 +772,7 @@ c     --- set nbname
 
 c     C-C=C for linear primary alkenes [jcp2001a]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.0d0
       bclocal(1) = (0.5d0)*(62500d0)
       call twh_set_bencoeff(type,bclocal) 
@@ -794,7 +794,7 @@ c     --- set nbname
 
 c     H2S [jpcb2003]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 91.5d0
       bclocal(1) = (0.5d0)*(62500d0)
       call twh_set_bencoeff(type,bclocal) 
@@ -811,7 +811,7 @@ c     --- set nbname
 
 c     CH2 - CH2 - O in alcohols [jpcb2004]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.0d0
       bclocal(1) = (0.5d0)*(1000d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -836,7 +836,7 @@ c     --- set nbname
 
 c     CH2 - O - H in alcohols [jpcb2004]
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.5d0
       bclocal(1) = (0.5d0)*(460d0)*CON_KJTOK
       call twh_set_bencoeff(type,bclocal) 

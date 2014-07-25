@@ -2,6 +2,7 @@ SUBDIRS = \
 Amber_IsoPropanol \
 Catlow_Zeolite_4a \
 Cu_VLE \
+Cui2002_Hexane \
 Dubb_Zeolite \
 EPM_VLCC \
 Gordon \

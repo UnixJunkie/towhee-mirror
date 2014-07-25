@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -44,7 +44,7 @@ c     *          Note: we are a bit tricky as lovrlap is not intialized*
 c     *          in this routine, should be intialized by the caller   *
 c     *                                                                *
 c     * rewritten from old sumup subroutines 01-21-2000 by M.G. Martin *
-c     * last modified 08-09-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -120,7 +120,7 @@ c     --- determine type, style and order of the angle
 
       style = twh_get_anglestyle(type)
 
-      if ( style .eq. 0 ) then
+      if ( style .eq. ANG_STYLE_RIGID ) then
 c        --- rigid angle, make sure it is within tolerance, else overlap
          angle = twh_arccos(angcos)
          value = (angle - twh_get_bencoeff(type,0))**2
@@ -136,23 +136,21 @@ c           --- out of tolerance, hard overlap
 c           --- in tolerance, no energy
             twh_vangle = 0.0d0
          endif
-      elseif ( style .eq. 1 ) then
+      elseif ( style .eq. ANG_STYLE_HARMONIC ) then
 c        --- standard harmonic bond bending potential
 c        --- energy = k* (angle - equil)**2
          angle = twh_arccos(angcos)
          twh_vangle = twh_get_bencoeff(type,1)
      &        *(angle-twh_get_bencoeff(type,0))**2
-
-      elseif ( style .eq. 2 ) then
+      elseif ( style .eq. ANG_STYLE_DREIDING ) then
 c        --- Dreiding K[ 1 + Cos(angle)]
          twh_vangle = twh_get_bencoeff(type,1)*(1.0d0 + angcos)
-      elseif ( style .eq. 3 ) then
+      elseif ( style .eq. ANG_STYLE_HARM_COS ) then
 c        --- harmonic cosine potential
 c        --- energy = k* (cos(angle) - cos(equil))**2
          twh_vangle = twh_get_bencoeff(type,1)
      &        *(angcos - twh_get_bencoeff(type,-1))**2
-
-      elseif ( style .eq. 4 ) then
+      elseif ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c        --- Compass quartic angle with autodetection
          angle = twh_arccos(angcos)
          differ = angle - twh_get_bencoeff(type,0)
@@ -186,8 +184,7 @@ c              --- force constants match with inverted bond order
             endif
             twh_vangle = twh_vangle + prefac*differ
          endif
-
-      elseif ( style .eq. 5 ) then
+      elseif ( style .eq. ANG_STYLE_CHARMM_UB ) then
 c         --- Charmm harmonic with urey-bradley
          angle = twh_arccos(angcos)
          twh_vangle = twh_get_bencoeff(type,1)
@@ -198,18 +195,16 @@ c        --- compute the distance between the 1-3 atoms
          twh_vangle = twh_vangle 
      &        + twh_get_bencoeff(type,3)
      &        *((dist-twh_get_bencoeff(type,2))**2)
-
-      elseif ( style .eq. 6 ) then
+      elseif ( style .eq. ANG_STYLE_NONBOND ) then
 c        --- nonbonded interaction between the 1-3 atoms
          ldononbond = .true.
-      elseif ( style .eq. 7 ) then
+      elseif ( style .eq. ANG_STYLE_NB_HARM ) then
 c        --- harmonic plus nonbond and coulombic between the 1-3 atoms
          angle = twh_arccos(angcos)
          twh_vangle = twh_get_bencoeff(type,1)
      &        *(angle-twh_get_bencoeff(type,0))**2
          ldononbond = .true.
-
-      elseif ( style .eq. 8 ) then
+      elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c        --- Compass quartic angle with explicit ordering of terms
          angle = twh_arccos(angcos)
          differ = angle - twh_get_bencoeff(type,0)
@@ -217,7 +212,6 @@ c        --- Compass quartic angle with explicit ordering of terms
          twh_vangle = twh_get_bencoeff(type,1)*(value)
      &        + twh_get_bencoeff(type,2)*(value*differ)
      &        + twh_get_bencoeff(type,3)*(value*value)
-
          call twh_ntype(GLB_GET,imolty,iunit,iutype)
          if ( twh_get_lbonang(type) ) then
 c           --- add in both of the bond angle cross terms
@@ -240,23 +234,23 @@ c              --- force constants match with inverted bond order
             endif
             twh_vangle = twh_vangle + prefac*differ
          endif
-      elseif ( style .eq. 9 ) then
+      elseif ( style .eq. ANG_STYLE_FOURIER ) then
 c        --- Fourier expansion with constant minus single term
          angle = twh_arccos(angcos)
          twh_vangle = twh_get_benprefact(imolty,iunit,ibend)
      &        *(1.0d0 + twh_get_bencoeff(type,2)
      &        *dcos( twh_get_bencoeff(type,1)*angle))
-      elseif ( style .eq. 10 ) then
+      elseif ( style .eq. ANG_STYLE_TTFOURIER ) then
 c        --- 3 term Fourier expansion
          angle = twh_arccos(angcos)
          twh_vangle = twh_get_benprefact(imolty,iunit,ibend)
      &        *(twh_get_bencoeff(type,1)
      &        + twh_get_bencoeff(type,2)*angcos
      &        + twh_get_bencoeff(type,3)*dcos(2.0d0*angle) )
-      elseif ( style .eq. 11 ) then
+      elseif ( style .eq. ANG_STYLE_NONE ) then
 c        --- no energy for this term
          twh_vangle = 0.0d0
-      elseif ( style .eq. 12 ) then
+      elseif ( style .eq. ANG_STYLE_SIXTH_AUTO ) then
 c        --- MM2 sixth power angle with autodetection
          angle = twh_arccos(angcos)
          differ = angle - twh_get_bencoeff(type,0)
@@ -286,7 +280,7 @@ c              --- force constants match with inverted bond order
      &           ( distone - twh_get_vibcoeff(bone,0) ) +
      &           ( disttwo - twh_get_vibcoeff(btwo,0) ) )
          endif
-      elseif ( style .eq. 13 ) then
+      elseif ( style .eq. ANG_STYLE_SQUARE_WELL ) then
 c        --- infinite square well bending angle
 c        --- compute the distance between the 1-3 atoms
          dist = twh_lawofcosine(distone,disttwo,angcos)
@@ -296,7 +290,7 @@ c        --- compute the distance between the 1-3 atoms
          else
             twh_vangle = twh_get_bencoeff(type,3)
          endif
-      elseif ( style .eq. 14 ) then
+      elseif ( style .eq. ANG_STYLE_MULTI_RIGID ) then
 c        --- rigid angle with two allowed angles
 c        --- make sure it is within tolerance of one of the allowed
 c        --- angles, else overlap
@@ -311,7 +305,7 @@ c              --- in tolerance, no energy
                twh_vangle = 0.0d0
             endif
          enddo
-      elseif ( style .eq. 15 ) then
+      elseif ( style .eq. ANG_STYLE_MMFF ) then
 c        --- MMFF cubic plus a bond-angle cross term
          angle = twh_arccos(angcos)
          differ = angle - twh_get_bencoeff(type,0)
@@ -346,7 +340,7 @@ c              --- force constants match with inverted bond order
             endif
             twh_vangle = twh_vangle + prefac*differ
          endif
-      elseif ( style .eq. 16 ) then
+      elseif ( style .eq. ANG_STYLE_HARM_COS_OT ) then
 c        --- harmonic cosine plus nonbond between the 1-3 atoms
          twh_vangle = twh_get_bencoeff(type,1)
      &        *(angcos - twh_get_bencoeff(type,-1))**2

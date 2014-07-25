@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for morrow2002                              *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -731,7 +731,7 @@ c     * these are not explicitly specified and instead must be         *
 c     * inferred from their example structure                          *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -749,7 +749,7 @@ c     --- initialize types
       type = 0
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.470d0
       vclocal(1) = 921.1d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -762,7 +762,7 @@ c     --- C6 - N3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.483d0
       vclocal(1) = 921.1d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -775,7 +775,7 @@ c     --- C7 - N1
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.382d0
       vclocal(1) = 1674.7d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -792,7 +792,7 @@ c     --- C4 - N3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.337d0
       vclocal(1) = 1674.7d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -809,7 +809,7 @@ c     --- C2 - N3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.361d0
       vclocal(1) = 1716.6d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -822,7 +822,7 @@ c     --- C4 - C5
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.078d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -834,7 +834,7 @@ c     --- C2 - H1 (all H bonds were held rigid)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.078d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -850,7 +850,7 @@ c     --- C5 - H3 (all H bonds were held rigid)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.089d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -870,7 +870,7 @@ c     --- C6 - H6 (all H bonds were held rigid)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.091d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -886,7 +886,7 @@ c     --- C7 - H8 (all H bonds were held rigid)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.096d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -910,7 +910,7 @@ c     --- C9 - H12 (all H bonds were held rigid)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.093d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -930,7 +930,7 @@ c     --- C10 - H15 (all H bonds were held rigid)
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.530d0
       vclocal(1) = 837.4d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -943,7 +943,7 @@ c     --- C7 - C8
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.534d0
       vclocal(1) = 931.6d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -956,7 +956,7 @@ c     --- C8 - C9
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.530d0
       vclocal(1) = 931.6d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -969,7 +969,7 @@ c     --- C9 - C10
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.646d0
       vclocal(1) = 1089.8d0*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -1017,7 +1017,7 @@ c     ******************************************************************
 c     * sets up the angle terms for Morrow2002                         *
 c     *                                                                *
 c     * originally written 04-19-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1035,7 +1035,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.6d0
       bclocal(1) = 586.2d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1049,7 +1049,7 @@ c     --- C8-C7-N1
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.3d0
       bclocal(1) = 544.3d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1068,7 +1068,7 @@ c     --- C5,4-N1,3-C2
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.9d0
       bclocal(1) = 544.3d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1087,7 +1087,7 @@ c     --- C7-N1-C2,5
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.8d0
       bclocal(1) = 544.3d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1106,7 +1106,7 @@ c     --- C6-N3-C2,4
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.6d0
       bclocal(1) = 125.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1130,7 +1130,7 @@ c     --- H4,5,6-C6-N3
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.5d0
       bclocal(1) = 104.7d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1149,7 +1149,7 @@ c     --- H1-C2-N1,3
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.2d0
       bclocal(1) = 544.3d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1168,7 +1168,7 @@ c     --- N1,3-C5,4-C4,5
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.1d0
       bclocal(1) = 544.3d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1182,7 +1182,7 @@ c     --- N1-C2-N3
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.8d0
       bclocal(1) = 104.7d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1201,7 +1201,7 @@ c     --- H2,3-C4,5-C5,4
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.3d0
       bclocal(1) = 148.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1225,7 +1225,7 @@ c     --- H4,5,6-C6-H
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.1d0
       bclocal(1) = 104.7d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1244,7 +1244,7 @@ c     --- N1,3-C5-4-H3,2
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.2d0
       bclocal(1) = 148.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1258,7 +1258,7 @@ c     --- H7-C7-H8
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.5d0
       bclocal(1) = 139.8d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1277,7 +1277,7 @@ c     --- H7,8-C7-C8
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.5d0
       bclocal(1) = 139.8d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1296,7 +1296,7 @@ c     --- H9,10-C8-C7
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.6d0
       bclocal(1) = 244.5d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1315,7 +1315,7 @@ c     --- C7,8-C8,9-C9,10
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.4d0
       bclocal(1) = 144.4d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1334,7 +1334,7 @@ c     --- H-C8,9-H
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.7d0
       bclocal(1) = 144.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1353,7 +1353,7 @@ c     --- C8,9-C9,10-H
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.7d0
       bclocal(1) = 144.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1372,7 +1372,7 @@ c     --- H9,10-C8-C9
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.7d0
       bclocal(1) = 144.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1391,7 +1391,7 @@ c     --- H11,12-C9-C10
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.6d0
       bclocal(1) = 148.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1415,7 +1415,7 @@ c     --- H13,14,15-C10-H
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.8d0
       bclocal(1) = 125.6d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1434,7 +1434,7 @@ c     --- N-C7-H7,8 (incorrectly listed as N-C7-H8,9 in the erratum)
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 90.0d0
       bclocal(1) = 812.7d0*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 07-21-2013 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -126,6 +126,8 @@ c     --- initialize all of the structure arrays
       call twh_cbmcbondinfo(GLB_INIT,NTMAX,NUMAX,NNBOND
      &     ,CBMCMAXBOND,0.0d0)
       call twh_cbmcbendcount(GLB_INIT,NTMAX,NUMAX,MAXBEND,MAXBEND,0)
+      call twh_cbmcbenddist(GLB_INIT,NTMAX,NUMAX,MAXBEND,MAXBEND
+     &     ,DIST_NULL)
       call twh_cbmcbendinfo(GLB_INIT,NTMAX,NUMAX,MAXBEND
      &     ,MAXBEND,CBMC_MAXBENDPEAKS,CBMCMAXBEND,0.0d0)
       call twh_ncmt(GLB_INIT,MAXBOX,NTMAX,0)
@@ -309,7 +311,7 @@ c     --- Give initial values to move probabilities.
 
 c     --- initialize vibration parameters
       call twh_vibcoeff(GLB_INIT,TVIBMAX,MAXVIBCOEFF,0.0d0)
-      call twh_vibstyle(GLB_INIT,TVIBMAX,-1)
+      call twh_vibstyle(GLB_INIT,TVIBMAX,BOND_STYLE_NULL)
       ctemp = 'init-error'
       call twh_vibff(GLB_INIT,TVIBMAX,ctemp)
       call twh_vibnames(GLB_INIT,TVIBMAX,MAXSAMEV,MAXVNAME,ctemp)
@@ -331,7 +333,7 @@ c     --- initialize bond increments
       ctemp = 'init-error'
       call twh_lbonang(GLB_INIT,TBENMAX,.false.)
       call twh_lbonbon(GLB_INIT,TBENMAX,.false.)
-      call twh_anglestyle(GLB_INIT,TBENMAX,-1)
+      call twh_anglestyle(GLB_INIT,TBENMAX,ANG_STYLE_NULL)
       call twh_bencoeff(GLB_INIT,TBENMAX,MAXBENDCOEFF,0.0d0)
       call twh_nbsame(GLB_INIT,TBENMAX,0)
       call twh_bendff(GLB_INIT,TBENMAX,ctemp)
@@ -424,7 +426,9 @@ c     --- reinitialize classical_potential and number
       call twh_nch_vib(GLB_INIT,NTMAX,1000)
       call twh_nch_pre_nb(GLB_INIT,NTMAX,1)
       call twh_cbmc_formulation(GLB_SET,'Martin and Frischknecht 2006')
+      call twh_cbmc_analysis(GLB_SET,'normal')
       call twh_cbmc_setting_style(GLB_SET,'Martin and Frischknecht')
+      call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
       call twh_two_bond_fe_bias_style(GLB_SET,'none')
       call twh_two_bond_bias_vibrange(GLB_SET,1,0.85d0)
       call twh_two_bond_bias_vibrange(GLB_SET,2,1.15d0)

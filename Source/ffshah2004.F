@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for shah2004                                *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -441,7 +441,7 @@ c     * these are not explicitly specified and instead must be         *
 c     * inferred from their example structure                          *
 c     *                                                                *
 c     * originally written 04-18-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -461,7 +461,7 @@ c     --- initialize types
       type = 0
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -1.542d0
       apos(2) = -2.310d0
@@ -481,7 +481,7 @@ c     --- C6 - N3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -1.322d0
       apos(2) = -0.100d0
@@ -501,7 +501,7 @@ c     --- C2 - N3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -3.274d0
       apos(2) = -1.083d0
@@ -521,7 +521,7 @@ c     --- C4 - N3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -3.274d0
       apos(2) = -1.083d0
@@ -541,7 +541,7 @@ c     --- C4 - C5
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -2.0478d0
       apos(2) = 0.682d0
@@ -561,7 +561,7 @@ c     --- N1 - C5
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -2.0478d0
       apos(2) = 0.682d0
@@ -581,7 +581,7 @@ c     --- N1 - C2
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -2.0478d0
       apos(2) = 0.682d0
@@ -601,7 +601,7 @@ c     --- N1 - C7
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -1.993d0
       apos(2) = 3.187d0
@@ -621,7 +621,7 @@ c     --- C8 - C7
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = -1.993d0
       apos(2) = 3.187d0
@@ -641,7 +641,7 @@ c     --- C8 - C9
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 0.173d0
       apos(2) = 3.582d0
@@ -661,7 +661,7 @@ c     --- C10 - C9
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 1.995d0
       apos(2) = -1.001d0
@@ -681,7 +681,7 @@ c     --- P - F1
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 1.995d0
       apos(2) = -1.001d0
@@ -701,7 +701,7 @@ c     --- P - F2
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 1.995d0
       apos(2) = -1.001d0
@@ -721,7 +721,7 @@ c     --- P - F3
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 1.995d0
       apos(2) = -1.001d0
@@ -741,7 +741,7 @@ c     --- P - F4
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 1.995d0
       apos(2) = -1.001d0
@@ -761,7 +761,7 @@ c     --- P - F5
       call twh_set_vibnames(type,nsame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c     --- compute the bond length from the coordinates
       apos(1) = 1.995d0
       apos(2) = -1.001d0
@@ -784,7 +784,7 @@ c     --- P - F6
 c     --- generic bond length from Morrow2002, but rigid
 c     --- suggested for use by E.J. Maginn (pers. comm with M.G. Martin
 c     --- 04-19-2006)
-      call twh_vibstyle(GLB_SET,type,1)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
       vclocal(0) = 1.646d0
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
@@ -807,7 +807,7 @@ c     ******************************************************************
 c     * sets up the angle terms for Shah2004                           *
 c     *                                                                *
 c     * originally written 04-20-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
@@ -831,7 +831,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C6
       index = 1
       xcord(index) = -1.542d0
@@ -862,7 +862,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C6
       index = 1
       xcord(index) = -1.542d0
@@ -893,7 +893,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     N3
       index = 1
       xcord(index) = -2.041d0
@@ -924,7 +924,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C2
       index = 1
       xcord(index) = -1.322d0
@@ -955,7 +955,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     N3
       index = 1
       xcord(index) = -2.041d0
@@ -986,7 +986,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C4
       index = 1
       xcord(index) = -3.274d0
@@ -1017,7 +1017,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C2
       index = 1
       xcord(index) = -1.322d0
@@ -1048,7 +1048,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C2
       index = 1
       xcord(index) = -1.322d0
@@ -1079,7 +1079,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C5
       index = 1
       xcord(index) = -3.279d0
@@ -1110,7 +1110,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     N1
       index = 1
       xcord(index) = -2.0478d0
@@ -1141,7 +1141,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C7
       index = 1
       xcord(index) = -1.574d0
@@ -1172,7 +1172,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     C8
       index = 1
       xcord(index) = -1.993d0
@@ -1203,7 +1203,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F1
       index = 1
       xcord(index) = 1.428d0
@@ -1234,7 +1234,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F1
       index = 1
       xcord(index) = 1.428d0
@@ -1265,7 +1265,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F1
       index = 1
       xcord(index) = 1.428d0
@@ -1296,7 +1296,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F1
       index = 1
       xcord(index) = 1.428d0
@@ -1327,7 +1327,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F1
       index = 1
       xcord(index) = 1.428d0
@@ -1358,7 +1358,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F2
       index = 1
       xcord(index) = 0.502d0
@@ -1389,7 +1389,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F2
       index = 1
       xcord(index) = 0.502d0
@@ -1420,7 +1420,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F2
       index = 1
       xcord(index) = 0.502d0
@@ -1451,7 +1451,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F2
       index = 1
       xcord(index) = 0.502d0
@@ -1482,7 +1482,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F3
       index = 1
       xcord(index) = 2.529d0
@@ -1513,7 +1513,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F3
       index = 1
       xcord(index) = 2.529d0
@@ -1544,7 +1544,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F3
       index = 1
       xcord(index) = 2.529d0
@@ -1575,7 +1575,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F4
       index = 1
       xcord(index) = 2.462d0
@@ -1606,7 +1606,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F4
       index = 1
       xcord(index) = 2.462d0
@@ -1637,7 +1637,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,0)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_RIGID)
 c     F5
       index = 1
       xcord(index) = 3.400d0
@@ -1668,7 +1668,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nsame,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,14)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_MULTI_RIGID)
       bclocal(0) = 90.0d0
       bclocal(1) = 180.0d0
       bclocal(2) = 1d-5

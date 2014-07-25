@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the mmff94       *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 12-07-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -5432,7 +5432,7 @@ c     ******************************************************************
 c     * sets up the MMFF94 bond potentials                             *
 c     *                                                                *
 c     * originally written 12-09-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -5457,7 +5457,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.508d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.258d0
       cs = -2.0d0
@@ -5476,7 +5476,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.482d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.539d0
       cs = -2.0d0
@@ -5495,7 +5495,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.492d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.190d0
       cs = -2.0d0
@@ -5514,7 +5514,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.459d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.707d0
       cs = -2.0d0
@@ -5533,7 +5533,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.093d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.766d0
       cs = -2.0d0
@@ -5552,7 +5552,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.418d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.047d0
       cs = -2.0d0
@@ -5571,7 +5571,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.451d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.084d0
       cs = -2.0d0
@@ -5590,7 +5590,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.458d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.763d0
       cs = -2.0d0
@@ -5609,7 +5609,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.436d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.664d0
       cs = -2.0d0
@@ -5628,7 +5628,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.360d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.011d0
       cs = -2.0d0
@@ -5647,7 +5647,7 @@ c     --- origin: #C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.773d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.974d0
       cs = -2.0d0
@@ -5666,7 +5666,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.949d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.529d0
       cs = -2.0d0
@@ -5685,7 +5685,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.090d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 1.706d0
       cs = -2.0d0
@@ -5704,7 +5704,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.805d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.893d0
       cs = -2.0d0
@@ -5723,7 +5723,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.813d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.841d0
       cs = -2.0d0
@@ -5742,7 +5742,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.772d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.258d0
       cs = -2.0d0
@@ -5761,7 +5761,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.830d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.866d0
       cs = -2.0d0
@@ -5780,7 +5780,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.504d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.650d0
       cs = -2.0d0
@@ -5799,7 +5799,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.482d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.286d0
       cs = -2.0d0
@@ -5818,7 +5818,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.810d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.980d0
       cs = -2.0d0
@@ -5837,7 +5837,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.830d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.790d0
       cs = -2.0d0
@@ -5856,7 +5856,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.480d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.844d0
       cs = -2.0d0
@@ -5875,7 +5875,7 @@ c     --- origin: #C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.307d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.915d0
       cs = -2.0d0
@@ -5894,7 +5894,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.486d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.957d0
       cs = -2.0d0
@@ -5913,7 +5913,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.445d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.114d0
       cs = -2.0d0
@@ -5932,7 +5932,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.446d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.922d0
       cs = -2.0d0
@@ -5951,7 +5951,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.510d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.830d0
       cs = -2.0d0
@@ -5970,7 +5970,7 @@ c     --- origin: #C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.472d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.971d0
       cs = -2.0d0
@@ -5989,7 +5989,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.480d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.844d0
       cs = -2.0d0
@@ -6008,7 +6008,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.482d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.813d0
       cs = -2.0d0
@@ -6027,7 +6027,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.461d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.267d0
       cs = -2.0d0
@@ -6046,7 +6046,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.454d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.646d0
       cs = -2.0d0
@@ -6065,7 +6065,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.453d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.166d0
       cs = -2.0d0
@@ -6084,7 +6084,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.461d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.669d0
       cs = -2.0d0
@@ -6103,7 +6103,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.451d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.329d0
       cs = -2.0d0
@@ -6122,7 +6122,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.424d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.845d0
       cs = -2.0d0
@@ -6141,7 +6141,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.444d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.456d0
       cs = -2.0d0
@@ -6160,7 +6160,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.471d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.481d0
       cs = -2.0d0
@@ -6179,7 +6179,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.469d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.518d0
       cs = -2.0d0
@@ -6198,7 +6198,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.459d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.188d0
       cs = -2.0d0
@@ -6217,7 +6217,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.479d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.217d0
       cs = -2.0d0
@@ -6236,7 +6236,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.801d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.956d0
       cs = -2.0d0
@@ -6255,7 +6255,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.839d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.608d0
       cs = -2.0d0
@@ -6274,7 +6274,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.858d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.547d0
       cs = -2.0d0
@@ -6293,7 +6293,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.465d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.593d0
       cs = -2.0d0
@@ -6312,7 +6312,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.477d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.373d0
       cs = -2.0d0
@@ -6331,7 +6331,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.441d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.512d0
       cs = -2.0d0
@@ -6350,7 +6350,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.333d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.505d0
       cs = -2.0d0
@@ -6369,7 +6369,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.430d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.310d0
       cs = -2.0d0
@@ -6388,7 +6388,7 @@ c     --- origin: #C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.468d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.565d0
       cs = -2.0d0
@@ -6407,7 +6407,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.297d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.538d0
       cs = -2.0d0
@@ -6426,7 +6426,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.415d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.657d0
       cs = -2.0d0
@@ -6445,7 +6445,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.083d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.170d0
       cs = -2.0d0
@@ -6464,7 +6464,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.373d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.520d0
       cs = -2.0d0
@@ -6483,7 +6483,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.360d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.385d0
       cs = -2.0d0
@@ -6502,7 +6502,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.362d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.329d0
       cs = -2.0d0
@@ -6521,7 +6521,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.350d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.283d0
       cs = -2.0d0
@@ -6540,7 +6540,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.720d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.390d0
       cs = -2.0d0
@@ -6559,7 +6559,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.854d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.413d0
       cs = -2.0d0
@@ -6578,7 +6578,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.025d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.062d0
       cs = -2.0d0
@@ -6597,7 +6597,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.720d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.896d0
       cs = -2.0d0
@@ -6616,7 +6616,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.773d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.247d0
       cs = -2.0d0
@@ -6635,7 +6635,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.728d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.789d0
       cs = -2.0d0
@@ -6654,7 +6654,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.811d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.052d0
       cs = -2.0d0
@@ -6673,7 +6673,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.465d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.593d0
       cs = -2.0d0
@@ -6692,7 +6692,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.448d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.926d0
       cs = -2.0d0
@@ -6711,7 +6711,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.742d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.750d0
       cs = -2.0d0
@@ -6730,7 +6730,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.331d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.166d0
       cs = -2.0d0
@@ -6749,7 +6749,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.407d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.207d0
       cs = -2.0d0
@@ -6768,7 +6768,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.250d0
       force = CON_KCALTOK*143.9825d0*0.5d0*10.343d0
       cs = -2.0d0
@@ -6787,7 +6787,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.449d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.007d0
       cs = -2.0d0
@@ -6806,7 +6806,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.368d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.164d0
       cs = -2.0d0
@@ -6825,7 +6825,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.370d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.110d0
       cs = -2.0d0
@@ -6844,7 +6844,7 @@ c     --- origin: #C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.505d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.746d0
       cs = -2.0d0
@@ -6863,7 +6863,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.420d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.928d0
       cs = -2.0d0
@@ -6882,7 +6882,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.430d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.725d0
       cs = -2.0d0
@@ -6901,7 +6901,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.325d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.466d0
       cs = -2.0d0
@@ -6920,7 +6920,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.368d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.164d0
       cs = -2.0d0
@@ -6939,7 +6939,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.365d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.246d0
       cs = -2.0d0
@@ -6958,7 +6958,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.336d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.105d0
       cs = -2.0d0
@@ -6977,7 +6977,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.400d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.030d0
       cs = -2.0d0
@@ -6996,7 +6996,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.411d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.754d0
       cs = -2.0d0
@@ -7015,7 +7015,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.432d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.685d0
       cs = -2.0d0
@@ -7034,7 +7034,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.700d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.179d0
       cs = -2.0d0
@@ -7053,7 +7053,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.361d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.357d0
       cs = -2.0d0
@@ -7072,7 +7072,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.489d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.418d0
       cs = -2.0d0
@@ -7091,7 +7091,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.438d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.135d0
       cs = -2.0d0
@@ -7110,7 +7110,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.101d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.650d0
       cs = -2.0d0
@@ -7129,7 +7129,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.355d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.801d0
       cs = -2.0d0
@@ -7148,7 +7148,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.222d0
       force = CON_KCALTOK*143.9825d0*0.5d0*12.950d0
       cs = -2.0d0
@@ -7167,7 +7167,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.290d0
       force = CON_KCALTOK*143.9825d0*0.5d0*10.077d0
       cs = -2.0d0
@@ -7186,7 +7186,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.364d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.273d0
       cs = -2.0d0
@@ -7205,7 +7205,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.369d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.829d0
       cs = -2.0d0
@@ -7224,7 +7224,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.340d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.570d0
       cs = -2.0d0
@@ -7243,7 +7243,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.715d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.449d0
       cs = -2.0d0
@@ -7262,7 +7262,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.748d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.536d0
       cs = -2.0d0
@@ -7281,7 +7281,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.665d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.735d0
       cs = -2.0d0
@@ -7300,7 +7300,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.808d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.888d0
       cs = -2.0d0
@@ -7319,7 +7319,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.760d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.394d0
       cs = -2.0d0
@@ -7338,7 +7338,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.530d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.298d0
       cs = -2.0d0
@@ -7357,7 +7357,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.465d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.593d0
       cs = -2.0d0
@@ -7376,7 +7376,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.792d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.164d0
       cs = -2.0d0
@@ -7395,7 +7395,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.471d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.481d0
       cs = -2.0d0
@@ -7414,7 +7414,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.237d0
       force = CON_KCALTOK*143.9825d0*0.5d0*11.012d0
       cs = -2.0d0
@@ -7433,7 +7433,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.457d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.488d0
       cs = -2.0d0
@@ -7452,7 +7452,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.978d0
       cs = -2.0d0
@@ -7471,7 +7471,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.370d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.110d0
       cs = -2.0d0
@@ -7490,7 +7490,7 @@ c     --- origin: #C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.482d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.286d0
       cs = -2.0d0
@@ -7509,7 +7509,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.420d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.928d0
       cs = -2.0d0
@@ -7528,7 +7528,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.440d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.531d0
       cs = -2.0d0
@@ -7547,7 +7547,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.398d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.412d0
       cs = -2.0d0
@@ -7566,7 +7566,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.290d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.562d0
       cs = -2.0d0
@@ -7585,7 +7585,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.320d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.637d0
       cs = -2.0d0
@@ -7604,7 +7604,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.280d0
       force = CON_KCALTOK*143.9825d0*0.5d0*10.333d0
       cs = -2.0d0
@@ -7623,7 +7623,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.563d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.771d0
       cs = -2.0d0
@@ -7642,7 +7642,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.422d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.886d0
       cs = -2.0d0
@@ -7661,7 +7661,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.421d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.907d0
       cs = -2.0d0
@@ -7680,7 +7680,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.422d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.492d0
       cs = -2.0d0
@@ -7699,7 +7699,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.409d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.163d0
       cs = -2.0d0
@@ -7718,7 +7718,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.322d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.568d0
       cs = -2.0d0
@@ -7737,7 +7737,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.423d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.468d0
       cs = -2.0d0
@@ -7756,7 +7756,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.431d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.288d0
       cs = -2.0d0
@@ -7775,7 +7775,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.304d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.217d0
       cs = -2.0d0
@@ -7794,7 +7794,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.639d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.204d0
       cs = -2.0d0
@@ -7813,7 +7813,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.710d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.191d0
       cs = -2.0d0
@@ -7832,7 +7832,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.413d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.705d0
       cs = -2.0d0
@@ -7851,7 +7851,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.719d0
       cs = -2.0d0
@@ -7870,7 +7870,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.200d0
       force = CON_KCALTOK*143.9825d0*0.5d0*15.206d0
       cs = -2.0d0
@@ -7889,7 +7889,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.065d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.726d0
       cs = -2.0d0
@@ -7908,7 +7908,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.328d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.193d0
       cs = -2.0d0
@@ -7927,7 +7927,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.176d0
       force = CON_KCALTOK*143.9825d0*0.5d0*14.916d0
       cs = -2.0d0
@@ -7946,7 +7946,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.172d0
       force = CON_KCALTOK*143.9825d0*0.5d0*15.589d0
       cs = -2.0d0
@@ -7965,7 +7965,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.338d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.041d0
       cs = -2.0d0
@@ -7984,7 +7984,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.345d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.824d0
       cs = -2.0d0
@@ -8003,7 +8003,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.690d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.330d0
       cs = -2.0d0
@@ -8022,7 +8022,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.436d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.178d0
       cs = -2.0d0
@@ -8041,7 +8041,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.426d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.400d0
       cs = -2.0d0
@@ -8060,7 +8060,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.282d0
       force = CON_KCALTOK*143.9825d0*0.5d0*10.227d0
       cs = -2.0d0
@@ -8079,7 +8079,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.424d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.445d0
       cs = -2.0d0
@@ -8098,7 +8098,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.160d0
       force = CON_KCALTOK*143.9825d0*0.5d0*16.582d0
       cs = -2.0d0
@@ -8117,7 +8117,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.341d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.947d0
       cs = -2.0d0
@@ -8136,7 +8136,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.416d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.633d0
       cs = -2.0d0
@@ -8155,7 +8155,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.422d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.492d0
       cs = -2.0d0
@@ -8174,7 +8174,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.485d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.254d0
       cs = -2.0d0
@@ -8193,7 +8193,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.093d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.852d0
       cs = -2.0d0
@@ -8212,7 +8212,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.082d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.191d0
       cs = -2.0d0
@@ -8231,7 +8231,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.086d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.176d0
       cs = -2.0d0
@@ -8250,7 +8250,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.084d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.306d0
       cs = -2.0d0
@@ -8269,7 +8269,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.144d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.256d0
       cs = -2.0d0
@@ -8288,7 +8288,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.076d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.633d0
       cs = -2.0d0
@@ -8307,7 +8307,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.080d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.531d0
       cs = -2.0d0
@@ -8326,7 +8326,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.080d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.506d0
       cs = -2.0d0
@@ -8345,7 +8345,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.080d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.506d0
       cs = -2.0d0
@@ -8364,7 +8364,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.076d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.633d0
       cs = -2.0d0
@@ -8383,7 +8383,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.449d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.088d0
       cs = -2.0d0
@@ -8402,7 +8402,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.450d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.059d0
       cs = -2.0d0
@@ -8421,7 +8421,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.395d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.491d0
       cs = -2.0d0
@@ -8440,7 +8440,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.410d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.982d0
       cs = -2.0d0
@@ -8459,7 +8459,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.661d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.757d0
       cs = -2.0d0
@@ -8478,7 +8478,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.608d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.779d0
       cs = -2.0d0
@@ -8497,7 +8497,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.630d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.326d0
       cs = -2.0d0
@@ -8516,7 +8516,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.660d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.661d0
       cs = -2.0d0
@@ -8535,7 +8535,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.433d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.623d0
       cs = -2.0d0
@@ -8554,7 +8554,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.972d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.794d0
       cs = -2.0d0
@@ -8573,7 +8573,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.433d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.556d0
       cs = -2.0d0
@@ -8592,7 +8592,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.981d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.403d0
       cs = -2.0d0
@@ -8611,7 +8611,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.630d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.243d0
       cs = -2.0d0
@@ -8630,7 +8630,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.618d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.481d0
       cs = -2.0d0
@@ -8649,7 +8649,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.973d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.839d0
       cs = -2.0d0
@@ -8668,7 +8668,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.271d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.359d0
       cs = -2.0d0
@@ -8687,7 +8687,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.986d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.143d0
       cs = -2.0d0
@@ -8706,7 +8706,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.376d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.614d0
       cs = -2.0d0
@@ -8725,7 +8725,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.388d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.629d0
       cs = -2.0d0
@@ -8744,7 +8744,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.389d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.609d0
       cs = -2.0d0
@@ -8763,7 +8763,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.342d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.754d0
       cs = -2.0d0
@@ -8782,7 +8782,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.426d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.937d0
       cs = -2.0d0
@@ -8801,7 +8801,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.404d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.321d0
       cs = -2.0d0
@@ -8820,7 +8820,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.365d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.117d0
       cs = -2.0d0
@@ -8839,7 +8839,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.381d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.772d0
       cs = -2.0d0
@@ -8858,7 +8858,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.330d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.128d0
       cs = -2.0d0
@@ -8877,7 +8877,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.380d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.792d0
       cs = -2.0d0
@@ -8896,7 +8896,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.324d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.324d0
       cs = -2.0d0
@@ -8915,7 +8915,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.345d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.664d0
       cs = -2.0d0
@@ -8934,7 +8934,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.500d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.770d0
       cs = -2.0d0
@@ -8953,7 +8953,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.235d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.329d0
       cs = -2.0d0
@@ -8972,7 +8972,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.490d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.129d0
       cs = -2.0d0
@@ -8991,7 +8991,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.420d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.264d0
       cs = -2.0d0
@@ -9010,7 +9010,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.342d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.581d0
       cs = -2.0d0
@@ -9029,7 +9029,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.378d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.909d0
       cs = -2.0d0
@@ -9048,7 +9048,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.761d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.371d0
       cs = -2.0d0
@@ -9067,7 +9067,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.652d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.060d0
       cs = -2.0d0
@@ -9086,7 +9086,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.663d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.901d0
       cs = -2.0d0
@@ -9105,7 +9105,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.700d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.254d0
       cs = -2.0d0
@@ -9124,7 +9124,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.456d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.107d0
       cs = -2.0d0
@@ -9143,7 +9143,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.457d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.223d0
       cs = -2.0d0
@@ -9162,7 +9162,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.019d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.490d0
       cs = -2.0d0
@@ -9181,7 +9181,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.660d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.629d0
       cs = -2.0d0
@@ -9200,7 +9200,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.699d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.027d0
       cs = -2.0d0
@@ -9219,7 +9219,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.386d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.775d0
       cs = -2.0d0
@@ -9238,7 +9238,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.408d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.435d0
       cs = -2.0d0
@@ -9257,7 +9257,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.390d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.710d0
       cs = -2.0d0
@@ -9276,7 +9276,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.374d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.977d0
       cs = -2.0d0
@@ -9295,7 +9295,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.358d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.267d0
       cs = -2.0d0
@@ -9314,7 +9314,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.301d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.519d0
       cs = -2.0d0
@@ -9333,7 +9333,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.360d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.229d0
       cs = -2.0d0
@@ -9352,7 +9352,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.373d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.995d0
       cs = -2.0d0
@@ -9371,7 +9371,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.243d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.256d0
       cs = -2.0d0
@@ -9390,7 +9390,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.384d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.808d0
       cs = -2.0d0
@@ -9409,7 +9409,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.347d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.480d0
       cs = -2.0d0
@@ -9428,7 +9428,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.739d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.635d0
       cs = -2.0d0
@@ -9447,7 +9447,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.671d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.791d0
       cs = -2.0d0
@@ -9466,7 +9466,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.626d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.465d0
       cs = -2.0d0
@@ -9485,7 +9485,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.741d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.687d0
       cs = -2.0d0
@@ -9504,7 +9504,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.447d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.401d0
       cs = -2.0d0
@@ -9523,7 +9523,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.619d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.379d0
       cs = -2.0d0
@@ -9542,7 +9542,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.026d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.230d0
       cs = -2.0d0
@@ -9561,7 +9561,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.423d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.223d0
       cs = -2.0d0
@@ -9580,7 +9580,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.366d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.095d0
       cs = -2.0d0
@@ -9599,7 +9599,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.393d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.529d0
       cs = -2.0d0
@@ -9618,7 +9618,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.337d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.685d0
       cs = -2.0d0
@@ -9637,7 +9637,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.352d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.382d0
       cs = -2.0d0
@@ -9656,7 +9656,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.388d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.650d0
       cs = -2.0d0
@@ -9675,7 +9675,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.329d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.857d0
       cs = -2.0d0
@@ -9694,7 +9694,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.242d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.291d0
       cs = -2.0d0
@@ -9713,7 +9713,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.323d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.991d0
       cs = -2.0d0
@@ -9732,7 +9732,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.383d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.825d0
       cs = -2.0d0
@@ -9751,7 +9751,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.341d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.602d0
       cs = -2.0d0
@@ -9770,7 +9770,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.345d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.824d0
       cs = -2.0d0
@@ -9789,7 +9789,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.334d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.749d0
       cs = -2.0d0
@@ -9808,7 +9808,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.345d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.824d0
       cs = -2.0d0
@@ -9827,7 +9827,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.396d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.458d0
       cs = -2.0d0
@@ -9846,7 +9846,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.258d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.752d0
       cs = -2.0d0
@@ -9865,7 +9865,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.351d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.644d0
       cs = -2.0d0
@@ -9884,7 +9884,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.378d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.909d0
       cs = -2.0d0
@@ -9903,7 +9903,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.374d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.977d0
       cs = -2.0d0
@@ -9922,7 +9922,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.878d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.110d0
       cs = -2.0d0
@@ -9941,7 +9941,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.029d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 1.967d0
       cs = -2.0d0
@@ -9960,7 +9960,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.686d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.593d0
       cs = -2.0d0
@@ -9979,7 +9979,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.661d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.930d0
       cs = -2.0d0
@@ -9998,7 +9998,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.456d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.240d0
       cs = -2.0d0
@@ -10017,7 +10017,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.418d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.970d0
       cs = -2.0d0
@@ -10036,7 +10036,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.714d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.820d0
       cs = -2.0d0
@@ -10055,7 +10055,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.727d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.651d0
       cs = -2.0d0
@@ -10074,7 +10074,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.015d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.663d0
       cs = -2.0d0
@@ -10093,7 +10093,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.960d0
       cs = -2.0d0
@@ -10112,7 +10112,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.898d0
       cs = -2.0d0
@@ -10131,7 +10131,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.395d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.482d0
       cs = -2.0d0
@@ -10150,7 +10150,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.352d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.382d0
       cs = -2.0d0
@@ -10169,7 +10169,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.382d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.841d0
       cs = -2.0d0
@@ -10188,7 +10188,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.325d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.466d0
       cs = -2.0d0
@@ -10207,7 +10207,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.402d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.524d0
       cs = -2.0d0
@@ -10226,7 +10226,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.369d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.137d0
       cs = -2.0d0
@@ -10245,7 +10245,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.376d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.952d0
       cs = -2.0d0
@@ -10264,7 +10264,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.348d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.339d0
       cs = -2.0d0
@@ -10283,7 +10283,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.389d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.296d0
       cs = -2.0d0
@@ -10302,7 +10302,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.583d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.019d0
       cs = -2.0d0
@@ -10321,7 +10321,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.575d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.204d0
       cs = -2.0d0
@@ -10340,7 +10340,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.342d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.511d0
       cs = -2.0d0
@@ -10359,7 +10359,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.440d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.187d0
       cs = -2.0d0
@@ -10378,7 +10378,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.031d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.978d0
       cs = -2.0d0
@@ -10397,7 +10397,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.051d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.808d0
       cs = -2.0d0
@@ -10416,7 +10416,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.050d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.838d0
       cs = -2.0d0
@@ -10435,7 +10435,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.751d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.859d0
       cs = -2.0d0
@@ -10454,7 +10454,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.750d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.056d0
       cs = -2.0d0
@@ -10473,7 +10473,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.023d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.063d0
       cs = -2.0d0
@@ -10492,7 +10492,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.100d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.448d0
       cs = -2.0d0
@@ -10511,7 +10511,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.721d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.378d0
       cs = -2.0d0
@@ -10530,7 +10530,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.731d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.737d0
       cs = -2.0d0
@@ -10549,7 +10549,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.694d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.714d0
       cs = -2.0d0
@@ -10568,7 +10568,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.718d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.413d0
       cs = -2.0d0
@@ -10587,7 +10587,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.699d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.649d0
       cs = -2.0d0
@@ -10606,7 +10606,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.920d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.767d0
       cs = -2.0d0
@@ -10625,7 +10625,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.902d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.928d0
       cs = -2.0d0
@@ -10644,7 +10644,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.891d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.031d0
       cs = -2.0d0
@@ -10663,7 +10663,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.891d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.031d0
       cs = -2.0d0
@@ -10682,7 +10682,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.332d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 0.884d0
       cs = -2.0d0
@@ -10701,7 +10701,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.075d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 1.781d0
       cs = -2.0d0
@@ -10720,7 +10720,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.050d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.531d0
       cs = -2.0d0
@@ -10739,7 +10739,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.094d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.214d0
       cs = -2.0d0
@@ -10758,7 +10758,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.146d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.022d0
       cs = -2.0d0
@@ -10777,7 +10777,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.822d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.757d0
       cs = -2.0d0
@@ -10796,7 +10796,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.727d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.802d0
       cs = -2.0d0
@@ -10815,7 +10815,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.112d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.319d0
       cs = -2.0d0
@@ -10834,7 +10834,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.106d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.359d0
       cs = -2.0d0
@@ -10853,7 +10853,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.731d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.750d0
       cs = -2.0d0
@@ -10872,7 +10872,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.765d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.565d0
       cs = -2.0d0
@@ -10891,7 +10891,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.666d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.859d0
       cs = -2.0d0
@@ -10910,7 +10910,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.717d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.221d0
       cs = -2.0d0
@@ -10929,7 +10929,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.713d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.993d0
       cs = -2.0d0
@@ -10948,7 +10948,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.733d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.724d0
       cs = -2.0d0
@@ -10967,7 +10967,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.747d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.548d0
       cs = -2.0d0
@@ -10986,7 +10986,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.341d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.014d0
       cs = -2.0d0
@@ -11005,7 +11005,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.865d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.397d0
       cs = -2.0d0
@@ -11024,7 +11024,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.844d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.566d0
       cs = -2.0d0
@@ -11043,7 +11043,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.787d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.098d0
       cs = -2.0d0
@@ -11062,7 +11062,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.601d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.900d0
       cs = -2.0d0
@@ -11081,7 +11081,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.780d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.172d0
       cs = -2.0d0
@@ -11100,7 +11100,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.822d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.757d0
       cs = -2.0d0
@@ -11119,7 +11119,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.450d0
       force = CON_KCALTOK*143.9825d0*0.5d0*10.748d0
       cs = -2.0d0
@@ -11138,7 +11138,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.770d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.281d0
       cs = -2.0d0
@@ -11157,7 +11157,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.693d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.504d0
       cs = -2.0d0
@@ -11176,7 +11176,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.710d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.301d0
       cs = -2.0d0
@@ -11195,7 +11195,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.540d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.186d0
       cs = -2.0d0
@@ -11214,7 +11214,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.628d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.432d0
       cs = -2.0d0
@@ -11233,7 +11233,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.783d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.568d0
       cs = -2.0d0
@@ -11252,7 +11252,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.570d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.510d0
       cs = -2.0d0
@@ -11271,7 +11271,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.749d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.524d0
       cs = -2.0d0
@@ -11290,7 +11290,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.723d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.856d0
       cs = -2.0d0
@@ -11309,7 +11309,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.702d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.150d0
       cs = -2.0d0
@@ -11328,7 +11328,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.900d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.288d0
       cs = -2.0d0
@@ -11347,7 +11347,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.809d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.072d0
       cs = -2.0d0
@@ -11366,7 +11366,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.686d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.470d0
       cs = -2.0d0
@@ -11385,7 +11385,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.795d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.219d0
       cs = -2.0d0
@@ -11404,7 +11404,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.226d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 1.600d0
       cs = -2.0d0
@@ -11423,7 +11423,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.526d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.663d0
       cs = -2.0d0
@@ -11442,7 +11442,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.484d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.251d0
       cs = -2.0d0
@@ -11461,7 +11461,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.838d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.718d0
       cs = -2.0d0
@@ -11480,7 +11480,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.853d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.588d0
       cs = -2.0d0
@@ -11499,7 +11499,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.507d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.977d0
       cs = -2.0d0
@@ -11518,7 +11518,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.460d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.171d0
       cs = -2.0d0
@@ -11537,7 +11537,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.516d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.740d0
       cs = -2.0d0
@@ -11556,7 +11556,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.427d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.784d0
       cs = -2.0d0
@@ -11575,7 +11575,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.482d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.286d0
       cs = -2.0d0
@@ -11594,7 +11594,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.487d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.737d0
       cs = -2.0d0
@@ -11613,7 +11613,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.480d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.844d0
       cs = -2.0d0
@@ -11632,7 +11632,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.499d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.969d0
       cs = -2.0d0
@@ -11651,7 +11651,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.513d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.785d0
       cs = -2.0d0
@@ -11670,7 +11670,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.464d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.103d0
       cs = -2.0d0
@@ -11689,7 +11689,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.471d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.481d0
       cs = -2.0d0
@@ -11708,7 +11708,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.459d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.188d0
       cs = -2.0d0
@@ -11727,7 +11727,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.441d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.071d0
       cs = -2.0d0
@@ -11746,7 +11746,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.466d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.070d0
       cs = -2.0d0
@@ -11765,7 +11765,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.452d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.311d0
       cs = -2.0d0
@@ -11784,7 +11784,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.012d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.112d0
       cs = -2.0d0
@@ -11803,7 +11803,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.026d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.339d0
       cs = -2.0d0
@@ -11822,7 +11822,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.019d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.610d0
       cs = -2.0d0
@@ -11841,7 +11841,7 @@ c     --- origin: #E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.038d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.899d0
       cs = -2.0d0
@@ -11860,7 +11860,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.253d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 1.514d0
       cs = -2.0d0
@@ -11879,7 +11879,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.510d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.296d0
       cs = -2.0d0
@@ -11898,7 +11898,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.755d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.586d0
       cs = -2.0d0
@@ -11917,7 +11917,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.676d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.370d0
       cs = -2.0d0
@@ -11936,7 +11936,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.660d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.629d0
       cs = -2.0d0
@@ -11955,7 +11955,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.762d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.237d0
       cs = -2.0d0
@@ -11974,7 +11974,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.699d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.356d0
       cs = -2.0d0
@@ -11993,7 +11993,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.745d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.711d0
       cs = -2.0d0
@@ -12012,7 +12012,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.411d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.001d0
       cs = -2.0d0
@@ -12031,7 +12031,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.950d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.744d0
       cs = -2.0d0
@@ -12050,7 +12050,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.279d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 1.414d0
       cs = -2.0d0
@@ -12069,7 +12069,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.748d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.395d0
       cs = -2.0d0
@@ -12088,7 +12088,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.788d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.207d0
       cs = -2.0d0
@@ -12107,7 +12107,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.646d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.870d0
       cs = -2.0d0
@@ -12126,7 +12126,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.415d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.959d0
       cs = -2.0d0
@@ -12145,7 +12145,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.018d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.576d0
       cs = -2.0d0
@@ -12164,7 +12164,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.028d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.265d0
       cs = -2.0d0
@@ -12183,7 +12183,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.024d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.413d0
       cs = -2.0d0
@@ -12202,7 +12202,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.343d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.579d0
       cs = -2.0d0
@@ -12221,7 +12221,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.428d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.355d0
       cs = -2.0d0
@@ -12240,7 +12240,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.298d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.447d0
       cs = -2.0d0
@@ -12259,7 +12259,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.404d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.274d0
       cs = -2.0d0
@@ -12278,7 +12278,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.969d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.880d0
       cs = -2.0d0
@@ -12297,7 +12297,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.261d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.756d0
       cs = -2.0d0
@@ -12316,7 +12316,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.233d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.420d0
       cs = -2.0d0
@@ -12335,7 +12335,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.269d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.926d0
       cs = -2.0d0
@@ -12354,7 +12354,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.348d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.398d0
       cs = -2.0d0
@@ -12373,7 +12373,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.261d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.098d0
       cs = -2.0d0
@@ -12392,7 +12392,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.510d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.427d0
       cs = -2.0d0
@@ -12411,7 +12411,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.450d0
       force = CON_KCALTOK*143.9825d0*0.5d0*10.648d0
       cs = -2.0d0
@@ -12430,7 +12430,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.252d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.594d0
       cs = -2.0d0
@@ -12449,7 +12449,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.028d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.163d0
       cs = -2.0d0
@@ -12468,7 +12468,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.450d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.347d0
       cs = -2.0d0
@@ -12487,7 +12487,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.351d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.401d0
       cs = -2.0d0
@@ -12506,7 +12506,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.262d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 9.767d0
       cs = -2.0d0
@@ -12525,7 +12525,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.207d0
       force = CON_KCALTOK*143.9825d0*0.5d0*12.760d0
       cs = -2.0d0
@@ -12544,7 +12544,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.022d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.529d0
       cs = -2.0d0
@@ -12563,7 +12563,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.014d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.744d0
       cs = -2.0d0
@@ -12582,7 +12582,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.017d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.490d0
       cs = -2.0d0
@@ -12601,7 +12601,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.019d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.610d0
       cs = -2.0d0
@@ -12620,7 +12620,7 @@ c     --- origin: #E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.016d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.980d0
       cs = -2.0d0
@@ -12639,7 +12639,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.374d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.573d0
       cs = -2.0d0
@@ -12658,7 +12658,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.436d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.178d0
       cs = -2.0d0
@@ -12677,7 +12677,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.333d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.737d0
       cs = -2.0d0
@@ -12696,7 +12696,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.978d0
       cs = -2.0d0
@@ -12715,7 +12715,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.388d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.650d0
       cs = -2.0d0
@@ -12734,7 +12734,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.398d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.168d0
       cs = -2.0d0
@@ -12753,7 +12753,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.468d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.537d0
       cs = -2.0d0
@@ -12772,7 +12772,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.428d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.764d0
       cs = -2.0d0
@@ -12791,7 +12791,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.431d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.705d0
       cs = -2.0d0
@@ -12810,7 +12810,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.367d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.191d0
       cs = -2.0d0
@@ -12829,7 +12829,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.352d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.615d0
       cs = -2.0d0
@@ -12848,7 +12848,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.414d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.055d0
       cs = -2.0d0
@@ -12867,7 +12867,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.440d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.092d0
       cs = -2.0d0
@@ -12886,7 +12886,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.326d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.432d0
       cs = -2.0d0
@@ -12905,7 +12905,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.414d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.055d0
       cs = -2.0d0
@@ -12924,7 +12924,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.385d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.724d0
       cs = -2.0d0
@@ -12943,7 +12943,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.335d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.137d0
       cs = -2.0d0
@@ -12962,7 +12962,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.372d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.095d0
       cs = -2.0d0
@@ -12981,7 +12981,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.436d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.178d0
       cs = -2.0d0
@@ -13000,7 +13000,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.379d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.161d0
       cs = -2.0d0
@@ -13019,7 +13019,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.432d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.265d0
       cs = -2.0d0
@@ -13038,7 +13038,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.430d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.725d0
       cs = -2.0d0
@@ -13057,7 +13057,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.352d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.396d0
       cs = -2.0d0
@@ -13076,7 +13076,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.719d0
       cs = -2.0d0
@@ -13095,7 +13095,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.471d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.987d0
       cs = -2.0d0
@@ -13114,7 +13114,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.440d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.531d0
       cs = -2.0d0
@@ -13133,7 +13133,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.246d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.002d0
       cs = -2.0d0
@@ -13152,7 +13152,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.330d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.299d0
       cs = -2.0d0
@@ -13171,7 +13171,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.340d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.978d0
       cs = -2.0d0
@@ -13190,7 +13190,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.321d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.036d0
       cs = -2.0d0
@@ -13209,7 +13209,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.366d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.218d0
       cs = -2.0d0
@@ -13228,7 +13228,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.367d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.101d0
       cs = -2.0d0
@@ -13247,7 +13247,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.402d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.524d0
       cs = -2.0d0
@@ -13266,7 +13266,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.364d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.301d0
       cs = -2.0d0
@@ -13285,7 +13285,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.369d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.137d0
       cs = -2.0d0
@@ -13304,7 +13304,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.361d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.357d0
       cs = -2.0d0
@@ -13323,7 +13323,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.395d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.482d0
       cs = -2.0d0
@@ -13342,7 +13342,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.339d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.513d0
       cs = -2.0d0
@@ -13361,7 +13361,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.369d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.137d0
       cs = -2.0d0
@@ -13380,7 +13380,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.359d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.248d0
       cs = -2.0d0
@@ -13399,7 +13399,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.356d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.305d0
       cs = -2.0d0
@@ -13418,7 +13418,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.335d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.727d0
       cs = -2.0d0
@@ -13437,7 +13437,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.256d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.817d0
       cs = -2.0d0
@@ -13456,7 +13456,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.348d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.733d0
       cs = -2.0d0
@@ -13475,7 +13475,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.351d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.644d0
       cs = -2.0d0
@@ -13494,7 +13494,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.378d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.900d0
       cs = -2.0d0
@@ -13513,7 +13513,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.443d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.029d0
       cs = -2.0d0
@@ -13532,7 +13532,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.391d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.577d0
       cs = -2.0d0
@@ -13551,7 +13551,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.335d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.137d0
       cs = -2.0d0
@@ -13570,7 +13570,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.678d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.519d0
       cs = -2.0d0
@@ -13589,7 +13589,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.434d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.222d0
       cs = -2.0d0
@@ -13608,7 +13608,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.087d0
       force = CON_KCALTOK*143.9825d0*0.5d0*16.223d0
       cs = -2.0d0
@@ -13627,7 +13627,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.361d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.211d0
       cs = -2.0d0
@@ -13646,7 +13646,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.390d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.710d0
       cs = -2.0d0
@@ -13665,7 +13665,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.399d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.389d0
       cs = -2.0d0
@@ -13684,7 +13684,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.717d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.589d0
       cs = -2.0d0
@@ -13703,7 +13703,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.684d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.374d0
       cs = -2.0d0
@@ -13722,7 +13722,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.734d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.711d0
       cs = -2.0d0
@@ -13741,7 +13741,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.719d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.910d0
       cs = -2.0d0
@@ -13760,7 +13760,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.411d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.119d0
       cs = -2.0d0
@@ -13779,7 +13779,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.413d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.076d0
       cs = -2.0d0
@@ -13798,7 +13798,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.385d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.724d0
       cs = -2.0d0
@@ -13817,7 +13817,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.140d0
       force = CON_KCALTOK*143.9825d0*0.5d0*12.192d0
       cs = -2.0d0
@@ -13836,7 +13836,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.991d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.812d0
       cs = -2.0d0
@@ -13855,7 +13855,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.987d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.100d0
       cs = -2.0d0
@@ -13874,7 +13874,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.319d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.227d0
       cs = -2.0d0
@@ -13893,7 +13893,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.374d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.977d0
       cs = -2.0d0
@@ -13912,7 +13912,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.393d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.529d0
       cs = -2.0d0
@@ -13931,7 +13931,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.324d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.500d0
       cs = -2.0d0
@@ -13950,7 +13950,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.383d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.137d0
       cs = -2.0d0
@@ -13969,7 +13969,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.378d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.900d0
       cs = -2.0d0
@@ -13988,7 +13988,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.357d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.470d0
       cs = -2.0d0
@@ -14007,7 +14007,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.426d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.400d0
       cs = -2.0d0
@@ -14026,7 +14026,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.438d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.135d0
       cs = -2.0d0
@@ -14045,7 +14045,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.346d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.794d0
       cs = -2.0d0
@@ -14064,7 +14064,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.368d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.164d0
       cs = -2.0d0
@@ -14083,7 +14083,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.360d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.787d0
       cs = -2.0d0
@@ -14102,7 +14102,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.388d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.756d0
       cs = -2.0d0
@@ -14121,7 +14121,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.364d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.127d0
       cs = -2.0d0
@@ -14140,7 +14140,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.332d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.064d0
       cs = -2.0d0
@@ -14159,7 +14159,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.431d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.855d0
       cs = -2.0d0
@@ -14178,7 +14178,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.170d0
       force = CON_KCALTOK*143.9825d0*0.5d0*15.749d0
       cs = -2.0d0
@@ -14197,7 +14197,7 @@ c     --- origin: #X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.341d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.947d0
       cs = -2.0d0
@@ -14216,7 +14216,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.364d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.273d0
       cs = -2.0d0
@@ -14235,7 +14235,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.412d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.729d0
       cs = -2.0d0
@@ -14254,7 +14254,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.377d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.118d0
       cs = -2.0d0
@@ -14273,7 +14273,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.313d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.326d0
       cs = -2.0d0
@@ -14292,7 +14292,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.679d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.503d0
       cs = -2.0d0
@@ -14311,7 +14311,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.352d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.434d0
       cs = -2.0d0
@@ -14330,7 +14330,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.316d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.778d0
       cs = -2.0d0
@@ -14349,7 +14349,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.418d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.313d0
       cs = -2.0d0
@@ -14368,7 +14368,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.448d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.926d0
       cs = -2.0d0
@@ -14387,7 +14387,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.335d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.258d0
       cs = -2.0d0
@@ -14406,7 +14406,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.369d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.456d0
       cs = -2.0d0
@@ -14425,7 +14425,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.422d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.492d0
       cs = -2.0d0
@@ -14444,7 +14444,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.381d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.824d0
       cs = -2.0d0
@@ -14463,7 +14463,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.346d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.794d0
       cs = -2.0d0
@@ -14482,7 +14482,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.323d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 7.243d0
       cs = -2.0d0
@@ -14501,7 +14501,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.298d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.447d0
       cs = -2.0d0
@@ -14520,7 +14520,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.313d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.223d0
       cs = -2.0d0
@@ -14539,7 +14539,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.297d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.622d0
       cs = -2.0d0
@@ -14558,7 +14558,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.368d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.874d0
       cs = -2.0d0
@@ -14577,7 +14577,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.360d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.385d0
       cs = -2.0d0
@@ -14596,7 +14596,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.375d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 3.960d0
       cs = -2.0d0
@@ -14615,7 +14615,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.280d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.085d0
       cs = -2.0d0
@@ -14634,7 +14634,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.423d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.852d0
       cs = -2.0d0
@@ -14653,7 +14653,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.035d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 2.628d0
       cs = -2.0d0
@@ -14672,7 +14672,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.357d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.286d0
       cs = -2.0d0
@@ -14691,7 +14691,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.345d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.824d0
       cs = -2.0d0
@@ -14710,7 +14710,7 @@ c     --- origin: X94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.374d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.573d0
       cs = -2.0d0
@@ -14729,7 +14729,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.287d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.890d0
       cs = -2.0d0
@@ -14748,7 +14748,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.381d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 5.046d0
       cs = -2.0d0
@@ -14767,7 +14767,7 @@ c     --- origin: C94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.269d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 6.408d0
       cs = -2.0d0
@@ -14786,7 +14786,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.356d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 4.305d0
       cs = -2.0d0
@@ -14805,7 +14805,7 @@ c     --- origin: E94
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.335d0
       force = CON_KCALTOK*143.9825d0*0.5d0* 8.237d0
       cs = -2.0d0
@@ -14836,7 +14836,7 @@ c     ******************************************************************
 c     * sets up the MMFF94 angle terms                                 *
 c     *                                                                *
 c     * originally written 12-11-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -14876,7 +14876,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-1-* MMFF94 DEF  
       bclocal(0) = 108.900d0
@@ -14894,7 +14894,7 @@ c     --- origin:0:*-1-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.608d0
@@ -14915,7 +14915,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.445d0
@@ -14936,7 +14936,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.517d0
@@ -14957,7 +14957,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.265d0
@@ -14975,7 +14975,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.549d0
@@ -14996,7 +14996,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.133d0
@@ -15017,7 +15017,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.290d0
@@ -15038,7 +15038,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.194d0
@@ -15056,7 +15056,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.960d0
@@ -15077,7 +15077,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.313d0
@@ -15098,7 +15098,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.679d0
@@ -15119,7 +15119,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.820d0
@@ -15137,7 +15137,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.945d0
@@ -15155,7 +15155,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.397d0
@@ -15176,7 +15176,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.578d0
@@ -15194,7 +15194,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.315d0
@@ -15212,7 +15212,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.436d0
@@ -15230,7 +15230,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.659d0
@@ -15248,7 +15248,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.125d0
@@ -15266,7 +15266,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 112.356d0
@@ -15284,7 +15284,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.879d0
@@ -15302,7 +15302,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.493d0
@@ -15323,7 +15323,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.617d0
@@ -15344,7 +15344,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.170d0
@@ -15365,7 +15365,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.678d0
@@ -15383,7 +15383,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  98.422d0
@@ -15404,7 +15404,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.019d0
@@ -15422,7 +15422,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.028d0
@@ -15440,7 +15440,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.424d0
@@ -15458,7 +15458,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.604d0
@@ -15476,7 +15476,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.371d0
@@ -15497,7 +15497,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.900d0
@@ -15515,7 +15515,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.327d0
@@ -15533,7 +15533,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.311d0
@@ -15551,7 +15551,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.058d0
@@ -15569,7 +15569,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.064d0
@@ -15587,7 +15587,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.557d0
@@ -15605,7 +15605,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.195d0
@@ -15626,7 +15626,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.658d0
@@ -15644,7 +15644,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.850d0
@@ -15662,7 +15662,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.327d0
@@ -15680,7 +15680,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.837d0
@@ -15698,7 +15698,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.453d0
@@ -15719,7 +15719,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 104.829d0
@@ -15740,7 +15740,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.873d0
@@ -15758,7 +15758,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.292d0
@@ -15779,7 +15779,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.699d0
@@ -15800,7 +15800,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.553d0
@@ -15821,7 +15821,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.577d0
@@ -15839,7 +15839,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.963d0
@@ -15857,7 +15857,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.419d0
@@ -15875,7 +15875,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.410d0
@@ -15893,7 +15893,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.560d0
@@ -15911,7 +15911,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.434d0
@@ -15929,7 +15929,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.110d0
@@ -15947,7 +15947,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.448d0
@@ -15965,7 +15965,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.020d0
@@ -15983,7 +15983,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.815d0
@@ -16001,7 +16001,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.065d0
@@ -16019,7 +16019,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.817d0
@@ -16037,7 +16037,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.446d0
@@ -16055,7 +16055,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.513d0
@@ -16073,7 +16073,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.270d0
@@ -16091,7 +16091,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.978d0
@@ -16109,7 +16109,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.692d0
@@ -16127,7 +16127,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.687d0
@@ -16145,7 +16145,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.746d0
@@ -16163,7 +16163,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.850d0
@@ -16181,7 +16181,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.385d0
@@ -16202,7 +16202,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 104.112d0
@@ -16223,7 +16223,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.837d0
@@ -16241,7 +16241,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.535d0
@@ -16259,7 +16259,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 102.655d0
@@ -16280,7 +16280,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.328d0
@@ -16298,7 +16298,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.064d0
@@ -16316,7 +16316,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.645d0
@@ -16334,7 +16334,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.404d0
@@ -16352,7 +16352,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.192d0
@@ -16370,7 +16370,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.602d0
@@ -16388,7 +16388,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.119d0
@@ -16406,7 +16406,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.830d0
@@ -16424,7 +16424,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.522d0
@@ -16442,7 +16442,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.555d0
@@ -16460,7 +16460,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.871d0
@@ -16478,7 +16478,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.833d0
@@ -16496,7 +16496,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.751d0
@@ -16514,7 +16514,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.941d0
@@ -16532,7 +16532,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.216d0
@@ -16550,7 +16550,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.281d0
@@ -16568,7 +16568,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.077d0
@@ -16586,7 +16586,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.186d0
@@ -16604,7 +16604,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.327d0
@@ -16622,7 +16622,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.186d0
@@ -16640,7 +16640,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 111.417d0
@@ -16658,7 +16658,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.977d0
@@ -16676,7 +16676,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.063d0
@@ -16694,7 +16694,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.750d0
@@ -16712,7 +16712,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.488d0
@@ -16730,7 +16730,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.047d0
@@ -16748,7 +16748,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.432d0
@@ -16766,7 +16766,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.351d0
@@ -16784,7 +16784,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.556d0
@@ -16802,7 +16802,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.999d0
@@ -16820,7 +16820,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.160d0
@@ -16838,7 +16838,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.424d0
@@ -16856,7 +16856,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.836d0
@@ -16877,7 +16877,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.577d0
@@ -16898,7 +16898,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.297d0
@@ -16919,7 +16919,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.894d0
@@ -16940,7 +16940,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.646d0
@@ -16961,7 +16961,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.897d0
@@ -16982,7 +16982,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.162d0
@@ -17003,7 +17003,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.049d0
@@ -17021,7 +17021,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.019d0
@@ -17039,7 +17039,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.609d0
@@ -17060,7 +17060,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 107.944d0
@@ -17078,7 +17078,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 106.855d0
@@ -17099,7 +17099,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.195d0
@@ -17117,7 +17117,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.000d0
@@ -17138,7 +17138,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.380d0
@@ -17159,7 +17159,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.486d0
@@ -17177,7 +17177,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 111.172d0
@@ -17195,7 +17195,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.224d0
@@ -17216,7 +17216,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 125.663d0
@@ -17234,7 +17234,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.491d0
@@ -17255,7 +17255,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.299d0
@@ -17276,7 +17276,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.870d0
@@ -17297,7 +17297,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.904d0
@@ -17318,7 +17318,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.083d0
@@ -17336,7 +17336,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 105.197d0
@@ -17354,7 +17354,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 106.735d0
@@ -17372,7 +17372,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.973d0
@@ -17393,7 +17393,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.507d0
@@ -17414,7 +17414,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.223d0
@@ -17435,7 +17435,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.420d0
@@ -17453,7 +17453,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.481d0
@@ -17471,7 +17471,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.227d0
@@ -17489,7 +17489,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.035d0
@@ -17507,7 +17507,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.467d0
@@ -17525,7 +17525,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.457d0
@@ -17543,7 +17543,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.474d0
@@ -17561,7 +17561,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.817d0
@@ -17582,7 +17582,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 116.576d0
@@ -17600,7 +17600,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 107.153d0
@@ -17618,7 +17618,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.078d0
@@ -17636,7 +17636,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.144d0
@@ -17654,7 +17654,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.870d0
@@ -17672,7 +17672,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.368d0
@@ -17693,7 +17693,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.223d0
@@ -17711,7 +17711,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.950d0
@@ -17729,7 +17729,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.568d0
@@ -17747,7 +17747,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.900d0
@@ -17765,7 +17765,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.012d0
@@ -17783,7 +17783,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.655d0
@@ -17801,7 +17801,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.214d0
@@ -17819,7 +17819,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.202d0
@@ -17837,7 +17837,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.913d0
@@ -17855,7 +17855,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.598d0
@@ -17873,7 +17873,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.433d0
@@ -17891,7 +17891,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.975d0
@@ -17909,7 +17909,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.978d0
@@ -17930,7 +17930,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.464d0
@@ -17948,7 +17948,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.779d0
@@ -17966,7 +17966,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.467d0
@@ -17984,7 +17984,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.438d0
@@ -18002,7 +18002,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.467d0
@@ -18020,7 +18020,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.535d0
@@ -18038,7 +18038,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.308d0
@@ -18056,7 +18056,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.856d0
@@ -18074,7 +18074,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.080d0
@@ -18092,7 +18092,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.683d0
@@ -18110,7 +18110,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.251d0
@@ -18128,7 +18128,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.356d0
@@ -18146,7 +18146,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.353d0
@@ -18164,7 +18164,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.698d0
@@ -18182,7 +18182,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.412d0
@@ -18200,7 +18200,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.992d0
@@ -18218,7 +18218,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.193d0
@@ -18236,7 +18236,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.962d0
@@ -18254,7 +18254,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.868d0
@@ -18272,7 +18272,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.596d0
@@ -18290,7 +18290,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.139d0
@@ -18308,7 +18308,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.266d0
@@ -18326,7 +18326,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.598d0
@@ -18344,7 +18344,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.127d0
@@ -18362,7 +18362,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.720d0
@@ -18380,7 +18380,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.152d0
@@ -18398,7 +18398,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.465d0
@@ -18416,7 +18416,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.432d0
@@ -18434,7 +18434,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.565d0
@@ -18452,7 +18452,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.728d0
@@ -18470,7 +18470,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.509d0
@@ -18488,7 +18488,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.995d0
@@ -18506,7 +18506,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.502d0
@@ -18524,7 +18524,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.509d0
@@ -18542,7 +18542,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.838d0
@@ -18560,7 +18560,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.262d0
@@ -18578,7 +18578,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.822d0
@@ -18596,7 +18596,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.423d0
@@ -18614,7 +18614,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.536d0
@@ -18632,7 +18632,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.961d0
@@ -18650,7 +18650,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.622d0
@@ -18668,7 +18668,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.081d0
@@ -18689,7 +18689,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.517d0
@@ -18707,7 +18707,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.637d0
@@ -18725,7 +18725,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.532d0
@@ -18743,7 +18743,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.669d0
@@ -18761,7 +18761,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.367d0
@@ -18779,7 +18779,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.278d0
@@ -18797,7 +18797,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.053d0
@@ -18815,7 +18815,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.991d0
@@ -18833,7 +18833,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.569d0
@@ -18851,7 +18851,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.378d0
@@ -18869,7 +18869,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.422d0
@@ -18890,7 +18890,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.064d0
@@ -18908,7 +18908,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.827d0
@@ -18926,7 +18926,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.971d0
@@ -18944,7 +18944,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.605d0
@@ -18962,7 +18962,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.028d0
@@ -18980,7 +18980,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.118d0
@@ -18998,7 +18998,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.030d0
@@ -19016,7 +19016,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.359d0
@@ -19034,7 +19034,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.430d0
@@ -19052,7 +19052,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.474d0
@@ -19070,7 +19070,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.338d0
@@ -19088,7 +19088,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.645d0
@@ -19106,7 +19106,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.534d0
@@ -19124,7 +19124,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.469d0
@@ -19142,7 +19142,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.383d0
@@ -19160,7 +19160,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.718d0
@@ -19178,7 +19178,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.896d0
@@ -19196,7 +19196,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.308d0
@@ -19214,7 +19214,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.318d0
@@ -19232,7 +19232,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.959d0
@@ -19250,7 +19250,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.005d0
@@ -19268,7 +19268,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.981d0
@@ -19286,7 +19286,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.596d0
@@ -19304,7 +19304,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.703d0
@@ -19322,7 +19322,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.029d0
@@ -19340,7 +19340,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.049d0
@@ -19358,7 +19358,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.960d0
@@ -19376,7 +19376,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.125d0
@@ -19394,7 +19394,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.390d0
@@ -19412,7 +19412,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.273d0
@@ -19430,7 +19430,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.683d0
@@ -19448,7 +19448,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.506d0
@@ -19466,7 +19466,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.084d0
@@ -19484,7 +19484,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.428d0
@@ -19502,7 +19502,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.335d0
@@ -19520,7 +19520,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.226d0
@@ -19538,7 +19538,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.293d0
@@ -19556,7 +19556,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.940d0
@@ -19574,7 +19574,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.586d0
@@ -19592,7 +19592,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.181d0
@@ -19610,7 +19610,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.138d0
@@ -19628,7 +19628,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.271d0
@@ -19646,7 +19646,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.945d0
@@ -19664,7 +19664,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.417d0
@@ -19682,7 +19682,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.234d0
@@ -19700,7 +19700,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.700d0
@@ -19718,7 +19718,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.167d0
@@ -19736,7 +19736,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.275d0
@@ -19754,7 +19754,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.238d0
@@ -19772,7 +19772,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.412d0
@@ -19790,7 +19790,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.240d0
@@ -19808,7 +19808,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.315d0
@@ -19826,7 +19826,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.188d0
@@ -19844,7 +19844,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.478d0
@@ -19862,7 +19862,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.800d0
@@ -19880,7 +19880,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.047d0
@@ -19898,7 +19898,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.239d0
@@ -19916,7 +19916,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.983d0
@@ -19934,7 +19934,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.638d0
@@ -19952,7 +19952,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.040d0
@@ -19970,7 +19970,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.547d0
@@ -19988,7 +19988,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.005d0
@@ -20006,7 +20006,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.786d0
@@ -20024,7 +20024,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.505d0
@@ -20042,7 +20042,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.376d0
@@ -20060,7 +20060,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.400d0
@@ -20078,7 +20078,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.112d0
@@ -20096,7 +20096,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.553d0
@@ -20114,7 +20114,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.088d0
@@ -20132,7 +20132,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-2-* MMFF94 DEF  
       bclocal(0) = 119.400d0
@@ -20150,7 +20150,7 @@ c     --- origin:0:*-2-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-2-* MMFF94 DEF  
       bclocal(0) = 118.200d0
@@ -20168,7 +20168,7 @@ c     --- origin:0:*-2-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:2::*-2-* MMFF94 DEF 
       bclocal(0) = 120.800d0
@@ -20186,7 +20186,7 @@ c     --- origin:2::*-2-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-2-* MMFF94 DEF 
       bclocal(0) =  62.600d0
@@ -20204,7 +20204,7 @@ c     --- origin:3::*-2-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:6:*-2-* MMFF94 DEF  
       bclocal(0) =  60.500d0
@@ -20222,7 +20222,7 @@ c     --- origin:6:*-2-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 118.043d0
@@ -20243,7 +20243,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 122.141d0
@@ -20264,7 +20264,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.929d0
@@ -20282,7 +20282,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.104d0
@@ -20300,7 +20300,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.045d0
@@ -20318,7 +20318,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.613d0
@@ -20336,7 +20336,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.108d0
@@ -20357,7 +20357,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.518d0
@@ -20375,7 +20375,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.707d0
@@ -20393,7 +20393,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.343d0
@@ -20411,7 +20411,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.395d0
@@ -20429,7 +20429,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.465d0
@@ -20447,7 +20447,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.868d0
@@ -20465,7 +20465,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.918d0
@@ -20483,7 +20483,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.310d0
@@ -20501,7 +20501,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.114d0
@@ -20519,7 +20519,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.605d0
@@ -20537,7 +20537,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.064d0
@@ -20555,7 +20555,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.515d0
@@ -20573,7 +20573,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.921d0
@@ -20591,7 +20591,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.192d0
@@ -20609,7 +20609,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.945d0
@@ -20627,7 +20627,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.884d0
@@ -20645,7 +20645,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.185d0
@@ -20663,7 +20663,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.550d0
@@ -20684,7 +20684,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.284d0
@@ -20702,7 +20702,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  60.549d0
@@ -20720,7 +20720,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.297d0
@@ -20738,7 +20738,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.456d0
@@ -20759,7 +20759,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  59.145d0
@@ -20777,7 +20777,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.053d0
@@ -20795,7 +20795,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.794d0
@@ -20813,7 +20813,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.004d0
@@ -20834,7 +20834,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 118.442d0
@@ -20855,7 +20855,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.267d0
@@ -20876,7 +20876,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.538d0
@@ -20894,7 +20894,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.536d0
@@ -20912,7 +20912,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.273d0
@@ -20930,7 +20930,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.828d0
@@ -20948,7 +20948,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.324d0
@@ -20966,7 +20966,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 119.100d0
@@ -20984,7 +20984,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.828d0
@@ -21002,7 +21002,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 120.132d0
@@ -21020,7 +21020,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.526d0
@@ -21038,7 +21038,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.717d0
@@ -21056,7 +21056,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.584d0
@@ -21074,7 +21074,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.344d0
@@ -21092,7 +21092,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.553d0
@@ -21110,7 +21110,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.466d0
@@ -21128,7 +21128,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.167d0
@@ -21146,7 +21146,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.561d0
@@ -21164,7 +21164,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.721d0
@@ -21182,7 +21182,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.784d0
@@ -21200,7 +21200,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.820d0
@@ -21218,7 +21218,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  66.165d0
@@ -21236,7 +21236,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.830d0
@@ -21254,7 +21254,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.151d0
@@ -21272,7 +21272,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 137.103d0
@@ -21290,7 +21290,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.508d0
@@ -21308,7 +21308,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.229d0
@@ -21329,7 +21329,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.360d0
@@ -21347,7 +21347,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 126.830d0
@@ -21368,7 +21368,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.132d0
@@ -21386,7 +21386,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.442d0
@@ -21407,7 +21407,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.808d0
@@ -21425,7 +21425,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.231d0
@@ -21443,7 +21443,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.984d0
@@ -21461,7 +21461,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.534d0
@@ -21479,7 +21479,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.154d0
@@ -21497,7 +21497,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.879d0
@@ -21515,7 +21515,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 135.269d0
@@ -21533,7 +21533,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.277d0
@@ -21551,7 +21551,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.528d0
@@ -21569,7 +21569,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.998d0
@@ -21587,7 +21587,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.136d0
@@ -21605,7 +21605,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 134.269d0
@@ -21623,7 +21623,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.541d0
@@ -21641,7 +21641,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.370d0
@@ -21659,7 +21659,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.739d0
@@ -21677,7 +21677,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.291d0
@@ -21698,7 +21698,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.738d0
@@ -21716,7 +21716,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.648d0
@@ -21734,7 +21734,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.698d0
@@ -21752,7 +21752,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.876d0
@@ -21770,7 +21770,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.732d0
@@ -21788,7 +21788,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.643d0
@@ -21806,7 +21806,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.111d0
@@ -21824,7 +21824,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.635d0
@@ -21842,7 +21842,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.265d0
@@ -21860,7 +21860,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.510d0
@@ -21878,7 +21878,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.209d0
@@ -21896,7 +21896,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.723d0
@@ -21914,7 +21914,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.767d0
@@ -21932,7 +21932,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.758d0
@@ -21950,7 +21950,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.408d0
@@ -21968,7 +21968,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.505d0
@@ -21986,7 +21986,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.257d0
@@ -22004,7 +22004,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.401d0
@@ -22022,7 +22022,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.841d0
@@ -22040,7 +22040,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.158d0
@@ -22058,7 +22058,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 121.000d0
@@ -22076,7 +22076,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -22094,7 +22094,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.845d0
@@ -22112,7 +22112,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.447d0
@@ -22130,7 +22130,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.537d0
@@ -22148,7 +22148,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.938d0
@@ -22166,7 +22166,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.093d0
@@ -22184,7 +22184,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.355d0
@@ -22202,7 +22202,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.426d0
@@ -22220,7 +22220,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.442d0
@@ -22238,7 +22238,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.523d0
@@ -22259,7 +22259,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.757d0
@@ -22280,7 +22280,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 117.000d0
@@ -22298,7 +22298,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.859d0
@@ -22316,7 +22316,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 108.186d0
@@ -22334,7 +22334,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 110.650d0
@@ -22352,7 +22352,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.513d0
@@ -22370,7 +22370,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.562d0
@@ -22388,7 +22388,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 124.000d0
@@ -22406,7 +22406,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.053d0
@@ -22424,7 +22424,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -22442,7 +22442,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 124.000d0
@@ -22460,7 +22460,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -22478,7 +22478,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 124.164d0
@@ -22496,7 +22496,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.423d0
@@ -22514,7 +22514,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.724d0
@@ -22532,7 +22532,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.322d0
@@ -22553,7 +22553,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 123.706d0
@@ -22574,7 +22574,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 107.774d0
@@ -22592,7 +22592,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 116.000d0
@@ -22610,7 +22610,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 125.344d0
@@ -22628,7 +22628,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -22646,7 +22646,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -22664,7 +22664,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 122.009d0
@@ -22682,7 +22682,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 115.000d0
@@ -22700,7 +22700,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.520d0
@@ -22718,7 +22718,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.921d0
@@ -22736,7 +22736,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.560d0
@@ -22754,7 +22754,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.391d0
@@ -22772,7 +22772,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.441d0
@@ -22790,7 +22790,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.073d0
@@ -22808,7 +22808,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.438d0
@@ -22826,7 +22826,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.802d0
@@ -22844,7 +22844,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.574d0
@@ -22862,7 +22862,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.536d0
@@ -22880,7 +22880,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.521d0
@@ -22898,7 +22898,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.723d0
@@ -22916,7 +22916,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.519d0
@@ -22934,7 +22934,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.818d0
@@ -22952,7 +22952,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.139d0
@@ -22970,7 +22970,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.034d0
@@ -22988,7 +22988,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.000d0
@@ -23006,7 +23006,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.105d0
@@ -23024,7 +23024,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.206d0
@@ -23042,7 +23042,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.553d0
@@ -23060,7 +23060,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.646d0
@@ -23078,7 +23078,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.563d0
@@ -23096,7 +23096,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.753d0
@@ -23114,7 +23114,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.136d0
@@ -23132,7 +23132,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.543d0
@@ -23150,7 +23150,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.616d0
@@ -23168,7 +23168,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.027d0
@@ -23186,7 +23186,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 133.654d0
@@ -23204,7 +23204,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.757d0
@@ -23222,7 +23222,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.924d0
@@ -23240,7 +23240,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.955d0
@@ -23258,7 +23258,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.608d0
@@ -23276,7 +23276,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.108d0
@@ -23294,7 +23294,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  58.963d0
@@ -23312,7 +23312,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.693d0
@@ -23330,7 +23330,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.816d0
@@ -23348,7 +23348,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.032d0
@@ -23366,7 +23366,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.436d0
@@ -23384,7 +23384,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.987d0
@@ -23402,7 +23402,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.268d0
@@ -23420,7 +23420,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.881d0
@@ -23438,7 +23438,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 135.317d0
@@ -23456,7 +23456,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.095d0
@@ -23474,7 +23474,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.342d0
@@ -23492,7 +23492,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-3-* MMFF94 DEF  
       bclocal(0) = 117.300d0
@@ -23510,7 +23510,7 @@ c     --- origin:0:*-3-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-3-* MMFF94 DEF  
       bclocal(0) = 115.800d0
@@ -23528,7 +23528,7 @@ c     --- origin:1:*-3-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-3-* MMFF94 DEF  
       bclocal(0) =  90.800d0
@@ -23546,7 +23546,7 @@ c     --- origin:4:*-3-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:7:*-3-* MMFF94 DEF  
       bclocal(0) =  91.100d0
@@ -23564,7 +23564,7 @@ c     --- origin:7:*-3-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:7:*-3-* MMFF94 DEF  
       bclocal(0) =  88.900d0
@@ -23582,7 +23582,7 @@ c     --- origin:7:*-3-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 118.016d0
@@ -23603,7 +23603,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.853d0
@@ -23621,7 +23621,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.612d0
@@ -23639,7 +23639,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.280d0
@@ -23660,7 +23660,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.716d0
@@ -23681,7 +23681,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 124.410d0
@@ -23702,7 +23702,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.788d0
@@ -23720,7 +23720,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.132d0
@@ -23738,7 +23738,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.735d0
@@ -23759,7 +23759,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.972d0
@@ -23777,7 +23777,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.612d0
@@ -23795,7 +23795,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.986d0
@@ -23813,7 +23813,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.097d0
@@ -23831,7 +23831,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.312d0
@@ -23849,7 +23849,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.001d0
@@ -23867,7 +23867,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.808d0
@@ -23885,7 +23885,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.191d0
@@ -23903,7 +23903,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.895d0
@@ -23921,7 +23921,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.457d0
@@ -23939,7 +23939,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.681d0
@@ -23957,7 +23957,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.731d0
@@ -23975,7 +23975,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.019d0
@@ -23993,7 +23993,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 116.573d0
@@ -24011,7 +24011,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.065d0
@@ -24029,7 +24029,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.322d0
@@ -24047,7 +24047,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.129d0
@@ -24065,7 +24065,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.523d0
@@ -24083,7 +24083,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.001d0
@@ -24101,7 +24101,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.253d0
@@ -24119,7 +24119,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.666d0
@@ -24137,7 +24137,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 116.851d0
@@ -24155,7 +24155,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 128.037d0
@@ -24173,7 +24173,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.562d0
@@ -24191,7 +24191,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  62.792d0
@@ -24209,7 +24209,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.239d0
@@ -24227,7 +24227,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.350d0
@@ -24248,7 +24248,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.510d0
@@ -24269,7 +24269,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 122.623d0
@@ -24290,7 +24290,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 122.253d0
@@ -24311,7 +24311,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.408d0
@@ -24329,7 +24329,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.721d0
@@ -24350,7 +24350,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.769d0
@@ -24368,7 +24368,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.105d0
@@ -24386,7 +24386,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.850d0
@@ -24404,7 +24404,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.027d0
@@ -24422,7 +24422,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.794d0
@@ -24440,7 +24440,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.935d0
@@ -24458,7 +24458,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.592d0
@@ -24476,7 +24476,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.437d0
@@ -24494,7 +24494,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.169d0
@@ -24512,7 +24512,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.032d0
@@ -24530,7 +24530,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.588d0
@@ -24548,7 +24548,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.278d0
@@ -24566,7 +24566,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.909d0
@@ -24584,7 +24584,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.947d0
@@ -24602,7 +24602,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.084d0
@@ -24620,7 +24620,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.597d0
@@ -24638,7 +24638,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.775d0
@@ -24656,7 +24656,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.965d0
@@ -24674,7 +24674,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.762d0
@@ -24695,7 +24695,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.030d0
@@ -24716,7 +24716,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.024d0
@@ -24737,7 +24737,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.704d0
@@ -24755,7 +24755,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.421d0
@@ -24773,7 +24773,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.492d0
@@ -24791,7 +24791,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.562d0
@@ -24809,7 +24809,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.888d0
@@ -24827,7 +24827,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.910d0
@@ -24845,7 +24845,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.295d0
@@ -24863,7 +24863,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  87.789d0
@@ -24881,7 +24881,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.949d0
@@ -24899,7 +24899,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.384d0
@@ -24917,7 +24917,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.124d0
@@ -24935,7 +24935,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.361d0
@@ -24953,7 +24953,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.023d0
@@ -24971,7 +24971,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.169d0
@@ -24989,7 +24989,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.685d0
@@ -25007,7 +25007,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.840d0
@@ -25025,7 +25025,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.860d0
@@ -25043,7 +25043,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.750d0
@@ -25061,7 +25061,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.852d0
@@ -25079,7 +25079,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.833d0
@@ -25097,7 +25097,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.081d0
@@ -25115,7 +25115,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.699d0
@@ -25136,7 +25136,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.253d0
@@ -25157,7 +25157,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 123.439d0
@@ -25178,7 +25178,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.491d0
@@ -25199,7 +25199,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.168d0
@@ -25217,7 +25217,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.761d0
@@ -25238,7 +25238,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.405d0
@@ -25256,7 +25256,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.400d0
@@ -25274,7 +25274,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.684d0
@@ -25295,7 +25295,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 118.000d0
@@ -25313,7 +25313,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.471d0
@@ -25334,7 +25334,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 118.000d0
@@ -25352,7 +25352,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 117.000d0
@@ -25370,7 +25370,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.698d0
@@ -25388,7 +25388,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.094d0
@@ -25406,7 +25406,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 124.425d0
@@ -25427,7 +25427,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.478d0
@@ -25445,7 +25445,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.868d0
@@ -25463,7 +25463,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.187d0
@@ -25481,7 +25481,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.317d0
@@ -25499,7 +25499,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.581d0
@@ -25517,7 +25517,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.130d0
@@ -25538,7 +25538,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.826d0
@@ -25556,7 +25556,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.191d0
@@ -25574,7 +25574,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 102.881d0
@@ -25592,7 +25592,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.655d0
@@ -25610,7 +25610,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.565d0
@@ -25628,7 +25628,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.658d0
@@ -25646,7 +25646,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.183d0
@@ -25664,7 +25664,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.328d0
@@ -25682,7 +25682,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.427d0
@@ -25700,7 +25700,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.510d0
@@ -25718,7 +25718,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.542d0
@@ -25736,7 +25736,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.082d0
@@ -25754,7 +25754,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.993d0
@@ -25772,7 +25772,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.698d0
@@ -25790,7 +25790,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.084d0
@@ -25808,7 +25808,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 127.152d0
@@ -25829,7 +25829,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.049d0
@@ -25847,7 +25847,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.313d0
@@ -25865,7 +25865,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 129.492d0
@@ -25886,7 +25886,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.851d0
@@ -25904,7 +25904,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.010d0
@@ -25922,7 +25922,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.968d0
@@ -25940,7 +25940,7 @@ c     --- origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.727d0
@@ -25958,7 +25958,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.087d0
@@ -25976,7 +25976,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 124.549d0
@@ -25994,7 +25994,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.879d0
@@ -26012,7 +26012,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.184d0
@@ -26030,7 +26030,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.056d0
@@ -26048,7 +26048,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.854d0
@@ -26066,7 +26066,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.081d0
@@ -26084,7 +26084,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.349d0
@@ -26102,7 +26102,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.456d0
@@ -26120,7 +26120,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.133d0
@@ -26138,7 +26138,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.047d0
@@ -26156,7 +26156,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.094d0
@@ -26174,7 +26174,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.131d0
@@ -26192,7 +26192,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.697d0
@@ -26210,7 +26210,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.608d0
@@ -26228,7 +26228,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.046d0
@@ -26246,7 +26246,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.679d0
@@ -26264,7 +26264,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.787d0
@@ -26282,7 +26282,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.665d0
@@ -26300,7 +26300,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.902d0
@@ -26318,7 +26318,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.698d0
@@ -26336,7 +26336,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.437d0
@@ -26354,7 +26354,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.861d0
@@ -26372,7 +26372,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.442d0
@@ -26390,7 +26390,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.470d0
@@ -26408,7 +26408,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.569d0
@@ -26426,7 +26426,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.740d0
@@ -26444,7 +26444,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 128.078d0
@@ -26465,7 +26465,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.152d0
@@ -26483,7 +26483,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.513d0
@@ -26501,7 +26501,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.140d0
@@ -26519,7 +26519,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.056d0
@@ -26537,7 +26537,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.096d0
@@ -26555,7 +26555,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.054d0
@@ -26573,7 +26573,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.060d0
@@ -26591,7 +26591,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.150d0
@@ -26609,7 +26609,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.923d0
@@ -26630,7 +26630,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.206d0
@@ -26648,7 +26648,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.150d0
@@ -26666,7 +26666,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.052d0
@@ -26684,7 +26684,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.213d0
@@ -26702,7 +26702,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.724d0
@@ -26720,7 +26720,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.651d0
@@ -26738,7 +26738,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.508d0
@@ -26756,7 +26756,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.649d0
@@ -26774,7 +26774,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.495d0
@@ -26792,7 +26792,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.419d0
@@ -26810,7 +26810,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.697d0
@@ -26828,7 +26828,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.929d0
@@ -26846,7 +26846,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.685d0
@@ -26864,7 +26864,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.590d0
@@ -26882,7 +26882,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.168d0
@@ -26900,7 +26900,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.623d0
@@ -26918,7 +26918,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.233d0
@@ -26936,7 +26936,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.543d0
@@ -26954,7 +26954,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.244d0
@@ -26972,7 +26972,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.964d0
@@ -26990,7 +26990,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.284d0
@@ -27008,7 +27008,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.217d0
@@ -27026,7 +27026,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.502d0
@@ -27044,7 +27044,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.620d0
@@ -27062,7 +27062,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.329d0
@@ -27080,7 +27080,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.607d0
@@ -27098,7 +27098,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.034d0
@@ -27116,7 +27116,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.041d0
@@ -27134,7 +27134,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.753d0
@@ -27152,7 +27152,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.305d0
@@ -27170,7 +27170,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.388d0
@@ -27188,7 +27188,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.260d0
@@ -27206,7 +27206,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.583d0
@@ -27224,7 +27224,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.117d0
@@ -27242,7 +27242,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.695d0
@@ -27260,7 +27260,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.230d0
@@ -27278,7 +27278,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.415d0
@@ -27296,7 +27296,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.196d0
@@ -27314,7 +27314,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.347d0
@@ -27332,7 +27332,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.454d0
@@ -27350,7 +27350,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.110d0
@@ -27368,7 +27368,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.528d0
@@ -27386,7 +27386,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.188d0
@@ -27404,7 +27404,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  94.800d0
@@ -27425,7 +27425,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.459d0
@@ -27443,7 +27443,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.733d0
@@ -27461,7 +27461,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.526d0
@@ -27479,7 +27479,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.334d0
@@ -27497,7 +27497,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  83.915d0
@@ -27515,7 +27515,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.995d0
@@ -27533,7 +27533,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.404d0
@@ -27551,7 +27551,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.520d0
@@ -27569,7 +27569,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.566d0
@@ -27587,7 +27587,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.790d0
@@ -27605,7 +27605,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.565d0
@@ -27623,7 +27623,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 110.383d0
@@ -27641,7 +27641,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.268d0
@@ -27659,7 +27659,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.645d0
@@ -27677,7 +27677,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.132d0
@@ -27695,7 +27695,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.163d0
@@ -27713,7 +27713,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.701d0
@@ -27731,7 +27731,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.460d0
@@ -27749,7 +27749,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.582d0
@@ -27767,7 +27767,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.002d0
@@ -27788,7 +27788,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.089d0
@@ -27806,7 +27806,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.889d0
@@ -27824,7 +27824,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.163d0
@@ -27842,7 +27842,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.849d0
@@ -27860,7 +27860,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.747d0
@@ -27878,7 +27878,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.280d0
@@ -28264,7 +28264,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-6-* MMFF94 DEF  
       bclocal(0) = 110.400d0
@@ -28282,7 +28282,7 @@ c     --- origin:0:*-6-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-6-* MMFF94 DEF 
       bclocal(0) =  57.900d0
@@ -28300,7 +28300,7 @@ c     --- origin:3::*-6-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-6-* MMFF94 DEF  
       bclocal(0) =  90.200d0
@@ -28318,7 +28318,7 @@ c     --- origin:4:*-6-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.926d0
@@ -28339,7 +28339,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.614d0
@@ -28360,7 +28360,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.055d0
@@ -28381,7 +28381,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.905d0
@@ -28399,7 +28399,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.422d0
@@ -28417,7 +28417,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.496d0
@@ -28435,7 +28435,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.317d0
@@ -28453,7 +28453,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.230d0
@@ -28471,7 +28471,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.951d0
@@ -28489,7 +28489,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.346d0
@@ -28507,7 +28507,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.943d0
@@ -28525,7 +28525,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.833d0
@@ -28543,7 +28543,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.503d0
@@ -28564,7 +28564,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.759d0
@@ -28582,7 +28582,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.581d0
@@ -28600,7 +28600,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.081d0
@@ -28618,7 +28618,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 102.846d0
@@ -28639,7 +28639,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.733d0
@@ -28657,7 +28657,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.046d0
@@ -28675,7 +28675,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.462d0
@@ -28693,7 +28693,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 105.875d0
@@ -28711,7 +28711,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.545d0
@@ -28729,7 +28729,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.848d0
@@ -28747,7 +28747,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.339d0
@@ -28765,7 +28765,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  98.438d0
@@ -28786,7 +28786,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.169d0
@@ -28804,7 +28804,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.078d0
@@ -28822,7 +28822,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 105.727d0
@@ -28843,7 +28843,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.694d0
@@ -28861,7 +28861,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.785d0
@@ -28879,7 +28879,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.067d0
@@ -28897,7 +28897,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.404d0
@@ -28915,7 +28915,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.872d0
@@ -28933,7 +28933,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.437d0
@@ -28951,7 +28951,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.468d0
@@ -28969,7 +28969,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.840d0
@@ -28987,7 +28987,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.381d0
@@ -29005,7 +29005,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.216d0
@@ -29026,7 +29026,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.491d0
@@ -29044,7 +29044,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.948d0
@@ -29065,7 +29065,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.410d0
@@ -29083,7 +29083,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.417d0
@@ -29101,7 +29101,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  95.300d0
@@ -29122,7 +29122,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.483d0
@@ -29140,7 +29140,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.233d0
@@ -29158,7 +29158,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.697d0
@@ -29176,7 +29176,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  99.409d0
@@ -29197,7 +29197,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.592d0
@@ -29215,7 +29215,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  99.688d0
@@ -29236,7 +29236,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.242d0
@@ -29254,7 +29254,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.364d0
@@ -29275,7 +29275,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.473d0
@@ -29293,7 +29293,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.152d0
@@ -29311,7 +29311,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.479d0
@@ -29329,7 +29329,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 141.096d0
@@ -29347,7 +29347,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 118.204d0
@@ -29365,7 +29365,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.421d0
@@ -29383,7 +29383,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  89.100d0
@@ -29404,7 +29404,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.587d0
@@ -29422,7 +29422,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.394d0
@@ -29440,7 +29440,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.417d0
@@ -29458,7 +29458,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.253d0
@@ -29476,7 +29476,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 100.000d0
@@ -29494,7 +29494,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 101.000d0
@@ -29512,7 +29512,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  58.680d0
@@ -29530,7 +29530,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  57.087d0
@@ -29548,7 +29548,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 118.533d0
@@ -29566,7 +29566,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.375d0
@@ -29584,7 +29584,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.923d0
@@ -29602,7 +29602,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.692d0
@@ -29620,7 +29620,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 108.000d0
@@ -29638,7 +29638,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 105.409d0
@@ -29659,7 +29659,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.922d0
@@ -29677,7 +29677,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.967d0
@@ -29695,7 +29695,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.274d0
@@ -29713,7 +29713,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-8-* MMFF94 DEF  
       bclocal(0) = 110.400d0
@@ -29731,7 +29731,7 @@ c     --- origin:0:*-8-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-8-* MMFF94 DEF 
       bclocal(0) =  58.500d0
@@ -29749,7 +29749,7 @@ c     --- origin:3::*-8-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-8-* MMFF94 DEF  
       bclocal(0) =  95.000d0
@@ -29767,7 +29767,7 @@ c     --- origin:4:*-8-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.018d0
@@ -29788,7 +29788,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 102.829d0
@@ -29809,7 +29809,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.708d0
@@ -29827,7 +29827,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.240d0
@@ -29845,7 +29845,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.079d0
@@ -29863,7 +29863,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.283d0
@@ -29881,7 +29881,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.478d0
@@ -29899,7 +29899,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.759d0
@@ -29917,7 +29917,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.873d0
@@ -29935,7 +29935,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.200d0
@@ -29953,7 +29953,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.062d0
@@ -29974,7 +29974,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.482d0
@@ -29992,7 +29992,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.630d0
@@ -30010,7 +30010,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.609d0
@@ -30028,7 +30028,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.149d0
@@ -30046,7 +30046,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.092d0
@@ -30064,7 +30064,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.296d0
@@ -30082,7 +30082,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.334d0
@@ -30100,7 +30100,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.100d0
@@ -30118,7 +30118,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 100.510d0
@@ -30139,7 +30139,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  60.000d0
@@ -30157,7 +30157,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.917d0
@@ -30175,7 +30175,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.595d0
@@ -30193,7 +30193,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.816d0
@@ -30211,7 +30211,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.864d0
@@ -30229,7 +30229,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  84.690d0
@@ -30247,7 +30247,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.788d0
@@ -30265,7 +30265,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.439d0
@@ -30283,7 +30283,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.674d0
@@ -30301,7 +30301,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.056d0
@@ -30319,7 +30319,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.842d0
@@ -30337,7 +30337,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 112.000d0
@@ -30355,7 +30355,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  90.370d0
@@ -30376,7 +30376,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.359d0
@@ -30397,7 +30397,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  57.087d0
@@ -30415,7 +30415,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.033d0
@@ -30433,7 +30433,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.361d0
@@ -30451,7 +30451,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 105.998d0
@@ -30472,7 +30472,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 117.000d0
@@ -30490,7 +30490,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.959d0
@@ -30508,7 +30508,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 109.000d0
@@ -30526,7 +30526,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.820d0
@@ -30544,7 +30544,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.120d0
@@ -30562,7 +30562,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.222d0
@@ -30580,7 +30580,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 106.000d0
@@ -30598,7 +30598,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.092d0
@@ -30616,7 +30616,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-9-* MMFF94 DEF  
       bclocal(0) = 111.500d0
@@ -30634,7 +30634,7 @@ c     --- origin:0:*-9-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-9-* MMFF94 DEF  
       bclocal(0) = 109.100d0
@@ -30652,7 +30652,7 @@ c     --- origin:1:*-9-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.409d0
@@ -30673,7 +30673,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.005d0
@@ -30691,7 +30691,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.995d0
@@ -30709,7 +30709,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.413d0
@@ -30727,7 +30727,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.856d0
@@ -30745,7 +30745,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.528d0
@@ -30763,7 +30763,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.488d0
@@ -30781,7 +30781,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.272d0
@@ -30799,7 +30799,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.872d0
@@ -30817,7 +30817,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.822d0
@@ -30835,7 +30835,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.355d0
@@ -30853,7 +30853,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.548d0
@@ -30871,7 +30871,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.303d0
@@ -30889,7 +30889,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.780d0
@@ -30907,7 +30907,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.743d0
@@ -30925,7 +30925,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.751d0
@@ -30943,7 +30943,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.927d0
@@ -30961,7 +30961,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.779d0
@@ -30982,7 +30982,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.199d0
@@ -31000,7 +31000,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.907d0
@@ -31018,7 +31018,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.663d0
@@ -31036,7 +31036,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.538d0
@@ -31054,7 +31054,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.440d0
@@ -31072,7 +31072,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.551d0
@@ -31090,7 +31090,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.796d0
@@ -31108,7 +31108,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.578d0
@@ -31126,7 +31126,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.943d0
@@ -31144,7 +31144,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.195d0
@@ -31162,7 +31162,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.289d0
@@ -31180,7 +31180,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.780d0
@@ -31198,7 +31198,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.989d0
@@ -31216,7 +31216,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.461d0
@@ -31234,7 +31234,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.641d0
@@ -31252,7 +31252,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.581d0
@@ -31270,7 +31270,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 161.741d0
@@ -31288,7 +31288,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.868d0
@@ -31306,7 +31306,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.043d0
@@ -31324,7 +31324,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.154d0
@@ -31342,7 +31342,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.014d0
@@ -31360,7 +31360,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.413d0
@@ -31378,7 +31378,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.417d0
@@ -31396,7 +31396,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.325d0
@@ -31414,7 +31414,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.711d0
@@ -31432,7 +31432,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.162d0
@@ -31450,7 +31450,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.871d0
@@ -31468,7 +31468,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.056d0
@@ -31486,7 +31486,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.149d0
@@ -31504,7 +31504,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-10-* MMFF94 DEF 
       bclocal(0) = 117.500d0
@@ -31522,7 +31522,7 @@ c     --- origin:0:*-10-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-10-* MMFF94 DEF
       bclocal(0) =  58.900d0
@@ -31540,7 +31540,7 @@ c     --- origin:3::*-10-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-10-* MMFF94 DEF 
       bclocal(0) =  92.900d0
@@ -31558,7 +31558,7 @@ c     --- origin:4:*-10-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.909d0
@@ -31579,7 +31579,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.916d0
@@ -31597,7 +31597,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.600d0
@@ -31618,7 +31618,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.865d0
@@ -31639,7 +31639,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.189d0
@@ -31657,7 +31657,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.005d0
@@ -31675,7 +31675,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.009d0
@@ -31693,7 +31693,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.388d0
@@ -31711,7 +31711,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.679d0
@@ -31729,7 +31729,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.390d0
@@ -31747,7 +31747,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.066d0
@@ -31768,7 +31768,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.332d0
@@ -31786,7 +31786,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.838d0
@@ -31804,7 +31804,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.314d0
@@ -31822,7 +31822,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.033d0
@@ -31840,7 +31840,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.599d0
@@ -31858,7 +31858,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.185d0
@@ -31876,7 +31876,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.315d0
@@ -31894,7 +31894,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.878d0
@@ -31912,7 +31912,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.703d0
@@ -31930,7 +31930,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.609d0
@@ -31948,7 +31948,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.544d0
@@ -31966,7 +31966,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.553d0
@@ -31984,7 +31984,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.506d0
@@ -32002,7 +32002,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.274d0
@@ -32023,7 +32023,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.236d0
@@ -32041,7 +32041,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.133d0
@@ -32062,7 +32062,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.075d0
@@ -32080,7 +32080,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.608d0
@@ -32098,7 +32098,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.443d0
@@ -32116,7 +32116,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.377d0
@@ -32134,7 +32134,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.867d0
@@ -32152,7 +32152,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.162d0
@@ -32170,7 +32170,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.969d0
@@ -32188,7 +32188,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.612d0
@@ -32206,7 +32206,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.540d0
@@ -32224,7 +32224,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.349d0
@@ -32242,7 +32242,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.929d0
@@ -32260,7 +32260,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.157d0
@@ -32278,7 +32278,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.912d0
@@ -32296,7 +32296,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.277d0
@@ -32317,7 +32317,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.201d0
@@ -32335,7 +32335,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.633d0
@@ -32353,7 +32353,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.596d0
@@ -32371,7 +32371,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.680d0
@@ -32389,7 +32389,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.913d0
@@ -32407,7 +32407,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.447d0
@@ -32425,7 +32425,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.381d0
@@ -32443,7 +32443,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.574d0
@@ -32461,7 +32461,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.702d0
@@ -32479,7 +32479,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.214d0
@@ -32497,7 +32497,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.476d0
@@ -32515,7 +32515,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.160d0
@@ -32533,7 +32533,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.599d0
@@ -32551,7 +32551,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.206d0
@@ -32569,7 +32569,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.501d0
@@ -32587,7 +32587,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.553d0
@@ -32605,7 +32605,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.309d0
@@ -32623,7 +32623,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.715d0
@@ -32641,7 +32641,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.743d0
@@ -32659,7 +32659,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.033d0
@@ -32677,7 +32677,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.694d0
@@ -32695,7 +32695,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.394d0
@@ -32713,7 +32713,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.703d0
@@ -32731,7 +32731,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  58.894d0
@@ -32749,7 +32749,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.583d0
@@ -32767,7 +32767,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.785d0
@@ -32785,7 +32785,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.630d0
@@ -32806,7 +32806,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 113.000d0
@@ -32824,7 +32824,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 114.000d0
@@ -32842,7 +32842,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.227d0
@@ -32860,7 +32860,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 113.000d0
@@ -32878,7 +32878,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.067d0
@@ -32896,7 +32896,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.099d0
@@ -32914,7 +32914,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.575d0
@@ -32932,7 +32932,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.412d0
@@ -32950,7 +32950,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-15-* MMFF94 DEF 
       bclocal(0) =  97.900d0
@@ -32968,7 +32968,7 @@ c     --- origin:0:*-15-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-15-* MMFF94 DEF 
       bclocal(0) =  80.200d0
@@ -32986,7 +32986,7 @@ c     --- origin:4:*-15-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  97.335d0
@@ -33007,7 +33007,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.853d0
@@ -33025,7 +33025,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.326d0
@@ -33043,7 +33043,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.370d0
@@ -33061,7 +33061,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.814d0
@@ -33079,7 +33079,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 100.316d0
@@ -33100,7 +33100,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.641d0
@@ -33118,7 +33118,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.069d0
@@ -33136,7 +33136,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.913d0
@@ -33154,7 +33154,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.768d0
@@ -33172,7 +33172,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.732d0
@@ -33190,7 +33190,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.613d0
@@ -33208,7 +33208,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  97.111d0
@@ -33229,7 +33229,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.643d0
@@ -33247,7 +33247,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.686d0
@@ -33265,7 +33265,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.330d0
@@ -33283,7 +33283,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.066d0
@@ -33301,7 +33301,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  96.494d0
@@ -33322,7 +33322,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.108d0
@@ -33340,7 +33340,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.813d0
@@ -33358,7 +33358,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.780d0
@@ -33376,7 +33376,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.789d0
@@ -33394,7 +33394,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.942d0
@@ -33412,7 +33412,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.872d0
@@ -33430,7 +33430,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.424d0
@@ -33448,7 +33448,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.075d0
@@ -33466,7 +33466,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.399d0
@@ -33484,7 +33484,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  79.842d0
@@ -33502,7 +33502,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.541d0
@@ -33520,7 +33520,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.051d0
@@ -33538,7 +33538,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) =  97.000d0
@@ -33556,7 +33556,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.231d0
@@ -33574,7 +33574,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.143d0
@@ -33592,7 +33592,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.976d0
@@ -33610,7 +33610,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.524d0
@@ -33628,7 +33628,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.105d0
@@ -33646,7 +33646,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.715d0
@@ -33664,7 +33664,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.534d0
@@ -33682,7 +33682,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.893d0
@@ -33700,7 +33700,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.173d0
@@ -33718,7 +33718,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.790d0
@@ -33736,7 +33736,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.040d0
@@ -33754,7 +33754,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  99.239d0
@@ -33775,7 +33775,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  73.428d0
@@ -33793,7 +33793,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.589d0
@@ -33811,7 +33811,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.505d0
@@ -33829,7 +33829,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  87.982d0
@@ -33847,7 +33847,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.851d0
@@ -33865,7 +33865,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.428d0
@@ -33883,7 +33883,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.710d0
@@ -33901,7 +33901,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  79.546d0
@@ -33919,7 +33919,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.802d0
@@ -33937,7 +33937,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.197d0
@@ -33955,7 +33955,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.423d0
@@ -33973,7 +33973,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  96.222d0
@@ -33994,7 +33994,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  93.377d0
@@ -34015,7 +34015,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-17-* MMFF94 DEF 
       bclocal(0) =  99.400d0
@@ -34033,7 +34033,7 @@ c     --- origin:0:*-17-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-17-* MMFF94 DEF 
       bclocal(0) =  78.400d0
@@ -34051,7 +34051,7 @@ c     --- origin:4:*-17-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  93.266d0
@@ -34069,7 +34069,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.732d0
@@ -34087,7 +34087,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.852d0
@@ -34105,7 +34105,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.132d0
@@ -34123,7 +34123,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 107.104d0
@@ -34141,7 +34141,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.498d0
@@ -34159,7 +34159,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.839d0
@@ -34177,7 +34177,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.368d0
@@ -34195,7 +34195,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.591d0
@@ -34213,7 +34213,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.911d0
@@ -34231,7 +34231,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.901d0
@@ -34249,7 +34249,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.412d0
@@ -34267,7 +34267,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.882d0
@@ -34285,7 +34285,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.431d0
@@ -34303,7 +34303,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.766d0
@@ -34321,7 +34321,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.431d0
@@ -34339,7 +34339,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.808d0
@@ -34357,7 +34357,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.549d0
@@ -34375,7 +34375,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.737d0
@@ -34393,7 +34393,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.928d0
@@ -34411,7 +34411,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.313d0
@@ -34429,7 +34429,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  78.354d0
@@ -34447,7 +34447,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.169d0
@@ -34465,7 +34465,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.633d0
@@ -34483,7 +34483,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-18-* MMFF94 DEF 
       bclocal(0) = 104.600d0
@@ -34501,7 +34501,7 @@ c     --- origin:0:*-18-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-18-* MMFF94 DEF 
       bclocal(0) =  80.300d0
@@ -34519,7 +34519,7 @@ c     --- origin:4:*-18-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 101.166d0
@@ -34540,7 +34540,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.420d0
@@ -34558,7 +34558,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.883d0
@@ -34576,7 +34576,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  95.671d0
@@ -34597,7 +34597,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.465d0
@@ -34615,7 +34615,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.315d0
@@ -34633,7 +34633,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.417d0
@@ -34651,7 +34651,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 107.066d0
@@ -34672,7 +34672,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.070d0
@@ -34690,7 +34690,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  98.014d0
@@ -34711,7 +34711,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 106.586d0
@@ -34729,7 +34729,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 102.402d0
@@ -34747,7 +34747,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.492d0
@@ -34765,7 +34765,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.668d0
@@ -34783,7 +34783,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.849d0
@@ -34801,7 +34801,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.979d0
@@ -34819,7 +34819,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.489d0
@@ -34837,7 +34837,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.668d0
@@ -34855,7 +34855,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.361d0
@@ -34873,7 +34873,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.453d0
@@ -34891,7 +34891,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.747d0
@@ -34909,7 +34909,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 103.052d0
@@ -34930,7 +34930,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.446d0
@@ -34948,7 +34948,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 108.063d0
@@ -34969,7 +34969,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.229d0
@@ -34987,7 +34987,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.815d0
@@ -35005,7 +35005,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.180d0
@@ -35023,7 +35023,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.945d0
@@ -35041,7 +35041,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.378d0
@@ -35059,7 +35059,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.227d0
@@ -35077,7 +35077,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.959d0
@@ -35095,7 +35095,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.976d0
@@ -35113,7 +35113,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.170d0
@@ -35131,7 +35131,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.399d0
@@ -35149,7 +35149,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.292d0
@@ -35167,7 +35167,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.508d0
@@ -35185,7 +35185,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  80.297d0
@@ -35203,7 +35203,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.247d0
@@ -35221,7 +35221,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 120.924d0
@@ -35242,7 +35242,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 105.280d0
@@ -35260,7 +35260,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 101.600d0
@@ -35278,7 +35278,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 108.548d0
@@ -35299,7 +35299,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 126.841d0
@@ -35317,7 +35317,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.548d0
@@ -35335,7 +35335,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.139d0
@@ -35353,7 +35353,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 121.426d0
@@ -35371,7 +35371,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.212d0
@@ -35389,7 +35389,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.771d0
@@ -35407,7 +35407,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.401d0
@@ -35425,7 +35425,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.380d0
@@ -35443,7 +35443,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  99.854d0
@@ -35461,7 +35461,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  99.200d0
@@ -35479,7 +35479,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.466d0
@@ -35497,7 +35497,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.926d0
@@ -35515,7 +35515,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.665d0
@@ -35533,7 +35533,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.735d0
@@ -35551,7 +35551,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  99.905d0
@@ -35572,7 +35572,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.868d0
@@ -35590,7 +35590,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-19-* MMFF94 DEF 
       bclocal(0) = 108.700d0
@@ -35608,7 +35608,7 @@ c     --- origin:0:*-19-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-19-* MMFF94 DEF 
       bclocal(0) =  89.900d0
@@ -35626,7 +35626,7 @@ c     --- origin:4:*-19-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.339d0
@@ -35644,7 +35644,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 110.795d0
@@ -35662,7 +35662,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.958d0
@@ -35680,7 +35680,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.521d0
@@ -35698,7 +35698,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.380d0
@@ -35716,7 +35716,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 108.947d0
@@ -35734,7 +35734,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.828d0
@@ -35752,7 +35752,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.858d0
@@ -35770,7 +35770,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.924d0
@@ -35788,7 +35788,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.633d0
@@ -35806,7 +35806,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.981d0
@@ -35824,7 +35824,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 108.699d0
@@ -35842,7 +35842,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.677d0
@@ -35860,7 +35860,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.070d0
@@ -35878,7 +35878,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 106.756d0
@@ -35896,7 +35896,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.280d0
@@ -35914,7 +35914,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.022d0
@@ -35932,7 +35932,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.096d0
@@ -35950,7 +35950,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.099d0
@@ -35968,7 +35968,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.683d0
@@ -35986,7 +35986,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.597d0
@@ -36004,7 +36004,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.681d0
@@ -36022,7 +36022,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.931d0
@@ -36040,7 +36040,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.045d0
@@ -36058,7 +36058,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-20-* MMFF94 DEF 
       bclocal(0) = 113.200d0
@@ -36076,7 +36076,7 @@ c     --- origin:0:*-20-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-20-* MMFF94 DEF 
       bclocal(0) =  88.800d0
@@ -36094,7 +36094,7 @@ c     --- origin:4:*-20-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.131d0
@@ -36112,7 +36112,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.940d0
@@ -36130,7 +36130,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.057d0
@@ -36151,7 +36151,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.677d0
@@ -36169,7 +36169,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.090d0
@@ -36187,7 +36187,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.057d0
@@ -36205,7 +36205,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.993d0
@@ -36223,7 +36223,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.773d0
@@ -36241,7 +36241,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.226d0
@@ -36259,7 +36259,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.383d0
@@ -36277,7 +36277,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.313d0
@@ -36298,7 +36298,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.201d0
@@ -36316,7 +36316,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.096d0
@@ -36334,7 +36334,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.611d0
@@ -36352,7 +36352,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.220d0
@@ -36370,7 +36370,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.505d0
@@ -36388,7 +36388,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.650d0
@@ -36406,7 +36406,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.787d0
@@ -36424,7 +36424,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.187d0
@@ -36442,7 +36442,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.074d0
@@ -36460,7 +36460,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.060d0
@@ -36478,7 +36478,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.035d0
@@ -36496,7 +36496,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.851d0
@@ -36514,7 +36514,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.750d0
@@ -36532,7 +36532,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.138d0
@@ -36550,7 +36550,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.919d0
@@ -36568,7 +36568,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.989d0
@@ -36589,7 +36589,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.611d0
@@ -36607,7 +36607,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  87.271d0
@@ -36625,7 +36625,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.988d0
@@ -36643,7 +36643,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.849d0
@@ -36661,7 +36661,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.891d0
@@ -36679,7 +36679,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.951d0
@@ -36697,7 +36697,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.273d0
@@ -36715,7 +36715,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  88.961d0
@@ -36736,7 +36736,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.667d0
@@ -36754,7 +36754,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  85.619d0
@@ -36772,7 +36772,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.707d0
@@ -36790,7 +36790,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.078d0
@@ -36808,7 +36808,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.312d0
@@ -36826,7 +36826,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.107d0
@@ -36847,7 +36847,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.352d0
@@ -36868,7 +36868,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.011d0
@@ -36889,7 +36889,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.826d0
@@ -36907,7 +36907,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.010d0
@@ -36925,7 +36925,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.117d0
@@ -36946,7 +36946,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.339d0
@@ -36964,7 +36964,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 113.000d0
@@ -36982,7 +36982,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.570d0
@@ -37000,7 +37000,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.940d0
@@ -37021,7 +37021,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.722d0
@@ -37039,7 +37039,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.038d0
@@ -37060,7 +37060,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 112.000d0
@@ -37078,7 +37078,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.670d0
@@ -37096,7 +37096,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.331d0
@@ -37114,7 +37114,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.686d0
@@ -37132,7 +37132,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.408d0
@@ -37150,7 +37150,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.666d0
@@ -37168,7 +37168,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.868d0
@@ -37186,7 +37186,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.117d0
@@ -37204,7 +37204,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  93.413d0
@@ -37225,7 +37225,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.205d0
@@ -37243,7 +37243,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.705d0
@@ -37261,7 +37261,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  87.873d0
@@ -37279,7 +37279,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.606d0
@@ -37297,7 +37297,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  91.244d0
@@ -37318,7 +37318,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.782d0
@@ -37336,7 +37336,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.640d0
@@ -37354,7 +37354,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.525d0
@@ -37372,7 +37372,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.564d0
@@ -37390,7 +37390,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.845d0
@@ -37408,7 +37408,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.170d0
@@ -37426,7 +37426,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  87.497d0
@@ -37444,7 +37444,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  86.657d0
@@ -37462,7 +37462,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.360d0
@@ -37480,7 +37480,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.020d0
@@ -37498,7 +37498,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.460d0
@@ -37516,7 +37516,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.673d0
@@ -37534,7 +37534,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.309d0
@@ -37552,7 +37552,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.603d0
@@ -37570,7 +37570,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.821d0
@@ -37588,7 +37588,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 118.108d0
@@ -37609,7 +37609,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.399d0
@@ -37627,7 +37627,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.361d0
@@ -37645,7 +37645,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.037d0
@@ -37663,7 +37663,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.888d0
@@ -37681,7 +37681,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.048d0
@@ -37699,7 +37699,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.793d0
@@ -37717,7 +37717,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.483d0
@@ -37735,7 +37735,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.468d0
@@ -37753,7 +37753,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  86.726d0
@@ -37771,7 +37771,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.977d0
@@ -37789,7 +37789,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.108d0
@@ -37807,7 +37807,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.480d0
@@ -37825,7 +37825,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.185d0
@@ -37843,7 +37843,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.656d0
@@ -37861,7 +37861,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.298d0
@@ -37879,7 +37879,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  88.477d0
@@ -37897,7 +37897,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.644d0
@@ -37915,7 +37915,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  90.294d0
@@ -37936,7 +37936,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.817d0
@@ -37954,7 +37954,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  86.669d0
@@ -37972,7 +37972,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  84.818d0
@@ -37990,7 +37990,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.745d0
@@ -38008,7 +38008,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  85.303d0
@@ -38029,7 +38029,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.143d0
@@ -38047,7 +38047,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.128d0
@@ -38065,7 +38065,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.709d0
@@ -38083,7 +38083,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  86.810d0
@@ -38101,7 +38101,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.254d0
@@ -38119,7 +38119,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.408d0
@@ -38137,7 +38137,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.540d0
@@ -38155,7 +38155,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.879d0
@@ -38173,7 +38173,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.090d0
@@ -38191,7 +38191,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.829d0
@@ -38209,7 +38209,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  79.399d0
@@ -38227,7 +38227,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.811d0
@@ -38245,7 +38245,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.805d0
@@ -38263,7 +38263,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.943d0
@@ -38281,7 +38281,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.365d0
@@ -38299,7 +38299,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-22-* MMFF94 DEF 
       bclocal(0) = 116.100d0
@@ -38317,7 +38317,7 @@ c     --- origin:0:*-22-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-22-* MMFF94 DEF
       bclocal(0) =  59.400d0
@@ -38335,7 +38335,7 @@ c     --- origin:3::*-22-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-22-* MMFF94 DEF 
       bclocal(0) =  91.600d0
@@ -38353,7 +38353,7 @@ c     --- origin:4:*-22-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.483d0
@@ -38371,7 +38371,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.360d0
@@ -38389,7 +38389,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.424d0
@@ -38407,7 +38407,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.720d0
@@ -38425,7 +38425,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.788d0
@@ -38446,7 +38446,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.545d0
@@ -38464,7 +38464,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.469d0
@@ -38482,7 +38482,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.087d0
@@ -38500,7 +38500,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.265d0
@@ -38518,7 +38518,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.246d0
@@ -38539,7 +38539,7 @@ c     --- cross term origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.041d0
@@ -38557,7 +38557,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.899d0
@@ -38575,7 +38575,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  48.820d0
@@ -38593,7 +38593,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.147d0
@@ -38611,7 +38611,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.957d0
@@ -38629,7 +38629,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.869d0
@@ -38647,7 +38647,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.319d0
@@ -38665,7 +38665,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.260d0
@@ -38683,7 +38683,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  60.845d0
@@ -38701,7 +38701,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.146d0
@@ -38719,7 +38719,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.977d0
@@ -38737,7 +38737,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.718d0
@@ -38755,7 +38755,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.738d0
@@ -38773,7 +38773,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.646d0
@@ -38791,7 +38791,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.261d0
@@ -38809,7 +38809,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.750d0
@@ -38827,7 +38827,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.047d0
@@ -38845,7 +38845,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.869d0
@@ -38863,7 +38863,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.252d0
@@ -38881,7 +38881,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.287d0
@@ -38899,7 +38899,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.217d0
@@ -38917,7 +38917,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.464d0
@@ -38935,7 +38935,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.288d0
@@ -38953,7 +38953,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.441d0
@@ -38971,7 +38971,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.033d0
@@ -38989,7 +38989,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 118.000d0
@@ -39007,7 +39007,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.650d0
@@ -39025,7 +39025,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.034d0
@@ -39043,7 +39043,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.455d0
@@ -39061,7 +39061,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.890d0
@@ -39079,7 +39079,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.227d0
@@ -39097,7 +39097,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.938d0
@@ -39118,7 +39118,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.836d0
@@ -39136,7 +39136,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.758d0
@@ -39154,7 +39154,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.806d0
@@ -39172,7 +39172,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 108.296d0
@@ -39190,7 +39190,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.865d0
@@ -39208,7 +39208,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 110.000d0
@@ -39226,7 +39226,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.875d0
@@ -39247,7 +39247,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.438d0
@@ -39265,7 +39265,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.855d0
@@ -39283,7 +39283,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 122.000d0
@@ -39301,7 +39301,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.128d0
@@ -39319,7 +39319,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 112.000d0
@@ -39337,7 +39337,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.409d0
@@ -39355,7 +39355,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.583d0
@@ -39373,7 +39373,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.009d0
@@ -39391,7 +39391,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.942d0
@@ -39409,7 +39409,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  60.711d0
@@ -39427,7 +39427,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.170d0
@@ -39445,7 +39445,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  68.138d0
@@ -39463,7 +39463,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.368d0
@@ -39481,7 +39481,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.144d0
@@ -39499,7 +39499,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  61.507d0
@@ -39517,7 +39517,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.411d0
@@ -39535,7 +39535,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  60.603d0
@@ -39553,7 +39553,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.859d0
@@ -39571,7 +39571,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 116.086d0
@@ -39589,7 +39589,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.988d0
@@ -39607,7 +39607,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 117.971d0
@@ -39625,7 +39625,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.473d0
@@ -39643,7 +39643,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.606d0
@@ -39661,7 +39661,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.404d0
@@ -39679,7 +39679,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.106d0
@@ -39697,7 +39697,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.054d0
@@ -39715,7 +39715,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.430d0
@@ -39733,7 +39733,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.930d0
@@ -39751,7 +39751,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.070d0
@@ -39769,7 +39769,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  60.000d0
@@ -39790,7 +39790,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.653d0
@@ -39808,7 +39808,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.514d0
@@ -39826,7 +39826,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.415d0
@@ -39844,7 +39844,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.135d0
@@ -39862,7 +39862,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  61.163d0
@@ -39880,7 +39880,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.045d0
@@ -39898,7 +39898,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  61.536d0
@@ -39916,7 +39916,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.380d0
@@ -39934,7 +39934,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.095d0
@@ -39952,7 +39952,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.774d0
@@ -39970,7 +39970,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  51.029d0
@@ -39988,7 +39988,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.789d0
@@ -40006,7 +40006,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-25-* MMFF94 DEF 
       bclocal(0) = 106.500d0
@@ -40024,7 +40024,7 @@ c     --- origin:0:*-25-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-25-* MMFF94 DEF 
       bclocal(0) =  89.100d0
@@ -40042,7 +40042,7 @@ c     --- origin:4:*-25-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  99.158d0
@@ -40060,7 +40060,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.423d0
@@ -40078,7 +40078,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  98.288d0
@@ -40096,7 +40096,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.775d0
@@ -40114,7 +40114,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.890d0
@@ -40132,7 +40132,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.431d0
@@ -40150,7 +40150,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.707d0
@@ -40168,7 +40168,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 107.891d0
@@ -40186,7 +40186,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.924d0
@@ -40204,7 +40204,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.644d0
@@ -40222,7 +40222,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  98.760d0
@@ -40240,7 +40240,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.363d0
@@ -40258,7 +40258,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 111.306d0
@@ -40276,7 +40276,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.892d0
@@ -40294,7 +40294,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.148d0
@@ -40312,7 +40312,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  85.839d0
@@ -40330,7 +40330,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.127d0
@@ -40348,7 +40348,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.249d0
@@ -40366,7 +40366,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.026d0
@@ -40384,7 +40384,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.307d0
@@ -40402,7 +40402,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  99.311d0
@@ -40420,7 +40420,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.161d0
@@ -40438,7 +40438,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.407d0
@@ -40456,7 +40456,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.194d0
@@ -40474,7 +40474,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.260d0
@@ -40492,7 +40492,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.818d0
@@ -40510,7 +40510,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.688d0
@@ -40528,7 +40528,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.280d0
@@ -40546,7 +40546,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.314d0
@@ -40564,7 +40564,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.601d0
@@ -40582,7 +40582,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.242d0
@@ -40600,7 +40600,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.058d0
@@ -40618,7 +40618,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.341d0
@@ -40636,7 +40636,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.893d0
@@ -40654,7 +40654,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.655d0
@@ -40672,7 +40672,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.094d0
@@ -40690,7 +40690,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.325d0
@@ -40708,7 +40708,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.742d0
@@ -40726,7 +40726,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.617d0
@@ -40744,7 +40744,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.767d0
@@ -40762,7 +40762,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.493d0
@@ -40780,7 +40780,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.856d0
@@ -40798,7 +40798,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.640d0
@@ -40816,7 +40816,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.624d0
@@ -40834,7 +40834,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.045d0
@@ -40852,7 +40852,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.224d0
@@ -40870,7 +40870,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.320d0
@@ -40888,7 +40888,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.673d0
@@ -40906,7 +40906,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.138d0
@@ -40924,7 +40924,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.964d0
@@ -40942,7 +40942,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.729d0
@@ -40960,7 +40960,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  85.039d0
@@ -40978,7 +40978,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.595d0
@@ -40996,7 +40996,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.612d0
@@ -41014,7 +41014,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 122.857d0
@@ -41032,7 +41032,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.430d0
@@ -41050,7 +41050,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.255d0
@@ -41068,7 +41068,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.057d0
@@ -41086,7 +41086,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 110.308d0
@@ -41104,7 +41104,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.740d0
@@ -41122,7 +41122,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.168d0
@@ -41140,7 +41140,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 117.733d0
@@ -41158,7 +41158,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.823d0
@@ -41176,7 +41176,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.124d0
@@ -41194,7 +41194,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.107d0
@@ -41212,7 +41212,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.776d0
@@ -41230,7 +41230,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  95.270d0
@@ -41248,7 +41248,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.441d0
@@ -41266,7 +41266,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.995d0
@@ -41284,7 +41284,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.950d0
@@ -41302,7 +41302,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 100.483d0
@@ -41320,7 +41320,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-26-* MMFF94 DEF 
       bclocal(0) =  98.100d0
@@ -41338,7 +41338,7 @@ c     --- origin:0:*-26-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-26-* MMFF94 DEF 
       bclocal(0) =  83.600d0
@@ -41356,7 +41356,7 @@ c     --- origin:4:*-26-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.054d0
@@ -41374,7 +41374,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.331d0
@@ -41392,7 +41392,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.175d0
@@ -41410,7 +41410,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  98.926d0
@@ -41428,7 +41428,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.260d0
@@ -41446,7 +41446,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.171d0
@@ -41464,7 +41464,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.571d0
@@ -41482,7 +41482,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  98.754d0
@@ -41500,7 +41500,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  97.353d0
@@ -41518,7 +41518,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  97.935d0
@@ -41536,7 +41536,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.061d0
@@ -41554,7 +41554,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.021d0
@@ -41572,7 +41572,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.662d0
@@ -41590,7 +41590,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.069d0
@@ -41608,7 +41608,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.096d0
@@ -41626,7 +41626,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  94.795d0
@@ -41644,7 +41644,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.730d0
@@ -41662,7 +41662,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.565d0
@@ -41680,7 +41680,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.783d0
@@ -41698,7 +41698,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  96.577d0
@@ -41716,7 +41716,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.592d0
@@ -41734,7 +41734,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.164d0
@@ -41752,7 +41752,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  83.624d0
@@ -41770,7 +41770,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  94.470d0
@@ -41788,7 +41788,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-30-* MMFF94 DEF 
       bclocal(0) = 134.200d0
@@ -41806,7 +41806,7 @@ c     --- origin:0:*-30-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-30-* MMFF94 DEF 
       bclocal(0) = 131.800d0
@@ -41824,7 +41824,7 @@ c     --- origin:1:*-30-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-30-* MMFF94 DEF 
       bclocal(0) =  97.700d0
@@ -41842,7 +41842,7 @@ c     --- origin:4:*-30-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:7:*-30-* MMFF94 DEF 
       bclocal(0) =  92.300d0
@@ -41860,7 +41860,7 @@ c     --- origin:7:*-30-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.756d0
@@ -41878,7 +41878,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.439d0
@@ -41896,7 +41896,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.187d0
@@ -41914,7 +41914,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.100d0
@@ -41932,7 +41932,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.225d0
@@ -41950,7 +41950,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.566d0
@@ -41968,7 +41968,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 135.975d0
@@ -41986,7 +41986,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 137.596d0
@@ -42004,7 +42004,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.677d0
@@ -42022,7 +42022,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.957d0
@@ -42040,7 +42040,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.418d0
@@ -42058,7 +42058,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.102d0
@@ -42076,7 +42076,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 136.444d0
@@ -42094,7 +42094,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 131.835d0
@@ -42115,7 +42115,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 132.652d0
@@ -42136,7 +42136,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 139.045d0
@@ -42154,7 +42154,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.718d0
@@ -42172,7 +42172,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.359d0
@@ -42190,7 +42190,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.228d0
@@ -42208,7 +42208,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 100.902d0
@@ -42226,7 +42226,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  95.513d0
@@ -42247,7 +42247,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.909d0
@@ -42265,7 +42265,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.526d0
@@ -42283,7 +42283,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 138.631d0
@@ -42301,7 +42301,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.007d0
@@ -42319,7 +42319,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.732d0
@@ -42337,7 +42337,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 145.470d0
@@ -42355,7 +42355,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.792d0
@@ -42373,7 +42373,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-34-* MMFF94 DEF 
       bclocal(0) = 109.400d0
@@ -42391,7 +42391,7 @@ c     --- origin:0:*-34-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-34-* MMFF94 DEF 
       bclocal(0) =  89.400d0
@@ -42409,7 +42409,7 @@ c     --- origin:4:*-34-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.251d0
@@ -42430,7 +42430,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.212d0
@@ -42448,7 +42448,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.399d0
@@ -42466,7 +42466,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.989d0
@@ -42484,7 +42484,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.291d0
@@ -42502,7 +42502,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.135d0
@@ -42520,7 +42520,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.004d0
@@ -42538,7 +42538,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.206d0
@@ -42559,7 +42559,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.045d0
@@ -42577,7 +42577,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 112.000d0
@@ -42595,7 +42595,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.753d0
@@ -42613,7 +42613,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.649d0
@@ -42631,7 +42631,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 108.000d0
@@ -42649,7 +42649,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  89.411d0
@@ -42667,7 +42667,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.526d0
@@ -42685,7 +42685,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 110.000d0
@@ -42703,7 +42703,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.787d0
@@ -42724,7 +42724,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.668d0
@@ -42742,7 +42742,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 108.000d0
@@ -42760,7 +42760,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-37-* MMFF94 DEF 
       bclocal(0) = 118.800d0
@@ -42778,7 +42778,7 @@ c     --- origin:0:*-37-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-37-* MMFF94 DEF 
       bclocal(0) = 115.900d0
@@ -42796,7 +42796,7 @@ c     --- origin:1:*-37-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-37-* MMFF94 DEF
       bclocal(0) =  64.700d0
@@ -42814,7 +42814,7 @@ c     --- origin:3::*-37-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:4:*-37-* MMFF94 DEF 
       bclocal(0) =  91.800d0
@@ -42832,7 +42832,7 @@ c     --- origin:4:*-37-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.419d0
@@ -42853,7 +42853,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.432d0
@@ -42871,7 +42871,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.528d0
@@ -42889,7 +42889,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.024d0
@@ -42907,7 +42907,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.073d0
@@ -42925,7 +42925,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.506d0
@@ -42943,7 +42943,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.695d0
@@ -42964,7 +42964,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.220d0
@@ -42982,7 +42982,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.475d0
@@ -43003,7 +43003,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.784d0
@@ -43021,7 +43021,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.724d0
@@ -43039,7 +43039,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.566d0
@@ -43057,7 +43057,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.916d0
@@ -43075,7 +43075,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.614d0
@@ -43093,7 +43093,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.623d0
@@ -43111,7 +43111,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.571d0
@@ -43132,7 +43132,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.588d0
@@ -43153,7 +43153,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.316d0
@@ -43171,7 +43171,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.238d0
@@ -43192,7 +43192,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.446d0
@@ -43213,7 +43213,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.638d0
@@ -43234,7 +43234,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.432d0
@@ -43252,7 +43252,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.495d0
@@ -43273,7 +43273,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.886d0
@@ -43291,7 +43291,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.868d0
@@ -43309,7 +43309,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.003d0
@@ -43327,7 +43327,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.591d0
@@ -43345,7 +43345,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.918d0
@@ -43363,7 +43363,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.135d0
@@ -43381,7 +43381,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.925d0
@@ -43399,7 +43399,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.065d0
@@ -43417,7 +43417,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.328d0
@@ -43435,7 +43435,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.495d0
@@ -43453,7 +43453,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.859d0
@@ -43471,7 +43471,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.320d0
@@ -43489,7 +43489,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.117d0
@@ -43507,7 +43507,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.045d0
@@ -43525,7 +43525,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.037d0
@@ -43546,7 +43546,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.421d0
@@ -43564,7 +43564,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.125d0
@@ -43582,7 +43582,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.408d0
@@ -43600,7 +43600,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.828d0
@@ -43618,7 +43618,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.357d0
@@ -43636,7 +43636,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.991d0
@@ -43654,7 +43654,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.908d0
@@ -43672,7 +43672,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.029d0
@@ -43690,7 +43690,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.278d0
@@ -43708,7 +43708,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.614d0
@@ -43726,7 +43726,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.425d0
@@ -43744,7 +43744,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.777d0
@@ -43762,7 +43762,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  64.704d0
@@ -43780,7 +43780,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.494d0
@@ -43798,7 +43798,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.600d0
@@ -43816,7 +43816,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.967d0
@@ -43834,7 +43834,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.423d0
@@ -43852,7 +43852,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.905d0
@@ -43870,7 +43870,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.858d0
@@ -43888,7 +43888,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.980d0
@@ -43906,7 +43906,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.977d0
@@ -43927,7 +43927,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.227d0
@@ -43945,7 +43945,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  90.193d0
@@ -43963,7 +43963,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 126.139d0
@@ -43984,7 +43984,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.271d0
@@ -44002,7 +44002,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.619d0
@@ -44020,7 +44020,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.622d0
@@ -44038,7 +44038,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.633d0
@@ -44059,7 +44059,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.572d0
@@ -44077,7 +44077,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 117.860d0
@@ -44095,7 +44095,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.337d0
@@ -44113,7 +44113,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.038d0
@@ -44131,7 +44131,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.163d0
@@ -44149,7 +44149,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.801d0
@@ -44167,7 +44167,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.932d0
@@ -44185,7 +44185,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.052d0
@@ -44203,7 +44203,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.251d0
@@ -44221,7 +44221,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.515d0
@@ -44239,7 +44239,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.384d0
@@ -44257,7 +44257,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.243d0
@@ -44278,7 +44278,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.190d0
@@ -44296,7 +44296,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.567d0
@@ -44317,7 +44317,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.973d0
@@ -44335,7 +44335,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.980d0
@@ -44353,7 +44353,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.778d0
@@ -44374,7 +44374,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.438d0
@@ -44392,7 +44392,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.439d0
@@ -44410,7 +44410,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.664d0
@@ -44428,7 +44428,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.759d0
@@ -44446,7 +44446,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 128.938d0
@@ -44467,7 +44467,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.755d0
@@ -44485,7 +44485,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.355d0
@@ -44503,7 +44503,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.362d0
@@ -44521,7 +44521,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.356d0
@@ -44539,7 +44539,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.349d0
@@ -44557,7 +44557,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.386d0
@@ -44575,7 +44575,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.910d0
@@ -44593,7 +44593,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.605d0
@@ -44611,7 +44611,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.610d0
@@ -44629,7 +44629,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.417d0
@@ -44647,7 +44647,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.904d0
@@ -44665,7 +44665,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.541d0
@@ -44683,7 +44683,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.604d0
@@ -44701,7 +44701,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.535d0
@@ -44719,7 +44719,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.781d0
@@ -44737,7 +44737,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.199d0
@@ -44755,7 +44755,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.041d0
@@ -44773,7 +44773,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.987d0
@@ -44791,7 +44791,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.628d0
@@ -44809,7 +44809,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.250d0
@@ -44827,7 +44827,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.166d0
@@ -44845,7 +44845,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.842d0
@@ -44863,7 +44863,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-38-* MMFF94 DEF 
       bclocal(0) = 113.800d0
@@ -44881,7 +44881,7 @@ c     --- origin:0:*-38-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.406d0
@@ -44902,7 +44902,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.016d0
@@ -44923,7 +44923,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.181d0
@@ -44941,7 +44941,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.032d0
@@ -44959,7 +44959,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.692d0
@@ -44977,7 +44977,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.813d0
@@ -44995,7 +44995,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.516d0
@@ -45013,7 +45013,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-39-* MMFF94 DEF 
       bclocal(0) = 120.700d0
@@ -45031,7 +45031,7 @@ c     --- origin:0:*-39-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-39-* MMFF94 DEF 
       bclocal(0) = 125.400d0
@@ -45049,7 +45049,7 @@ c     --- origin:1:*-39-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 123.380d0
@@ -45070,7 +45070,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.049d0
@@ -45088,7 +45088,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.275d0
@@ -45106,7 +45106,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 133.220d0
@@ -45124,7 +45124,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.045d0
@@ -45142,7 +45142,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.909d0
@@ -45160,7 +45160,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.985d0
@@ -45178,7 +45178,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.707d0
@@ -45196,7 +45196,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.868d0
@@ -45214,7 +45214,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.145d0
@@ -45232,7 +45232,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.725d0
@@ -45250,7 +45250,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.487d0
@@ -45268,7 +45268,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.788d0
@@ -45286,7 +45286,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.961d0
@@ -45304,7 +45304,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 117.061d0
@@ -45322,7 +45322,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 127.770d0
@@ -45343,7 +45343,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 118.352d0
@@ -45364,7 +45364,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 124.000d0
@@ -45382,7 +45382,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.561d0
@@ -45400,7 +45400,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.135d0
@@ -45418,7 +45418,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.009d0
@@ -45436,7 +45436,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.312d0
@@ -45454,7 +45454,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.090d0
@@ -45472,7 +45472,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.832d0
@@ -45490,7 +45490,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.641d0
@@ -45508,7 +45508,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.464d0
@@ -45526,7 +45526,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.599d0
@@ -45547,7 +45547,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.078d0
@@ -45565,7 +45565,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.577d0
@@ -45583,7 +45583,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.936d0
@@ -45601,7 +45601,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.087d0
@@ -45622,7 +45622,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.990d0
@@ -45640,7 +45640,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.800d0
@@ -45658,7 +45658,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.117d0
@@ -45676,7 +45676,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.898d0
@@ -45697,7 +45697,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-40-* MMFF94 DEF 
       bclocal(0) = 115.000d0
@@ -45715,7 +45715,7 @@ c     --- origin:0:*-40-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:3::*-40-* MMFF94 DEF
       bclocal(0) =  57.800d0
@@ -45733,7 +45733,7 @@ c     --- origin:3::*-40-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.703d0
@@ -45751,7 +45751,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.873d0
@@ -45769,7 +45769,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.319d0
@@ -45787,7 +45787,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.742d0
@@ -45805,7 +45805,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.198d0
@@ -45823,7 +45823,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.320d0
@@ -45841,7 +45841,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.665d0
@@ -45859,7 +45859,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.320d0
@@ -45877,7 +45877,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.970d0
@@ -45895,7 +45895,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.483d0
@@ -45913,7 +45913,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.374d0
@@ -45934,7 +45934,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.604d0
@@ -45952,7 +45952,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.349d0
@@ -45973,7 +45973,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.622d0
@@ -45991,7 +45991,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.011d0
@@ -46009,7 +46009,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.226d0
@@ -46027,7 +46027,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.982d0
@@ -46045,7 +46045,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.473d0
@@ -46063,7 +46063,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.483d0
@@ -46081,7 +46081,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.651d0
@@ -46099,7 +46099,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.660d0
@@ -46117,7 +46117,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.626d0
@@ -46135,7 +46135,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.196d0
@@ -46153,7 +46153,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.260d0
@@ -46171,7 +46171,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.087d0
@@ -46189,7 +46189,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.053d0
@@ -46210,7 +46210,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.022d0
@@ -46228,7 +46228,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.106d0
@@ -46246,7 +46246,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.253d0
@@ -46264,7 +46264,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.447d0
@@ -46282,7 +46282,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.240d0
@@ -46300,7 +46300,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.557d0
@@ -46318,7 +46318,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.822d0
@@ -46336,7 +46336,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.261d0
@@ -46354,7 +46354,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.718d0
@@ -46372,7 +46372,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.871d0
@@ -46390,7 +46390,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.139d0
@@ -46408,7 +46408,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.420d0
@@ -46426,7 +46426,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.724d0
@@ -46444,7 +46444,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.808d0
@@ -46465,7 +46465,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.655d0
@@ -46483,7 +46483,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.511d0
@@ -46501,7 +46501,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.602d0
@@ -46519,7 +46519,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 110.000d0
@@ -46537,7 +46537,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.915d0
@@ -46555,7 +46555,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.920d0
@@ -46573,7 +46573,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.085d0
@@ -46591,7 +46591,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.549d0
@@ -46609,7 +46609,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.751d0
@@ -46627,7 +46627,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.725d0
@@ -46645,7 +46645,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.686d0
@@ -46663,7 +46663,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.687d0
@@ -46681,7 +46681,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.497d0
@@ -46699,7 +46699,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  57.777d0
@@ -46717,7 +46717,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.220d0
@@ -46735,7 +46735,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.006d0
@@ -46753,7 +46753,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -46771,7 +46771,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.977d0
@@ -46789,7 +46789,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 118.000d0
@@ -46807,7 +46807,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.336d0
@@ -46825,7 +46825,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.160d0
@@ -46846,7 +46846,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.230d0
@@ -46864,7 +46864,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.288d0
@@ -46885,7 +46885,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.951d0
@@ -46903,7 +46903,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.731d0
@@ -46921,7 +46921,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -46939,7 +46939,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.714d0
@@ -46957,7 +46957,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.188d0
@@ -46975,7 +46975,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.057d0
@@ -46993,7 +46993,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.829d0
@@ -47011,7 +47011,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.018d0
@@ -47029,7 +47029,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.579d0
@@ -47047,7 +47047,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.777d0
@@ -47065,7 +47065,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.867d0
@@ -47083,7 +47083,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.332d0
@@ -47101,7 +47101,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.678d0
@@ -47119,7 +47119,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.345d0
@@ -47137,7 +47137,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-41-* MMFF94 DEF 
       bclocal(0) = 118.300d0
@@ -47155,7 +47155,7 @@ c     --- origin:0:*-41-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.689d0
@@ -47176,7 +47176,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 114.936d0
@@ -47194,7 +47194,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.461d0
@@ -47215,7 +47215,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.810d0
@@ -47233,7 +47233,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.960d0
@@ -47254,7 +47254,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.899d0
@@ -47272,7 +47272,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.795d0
@@ -47290,7 +47290,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.240d0
@@ -47308,7 +47308,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.965d0
@@ -47326,7 +47326,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.748d0
@@ -47344,7 +47344,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 130.600d0
@@ -47365,7 +47365,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.871d0
@@ -47383,7 +47383,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.694d0
@@ -47401,7 +47401,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.919d0
@@ -47419,7 +47419,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.972d0
@@ -47437,7 +47437,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.425d0
@@ -47455,7 +47455,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 130.128d0
@@ -47473,7 +47473,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.175d0
@@ -47491,7 +47491,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-43-* MMFF94 DEF 
       bclocal(0) = 113.300d0
@@ -47509,7 +47509,7 @@ c     --- origin:0:*-43-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.353d0
@@ -47527,7 +47527,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.321d0
@@ -47545,7 +47545,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.050d0
@@ -47563,7 +47563,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.204d0
@@ -47581,7 +47581,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.011d0
@@ -47599,7 +47599,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.637d0
@@ -47617,7 +47617,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.739d0
@@ -47635,7 +47635,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.511d0
@@ -47653,7 +47653,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.034d0
@@ -47671,7 +47671,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.188d0
@@ -47689,7 +47689,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.268d0
@@ -47707,7 +47707,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 121.488d0
@@ -47725,7 +47725,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.913d0
@@ -47743,7 +47743,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.575d0
@@ -47761,7 +47761,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 117.464d0
@@ -47779,7 +47779,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.000d0
@@ -47797,7 +47797,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.373d0
@@ -47815,7 +47815,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.311d0
@@ -47833,7 +47833,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  54.827d0
@@ -47851,7 +47851,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 110.000d0
@@ -47869,7 +47869,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.833d0
@@ -47887,7 +47887,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.652d0
@@ -47905,7 +47905,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.036d0
@@ -47923,7 +47923,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.320d0
@@ -47941,7 +47941,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.008d0
@@ -47959,7 +47959,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.458d0
@@ -47977,7 +47977,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.904d0
@@ -47995,7 +47995,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.463d0
@@ -48013,7 +48013,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.768d0
@@ -48031,7 +48031,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  92.867d0
@@ -48049,7 +48049,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.379d0
@@ -48067,7 +48067,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 116.881d0
@@ -48085,7 +48085,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.347d0
@@ -48103,7 +48103,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 112.132d0
@@ -48121,7 +48121,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.036d0
@@ -48139,7 +48139,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.279d0
@@ -48157,7 +48157,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 115.000d0
@@ -48175,7 +48175,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  57.032d0
@@ -48193,7 +48193,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 118.274d0
@@ -48211,7 +48211,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 112.596d0
@@ -48229,7 +48229,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 110.000d0
@@ -48247,7 +48247,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.350d0
@@ -48265,7 +48265,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.293d0
@@ -48283,7 +48283,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-44-* MMFF94 DEF 
       bclocal(0) =  91.600d0
@@ -48301,7 +48301,7 @@ c     --- origin:0:*-44-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  88.495d0
@@ -48322,7 +48322,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) =  94.137d0
@@ -48343,7 +48343,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  86.270d0
@@ -48361,7 +48361,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  86.194d0
@@ -48379,7 +48379,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.147d0
@@ -48397,7 +48397,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  93.534d0
@@ -48415,7 +48415,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.401d0
@@ -48433,7 +48433,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-45-* MMFF94 DEF 
       bclocal(0) = 116.700d0
@@ -48451,7 +48451,7 @@ c     --- origin:0:*-45-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 118.182d0
@@ -48469,7 +48469,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 118.082d0
@@ -48487,7 +48487,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.589d0
@@ -48505,7 +48505,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 111.682d0
@@ -48523,7 +48523,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.695d0
@@ -48541,7 +48541,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.850d0
@@ -48559,7 +48559,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.194d0
@@ -48577,7 +48577,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.893d0
@@ -48595,7 +48595,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.503d0
@@ -48613,7 +48613,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 128.036d0
@@ -48631,7 +48631,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.857d0
@@ -48649,7 +48649,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.633d0
@@ -48667,7 +48667,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.432d0
@@ -48685,7 +48685,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.711d0
@@ -48703,7 +48703,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.765d0
@@ -48721,7 +48721,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.908d0
@@ -48739,7 +48739,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.962d0
@@ -48757,7 +48757,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-46-* MMFF94 DEF 
       bclocal(0) = 111.000d0
@@ -48775,7 +48775,7 @@ c     --- origin:0:*-46-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 110.492d0
@@ -48793,7 +48793,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.709d0
@@ -48811,7 +48811,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.817d0
@@ -48829,7 +48829,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.569d0
@@ -48847,7 +48847,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.405d0
@@ -48865,7 +48865,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-48-* MMFF94 DEF 
       bclocal(0) = 118.400d0
@@ -48883,7 +48883,7 @@ c     --- origin:0:*-48-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.928d0
@@ -48901,7 +48901,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.969d0
@@ -48919,7 +48919,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-49-* MMFF94 DEF 
       bclocal(0) = 111.400d0
@@ -48937,7 +48937,7 @@ c     --- origin:0:*-49-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.433d0
@@ -48958,7 +48958,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-51-* MMFF94 DEF 
       bclocal(0) = 111.400d0
@@ -48976,7 +48976,7 @@ c     --- origin:0:*-51-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 111.360d0
@@ -49042,7 +49042,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-54-* MMFF94 DEF 
       bclocal(0) = 119.500d0
@@ -49060,7 +49060,7 @@ c     --- origin:0:*-54-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-54-* MMFF94 DEF 
       bclocal(0) = 115.700d0
@@ -49078,7 +49078,7 @@ c     --- origin:1:*-54-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.439d0
@@ -49096,7 +49096,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 124.083d0
@@ -49117,7 +49117,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 122.881d0
@@ -49138,7 +49138,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.398d0
@@ -49156,7 +49156,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.457d0
@@ -49174,7 +49174,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.698d0
@@ -49195,7 +49195,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.439d0
@@ -49213,7 +49213,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 115.000d0
@@ -49231,7 +49231,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.403d0
@@ -49249,7 +49249,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.943d0
@@ -49270,7 +49270,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-55-* MMFF94 DEF 
       bclocal(0) = 120.800d0
@@ -49288,7 +49288,7 @@ c     --- origin:0:*-55-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.946d0
@@ -49306,7 +49306,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 126.448d0
@@ -49327,7 +49327,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.035d0
@@ -49345,7 +49345,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.606d0
@@ -49366,7 +49366,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.082d0
@@ -49384,7 +49384,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.994d0
@@ -49402,7 +49402,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -49420,7 +49420,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.847d0
@@ -49438,7 +49438,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.298d0
@@ -49456,7 +49456,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 124.000d0
@@ -49474,7 +49474,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.573d0
@@ -49492,7 +49492,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.163d0
@@ -49510,7 +49510,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 114.000d0
@@ -49528,7 +49528,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.958d0
@@ -49546,7 +49546,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 122.000d0
@@ -49564,7 +49564,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.209d0
@@ -49582,7 +49582,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.373d0
@@ -49600,7 +49600,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 125.000d0
@@ -49618,7 +49618,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.320d0
@@ -49636,7 +49636,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.729d0
@@ -49657,7 +49657,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.405d0
@@ -49675,7 +49675,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.689d0
@@ -49693,7 +49693,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.499d0
@@ -49714,7 +49714,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 118.000d0
@@ -49732,7 +49732,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.880d0
@@ -49750,7 +49750,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.816d0
@@ -49768,7 +49768,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.801d0
@@ -49786,7 +49786,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.366d0
@@ -49804,7 +49804,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.465d0
@@ -49822,7 +49822,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-56-* MMFF94 DEF 
       bclocal(0) = 119.100d0
@@ -49840,7 +49840,7 @@ c     --- origin:0:*-56-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 123.585d0
@@ -49861,7 +49861,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 119.267d0
@@ -49882,7 +49882,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.311d0
@@ -49900,7 +49900,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.037d0
@@ -49918,7 +49918,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.607d0
@@ -49936,7 +49936,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.521d0
@@ -49954,7 +49954,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.567d0
@@ -49972,7 +49972,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.009d0
@@ -49990,7 +49990,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.357d0
@@ -50008,7 +50008,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.258d0
@@ -50026,7 +50026,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.661d0
@@ -50044,7 +50044,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.534d0
@@ -50065,7 +50065,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -50083,7 +50083,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.649d0
@@ -50104,7 +50104,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.766d0
@@ -50122,7 +50122,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -50140,7 +50140,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.912d0
@@ -50158,7 +50158,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.915d0
@@ -50176,7 +50176,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-57-* MMFF94 DEF 
       bclocal(0) = 120.900d0
@@ -50194,7 +50194,7 @@ c     --- origin:0:*-57-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-57-* MMFF94 DEF 
       bclocal(0) = 118.100d0
@@ -50212,7 +50212,7 @@ c     --- origin:1:*-57-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.865d0
@@ -50230,7 +50230,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.034d0
@@ -50248,7 +50248,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.747d0
@@ -50269,7 +50269,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.257d0
@@ -50287,7 +50287,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.143d0
@@ -50305,7 +50305,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.327d0
@@ -50323,7 +50323,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.646d0
@@ -50341,7 +50341,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.889d0
@@ -50359,7 +50359,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.379d0
@@ -50377,7 +50377,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 126.476d0
@@ -50398,7 +50398,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.800d0
@@ -50416,7 +50416,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.166d0
@@ -50434,7 +50434,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.010d0
@@ -50455,7 +50455,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-58-* MMFF94 DEF 
       bclocal(0) = 119.000d0
@@ -50473,7 +50473,7 @@ c     --- origin:0:*-58-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-58-* MMFF94 DEF 
       bclocal(0) = 119.900d0
@@ -50491,7 +50491,7 @@ c     --- origin:1:*-58-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.236d0
@@ -50509,7 +50509,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.070d0
@@ -50527,7 +50527,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.506d0
@@ -50545,7 +50545,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.370d0
@@ -50563,7 +50563,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.665d0
@@ -50581,7 +50581,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.713d0
@@ -50599,7 +50599,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 118.000d0
@@ -50617,7 +50617,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.051d0
@@ -50635,7 +50635,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.710d0
@@ -50653,7 +50653,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.260d0
@@ -50671,7 +50671,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.989d0
@@ -50689,7 +50689,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.942d0
@@ -50707,7 +50707,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-59-* MMFF94 DEF 
       bclocal(0) = 105.600d0
@@ -50725,7 +50725,7 @@ c     --- origin:0:*-59-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.313d0
@@ -50746,7 +50746,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.755d0
@@ -50767,7 +50767,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.179d0
@@ -50785,7 +50785,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.341d0
@@ -50803,7 +50803,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.683d0
@@ -50821,7 +50821,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.142d0
@@ -50839,7 +50839,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.624d0
@@ -50921,7 +50921,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-62-* MMFF94 DEF 
       bclocal(0) = 108.300d0
@@ -50939,7 +50939,7 @@ c     --- origin:0:*-62-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.273d0
@@ -50957,7 +50957,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 105.542d0
@@ -50975,7 +50975,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.821d0
@@ -50993,7 +50993,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.144d0
@@ -51011,7 +51011,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.414d0
@@ -51029,7 +51029,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.660d0
@@ -51047,7 +51047,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.618d0
@@ -51065,7 +51065,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.722d0
@@ -51083,7 +51083,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.284d0
@@ -51101,7 +51101,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.366d0
@@ -51119,7 +51119,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-63-* MMFF94 DEF 
       bclocal(0) = 123.300d0
@@ -51137,7 +51137,7 @@ c     --- origin:0:*-63-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-63-* MMFF94 DEF 
       bclocal(0) = 124.300d0
@@ -51155,7 +51155,7 @@ c     --- origin:1:*-63-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.832d0
@@ -51173,7 +51173,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.101d0
@@ -51191,7 +51191,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.253d0
@@ -51209,7 +51209,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.378d0
@@ -51227,7 +51227,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.610d0
@@ -51245,7 +51245,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.864d0
@@ -51263,7 +51263,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.524d0
@@ -51281,7 +51281,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 133.818d0
@@ -51299,7 +51299,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.383d0
@@ -51317,7 +51317,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.395d0
@@ -51335,7 +51335,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.481d0
@@ -51353,7 +51353,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.219d0
@@ -51371,7 +51371,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.065d0
@@ -51389,7 +51389,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.049d0
@@ -51407,7 +51407,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.602d0
@@ -51425,7 +51425,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.804d0
@@ -51443,7 +51443,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.817d0
@@ -51461,7 +51461,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.127d0
@@ -51482,7 +51482,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 126.141d0
@@ -51503,7 +51503,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.076d0
@@ -51524,7 +51524,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 131.721d0
@@ -51545,7 +51545,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 125.134d0
@@ -51566,7 +51566,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 130.000d0
@@ -51584,7 +51584,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 124.000d0
@@ -51602,7 +51602,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.509d0
@@ -51620,7 +51620,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.514d0
@@ -51638,7 +51638,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.301d0
@@ -51656,7 +51656,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.741d0
@@ -51674,7 +51674,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.598d0
@@ -51692,7 +51692,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.237d0
@@ -51710,7 +51710,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 133.020d0
@@ -51728,7 +51728,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.356d0
@@ -51746,7 +51746,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.732d0
@@ -51764,7 +51764,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.218d0
@@ -51782,7 +51782,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.750d0
@@ -51800,7 +51800,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.617d0
@@ -51818,7 +51818,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.439d0
@@ -51836,7 +51836,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.321d0
@@ -51854,7 +51854,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.226d0
@@ -51872,7 +51872,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.280d0
@@ -51890,7 +51890,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.958d0
@@ -51908,7 +51908,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.654d0
@@ -51926,7 +51926,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.284d0
@@ -51944,7 +51944,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.490d0
@@ -51962,7 +51962,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.077d0
@@ -51980,7 +51980,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 135.028d0
@@ -51998,7 +51998,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 132.369d0
@@ -52016,7 +52016,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 141.986d0
@@ -52034,7 +52034,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 139.439d0
@@ -52052,7 +52052,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.699d0
@@ -52070,7 +52070,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.475d0
@@ -52088,7 +52088,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 145.098d0
@@ -52106,7 +52106,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 132.046d0
@@ -52127,7 +52127,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.481d0
@@ -52145,7 +52145,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 133.930d0
@@ -52163,7 +52163,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.637d0
@@ -52181,7 +52181,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.836d0
@@ -52199,7 +52199,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.211d0
@@ -52217,7 +52217,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 122.881d0
@@ -52238,7 +52238,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.784d0
@@ -52256,7 +52256,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 140.668d0
@@ -52274,7 +52274,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.130d0
@@ -52292,7 +52292,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.814d0
@@ -52310,7 +52310,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.513d0
@@ -52328,7 +52328,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.461d0
@@ -52346,7 +52346,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.174d0
@@ -52364,7 +52364,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.261d0
@@ -52382,7 +52382,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.126d0
@@ -52400,7 +52400,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.115d0
@@ -52418,7 +52418,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.222d0
@@ -52436,7 +52436,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.231d0
@@ -52454,7 +52454,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.353d0
@@ -52472,7 +52472,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.255d0
@@ -52493,7 +52493,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.441d0
@@ -52511,7 +52511,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.865d0
@@ -52532,7 +52532,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.834d0
@@ -52550,7 +52550,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.881d0
@@ -52568,7 +52568,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.078d0
@@ -52586,7 +52586,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.865d0
@@ -52604,7 +52604,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.926d0
@@ -52622,7 +52622,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.633d0
@@ -52640,7 +52640,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.178d0
@@ -52658,7 +52658,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.899d0
@@ -52676,7 +52676,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.341d0
@@ -52694,7 +52694,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.480d0
@@ -52715,7 +52715,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 114.516d0
@@ -52736,7 +52736,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.129d0
@@ -52754,7 +52754,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.254d0
@@ -52772,7 +52772,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.400d0
@@ -52790,7 +52790,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.824d0
@@ -52808,7 +52808,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.725d0
@@ -52826,7 +52826,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.157d0
@@ -52844,7 +52844,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.888d0
@@ -52862,7 +52862,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.246d0
@@ -52880,7 +52880,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.522d0
@@ -52898,7 +52898,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.108d0
@@ -52919,7 +52919,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.592d0
@@ -52940,7 +52940,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.662d0
@@ -52958,7 +52958,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.499d0
@@ -52976,7 +52976,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.689d0
@@ -52994,7 +52994,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.610d0
@@ -53012,7 +53012,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-64-* MMFF94 DEF 
       bclocal(0) = 121.400d0
@@ -53030,7 +53030,7 @@ c     --- origin:0:*-64-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-64-* MMFF94 DEF 
       bclocal(0) = 121.700d0
@@ -53048,7 +53048,7 @@ c     --- origin:1:*-64-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.041d0
@@ -53066,7 +53066,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.061d0
@@ -53084,7 +53084,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.640d0
@@ -53102,7 +53102,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.685d0
@@ -53120,7 +53120,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.735d0
@@ -53138,7 +53138,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.414d0
@@ -53156,7 +53156,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.947d0
@@ -53174,7 +53174,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.433d0
@@ -53192,7 +53192,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.781d0
@@ -53210,7 +53210,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.540d0
@@ -53228,7 +53228,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.473d0
@@ -53246,7 +53246,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.890d0
@@ -53264,7 +53264,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.286d0
@@ -53282,7 +53282,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.954d0
@@ -53300,7 +53300,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.821d0
@@ -53318,7 +53318,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.754d0
@@ -53336,7 +53336,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.889d0
@@ -53354,7 +53354,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.131d0
@@ -53372,7 +53372,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.401d0
@@ -53390,7 +53390,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.254d0
@@ -53408,7 +53408,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 126.170d0
@@ -53429,7 +53429,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 127.405d0
@@ -53450,7 +53450,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 118.412d0
@@ -53471,7 +53471,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 120.478d0
@@ -53492,7 +53492,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.331d0
@@ -53510,7 +53510,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -53528,7 +53528,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 122.000d0
@@ -53546,7 +53546,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.985d0
@@ -53564,7 +53564,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.922d0
@@ -53582,7 +53582,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.506d0
@@ -53600,7 +53600,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.890d0
@@ -53618,7 +53618,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.924d0
@@ -53636,7 +53636,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.529d0
@@ -53654,7 +53654,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.743d0
@@ -53672,7 +53672,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.695d0
@@ -53690,7 +53690,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.735d0
@@ -53708,7 +53708,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.788d0
@@ -53726,7 +53726,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.125d0
@@ -53744,7 +53744,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.259d0
@@ -53762,7 +53762,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.058d0
@@ -53780,7 +53780,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.198d0
@@ -53798,7 +53798,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.900d0
@@ -53816,7 +53816,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.004d0
@@ -53834,7 +53834,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.111d0
@@ -53852,7 +53852,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.581d0
@@ -53870,7 +53870,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.309d0
@@ -53888,7 +53888,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.049d0
@@ -53906,7 +53906,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.826d0
@@ -53924,7 +53924,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.404d0
@@ -53942,7 +53942,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.002d0
@@ -53960,7 +53960,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 117.966d0
@@ -53981,7 +53981,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 136.087d0
@@ -54002,7 +54002,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.673d0
@@ -54020,7 +54020,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.844d0
@@ -54038,7 +54038,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.866d0
@@ -54056,7 +54056,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.337d0
@@ -54074,7 +54074,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 135.432d0
@@ -54092,7 +54092,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.856d0
@@ -54110,7 +54110,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.684d0
@@ -54128,7 +54128,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.086d0
@@ -54146,7 +54146,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.242d0
@@ -54164,7 +54164,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.014d0
@@ -54182,7 +54182,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.335d0
@@ -54200,7 +54200,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.454d0
@@ -54218,7 +54218,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.312d0
@@ -54236,7 +54236,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.481d0
@@ -54254,7 +54254,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.188d0
@@ -54272,7 +54272,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.157d0
@@ -54290,7 +54290,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.538d0
@@ -54308,7 +54308,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.853d0
@@ -54326,7 +54326,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.125d0
@@ -54344,7 +54344,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.154d0
@@ -54362,7 +54362,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.934d0
@@ -54380,7 +54380,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.749d0
@@ -54398,7 +54398,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.876d0
@@ -54416,7 +54416,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.706d0
@@ -54434,7 +54434,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.409d0
@@ -54452,7 +54452,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.063d0
@@ -54470,7 +54470,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.014d0
@@ -54488,7 +54488,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.521d0
@@ -54506,7 +54506,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.371d0
@@ -54524,7 +54524,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.405d0
@@ -54542,7 +54542,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.220d0
@@ -54560,7 +54560,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.950d0
@@ -54578,7 +54578,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.017d0
@@ -54596,7 +54596,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.646d0
@@ -54614,7 +54614,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.812d0
@@ -54632,7 +54632,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.562d0
@@ -54650,7 +54650,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.560d0
@@ -54668,7 +54668,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.703d0
@@ -54686,7 +54686,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.239d0
@@ -54707,7 +54707,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.584d0
@@ -54725,7 +54725,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.621d0
@@ -54746,7 +54746,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.176d0
@@ -54764,7 +54764,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.895d0
@@ -54782,7 +54782,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.902d0
@@ -54800,7 +54800,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.037d0
@@ -54818,7 +54818,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 113.570d0
@@ -54839,7 +54839,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.067d0
@@ -54857,7 +54857,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 103.479d0
@@ -54875,7 +54875,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 108.553d0
@@ -54893,7 +54893,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 115.369d0
@@ -54914,7 +54914,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.240d0
@@ -54932,7 +54932,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.624d0
@@ -54950,7 +54950,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-65-* MMFF94 DEF 
       bclocal(0) = 104.500d0
@@ -54968,7 +54968,7 @@ c     --- origin:0:*-65-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 101.550d0
@@ -54989,7 +54989,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.360d0
@@ -55010,7 +55010,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 101.208d0
@@ -55028,7 +55028,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.829d0
@@ -55049,7 +55049,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.552d0
@@ -55067,7 +55067,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.213d0
@@ -55085,7 +55085,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.452d0
@@ -55106,7 +55106,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.872d0
@@ -55124,7 +55124,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-66-* MMFF94 DEF 
       bclocal(0) = 106.900d0
@@ -55142,7 +55142,7 @@ c     --- origin:0:*-66-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.779d0
@@ -55163,7 +55163,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 106.735d0
@@ -55184,7 +55184,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.365d0
@@ -55202,7 +55202,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 106.806d0
@@ -55220,7 +55220,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.658d0
@@ -55241,7 +55241,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 111.306d0
@@ -55262,7 +55262,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-67-* MMFF94 DEF 
       bclocal(0) = 119.900d0
@@ -55280,7 +55280,7 @@ c     --- origin:0:*-67-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-67-* MMFF94 DEF 
       bclocal(0) = 116.600d0
@@ -55298,7 +55298,7 @@ c     --- origin:1:*-67-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.683d0
@@ -55316,7 +55316,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.581d0
@@ -55334,7 +55334,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.589d0
@@ -55352,7 +55352,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.574d0
@@ -55370,7 +55370,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.320d0
@@ -55388,7 +55388,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.438d0
@@ -55406,7 +55406,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 128.000d0
@@ -55424,7 +55424,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.945d0
@@ -55442,7 +55442,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.631d0
@@ -55460,7 +55460,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.899d0
@@ -55478,7 +55478,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.531d0
@@ -55496,7 +55496,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 115.979d0
@@ -55514,7 +55514,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 120.000d0
@@ -55532,7 +55532,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.854d0
@@ -55550,7 +55550,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.019d0
@@ -55568,7 +55568,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.327d0
@@ -55586,7 +55586,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.017d0
@@ -55604,7 +55604,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-68-* MMFF94 DEF 
       bclocal(0) = 108.800d0
@@ -55622,7 +55622,7 @@ c     --- origin:0:*-68-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.238d0
@@ -55643,7 +55643,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 107.200d0
@@ -55664,7 +55664,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.757d0
@@ -55685,7 +55685,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 104.892d0
@@ -55706,7 +55706,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 112.977d0
@@ -55727,7 +55727,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-69-* MMFF94 DEF 
       bclocal(0) = 120.300d0
@@ -55745,7 +55745,7 @@ c     --- origin:0:*-69-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 121.777d0
@@ -55766,7 +55766,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.217d0
@@ -55784,7 +55784,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 116.447d0
@@ -55805,7 +55805,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.930d0
@@ -55823,7 +55823,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 103.978d0
@@ -55844,7 +55844,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-73-* MMFF94 DEF 
       bclocal(0) = 106.600d0
@@ -55862,7 +55862,7 @@ c     --- origin:0:*-73-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 100.180d0
@@ -55880,7 +55880,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  96.166d0
@@ -55898,7 +55898,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.012d0
@@ -55916,7 +55916,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 115.134d0
@@ -55934,7 +55934,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-74-* MMFF94 DEF 
       bclocal(0) = 113.000d0
@@ -55952,7 +55952,7 @@ c     --- origin:0:*-74-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.010d0
@@ -55970,7 +55970,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-75-* MMFF94 DEF 
       bclocal(0) =  94.900d0
@@ -55988,7 +55988,7 @@ c     --- origin:0:*-75-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  96.779d0
@@ -56006,7 +56006,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  91.970d0
@@ -56024,7 +56024,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) =  95.899d0
@@ -56042,7 +56042,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-76-* MMFF94 DEF 
       bclocal(0) = 107.600d0
@@ -56060,7 +56060,7 @@ c     --- origin:0:*-76-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.889d0
@@ -56078,7 +56078,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 103.519d0
@@ -56096,7 +56096,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.421d0
@@ -56114,7 +56114,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-77-* MMFF94 DEF 
       bclocal(0) = 109.500d0
@@ -56132,7 +56132,7 @@ c     --- origin:0:*-77-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 109.472d0
@@ -56150,7 +56150,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-78-* MMFF94 DEF 
       bclocal(0) = 121.900d0
@@ -56168,7 +56168,7 @@ c     --- origin:0:*-78-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-78-* MMFF94 DEF 
       bclocal(0) = 126.100d0
@@ -56186,7 +56186,7 @@ c     --- origin:1:*-78-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.960d0
@@ -56204,7 +56204,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.477d0
@@ -56222,7 +56222,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.468d0
@@ -56240,7 +56240,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.748d0
@@ -56258,7 +56258,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 123.407d0
@@ -56276,7 +56276,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 128.000d0
@@ -56297,7 +56297,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:#E94                
       bclocal(0) = 122.000d0
@@ -56315,7 +56315,7 @@ c     --- origin:#E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 109.881d0
@@ -56336,7 +56336,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.501d0
@@ -56354,7 +56354,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.857d0
@@ -56372,7 +56372,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 137.282d0
@@ -56390,7 +56390,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.249d0
@@ -56408,7 +56408,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.714d0
@@ -56426,7 +56426,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.617d0
@@ -56444,7 +56444,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.532d0
@@ -56462,7 +56462,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 138.714d0
@@ -56480,7 +56480,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 109.426d0
@@ -56498,7 +56498,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.150d0
@@ -56516,7 +56516,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 135.746d0
@@ -56534,7 +56534,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 121.251d0
@@ -56552,7 +56552,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 141.902d0
@@ -56570,7 +56570,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 142.589d0
@@ -56588,7 +56588,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 134.701d0
@@ -56606,7 +56606,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.702d0
@@ -56624,7 +56624,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.467d0
@@ -56642,7 +56642,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.050d0
@@ -56660,7 +56660,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.926d0
@@ -56678,7 +56678,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.471d0
@@ -56696,7 +56696,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.375d0
@@ -56714,7 +56714,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.916d0
@@ -56732,7 +56732,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 117.779d0
@@ -56750,7 +56750,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.530d0
@@ -56768,7 +56768,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.834d0
@@ -56786,7 +56786,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 118.376d0
@@ -56804,7 +56804,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:X94                 
       bclocal(0) = 113.179d0
@@ -56822,7 +56822,7 @@ c     --- origin:X94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 111.900d0
@@ -56840,7 +56840,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) =  99.459d0
@@ -56858,7 +56858,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 105.130d0
@@ -56879,7 +56879,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.792d0
@@ -56897,7 +56897,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-79-* MMFF94 DEF 
       bclocal(0) = 103.400d0
@@ -56915,7 +56915,7 @@ c     --- origin:0:*-79-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 102.043d0
@@ -56933,7 +56933,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 104.857d0
@@ -56951,7 +56951,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-80-* MMFF94 DEF 
       bclocal(0) = 121.900d0
@@ -56969,7 +56969,7 @@ c     --- origin:0:*-80-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:1:*-80-* MMFF94 DEF 
       bclocal(0) = 128.200d0
@@ -56987,7 +56987,7 @@ c     --- origin:1:*-80-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.147d0
@@ -57005,7 +57005,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.181d0
@@ -57023,7 +57023,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 125.682d0
@@ -57044,7 +57044,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.869d0
@@ -57062,7 +57062,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.057d0
@@ -57080,7 +57080,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.755d0
@@ -57098,7 +57098,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.411d0
@@ -57116,7 +57116,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.263d0
@@ -57134,7 +57134,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 127.612d0
@@ -57152,7 +57152,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.038d0
@@ -57170,7 +57170,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.030d0
@@ -57188,7 +57188,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 108.609d0
@@ -57209,7 +57209,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:0:*-81-* MMFF94 DEF 
       bclocal(0) = 119.500d0
@@ -57227,7 +57227,7 @@ c     --- origin:0:*-81-* MMFF94 DEF
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.129d0
@@ -57245,7 +57245,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.970d0
@@ -57263,7 +57263,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.535d0
@@ -57281,7 +57281,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 116.113d0
@@ -57299,7 +57299,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.324d0
@@ -57317,7 +57317,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 125.080d0
@@ -57335,7 +57335,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.399d0
@@ -57353,7 +57353,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 124.270d0
@@ -57371,7 +57371,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 120.028d0
@@ -57389,7 +57389,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 130.295d0
@@ -57407,7 +57407,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 128.738d0
@@ -57425,7 +57425,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 124.658d0
@@ -57446,7 +57446,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 124.787d0
@@ -57467,7 +57467,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.408d0
@@ -57485,7 +57485,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 119.722d0
@@ -57503,7 +57503,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.158d0
@@ -57521,7 +57521,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 110.477d0
@@ -57539,7 +57539,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 126.208d0
@@ -57557,7 +57557,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 123.333d0
@@ -57575,7 +57575,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.945d0
@@ -57593,7 +57593,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.099d0
@@ -57611,7 +57611,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 113.176d0
@@ -57629,7 +57629,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 122.250d0
@@ -57647,7 +57647,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:C94                 
       bclocal(0) = 110.556d0
@@ -57668,7 +57668,7 @@ c     --- cross term origin:C94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 107.936d0
@@ -57686,7 +57686,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 114.660d0
@@ -57704,7 +57704,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 131.706d0
@@ -57722,7 +57722,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 129.293d0
@@ -57740,7 +57740,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 105.660d0
@@ -57758,7 +57758,7 @@ c     --- origin:E94
       call twh_set_bendnames(type,1,bnlocal)
 
       type = type + 1
-      style = 15
+      style = ANG_STYLE_MMFF
       call twh_anglestyle(GLB_SET,type,style)
 c     --- origin:E94                 
       bclocal(0) = 112.955d0

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -992,7 +992,7 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 07-24-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1077,7 +1077,7 @@ c                       --- completely through the periodic box
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         write(6,*) 'overlap vibration'
-                        write(6,*) 'ichain,imolty,ii,ip1'
+                        write(6,*) 'chain,molecule,atom A,atom B'
      &                          ,ichain,imolty,ii,ip1
                         write(6,*) 'bond length:',dist
                         write(6,*) 'bond type:',it

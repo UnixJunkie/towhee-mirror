@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * I added some default values for the bonded terms for those who *
 c     * might want to study square well chains                         *
 c     *                                                                *
 c     * originally written 06-24-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -187,7 +187,7 @@ c     --- sphere radii
             jj = twh_getnbtype(jtype,jtype)
 c           --- increment bond type
             type = type + 1
-            call twh_vibstyle(GLB_SET,type,1)
+            call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c           --- set to the arithmetic average of the hard radii
             vclocal(0) = 0.5d0*(twh_get_nbcoeff(1,ii)
      &           + twh_get_nbcoeff(1,jj))
@@ -207,7 +207,7 @@ c           --- use the bond names of those types
        
 c     --- angle potentials nonbond interaction for all
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,6)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_NONBOND)
       call twh_bendff(GLB_SET,type,ffname)
 c     wild - wild - wild
       nbslocal = 1

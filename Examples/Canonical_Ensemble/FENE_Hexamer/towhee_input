@@ -45,7 +45,7 @@ potentialstyle
 ffnumber
 1
 ff_filename
-/towheebase/Examples/Canonical_Ensemble/FENE_Hexamer/towhee_ff_LJBeadsFENE
+/towheebase/ForceFields/towhee_ff_LJium
 classical_potential
 'Lennard-Jones'       
 classical_mixrule
@@ -55,11 +55,11 @@ lshift
 ltailc
 .false.
 rmin  
-0.0d0 
+0.10d0 
 rcut  
 2.245d0
 rcutin 
-0.0d0 
+0.10d0 
 electrostatic_form
 'none'
 linit   
@@ -67,8 +67,8 @@ T
 initboxtype
 'dimensions'
 initstyle
-'template'
-'template'
+'full cbmc'
+'full cbmc'
 initlattice
 'simple cubic'
 'simple cubic'
@@ -79,12 +79,12 @@ inix iniy iniz
 4    4    8
 4    4    8
 hmatrix
+12.0d0   0.0d0   0.0d0
+ 0.0d0  12.0d0   0.0d0
+ 0.0d0   0.0d0  12.0d0   
 22.0d0   0.0d0   0.0d0
- 0.0d0  11.0d0   0.0d0
- 0.0d0   0.0d0  11.0d0   
-22.0d0   0.0d0   0.0d0
- 0.0d0  11.0d0   0.0d0
- 0.0d0   0.0d0  11.0d0   
+ 0.0d0  22.0d0   0.0d0
+ 0.0d0   0.0d0  22.0d0   
 pmvol     
 0.005d0   
           pmvlpr
@@ -161,13 +161,9 @@ nch_bend_a
 nch_bend_b
 10
 cbmc_bond_generation
-'global gaussian'
-#vibrang
-#0.85 1.15
-sdevvib
-0.02d0
-#bond_sdev_multiplier
-#1.0
+'autofit gaussian'
+bond_sdev_multiplier
+1.0
 nch_vib
 10
 two_bond_fixed_endpoint_bias_style
@@ -180,9 +176,9 @@ three_bond_fixed_endpoint_bias_style
 input_style
 'basic connectivity map'
 nunit
-5
+6
 nmaxcbmc
-5
+6
 lpdbnames
 F
 forcefield
@@ -190,37 +186,44 @@ forcefield
 charge_assignment
 'manual'
 unit ntype qqatom
-1    'lj1.0' 0.0d0
+1    'lj1.0_FENE' 0.0d0
 vibration
 1
 2
 improper torsion
 0
 unit ntype qqatom
-2    'lj1.0' 0.0d0
+2    'lj1.0_FENE' 0.0d0
 vibration
 2
 1 3
 improper torsion
 0
 unit ntype qqatom
-3    'lj1.0' 0.0d0
+3    'lj1.0_FENE' 0.0d0
 vibration
 2
 2 4
 improper torsion
 0
 unit ntype qqatom
-4    'lj1.0' 0.0d0
+4    'lj1.0_FENE' 0.0d0
 vibration
 2
 3 5
 improper torsion
 0
 unit ntype qqatom
-5    'lj1.0' 0.0d0
+5    'lj1.0_FENE' 0.0d0
+vibration
+2
+4 6
+improper torsion
+0
+unity ntype qqatom
+6     'lj1.0_FENE' 0.0d0
 vibration
 1
-4
+5
 improper torsion
 0

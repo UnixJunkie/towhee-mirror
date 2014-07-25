@@ -784,7 +784,7 @@ c     ******************************************************************
 c     * read_bond_coeff                                                *
 c     * reads in the bond coefficients                                 *
 c     * rewritten from LAMMPS 2001 on 03-01-2002 by M.G. Martin        *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-14-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -808,7 +808,7 @@ c           --- force constant (kcal)
 c           --- equilibrium value
             call twh_vibcoeff(GLB_SET,i,0,tmp(2))
 c           --- this is towhee style 2
-            call twh_vibstyle(GLB_SET,i,2)
+            call twh_vibstyle(GLB_SET,i,BOND_STYLE_HARMONIC)
          enddo
       elseif (bondstyle.eq.2) then
 c        --- FENE/standard (not in Towhee)
@@ -827,7 +827,7 @@ c           --- equilibrium value
 c           --- lamda squared
             call twh_vibcoeff(GLB_SET,i,2,tmp(3)**2)
 c           --- this is towhee style 4
-            call twh_vibstyle(GLB_SET,i,4)
+            call twh_vibstyle(GLB_SET,i,BOND_STYLE_NONLINEAR)
          enddo
 
       elseif (bondstyle.eq.5) then
@@ -843,7 +843,7 @@ c           --- cubic force constant (kcal)
 c           --- quartic force constant (kcal)
             call twh_vibcoeff(GLB_SET,i,3,tmp(4)*CON_KCALTOK)
 c           --- quartic is type 6 in Towhee
-            call twh_vibstyle(GLB_SET,i,6)
+            call twh_vibstyle(GLB_SET,i,BOND_STYLE_COMPASS)
          enddo
       else
          write(6,*) 'invalid bondstyle ',bondstyle
@@ -860,7 +860,7 @@ c     * read_angle_coeff                                               *
 c     * reads in the angle coefficients                                *
 c     *                                                                *
 c     * rewritten from LAMMPS 2001 03-01-2002 by M.G. Martin           *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -896,7 +896,7 @@ c           --- equil distance (degrees) - later converted to radians
             iset = 0
             call twh_bencoeff(GLB_SET,i,iset,bclocal(iset))
 c           --- this is anglestyle 1 in Towhee
-            call twh_anglestyle(GLB_SET,i,1)
+            call twh_anglestyle(GLB_SET,i,ANG_STYLE_HARMONIC)
          enddo
       elseif (lmpangstyle.eq.2) then
 c        --- class 2 This is part of the Compass quartic angle in Towhee
@@ -922,7 +922,7 @@ c           --- quartic force constant (kcal)
             iset = 3
             call twh_bencoeff(GLB_SET,i,iset,bclocal(iset))
 c           --- this is anglestyle 8 in Towhee
-            call twh_anglestyle(GLB_SET,i,8)
+            call twh_anglestyle(GLB_SET,i,ANG_STYLE_COMPASS_EX)
 c           --- set the lbonang term to false until we sort it out
             call twh_lbonang(GLB_SET,i,.false.)
          enddo
@@ -947,7 +947,7 @@ c           --- UB force constant (kcal)
             iset = 3
             call twh_bencoeff(GLB_SET,i,iset,bclocal(iset))
 c           --- this is anglestyle 5
-            call twh_anglestyle(GLB_SET,i,5)
+            call twh_anglestyle(GLB_SET,i,ANG_STYLE_CHARMM_UB)
          enddo
       endif
 

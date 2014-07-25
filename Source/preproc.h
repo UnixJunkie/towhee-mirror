@@ -1,6 +1,6 @@
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program           *
-* Copyright (C) 2003-2005 Marcus G. Martin                             *
+* Copyright (C) 2003-2014 Marcus G. Martin                             *
 * see the file license.gpl for the full license information            *
 *                                                                      *
 * This program is free software; you can redistribute it and/or        *
@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 07-16-2013 by M.G. Martin */
+/* last significant modification 07-16-2014 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -536,20 +536,55 @@
 
 /* cbmc distribution codes, values arbitrary */
 #define DIST_NULL 0
-#define DIST_SINE 1
-#define DIST_GAUSSIAN 2
-#define DIST_SINE_GAUSSIAN 3
-#define DIST_UNIFORM 4
-#define DIST_UNIFORM_GAUSSIAN 5
-#define DIST_DELTA 6
-#define DIST_R_SQ_WITH_BOUNDS 7
-#define DIST_R_SQ_IDEAL 8
-#define DIST_ENERGY_BIAS 9
-#define DIST_BOUNDED_SINE 10
+#define DIST_DELTA 1
+#define DIST_R_SQ 2
+#define DIST_GAUSSIAN 3
+#define DIST_SINE 4
+#define DIST_SINE_GAUSSIAN 5
+#define DIST_UNIFORM 6
+#define DIST_UNIFORM_GAUSSIAN 7
+#define DIST_ENERGY_BIAS 8
+#define DIST_BOUNDED_SINE 9
+#define DIST_TRIANGLE 10
 
 /* cbmc formulation codes, values arbitrary */
 #define CBMC_FORM_MS1999_MT2004 0
 #define CBMC_FORM_MF2006 1
+
+/* bond style integer codes, do not change for compatibility */
+#define BOND_STYLE_NULL -1
+#define BOND_STYLE_FIXED 1
+#define BOND_STYLE_HARMONIC 2
+#define BOND_STYLE_GROMOS 3
+#define BOND_STYLE_NONLINEAR 4
+#define BOND_STYLE_MMTWO 5
+#define BOND_STYLE_COMPASS 6
+#define BOND_STYLE_NONBOND 7
+#define BOND_STYLE_NONE 8
+#define BOND_STYLE_MORSE 9
+#define BOND_STYLE_SQUARE_WELL 10
+#define BOND_STYLE_HARMONIC_NONBOND 11
+#define BOND_STYLE_FENE 12
+
+/* angle style integer codes, do not change for compatibility */
+#define ANG_STYLE_NULL -1
+#define ANG_STYLE_RIGID 0
+#define ANG_STYLE_HARMONIC 1
+#define ANG_STYLE_DREIDING 2
+#define ANG_STYLE_HARM_COS 3
+#define ANG_STYLE_COMPASS_AUTO 4
+#define ANG_STYLE_CHARMM_UB 5
+#define ANG_STYLE_NONBOND 6
+#define ANG_STYLE_NB_HARM 7
+#define ANG_STYLE_COMPASS_EX 8
+#define ANG_STYLE_FOURIER 9
+#define ANG_STYLE_TTFOURIER 10
+#define ANG_STYLE_NONE 11
+#define ANG_STYLE_SIXTH_AUTO 12
+#define ANG_STYLE_SQUARE_WELL 13
+#define ANG_STYLE_MULTI_RIGID 14
+#define ANG_STYLE_MMFF 15
+#define ANG_STYLE_HARM_COS_OT 16
 
 /* torsion scaling codes, value arbitrary */
 #define CODE_ZERO 0

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *     angle types 2 (DREIDING) and 3 (harmonic cosine)           *
 c     *     dihedral types 15 (DREIDING) and (not) 8 (nonbond)         *
 c     *     improper form 4 type 7 (DREIDING 1-cos)                    *
 c     *     fixed unit cell vector output and changed to triclinic pbc *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -197,7 +197,7 @@ c            --- and lists under a seperate section called CONSTRAINTS
      &                              .gt. iunit ) then
                                   call twh_vibstyle(GLB_GET,type
      &                                 ,style)
-                                  if ( style .eq. 1) then
+                                  if ( style .eq. BOND_STYLE_FIXED) then
                                      count_bond = count_bond + 1
                                      if (count_bond .eq. 1) then
                                         lconstraints = .true.
@@ -242,7 +242,8 @@ c            --- if there are no flexible bonds continue with angles
                                   count_bond = count_bond + 1
                                   call twh_vibstyle(GLB_GET,type
      &                                 ,style)
-                                  if ( style .eq. 2) then
+                                  if ( style .eq. BOND_STYLE_HARMONIC
+     &                                 ) then
                                      write(inpnum,'(a5,2i5,2f12.5)')
      &                                    'harm '
      &                                    ,twh_oldgetatomnum(ichain
@@ -293,7 +294,7 @@ c         ----  output angle information
      &                           .gt.iunit ) then
                                count_angle = count_angle + 1
                                style = twh_get_anglestyle(type)
-                               if ( style .eq. 1) then
+                               if ( style .eq. ANG_STYLE_HARMONIC ) then
                                   write(inpnum,'(a5,3i5,2f12.5)')
      &                                 'harm '
      &                                 ,twh_oldgetatomnum(ichain
@@ -310,7 +311,8 @@ c         ----  output angle information
      &                                 *2.0d0/CON_KJTOK
      &                                 ,twh_get_bencoeff(type,0)
      &                                 *radtodeg
-                               elseif ( style .eq. 2) then
+                               elseif ( style .eq. ANG_STYLE_DREIDING
+     &                                 ) then
                                   write(inpnum,'(a5,3i5,3f12.5)')
      &                                 'cos  '
      &                                 ,twh_oldgetatomnum(ichain
@@ -326,7 +328,8 @@ c         ----  output angle information
      &                                 ,twh_get_bencoeff(type,1)
      &                                 *2.0d0/CON_KJTOK
      &                                 , 0.0, 1.0
-                               elseif ( style .eq. 3) then
+                               elseif ( style .eq. ANG_STYLE_HARM_COS
+     &                                 ) then
                                   write(inpnum,'(a5,3i5,2f12.5)')
      &                                 'hcos '
      &                                 ,twh_oldgetatomnum(ichain

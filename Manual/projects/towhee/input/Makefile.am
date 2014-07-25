@@ -49,8 +49,9 @@ towhee_input_v4_16_x.html \
 towhee_input_v5_0_x.html \
 towhee_input_v5_1_x.html \
 towhee_input_v5_2_x.html \
-towhee_input_v5_2_x.html \
+towhee_input_v5_3_x.html \
 towhee_input_v6_0_x.html \
 towhee_input_v6_1_x.html \
 towhee_input_v6_2_x.html \
-towhee_input_v7_0_x.html
+towhee_input_v7_0_x.html \
+towhee_input_v7_1_x.html

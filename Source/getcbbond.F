@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -46,7 +46,7 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-16-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -80,7 +80,7 @@ c     --- logical arrays
 c     --- integer scalars
       integer count,ntogrow,iugrow,iufrom,iv,juvib,jtvib,ib
       integer ivib,iwinner,iut,ixtra,inum,ic,it,nchoice
-      integer vibnumber,growprev,xtracount,style_code
+      integer vibnumber,growprev,xtracount,dist_code
 c     --- integer arrays
       integer bblocl
       dimension bblocl(2,MAXBEND)
@@ -225,16 +225,11 @@ c        --- determine the vibration (bond) type as jtvib
 
 c        --- set default number of choices
          nchoice = nch_vib
-         call twh_cbbonddist(GLB_GET,jtvib,style_code)
-         if ( style_code .eq. DIST_DELTA ) then
+         call twh_cbbonddist(GLB_GET,imolty,iugrow,vibnumber,dist_code)
+         if ( dist_code .eq. DIST_DELTA ) then
 c           --- one rigid bond length
             nchoice = 1
-         elseif ( style_code .eq. DIST_R_SQ_WITH_BOUNDS ) then
-            call twh_cbmcbondinfo(GLB_GET,imolty,iugrow,vibnumber,3
-     &           ,lolimit)
-            call twh_cbmcbondinfo(GLB_GET,imolty,iugrow,vibnumber,4
-     &           ,hilimit)
-         elseif ( style_code .eq. DIST_GAUSSIAN ) then
+         elseif ( dist_code .eq. DIST_GAUSSIAN ) then
 c           --- set the limits of the gaussian bond generation
             lolimit = 0.0d0
             call twh_max_bond_length(GLB_GET,hilimit)
@@ -242,14 +237,15 @@ c           --- set the limits of the gaussian bond generation
      &           ,3,mean)
             call twh_cbmcbondinfo(GLB_GET,imolty,iugrow,vibnumber
      &           ,4,std_dev)
-         elseif ( style_code .eq. DIST_R_SQ_IDEAL ) then
-c           --- just need the high limit
+         elseif ( dist_code .eq. DIST_R_SQ ) then
             call twh_cbmcbondinfo(GLB_GET,imolty,iugrow,vibnumber,3
+     &           ,lolimit)
+            call twh_cbmcbondinfo(GLB_GET,imolty,iugrow,vibnumber,4
      &           ,hilimit)
          else
-c           --- unknown style_code
-            write(6,*) 'GETCBBOND: unknown style_code'
-            write(6,*) style_code
+c           --- unknown dist_code
+            write(6,*) 'GETCBBOND: unknown dist_code'
+            write(6,*) dist_code
             write(6,*) 'imolty,iugrow,iufrom,jtvib:'
      &           ,imolty,iugrow,iufrom,jtvib
             lfailure = .true.
@@ -286,45 +282,40 @@ c              --- first ivib is old bond length
                   return
                endif
             else
-               if ( style_code .eq. DIST_DELTA ) then
+               if ( dist_code .eq. DIST_DELTA ) then
 c                 --- fixed bond lengths.
-                  length = twh_get_vibcoeff(jtvib,0)
-               elseif ( style_code .eq. DIST_R_SQ_WITH_BOUNDS ) then
-c                 --- sample according to a bounded r^2 distribution
-                  length = ((lolimit+twh_random()*hilimit))**onethird
-               elseif ( style_code .eq. DIST_GAUSSIAN ) then
+                  call twh_cbmcbondinfo(GLB_GET,imolty,iugrow
+     &                 ,vibnumber,3,length)
+               elseif ( dist_code .eq. DIST_GAUSSIAN ) then
 c                 --- sample from a gaussian distribution
                   length = twh_gaussian(lfailure,mean,std_dev
      &                 ,lolimit,hilimit)
                   if ( lfailure ) return
-               elseif ( style_code .eq. DIST_R_SQ_IDEAL ) then
-c                 --- sample according to ideal r^2 distribution
-                  length = hilimit*(twh_random()**onethird)
+               elseif ( dist_code .eq. DIST_R_SQ ) then
+c                 --- sample according to a bounded r^2 distribution
+                  length = ((lolimit+twh_random()*hilimit))**onethird
                else
-                  write(6,*) 'GETCBBOND: unknown style_code'
-                  write(6,*) style_code
+                  write(6,*) 'GETCBBOND: unknown dist_code'
+                  write(6,*) dist_code
                   lfailure = .true.
                   return
                endif
             endif
 
 c           --- set pdf_bias
-            if ( style_code .eq. DIST_R_SQ_WITH_BOUNDS ) then
-c              --- sampling from bounded r^2 distribution
-               pdf_bias = length*length*arbnorm
-            elseif ( style_code .eq. DIST_GAUSSIAN ) then
+            if ( dist_code .eq. DIST_GAUSSIAN ) then
 c              --- sampling from a gaussian distribution
                pdf_bias = twh_gaussprob(length,mean,std_dev,lolimit
      &              ,hilimit)
-            elseif ( style_code .eq. DIST_DELTA ) then
+            elseif ( dist_code .eq. DIST_DELTA ) then
 c              --- rigid bond, constant
                pdf_bias = arbnorm
-            elseif ( style_code .eq. DIST_R_SQ_IDEAL ) then
+            elseif ( dist_code .eq. DIST_R_SQ ) then
 c              --- sampling from ideal r^2 distribution
                pdf_bias = length*length*arbnorm
             else
-               write(6,*) 'GETCBBOND: unknown style_code'
-               write(6,*) style_code
+               write(6,*) 'GETCBBOND: unknown dist_code'
+               write(6,*) dist_code
                lfailure = .true.
                return
             endif
@@ -334,7 +325,7 @@ c           --- store the ratio of the trial pdf factors
             if ( pdf_bias .le. 0.0d0 ) then
 c              --- this is an extremely unlikely bond, print a warning
                write(6,*) 'GETCBBOND: pdf_bias probability too low'
-               write(6,*) 'style_code:',style_code
+               write(6,*) 'dist_code:',dist_code
                write(6,*) 'luseoldone',luseoldone
                write(6,*) 'ivib,pdf_bias',ivib,pdf_bias
                write(6,*) 'length,mean,std_dev',length,mean,std_dev
@@ -349,7 +340,7 @@ c              --- this is an extremely unlikely bond, print a warning
      &              ,'accepting a move away from this bond length'
                pdf_bias = 1.0d20
             endif
-            if ( style_code .eq. DIST_DELTA ) then
+            if ( dist_code .eq. DIST_DELTA ) then
 c              --- finite number of non-infinite energy lengths
                pdf_true = truenorm
             else

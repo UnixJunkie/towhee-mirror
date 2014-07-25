@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * but just things I made up so I could do some more simulations  *
 c     * so use at your own risk                                        *
 c     *                                                                *
 c     * originally written 02-22-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -69,7 +69,7 @@ c     * Charmm27 bond potentials                                       *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.360d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -92,7 +92,7 @@ c     ******************************************************************
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.50d0
       bclocal(1) = (140.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -109,7 +109,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.00d0
       bclocal(1) = (125.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -126,7 +126,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.80d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -143,7 +143,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.70d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -160,7 +160,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.60d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -177,7 +177,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.20d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -194,7 +194,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.50d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -211,7 +211,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -228,7 +228,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.20d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -244,7 +244,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 115.00d0
       bclocal(1) = (58.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0

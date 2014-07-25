@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the compass      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -909,7 +909,7 @@ c     --- harmonic, triple and quartic terms
 
 c     --- c3a - c3a 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4170d0
       vclocal(1) = (470.8361d0)*(CON_KCALTOK)
       vclocal(2) = (-627.6179d0)*(CON_KCALTOK)
@@ -923,7 +923,7 @@ c     --- c3a - c3a
 
 c     --- c3a - c4 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.5010d0
       vclocal(1) = (321.9021d0)*(CON_KCALTOK)
       vclocal(2) = (-521.8208d0)*(CON_KCALTOK)
@@ -937,7 +937,7 @@ c     --- c3a - c4
 
 c     --- c3a - h1
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.0982d0
       vclocal(1) = (372.8251d0)*(CON_KCALTOK)
       vclocal(2) = (-803.4526d0)*(CON_KCALTOK)
@@ -951,7 +951,7 @@ c     --- c3a - h1
 
 c     --- c4 - c4
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.5300d0
       vclocal(1) = (299.6700d0)*(CON_KCALTOK)
       vclocal(2) = (-501.7700d0)*(CON_KCALTOK)
@@ -965,7 +965,7 @@ c     --- c4 - c4
 
 c     --- c4 - h1
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1010d0
       vclocal(1) = (345.0000d0)*(CON_KCALTOK)
       vclocal(2) = (-691.8900d0)*(CON_KCALTOK)
@@ -979,7 +979,7 @@ c     --- c4 - h1
 
 c     --- c3a - n3o
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4300d0
       vclocal(1) = (313.8329d0)*(CON_KCALTOK)
       vclocal(2) = (-568.6087d0)*(CON_KCALTOK)
@@ -994,7 +994,7 @@ c     --- c3a - n3o
 c     --- c4 - n3o
 c     --- c4o - n3o
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4740d0
       vclocal(1) = (301.6051d0)*(CON_KCALTOK)
       vclocal(2) = (-535.7028d0)*(CON_KCALTOK)
@@ -1011,7 +1011,7 @@ c     --- c4o - n3o
 c     --- c4 - o2n
 c     --- c4o - o2n
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4350d0
       vclocal(1) = (400.3954d0)*(CON_KCALTOK)
       vclocal(2) = (-835.1951d0)*(CON_KCALTOK)
@@ -1027,7 +1027,7 @@ c     --- c4o - o2n
 
 c     --- h1 - n3o
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.0400d0
       vclocal(1) = (439.9346d0)*(CON_KCALTOK)
       vclocal(2) = (-943.7307d0)*(CON_KCALTOK)
@@ -1041,7 +1041,7 @@ c     --- h1 - n3o
 
 c     --- n3o - o1=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.2100d0
       vclocal(1) = (765.0664d0)*(CON_KCALTOK)
       vclocal(2) = (-2070.2830d0)*(CON_KCALTOK)
@@ -1055,7 +1055,7 @@ c     --- n3o - o1=
 
 c     --- n3o - o2n
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4020d0
       vclocal(1) = (300.0000d0)*(CON_KCALTOK)
       vclocal(2) = (-1000.000d0)*(CON_KCALTOK)
@@ -1069,7 +1069,7 @@ c     --- n3o - o2n
 
 c     --- c3a - n2=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.400d0
       vclocal(1) = (350.0000d0)*(CON_KCALTOK)
       vclocal(2) = (0.000d0)*(CON_KCALTOK)
@@ -1083,7 +1083,7 @@ c     --- c3a - n2=
 
 c     --- c3a - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.789d0
       vclocal(1) = (197.702d0)*(CON_KCALTOK)
       vclocal(2) = (-332.251d0)*(CON_KCALTOK)
@@ -1097,7 +1097,7 @@ c     --- c3a - p4=
 
 c     --- c4 - n2=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.474d0
       vclocal(1) = (337.060d0)*(CON_KCALTOK)
       vclocal(2) = (-147.370d0)*(CON_KCALTOK)
@@ -1111,7 +1111,7 @@ c     --- c4 - n2=
 
 c     --- c4 - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.800d0
       vclocal(1) = (218.140d0)*(CON_KCALTOK)
       vclocal(2) = (-329.511d0)*(CON_KCALTOK)
@@ -1125,7 +1125,7 @@ c     --- c4 - p4=
 
 c     --- cl1p - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 2.000d0
       vclocal(1) = (158.777d0)*(CON_KCALTOK)
       vclocal(2) = (-239.129d0)*(CON_KCALTOK)
@@ -1139,7 +1139,7 @@ c     --- cl1p - p4=
 
 c     --- f1p - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.565d0
       vclocal(1) = (340.000d0)*(CON_KCALTOK)
       vclocal(2) = (-882.384d0)*(CON_KCALTOK)
@@ -1153,7 +1153,7 @@ c     --- f1p - p4=
 
 c     --- h1 - n2=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.031d0
       vclocal(1) = (540.112d0)*(CON_KCALTOK)
       vclocal(2) = (-1500.2952d0)*(CON_KCALTOK)
@@ -1167,7 +1167,7 @@ c     --- h1 - n2=
 
 c     --- h1 - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.430d0
       vclocal(1) = (285.204d0)*(CON_KCALTOK)
       vclocal(2) = (-575.685d0)*(CON_KCALTOK)
@@ -1181,7 +1181,7 @@ c     --- h1 - p4=
 
 c     --- n2= - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.598d0
       vclocal(1) = (393.006d0)*(CON_KCALTOK)
       vclocal(2) = (-751.405d0)*(CON_KCALTOK)
@@ -1195,7 +1195,7 @@ c     --- n2= - p4=
 
 c     --- n3 - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.678d0
       vclocal(1) = (329.000d0)*(CON_KCALTOK)
       vclocal(2) = (-713.795d0)*(CON_KCALTOK)
@@ -1209,7 +1209,7 @@ c     --- n3 - p4=
 
 c     --- o2 - p4=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.600d0
       vclocal(1) = (333.098d0)*(CON_KCALTOK)
       vclocal(2) = (-726.623d0)*(CON_KCALTOK)
@@ -1223,7 +1223,7 @@ c     --- o2 - p4=
 
 c     --- h1h - h1h
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.7412d0
       vclocal(1) = (414.2185d0)*(CON_KCALTOK)
       vclocal(2) = (-805.6549d0)*(CON_KCALTOK)
@@ -1237,7 +1237,7 @@ c     --- h1h - h1h
 
 c     --- n1n - n1n
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.0977d0
       vclocal(1) = (1651.3730d0)*(CON_KCALTOK)
       vclocal(2) = (-4069.3178d0)*(CON_KCALTOK)
@@ -1251,7 +1251,7 @@ c     --- n1n - n1n
 
 c     --- o1o - o1o
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.2074d0
       vclocal(1) = (846.7150d0)*(CON_KCALTOK)
       vclocal(2) = (-2247.1760d0)*(CON_KCALTOK)
@@ -1265,7 +1265,7 @@ c     --- o1o - o1o
 
 c     --- c1o - o1c
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1283d0
       vclocal(1) = (1368.7676d0)*(CON_KCALTOK)
       vclocal(2) = (-3157.0007d0)*(CON_KCALTOK)
@@ -1279,7 +1279,7 @@ c     --- c1o - o1c
 
 c     --- n1o - o1n
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1506d0
       vclocal(1) = (1147.8362d0)*(CON_KCALTOK)
       vclocal(2) = (-3167.7349d0)*(CON_KCALTOK)
@@ -1293,7 +1293,7 @@ c     --- n1o - o1n
 
 c     --- o1= - s2=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4308d0
       vclocal(1) = (730.8387d0)*(CON_KCALTOK)
       vclocal(2) = (-1531.7910d0)*(CON_KCALTOK)
@@ -1307,7 +1307,7 @@ c     --- o1= - s2=
 
 c     --- c2= - o1=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1600d0
       vclocal(1) = (1161.3421d0)*(CON_KCALTOK)
       vclocal(2) = (-2564.5706d0)*(CON_KCALTOK)
@@ -1321,7 +1321,7 @@ c     --- c2= - o1=
 
 c     --- n2o - o1=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1930d0
       vclocal(1) = (620.0000d0)*(CON_KCALTOK)
       vclocal(2) = (-1808.6018d0)*(CON_KCALTOK)
@@ -1335,7 +1335,7 @@ c     --- n2o - o1=
 
 c     --- c2= - s1=
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.5540d0
       vclocal(1) = (559.0065d0)*(CON_KCALTOK)
       vclocal(2) = (-1348.6633d0)*(CON_KCALTOK)
@@ -1351,7 +1351,7 @@ c     --- Parameters from Polymer International (1997) 44 311-330.
 
 c     --- c3a - o2
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.3768d0
       vclocal(1) = (428.8798d0)*(CON_KCALTOK)
       vclocal(2) = (-738.235d0)*(CON_KCALTOK)
@@ -1366,7 +1366,7 @@ c     --- c3a - o2
 c     --- c3a - o2e
 c     --- c3a - o2h
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.3768d0
       vclocal(1) = (428.8798d0)*(CON_KCALTOK)
       vclocal(2) = (-738.2351d0)*(CON_KCALTOK)
@@ -1383,7 +1383,7 @@ c     --- c3a - o2h
 c     --- c4 - o2e
 c     --- c4 - o2h
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4200d0
       vclocal(1) = (400.3954d0)*(CON_KCALTOK)
       vclocal(2) = (-835.1951d0)*(CON_KCALTOK)
@@ -1399,7 +1399,7 @@ c     --- c4 - o2h
 
 c     --- h1 - o2h
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 0.9494d0
       vclocal(1) = (540.3633d0)*(CON_KCALTOK)
       vclocal(2) = (-1311.8663d0)*(CON_KCALTOK)
@@ -1416,7 +1416,7 @@ c     --- 53 (1997) 1301-1323
 
 c     o2 - si4
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.640d0
       vclocal(1) = (350.1232d0)*(CON_KCALTOK)
       vclocal(2) = (-517.3424d0)*(CON_KCALTOK)
@@ -1432,7 +1432,7 @@ c     o2 - si4
 c     --- parameters from [JCC 2003]
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1354d0
       vclocal(1) = (1337.7450d0)*(CON_KCALTOK)
       vclocal(2) = (-2675.4900d0)*(CON_KCALTOK)
@@ -1446,7 +1446,7 @@ c     n1t - n1t [jcc2003]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.2343d0
       vclocal(1) = (720.3345d0)*(CON_KCALTOK)
       vclocal(2) = (-1542.6689d0)*(CON_KCALTOK)
@@ -1460,7 +1460,7 @@ c     n2z - n2t [jcc2003]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.1354d0
       vclocal(1) = (1198.7450d0)*(CON_KCALTOK)
       vclocal(2) = (-2675.4900d0)*(CON_KCALTOK)
@@ -1474,7 +1474,7 @@ c     n2t - n1t [jcc2003]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.4814d0
       vclocal(1) = (324.4578d0)*(CON_KCALTOK)
       vclocal(2) = (-648.9156d0)*(CON_KCALTOK)
@@ -1488,7 +1488,7 @@ c     n2z - c4 [jcc2003]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) = 1.0221d0
       vclocal(1) = (440.1623d0)*(CON_KCALTOK)
       vclocal(2) = (-960.3246d0)*(CON_KCALTOK)
@@ -1521,7 +1521,7 @@ c     --- energybondbond = br6*(bond(ij)-bondo(ij))*(bond(jk)-bond0(jk))
 
 c     --- c3a - c3a - c3a
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 118.9000d0
       bclocal(1) = (61.0226d0)*(CON_KCALTOK)
       bclocal(2) = (-34.9931d0)*(CON_KCALTOK)
@@ -1541,7 +1541,7 @@ c     --- c3a - c3a - c3a
 
 c     --- c3a - c3a - c4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 120.0500d0
       bclocal(1) = (44.7148d0)*(CON_KCALTOK)
       bclocal(2) = (-22.7352d0)*(CON_KCALTOK)
@@ -1561,7 +1561,7 @@ c     --- c3a - c3a - c4
 
 c     --- c3a - c3a - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 117.9400d0
       bclocal(1) = (35.1558d0)*(CON_KCALTOK)
       bclocal(2) = (-12.4682d0)*(CON_KCALTOK)
@@ -1581,7 +1581,7 @@ c     --- c3a - c3a - h1
 
 c     --- c3a - c4 - c3a
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 111.0000d0
       bclocal(1) = (44.3234d0)*(CON_KCALTOK)
       bclocal(2) = (-9.4454d0)*(CON_KCALTOK)
@@ -1601,7 +1601,7 @@ c     --- c3a - c4 - c3a
 
 c     --- c3a - c4 - c4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 108.4000d0
       bclocal(1) = (43.9594d0)*(CON_KCALTOK)
       bclocal(2) = (-8.3924d0)*(CON_KCALTOK)
@@ -1621,7 +1621,7 @@ c     --- c3a - c4 - c4
 
 c     --- c3a - c4 - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 111.0000d0
       bclocal(1) = (44.3234d0)*(CON_KCALTOK)
       bclocal(2) = (-9.4454d0)*(CON_KCALTOK)
@@ -1641,7 +1641,7 @@ c     --- c3a - c4 - h1
 
 c     --- c4 - c4 - c4 (generic sp3 C-C-C)
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 112.670d0
       bclocal(1) = (39.5160d0)*(CON_KCALTOK)
       bclocal(2) = (-7.4430d0)*(CON_KCALTOK)
@@ -1661,7 +1661,7 @@ c     --- c4 - c4 - c4 (generic sp3 C-C-C)
 
 c     --- c4 - c4 - h1 (generic sp3 C-C-H)
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.7700d0
       bclocal(1) = (41.4530d0)*(CON_KCALTOK)
       bclocal(2) = (-10.6040d0)*(CON_KCALTOK)
@@ -1681,7 +1681,7 @@ c     --- c4 - c4 - h1 (generic sp3 C-C-H)
 
 c     --- h1 - c4 - h1 (generic sp3 H-C-H)
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 107.6600d0
       bclocal(1) = (39.6410d0)*(CON_KCALTOK)
       bclocal(2) = (-12.9210d0)*(CON_KCALTOK)
@@ -1701,7 +1701,7 @@ c     --- h1 - c4 - h1 (generic sp3 H-C-H)
 
 c     --- c3a - c3a - n3o
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 118.8000d0
       bclocal(1) = (29.2436d0)*(CON_KCALTOK)
       bclocal(2) = (-8.8495d0)*(CON_KCALTOK)
@@ -1721,7 +1721,7 @@ c     --- c3a - c3a - n3o
 
 c     --- h1 - c4 - n3o
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 107.0000d0
       bclocal(1) = (54.9318d0)*(CON_KCALTOK)
       bclocal(2) = (-9.1333d0)*(CON_KCALTOK)
@@ -1741,7 +1741,7 @@ c     --- h1 - c4 - n3o
 
 c     --- h1 - c4 - o2n
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 108.7280d0
       bclocal(1) = (58.5446d0)*(CON_KCALTOK)
       bclocal(2) = (-10.8088d0)*(CON_KCALTOK)
@@ -1761,7 +1761,7 @@ c     --- h1 - c4 - o2n
 
 c     --- c3a - n3o - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 117.7000d0
       bclocal(1) = (63.9404d0)*(CON_KCALTOK)
       bclocal(2) = (-18.4524d0)*(CON_KCALTOK)
@@ -1781,7 +1781,7 @@ c     --- c3a - n3o - o1=
 
 c     --- c4 - n3o - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 117.5000d0
       bclocal(1) = (64.5228d0)*(CON_KCALTOK)
       bclocal(2) = (-18.4582d0)*(CON_KCALTOK)
@@ -1801,7 +1801,7 @@ c     --- c4 - n3o - o1=
 
 c     --- h1 - n3o - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 115.7000d0
       bclocal(1) = (53.8034d0)*(CON_KCALTOK)
       bclocal(2) = (-14.1991d0)*(CON_KCALTOK)
@@ -1821,7 +1821,7 @@ c     --- h1 - n3o - o1=
 
 c     --- o1= - n3o - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 128.0000d0
       bclocal(1) = (95.1035d0)*(CON_KCALTOK)
       bclocal(2) = (-47.4240d0)*(CON_KCALTOK)
@@ -1841,7 +1841,7 @@ c     --- o1= - n3o - o1=
 
 c     --- c4 - o2n - n3o
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 108.5000d0
       bclocal(1) = (55.7454d0)*(CON_KCALTOK)
       bclocal(2) = (-10.0067d0)*(CON_KCALTOK)
@@ -1861,7 +1861,7 @@ c     --- c4 - o2n - n3o
 
 c     --- c4 - c4 - o2n
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 105.0000d0
       bclocal(1) = (54.5381d0)*(CON_KCALTOK)
       bclocal(2) = (-8.3642d0)*(CON_KCALTOK)
@@ -1881,7 +1881,7 @@ c     --- c4 - c4 - o2n
 
 c     --- o2n - n3o - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 112.8000d0
       bclocal(1) = (85.5228d0)*(CON_KCALTOK)
       bclocal(2) = (-18.4582d0)*(CON_KCALTOK)
@@ -1901,7 +1901,7 @@ c     --- o2n - n3o - o1=
 
 c     --- c3a - c3a - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 120.000d0
       bclocal(1) = (60.000d0)*(CON_KCALTOK)
       bclocal(2) = (0.000d0)*(CON_KCALTOK)
@@ -1921,7 +1921,7 @@ c     --- c3a - c3a - n2=
 
 c     --- c3a - c3a - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 120.001d0
       bclocal(1) = (47.841d0)*(CON_KCALTOK)
       bclocal(2) = (-15.229d0)*(CON_KCALTOK)
@@ -1941,7 +1941,7 @@ c     --- c3a - c3a - p4=
 
 c     --- c4 - c4 - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 117.317d0
       bclocal(1) = (55.242d0)*(CON_KCALTOK)
       bclocal(2) = (0.000d0)*(CON_KCALTOK)
@@ -1961,7 +1961,7 @@ c     --- c4 - c4 - n2=
 
 c     --- h1 - c4 - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 107.499d0
       bclocal(1) = (62.731d0)*(CON_KCALTOK)
       bclocal(2) = (0.000d0)*(CON_KCALTOK)
@@ -1981,7 +1981,7 @@ c     --- h1 - c4 - n2=
 
 c     --- h1 - c4 - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.886d0
       bclocal(1) = (33.830d0)*(CON_KCALTOK)
       bclocal(2) = (-7.043d0)*(CON_KCALTOK)
@@ -2001,7 +2001,7 @@ c     --- h1 - c4 - p4=
 
 c     --- c4 - n2= - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 117.200d0
       bclocal(1) = (37.262d0)*(CON_KCALTOK)
       bclocal(2) = (0.000d0)*(CON_KCALTOK)
@@ -2021,7 +2021,7 @@ c     --- c4 - n2= - h1
 
 c     --- h1 - n2= - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.910d0
       bclocal(1) = (31.091d0)*(CON_KCALTOK)
       bclocal(2) = (0.000d0)*(CON_KCALTOK)
@@ -2041,7 +2041,7 @@ c     --- h1 - n2= - h1
 
 c     --- h1 - n2= - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 120.000d0
       bclocal(1) = (26.068d0)*(CON_KCALTOK)
       bclocal(2) = (-8.298d0)*(CON_KCALTOK)
@@ -2061,7 +2061,7 @@ c     --- h1 - n2= - p4=
 
 c     --- p4= - n2= - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 135.000d0
       bclocal(1) = (23.868d0)*(CON_KCALTOK)
       bclocal(2) = (-8.736d0)*(CON_KCALTOK)
@@ -2082,7 +2082,7 @@ c     --- p4= - n2= - p4=
 c     --- c4 - n3 - p4=
 c     --- h1 - n3 - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 120.083d0
       bclocal(1) = (25.001d0)*(CON_KCALTOK)
       bclocal(2) = (-6.117d0)*(CON_KCALTOK)
@@ -2105,7 +2105,7 @@ c     --- h1 - n3 - p4=
 
 c     --- c4 - o2 - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 118.283d0
       bclocal(1) = (35.001d0)*(CON_KCALTOK)
       bclocal(2) = (-10.360d0)*(CON_KCALTOK)
@@ -2125,7 +2125,7 @@ c     --- c4 - o2 - p4=
 
 c     --- h1 - o2 - p4=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 117.000d0
       bclocal(1) = (26.031d0)*(CON_KCALTOK)
       bclocal(2) = (-5.828d0)*(CON_KCALTOK)
@@ -2145,7 +2145,7 @@ c     --- h1 - o2 - p4=
 
 c     --- c3a - p4= - c3a
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.231d0
       bclocal(1) = (56.185d0)*(CON_KCALTOK)
       bclocal(2) = (-17.316d0)*(CON_KCALTOK)
@@ -2165,7 +2165,7 @@ c     --- c3a - p4= - c3a
 
 c     --- c3a - p4= - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 108.231d0
       bclocal(1) = (36.185d0)*(CON_KCALTOK)
       bclocal(2) = (-6.488d0)*(CON_KCALTOK)
@@ -2185,7 +2185,7 @@ c     --- c3a - p4= - h1
 
 c     --- c3a - p4= - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 109.600d0
       bclocal(1) = (63.062d0)*(CON_KCALTOK)
       bclocal(2) = (-19.740d0)*(CON_KCALTOK)
@@ -2205,7 +2205,7 @@ c     --- c3a - p4= - n2=
 
 c     --- c3a - p4= - n3
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 108.165d0
       bclocal(1) = (70.977d0)*(CON_KCALTOK)
       bclocal(2) = (-11.548d0)*(CON_KCALTOK)
@@ -2225,7 +2225,7 @@ c     --- c3a - p4= - n3
 
 c     --- c3a - p4= - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 107.365d0
       bclocal(1) = (71.977d0)*(CON_KCALTOK)
       bclocal(2) = (-10.943d0)*(CON_KCALTOK)
@@ -2245,7 +2245,7 @@ c     --- c3a - p4= - o2
 
 c     --- c4 - p4= - c4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 102.500d0
       bclocal(1) = (48.232d0)*(CON_KCALTOK)
       bclocal(2) = (-5.798d0)*(CON_KCALTOK)
@@ -2265,7 +2265,7 @@ c     --- c4 - p4= - c4
 
 c     --- c4 - p4= - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 102.900d0
       bclocal(1) = (52.071d0)*(CON_KCALTOK)
       bclocal(2) = (-6.468d0)*(CON_KCALTOK)
@@ -2285,7 +2285,7 @@ c     --- c4 - p4= - h1
 
 c     --- c4 - p4= - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 119.300d0
       bclocal(1) = (47.366d0)*(CON_KCALTOK)
       bclocal(2) = (-14.641d0)*(CON_KCALTOK)
@@ -2305,7 +2305,7 @@ c     --- c4 - p4= - n2=
 
 c     --- h1 - p4= - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 101.408d0
       bclocal(1) = (39.695d0)*(CON_KCALTOK)
       bclocal(2) = (-5.134d0)*(CON_KCALTOK)
@@ -2325,7 +2325,7 @@ c     --- h1 - p4= - h1
 
 c     --- h1 - p4= - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.033d0
       bclocal(1) = (45.978d0)*(CON_KCALTOK)
       bclocal(2) = (-14.052d0)*(CON_KCALTOK)
@@ -2345,7 +2345,7 @@ c     --- h1 - p4= - n2=
 
 c     --- h1 - p4= - n3
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 103.978d0
       bclocal(1) = (68.257d0)*(CON_KCALTOK)
       bclocal(2) = (-9.221d0)*(CON_KCALTOK)
@@ -2365,7 +2365,7 @@ c     --- h1 - p4= - n3
 
 c     --- h1 - p4= - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  103.978d0
       bclocal(1) = (73.257d0)*(CON_KCALTOK)
       bclocal(2) = (-9.897d0)*(CON_KCALTOK)
@@ -2385,7 +2385,7 @@ c     --- h1 - p4= - o2
 
 c     --- n2= - p4= - n2=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  125.000d0
       bclocal(1) = (90.523d0)*(CON_KCALTOK)
       bclocal(2) = (-20.801d0)*(CON_KCALTOK)
@@ -2405,7 +2405,7 @@ c     --- n2= - p4= - n2=
 
 c     --- n2= - p4= - n3
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  123.215d0
       bclocal(1) = (89.923d0)*(CON_KCALTOK)
       bclocal(2) = (-32.612d0)*(CON_KCALTOK)
@@ -2425,7 +2425,7 @@ c     --- n2= - p4= - n3
 
 c     --- n2= - p4= - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  112.215d0
       bclocal(1) = (99.923d0)*(CON_KCALTOK)
       bclocal(2) = (-32.093d0)*(CON_KCALTOK)
@@ -2445,7 +2445,7 @@ c     --- n2= - p4= - o2
 
 c     --- n3 - p4= - n3
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  107.100d0
       bclocal(1) = (85.769d0)*(CON_KCALTOK)
       bclocal(2) = (-5.779d0)*(CON_KCALTOK)
@@ -2465,7 +2465,7 @@ c     --- n3 - p4= - n3
 
 c     --- n3 - p4= - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  108.300d0
       bclocal(1) = (86.769d0)*(CON_KCALTOK)
       bclocal(2) = (-5.175d0)*(CON_KCALTOK)
@@ -2485,7 +2485,7 @@ c     --- n3 - p4= - o2
 
 c     --- o2 - p4= - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  107.500d0
       bclocal(1) = (87.769d0)*(CON_KCALTOK)
       bclocal(2) = (-4.570d0)*(CON_KCALTOK)
@@ -2505,7 +2505,7 @@ c     --- o2 - p4= - o2
 
 c     --- o1= - c2= - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  180.0000d0
       bclocal(1) = (57.1000d0)*(CON_KCALTOK)
       bclocal(2) = (0.0000d0)*(CON_KCALTOK)
@@ -2525,7 +2525,7 @@ c     --- o1= - c2= - o1=
 
 c     --- s1= - c2= - s1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  180.0000d0
       bclocal(1) = (48.0000d0)*(CON_KCALTOK)
       bclocal(2) = (0.0000d0)*(CON_KCALTOK)
@@ -2545,7 +2545,7 @@ c     --- s1= - c2= - s1=
 
 c     --- o1= - n2o - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  134.1000d0
       bclocal(1) = (150.0000d0)*(CON_KCALTOK)
       bclocal(2) = (-82.1013d0)*(CON_KCALTOK)
@@ -2565,7 +2565,7 @@ c     --- o1= - n2o - o1=
 
 c     --- o1= - s2= - o1=
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  119.3000d0
       bclocal(1) = (115.2627d0)*(CON_KCALTOK)
       bclocal(2) = (-35.6278d0)*(CON_KCALTOK)
@@ -2587,7 +2587,7 @@ c     --- Parameters from Polymer International (1997) 44, 311-330.
 
 c     --- c3a - c3a - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  123.4200d0
       bclocal(1) = (73.6781d0)*(CON_KCALTOK)
       bclocal(2) = (-21.6787d0)*(CON_KCALTOK)
@@ -2607,7 +2607,7 @@ c     --- c3a - c3a - o2
 
 c     --- c4 - c4 - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  111.2700d0
       bclocal(1) = (54.5381d0)*(CON_KCALTOK)
       bclocal(2) = (-8.3642d0)*(CON_KCALTOK)
@@ -2627,7 +2627,7 @@ c     --- c4 - c4 - o2
 
 c     --- h1 - c4 - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  108.7280d0
       bclocal(1) = (58.5446d0)*(CON_KCALTOK)
       bclocal(2) = (-10.8088d0)*(CON_KCALTOK)
@@ -2647,7 +2647,7 @@ c     --- h1 - c4 - o2
 
 c     --- c3a - o2 - c4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  102.9695d0
       bclocal(1) = (38.9739d0)*(CON_KCALTOK)
       bclocal(2) = (-6.2595d0)*(CON_KCALTOK)
@@ -2667,7 +2667,7 @@ c     --- c3a - o2 - c4
 
 c     --- c3a - o2 - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  108.1900d0
       bclocal(1) = (53.1250d0)*(CON_KCALTOK)
       bclocal(2) = (-8.5016d0)*(CON_KCALTOK)
@@ -2687,7 +2687,7 @@ c     --- c3a - o2 - h1
 
 c     --- c4 - o2 - c4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  104.5000d0
       bclocal(1) = (35.7454d0)*(CON_KCALTOK)
       bclocal(2) = (-10.0067d0)*(CON_KCALTOK)
@@ -2707,7 +2707,7 @@ c     --- c4 - o2 - c4
 
 c     --- c4 - o2 - h1
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  105.8000d0
       bclocal(1) = (52.7061d0)*(CON_KCALTOK)
       bclocal(2) = (-12.1090d0)*(CON_KCALTOK)
@@ -2728,7 +2728,7 @@ c     --- c4 - o2 - h1
 c     --- h1 - c3a - o2
 c     --- only the bond-bond cross term was listed for this angle
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  0.0d0
       bclocal(1) = (0.0d0)*(CON_KCALTOK)
       bclocal(2) = (0.0d0)*(CON_KCALTOK)
@@ -2749,7 +2749,7 @@ c     --- only the bond-bond cross term was listed for this angle
 c     --- o2 - c4 - o2
 c     --- only the bond-bond cross term was listed for this angle
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  0.0d0
       bclocal(1) = (0.0d0)*(CON_KCALTOK)
       bclocal(2) = (0.0d0)*(CON_KCALTOK)
@@ -2772,7 +2772,7 @@ c     --- 53 (1997) 1301-1323
 
 c     --- h1 - o2 - si4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  122.8d0
       bclocal(1) = (23.7764d0)*(CON_KCALTOK)
       bclocal(2) = (-19.8152d0)*(CON_KCALTOK)
@@ -2792,7 +2792,7 @@ c     --- h1 - o2 - si4
 
 c     --- si4 - o2 - si4
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  159.0d0
       bclocal(1) = (8.5000d0)*(CON_KCALTOK)
       bclocal(2) = (-13.4188d0)*(CON_KCALTOK)
@@ -2812,7 +2812,7 @@ c     --- si4 - o2 - si4
 
 c     --- c3a - si4 - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  114.9d0
       bclocal(1) = (23.0218d0)*(CON_KCALTOK)
       bclocal(2) = (-31.3993d0)*(CON_KCALTOK)
@@ -2829,7 +2829,7 @@ c     --- c3a - si4 - o2
 
 c     --- c4 - si4 - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  114.9d0
       bclocal(1) = (23.0218d0)*(CON_KCALTOK)
       bclocal(2) = (-31.3993d0)*(CON_KCALTOK)
@@ -2849,7 +2849,7 @@ c     --- c4 - si4 - o2
 
 c     --- h1 - si4 - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  107.4d0
       bclocal(1) = (57.6643d0)*(CON_KCALTOK)
       bclocal(2) = (-10.6506d0)*(CON_KCALTOK)
@@ -2869,7 +2869,7 @@ c     --- h1 - si4 - o2
 
 c     --- o2 - si4 - o2
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =  110.7d0
       bclocal(1) = (70.3069d0)*(CON_KCALTOK)
       bclocal(2) = (-6.9375d0)*(CON_KCALTOK)
@@ -2890,7 +2890,7 @@ c     --- o2 - si4 - o2
 c     --- angles from JCC 2003
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 171.6211d0
       bclocal(1) = (47.7899d0)*(CON_KCALTOK)
       bclocal(2) = (0.0d0)*(CON_KCALTOK)
@@ -2910,7 +2910,7 @@ c     n2z - n2t - n1t [jcc 2003]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.0345d0
       bclocal(1) = (55.7635d0)*(CON_KCALTOK)
       bclocal(2) = (0.6618d0)*(CON_KCALTOK)
@@ -2930,7 +2930,7 @@ c     n2t - n2z - h1 [jcc 2003]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 113.5017d0
       bclocal(1) = (82.6294d0)*(CON_KCALTOK)
       bclocal(2) = (0.9845d0)*(CON_KCALTOK)
@@ -2950,7 +2950,7 @@ c     n2t - n2z - c4 [jcc 2003]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 107.9744d0
       bclocal(1) = (52.7803d0)*(CON_KCALTOK)
       bclocal(2) = (0.6615d0)*(CON_KCALTOK)
@@ -2970,7 +2970,7 @@ c     n2z - c4 - h1 [jcc 2003]
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) = 110.9900d0
       bclocal(1) = (77.9387d0)*(CON_KCALTOK)
       bclocal(2) = (0.9499d0)*(CON_KCALTOK)

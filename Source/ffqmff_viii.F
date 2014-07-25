@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the QMFF-VIII    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 04-17-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -852,7 +852,7 @@ c     ******************************************************************
 c     * sets up the bond parameters for QMFF-VIII                      *
 c     *                                                                *
 c     * originally written 05-04-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -871,7 +871,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.52604d0
       vclocal(1) =    309.89988d0*CON_KCALTOK
       vclocal(2) =   -518.88533d0*CON_KCALTOK
@@ -885,7 +885,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.51254d0
       vclocal(1) =    323.03196d0*CON_KCALTOK
       vclocal(2) =   -481.72576d0*CON_KCALTOK
@@ -899,7 +899,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.50201d0
       vclocal(1) =    367.19212d0*CON_KCALTOK
       vclocal(2) =   -482.52231d0*CON_KCALTOK
@@ -913,7 +913,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.54831d0
       vclocal(1) =    297.74510d0*CON_KCALTOK
       vclocal(2) =   -528.26600d0*CON_KCALTOK
@@ -927,7 +927,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.50518d0
       vclocal(1) =    346.13442d0*CON_KCALTOK
       vclocal(2) =   -645.15327d0*CON_KCALTOK
@@ -941,7 +941,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.78230d0
       vclocal(1) =    249.12229d0*CON_KCALTOK
       vclocal(2) =   -374.73117d0*CON_KCALTOK
@@ -955,7 +955,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.51266d0
       vclocal(1) =    390.57695d0*CON_KCALTOK
       vclocal(2) =   -440.62528d0*CON_KCALTOK
@@ -969,7 +969,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.49996d0
       vclocal(1) =    409.37169d0*CON_KCALTOK
       vclocal(2) =   -639.53851d0*CON_KCALTOK
@@ -983,7 +983,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.46955d0
       vclocal(1) =    404.41436d0*CON_KCALTOK
       vclocal(2) =   -759.38519d0*CON_KCALTOK
@@ -997,7 +997,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.32360d0
       vclocal(1) =    537.74228d0*CON_KCALTOK
       vclocal(2) =  -1082.29600d0*CON_KCALTOK
@@ -1011,7 +1011,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.08466d0
       vclocal(1) =    415.84688d0*CON_KCALTOK
       vclocal(2) =   -843.77460d0*CON_KCALTOK
@@ -1025,7 +1025,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.44075d0
       vclocal(1) =    434.48963d0*CON_KCALTOK
       vclocal(2) =   -742.19076d0*CON_KCALTOK
@@ -1039,7 +1039,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.52281d0
       vclocal(1) =    288.91285d0*CON_KCALTOK
       vclocal(2) =   -577.95491d0*CON_KCALTOK
@@ -1053,7 +1053,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.46604d0
       vclocal(1) =    362.15770d0*CON_KCALTOK
       vclocal(2) =   -708.26683d0*CON_KCALTOK
@@ -1067,7 +1067,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.45168d0
       vclocal(1) =    378.28874d0*CON_KCALTOK
       vclocal(2) =   -723.51280d0*CON_KCALTOK
@@ -1081,7 +1081,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.44156d0
       vclocal(1) =    403.90825d0*CON_KCALTOK
       vclocal(2) =   -676.41918d0*CON_KCALTOK
@@ -1095,7 +1095,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.44156d0
       vclocal(1) =    403.90825d0*CON_KCALTOK
       vclocal(2) =   -676.41918d0*CON_KCALTOK
@@ -1109,7 +1109,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.40193d0
       vclocal(1) =    414.05934d0*CON_KCALTOK
       vclocal(2) =   -863.69713d0*CON_KCALTOK
@@ -1123,7 +1123,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.82015d0
       vclocal(1) =    245.98034d0*CON_KCALTOK
       vclocal(2) =   -423.13191d0*CON_KCALTOK
@@ -1137,7 +1137,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.78759d0
       vclocal(1) =    268.69147d0*CON_KCALTOK
       vclocal(2) =   -396.42741d0*CON_KCALTOK
@@ -1151,7 +1151,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.47020d0
       vclocal(1) =    427.71666d0*CON_KCALTOK
       vclocal(2) =   -432.62860d0*CON_KCALTOK
@@ -1165,7 +1165,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.09619d0
       vclocal(1) =    390.85012d0*CON_KCALTOK
       vclocal(2) =   -799.19280d0*CON_KCALTOK
@@ -1179,7 +1179,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.39830d0
       vclocal(1) =    443.40625d0*CON_KCALTOK
       vclocal(2) =   -689.47285d0*CON_KCALTOK
@@ -1193,7 +1193,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.34248d0
       vclocal(1) =    472.73190d0*CON_KCALTOK
       vclocal(2) =  -1067.28040d0*CON_KCALTOK
@@ -1207,7 +1207,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.19294d0
       vclocal(1) =   1128.48590d0*CON_KCALTOK
       vclocal(2) =  -2573.68520d0*CON_KCALTOK
@@ -1221,7 +1221,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.51027d0
       vclocal(1) =    333.21819d0*CON_KCALTOK
       vclocal(2) =   -522.26834d0*CON_KCALTOK
@@ -1235,7 +1235,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.49598d0
       vclocal(1) =    391.48546d0*CON_KCALTOK
       vclocal(2) =   -464.58560d0*CON_KCALTOK
@@ -1249,7 +1249,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.09293d0
       vclocal(1) =    402.74935d0*CON_KCALTOK
       vclocal(2) =   -857.77151d0*CON_KCALTOK
@@ -1263,7 +1263,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.40009d0
       vclocal(1) =    467.86594d0*CON_KCALTOK
       vclocal(2) =   -544.00237d0*CON_KCALTOK
@@ -1277,7 +1277,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.34248d0
       vclocal(1) =    472.73190d0*CON_KCALTOK
       vclocal(2) =  -1067.28040d0*CON_KCALTOK
@@ -1291,7 +1291,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.18988d0
       vclocal(1) =   1157.03830d0*CON_KCALTOK
       vclocal(2) =  -2686.07180d0*CON_KCALTOK
@@ -1305,7 +1305,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.47000d0
       vclocal(1) =    453.56575d0*CON_KCALTOK
       vclocal(2) =   -372.57821d0*CON_KCALTOK
@@ -1319,7 +1319,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.08638d0
       vclocal(1) =    422.32795d0*CON_KCALTOK
       vclocal(2) =   -865.16683d0*CON_KCALTOK
@@ -1333,7 +1333,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.36312d0
       vclocal(1) =    604.42083d0*CON_KCALTOK
       vclocal(2) =   -769.28210d0*CON_KCALTOK
@@ -1347,7 +1347,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.13306d0
       vclocal(1) =    293.97280d0*CON_KCALTOK
       vclocal(2) =   -700.95200d0*CON_KCALTOK
@@ -1361,7 +1361,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.23390d0
       vclocal(1) =    889.19130d0*CON_KCALTOK
       vclocal(2) =  -1929.84000d0*CON_KCALTOK
@@ -1375,7 +1375,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.33115d0
       vclocal(1) =    746.94016d0*CON_KCALTOK
       vclocal(2) =  -1377.57810d0*CON_KCALTOK
@@ -1389,7 +1389,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.46328d0
       vclocal(1) =    455.90884d0*CON_KCALTOK
       vclocal(2) =   -602.81771d0*CON_KCALTOK
@@ -1403,7 +1403,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.07506d0
       vclocal(1) =    447.58678d0*CON_KCALTOK
       vclocal(2) =   -887.83660d0*CON_KCALTOK
@@ -1417,7 +1417,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.38507d0
       vclocal(1) =    540.38223d0*CON_KCALTOK
       vclocal(2) =   -612.86278d0*CON_KCALTOK
@@ -1431,7 +1431,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.25993d0
       vclocal(1) =    936.54686d0*CON_KCALTOK
       vclocal(2) =  -2079.23450d0*CON_KCALTOK
@@ -1445,7 +1445,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.72720d0
       vclocal(1) =    327.71180d0*CON_KCALTOK
       vclocal(2) =   -550.99661d0*CON_KCALTOK
@@ -1459,7 +1459,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.08177d0
       vclocal(1) =    422.51099d0*CON_KCALTOK
       vclocal(2) =   -883.95475d0*CON_KCALTOK
@@ -1473,7 +1473,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.44156d0
       vclocal(1) =    403.90825d0*CON_KCALTOK
       vclocal(2) =   -676.41918d0*CON_KCALTOK
@@ -1487,7 +1487,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.38729d0
       vclocal(1) =    466.01982d0*CON_KCALTOK
       vclocal(2) =   -824.08529d0*CON_KCALTOK
@@ -1501,7 +1501,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.42754d0
       vclocal(1) =    438.79209d0*CON_KCALTOK
       vclocal(2) =   -703.30292d0*CON_KCALTOK
@@ -1515,7 +1515,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.42754d0
       vclocal(1) =    438.79209d0*CON_KCALTOK
       vclocal(2) =   -703.30292d0*CON_KCALTOK
@@ -1529,7 +1529,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.43466d0
       vclocal(1) =    452.50609d0*CON_KCALTOK
       vclocal(2) =   -791.87535d0*CON_KCALTOK
@@ -1543,7 +1543,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.31950d0
       vclocal(1) =    557.41119d0*CON_KCALTOK
       vclocal(2) =  -1135.46430d0*CON_KCALTOK
@@ -1557,7 +1557,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.07094d0
       vclocal(1) =    466.33336d0*CON_KCALTOK
       vclocal(2) =   -989.32036d0*CON_KCALTOK
@@ -1571,7 +1571,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.35829d0
       vclocal(1) =    601.91527d0*CON_KCALTOK
       vclocal(2) =   -715.49795d0*CON_KCALTOK
@@ -1585,7 +1585,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.41814d0
       vclocal(1) =    509.65228d0*CON_KCALTOK
       vclocal(2) =   -481.73771d0*CON_KCALTOK
@@ -1599,7 +1599,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.48437d0
       vclocal(1) =    380.88502d0*CON_KCALTOK
       vclocal(2) =   -693.43613d0*CON_KCALTOK
@@ -1613,7 +1613,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.43000d0
       vclocal(1) =    404.18901d0*CON_KCALTOK
       vclocal(2) =   -693.58910d0*CON_KCALTOK
@@ -1627,7 +1627,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.36165d0
       vclocal(1) =    562.35033d0*CON_KCALTOK
       vclocal(2) =   -759.20705d0*CON_KCALTOK
@@ -1641,7 +1641,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.35829d0
       vclocal(1) =    601.91527d0*CON_KCALTOK
       vclocal(2) =   -715.49795d0*CON_KCALTOK
@@ -1655,7 +1655,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.33345d0
       vclocal(1) =    576.22904d0*CON_KCALTOK
       vclocal(2) =  -1152.12840d0*CON_KCALTOK
@@ -1669,7 +1669,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.35403d0
       vclocal(1) =    548.51948d0*CON_KCALTOK
       vclocal(2) =   -777.90554d0*CON_KCALTOK
@@ -1683,7 +1683,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.35843d0
       vclocal(1) =    470.01045d0*CON_KCALTOK
       vclocal(2) =   -560.19556d0*CON_KCALTOK
@@ -1697,7 +1697,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.77443d0
       vclocal(1) =    272.96562d0*CON_KCALTOK
       vclocal(2) =   -448.60990d0*CON_KCALTOK
@@ -1711,7 +1711,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.71456d0
       vclocal(1) =    349.94694d0*CON_KCALTOK
       vclocal(2) =   -438.37938d0*CON_KCALTOK
@@ -1725,7 +1725,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.73492d0
       vclocal(1) =    287.33122d0*CON_KCALTOK
       vclocal(2) =   -383.33133d0*CON_KCALTOK
@@ -1739,7 +1739,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.47424d0
       vclocal(1) =    404.35389d0*CON_KCALTOK
       vclocal(2) =   -685.60397d0*CON_KCALTOK
@@ -1753,7 +1753,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.36165d0
       vclocal(1) =    562.35033d0*CON_KCALTOK
       vclocal(2) =   -759.20705d0*CON_KCALTOK
@@ -1767,7 +1767,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.38286d0
       vclocal(1) =    515.90524d0*CON_KCALTOK
       vclocal(2) =   -445.31769d0*CON_KCALTOK
@@ -1781,7 +1781,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.33345d0
       vclocal(1) =    576.22904d0*CON_KCALTOK
       vclocal(2) =  -1152.12840d0*CON_KCALTOK
@@ -1795,7 +1795,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.35843d0
       vclocal(1) =    470.01045d0*CON_KCALTOK
       vclocal(2) =   -560.19556d0*CON_KCALTOK
@@ -1809,7 +1809,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.73492d0
       vclocal(1) =    287.33122d0*CON_KCALTOK
       vclocal(2) =   -383.33133d0*CON_KCALTOK
@@ -1823,7 +1823,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.18754d0
       vclocal(1) =   1447.35240d0*CON_KCALTOK
       vclocal(2) =  -2692.58780d0*CON_KCALTOK
@@ -1837,7 +1837,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.05622d0
       vclocal(1) =    516.65405d0*CON_KCALTOK
       vclocal(2) =   -992.21427d0*CON_KCALTOK
@@ -1851,7 +1851,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.32596d0
       vclocal(1) =    352.53248d0*CON_KCALTOK
       vclocal(2) =   -640.03642d0*CON_KCALTOK
@@ -1865,7 +1865,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.33041d0
       vclocal(1) =    341.86018d0*CON_KCALTOK
       vclocal(2) =   -654.82317d0*CON_KCALTOK
@@ -1879,7 +1879,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.00135d0
       vclocal(1) =    576.24337d0*CON_KCALTOK
       vclocal(2) =  -1309.47650d0*CON_KCALTOK
@@ -1893,7 +1893,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.01652d0
       vclocal(1) =    502.45649d0*CON_KCALTOK
       vclocal(2) =  -1179.60880d0*CON_KCALTOK
@@ -1907,7 +1907,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.00139d0
       vclocal(1) =    569.19520d0*CON_KCALTOK
       vclocal(2) =  -1309.27050d0*CON_KCALTOK
@@ -1921,7 +1921,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.00151d0
       vclocal(1) =    571.29631d0*CON_KCALTOK
       vclocal(2) =  -1300.78440d0*CON_KCALTOK
@@ -1935,7 +1935,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.00151d0
       vclocal(1) =    571.29631d0*CON_KCALTOK
       vclocal(2) =  -1300.78440d0*CON_KCALTOK
@@ -1949,7 +1949,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      0.94653d0
       vclocal(1) =    682.70024d0*CON_KCALTOK
       vclocal(2) =  -1644.75020d0*CON_KCALTOK
@@ -1963,7 +1963,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      0.97000d0
       vclocal(1) =    563.28000d0*CON_KCALTOK
       vclocal(2) =  -1428.22000d0*CON_KCALTOK
@@ -1977,7 +1977,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.01192d0
       vclocal(1) =    538.24267d0*CON_KCALTOK
       vclocal(2) =  -1199.19730d0*CON_KCALTOK
@@ -1991,7 +1991,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.65255d0
       vclocal(1) =    424.44931d0*CON_KCALTOK
       vclocal(2) =   -673.86653d0*CON_KCALTOK
@@ -2005,7 +2005,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.19480d0
       vclocal(1) =    976.73770d0*CON_KCALTOK
       vclocal(2) =  -2500.08440d0*CON_KCALTOK
@@ -2019,7 +2019,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.21921d0
       vclocal(1) =   1077.85210d0*CON_KCALTOK
       vclocal(2) =  -2231.92700d0*CON_KCALTOK
@@ -2033,7 +2033,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.43587d0
       vclocal(1) =    407.59874d0*CON_KCALTOK
       vclocal(2) =   -492.66272d0*CON_KCALTOK
@@ -2047,7 +2047,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.28726d0
       vclocal(1) =    636.16453d0*CON_KCALTOK
       vclocal(2) =  -1040.20600d0*CON_KCALTOK
@@ -2061,7 +2061,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.26965d0
       vclocal(1) =    739.27311d0*CON_KCALTOK
       vclocal(2) =  -1662.03650d0*CON_KCALTOK
@@ -2075,7 +2075,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.36115d0
       vclocal(1) =    473.78075d0*CON_KCALTOK
       vclocal(2) =   -636.05190d0*CON_KCALTOK
@@ -2089,7 +2089,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.64860d0
       vclocal(1) =    364.49484d0*CON_KCALTOK
       vclocal(2) =   -545.62257d0*CON_KCALTOK
@@ -2103,7 +2103,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.63549d0
       vclocal(1) =    398.67842d0*CON_KCALTOK
       vclocal(2) =   -622.23348d0*CON_KCALTOK
@@ -2117,7 +2117,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.69973d0
       vclocal(1) =    341.95620d0*CON_KCALTOK
       vclocal(2) =   -557.68919d0*CON_KCALTOK
@@ -2131,7 +2131,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.43574d0
       vclocal(1) =    814.84012d0*CON_KCALTOK
       vclocal(2) =  -1897.21980d0*CON_KCALTOK
@@ -2145,7 +2145,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.47036d0
       vclocal(1) =    785.88168d0*CON_KCALTOK
       vclocal(2) =  -1629.62140d0*CON_KCALTOK
@@ -2159,7 +2159,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      1.49681d0
       vclocal(1) =    683.42789d0*CON_KCALTOK
       vclocal(2) =  -1401.99000d0*CON_KCALTOK
@@ -2173,7 +2173,7 @@ c     --- initialize types
 
       type = type + 1
       call twh_vibff(GLB_SET,type,ffname)
-      call twh_vibstyle(GLB_SET,type,6)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_COMPASS)
       vclocal(0) =      2.08189d0
       vclocal(1) =    212.21289d0*CON_KCALTOK
       vclocal(2) =   -102.04010d0*CON_KCALTOK
@@ -2197,7 +2197,7 @@ c     ******************************************************************
 c     * sets the angle and bond-angle terms for QMFF-VIII              *
 c     *                                                                *
 c     * originally written 05-05-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -2215,7 +2215,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.67330d0
       bclocal(1) =     49.33332d0*CON_KCALTOK
       bclocal(2) =     -9.29214d0*CON_KCALTOK
@@ -2235,7 +2235,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.31040d0
       bclocal(1) =     51.71700d0*CON_KCALTOK
       bclocal(2) =     -9.87345d0*CON_KCALTOK
@@ -2255,7 +2255,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.60960d0
       bclocal(1) =     39.98473d0*CON_KCALTOK
       bclocal(2) =     -8.00025d0*CON_KCALTOK
@@ -2275,7 +2275,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    104.49140d0
       bclocal(1) =     37.35106d0*CON_KCALTOK
       bclocal(2) =     -5.24080d0*CON_KCALTOK
@@ -2295,7 +2295,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.76270d0
       bclocal(1) =     57.05687d0*CON_KCALTOK
       bclocal(2) =    -13.28287d0*CON_KCALTOK
@@ -2315,7 +2315,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.67330d0
       bclocal(1) =     49.33332d0*CON_KCALTOK
       bclocal(2) =     -9.29214d0*CON_KCALTOK
@@ -2335,7 +2335,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.87683d0
       bclocal(1) =     46.38439d0*CON_KCALTOK
       bclocal(2) =     -9.57236d0*CON_KCALTOK
@@ -2355,7 +2355,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.40156d0
       bclocal(1) =     71.68820d0*CON_KCALTOK
       bclocal(2) =    -15.99149d0*CON_KCALTOK
@@ -2375,7 +2375,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.77000d0
       bclocal(1) =     51.75238d0*CON_KCALTOK
       bclocal(2) =    -13.23853d0*CON_KCALTOK
@@ -2395,7 +2395,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.11920d0
       bclocal(1) =     60.52110d0*CON_KCALTOK
       bclocal(2) =    -16.13980d0*CON_KCALTOK
@@ -2415,7 +2415,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.06674d0
       bclocal(1) =     75.18900d0*CON_KCALTOK
       bclocal(2) =    -14.93687d0*CON_KCALTOK
@@ -2435,7 +2435,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.01469d0
       bclocal(1) =     67.14361d0*CON_KCALTOK
       bclocal(2) =    -16.57412d0*CON_KCALTOK
@@ -2455,7 +2455,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.91000d0
       bclocal(1) =     75.79865d0*CON_KCALTOK
       bclocal(2) =    -16.64995d0*CON_KCALTOK
@@ -2475,7 +2475,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.30180d0
       bclocal(1) =     50.78439d0*CON_KCALTOK
       bclocal(2) =    -12.55520d0*CON_KCALTOK
@@ -2495,7 +2495,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.30180d0
       bclocal(1) =     50.78439d0*CON_KCALTOK
       bclocal(2) =    -12.55520d0*CON_KCALTOK
@@ -2515,7 +2515,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.88660d0
       bclocal(1) =     68.08755d0*CON_KCALTOK
       bclocal(2) =    -10.44224d0*CON_KCALTOK
@@ -2535,7 +2535,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.94106d0
       bclocal(1) =     56.36328d0*CON_KCALTOK
       bclocal(2) =    -12.32061d0*CON_KCALTOK
@@ -2555,7 +2555,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    103.01330d0
       bclocal(1) =     39.86377d0*CON_KCALTOK
       bclocal(2) =     -4.99710d0*CON_KCALTOK
@@ -2575,7 +2575,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.85940d0
       bclocal(1) =     47.54466d0*CON_KCALTOK
       bclocal(2) =    -21.85686d0*CON_KCALTOK
@@ -2595,7 +2595,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    100.56630d0
       bclocal(1) =     62.01977d0*CON_KCALTOK
       bclocal(2) =     -6.26696d0*CON_KCALTOK
@@ -2615,7 +2615,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.17640d0
       bclocal(1) =     92.90171d0*CON_KCALTOK
       bclocal(2) =    -15.73263d0*CON_KCALTOK
@@ -2635,7 +2635,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.52950d0
       bclocal(1) =     61.87459d0*CON_KCALTOK
       bclocal(2) =    -11.29179d0*CON_KCALTOK
@@ -2655,7 +2655,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.44949d0
       bclocal(1) =     56.68412d0*CON_KCALTOK
       bclocal(2) =    -10.17170d0*CON_KCALTOK
@@ -2675,7 +2675,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.48634d0
       bclocal(1) =     83.32298d0*CON_KCALTOK
       bclocal(2) =    -17.65044d0*CON_KCALTOK
@@ -2695,7 +2695,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    100.56630d0
       bclocal(1) =     62.01977d0*CON_KCALTOK
       bclocal(2) =     -6.26696d0*CON_KCALTOK
@@ -2715,7 +2715,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.17640d0
       bclocal(1) =     92.90171d0*CON_KCALTOK
       bclocal(2) =    -15.73263d0*CON_KCALTOK
@@ -2735,7 +2735,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.67080d0
       bclocal(1) =     45.14111d0*CON_KCALTOK
       bclocal(2) =     -8.79486d0*CON_KCALTOK
@@ -2755,7 +2755,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     99.14982d0
       bclocal(1) =     75.20999d0*CON_KCALTOK
       bclocal(2) =     -6.53977d0*CON_KCALTOK
@@ -2775,7 +2775,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    113.00900d0
       bclocal(1) =     55.21236d0*CON_KCALTOK
       bclocal(2) =    -12.81934d0*CON_KCALTOK
@@ -2795,7 +2795,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.05660d0
       bclocal(1) =     51.53359d0*CON_KCALTOK
       bclocal(2) =    -17.84811d0*CON_KCALTOK
@@ -2815,7 +2815,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.05620d0
       bclocal(1) =    119.17813d0*CON_KCALTOK
       bclocal(2) =    -21.11503d0*CON_KCALTOK
@@ -2835,7 +2835,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.84480d0
       bclocal(1) =     73.62862d0*CON_KCALTOK
       bclocal(2) =    -15.16498d0*CON_KCALTOK
@@ -2855,7 +2855,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.77000d0
       bclocal(1) =     51.75238d0*CON_KCALTOK
       bclocal(2) =    -13.23853d0*CON_KCALTOK
@@ -2875,7 +2875,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.30180d0
       bclocal(1) =     50.78439d0*CON_KCALTOK
       bclocal(2) =    -12.55520d0*CON_KCALTOK
@@ -2895,7 +2895,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.86480d0
       bclocal(1) =     69.17548d0*CON_KCALTOK
       bclocal(2) =     -5.55519d0*CON_KCALTOK
@@ -2915,7 +2915,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.87683d0
       bclocal(1) =     46.38439d0*CON_KCALTOK
       bclocal(2) =     -9.57236d0*CON_KCALTOK
@@ -2935,7 +2935,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    113.15560d0
       bclocal(1) =     64.46562d0*CON_KCALTOK
       bclocal(2) =    -14.96774d0*CON_KCALTOK
@@ -2955,7 +2955,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.72160d0
       bclocal(1) =     97.17380d0*CON_KCALTOK
       bclocal(2) =    -21.10107d0*CON_KCALTOK
@@ -2975,7 +2975,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.64559d0
       bclocal(1) =     53.89350d0*CON_KCALTOK
       bclocal(2) =    -10.31145d0*CON_KCALTOK
@@ -2995,7 +2995,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.77570d0
       bclocal(1) =     62.95977d0*CON_KCALTOK
       bclocal(2) =    -12.15042d0*CON_KCALTOK
@@ -3015,7 +3015,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.12750d0
       bclocal(1) =    138.64696d0*CON_KCALTOK
       bclocal(2) =    -23.12969d0*CON_KCALTOK
@@ -3035,7 +3035,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.66290d0
       bclocal(1) =     49.49007d0*CON_KCALTOK
       bclocal(2) =    -16.13105d0*CON_KCALTOK
@@ -3055,7 +3055,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.09619d0
       bclocal(1) =     72.10056d0*CON_KCALTOK
       bclocal(2) =    -13.57880d0*CON_KCALTOK
@@ -3075,7 +3075,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    105.12703d0
       bclocal(1) =     71.10819d0*CON_KCALTOK
       bclocal(2) =    -10.42399d0*CON_KCALTOK
@@ -3095,7 +3095,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.78549d0
       bclocal(1) =     64.15919d0*CON_KCALTOK
       bclocal(2) =     -6.68651d0*CON_KCALTOK
@@ -3115,7 +3115,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.62040d0
       bclocal(1) =     64.06204d0*CON_KCALTOK
       bclocal(2) =     -8.38928d0*CON_KCALTOK
@@ -3135,7 +3135,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.93717d0
       bclocal(1) =     68.33446d0*CON_KCALTOK
       bclocal(2) =      3.49686d0*CON_KCALTOK
@@ -3155,7 +3155,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.93717d0
       bclocal(1) =     68.33446d0*CON_KCALTOK
       bclocal(2) =      3.49686d0*CON_KCALTOK
@@ -3175,7 +3175,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.72800d0
       bclocal(1) =     73.08940d0*CON_KCALTOK
       bclocal(2) =    -13.49419d0*CON_KCALTOK
@@ -3195,7 +3195,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.89356d0
       bclocal(1) =     57.11693d0*CON_KCALTOK
       bclocal(2) =    -10.01529d0*CON_KCALTOK
@@ -3215,7 +3215,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.40520d0
       bclocal(1) =     53.43819d0*CON_KCALTOK
       bclocal(2) =     -8.55233d0*CON_KCALTOK
@@ -3235,7 +3235,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.80918d0
       bclocal(1) =     89.75792d0*CON_KCALTOK
       bclocal(2) =    -69.56963d0*CON_KCALTOK
@@ -3255,7 +3255,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.43520d0
       bclocal(1) =    116.10309d0*CON_KCALTOK
       bclocal(2) =    -23.53009d0*CON_KCALTOK
@@ -3275,7 +3275,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.09671d0
       bclocal(1) =     67.33503d0*CON_KCALTOK
       bclocal(2) =    -14.85868d0*CON_KCALTOK
@@ -3295,7 +3295,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.58840d0
       bclocal(1) =     40.73110d0*CON_KCALTOK
       bclocal(2) =     -8.34581d0*CON_KCALTOK
@@ -3314,7 +3314,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    105.78990d0
       bclocal(1) =     32.33862d0*CON_KCALTOK
       bclocal(2) =     -2.27647d0*CON_KCALTOK
@@ -3334,7 +3334,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.92570d0
       bclocal(1) =     46.92773d0*CON_KCALTOK
       bclocal(2) =    -13.08867d0*CON_KCALTOK
@@ -3354,7 +3354,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    100.31820d0
       bclocal(1) =     45.72125d0*CON_KCALTOK
       bclocal(2) =     -4.50863d0*CON_KCALTOK
@@ -3374,7 +3374,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.77920d0
       bclocal(1) =     76.59017d0*CON_KCALTOK
       bclocal(2) =    -21.14898d0*CON_KCALTOK
@@ -3394,7 +3394,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    113.11680d0
       bclocal(1) =     69.22291d0*CON_KCALTOK
       bclocal(2) =    -16.10624d0*CON_KCALTOK
@@ -3414,7 +3414,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.78727d0
       bclocal(1) =     62.96260d0*CON_KCALTOK
       bclocal(2) =    -16.42769d0*CON_KCALTOK
@@ -3434,7 +3434,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.35680d0
       bclocal(1) =     50.03298d0*CON_KCALTOK
       bclocal(2) =     -8.50673d0*CON_KCALTOK
@@ -3454,7 +3454,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.39350d0
       bclocal(1) =     62.10086d0*CON_KCALTOK
       bclocal(2) =    -22.00537d0*CON_KCALTOK
@@ -3474,7 +3474,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     92.02086d0
       bclocal(1) =     38.08841d0*CON_KCALTOK
       bclocal(2) =     -0.72631d0*CON_KCALTOK
@@ -3494,7 +3494,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.03810d0
       bclocal(1) =     70.16703d0*CON_KCALTOK
       bclocal(2) =    -25.78580d0*CON_KCALTOK
@@ -3514,7 +3514,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.52920d0
       bclocal(1) =    123.91159d0*CON_KCALTOK
       bclocal(2) =    -43.72802d0*CON_KCALTOK
@@ -3534,7 +3534,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.54200d0
       bclocal(1) =    115.20474d0*CON_KCALTOK
       bclocal(2) =    -41.04756d0*CON_KCALTOK
@@ -3554,7 +3554,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    103.71952d0
       bclocal(1) =    111.50659d0*CON_KCALTOK
       bclocal(2) =    -14.70447d0*CON_KCALTOK
@@ -3574,7 +3574,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.98550d0
       bclocal(1) =    116.09572d0*CON_KCALTOK
       bclocal(2) =    -26.17467d0*CON_KCALTOK
@@ -3594,7 +3594,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.58840d0
       bclocal(1) =     40.73110d0*CON_KCALTOK
       bclocal(2) =     -8.34581d0*CON_KCALTOK
@@ -3613,7 +3613,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    105.78990d0
       bclocal(1) =     32.33862d0*CON_KCALTOK
       bclocal(2) =     -2.27647d0*CON_KCALTOK
@@ -3633,7 +3633,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.47839d0
       bclocal(1) =     47.18995d0*CON_KCALTOK
       bclocal(2) =    -13.13954d0*CON_KCALTOK
@@ -3653,7 +3653,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    100.31820d0
       bclocal(1) =     45.72125d0*CON_KCALTOK
       bclocal(2) =     -4.50863d0*CON_KCALTOK
@@ -3673,7 +3673,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.21019d0
       bclocal(1) =     54.10131d0*CON_KCALTOK
       bclocal(2) =    -18.06801d0*CON_KCALTOK
@@ -3693,7 +3693,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.14510d0
       bclocal(1) =     66.12279d0*CON_KCALTOK
       bclocal(2) =    -20.49084d0*CON_KCALTOK
@@ -3713,7 +3713,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.92088d0
       bclocal(1) =     39.80700d0*CON_KCALTOK
       bclocal(2) =     -6.45198d0*CON_KCALTOK
@@ -3733,7 +3733,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    117.58731d0
       bclocal(1) =     67.61201d0*CON_KCALTOK
       bclocal(2) =    -19.24031d0*CON_KCALTOK
@@ -3753,7 +3753,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.35680d0
       bclocal(1) =     50.03298d0*CON_KCALTOK
       bclocal(2) =     -8.50673d0*CON_KCALTOK
@@ -3773,7 +3773,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.52304d0
       bclocal(1) =     55.23517d0*CON_KCALTOK
       bclocal(2) =    -10.62720d0*CON_KCALTOK
@@ -3793,7 +3793,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     92.02086d0
       bclocal(1) =     38.08841d0*CON_KCALTOK
       bclocal(2) =     -0.72631d0*CON_KCALTOK
@@ -3813,7 +3813,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.53193d0
       bclocal(1) =     61.41831d0*CON_KCALTOK
       bclocal(2) =    -18.24893d0*CON_KCALTOK
@@ -3833,7 +3833,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.52920d0
       bclocal(1) =    123.91159d0*CON_KCALTOK
       bclocal(2) =    -43.72802d0*CON_KCALTOK
@@ -3853,7 +3853,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.41090d0
       bclocal(1) =     84.66801d0*CON_KCALTOK
       bclocal(2) =    -17.04707d0*CON_KCALTOK
@@ -3873,7 +3873,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.70551d0
       bclocal(1) =    105.99296d0*CON_KCALTOK
       bclocal(2) =    -38.82368d0*CON_KCALTOK
@@ -3893,7 +3893,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.98550d0
       bclocal(1) =    116.09572d0*CON_KCALTOK
       bclocal(2) =    -26.17467d0*CON_KCALTOK
@@ -3913,7 +3913,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.84087d0
       bclocal(1) =     63.58001d0*CON_KCALTOK
       bclocal(2) =    -15.97706d0*CON_KCALTOK
@@ -3933,7 +3933,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.66290d0
       bclocal(1) =     57.27177d0*CON_KCALTOK
       bclocal(2) =     -9.87577d0*CON_KCALTOK
@@ -3953,7 +3953,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.30000d0
       bclocal(1) =     66.14710d0*CON_KCALTOK
       bclocal(2) =    -14.78910d0*CON_KCALTOK
@@ -3973,7 +3973,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.80000d0
       bclocal(1) =    104.03111d0*CON_KCALTOK
       bclocal(2) =    -35.64114d0*CON_KCALTOK
@@ -3993,7 +3993,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.06200d0
       bclocal(1) =     70.35181d0*CON_KCALTOK
       bclocal(2) =    -18.02690d0*CON_KCALTOK
@@ -4013,7 +4013,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.75340d0
       bclocal(1) =     72.80066d0*CON_KCALTOK
       bclocal(2) =    -16.68950d0*CON_KCALTOK
@@ -4033,7 +4033,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    130.01000d0
       bclocal(1) =    132.48810d0*CON_KCALTOK
       bclocal(2) =    -62.30840d0*CON_KCALTOK
@@ -4053,7 +4053,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.01260d0
       bclocal(1) =     36.54230d0*CON_KCALTOK
       bclocal(2) =    -12.63106d0*CON_KCALTOK
@@ -4072,7 +4072,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    126.75940d0
       bclocal(1) =     48.69441d0*CON_KCALTOK
       bclocal(2) =    -30.80725d0*CON_KCALTOK
@@ -4092,7 +4092,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    117.27190d0
       bclocal(1) =     37.57104d0*CON_KCALTOK
       bclocal(2) =    -10.09062d0*CON_KCALTOK
@@ -4112,7 +4112,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.87820d0
       bclocal(1) =     39.19627d0*CON_KCALTOK
       bclocal(2) =    -19.74888d0*CON_KCALTOK
@@ -4132,7 +4132,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.89210d0
       bclocal(1) =     72.03217d0*CON_KCALTOK
       bclocal(2) =    -14.20172d0*CON_KCALTOK
@@ -4152,7 +4152,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    127.75631d0
       bclocal(1) =     41.26839d0*CON_KCALTOK
       bclocal(2) =    -17.71816d0*CON_KCALTOK
@@ -4172,7 +4172,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.49080d0
       bclocal(1) =     36.99910d0*CON_KCALTOK
       bclocal(2) =    -15.58713d0*CON_KCALTOK
@@ -4192,7 +4192,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.99616d0
       bclocal(1) =     44.83517d0*CON_KCALTOK
       bclocal(2) =    -11.23997d0*CON_KCALTOK
@@ -4212,7 +4212,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.10141d0
       bclocal(1) =     55.81749d0*CON_KCALTOK
       bclocal(2) =    -19.85665d0*CON_KCALTOK
@@ -4232,7 +4232,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    129.60436d0
       bclocal(1) =     71.47831d0*CON_KCALTOK
       bclocal(2) =    -32.88896d0*CON_KCALTOK
@@ -4252,7 +4252,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    131.71020d0
       bclocal(1) =     84.60596d0*CON_KCALTOK
       bclocal(2) =    -42.08314d0*CON_KCALTOK
@@ -4272,7 +4272,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.67330d0
       bclocal(1) =     49.33332d0*CON_KCALTOK
       bclocal(2) =     -9.29214d0*CON_KCALTOK
@@ -4291,7 +4291,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.52950d0
       bclocal(1) =     61.87459d0*CON_KCALTOK
       bclocal(2) =    -11.29179d0*CON_KCALTOK
@@ -4311,7 +4311,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.77000d0
       bclocal(1) =     51.75238d0*CON_KCALTOK
       bclocal(2) =    -13.23853d0*CON_KCALTOK
@@ -4331,7 +4331,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.30180d0
       bclocal(1) =     50.78439d0*CON_KCALTOK
       bclocal(2) =    -12.55520d0*CON_KCALTOK
@@ -4351,7 +4351,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.92500d0
       bclocal(1) =     75.94754d0*CON_KCALTOK
       bclocal(2) =    -14.62436d0*CON_KCALTOK
@@ -4371,7 +4371,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.52950d0
       bclocal(1) =     61.87459d0*CON_KCALTOK
       bclocal(2) =    -11.29179d0*CON_KCALTOK
@@ -4388,7 +4388,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.73360d0
       bclocal(1) =     48.34510d0*CON_KCALTOK
       bclocal(2) =    -34.30013d0*CON_KCALTOK
@@ -4408,7 +4408,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.34410d0
       bclocal(1) =     64.54747d0*CON_KCALTOK
       bclocal(2) =    -11.55455d0*CON_KCALTOK
@@ -4428,7 +4428,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.93717d0
       bclocal(1) =     68.33446d0*CON_KCALTOK
       bclocal(2) =      3.49686d0*CON_KCALTOK
@@ -4448,7 +4448,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.61980d0
       bclocal(1) =     80.77312d0*CON_KCALTOK
       bclocal(2) =    -15.67803d0*CON_KCALTOK
@@ -4468,7 +4468,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.66693d0
       bclocal(1) =     98.33405d0*CON_KCALTOK
       bclocal(2) =    -15.95194d0*CON_KCALTOK
@@ -4488,7 +4488,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.43520d0
       bclocal(1) =    116.10309d0*CON_KCALTOK
       bclocal(2) =    -23.53009d0*CON_KCALTOK
@@ -4508,7 +4508,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.57975d0
       bclocal(1) =     39.99201d0*CON_KCALTOK
       bclocal(2) =    -14.92217d0*CON_KCALTOK
@@ -4528,7 +4528,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.42148d0
       bclocal(1) =     58.48329d0*CON_KCALTOK
       bclocal(2) =    -15.11177d0*CON_KCALTOK
@@ -4548,7 +4548,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.12620d0
       bclocal(1) =     49.86593d0*CON_KCALTOK
       bclocal(2) =    -17.01477d0*CON_KCALTOK
@@ -4568,7 +4568,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.23183d0
       bclocal(1) =     39.99201d0*CON_KCALTOK
       bclocal(2) =     -8.70882d0*CON_KCALTOK
@@ -4588,7 +4588,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.10940d0
       bclocal(1) =     58.48329d0*CON_KCALTOK
       bclocal(2) =     -9.71013d0*CON_KCALTOK
@@ -4608,7 +4608,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    105.51431d0
       bclocal(1) =     49.86593d0*CON_KCALTOK
       bclocal(2) =     -7.38934d0*CON_KCALTOK
@@ -4628,7 +4628,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.49497d0
       bclocal(1) =     29.72316d0*CON_KCALTOK
       bclocal(2) =     -6.23474d0*CON_KCALTOK
@@ -4648,7 +4648,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.77907d0
       bclocal(1) =     45.96337d0*CON_KCALTOK
       bclocal(2) =     -8.52708d0*CON_KCALTOK
@@ -4668,7 +4668,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.72506d0
       bclocal(1) =     41.94061d0*CON_KCALTOK
       bclocal(2) =     -8.82847d0*CON_KCALTOK
@@ -4688,7 +4688,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    103.36266d0
       bclocal(1) =     34.45333d0*CON_KCALTOK
       bclocal(2) =     -4.27891d0*CON_KCALTOK
@@ -4708,7 +4708,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.32120d0
       bclocal(1) =     35.13950d0*CON_KCALTOK
       bclocal(2) =     -8.17160d0*CON_KCALTOK
@@ -4728,7 +4728,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.69689d0
       bclocal(1) =     49.88869d0*CON_KCALTOK
       bclocal(2) =     -9.56063d0*CON_KCALTOK
@@ -4748,7 +4748,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.41695d0
       bclocal(1) =     80.79138d0*CON_KCALTOK
       bclocal(2) =    -20.83947d0*CON_KCALTOK
@@ -4768,7 +4768,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.33509d0
       bclocal(1) =     55.34122d0*CON_KCALTOK
       bclocal(2) =    -11.72604d0*CON_KCALTOK
@@ -4788,7 +4788,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.17933d0
       bclocal(1) =     39.99201d0*CON_KCALTOK
       bclocal(2) =    -10.51948d0*CON_KCALTOK
@@ -4808,7 +4808,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.34133d0
       bclocal(1) =     58.48329d0*CON_KCALTOK
       bclocal(2) =    -13.02373d0*CON_KCALTOK
@@ -4828,7 +4828,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    117.07714d0
       bclocal(1) =     49.86593d0*CON_KCALTOK
       bclocal(2) =    -13.75877d0*CON_KCALTOK
@@ -4848,7 +4848,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.17430d0
       bclocal(1) =     58.10852d0*CON_KCALTOK
       bclocal(2) =    -21.00034d0*CON_KCALTOK
@@ -4868,7 +4868,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.11600d0
       bclocal(1) =     91.06005d0*CON_KCALTOK
       bclocal(2) =    -30.33107d0*CON_KCALTOK
@@ -4888,7 +4888,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.32440d0
       bclocal(1) =     71.07145d0*CON_KCALTOK
       bclocal(2) =    -24.85106d0*CON_KCALTOK
@@ -4908,7 +4908,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.99517d0
       bclocal(1) =     41.97218d0*CON_KCALTOK
       bclocal(2) =    -13.04808d0*CON_KCALTOK
@@ -4928,7 +4928,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.99517d0
       bclocal(1) =     41.97218d0*CON_KCALTOK
       bclocal(2) =    -13.04808d0*CON_KCALTOK
@@ -4948,7 +4948,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.21588d0
       bclocal(1) =     56.86507d0*CON_KCALTOK
       bclocal(2) =    -18.74154d0*CON_KCALTOK
@@ -4968,7 +4968,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.78640d0
       bclocal(1) =     60.53543d0*CON_KCALTOK
       bclocal(2) =    -21.39227d0*CON_KCALTOK
@@ -4988,7 +4988,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.88133d0
       bclocal(1) =     52.70070d0*CON_KCALTOK
       bclocal(2) =    -17.16631d0*CON_KCALTOK
@@ -5008,7 +5008,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    128.01014d0
       bclocal(1) =     45.32104d0*CON_KCALTOK
       bclocal(2) =    -19.63407d0*CON_KCALTOK
@@ -5028,7 +5028,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.67190d0
       bclocal(1) =     38.77453d0*CON_KCALTOK
       bclocal(2) =    -14.03190d0*CON_KCALTOK
@@ -5048,7 +5048,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.61702d0
       bclocal(1) =     43.25782d0*CON_KCALTOK
       bclocal(2) =    -11.46107d0*CON_KCALTOK
@@ -5068,7 +5068,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.98874d0
       bclocal(1) =     77.41959d0*CON_KCALTOK
       bclocal(2) =    -22.95522d0*CON_KCALTOK
@@ -5088,7 +5088,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.80586d0
       bclocal(1) =     57.07924d0*CON_KCALTOK
       bclocal(2) =    -17.25319d0*CON_KCALTOK
@@ -5108,7 +5108,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    128.01014d0
       bclocal(1) =     45.32104d0*CON_KCALTOK
       bclocal(2) =    -19.63407d0*CON_KCALTOK
@@ -5128,7 +5128,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.85718d0
       bclocal(1) =     57.07924d0*CON_KCALTOK
       bclocal(2) =    -20.38001d0*CON_KCALTOK
@@ -5148,7 +5148,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.45771d0
       bclocal(1) =     80.60236d0*CON_KCALTOK
       bclocal(2) =    -28.15122d0*CON_KCALTOK
@@ -5168,7 +5168,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.66696d0
       bclocal(1) =     98.89011d0*CON_KCALTOK
       bclocal(2) =    -34.79762d0*CON_KCALTOK
@@ -5188,7 +5188,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.19096d0
       bclocal(1) =     62.24384d0*CON_KCALTOK
       bclocal(2) =    -19.89259d0*CON_KCALTOK
@@ -5208,7 +5208,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.88780d0
       bclocal(1) =     41.02206d0*CON_KCALTOK
       bclocal(2) =    -10.91345d0*CON_KCALTOK
@@ -5228,7 +5228,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.84870d0
       bclocal(1) =     55.47367d0*CON_KCALTOK
       bclocal(2) =    -20.45101d0*CON_KCALTOK
@@ -5248,7 +5248,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.88133d0
       bclocal(1) =     52.70070d0*CON_KCALTOK
       bclocal(2) =    -17.16631d0*CON_KCALTOK
@@ -5268,7 +5268,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.80586d0
       bclocal(1) =     57.07924d0*CON_KCALTOK
       bclocal(2) =    -17.25319d0*CON_KCALTOK
@@ -5288,7 +5288,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.85718d0
       bclocal(1) =     57.07924d0*CON_KCALTOK
       bclocal(2) =    -20.38001d0*CON_KCALTOK
@@ -5308,7 +5308,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.66696d0
       bclocal(1) =     98.89011d0*CON_KCALTOK
       bclocal(2) =    -34.79762d0*CON_KCALTOK
@@ -5328,7 +5328,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.84870d0
       bclocal(1) =     55.47367d0*CON_KCALTOK
       bclocal(2) =    -20.45101d0*CON_KCALTOK
@@ -5348,7 +5348,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.62090d0
       bclocal(1) =    104.26173d0*CON_KCALTOK
       bclocal(2) =    -32.58361d0*CON_KCALTOK
@@ -5368,7 +5368,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.93370d0
       bclocal(1) =     82.29067d0*CON_KCALTOK
       bclocal(2) =    -28.25378d0*CON_KCALTOK
@@ -5388,7 +5388,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.46270d0
       bclocal(1) =     49.96057d0*CON_KCALTOK
       bclocal(2) =    -12.79114d0*CON_KCALTOK
@@ -5408,7 +5408,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    117.07243d0
       bclocal(1) =     48.02810d0*CON_KCALTOK
       bclocal(2) =    -13.47517d0*CON_KCALTOK
@@ -5428,7 +5428,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.64780d0
       bclocal(1) =     63.23359d0*CON_KCALTOK
       bclocal(2) =    -12.98216d0*CON_KCALTOK
@@ -5448,7 +5448,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.05956d0
       bclocal(1) =     51.67824d0*CON_KCALTOK
       bclocal(2) =    -10.71645d0*CON_KCALTOK
@@ -5468,7 +5468,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.03348d0
       bclocal(1) =     73.75180d0*CON_KCALTOK
       bclocal(2) =    -27.34156d0*CON_KCALTOK
@@ -5488,7 +5488,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.05172d0
       bclocal(1) =     90.83905d0*CON_KCALTOK
       bclocal(2) =    -32.42871d0*CON_KCALTOK
@@ -5508,7 +5508,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.57100d0
       bclocal(1) =     73.88939d0*CON_KCALTOK
       bclocal(2) =    -23.79319d0*CON_KCALTOK
@@ -5528,7 +5528,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.53540d0
       bclocal(1) =     41.92943d0*CON_KCALTOK
       bclocal(2) =    -15.05848d0*CON_KCALTOK
@@ -5548,7 +5548,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.78867d0
       bclocal(1) =     56.91964d0*CON_KCALTOK
       bclocal(2) =    -12.22435d0*CON_KCALTOK
@@ -5568,7 +5568,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.24367d0
       bclocal(1) =     71.36648d0*CON_KCALTOK
       bclocal(2) =    -14.82745d0*CON_KCALTOK
@@ -5588,7 +5588,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.85361d0
       bclocal(1) =     82.90811d0*CON_KCALTOK
       bclocal(2) =    -29.31444d0*CON_KCALTOK
@@ -5608,7 +5608,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.03348d0
       bclocal(1) =     73.75180d0*CON_KCALTOK
       bclocal(2) =    -27.34156d0*CON_KCALTOK
@@ -5628,7 +5628,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.26692d0
       bclocal(1) =     99.05923d0*CON_KCALTOK
       bclocal(2) =    -37.41994d0*CON_KCALTOK
@@ -5648,7 +5648,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.66552d0
       bclocal(1) =     72.69853d0*CON_KCALTOK
       bclocal(2) =    -21.66329d0*CON_KCALTOK
@@ -5668,7 +5668,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.98038d0
       bclocal(1) =     40.32519d0*CON_KCALTOK
       bclocal(2) =    -11.18357d0*CON_KCALTOK
@@ -5688,7 +5688,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.05172d0
       bclocal(1) =     90.83905d0*CON_KCALTOK
       bclocal(2) =    -32.42871d0*CON_KCALTOK
@@ -5708,7 +5708,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    126.98948d0
       bclocal(1) =     56.77877d0*CON_KCALTOK
       bclocal(2) =    -23.50703d0*CON_KCALTOK
@@ -5728,7 +5728,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.46406d0
       bclocal(1) =     71.29657d0*CON_KCALTOK
       bclocal(2) =    -26.00359d0*CON_KCALTOK
@@ -5748,7 +5748,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.52814d0
       bclocal(1) =    115.46416d0*CON_KCALTOK
       bclocal(2) =    -35.95305d0*CON_KCALTOK
@@ -5768,7 +5768,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.11529d0
       bclocal(1) =     30.90676d0*CON_KCALTOK
       bclocal(2) =     -6.32242d0*CON_KCALTOK
@@ -5788,7 +5788,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.61224d0
       bclocal(1) =     97.07880d0*CON_KCALTOK
       bclocal(2) =    -31.66941d0*CON_KCALTOK
@@ -5808,7 +5808,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.99517d0
       bclocal(1) =     41.97218d0*CON_KCALTOK
       bclocal(2) =    -13.04808d0*CON_KCALTOK
@@ -5827,7 +5827,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.85401d0
       bclocal(1) =     35.81420d0*CON_KCALTOK
       bclocal(2) =    -12.02082d0*CON_KCALTOK
@@ -5847,7 +5847,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.80586d0
       bclocal(1) =     57.07924d0*CON_KCALTOK
       bclocal(2) =    -17.25319d0*CON_KCALTOK
@@ -5867,7 +5867,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.41250d0
       bclocal(1) =     70.70319d0*CON_KCALTOK
       bclocal(2) =    -24.58770d0*CON_KCALTOK
@@ -5887,7 +5887,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.85718d0
       bclocal(1) =     57.07924d0*CON_KCALTOK
       bclocal(2) =    -20.38001d0*CON_KCALTOK
@@ -5907,7 +5907,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.66696d0
       bclocal(1) =     98.89011d0*CON_KCALTOK
       bclocal(2) =    -34.79762d0*CON_KCALTOK
@@ -5927,7 +5927,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.84870d0
       bclocal(1) =     55.47367d0*CON_KCALTOK
       bclocal(2) =    -20.45101d0*CON_KCALTOK
@@ -5947,7 +5947,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.39400d0
       bclocal(1) =     47.06288d0*CON_KCALTOK
       bclocal(2) =    -16.16832d0*CON_KCALTOK
@@ -5967,7 +5967,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.05200d0
       bclocal(1) =     66.69684d0*CON_KCALTOK
       bclocal(2) =    -19.34054d0*CON_KCALTOK
@@ -5987,7 +5987,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.85300d0
       bclocal(1) =     33.51567d0*CON_KCALTOK
       bclocal(2) =     -9.17435d0*CON_KCALTOK
@@ -6007,7 +6007,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.11800d0
       bclocal(1) =     70.29633d0*CON_KCALTOK
       bclocal(2) =    -23.33350d0*CON_KCALTOK
@@ -6027,7 +6027,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.37070d0
       bclocal(1) =     87.70841d0*CON_KCALTOK
       bclocal(2) =    -26.97209d0*CON_KCALTOK
@@ -6047,7 +6047,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.26692d0
       bclocal(1) =     99.05923d0*CON_KCALTOK
       bclocal(2) =    -37.41994d0*CON_KCALTOK
@@ -6067,7 +6067,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    126.98948d0
       bclocal(1) =     56.77877d0*CON_KCALTOK
       bclocal(2) =    -23.50703d0*CON_KCALTOK
@@ -6087,7 +6087,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    180.75000d0
       bclocal(1) =     29.89432d0*CON_KCALTOK
       bclocal(2) =      0.00000d0*CON_KCALTOK
@@ -6107,7 +6107,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    180.75000d0
       bclocal(1) =     31.19084d0*CON_KCALTOK
       bclocal(2) =      0.00000d0*CON_KCALTOK
@@ -6127,7 +6127,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    180.75000d0
       bclocal(1) =     17.98723d0*CON_KCALTOK
       bclocal(2) =      0.00000d0*CON_KCALTOK
@@ -6147,7 +6147,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.18516d0
       bclocal(1) =     56.41830d0*CON_KCALTOK
       bclocal(2) =    -11.84547d0*CON_KCALTOK
@@ -6166,7 +6166,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.03720d0
       bclocal(1) =     37.97123d0*CON_KCALTOK
       bclocal(2) =     -7.96931d0*CON_KCALTOK
@@ -6186,7 +6186,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.07212d0
       bclocal(1) =     38.23787d0*CON_KCALTOK
       bclocal(2) =     -7.15671d0*CON_KCALTOK
@@ -6206,7 +6206,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.20000d0
       bclocal(1) =     44.29908d0*CON_KCALTOK
       bclocal(2) =    -14.12262d0*CON_KCALTOK
@@ -6226,7 +6226,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.91370d0
       bclocal(1) =     45.74921d0*CON_KCALTOK
       bclocal(2) =     -7.91644d0*CON_KCALTOK
@@ -6246,7 +6246,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.25613d0
       bclocal(1) =     55.82880d0*CON_KCALTOK
       bclocal(2) =    -12.29685d0*CON_KCALTOK
@@ -6266,7 +6266,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.69067d0
       bclocal(1) =     57.06097d0*CON_KCALTOK
       bclocal(2) =    -13.02628d0*CON_KCALTOK
@@ -6286,7 +6286,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.50000d0
       bclocal(1) =     41.12346d0*CON_KCALTOK
       bclocal(2) =     -8.38606d0*CON_KCALTOK
@@ -6306,7 +6306,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.95560d0
       bclocal(1) =     90.84582d0*CON_KCALTOK
       bclocal(2) =    -31.32934d0*CON_KCALTOK
@@ -6325,7 +6325,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.96070d0
       bclocal(1) =     44.63853d0*CON_KCALTOK
       bclocal(2) =     -9.74250d0*CON_KCALTOK
@@ -6345,7 +6345,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.50828d0
       bclocal(1) =     47.53502d0*CON_KCALTOK
       bclocal(2) =    -17.24370d0*CON_KCALTOK
@@ -6364,7 +6364,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    129.32818d0
       bclocal(1) =     38.93482d0*CON_KCALTOK
       bclocal(2) =    -17.42165d0*CON_KCALTOK
@@ -6384,7 +6384,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.33515d0
       bclocal(1) =     48.80314d0*CON_KCALTOK
       bclocal(2) =    -12.45650d0*CON_KCALTOK
@@ -6404,7 +6404,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.00066d0
       bclocal(1) =     57.78872d0*CON_KCALTOK
       bclocal(2) =    -18.14416d0*CON_KCALTOK
@@ -6424,7 +6424,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    117.89442d0
       bclocal(1) =     53.37327d0*CON_KCALTOK
       bclocal(2) =    -15.42520d0*CON_KCALTOK
@@ -6444,7 +6444,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.55032d0
       bclocal(1) =     49.49435d0*CON_KCALTOK
       bclocal(2) =    -16.62352d0*CON_KCALTOK
@@ -6464,7 +6464,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    127.68774d0
       bclocal(1) =     41.17911d0*CON_KCALTOK
       bclocal(2) =    -15.69229d0*CON_KCALTOK
@@ -6484,7 +6484,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.98437d0
       bclocal(1) =     49.97057d0*CON_KCALTOK
       bclocal(2) =     -9.71453d0*CON_KCALTOK
@@ -6503,7 +6503,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    122.02220d0
       bclocal(1) =     53.97580d0*CON_KCALTOK
       bclocal(2) =    -18.66427d0*CON_KCALTOK
@@ -6523,7 +6523,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    117.37230d0
       bclocal(1) =     82.32983d0*CON_KCALTOK
       bclocal(2) =    -23.32676d0*CON_KCALTOK
@@ -6543,7 +6543,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    125.25470d0
       bclocal(1) =    154.85213d0*CON_KCALTOK
       bclocal(2) =    -60.48647d0*CON_KCALTOK
@@ -6563,7 +6563,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.73950d0
       bclocal(1) =     59.28437d0*CON_KCALTOK
       bclocal(2) =    -12.18775d0*CON_KCALTOK
@@ -6582,7 +6582,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.98145d0
       bclocal(1) =     64.02268d0*CON_KCALTOK
       bclocal(2) =    -14.10991d0*CON_KCALTOK
@@ -6602,7 +6602,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.24527d0
       bclocal(1) =     54.83865d0*CON_KCALTOK
       bclocal(2) =    -10.86038d0*CON_KCALTOK
@@ -6622,7 +6622,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.59531d0
       bclocal(1) =     58.75534d0*CON_KCALTOK
       bclocal(2) =    -12.53478d0*CON_KCALTOK
@@ -6642,7 +6642,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    105.91333d0
       bclocal(1) =     55.10303d0*CON_KCALTOK
       bclocal(2) =     -8.52108d0*CON_KCALTOK
@@ -6661,7 +6661,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.02316d0
       bclocal(1) =     66.26258d0*CON_KCALTOK
       bclocal(2) =    -13.84160d0*CON_KCALTOK
@@ -6680,7 +6680,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.75387d0
       bclocal(1) =    122.00799d0*CON_KCALTOK
       bclocal(2) =    -41.54859d0*CON_KCALTOK
@@ -6700,7 +6700,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.58743d0
       bclocal(1) =     66.84106d0*CON_KCALTOK
       bclocal(2) =    -15.00519d0*CON_KCALTOK
@@ -6718,7 +6718,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.75387d0
       bclocal(1) =    127.03118d0*CON_KCALTOK
       bclocal(2) =    -92.12250d0*CON_KCALTOK
@@ -6738,7 +6738,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.51922d0
       bclocal(1) =     98.57054d0*CON_KCALTOK
       bclocal(2) =    -24.19394d0*CON_KCALTOK
@@ -6757,7 +6757,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.44360d0
       bclocal(1) =     58.96836d0*CON_KCALTOK
       bclocal(2) =    -13.30981d0*CON_KCALTOK
@@ -6776,7 +6776,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.95380d0
       bclocal(1) =     63.50213d0*CON_KCALTOK
       bclocal(2) =     -5.55832d0*CON_KCALTOK
@@ -6796,7 +6796,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.82838d0
       bclocal(1) =     90.13072d0*CON_KCALTOK
       bclocal(2) =    -16.71352d0*CON_KCALTOK
@@ -6816,7 +6816,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    107.06710d0
       bclocal(1) =     56.49442d0*CON_KCALTOK
       bclocal(2) =     -9.43294d0*CON_KCALTOK
@@ -6835,7 +6835,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.86791d0
       bclocal(1) =     78.43829d0*CON_KCALTOK
       bclocal(2) =    -12.86062d0*CON_KCALTOK
@@ -6855,7 +6855,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.56350d0
       bclocal(1) =     47.15292d0*CON_KCALTOK
       bclocal(2) =    -10.17371d0*CON_KCALTOK
@@ -6874,7 +6874,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.56350d0
       bclocal(1) =     47.15292d0*CON_KCALTOK
       bclocal(2) =    -10.17371d0*CON_KCALTOK
@@ -6893,7 +6893,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.78144d0
       bclocal(1) =     35.00000d0*CON_KCALTOK
       bclocal(2) =    -11.03965d0*CON_KCALTOK
@@ -6913,7 +6913,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    113.86830d0
       bclocal(1) =     54.67515d0*CON_KCALTOK
       bclocal(2) =    -23.90761d0*CON_KCALTOK
@@ -6933,7 +6933,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.56350d0
       bclocal(1) =     47.15292d0*CON_KCALTOK
       bclocal(2) =    -10.17371d0*CON_KCALTOK
@@ -6952,7 +6952,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.78144d0
       bclocal(1) =     35.00000d0*CON_KCALTOK
       bclocal(2) =    -11.03965d0*CON_KCALTOK
@@ -6972,7 +6972,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    113.86830d0
       bclocal(1) =     54.67515d0*CON_KCALTOK
       bclocal(2) =    -23.90761d0*CON_KCALTOK
@@ -6993,7 +6993,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.50000d0
       bclocal(1) =     57.31697d0*CON_KCALTOK
       bclocal(2) =    -21.74167d0*CON_KCALTOK
@@ -7012,7 +7012,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.50000d0
       bclocal(1) =     57.31697d0*CON_KCALTOK
       bclocal(2) =    -21.74167d0*CON_KCALTOK
@@ -7032,7 +7032,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.32072d0
       bclocal(1) =     40.00000d0*CON_KCALTOK
       bclocal(2) =    -12.37484d0*CON_KCALTOK
@@ -7052,7 +7052,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.04280d0
       bclocal(1) =     58.24963d0*CON_KCALTOK
       bclocal(2) =    -17.73371d0*CON_KCALTOK
@@ -7072,7 +7072,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.32072d0
       bclocal(1) =     40.00000d0*CON_KCALTOK
       bclocal(2) =    -12.37484d0*CON_KCALTOK
@@ -7092,7 +7092,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.04280d0
       bclocal(1) =     58.24963d0*CON_KCALTOK
       bclocal(2) =    -17.73371d0*CON_KCALTOK
@@ -7112,7 +7112,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.94020d0
       bclocal(1) =     56.73197d0*CON_KCALTOK
       bclocal(2) =    -11.31860d0*CON_KCALTOK
@@ -7131,7 +7131,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.47552d0
       bclocal(1) =     45.82977d0*CON_KCALTOK
       bclocal(2) =     -8.67174d0*CON_KCALTOK
@@ -7151,7 +7151,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    114.25770d0
       bclocal(1) =    133.31739d0*CON_KCALTOK
       bclocal(2) =    -32.81197d0*CON_KCALTOK
@@ -7171,7 +7171,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.03852d0
       bclocal(1) =     67.14337d0*CON_KCALTOK
       bclocal(2) =    -14.06278d0*CON_KCALTOK
@@ -7190,7 +7190,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.25613d0
       bclocal(1) =     55.82880d0*CON_KCALTOK
       bclocal(2) =    -12.29685d0*CON_KCALTOK
@@ -7210,7 +7210,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.81940d0
       bclocal(1) =     48.21012d0*CON_KCALTOK
       bclocal(2) =     -9.95797d0*CON_KCALTOK
@@ -7230,7 +7230,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.86332d0
       bclocal(1) =     66.85267d0*CON_KCALTOK
       bclocal(2) =    -12.99748d0*CON_KCALTOK
@@ -7250,7 +7250,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.26466d0
       bclocal(1) =     53.40841d0*CON_KCALTOK
       bclocal(2) =    -15.67444d0*CON_KCALTOK
@@ -7270,7 +7270,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.79203d0
       bclocal(1) =     58.15919d0*CON_KCALTOK
       bclocal(2) =    -15.37118d0*CON_KCALTOK
@@ -7290,7 +7290,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.56296d0
       bclocal(1) =     54.22024d0*CON_KCALTOK
       bclocal(2) =    -12.26188d0*CON_KCALTOK
@@ -7309,7 +7309,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.92865d0
       bclocal(1) =     58.81903d0*CON_KCALTOK
       bclocal(2) =    -15.46730d0*CON_KCALTOK
@@ -7328,7 +7328,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.92865d0
       bclocal(1) =     58.81903d0*CON_KCALTOK
       bclocal(2) =    -15.46730d0*CON_KCALTOK
@@ -7348,7 +7348,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.22296d0
       bclocal(1) =     53.03215d0*CON_KCALTOK
       bclocal(2) =    -17.02756d0*CON_KCALTOK
@@ -7368,7 +7368,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.33706d0
       bclocal(1) =     74.23989d0*CON_KCALTOK
       bclocal(2) =    -24.88823d0*CON_KCALTOK
@@ -7388,7 +7388,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.64582d0
       bclocal(1) =     89.75882d0*CON_KCALTOK
       bclocal(2) =    -24.55396d0*CON_KCALTOK
@@ -7408,7 +7408,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.49962d0
       bclocal(1) =     26.24184d0*CON_KCALTOK
       bclocal(2) =     -9.53581d0*CON_KCALTOK
@@ -7428,7 +7428,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.22296d0
       bclocal(1) =     53.03215d0*CON_KCALTOK
       bclocal(2) =    -17.02756d0*CON_KCALTOK
@@ -7448,7 +7448,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.33706d0
       bclocal(1) =     74.23989d0*CON_KCALTOK
       bclocal(2) =    -24.88823d0*CON_KCALTOK
@@ -7468,7 +7468,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.64582d0
       bclocal(1) =     89.75882d0*CON_KCALTOK
       bclocal(2) =    -24.55396d0*CON_KCALTOK
@@ -7488,7 +7488,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.35747d0
       bclocal(1) =    106.41610d0*CON_KCALTOK
       bclocal(2) =    -19.14918d0*CON_KCALTOK
@@ -7508,7 +7508,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    118.36598d0
       bclocal(1) =    136.08429d0*CON_KCALTOK
       bclocal(2) =    -40.39715d0*CON_KCALTOK
@@ -7528,7 +7528,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    119.84696d0
       bclocal(1) =    158.59242d0*CON_KCALTOK
       bclocal(2) =    -50.01159d0*CON_KCALTOK
@@ -7548,7 +7548,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.48723d0
       bclocal(1) =    103.46695d0*CON_KCALTOK
       bclocal(2) =    -34.85393d0*CON_KCALTOK
@@ -7568,7 +7568,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.58000d0
       bclocal(1) =     44.62597d0*CON_KCALTOK
       bclocal(2) =    -12.49272d0*CON_KCALTOK
@@ -7587,7 +7587,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.45950d0
       bclocal(1) =     38.97388d0*CON_KCALTOK
       bclocal(2) =     -6.25952d0*CON_KCALTOK
@@ -7607,7 +7607,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.45950d0
       bclocal(1) =     38.97388d0*CON_KCALTOK
       bclocal(2) =     -6.25952d0*CON_KCALTOK
@@ -7627,7 +7627,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    115.02700d0
       bclocal(1) =     94.82152d0*CON_KCALTOK
       bclocal(2) =    -15.92693d0*CON_KCALTOK
@@ -7647,7 +7647,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.53735d0
       bclocal(1) =     54.88291d0*CON_KCALTOK
       bclocal(2) =    -11.03416d0*CON_KCALTOK
@@ -7667,7 +7667,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.09270d0
       bclocal(1) =     65.80032d0*CON_KCALTOK
       bclocal(2) =    -15.11739d0*CON_KCALTOK
@@ -7687,7 +7687,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.82337d0
       bclocal(1) =     41.78864d0*CON_KCALTOK
       bclocal(2) =     -8.05630d0*CON_KCALTOK
@@ -7707,7 +7707,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.32337d0
       bclocal(1) =     56.92757d0*CON_KCALTOK
       bclocal(2) =    -11.93191d0*CON_KCALTOK
@@ -7727,7 +7727,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.45950d0
       bclocal(1) =     38.97388d0*CON_KCALTOK
       bclocal(2) =     -6.25952d0*CON_KCALTOK
@@ -7747,7 +7747,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.05370d0
       bclocal(1) =     66.82931d0*CON_KCALTOK
       bclocal(2) =    -14.78829d0*CON_KCALTOK
@@ -7767,7 +7767,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    112.05370d0
       bclocal(1) =     66.82931d0*CON_KCALTOK
       bclocal(2) =    -14.78829d0*CON_KCALTOK
@@ -7787,7 +7787,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.62280d0
       bclocal(1) =     77.98005d0*CON_KCALTOK
       bclocal(2) =    -14.23097d0*CON_KCALTOK
@@ -7806,7 +7806,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.00950d0
       bclocal(1) =     65.37896d0*CON_KCALTOK
       bclocal(2) =    -13.03236d0*CON_KCALTOK
@@ -7826,7 +7826,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.43885d0
       bclocal(1) =     75.47173d0*CON_KCALTOK
       bclocal(2) =    -16.06859d0*CON_KCALTOK
@@ -7846,7 +7846,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.20000d0
       bclocal(1) =     43.46824d0*CON_KCALTOK
       bclocal(2) =     -6.78991d0*CON_KCALTOK
@@ -7866,7 +7866,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.52000d0
       bclocal(1) =     65.51762d0*CON_KCALTOK
       bclocal(2) =    -17.80372d0*CON_KCALTOK
@@ -7886,7 +7886,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    103.70000d0
       bclocal(1) =     49.84000d0*CON_KCALTOK
       bclocal(2) =    -11.60000d0*CON_KCALTOK
@@ -7905,7 +7905,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.49063d0
       bclocal(1) =     92.01300d0*CON_KCALTOK
       bclocal(2) =    -19.80425d0*CON_KCALTOK
@@ -7924,7 +7924,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.49063d0
       bclocal(1) =     92.01300d0*CON_KCALTOK
       bclocal(2) =    -19.80425d0*CON_KCALTOK
@@ -7944,7 +7944,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    121.44342d0
       bclocal(1) =     90.78883d0*CON_KCALTOK
       bclocal(2) =    -30.46234d0*CON_KCALTOK
@@ -7964,7 +7964,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    116.90458d0
       bclocal(1) =    226.22745d0*CON_KCALTOK
       bclocal(2) =    -62.99811d0*CON_KCALTOK
@@ -7983,7 +7983,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     98.51026d0
       bclocal(1) =    134.72759d0*CON_KCALTOK
       bclocal(2) =    -10.85237d0*CON_KCALTOK
@@ -8002,7 +8002,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    109.59368d0
       bclocal(1) =    135.93403d0*CON_KCALTOK
       bclocal(2) =    -26.18870d0*CON_KCALTOK
@@ -8022,7 +8022,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    124.49976d0
       bclocal(1) =    155.76218d0*CON_KCALTOK
       bclocal(2) =    -59.12154d0*CON_KCALTOK
@@ -8041,7 +8041,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    110.78690d0
       bclocal(1) =    125.82436d0*CON_KCALTOK
       bclocal(2) =    -25.88716d0*CON_KCALTOK
@@ -8061,7 +8061,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    123.49976d0
       bclocal(1) =    121.12976d0*CON_KCALTOK
       bclocal(2) =    -44.37844d0*CON_KCALTOK
@@ -8080,7 +8080,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     99.47449d0
       bclocal(1) =     75.63337d0*CON_KCALTOK
       bclocal(2) =     -6.77694d0*CON_KCALTOK
@@ -8099,7 +8099,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     99.66314d0
       bclocal(1) =     80.49931d0*CON_KCALTOK
       bclocal(2) =     -7.37598d0*CON_KCALTOK
@@ -8119,7 +8119,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     96.70906d0
       bclocal(1) =     69.73130d0*CON_KCALTOK
       bclocal(2) =     -4.39043d0*CON_KCALTOK
@@ -8139,7 +8139,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    100.47191d0
       bclocal(1) =     71.62970d0*CON_KCALTOK
       bclocal(2) =     -7.10854d0*CON_KCALTOK
@@ -8159,7 +8159,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     94.37109d0
       bclocal(1) =     68.62377d0*CON_KCALTOK
       bclocal(2) =      0.00000d0*CON_KCALTOK
@@ -8178,7 +8178,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     97.29227d0
       bclocal(1) =     67.84173d0*CON_KCALTOK
       bclocal(2) =     -4.63847d0*CON_KCALTOK
@@ -8198,7 +8198,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    102.56840d0
       bclocal(1) =    105.36460d0*CON_KCALTOK
       bclocal(2) =    -12.73808d0*CON_KCALTOK
@@ -8217,7 +8217,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    101.71060d0
       bclocal(1) =    107.21449d0*CON_KCALTOK
       bclocal(2) =    -12.02141d0*CON_KCALTOK
@@ -8237,7 +8237,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    100.95050d0
       bclocal(1) =    105.67667d0*CON_KCALTOK
       bclocal(2) =    -11.07814d0*CON_KCALTOK
@@ -8257,7 +8257,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    102.58400d0
       bclocal(1) =    117.10244d0*CON_KCALTOK
       bclocal(2) =    -14.17541d0*CON_KCALTOK
@@ -8277,7 +8277,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    108.37770d0
       bclocal(1) =    118.96301d0*CON_KCALTOK
       bclocal(2) =    -21.51673d0*CON_KCALTOK
@@ -8297,7 +8297,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     99.98533d0
       bclocal(1) =    121.11564d0*CON_KCALTOK
       bclocal(2) =    -11.53728d0*CON_KCALTOK
@@ -8317,7 +8317,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    105.30130d0
       bclocal(1) =    109.33344d0*CON_KCALTOK
       bclocal(2) =    -16.19830d0*CON_KCALTOK
@@ -8337,7 +8337,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     98.76162d0
       bclocal(1) =    117.39175d0*CON_KCALTOK
       bclocal(2) =     -9.79341d0*CON_KCALTOK
@@ -8356,7 +8356,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     99.23194d0
       bclocal(1) =    133.51370d0*CON_KCALTOK
       bclocal(2) =    -11.74867d0*CON_KCALTOK
@@ -8376,7 +8376,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    106.60670d0
       bclocal(1) =    126.28202d0*CON_KCALTOK
       bclocal(2) =    -20.47600d0*CON_KCALTOK
@@ -8396,7 +8396,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    111.02490d0
       bclocal(1) =    153.00188d0*CON_KCALTOK
       bclocal(2) =    -32.09071d0*CON_KCALTOK
@@ -8416,7 +8416,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =    120.24320d0
       bclocal(1) =    104.35496d0*CON_KCALTOK
       bclocal(2) =    -33.55477d0*CON_KCALTOK
@@ -8435,7 +8435,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     91.93673d0
       bclocal(1) =    105.41543d0*CON_KCALTOK
       bclocal(2) =     -1.91883d0*CON_KCALTOK
@@ -8454,7 +8454,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     91.93673d0
       bclocal(1) =    105.41543d0*CON_KCALTOK
       bclocal(2) =     -1.91883d0*CON_KCALTOK
@@ -8474,7 +8474,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     92.77422d0
       bclocal(1) =     86.16114d0*CON_KCALTOK
       bclocal(2) =     -2.25231d0*CON_KCALTOK
@@ -8494,7 +8494,7 @@ c     --- local variables
 
       type = type + 1
       call twh_bendff(GLB_SET,type,ffname)
-      call twh_anglestyle(GLB_SET,type,4)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_COMPASS_AUTO)
       bclocal(0) =     92.13413d0
       bclocal(1) =    214.89015d0*CON_KCALTOK
       bclocal(2) =     -4.30978d0*CON_KCALTOK

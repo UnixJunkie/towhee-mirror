@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * rwflag is either READ_FLAG or WRITE_FLAG                       *
 c     *                                                                *
 c     * rewritten from writetowhee and readtowhee on 07-29-2005        *
 c     *           by M.G. Martin                                       *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -47,7 +47,8 @@ c     --- character string scalars
       character*15 idname,rwformat
       character*30 ctemp,cbmc_setting_style
       character*30 cbmc_bend_generation,cbmc_bond_generation
-      character*30 cbmc_dihedral_generation
+      character*30 cbmc_fit_strategy
+      character*30 cbmc_dihedral_generation,cbmc_analysis
       character*50 goodstring,twobbias_style,twobbias_init
       character*50 threebbias_init,threebbias_style
       character*60 cbmc_formulation
@@ -83,6 +84,32 @@ c     --- make sure we have a valid rwflag
          write(6,*) rwflag
          lfailure = .true.
          return
+      endif
+
+      goodstring = 'cbmc_analysis'
+      rwformat = '(a13)'
+      if ( rwflag .eq. READ_FLAG ) then
+         if ( twh_check_label(lfailure,rwfile,goodstring) ) then
+            call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &           ,.false.,idname,cbmc_analysis)
+            if ( lfailure ) return
+         else
+c           --- if not specified then default
+            cbmc_analysis = 'normal'
+         endif
+         write(6,'(a14,1x,a30)') 'cbmc_analysis:',cbmc_analysis
+         call twh_cbmc_analysis(GLB_SET,cbmc_analysis)
+c        --- error check
+         if ( cbmc_analysis .ne. 'normal'
+     &        .and. cbmc_analysis .ne. 'full' ) then
+            write(6,*) 'RWCBMC: unknown cbmc_analysis'
+            lfailure = .true.
+            return
+         endif
+      else
+         write(rwfile,rwformat) goodstring
+         call twh_cbmc_analysis(GLB_GET,cbmc_analysis)
+         write(rwfile,'(a1,a30,a1)') char(39),cbmc_analysis,char(39)
       endif
 
 c     --- cbmc formulation
@@ -135,7 +162,6 @@ c     --- cbmc setting style
       goodstring = 'cbmc_setting_style'
       rwformat = '(a18)'
       if ( rwflag .eq. READ_FLAG ) then
-
          if ( twh_check_label(lfailure,rwfile,goodstring) ) then
             call twh_read_labeled_string(lfailure,rwfile,goodstring
      &           , .false. ,idname,cbmc_setting_style)
@@ -155,6 +181,27 @@ c           --- if not specified then default
       endif
 
       if ( cbmc_setting_style .eq. 'explicit' ) then
+         goodstring = 'cbmc_fit_strategy'
+         rwformat = '(a17)'
+         if ( rwflag .eq. READ_FLAG ) then
+            if ( twh_check_label(lfailure,rwfile,goodstring) ) then
+               call twh_read_labeled_string(lfailure,rwfile,goodstring
+     &              , .false. ,idname,cbmc_fit_strategy)
+               if ( lfailure ) return
+            else
+c              --- if not specified then default
+               cbmc_fit_strategy = 'equilibrium'
+            endif
+            write(6,'(a18,1x,a30)') 'cbmc_fit_strategy:'
+     &           ,cbmc_fit_strategy
+            call twh_cbmc_fit_strategy(GLB_SET,cbmc_fit_strategy)
+         else
+            write(rwfile,rwformat) goodstring
+            call twh_cbmc_fit_strategy(GLB_GET,cbmc_fit_strategy)
+            write(rwfile,'(a1,a30,a1)') char(39),cbmc_fit_strategy
+     &           ,char(39)
+         endif
+
          goodstring = 'cbmc_nb_one_generation'
          rwformat = '(a23)'
          count = nmolty
@@ -1218,6 +1265,7 @@ c           --- old fraction
      &        ) then
          if ( rwflag .eq. READ_FLAG ) then
 c           --- use the default setting and styles from that paper
+            call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
             call twh_cbmc_nb_one_generation(GLB_INIT,numboxes,nmolty
      &           ,'uniform')
             call twh_cbmc_nb_one_gencode(GLB_INIT,numboxes,nmolty
@@ -1248,6 +1296,7 @@ c           --- use the default setting and styles from that paper
          if ( rwflag .eq. READ_FLAG ) then
 c           --- use all of the default setting and styles that were
 c           --- suggested by the manual at one point
+            call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
             call twh_cbmc_nb_one_generation(GLB_INIT,numboxes,nmolty
      &           ,'uniform')
             call twh_cbmc_nb_one_gencode(GLB_INIT,numboxes,nmolty
@@ -1277,9 +1326,10 @@ c           --- suggested by the manual at one point
      &        ) then
          if ( rwflag .eq. READ_FLAG ) then
 c           --- use the default ideal intramolecular generation, but
-c           --- set all nb terms to 1 so that the widom insertion will 
-c           --- always measure the correct chemical potential even when
-c           --- there are coulombic interactions
+c           --- set all nb terms to 1 so that the widom insertion to
+c           --- essentially remove the poor biasing seen in some 
+c           ---- molecules related to the coulombic terms
+            call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
             call twh_cbmc_nb_one_generation(GLB_INIT,numboxes,nmolty
      &           ,'uniform')
             call twh_cbmc_nb_one_gencode(GLB_INIT,numboxes,nmolty
@@ -1306,6 +1356,7 @@ c           --- there are coulombic interactions
       elseif ( cbmc_setting_style .eq. 'default autofit gaussian'
      &        ) then
          if ( rwflag .eq. READ_FLAG ) then
+            call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
             call twh_cbmc_dihedral_generation(GLB_SET
      &           ,'autofit gaussian')
             call twh_cbmc_dihedgen_code(GLB_SET,CBMC_AUTOFIT_GAUSSIAN)
@@ -1354,6 +1405,7 @@ c           --- there are coulombic interactions
       elseif ( cbmc_setting_style .eq. 'Martin and Frischknecht'
      &       ) then
          if ( rwflag .eq. READ_FLAG ) then
+            call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
             call twh_cbmc_dihedral_generation(GLB_SET
      &           ,'ideal + autofit gaussian')
             call twh_cbmc_dihedgen_code(GLB_SET

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * also creates part of the lammps_input file that has to do with *
 c     * the force field styles.  This is written to lammps_input.out   *
 c     *                                                                *
 c     * originally written 08-07-2001 by M.G. Martin                   *
-c     * last modified 01-30-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -270,12 +270,14 @@ c                          --- add entry into code_bond
                   do ibend = 1,twh_get_inben(imolty,iunit)
                      type = twh_get_itben(imolty,iunit,ibend)
                      ladd = .false.
-                     if ( twh_get_anglestyle(type) .eq. 8 ) then
+                     if ( twh_get_anglestyle(type)
+     &                    .eq. ANG_STYLE_COMPASS_EX ) then
 c                       --- add this to the list in all cases as 
 c                       --- the positive type number already selected
 c                       --- this angle a single time
                         ladd = .true.
-                     elseif ( twh_get_anglestyle(type) .eq. 4 ) then
+                     elseif ( twh_get_anglestyle(type)
+     &                       .eq. ANG_STYLE_COMPASS_AUTO ) then
 c                       --- only add in the case the constants are 
 c                       --- in the correct order, or when the names
 c                       --- are identical add based on iunit 
@@ -781,7 +783,7 @@ c           --- output bond coeffs
             do count_types = 1,lam_bond_types
                type = decode_bond(count_types)
                call twh_vibstyle(GLB_GET,type,style)
-               if ( style .eq. 2) then
+               if ( style .eq. BOND_STYLE_HARMONIC ) then
 c                 --- output bond style
                   write(inpnum,11)
  11               format('bond style             harmonic')
@@ -789,7 +791,7 @@ c                 --- output coeffs
                   write(filenum,*) count_types
      &                 ,twh_get_vibcoeff(type,1)/CON_KCALTOK
      &                 ,twh_get_vibcoeff(type,0)
-               elseif ( style .eq. 6 ) then
+               elseif ( style .eq. BOND_STYLE_COMPASS ) then
 c                 --- compass quartic class2 potential
                   write(inpnum,'(a27)') 'bond style           class2'
 c                 --- output coeffs
@@ -818,7 +820,7 @@ c           --- output angle coeffs
             do count_types = 1,lam_angle_types
                type = decode_angle(count_types)
                style = twh_get_anglestyle(type)
-               if ( style .eq. 1 ) then
+               if ( style .eq. ANG_STYLE_HARMONIC ) then
 c                 --- standard harmonic, output style as charmm for
 c                 --- compatibility
                   write(inpnum,13)
@@ -827,7 +829,7 @@ c                 --- output coeffs
      &                 ,twh_get_bencoeff(type,1)/CON_KCALTOK
      &                 ,twh_get_bencoeff(type,0)*radtodeg
      &                 ,0.0d0,0.0d0
-               elseif ( style .eq. 4 ) then
+               elseif ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c                 --- compass with autodection of terms
 c                 --- only output the regular bond terms here, but set
 c                 --- logical to output the rest later
@@ -837,7 +839,7 @@ c                 --- logical to output the rest later
      &                 ,twh_get_bencoeff(type,0)*radtodeg
      &                 ,(twh_get_bencoeff(type,icoeff)
      &                 /CON_KCALTOK,icoeff=1,3)
-               elseif ( style .eq. 5 ) then
+               elseif ( style .eq. ANG_STYLE_CHARMM_UB ) then
 c                 --- harmonic with urey-bradley
                   write(inpnum,13)
  13               format('angle style            charmm')
@@ -848,7 +850,7 @@ c                 --- output coeffs
      &                 ,twh_get_bencoeff(type,3)/CON_KCALTOK
      &                 ,twh_get_bencoeff(type,2)
 
-               elseif ( style .eq. 8 ) then
+               elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c                 --- compass with explicit declaration of terms
 c                 --- only output the regular bond terms here, but set
 c                 --- logical to output the rest later
@@ -882,13 +884,13 @@ c           --- output bondbond coeffs
             do count_types = 1,lam_angle_types
                type = decode_angle(count_types)
                style = twh_get_anglestyle(type)
-               if ( style .eq. 4 ) then
+               if ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c                 --- output the bondbond coefficients in the approp
 c                 --- order ( slightly different from style 8 )
                   write(filenum,*) count_types
      &                 ,twh_get_bencoeff(type,6)/CON_KCALTOK
      &                 ,(twh_get_bencoeff(type,icoeff),icoeff=9,10)
-               elseif ( style .eq. 8 ) then
+               elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c                 --- output the bondbond coefficients
                   write(filenum,*) count_types
      &                 ,twh_get_bencoeff(type,8)/CON_KCALTOK
@@ -910,7 +912,7 @@ c           --- output bondangle coeffs
             do count_types = 1,lam_angle_types
                type = decode_angle(count_types)
                style = twh_get_anglestyle(type)
-               if ( style .eq. 4 ) then
+               if ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c                 --- output the bondangle coefficients (slightly 
 c                 --- different from style 8 )
                   write(filenum,*) count_types
@@ -918,7 +920,7 @@ c                 --- different from style 8 )
      &                 ,twh_get_bencoeff(type,5)/CON_KCALTOK
      &                 ,twh_get_bencoeff(type,9)
      &                 ,twh_get_bencoeff(type,10)
-               elseif ( style .eq. 8 ) then
+               elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c                 --- output the bondangle coefficients
                   write(filenum,*) count_types
      &                 ,twh_get_bencoeff(type,4)/CON_KCALTOK
@@ -1421,7 +1423,8 @@ c                       --- default format
                   do iunit = 1,nunit
                      do ibend = 1,twh_get_inben(imolty,iunit)
                         type = twh_get_itben(imolty,iunit,ibend)
-                        if ( twh_get_anglestyle(type) .eq. 8 .or. 
+                        if ( twh_get_anglestyle(type)
+     &                       .eq. ANG_STYLE_COMPASS_EX .or. 
      &                       twh_get_ijben3(imolty,iunit,ibend)
      &                       .gt.iunit ) then
                            count_angle = count_angle + 1

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2007-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2007-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the dws2001      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 01-10-2007 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -199,7 +199,7 @@ c     --- harmonic vibrations
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,11)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC_NONBOND)
       vclocal(0) = 3.05d0
       vclocal(1) = (100.0d0)*(0.5d0)*CON_KCALTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -217,7 +217,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,11)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC_NONBOND)
       vclocal(0) = 2.70d0
       vclocal(1) = (100.0d0)*(0.5d0)*CON_KCALTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -235,7 +235,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,isame,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,11)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC_NONBOND)
       vclocal(0) = 3.4d0
       vclocal(1) = (100.0d0)*(0.5d0)*CON_KCALTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -257,7 +257,7 @@ c     --- harmonic cosine angles plus 1-3 nonbond
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,16)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS_OT)
       bclocal(0) = 90.0d0
       bclocal(1) = (80.0d0)*(0.5d0)*CON_KCALTOK
       call twh_set_bencoeff(type,bclocal) 
@@ -288,7 +288,7 @@ c     --- set nbsame
 
 c     HACK FIX THIS!!!
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,16)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS_OT)
       bclocal(0) = 90.0d0
       bclocal(1) = (80.0d0)*(0.5d0)*CON_KCALTOK
       call twh_set_bencoeff(type,bclocal) 

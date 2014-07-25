@@ -414,10 +414,9 @@ c     --- read in the force field parameters from the files
         if ( lfailure ) return
       enddo
       
-c     --- set up the nonbonded mixing and convert angle terms
+c     --- set up the nonbonded mixing and convert bonded
       call twh_setmixterms(lfailure,numtypes)
       if ( lfailure ) return
-
 
 c     --- optional read max_bond_length(default value set in initialize)
       if ( twh_check_label(lfailure,4,'max_bond_length') ) then

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the gromos43a1   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 09-09-2011 M.G. Martin                           *
+c     * last modified 07-21-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1048,7 +1048,7 @@ c     --- This is from Table 2.5.2.1 in the gromos manual
 
 c     --- H - OA
       type = 1
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.0d0
       vclocal(1) = (15.7d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1056,7 +1056,7 @@ c     --- H - OA
 
 c     --- H - N (all)
       type = 2
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.0d0
       vclocal(1) = (18.7d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1064,7 +1064,7 @@ c     --- H - N (all)
 
 c     --- HC - C
       type = 3
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.09d0
       vclocal(1) = (12.3d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1072,7 +1072,7 @@ c     --- HC - C
 
 c     --- C - O
       type = 4
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.23d0
       vclocal(1) = (16.6d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1080,7 +1080,7 @@ c     --- C - O
 
 c     --- C - OM
       type = 5
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.25d0
       vclocal(1) = (13.4d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1088,7 +1088,7 @@ c     --- C - OM
 
 c     --- CR1 - NR (6-ring)
       type = 6
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.32d0
       vclocal(1) = (12.0d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1096,7 +1096,7 @@ c     --- CR1 - NR (6-ring)
 
 c     --- H - S
       type = 7
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.33d0
       vclocal(1) = (8.87d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1104,7 +1104,7 @@ c     --- H - S
 
 c     --- C - NT,NL
       type = 8
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.33d0
       vclocal(1) = (10.6d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1112,7 +1112,7 @@ c     --- C - NT,NL
 
 c     --- C,CR1 - N,NR,CR1,C (peptide, 5-ring)
       type = 9
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.33d0
       vclocal(1) = (11.8d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1120,7 +1120,7 @@ c     --- C,CR1 - N,NR,CR1,C (peptide, 5-ring)
 
 c     --- C - N,NZ,NE
       type = 10
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.34d0
       vclocal(1) = (10.5d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1128,7 +1128,7 @@ c     --- C - N,NZ,NE
 
 c     --- C - NR (no H) (6-ring)
       type = 11
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.34d0
       vclocal(1) = (11.7d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1136,7 +1136,7 @@ c     --- C - NR (no H) (6-ring)
 
 c     --- C - OA (both kinds of OA ?)
       type = 12
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.36d0
       vclocal(1) = (10.2d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1144,7 +1144,7 @@ c     --- C - OA (both kinds of OA ?)
 
 c     --- C - NR (heme)
       type = 13
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.38d0
       vclocal(1) = (11.0d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1152,7 +1152,7 @@ c     --- C - NR (heme)
 
 c     --- CH2 - C,CR1 (6-ring)
       type = 14
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.39d0
       vclocal(1) = (8.66d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1160,7 +1160,7 @@ c     --- CH2 - C,CR1 (6-ring)
 
 c     --- C,CR1 - CH2,C,CR1 (6-ring)
       type = 15
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.39d0
       vclocal(1) = (10.8d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1168,7 +1168,7 @@ c     --- C,CR1 - CH2,C,CR1 (6-ring)
 
 c     --- C,CR1,CH2 - NR (6-ring)
       type = 16
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.40d0
       vclocal(1) = (8.54d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1176,7 +1176,7 @@ c     --- C,CR1,CH2 - NR (6-ring)
 
 c     --- CHn - OA (non-sugar)
       type = 17
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.43d0
       vclocal(1) = (8.18d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1184,7 +1184,7 @@ c     --- CHn - OA (non-sugar)
 
 c     --- CHn - OM
       type = 18 
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.43d0
       vclocal(1) = (9.21d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1192,7 +1192,7 @@ c     --- CHn - OM
 
 c     --- CHn - OA (sugar)
       type = 19
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.435d0
       vclocal(1) = (6.10d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1200,7 +1200,7 @@ c     --- CHn - OA (sugar)
 
 c     --- CHn - N,NT,NL,NZ,NE
       type = 20
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.47d0
       vclocal(1) = (8.71d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1208,7 +1208,7 @@ c     --- CHn - N,NT,NL,NZ,NE
 
 c     --- CHn - NR (5-ring)
       type = 21
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.48d0
       vclocal(1) = (5.73d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1216,7 +1216,7 @@ c     --- CHn - NR (5-ring)
 
 c     --- CHn - NR (6-ring)
       type = 22
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.48d0
       vclocal(1) = (7.64d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1224,7 +1224,7 @@ c     --- CHn - NR (6-ring)
 
 c     --- O,OM - P
       type = 23
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.48d0
       vclocal(1) = (8.60d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1232,7 +1232,7 @@ c     --- O,OM - P
 
 c     --- O - S
       type = 24
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.50d0
       vclocal(1) = (8.37d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1240,7 +1240,7 @@ c     --- O - S
 
 c     --- CHn - CHn (sugar)
       type = 25
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.52d0
       vclocal(1) = (5.43d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1248,7 +1248,7 @@ c     --- CHn - CHn (sugar)
 
 c     --- C,CHn - C,CHn (non-sugar)
       type = 26
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.53d0
       vclocal(1) = (7.15d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1256,7 +1256,7 @@ c     --- C,CHn - C,CHn (non-sugar)
 
 c     --- OA - P
       type = 27
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.61d0
       vclocal(1) = (4.84d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1264,7 +1264,7 @@ c     --- OA - P
 
 c     --- OA - Si
       type = 28
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.63d0
       vclocal(1) = (4.72d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1272,7 +1272,7 @@ c     --- OA - Si
 
 c     --- CH3 - S
       type = 29
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.78d0
       vclocal(1) = (5.94d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1280,7 +1280,7 @@ c     --- CH3 - S
 
 c     --- CH2 - S
       type = 30
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.83d0
       vclocal(1) = (5.62d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1288,7 +1288,7 @@ c     --- CH2 - S
 
 c     --- CH1 - SI
       type = 31
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.87d0
       vclocal(1) = (3.59d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1296,7 +1296,7 @@ c     --- CH1 - SI
 
 c     --- NR - FE
       type = 32
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.98d0
       vclocal(1) = (0.640d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1304,7 +1304,7 @@ c     --- NR - FE
 
 c     --- S - S
       type = 33
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.04d0
       vclocal(1) = (5.03d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1312,7 +1312,7 @@ c     --- S - S
 
 c     --- NR (heme) - FE
       type = 34
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.00d0
       vclocal(1) = (0.628d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1320,7 +1320,7 @@ c     --- NR (heme) - FE
 
 c     --- HW - OW
       type = 35
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.00d0
       vclocal(1) = (23.2d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1328,7 +1328,7 @@ c     --- HW - OW
 
 c     --- HChl - CChl
       type = 36
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.10d0
       vclocal(1) = (12.1d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1336,7 +1336,7 @@ c     --- HChl - CChl
 
 c     --- CChl - ClChl
       type = 37
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.758d0
       vclocal(1) = (8.12d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1344,7 +1344,7 @@ c     --- CChl - ClChl
 
 c     --- ODmso - SDmso
       type = 38
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.53d0
       vclocal(1) = (8.04d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1352,7 +1352,7 @@ c     --- ODmso - SDmso
 
 c     --- SDmso - CDmso
       type = 39
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.95d0
       vclocal(1) = (4.95d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1360,7 +1360,7 @@ c     --- SDmso - CDmso
 
 c     --- CCl4 - ClCl4
       type = 40
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.76d0
       vclocal(1) = (8.10d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1368,7 +1368,7 @@ c     --- CCl4 - ClCl4
 
 c     --- HW - HW 
       type = 41
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.63299d0
       vclocal(1) = (8.71d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1376,7 +1376,7 @@ c     --- HW - HW
 
 c     --- HChl - CLChl
       type = 42
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.33839d0
       vclocal(1) = (2.68d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1384,7 +1384,7 @@ c     --- HChl - CLChl
 
 c     --- ClChl - ClChl
       type = 43
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.90283d0
       vclocal(1) = (2.98d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1392,7 +1392,7 @@ c     --- ClChl - ClChl
 
 c     --- ODmso - CDmso
       type = 44
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.80412d0
       vclocal(1) = (2.39d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1400,7 +1400,7 @@ c     --- ODmso - CDmso
 
 c     --- CDmso - CDmso
       type = 45
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.92993d0
       vclocal(1) = (2.19d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1408,7 +1408,7 @@ c     --- CDmso - CDmso
 
 c     --- HMet - CMet (I have no idea what this means)
       type = 46
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 1.98842d0
       vclocal(1) = (3.97d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1416,7 +1416,7 @@ c     --- HMet - CMet (I have no idea what this means)
 
 c     --- ClCl4 - ClCl4
       type = 47
-      call twh_vibstyle(GLB_SET,type,3)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_GROMOS)
       vclocal(0) = 2.87407d0
       vclocal(1) = (3.04d6)*(0.25d0)*(CON_KJTOK)*(1.0d-4)
       call twh_set_vibcoeffs(type,vclocal)
@@ -1434,7 +1434,7 @@ c     same numbering system as in Gromos
 
 c     --- NR(heme) - FE - NR(heme)
       type = 1
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 90.0d0
       bclocal(1) = (420.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1442,7 +1442,7 @@ c     --- NR(heme) - FE - NR(heme)
 
 c     --- H - S - CH2
       type = 2
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 96.0d0
       bclocal(1) = (405.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1450,7 +1450,7 @@ c     --- H - S - CH2
 
 c     --- CH2 - S - CH3
       type = 3
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 100.0d0
       bclocal(1) = (475.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1458,7 +1458,7 @@ c     --- CH2 - S - CH3
 
 c     --- OA - P - OA
       type = 4
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 103.0d0
       bclocal(1) = (420.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1466,7 +1466,7 @@ c     --- OA - P - OA
 
 c     --- CH2 - S - S
       type = 5
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 104.0d0
       bclocal(1) = (490.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1474,7 +1474,7 @@ c     --- CH2 - S - S
 
 c     --- NR - C - CR1 (5-ring)
       type = 6
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 108.0d0
       bclocal(1) = (465.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1482,7 +1482,7 @@ c     --- NR - C - CR1 (5-ring)
 
 c     --- CHn - CHn - CHn,NR (6-ring) (sugar)
       type = 7
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (285.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1490,7 +1490,7 @@ c     --- CHn - CHn - CHn,NR (6-ring) (sugar)
       
 c     --- CHn,OA - CHn - OA,NR(5-ring) (sugar)
       type = 8
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (320.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1498,7 +1498,7 @@ c     --- CHn,OA - CHn - OA,NR(5-ring) (sugar)
 
 c     --- H - NL,NT - H : CHn - OA - CHn (sugar)
       type = 9
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (380.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1506,7 +1506,7 @@ c     --- H - NL,NT - H : CHn - OA - CHn (sugar)
 
 c     --- H - NL - C,CHn : H - NT - CHn
       type = 10
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (425.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1514,7 +1514,7 @@ c     --- H - NL - C,CHn : H - NT - CHn
 
 c     --- X - OA,SI - X
       type = 11
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (450.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1522,7 +1522,7 @@ c     --- X - OA,SI - X
 
 c     --- CHn,C - CHn - C,CHn,OA,OM,N,NE (note similar bond pattern 264)
       type = 12
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (520.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1530,7 +1530,7 @@ c     --- CHn,C - CHn - C,CHn,OA,OM,N,NE (note similar bond pattern 264)
 
 c     --- OM - P - OA
       type = 13
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.6d0
       bclocal(1) = (450.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1538,7 +1538,7 @@ c     --- OM - P - OA
 
 c     --- CHn - CHn - C,CHn,OA,NR,NT,NL (note similar bond pattern 262)
       type = 14
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 111.0d0
       bclocal(1) = (530.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1546,7 +1546,7 @@ c     --- CHn - CHn - C,CHn,OA,NR,NT,NL (note similar bond pattern 262)
 
 c     --- CHn - CH2 - S
       type = 15
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 113.0d0
       bclocal(1) = (545.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1554,7 +1554,7 @@ c     --- CHn - CH2 - S
 
 c     --- NR(heme) - FE - NR
       type = 16
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 115.0d0
       bclocal(1) = (50.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1562,7 +1562,7 @@ c     --- NR(heme) - FE - NR
 
 c     --- H - N - CHn
       type = 17
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 115.0d0
       bclocal(1) = (460.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1570,7 +1570,7 @@ c     --- H - N - CHn
 
 c     --- CHn,C - C -OA,N,NT,NL
       type = 18
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 115.0d0
       bclocal(1) = (610.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1578,7 +1578,7 @@ c     --- CHn,C - C -OA,N,NT,NL
 
 c     --- H -NE - CH2
       type = 19
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 116.0d0
       bclocal(1) = (465.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1586,7 +1586,7 @@ c     --- H -NE - CH2
 
 c     --- CH2 - N - CH1
       type = 20
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 116.0d0
       bclocal(1) = (620.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1594,7 +1594,7 @@ c     --- CH2 - N - CH1
 
 c     --- CH3 - N - C : CHn - C - OM
       type = 21
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 117.0d0
       bclocal(1) = (635.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1602,7 +1602,7 @@ c     --- CH3 - N - C : CHn - C - OM
 
 c     --- H - NT,NZ,NE - C
       type = 22
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (390.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1610,7 +1610,7 @@ c     --- H - NT,NZ,NE - C
 
 c     --- H -NT,NZ - H
       type = 23
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (445.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1618,7 +1618,7 @@ c     --- H -NT,NZ - H
 
 c     --- H - N - CH3,H,HC (6-ring) : H - NT - CHn
       type = 24
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (505.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1626,7 +1626,7 @@ c     --- H - N - CH3,H,HC (6-ring) : H - NT - CHn
 
 c     --- P,SI - OA - CHn,P
       type = 25
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (530.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1634,7 +1634,7 @@ c     --- P,SI - OA - CHn,P
 
 c     --- N,C,CR1 (6-ring, no H)
       type = 26
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (560.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1642,7 +1642,7 @@ c     --- N,C,CR1 (6-ring, no H)
 
 c     --- NZ - C - NZ,NE
       type = 27 
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (670.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1650,7 +1650,7 @@ c     --- NZ - C - NZ,NE
 
 c     --- OM - P - OM
       type = 28
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 120.0d0
       bclocal(1) = (780.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1658,7 +1658,7 @@ c     --- OM - P - OM
 
 c     --- O - C - CHn,C : CH3 - N 0- CHn
       type = 29
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 121.0d0
       bclocal(1) = (685.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1666,7 +1666,7 @@ c     --- O - C - CHn,C : CH3 - N 0- CHn
 
 c     --- CH1,CH2 - N - C
       type = 30
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 122.0d0
       bclocal(1) = (700.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1674,7 +1674,7 @@ c     --- CH1,CH2 - N - C
 
 c     --- H - N - C
       type = 31
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 123.0d0
       bclocal(1) = (415.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1682,7 +1682,7 @@ c     --- H - N - C
 
 c     --- O - C - OA,N,NT,NL : C - NE - CH2
       type = 32
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 124.0d0
       bclocal(1) = (730.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1690,7 +1690,7 @@ c     --- O - C - OA,N,NT,NL : C - NE - CH2
 
 c     --- FE - NR - CR1 (5-ring)
       type = 33
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 125.0d0
       bclocal(1) = (375.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1698,7 +1698,7 @@ c     --- FE - NR - CR1 (5-ring)
 
 c     --- ??
       type = 34
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 125.0d0
       bclocal(1) = (750.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1706,7 +1706,7 @@ c     --- ??
 
 c     --- H,HC - 5-ring
       type = 35
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 126.0d0
       bclocal(1) = (575.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1714,7 +1714,7 @@ c     --- H,HC - 5-ring
 
 c     --- X(noH) - 5-ring
       type = 36
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 126.0d0
       bclocal(1) = (640.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1722,7 +1722,7 @@ c     --- X(noH) - 5-ring
 
 c     --- OM -C - OM
       type = 37
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 126.0d0
       bclocal(1) = (770.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1730,7 +1730,7 @@ c     --- OM -C - OM
 
 c     --- 5,6 ring connection
       type = 38
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 132.0d0
       bclocal(1) = (760.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1738,7 +1738,7 @@ c     --- 5,6 ring connection
 
 c     --- SI - OA - SI
       type = 39
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 155.0d0
       bclocal(1) = (2215.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1746,7 +1746,7 @@ c     --- SI - OA - SI
 
 c     --- HWat - OWat - HWat
       type = 40
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (434.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1754,7 +1754,7 @@ c     --- HWat - OWat - HWat
 
 c     --- HChl - CChl - CLChl
       type = 41
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 107.57d0
       bclocal(1) = (484.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1762,7 +1762,7 @@ c     --- HChl - CChl - CLChl
 
 c     --- CLChl - CChl - CLChl
       type = 42
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 111.30d0
       bclocal(1) = (632.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1770,7 +1770,7 @@ c     --- CLChl - CChl - CLChl
 
 c     --- CDmso - SDmso - CDmso
       type = 43
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 97.4d0
       bclocal(1) = (469.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1778,7 +1778,7 @@ c     --- CDmso - SDmso - CDmso
 
 c     --- CDmso - SDmso - ODmso
       type = 44
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 106.75d0
       bclocal(1) = (503.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1786,7 +1786,7 @@ c     --- CDmso - SDmso - ODmso
 
 c     --- HMet - OMet - CMet
       type = 45
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 108.53d0
       bclocal(1) = (443.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -1794,7 +1794,7 @@ c     --- HMet - OMet - CMet
 
 c     --- CLCl4 - CCl4 - CLCl4
       type = 46
-      call twh_anglestyle(GLB_SET,type,3)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
       bclocal(0) = 109.5d0
       bclocal(1) = (618.0d0)*(0.5d0)*(CON_KJTOK)
       call twh_set_bencoeff(type,bclocal) 

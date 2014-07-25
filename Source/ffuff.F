@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,11 +24,11 @@ c     ******************************************************************
 c     ******************************************************************
 c     * sets up all of the force field parameters for the uff          *
 c     * forcefield                                                     *
-c     * Note: UFF is a bit odd in that it transforms its basic         *
+c     * Note: UFF is a bit unusual in that it transforms its basic     *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-01-2004 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -3360,7 +3360,7 @@ c              --- any other combination is a single bond (for now)
 c           --- increment type
             type = type + 1
 c           --- harmonic
-            call twh_vibstyle(GLB_SET,type,2)
+            call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
 c           --- compute the equilibrium bond length
 c           --- store ri
             ri = twh_get_nbcoeff(5,ii)
@@ -3414,29 +3414,29 @@ c           --- equilibrium bond angle depends only on center
             bclocal(0) = twh_get_nbcoeff(6,cc)
 c           --- determine type of interaction based on center
             if ( letterc .eq. '1' ) then
-               call twh_anglestyle(GLB_SET,type,9)
+               call twh_anglestyle(GLB_SET,type,ANG_STYLE_FOURIER)
                bclocal(1) = 1.0d0
                bclocal(2) = 1.0d0
             elseif ( letterc .eq. '2' ) then
-               call twh_anglestyle(GLB_SET,type,9)
+               call twh_anglestyle(GLB_SET,type,ANG_STYLE_FOURIER)
                bclocal(1) = 3.0d0
                bclocal(2) = -1.0d0
             elseif ( letterc .eq. '3' 
      &              .and. bclocal(0) .eq. 90.0d0 ) then
-               call twh_anglestyle(GLB_SET,type,9)
+               call twh_anglestyle(GLB_SET,type,ANG_STYLE_FOURIER)
                bclocal(1) = 2.0d0
                bclocal(2) = 1.0d0
             elseif ( letterc .eq. '4' ) then
-               call twh_anglestyle(GLB_SET,type,9)
+               call twh_anglestyle(GLB_SET,type,ANG_STYLE_FOURIER)
                bclocal(1) = 4.0d0
                bclocal(2) = -1.0d0
             elseif ( letterc .eq. '6' ) then
-               call twh_anglestyle(GLB_SET,type,9)
+               call twh_anglestyle(GLB_SET,type,ANG_STYLE_FOURIER)
                bclocal(1) = 4.0d0
                bclocal(2) = -1.0d0
             else
 c              --- general nonlinear case
-               call twh_anglestyle(GLB_SET,type,10)
+               call twh_anglestyle(GLB_SET,type,ANG_STYLE_TTFOURIER)
                theta = bclocal(0)*onepi/180.0d0
                bclocal(3) = 1.0d0/(4.0d0*(dsin(theta)**2))
                bclocal(2) = -4.0d0*bclocal(3)*dcos(theta)

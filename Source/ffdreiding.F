@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * Note: Dreiding force field transforms its basic                *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-08-2004 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1000,7 +1000,7 @@ c     --- initialize type
             code = twh_get_cbname(jtype)
             letterb = code(3:3)
             type = type + 1
-            call twh_vibstyle(GLB_SET,type,2)
+            call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
 c           --- compute the equilibrium bond length
             vclocal(0) = twh_get_nbcoeff(5,ii) + twh_get_nbcoeff(5,jj)
      &           - 0.01d0
@@ -1046,12 +1046,12 @@ c        --- set equilibrium angle (degrees)
          bclocal(0) = theta
          if ( theta .eq. 180.0d0 ) then
 c           --- special case where we use K[ 1 + Cos(theta)]
-            call twh_anglestyle(GLB_SET,type,2)
+            call twh_anglestyle(GLB_SET,type,ANG_STYLE_DREIDING)
 c           --- set force constant to default
             bclocal(1) = 100.0d0*CON_KCALTOK
          else
 c           --- general case with harmonic cosine
-            call twh_anglestyle(GLB_SET,type,3)
+            call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARM_COS)
 c           --- set force constant
             bclocal(1) = 0.5d0*100.0d0*CON_KCALTOK
      &           /(dsin(theta*onepi/180.0d0)**2)

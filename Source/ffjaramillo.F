@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the jaramillo    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 7-31-2006 by O. Yazaydin                    *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -174,7 +174,7 @@ c     * bond lengths - simple harmonic                                 *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.526d0
       vclocal(1) = (0.5d0)*(27.988d0)*(CON_EVTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -189,7 +189,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.105d0
       vclocal(1) = (0.5d0)*(29.540d0)*(CON_EVTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -204,7 +204,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.363d0
       vclocal(1) = (0.5d0)*(43.016d0)*(CON_EVTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -228,7 +228,7 @@ c     * angles - simple harmonic                                       *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.8d0
       bclocal(1) = (0.5d0)*(8.586d0)*(CON_EVTOK)
       call twh_set_bencoeff(type,bclocal)
@@ -244,7 +244,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.1d0
       bclocal(1) = (0.5d0)*(5.378d0)*(CON_EVTOK)
       call twh_set_bencoeff(type,bclocal)
@@ -260,7 +260,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.4d0
       bclocal(1) = (0.5d0)*(3.426d0)*(CON_EVTOK)
       call twh_set_bencoeff(type,bclocal)
@@ -276,7 +276,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.0d0
       bclocal(1) = (0.5d0)*(3.816d0)*(CON_EVTOK)
       call twh_set_bencoeff(type,bclocal)
@@ -292,7 +292,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.5d0
       bclocal(1) = (0.5d0)*(4.042d0)*(CON_EVTOK)
       call twh_set_bencoeff(type,bclocal)
@@ -314,7 +314,7 @@ c     * I took this one from OPLS2001 CTf-CTf-CTf                      *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.7d0
       bclocal(1) = (58.35d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal)

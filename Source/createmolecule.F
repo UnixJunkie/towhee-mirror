@@ -619,7 +619,7 @@ c     * There is a safety check to make sure we don't have more than   *
 c     * MAXBEND angles from any atom                                   *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE
@@ -663,7 +663,7 @@ c           --- found a new angle, add it to the data structure
                lfailure = .true.
                return
             endif
-            if ( twh_get_anglestyle(atype) .eq. 8 
+            if ( twh_get_anglestyle(atype) .eq. ANG_STYLE_COMPASS_EX 
      &           .and. iorder .eq. -1 ) then
 c              --- this is an explicitly declared class 2 angle that 
 c              --- originated from the opposite atom.  This gets a 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the MM2          *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 12-20-2004 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -182,7 +182,7 @@ c     * MM2 bond lengths                                               *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,5)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_MMTWO)
       vclocal(0) = 1.523d0
       vclocal(1) = (4.4d0)*(71.94d0)*CON_KCALTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -197,7 +197,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,5)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_MMTWO)
       vclocal(0) = 1.113d0
       vclocal(1) = (4.6d0)*(71.94d0)*CON_KCALTOK
       call twh_set_vibcoeffs(type,vclocal)
@@ -220,7 +220,7 @@ c     * MM2 angles - Sixth power with multiple types and Angle-Bond    *
 c     ******************************************************************
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,12)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SIXTH_AUTO)
 c     --- angle terms
       bclocal(0) = 109.5d0
       bclocal(1) = (0.45d0)*(0.021914d0)*CON_KCALTOK
@@ -242,7 +242,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,12)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SIXTH_AUTO)
 c     --- angle terms
       bclocal(0) = 109.4d0
       bclocal(1) = (0.36d0)*(0.021914d0)*CON_KCALTOK
@@ -263,7 +263,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,12)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SIXTH_AUTO)
 c     --- angle terms
       bclocal(0) = 110.0d0
       bclocal(1) = (0.36d0)*(0.021914d0)*CON_KCALTOK
@@ -284,7 +284,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,12)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SIXTH_AUTO)
 c     --- angle terms
       bclocal(0) = 109.4d0
       bclocal(1) = (0.32d0)*(0.021914d0)*CON_KCALTOK
@@ -304,7 +304,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,12)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_SIXTH_AUTO)
 c     --- angle terms
       bclocal(0) = 109.0d0
       bclocal(1) = (0.32d0)*(0.021914d0)*CON_KCALTOK

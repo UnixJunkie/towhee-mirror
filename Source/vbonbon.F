@@ -1,7 +1,6 @@
 #include "preproc.h"
 c     ******************************************************************
-c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +26,7 @@ c     * the bond-bond cross type is determined from the molecule type, *
 c     * the unit number and the bond-bond index                        *
 c     *                                                                *
 c     * originally written 02-28-2000 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE
@@ -53,7 +52,7 @@ c     --- local variables
       endif
       style = twh_get_anglestyle(type) 
 
-      if ( style .eq. 4 ) then
+      if ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c        --- Compass bond-bond cross term
 c        --- energy = k*(bond(1) - bond0(1))*(bond(2) - bond0(2))
          call twh_ibtbnbn1(GLB_GET,imolty,iunit,index,itemp)
@@ -63,7 +62,7 @@ c        --- energy = k*(bond(1) - bond0(1))*(bond(2) - bond0(2))
 
          twh_vbonbon = twh_get_bencoeff(type,6)*(length(1)-vtone)*
      &        (length(2)-vttwo)
-      elseif ( style .eq. 8 ) then
+      elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c        --- Compass bond-bond cross term with explicit distances
 c        --- energy = k*(bond(1) - bond0(1))*(bond(2) - bond0(2))
          if ( iorder .eq. 1 ) then

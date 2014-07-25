@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the charmm27     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-21-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3285,7 +3285,7 @@ c     * Charmm27 bond potentials                                       *
 c     ******************************************************************
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.522d0
       vclocal(1) = (200.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3336,7 +3336,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.500d0
       vclocal(1) = (222.50d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3355,7 +3355,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5380d0
       vclocal(1) = (222.50d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3382,7 +3382,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5280d0
       vclocal(1) = (222.50d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3409,7 +3409,7 @@ c     ---- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5300d0
       vclocal(1) = (222.50d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3436,7 +3436,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1110d0
       vclocal(1) = (309.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3491,7 +3491,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1110d0
       vclocal(1) = (322.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3514,7 +3514,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.220d0
       vclocal(1) = (750.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3537,7 +3537,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.2600d0
       vclocal(1) = (525.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3560,7 +3560,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4000d0
       vclocal(1) = (230.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3579,7 +3579,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4200d0
       vclocal(1) = (428.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3626,7 +3626,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 0.9600d0
       vclocal(1) = (545.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3653,7 +3653,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3340d0
       vclocal(1) = (150.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3672,7 +3672,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4300d0
       vclocal(1) = (340.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3703,7 +3703,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 0.9572d0
       vclocal(1) = (450.00d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3718,7 +3718,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.60d0
       vclocal(1) = (270.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3737,7 +3737,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.48d0
       vclocal(1) = (580.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3756,7 +3756,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.59d0
       vclocal(1) = (237.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3771,7 +3771,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.04d0
       vclocal(1) = (410.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3786,7 +3786,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.51d0
       vclocal(1) = (261.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3801,7 +3801,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.51d0
       vclocal(1) = (215.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3820,7 +3820,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.08d0
       vclocal(1) = (300.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3839,7 +3839,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.448d0
       vclocal(1) = (540.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3854,7 +3854,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.575d0
       vclocal(1) = (250.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3869,7 +3869,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.330d0
       vclocal(1) = (510.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3888,7 +3888,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.100d0
       vclocal(1) = (365.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3907,7 +3907,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.504d0
       vclocal(1) = (383.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3926,7 +3926,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.342d0
       vclocal(1) = (500.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3945,7 +3945,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.100d0
       vclocal(1) = (360.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3964,7 +3964,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.502d0
       vclocal(1) = (365.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -3983,7 +3983,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.340d0
       vclocal(1) = (440.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4003,7 +4003,7 @@ c     --- set nvsame
 
 c     *** Protein section (for protein bond groups not listed above) 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.335d0
       vclocal(1) = (600.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4018,7 +4018,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.375d0
       vclocal(1) = (305.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4033,7 +4033,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.490d0
       vclocal(1) = (250.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4064,7 +4064,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.490d0
       vclocal(1) = (200.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4079,7 +4079,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.527d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4093,7 +4093,7 @@ c     --- CP2 - CP1 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.537d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4112,7 +4112,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.380d0
       vclocal(1) = (450.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4127,7 +4127,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4432d0
       vclocal(1) = (299.8d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4142,7 +4142,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3464d0
       vclocal(1) = (340.7d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4157,7 +4157,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3600d0
       vclocal(1) = (410.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4172,7 +4172,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3716d0
       vclocal(1) = (360.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4187,7 +4187,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3680d0
       vclocal(1) = (305.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4202,7 +4202,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4000d0
       vclocal(1) = (360.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4217,7 +4217,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4900d0
       vclocal(1) = (230.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4244,7 +4244,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5000d0
       vclocal(1) = (229.63d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4263,7 +4263,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5310d0
       vclocal(1) = (190.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4278,7 +4278,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3650d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4297,7 +4297,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4400d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4312,7 +4312,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5100d0
       vclocal(1) = (230.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4327,7 +4327,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1100d0
       vclocal(1) = (330.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4342,7 +4342,7 @@ c     set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1000d0
       vclocal(1) = (330.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4357,7 +4357,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0830d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4372,7 +4372,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1000d0
       vclocal(1) = (317.13d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4387,7 +4387,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0900d0
       vclocal(1) = (367.6d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4402,7 +4402,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1110d0
       vclocal(1) = (300.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4417,7 +4417,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0800d0
       vclocal(1) = (330.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4448,7 +4448,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0800d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4463,7 +4463,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0800d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4477,7 +4477,7 @@ c     --- HP - CY [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0830d0
       vclocal(1) = (375.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4492,7 +4492,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0900d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4507,7 +4507,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0700d0
       vclocal(1) = (333.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4522,7 +4522,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0830d0
       vclocal(1) = (365.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4537,7 +4537,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3000d0
       vclocal(1) = (260.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4552,7 +4552,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4340d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4567,7 +4567,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4550d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4582,7 +4582,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3650d0
       vclocal(1) = (463.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4597,7 +4597,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4900d0
       vclocal(1) = (261.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4616,7 +4616,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0000d0
       vclocal(1) = (455.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4631,7 +4631,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3450d0
       vclocal(1) = (370.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4646,7 +4646,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.430d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4669,7 +4669,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 0.997d0
       vclocal(1) = (440.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4684,7 +4684,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 0.9800d0
       vclocal(1) = (405.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4699,7 +4699,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3600d0
       vclocal(1) = (430.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4714,7 +4714,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4550d0
       vclocal(1) = (240.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4733,7 +4733,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0000d0
       vclocal(1) = (480.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4748,7 +4748,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0000d0
       vclocal(1) = (460.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4763,7 +4763,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4800d0
       vclocal(1) = (200.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4786,7 +4786,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0400d0
       vclocal(1) = (403.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4801,7 +4801,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4850d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4816,7 +4816,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.5020d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4831,7 +4831,7 @@ c     --- set nvsame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0060d0
       vclocal(1) = (460.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4845,7 +4845,7 @@ c     --- NP - HC [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3757d0
       vclocal(1) = (377.2d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4859,7 +4859,7 @@ c     --- NPH - CPA [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3800d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4877,7 +4877,7 @@ c     --- NR2 - CPH1 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3600d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4891,7 +4891,7 @@ c     --- NR1 - CPH2 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3200d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4905,7 +4905,7 @@ c     --- NR2 - CPH2 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0000d0
       vclocal(1) = (466.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4919,7 +4919,7 @@ c     --- NR1 - H [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3700d0
       vclocal(1) = (380.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4933,7 +4933,7 @@ c     --- NR3 - CPH1 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3200d0
       vclocal(1) = (380.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4947,7 +4947,7 @@ c     --- NR3 - CPH2 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.0000d0
       vclocal(1) = (453.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4961,7 +4961,7 @@ c     --- NR3 - H [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3700d0
       vclocal(1) = (270.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4975,7 +4975,7 @@ c     --- NY - CA [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3750d0
       vclocal(1) = (270.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -4989,7 +4989,7 @@ c     --- NY - CPT [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 0.9760d0
       vclocal(1) = (465.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5003,7 +5003,7 @@ c     --- NY - H [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.2300d0
       vclocal(1) = (620.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5017,7 +5017,7 @@ c     --- O - C [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.2300d0
       vclocal(1) = (650.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5031,7 +5031,7 @@ c     --- O - CC [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3300d0
       vclocal(1) = (450.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5049,7 +5049,7 @@ c     --- OC - CT3 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4110d0
       vclocal(1) = (334.3d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5063,7 +5063,7 @@ c     --- OH1 - CA [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.1280d0
       vclocal(1) = (1115.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5077,7 +5077,7 @@ c     --- OM - CM [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.2300d0
       vclocal(1) = (600.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5091,7 +5091,7 @@ c     --- OM - OM [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.8180d0
       vclocal(1) = (198.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5105,7 +5105,7 @@ c     --- S - CT2 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.8160d0
       vclocal(1) = (240.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5119,7 +5119,7 @@ c     --- S - CT3 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.3250d0
       vclocal(1) = (275.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5133,7 +5133,7 @@ c     --- S - HS [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.8160d0
       vclocal(1) = (214.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5151,7 +5151,7 @@ c     --- SM - CT3 [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 2.0290d0
       vclocal(1) = (173.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5165,7 +5165,7 @@ c     --- SM - SM [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.8360d0
       vclocal(1) = (205.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5180,7 +5180,7 @@ c     --- SS - CS [par_all27_prot_lipid.inp]
 
 c     *** Nucleic acid bond terms (if not listed above) ***
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.090d0
       vclocal(1) = (374.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5198,7 +5198,7 @@ c     --- CN3C - HN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.090d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5232,7 +5232,7 @@ c     --- CN3B - HN3B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.409d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5246,7 +5246,7 @@ c     --- CN1 - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.403d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5260,7 +5260,7 @@ c     --- CN1 - CN3T [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.480d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5274,7 +5274,7 @@ c     --- CN1A - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.360d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5288,7 +5288,7 @@ c     --- CN1 - CN5G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.450d0
       vclocal(1) = (200.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5302,7 +5302,7 @@ c     --- CN7B - CN7B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.518d0
       vclocal(1) = (200.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5320,7 +5320,7 @@ c     --- CN7B - CN8 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.456d0
       vclocal(1) = (220.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5334,7 +5334,7 @@ c     --- CN7B - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.458d0
       vclocal(1) = (220.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5348,7 +5348,7 @@ c     --- CN7B - NN2B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.462d0
       vclocal(1) = (220.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5362,7 +5362,7 @@ c     --- CN7B - NR1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.460d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5376,7 +5376,7 @@ c     --- CN7 - CN7B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.490d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5390,7 +5390,7 @@ c     --- CN3 - CN8 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.512d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5404,7 +5404,7 @@ c     --- CN7 - CN8B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.516d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5422,7 +5422,7 @@ c     --- CN7 - CN8 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.529d0
       vclocal(1) = (222.5d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5436,7 +5436,7 @@ c     --- CN7 - CN7 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.478d0
       vclocal(1) = (230.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5450,7 +5450,7 @@ c     --- CN3T - CN9 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.480d0
       vclocal(1) = (230.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5464,7 +5464,7 @@ c     --- CN3D - CN9 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.580d0
       vclocal(1) = (237.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5478,7 +5478,7 @@ c     --- ON4 - P [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.446d0
       vclocal(1) = (240.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5492,7 +5492,7 @@ c     --- CN7 - ON6 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.480d0
       vclocal(1) = (240.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5506,7 +5506,7 @@ c     --- CN7 - ON6B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.4050d0
       vclocal(1) = (260.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5520,7 +5520,7 @@ c     --- CN2 - CN3D [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.420d0
       vclocal(1) = (260.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5538,7 +5538,7 @@ c     --- CN7B - ON6 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.375d0
       vclocal(1) = (300.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5552,7 +5552,7 @@ c     --- CN5 - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.378d0
       vclocal(1) = (300.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5566,7 +5566,7 @@ c     --- CN4 - NN2B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.680d0
       vclocal(1) = (300.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5580,7 +5580,7 @@ c     --- ON2 - P2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.343d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5594,7 +5594,7 @@ c     --- CN3 - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.348d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5608,7 +5608,7 @@ c     --- CN1T - NN2B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.375d0
       vclocal(1) = (302.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5622,7 +5622,7 @@ c     --- CN5 - NN2B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.355d0
       vclocal(1) = (310.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5636,7 +5636,7 @@ c     --- CN5 - NN4 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.361d0
       vclocal(1) = (310.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5650,7 +5650,7 @@ c     --- CN5 - CN5 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.365d0
       vclocal(1) = (310.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5664,7 +5664,7 @@ c     --- CN5G - NN4 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.433d0
       vclocal(1) = (310.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5682,7 +5682,7 @@ c     --- CN7 - ON2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.326d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5696,7 +5696,7 @@ c     --- CN2 - NN3G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.343d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5710,7 +5710,7 @@ c     --- CN3 - NN2B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.350d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5724,7 +5724,7 @@ c     --- CN5 - CN5G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.374d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5738,7 +5738,7 @@ c     --- CN4 - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.406d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5752,7 +5752,7 @@ c     --- CN2 - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.440d0
       vclocal(1) = (320.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5766,7 +5766,7 @@ c     --- CN8B - ON2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.383d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5780,7 +5780,7 @@ c     --- CN1T - NN2U [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.389d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5794,7 +5794,7 @@ c     --- CN1 - NN2U [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.396d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5808,7 +5808,7 @@ c     --- CN1 - NN2G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.440d0
       vclocal(1) = (340.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5822,7 +5822,7 @@ c     --- CN8 - ON2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.312d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5836,7 +5836,7 @@ c     --- CN5 - NN3A [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.315d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5850,7 +5850,7 @@ c     --- CN5 - NN3G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.332d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5864,7 +5864,7 @@ c     --- CN5 - NN3I [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.335d0
       vclocal(1) = (350.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5878,7 +5878,7 @@ c     --- CN1 - NN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.358d0
       vclocal(1) = (360.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5892,7 +5892,7 @@ c     --- CN2 - CN5 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.366d0
       vclocal(1) = (360.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5906,7 +5906,7 @@ c     --- CN2 - NN1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.090d0
       vclocal(1) = (380.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5920,7 +5920,7 @@ c     --- CN4 - HN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.367d0
       vclocal(1) = (380.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5934,7 +5934,7 @@ c     --- CN1 - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.305d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5948,7 +5948,7 @@ c     --- CN4 - NN4 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.342d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5962,7 +5962,7 @@ c     --- CN2 - NN3A [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.392d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5976,7 +5976,7 @@ c     --- CN2 - NN2G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.456d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -5990,7 +5990,7 @@ c     --- CN9 - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.458d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6008,7 +6008,7 @@ c     --- CN9 - NN2B [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.460d0
       vclocal(1) = (400.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6022,7 +6022,7 @@ c     --- CN8 - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.315d0
       vclocal(1) = (420.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6036,7 +6036,7 @@ c     --- CN3B - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.320d0
       vclocal(1) = (420.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6050,7 +6050,7 @@ c     --- CN3C - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.322d0
       vclocal(1) = (420.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6064,7 +6064,7 @@ c     --- CN4 - NN3A [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.350d0
       vclocal(1) = (420.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6078,7 +6078,7 @@ c     --- CN3B - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.355d0
       vclocal(1) = (420.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6092,7 +6092,7 @@ c     --- CN3C - NN2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.400d0
       vclocal(1) = (428.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6110,7 +6110,7 @@ c     --- CN7C - ON5 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.295d0
       vclocal(1) = (450.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6124,7 +6124,7 @@ c     --- CN4 - NN3I [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.343d0
       vclocal(1) = (450.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6138,7 +6138,7 @@ c     --- CN2 - NN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.360d0
       vclocal(1) = (450.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6152,7 +6152,7 @@ c     --- CN3A - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.010d0
       vclocal(1) = (460.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6166,7 +6166,7 @@ c     --- NN5 - HN1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.010d0
       vclocal(1) = (471.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6180,7 +6180,7 @@ c     --- HN2 - NN2G [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.010d0
       vclocal(1) = (474.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6202,7 +6202,7 @@ c     --- HN2 - NN2U [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.530d0
       vclocal(1) = (480.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6216,7 +6216,7 @@ c     --- ON3 - P2 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.000d0
       vclocal(1) = (488.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6230,7 +6230,7 @@ c     --- HN1 - NN1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.326d0
       vclocal(1) = (500.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6244,7 +6244,7 @@ c     --- CN3 - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.320d0
       vclocal(1) = (560.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6258,7 +6258,7 @@ c     --- CN3 - CN3T [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.335d0
       vclocal(1) = (560.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6272,7 +6272,7 @@ c     --- CN3D - CN3 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.360d0
       vclocal(1) = (560.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6286,7 +6286,7 @@ c     --- CN1A - NN1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.245d0
       vclocal(1) = (620.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6300,7 +6300,7 @@ c     --- CN1 - ON1C [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.234d0
       vclocal(1) = (660.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6314,7 +6314,7 @@ c     --- CN1 - ON1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.230d0
       vclocal(1) = (860.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6332,7 +6332,7 @@ c     --- CN1T - ON1 [par_all27_na.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.9000d0
       vclocal(1) = (258.0d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6346,7 +6346,7 @@ c     --- FE - CM [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 3.3814d0
       vclocal(1) = (0.000d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6360,7 +6360,7 @@ c     --- FE - CPM [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.9580d0
       vclocal(1) = (270.200d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6374,7 +6374,7 @@ c     --- NPH - FE [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 2.200d0
       vclocal(1) = (65.000d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6388,7 +6388,7 @@ c     --- NR2 - FE [par_all27_prot_lipid.inp]
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
       type = type + 1
-      call twh_vibstyle(GLB_SET,type,2)
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
       vclocal(0) = 1.800d0
       vclocal(1) = (250.000d0)*(CON_KCALTOK)
       call twh_set_vibcoeffs(type,vclocal)
@@ -6433,7 +6433,7 @@ c     * charmm27 angles with urey-bradley                              *
 c     ******************************************************************
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (52.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -6519,7 +6519,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 111.00d0
       bclocal(1) = (53.35d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -6547,7 +6547,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 113.50d0
       bclocal(1) = (58.350d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -6615,7 +6615,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 113.60d0
       bclocal(1) = (58.35d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -6633,7 +6633,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 113.60d0
       bclocal(1) = (58.35d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -6651,7 +6651,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.60d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.2651d0
@@ -6689,7 +6689,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 108.50d0
       bclocal(1) = (53.35d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -6712,7 +6712,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 115.00d0
       bclocal(1) = (58.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -6736,7 +6736,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.00d0
       bclocal(1) = (55.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -6758,7 +6758,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.00d0
       bclocal(1) = (57.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -6800,7 +6800,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.00d0
       bclocal(1) = (57.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -6826,7 +6826,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (33.430d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -6869,7 +6869,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (33.430d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -6917,7 +6917,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (26.50d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -6960,7 +6960,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.00d0
       bclocal(1) = (35.50d0)*(CON_KCALTOK)
       bclocal(2) = 1.8020d0
@@ -6998,7 +6998,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.00d0
       bclocal(1) = (35.50d0)*(CON_KCALTOK)
       bclocal(2) = 1.8020d0
@@ -7036,7 +7036,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (34.60d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -7079,7 +7079,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (34.60d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -7102,7 +7102,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.50d0
       bclocal(1) = (33.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.1630d0
@@ -7165,7 +7165,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (34.50d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -7208,7 +7208,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (34.50d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -7236,7 +7236,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (37.50d0)*(CON_KCALTOK)
       bclocal(2) = 2.1790d0
@@ -7259,7 +7259,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 108.40d0
       bclocal(1) = (35.50d0)*(CON_KCALTOK)
       bclocal(2) = 1.8020d0
@@ -7287,7 +7287,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.50d0
       bclocal(1) = (33.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.0560d0
@@ -7316,7 +7316,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.52d0
       bclocal(1) = (55.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7333,7 +7333,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (67.70d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7369,7 +7369,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 125.00d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.4420d0
@@ -7417,7 +7417,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 118.00d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.3880d0
@@ -7460,7 +7460,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 124.00d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.2250d0
@@ -7484,7 +7484,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.50d0
       bclocal(1) = (55.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7515,7 +7515,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 123.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.2620d0
@@ -7539,7 +7539,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.10d0
       bclocal(1) = (75.70d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7621,7 +7621,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.10d0
       bclocal(1) = (75.70d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7653,7 +7653,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.89d0
       bclocal(1) = (45.90d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7695,7 +7695,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.89d0
       bclocal(1) = (45.90d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7716,7 +7716,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.00d0
       bclocal(1) = (55.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.3260d0
@@ -7759,7 +7759,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 125.90d0
       bclocal(1) = (90.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.2576d0
@@ -7783,7 +7783,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7820,7 +7820,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7871,7 +7871,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.0d0
       bclocal(1) = (20.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.33d0
@@ -7894,7 +7894,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.0d0
       bclocal(1) = (20.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.33d0
@@ -7937,7 +7937,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 115.0d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.30d0
@@ -7956,7 +7956,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.3d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7973,7 +7973,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.3d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -7995,7 +7995,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.6d0
       bclocal(1) = (98.9d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8012,7 +8012,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.6d0
       bclocal(1) = (98.9d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8034,7 +8034,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.0d0
       bclocal(1) = (48.1d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8051,7 +8051,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.0d0
       bclocal(1) = (48.1d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8068,7 +8068,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.0d0
       bclocal(1) = (120.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8085,7 +8085,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.0d0
       bclocal(1) = (120.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8102,7 +8102,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.23d0
       bclocal(1) = (98.9d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8119,7 +8119,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.23d0
       bclocal(1) = (98.9d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8135,7 +8135,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.5d0
       bclocal(1) = (40.0d0)*(CON_KCALTOK)
       bclocal(2) = 2.13d0
@@ -8158,7 +8158,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.50d0
       bclocal(1) = (24.0d0)*(CON_KCALTOK)
       bclocal(2) = 1.767d0
@@ -8181,7 +8181,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.5d0
       bclocal(1) = (60.0d0)*(CON_KCALTOK)
       bclocal(2) = 2.466d0
@@ -8205,7 +8205,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.00d0
       bclocal(1) = (67.7d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8227,7 +8227,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (41.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8243,7 +8243,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 107.50d0
       bclocal(1) = (45.0d0)*(CON_KCALTOK)
       bclocal(2) = 2.0836d0
@@ -8261,7 +8261,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.47d0
       bclocal(1) = (130.0d0)*(CON_KCALTOK)
       bclocal(2) = 2.45d0
@@ -8280,7 +8280,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 98.0d0
       bclocal(1) = (85.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8296,7 +8296,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.0d0
       bclocal(1) = (15.0d0)*(CON_KCALTOK)
       bclocal(2) = 1.90d0
@@ -8320,7 +8320,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.50d0
       bclocal(1) = (48.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8347,7 +8347,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.00d0
       bclocal(1) = (48.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8369,7 +8369,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.20d0
       bclocal(1) = (47.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8391,7 +8391,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.50d0
       bclocal(1) = (52.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8413,7 +8413,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (42.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8435,7 +8435,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.00d0
       bclocal(1) = (40.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8457,7 +8457,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.00d0
       bclocal(1) = (22.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8479,7 +8479,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.50d0
       bclocal(1) = (45.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8501,7 +8501,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.50d0
       bclocal(1) = (55.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8523,7 +8523,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.00d0
       bclocal(1) = (19.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8545,7 +8545,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.20d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8572,7 +8572,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.50d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8594,7 +8594,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.50d0
       bclocal(1) = (42.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8615,7 +8615,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.00d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.4162d0
@@ -8634,7 +8634,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8656,7 +8656,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly) 
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.30d0
       bclocal(1) = (52.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8678,7 +8678,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.30d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8695,7 +8695,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.50d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8727,7 +8727,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.20d0
       bclocal(1) = (100.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8744,7 +8744,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.00d0
       bclocal(1) = (100.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8761,7 +8761,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.74d0
       bclocal(1) = (70.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8778,7 +8778,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.12d0
       bclocal(1) = (94.20d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8795,7 +8795,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 103.90d0
       bclocal(1) = (139.30d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8812,7 +8812,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.50d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8829,7 +8829,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.75d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8846,7 +8846,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.51d0
       bclocal(1) = (30.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8863,7 +8863,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.50d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8880,7 +8880,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.00d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8897,7 +8897,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (145.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8924,7 +8924,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.07d0
       bclocal(1) = (61.60d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8941,7 +8941,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8958,7 +8958,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8975,7 +8975,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -8991,7 +8991,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 107.40d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.261d0
@@ -9010,7 +9010,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9027,7 +9027,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9054,7 +9054,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.50d0
       bclocal(1) = (51.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9076,7 +9076,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.00d0
       bclocal(1) = (58.35d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9098,7 +9098,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9135,7 +9135,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.30d0
       bclocal(1) = (45.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9157,7 +9157,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.74d0
       bclocal(1) = (65.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9179,7 +9179,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.75d0
       bclocal(1) = (65.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9201,7 +9201,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.00d0
       bclocal(1) = (45.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9223,7 +9223,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.00d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9240,7 +9240,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.40d0
       bclocal(1) = (45.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9257,7 +9257,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.00d0
       bclocal(1) = (45.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9284,7 +9284,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (62.30d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9305,7 +9305,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 114.00d0
       bclocal(1) = (53.35d0)*(CON_KCALTOK)
       bclocal(2) = 2.5610d0
@@ -9334,7 +9334,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 95.00d0
       bclocal(1) = (34.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9351,7 +9351,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.60d0
       bclocal(1) = (160.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9373,7 +9373,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.40d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9395,7 +9395,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.00d0
       bclocal(1) = (58.35d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9417,7 +9417,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.00d0
       bclocal(1) = (34.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9434,7 +9434,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.00d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9461,7 +9461,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (23.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9477,7 +9477,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 125.50d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.150d0
@@ -9495,7 +9495,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 127.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.140d0
@@ -9513,7 +9513,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 126.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.130d0
@@ -9531,7 +9531,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 126.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.090d0
@@ -9550,7 +9550,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.00d0
       bclocal(1) = (28.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9572,7 +9572,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (65.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9589,7 +9589,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.50d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9606,7 +9606,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9623,7 +9623,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9639,7 +9639,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.00d0
       bclocal(1) = (29.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.1525d0
@@ -9658,7 +9658,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (41.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9674,7 +9674,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 125.00d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.173d0
@@ -9698,7 +9698,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.44d0
       bclocal(1) = (12.70d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9714,7 +9714,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 108.40d0
       bclocal(1) = (35.50d0)*(CON_KCALTOK)
       bclocal(2) = 1.7750d0
@@ -9733,7 +9733,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.50d0
       bclocal(1) = (49.30d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9755,7 +9755,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9812,7 +9812,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (33.43d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9838,7 +9838,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 126.40d0
       bclocal(1) = (20.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.186d0
@@ -9861,7 +9861,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 126.40d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.255d0
@@ -9885,7 +9885,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9912,7 +9912,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9929,7 +9929,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.00d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9956,7 +9956,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.00d0
       bclocal(1) = (36.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9973,7 +9973,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (49.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -9990,7 +9990,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (40.40d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10012,7 +10012,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10029,7 +10029,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10051,7 +10051,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.50d0
       bclocal(1) = (39.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10067,7 +10067,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.50d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.074d0
@@ -10096,7 +10096,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (44.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10113,7 +10113,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.50d0
       bclocal(1) = (51.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10129,7 +10129,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.1525d0
@@ -10147,7 +10147,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 122.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.1460d0
@@ -10165,7 +10165,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 130.00d0
       bclocal(1) = (22.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.2150d0
@@ -10183,7 +10183,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 130.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.2000d0
@@ -10202,7 +10202,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 95.00d0
       bclocal(1) = (38.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10219,7 +10219,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 95.00d0
       bclocal(1) = (43.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10236,7 +10236,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.50d0
       bclocal(1) = (20.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10268,7 +10268,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.20d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10295,7 +10295,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.80d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10312,7 +10312,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.00d0
       bclocal(1) = (48.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10329,7 +10329,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.50d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10346,7 +10346,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (48.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10372,7 +10372,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.00d0
       bclocal(1) = (52.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.3642d0
@@ -10391,7 +10391,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.50d0
       bclocal(1) = (67.70d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10408,7 +10408,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.50d0
       bclocal(1) = (51.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10445,7 +10445,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.50d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10477,7 +10477,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10519,7 +10519,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.50d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10551,7 +10551,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.50d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10568,7 +10568,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.50d0
       bclocal(1) = (51.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10590,7 +10590,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.50d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10606,7 +10606,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 116.50d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.450d0
@@ -10634,7 +10634,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 111.00d0
       bclocal(1) = (44.00d0)*(CON_KCALTOK)
       bclocal(2) = 1.980d0
@@ -10652,7 +10652,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 109.50d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.140d0
@@ -10676,7 +10676,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (43.70d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10712,7 +10712,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 107.50d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.101d0
@@ -10736,7 +10736,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10763,7 +10763,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.15d0
       bclocal(1) = (51.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10780,7 +10780,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.54d0
       bclocal(1) = (122.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10797,7 +10797,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.39d0
       bclocal(1) = (88.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10814,7 +10814,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.00d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10830,7 +10830,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 124.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.140d0
@@ -10848,7 +10848,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 122.50d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.140d0
@@ -10867,7 +10867,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10884,7 +10884,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (45.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10900,7 +10900,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 120.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.140d0
@@ -10918,7 +10918,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 125.00d0
       bclocal(1) = (25.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.120d0
@@ -10937,7 +10937,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.50d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10954,7 +10954,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (45.80d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -10970,7 +10970,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 122.00d0
       bclocal(1) = (22.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.180d0
@@ -10988,7 +10988,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 126.00d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.140d0
@@ -11006,7 +11006,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.00d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.240d0
@@ -11024,7 +11024,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 125.00d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.177d0
@@ -11048,7 +11048,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11070,7 +11070,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.00d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11097,7 +11097,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.00d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11114,7 +11114,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.70d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11131,7 +11131,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.50d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11152,7 +11152,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 121.00d0
       bclocal(1) = (15.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.440d0
@@ -11181,7 +11181,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (44.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11197,7 +11197,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 122.50d0
       bclocal(1) = (75.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.370d0
@@ -11216,7 +11216,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11233,7 +11233,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (65.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11250,7 +11250,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.30d0
       bclocal(1) = (65.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11272,7 +11272,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (45.20d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11289,7 +11289,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.50d0
       bclocal(1) = (58.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11311,7 +11311,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.50d0
       bclocal(1) = (58.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11333,7 +11333,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.30d0
       bclocal(1) = (46.10d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11355,7 +11355,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.00d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11377,7 +11377,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 103.30d0
       bclocal(1) = (72.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11399,7 +11399,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (55.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11416,7 +11416,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.30d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11434,7 +11434,7 @@ c     --- set nbsame
 c     *** Nucleic acid angle types (if not listed above) ***
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.00d0
       bclocal(1) = (42.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11471,7 +11471,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11493,7 +11493,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.80d0
       bclocal(1) = (90.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11510,7 +11510,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 133.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11527,7 +11527,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.10d0
       bclocal(1) = (90.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11544,7 +11544,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.40d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11561,7 +11561,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11578,7 +11578,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.70d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11595,7 +11595,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 105.70d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11612,7 +11612,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11634,7 +11634,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.60d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11651,7 +11651,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.40d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11668,7 +11668,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.30d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11685,7 +11685,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.90d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11702,7 +11702,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.00d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11719,7 +11719,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.50d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11736,7 +11736,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.70d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11753,7 +11753,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.60d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11770,7 +11770,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.50d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11787,7 +11787,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.00d0
       bclocal(1) = (31.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11804,7 +11804,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.80d0
       bclocal(1) = (39.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11821,7 +11821,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.80d0
       bclocal(1) = (39.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11838,7 +11838,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.40d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11855,7 +11855,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11872,7 +11872,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 131.10d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11889,7 +11889,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.20d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11906,7 +11906,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.40d0
       bclocal(1) = (90.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11923,7 +11923,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.90d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11940,7 +11940,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.60d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11957,7 +11957,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.80d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11974,7 +11974,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.60d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -11991,7 +11991,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.40d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12008,7 +12008,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 103.80d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12025,7 +12025,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.00d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12042,7 +12042,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.20d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12059,7 +12059,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.50d0
       bclocal(1) = (140.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12076,7 +12076,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.00d0
       bclocal(1) = (125.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12093,7 +12093,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.30d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12110,7 +12110,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.60d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12127,7 +12127,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.40d0
       bclocal(1) = (95.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12144,7 +12144,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.40d0
       bclocal(1) = (95.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12161,7 +12161,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.50d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12178,7 +12178,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.70d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12195,7 +12195,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.20d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12212,7 +12212,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.60d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12229,7 +12229,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.30d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12246,7 +12246,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.10d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12263,7 +12263,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.80d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12280,7 +12280,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.10d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12297,7 +12297,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.30d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12314,7 +12314,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.80d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12331,7 +12331,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.90d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12348,7 +12348,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.20d0
       bclocal(1) = (37.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12365,7 +12365,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.70d0
       bclocal(1) = (37.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12382,7 +12382,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.40d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12399,7 +12399,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.80d0
       bclocal(1) = (130.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12416,7 +12416,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.30d0
       bclocal(1) = (81.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12433,7 +12433,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.40d0
       bclocal(1) = (81.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12450,7 +12450,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.10d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12467,7 +12467,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.10d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12484,7 +12484,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.00d0
       bclocal(1) = (44.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12501,7 +12501,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12523,7 +12523,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.00d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12540,7 +12540,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 130.20d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12557,7 +12557,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.60d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12574,7 +12574,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.60d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12591,7 +12591,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.60d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12608,7 +12608,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (40.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12625,7 +12625,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.00d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12642,7 +12642,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.60d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12659,7 +12659,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.40d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12676,7 +12676,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.40d0
       bclocal(1) = (40.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12693,7 +12693,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.40d0
       bclocal(1) = (40.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12710,7 +12710,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.90d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12727,7 +12727,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.50d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12744,7 +12744,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.30d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12761,7 +12761,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.30d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12778,7 +12778,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.70d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12795,7 +12795,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.60d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12812,7 +12812,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.60d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12829,7 +12829,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.70d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12846,7 +12846,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.60d0
       bclocal(1) = (38.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12863,7 +12863,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.10d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12880,7 +12880,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.75d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12897,7 +12897,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.75d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12914,7 +12914,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.50d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12931,7 +12931,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.00d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12948,7 +12948,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 128.40d0
       bclocal(1) = (140.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12965,7 +12965,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 129.70d0
       bclocal(1) = (125.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12982,7 +12982,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.00d0
       bclocal(1) = (40.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -12999,7 +12999,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.40d0
       bclocal(1) = (90.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13016,7 +13016,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.00d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13033,7 +13033,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.40d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13050,7 +13050,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.50d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13067,7 +13067,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 125.90d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13094,7 +13094,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.80d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13111,7 +13111,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.90d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13133,7 +13133,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.70d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13150,7 +13150,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.40d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13167,7 +13167,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.60d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13184,7 +13184,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13201,7 +13201,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.90d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13218,7 +13218,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.10d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13235,7 +13235,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.60d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13252,7 +13252,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.50d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13269,7 +13269,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.30d0
       bclocal(1) = (45.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13286,7 +13286,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 112.00d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13308,7 +13308,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.70d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13330,7 +13330,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.00d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13362,7 +13362,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.00d0
       bclocal(1) = (43.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13383,7 +13383,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 113.00d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.460d0
@@ -13401,7 +13401,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 118.50d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.430d0
@@ -13419,7 +13419,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 128.50d0
       bclocal(1) = (85.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.170d0
@@ -13438,7 +13438,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.40d0
       bclocal(1) = (110.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13455,7 +13455,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.30d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13472,7 +13472,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.80d0
       bclocal(1) = (5.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13489,7 +13489,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.20d0
       bclocal(1) = (125.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13506,7 +13506,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.80d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13523,7 +13523,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 118.00d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13545,7 +13545,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.20d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13562,7 +13562,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 131.80d0
       bclocal(1) = (10.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13579,7 +13579,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.50d0
       bclocal(1) = (53.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13601,7 +13601,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 128.00d0
       bclocal(1) = (43.50d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13618,7 +13618,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.20d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13635,7 +13635,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13657,7 +13657,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 119.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13674,7 +13674,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 116.00d0
       bclocal(1) = (42.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13691,7 +13691,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.50d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13708,7 +13708,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 122.00d0
       bclocal(1) = (120.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13725,7 +13725,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 124.20d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13742,7 +13742,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.50d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13759,7 +13759,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (125.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13776,7 +13776,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.10d0
       bclocal(1) = (55.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13793,7 +13793,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.10d0
       bclocal(1) = (33.43d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13825,7 +13825,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13842,7 +13842,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13859,7 +13859,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 114.00d0
       bclocal(1) = (20.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13876,7 +13876,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 121.70d0
       bclocal(1) = (70.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13898,7 +13898,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 117.40d0
       bclocal(1) = (32.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13915,7 +13915,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.00d0
       bclocal(1) = (39.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13932,7 +13932,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.00d0
       bclocal(1) = (39.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -13948,7 +13948,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 140.00d0
       bclocal(1) = (15.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.800d0
@@ -13976,7 +13976,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 115.00d0
       bclocal(1) = (30.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.350d0
@@ -13995,7 +13995,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.00d0
       bclocal(1) = (98.90d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14012,7 +14012,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 111.60d0
       bclocal(1) = (88.90d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14029,7 +14029,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 120.00d0
       bclocal(1) = (104.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14046,7 +14046,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 102.00d0
       bclocal(1) = (90.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14068,7 +14068,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 100.00d0
       bclocal(1) = (80.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14089,7 +14089,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 102.00d0
       bclocal(1) = (60.00d0)*(CON_KCALTOK)
       bclocal(2) = 2.561d0
@@ -14113,7 +14113,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 104.00d0
       bclocal(1) = (100.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14130,7 +14130,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.24d0
       bclocal(1) = (45.20d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14162,7 +14162,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (40.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14178,7 +14178,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (34.53d0)*(CON_KCALTOK)
       bclocal(2) = 2.179d0
@@ -14222,7 +14222,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 115.00d0
       bclocal(1) = (110.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14239,7 +14239,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.00d0
       bclocal(1) = (90.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14256,7 +14256,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 96.00d0
       bclocal(1) = (110.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14272,7 +14272,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 100.00d0
       bclocal(1) = (60.0d0)*(CON_KCALTOK)
       bclocal(2) = 2.561d0
@@ -14290,7 +14290,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 110.10d0
       bclocal(1) = (33.4d0)*(CON_KCALTOK)
       bclocal(2) = 2.179d0
@@ -14309,7 +14309,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.20d0
       bclocal(1) = (90.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14331,7 +14331,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.40d0
       bclocal(1) = (70.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14348,7 +14348,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.70d0
       bclocal(1) = (115.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14385,7 +14385,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (75.7d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14402,7 +14402,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 109.00d0
       bclocal(1) = (57.5d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14429,7 +14429,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (90.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14451,7 +14451,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.40d0
       bclocal(1) = (80.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14473,7 +14473,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (90.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14495,7 +14495,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 108.00d0
       bclocal(1) = (140.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14517,7 +14517,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 113.70d0
       bclocal(1) = (140.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14539,7 +14539,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 127.00d0
       bclocal(1) = (130.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14556,7 +14556,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 126.00d0
       bclocal(1) = (130.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14573,7 +14573,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.30d0
       bclocal(1) = (30.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14590,7 +14590,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 107.00d0
       bclocal(1) = (130.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14607,7 +14607,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 106.25d0
       bclocal(1) = (120.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14624,7 +14624,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 110.00d0
       bclocal(1) = (45.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14641,7 +14641,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 128.05d0
       bclocal(1) = (96.150d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14658,7 +14658,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 133.0d0
       bclocal(1) = (30.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14675,7 +14675,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 123.0d0
       bclocal(1) = (30.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14692,7 +14692,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 180.0d0
       bclocal(1) = (0.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14709,7 +14709,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 90.0d0
       bclocal(1) = (50.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14726,7 +14726,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 45.0d0
       bclocal(1) = (0.0d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14743,7 +14743,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 90.0d0
       bclocal(1) = (14.390d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14760,7 +14760,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 180.0d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14777,7 +14777,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 90.0d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14794,7 +14794,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 180.0d0
       bclocal(1) = (35.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14811,7 +14811,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 90.0d0
       bclocal(1) = (5.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14828,7 +14828,7 @@ c     --- set nbsame
 
       type = type + 1
 c     --- standard harmonic (no urey-bradly)
-      call twh_anglestyle(GLB_SET,type,1)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_HARMONIC)
       bclocal(0) = 180.0d0
       bclocal(1) = (0.00d0)*(CON_KCALTOK)
       call twh_set_bencoeff(type,bclocal) 
@@ -14844,7 +14844,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 121.70d0
       bclocal(1) = (50.00d0)*(CON_KCALTOK)
       bclocal(2) = 0.0d0
@@ -14873,7 +14873,7 @@ c     --- set nbsame
       call twh_set_bendnames(type,nbslocal,bnlocal)
 
       type = type + 1
-      call twh_anglestyle(GLB_SET,type,5)
+      call twh_anglestyle(GLB_SET,type,ANG_STYLE_CHARMM_UB)
       bclocal(0) = 111.00d0
       bclocal(1) = (44.00d0)*(CON_KCALTOK)
       bclocal(2) = 1.9800d0
