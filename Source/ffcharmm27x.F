@@ -29,7 +29,7 @@ c     * but just things I made up so I could do some more simulations  *
 c     * so use at your own risk                                        *
 c     *                                                                *
 c     * originally written 02-22-2005 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -275,7 +275,7 @@ c     ******************************************************************
       call twh_constant_pi(GLB_GET,onepi)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)

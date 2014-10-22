@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * sets up the logic arrays needed to do the dihedral selection   *
 c     * for configurational-bias                                       *
 c     *                                                                *
 c     * originally split from rosenbluth 08-07-2002 by M.G. Martin     *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_BONDPATT
@@ -456,13 +456,13 @@ c                    --- use old/new unit coordinates
 c              --- store unit numbers
                ttype = torbead(1)
 c              --- compute the shift angle
-               phishift = twh_vtorsion(lfailure,ibox,0,imolty
+               phishift = twh_vtorsion(lfailure,.false.,ibox,0,imolty
      &              ,ttype,it,xttmp,yttmp,zttmp,dum,lovrlap)
                if ( lfailure ) return
 c              --- check to see if this is a multiple rigid angle
                call twh_ittor(GLB_GET,imolty,iu,it,tortype)
                call twh_torstyle(GLB_GET,tortype,torstyle)
-               if ( torstyle .eq. 21 ) then
+               if ( torstyle .eq. TOR_STYLE_MRD ) then
 c                 --- multiple rigid, override other options
                   ldelta_dist = .true.
 c                 --- reset the number of torsion trials to the number

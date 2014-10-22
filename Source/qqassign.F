@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,14 +24,13 @@ c     ******************************************************************
 c     * makes the charge assignment for a molecule we just assembled   *
 c     *                                                                *
 c     * originally written 12-10-2004 by M.G. Martin                   *
-c     * last modified 08-05-2011 by M.G. Martin                        *
+c     * last modified 08-08-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CBNAME
 #define FUNCTION_GET_IJVIB
 #define FUNCTION_GET_INVIB
 #define FUNCTION_GET_NBNAME
-#define FUNCTION_GET_QBASEVALUE
 #define FUNCTION_GET_QBIFF
 #define FUNCTION_GET_QBINAMES
 #define FUNCTION_GET_QBIVALUE
@@ -63,7 +62,7 @@ c        --- determine the charges using bond increment method
          do iunit = 1,nunit
             call twh_ntype(GLB_GET,imolty,iunit,itype)
 c           --- assign the base charge
-            charge = twh_get_qbasevalue(itype)
+            call twh_qbasevalue(GLB_GET,itype,charge)
 c           --- compute the bond increments
             names(1) = twh_get_cbname(itype)
             do ivib = 1,twh_get_invib(imolty,iunit)

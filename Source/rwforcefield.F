@@ -547,7 +547,7 @@ c     *  ncoeff                                                        *
 c     * Global variables modified by this subroutine::                 *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-08-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -560,7 +560,6 @@ c     ******************************************************************
 #define FUNCTION_GET_NBCOEFF
 #define FUNCTION_GET_NBFF
 #define FUNCTION_GET_NBNAME
-#define FUNCTION_GET_QBASEVALUE
 #define FUNCTION_READ_FLOAT
 #define FUNCTION_READ_LABELED_FLOAT
 #define FUNCTION_READ_LABELED_INTEGER
@@ -780,7 +779,8 @@ c     --- qbasevalue
       goodstring = 'Base Charge'
       if ( rwflag .eq. WRITE_FLAG ) then
          write(FFUNIT,'(a12)') goodstring
-         write(FFUNIT,'(e20.10)') twh_get_qbasevalue(type)
+         call twh_qbasevalue(GLB_GET,type,dtemp)
+         write(FFUNIT,'(e20.10)') dtemp
       else
          if ( iversion .ge. 7 ) then
             dtemp = twh_read_labeled_float(lfailure, FFUNIT,goodstring
@@ -1024,7 +1024,7 @@ c     *  anglestyle                                                    *
 c     *  bendnames                                                     *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-12-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE
@@ -1088,10 +1088,11 @@ c     --- needed
       endif
 
       itemp = twh_get_anglestyle(type)
-      call get_angle_params(itemp, iversion,coeffstart, coeffstop, 
-     &   ibastart, ibaend, ibbstart, ibbend,
-     &   lrwbondangle, lbastring, lrwbondbond)
-
+      call twh_get_angle_params(lfailure,itemp, iversion,coeffstart
+     &     , coeffstop, 
+     &     ibastart, ibaend, ibbstart, ibbend,
+     &     lrwbondangle, lbastring, lrwbondbond)
+      if ( lfailure ) return
 c        --- output bond-angle if needed
       if ( lrwbondangle ) then
          goodstring = 'Bond-Angle Logical'
@@ -2360,7 +2361,7 @@ c        --- FENE for CG models
       end
 
 
-      subroutine get_angle_params(anglestyle, iversion,
+      subroutine twh_get_angle_params(lfailure,anglestyle, iversion,
      &   coeffstart, coeffstop, ibastart, ibaend, ibbstart, ibbend,
      &   lrwbondangle, lbastring, lrwbondbond)
 c     ******************************************************************
@@ -2371,13 +2372,13 @@ c     *  lrwbondangle, lbastring, lrwbondbond                          *
 c     *  are set depending on angle style.                             *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-12-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
+      logical lfailure,lrwbondangle, lbastring, lrwbondbond
       integer anglestyle, iversion, coeffstart, coeffstop
       integer ibastart, ibaend, ibbstart, ibbend
-      logical lrwbondangle, lbastring, lrwbondbond
 
       lbastring = .false.
 
@@ -2482,10 +2483,19 @@ c        --- MMF cubic plus bond-stretch
 c        --- harmonic cosine plus 1-3 nonbond
          coeffstart = 0
          coeffstop = 1
+      elseif ( anglestyle .eq. ANG_STYLE_MMFFC_ANG ) then
+c        --- MMFF combo angle portion
+         coeffstart = 0
+         coeffstop = 2
+      elseif ( anglestyle .eq. ANG_STYLE_MMFFC_BA ) then
+c        --- MMFF combo bond-angle portion
+         coeffstart = 1
+         coeffstop = 2
       else
          write(6,*) 'RWFORCEFIELD: invalid anglestyle'
      &        ,anglestyle
-         stop
+         lfailure = .true.
+         return
       endif
       return
       end
@@ -2502,7 +2512,7 @@ c     *  ltorstring                                                    *
 c     * (values of these arguments initialized here)                   *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-13-2011 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NTORLOOP
@@ -2520,7 +2530,7 @@ c     --- local variables
       idname = 'rwforcefield'
       ltorstring = .false.
       torstyle = twh_get_torstyle(type)
-      if ( torstyle .eq. 1 ) then
+      if ( torstyle .eq. TOR_STYLE_SIM_HARM ) then
 c           --- simple harmonic
          coeffstart = 0
          if ( iversion .lt. 11 ) then
@@ -2530,38 +2540,38 @@ c              --- an extra coeff that was not used
          else
             coeffstop = 1
          endif
-      elseif ( torstyle .eq. 2 ) then
+      elseif ( torstyle .eq. TOR_STYLE_OPLS_COS ) then
 c           --- OPLS style cosine series
          coeffstart = 1
          coeffstop = 3
-      elseif ( torstyle .eq. 3 ) then
+      elseif ( torstyle .eq. TOR_STYLE_GCA_COS ) then
 c           --- Gromos/Charmm/Amber cosine series
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return
          coeffstart = 1
          coeffstop = 3*twh_get_ntorloop(type)
-      elseif ( torstyle .eq. 4 ) then
+      elseif ( torstyle .eq. TOR_STYLE_GCA_CUB ) then
 c           --- Gromos/Charmm/Amber cosine series
 c           --- with additional harmonic
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return
          coeffstart = 1
          coeffstop = 3*twh_get_ntorloop(type)+2
-      elseif ( torstyle .eq. 5 ) then
+      elseif ( torstyle .eq. TOR_STYLE_COMP_X_AD ) then
 c           --- compass with all of the cross terms
          coeffstart = 0
          coeffstop = 19
 c           --- torstrings
          ltorstring = .true.
-      elseif ( torstyle .eq. 6 ) then
+      elseif ( torstyle .eq. TOR_STYLE_COMP_R_AD ) then
 c           --- compass without the cross terms
          coeffstart = 0
          coeffstop = 2
-      elseif ( torstyle .eq. 7 ) then
+      elseif ( torstyle .eq. TOR_STYLE_TRAPPE_COS ) then
 c           --- TraPPE simple cosine function
          coeffstart = 0
          coeffstop = 1
-      elseif ( torstyle .eq. 8 ) then
+      elseif ( torstyle .eq. TOR_STYLE_NB ) then
 c           --- nonbonded potential only
          coeffstart = 0
          if ( iversion .lt. 12 ) then
@@ -2571,69 +2581,69 @@ c           --- there was an unused coefficient in previous version
 c           --- do not need anything in addition to the 1-4 scaling
             coeffstop = -1
          endif
-      elseif ( torstyle .eq. 9 ) then
+      elseif ( torstyle .eq. TOR_STYLE_COMP_X_EX ) then
 c           --- class 2 with explicit terms
          coeffstart = 0
          coeffstop = 31
-      elseif ( torstyle .eq. 10 ) then
+      elseif ( torstyle .eq. TOR_STYLE_COS_POW ) then
 c           --- cosine power series
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return
          coeffstart = 0
          coeffstop = twh_get_ntorloop(type)
-      elseif ( torstyle .eq. 11 ) then
+      elseif ( torstyle .eq. TOR_STYLE_O_OPLS_C ) then
 c           --- old UA OPLS style cosine series
          coeffstart = 0
          coeffstop = 3
-      elseif ( torstyle .eq. 12 ) then
+      elseif ( torstyle .eq. TOR_STYLE_SUN_COS ) then
 c           --- NERD Version 3 style cosine series
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return
          coeffstart = 0
          coeffstop = twh_get_ntorloop(type)
-      elseif ( torstyle .eq. 13 ) then
+      elseif ( torstyle .eq. TOR_STYLE_O_OPLS_T ) then
 c           --- two term cosine series from OPLS-ua amides
          coeffstart = 1
          coeffstop = 2
-      elseif ( torstyle .eq. 14 ) then
+      elseif ( torstyle .eq. TOR_STYLE_UFF ) then
 c           --- UFF cosine
          coeffstart = 1
          coeffstop = 3
-      elseif ( torstyle .eq. 15 ) then
+      elseif ( torstyle .eq. TOR_STYLE_DREIDING ) then
 c           --- DREIDING cosine
          coeffstart = 1
          coeffstop = 3
-      elseif ( torstyle .eq. 16 ) then
+      elseif ( torstyle .eq. TOR_STYLE_TF_COS ) then
 c           --- 2-fold cosine
          coeffstart = 1
          coeffstop = 1
-      elseif ( torstyle .eq. 17 ) then
+      elseif ( torstyle .eq. TOR_STYLE_TRAPPE_PLAN ) then
 c           --- potoff cosine
          coeffstart = 1
          coeffstop = 3
-      elseif ( torstyle .eq. 18 ) then
+      elseif ( torstyle .eq. TOR_STYLE_SQUARE_WELL ) then
 c           --- square well
          coeffstart = 1
          coeffstop = 3
-      elseif ( torstyle .eq. 19 ) then
+      elseif ( torstyle .eq. TOR_STYLE_AMBER ) then
 c           --- Amber cosine series divided by number of torsions
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return
          coeffstart = 1
          coeffstop = 3*twh_get_ntorloop(type)
-      elseif ( torstyle .eq. 20 ) then
+      elseif ( torstyle .eq. TOR_STYLE_OPLS_FL ) then
 c        --- OPLS 4 parameter style cosine series
          coeffstart = 1
          coeffstop = 4
-      elseif ( torstyle .eq. 21 ) then
+      elseif ( torstyle .eq. TOR_STYLE_MRD ) then
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return
          coeffstart = 0
          coeffstop = twh_get_ntorloop(type)
-      elseif ( torstyle .eq. 22 ) then
+      elseif ( torstyle .eq. TOR_STYLE_FL ) then
          coeffstart = 0
          coeffstop = 5
-      elseif ( torstyle .eq. 23 ) then
+      elseif ( torstyle .eq. TOR_STYLE_DRUKKER ) then
          coeffstart = 0
          coeffstop = 1
       else

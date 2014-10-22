@@ -2021,7 +2021,7 @@ c     ******************************************************************
 c     * bondlengths of atoms currently being grown in a CBMC move      *
 c     *                                                                *
 c     * originally written 04-12-2006 by M.G. Martin                   *
-c     * last modified 04-12-2006 by M.G. Martin                        *
+c     * last modified 08-03-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -5132,6 +5132,32 @@ c     --- local variables
       return
       end
 
+      subroutine twh_elect_form_code(flag,ivalue)
+c     ******************************************************************
+c     * an integer code summarizing the electrostatic potential to use *
+c     *                                                                *
+c     *                                                                *
+c     * originally written 08-27-2014 by M.G. Martin                   *
+c     * last modified 08-27-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,ivalue
+c     --- storage variable
+      integer elect_form_code
+      save elect_form_code
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = elect_form_code
+      elseif ( flag .eq. GLB_SET ) then
+         elect_form_code = ivalue
+      else
+         write(6,*) 'ELECT_FORM_CODE unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
 
       subroutine twh_electrostatic_form(flag,cvalue)
 c     ******************************************************************
@@ -8823,6 +8849,44 @@ c     --- storage variable
       return
       end
 
+      subroutine twh_itbang(flag,imolty,iunit,ibang,ivalue)
+c     ******************************************************************
+c     * the type of any additional bond-angle term related to the      *
+c     * bending angle.                                                 *
+c     *                                                                *
+c     * originally written 08-11-2014 by M.G. Martin                   *
+c     * last modified 08-11-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,imolty,iunit,ibang,ivalue
+c     --- local variables
+      integer imtemp,iutemp,ibtemp
+c     --- storage variable
+      integer itbang
+      dimension itbang(NTMAX,NUMAX,MAXBEND)
+      save itbang
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = itbang(imolty,iunit,ibang)
+      elseif ( flag .eq. GLB_SET ) then
+         itbang(imolty,iunit,ibang) = ivalue
+      elseif ( flag .eq. GLB_INIT ) then 
+         do imtemp = 1,imolty
+            do iutemp = 1,iunit
+               do ibtemp = 1,ibang
+                  itbang(imtemp,iutemp,ibtemp) = ivalue
+               enddo
+            enddo
+         enddo
+      else
+         write(6,*) 'ITBANG unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_itben(flag,imolty,iunit,ibend,ivalue)
 c     ******************************************************************
 c     * the type of each angle emanating from a particular unit and    *
@@ -9386,33 +9450,6 @@ c     --- information variables
       return
       end
 
-      subroutine twh_lcoulomb(flag,lvalue)
-c     ******************************************************************
-c     * logical for the use of Coulombic pair potential                *
-c     *                                                                *
-c     * originally written 10-05-2008 by M.G. Martin                   *
-c     * last modified 10-05-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag
-      logical lvalue
-c     --- information variables
-      logical lcoulomb
-      save lcoulomb
-
-      if ( flag .eq. GLB_GET ) then
-         lvalue = lcoulomb
-      elseif ( flag .eq. GLB_SET ) then
-         lcoulomb = lvalue
-      else
-         write(6,*) 'LCOULOMB: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_lcreatemap(flag,lvalue)
 c     ******************************************************************
 c     * energy map system logical                                      *
@@ -9461,6 +9498,33 @@ c     --- information variables
          ldualcutoff = lvalue
       else
          write(6,*) 'LDUALCUTOFF: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_lelect(flag,lvalue)
+c     ******************************************************************
+c     * logical for the use of electrostatic pair potential            *
+c     *                                                                *
+c     * originally written 10-05-2008 by M.G. Martin                   *
+c     * last modified 08-26-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag
+      logical lvalue
+c     --- information variables
+      logical lelect
+      save lelect
+
+      if ( flag .eq. GLB_GET ) then
+         lvalue = lelect
+      elseif ( flag .eq. GLB_SET ) then
+         lelect = lvalue
+      else
+         write(6,*) 'LELECT: invalid global flag',flag
          stop
       endif
 
@@ -11849,6 +11913,44 @@ c     --- variables passed to the function
       return
       end
 
+      subroutine twh_orderbang(flag,imolty,iunit,ibang,ivalue)
+c     ******************************************************************
+c     * the order (forward or reverse) for each bond-angle in each type*
+c     * of molecule                                                    *
+c     *                                                                *
+c     * originally written 08-11-2014 by M.G. Martin                   *
+c     * last modified 08-11-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,imolty,iunit,ibang,ivalue
+c     --- local variables
+      integer imtemp,iutemp,ibtemp
+c     --- storage variable
+      integer orderbang
+      dimension orderbang(NTMAX,NUMAX,MAXBEND)
+      save orderbang
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = orderbang(imolty,iunit,ibang)
+      elseif ( flag .eq. GLB_SET ) then
+         orderbang(imolty,iunit,ibang) = ivalue
+      elseif ( flag .eq. GLB_INIT ) then 
+         do imtemp = 1,imolty
+            do iutemp = 1,iunit
+               do ibtemp = 1,ibang
+                  orderbang(imtemp,iutemp,ibtemp) = ivalue
+               enddo
+            enddo
+         enddo
+      else
+         write(6,*) 'ORDERBANG unknown flag:',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_orderben(flag,imolty,iunit,ibend,ivalue)
 c     ******************************************************************
 c     * the order (forward or reverse) for each angle in each type of  *
@@ -14146,6 +14248,43 @@ c     --- information variables
       return
       end
 
+      subroutine twh_qqscale(flag,itype,iunit,dvalue)
+c     ******************************************************************
+c     * the scaled charge on each atom of each molecule type in the    *
+c     * system                                                         *
+c     *                                                                *
+c     * originally written 08-18-2014 by M.G. Martin                   *
+c     * last modified 08-18-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,itype,iunit
+      double precision dvalue
+c     --- local variables
+      integer ittemp,iutemp
+c     --- information variables
+      double precision qqscale
+      dimension qqscale(NTMAX,NUMAX)
+      save qqscale
+
+      if ( flag .eq. GLB_GET ) then
+         dvalue = qqscale(itype,iunit)
+      elseif ( flag .eq. GLB_SET ) then
+         qqscale(itype,iunit) = dvalue
+      elseif ( flag .eq. GLB_INIT ) then
+         do ittemp = 1,itype
+            do iutemp = 1,iunit
+               qqscale(ittemp,iutemp) = dvalue
+            enddo
+         enddo
+      else
+         write(6,*) 'QQSCALE: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_quantum_gsenergy(flag,itype,dvalue)
 c     ******************************************************************
 c     * the ground state energy of each molecule type                  *
@@ -14431,32 +14570,6 @@ c     --- information variables
       return
       end
 
-      subroutine twh_restartfreq(flag,ivalue)
-c     ******************************************************************
-c     * frequency for outputting a full restart file                   *
-c     *                                                                *
-c     * originally written 12-22-2007 by M.G. Martin                   *
-c     * last modified 12-22-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,ivalue
-c     --- information variables
-      integer restartfreq
-      save restartfreq
-
-      if ( flag .eq. GLB_GET ) then
-         ivalue = restartfreq
-      elseif ( flag .eq. GLB_SET ) then
-         restartfreq = ivalue
-      else
-         write(6,*) 'RESTARTFREQ: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_random_code(flag,ivalue)
 c     ******************************************************************
 c     * integer code for the random number generator                   *
@@ -14477,6 +14590,67 @@ c     --- information variables
          random_code = ivalue
       else
          write(6,*) 'RANDOM_CODE: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_report(flag,index,dvalue)
+c     ******************************************************************
+c     * array for tallying and reporting the various energies, normally*
+c     * used only at the start and end of a simulation                 *
+c     *                                                                *
+c     * originally written 08-08-2014 by M.G. Martin                   *
+c     * last modified 08-08-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,index
+      double precision dvalue
+c     --- information variables
+      double precision report
+      dimension report(REP_MAX)
+      save report
+c     --- local variables
+      integer itemp
+
+      if ( flag .eq. GLB_GET ) then
+         dvalue = report(index)
+      elseif ( flag .eq. GLB_INIT ) then
+         do itemp = 1,index
+            report(itemp) = dvalue
+         enddo
+      elseif ( flag .eq. GLB_INCR ) then
+         report(index) = report(index) + dvalue
+      else
+         write(6,*) 'REPORT: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_restartfreq(flag,ivalue)
+c     ******************************************************************
+c     * frequency for outputting a full restart file                   *
+c     *                                                                *
+c     * originally written 12-22-2007 by M.G. Martin                   *
+c     * last modified 12-22-2007 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,ivalue
+c     --- information variables
+      integer restartfreq
+      save restartfreq
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = restartfreq
+      elseif ( flag .eq. GLB_SET ) then
+         restartfreq = ivalue
+      else
+         write(6,*) 'RESTARTFREQ: invalid global flag',flag
          stop
       endif
 

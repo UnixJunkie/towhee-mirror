@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     *                                                                *
 c     * Units returned are [K/molecule]/[angstrom^2]                   *
 c     *                                                                *
 c     * originally written 05-16-2005 by M.G. Martin                   *
-c     * last update 11-16-2010 by M.G. Martin                          *
+c     * last update 08-18-2014 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -46,12 +46,11 @@ c     --- variables passed to/from the function
 c     --- local variables
       logical scp_scale_coulomb,lewald
       integer ntii, ntjj,isolvtype
-      double precision rijsq,qqa,qqb,onepi,qqfact,calp,rcelect
+      double precision rijsq,qqa,qqb,onepi,calp,rcelect
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
-      call twh_qqatom(GLB_GET,imolty,iunit,qqa)
-      call twh_qqatom(GLB_GET,jmolty,junit,qqb)
+      call twh_qqscale(GLB_GET,imolty,iunit,qqa)
+      call twh_qqscale(GLB_GET,jmolty,junit,qqb)
       if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,ibox,rcelect)
       call twh_lewald(GLB_GET,lewald)
 
@@ -60,7 +59,7 @@ c     --- initialize
       if ( ibox .eq. 0 .or. ( .not. lewald) ) then
 c        --- ideal gas box of infinite extent, or just no ewald
 c        --- either way compute explicit coulomb interaction
-         twh_wcoulomb = (-1.0d0)*qqa*qqb*qqfact/(rij**3)
+         twh_wcoulomb = (-1.0d0)*qqa*qqb/(rij**3)
       else
          call twh_constant_pi(GLB_GET,onepi)
          if ( twh_cmp_gt(rcelect,rij) ) then
@@ -70,7 +69,7 @@ c        --- either way compute explicit coulomb interaction
             if ( isolvtype .eq. SOLV_NONE ) then
                twh_wcoulomb = - (2.0d0*calp*
      &              twh_expon(-calp*calp*rijsq)/dsqrt(onepi)
-     &              +twh_derfc(calp*rij)/rij)*qqa*qqb*qqfact/rijsq
+     &              +twh_derfc(calp*rij)/rij)*qqa*qqb/rijsq
 
             elseif ( isolvtype .eq. SOLV_SASA ) then
 c              --- SASA implicit solvent model applies a distance 
@@ -79,7 +78,7 @@ c              --- Apostolakis, Caflisch use e(r) = 2r
                twh_wcoulomb = - (2.0d0*calp*
      &              twh_expon(-calp*calp*rijsq)/dsqrt(onepi)
      &              +(2.0d0)*twh_derfc(calp*rij)/rij)
-     &              *(0.5d0)*qqa*qqb*qqfact/(rijsq*rij)
+     &              *(0.5d0)*qqa*qqb/(rijsq*rij)
 
             elseif ( isolvtype .eq. SOLV_EEF1 ) then
 c              --- EEF1 implicit solvent model applies a distance 
@@ -88,7 +87,7 @@ c              --- and Karplus use e(r) = r)
                twh_wcoulomb = - (2.0d0*calp*
      &              twh_expon(-calp*calp*rijsq)/dsqrt(onepi)
      &              +(2.0d0)*twh_derfc(calp*rij)/rij)
-     &              *qqa*qqb*qqfact/(rijsq*rij)
+     &              *qqa*qqb/(rijsq*rij)
             endif
          endif
       endif

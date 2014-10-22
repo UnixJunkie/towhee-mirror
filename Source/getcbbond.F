@@ -46,7 +46,7 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 07-16-2014 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -349,8 +349,8 @@ c              --- continuous distribution is proportional to r squared
             endif
             blfact(ivib) = pdf_true/pdf_bias
 c           --- calculate the bond vibration energy
-            vvib(ivib) = twh_vbond(lfailure,jtvib,length,imolty,iufrom
-     &           ,iugrow,lovrlap)
+            vvib(ivib) = twh_vbond(lfailure,.false.,ibox,jtvib,length
+     &           ,imolty,iufrom,iugrow,lovrlap)
             if ( lfailure ) return
 c           --- calculate the IJ-JK bond-bond energy
             do ib = 1,bbtot(count)

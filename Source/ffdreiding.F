@@ -28,7 +28,7 @@ c     * Note: Dreiding force field transforms its basic                *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-08-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1159,7 +1159,7 @@ c                    --- decrement type
                   endif
                   if ( lfound ) then
 c                    --- set all of the logic
-                     call twh_torstyle(GLB_SET,type,15)
+                     call twh_torstyle(GLB_SET,type,TOR_STYLE_DREIDING)
                      tclocal(-1) = 1.0d0
                      call twh_loftor(GLB_SET,type,.true.)
                      call twh_set_torcoeff(type,tclocal)
@@ -1205,7 +1205,7 @@ c                       V0 = 2.0 kcal/mol, n = 3, phi = 180
                         tclocal(1) = 2.0d0*(0.5d0)*CON_KCALTOK
                         tclocal(2) = 3.0d0
                         tclocal(3) = 180.0d0*(onepi/180.0d0)
-                        call twh_torstyle(GLB_SET,type,15)
+                        call twh_torstyle(GLB_SET,type,TOR_STYLE_DREIDING)
                         tclocal(-1) = 1.0d0
                         call twh_loftor(GLB_SET,type,.true.)
                         call twh_set_torcoeff(type,tclocal)
@@ -1233,7 +1233,7 @@ c     (g) dihedrals involving one or two sp1 atoms, monovalent atoms
 c         or metals
 c     i.e. everything else gets the null torsion
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       tclocal(-1) = 1.0d0
       call twh_loftor(GLB_SET,type,.true.)
       call twh_set_torcoeff(type,tclocal)
@@ -1249,7 +1249,7 @@ c     --- unable to implement the logic for (e) a dihedral single bond
 c     --- provide the parameters here in case somebody wants to hard 
 c     --- wire
       type = type + 1
-      call twh_torstyle(GLB_SET,type,15)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_DREIDING)
       tclocal(-1) = 1.0d0
       tclocal(1) = 5.0d0*(0.5d0)*CON_KCALTOK
       tclocal(2) = 2.0d0
@@ -1268,7 +1268,7 @@ c     --- unable to implement the logic for (f) exocyclic dihedral
 c     --- provide the parameters here in case somebody wants to hard 
 c     --- wire
       type = type + 1
-      call twh_torstyle(GLB_SET,type,15)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_DREIDING)
       tclocal(-1) = 1.0d0
       tclocal(1) = 10.0d0*(0.5d0)*CON_KCALTOK
       tclocal(2) = 2.0d0

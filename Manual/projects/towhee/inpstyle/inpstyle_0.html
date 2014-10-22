@@ -23,6 +23,7 @@
      Requires explicit declaration of all terms of the force field that describes this molecule type. This is most difficult way to set up the molecule
      information, but it also allows the most flexibility.
      This option is only recommended when it is not possible to use the more sophisticated options to set up the molecule of interest.
+     Last updated with version 7.2.0.
 
      <p>&nbsp;</p>
      <dt><a name="nunit"><b>nunit (integer)</b></a>
@@ -112,18 +113,18 @@
         </ul>
        </dt>
 
-       <dt><a name="ijben2"><b>ijben2 (integer), ijben3(integer), itben (integer), orderben (integer)</b></a>
+       <dt><b><a name="ijben2">ijben2 (integer)</a>, ijben3(integer), itben (integer), orderben (integer), <a name="itbang">itbang (integer)</a>, <a name="orderbang">orderbang (integer)</a></b>
         <ul>
          <li> The next <b>inben</b> lines underneath the bending heading are a list of the other atoms in the bond bending angle and the bond bending angle
           force field number for the <b>inben</b> angles that contain the current atom at one of the ends. The format for listing the angle is to consider 
           the current atom in the first position of an angle between atoms current-ijben2-ijben3 so you only need to list atoms ijben2 and ijben3, the
           bending type, and the bending order on each line, where there is one angle per line of towhee_input.  The bending order is only used for force
           fields that have parameters that depend upon the order of the three atoms in the bond - typically those that have class 2 cross terms.
-          Valid entries for the bending order are
+          Valid entries for the <b>orderben</b> and <b>orderbang</b> order are listed here.
           <ul>
            <li>1 : the atoms in the bending angle force field are in the same order as the atoms listed here</li>
 	   <li>-1 : the atoms in the bending angle force field are in the reverse order compared to the atoms listed here</li>
-           <li>0 : null entry to make it easy for those force fields that do not depend upon the bending order</li>
+           <li>0 : null entry for force fields that do not depend upon the bending order</li>
           </ul>
          </li>
         </ul>
@@ -212,7 +213,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->July 10, 2014<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 11, 2014<!-- #EndDate -->
   </font>
   <br></br>
  </body>

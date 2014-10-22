@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up many variables for classical potentials                *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 07-30-2013 by M.G. Martin                        *
+c     * last modified 10-22-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -44,7 +44,7 @@ c     --- variables passed to/from the subroutine
       integer numtypes
 c     --- local variables
 c     --- logical scalars
-      logical lovrlap,lshift,ltailc,lcoulomb
+      logical lovrlap,lshift,ltailc,lelect
 c     --- character string scalars
       character*20 eampairstyle,eamdensstyle,keyname
 c     --- integer scalars
@@ -53,14 +53,14 @@ c     --- integer scalars
 c     --- double precision scalars
       double precision totalcharge,qsum,vdum,rijsq,swcut,dist,dtemp
       double precision charge,tpair,eamdens,rcut,rcutsq,rcutin,rcutinsq
-      double precision minboxdim
+      double precision minboxdim,qqfact,sqrtqqfact,qtemp
 c     --- initialize
       lovrlap = .false.
 
 c     --- retrieve constants
       call twh_cp_number(GLB_GET,cpnumber)
       call twh_ltailc(GLB_GET,ltailc)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
 
 c     --- get the initial value of nener
       call twh_nener(GLB_GET,nener)
@@ -102,6 +102,8 @@ c     --- set up the tail correction information (if needed)
       if ( ltailc ) call twh_tail()
 
 c     --- check the charge on molecules and in system
+      call twh_constant_qqfact(GLB_GET,qqfact)
+      sqrtqqfact = dsqrt(qqfact)
       totalcharge = 0.0d0
       call twh_nmolty(GLB_GET,nmolty)
       do imolty = 1,nmolty
@@ -110,13 +112,16 @@ c        --- initialize qsum
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
             call twh_qqatom(GLB_GET,imolty,iunit,charge)
-            if ( .not. lcoulomb .or. charge .eq. 0.0d0 ) then
-c               --- no coulmbic interaction for this atom type
+            if ( .not. lelect .or. charge .eq. 0.0d0 ) then
+c               --- no coulombic interaction for this atom type
                call twh_luse_c(GLB_SET,imolty,iunit,.false.)
+               qtemp = 0.0d0
             else
 c              --- compute the total charge for this molecule
                qsum = qsum + charge
+               qtemp = sqrtqqfact*charge
             endif
+            call twh_qqscale(GLB_SET,imolty,iunit,qtemp)
 
             call twh_ntype(GLB_GET,imolty,iunit,iutemp)
 c           --- set luse logicals for coulomb & VdW
@@ -318,7 +323,7 @@ c        --- set rcut to the maximum distance if larger than rcut
      &           ,' distance from tabulated potential'
             write(6,'(a17,1x,f10.5)') 'New rcut value is',rcut
          endif
-         if ( .not. lcoulomb ) then
+         if ( .not. lelect ) then
 c           --- turn off the dual cutoff
             call twh_ldualcutoff(GLB_SET,.false.)
          endif

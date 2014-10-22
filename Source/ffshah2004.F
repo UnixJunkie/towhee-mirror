@@ -1695,7 +1695,7 @@ c     ******************************************************************
 c     * dihedral terms for Shah2004                                    *
 c     *                                                                *
 c     * originally written 04-24-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1718,7 +1718,7 @@ c     --- communication between E.J. Maginn and M.G. Martin 04-21-2006)
       type = 0
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (5.89d0)*CON_KJTOK*(0.5d0)
@@ -1736,7 +1736,7 @@ c     --- C7-C8-C9-C10
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (11.41d0)*CON_KJTOK*(0.5d0)
@@ -1754,7 +1754,7 @@ c     --- N1-C7-C8-C9
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-5.85d0)*CON_KJTOK*(0.5d0)
@@ -1781,7 +1781,7 @@ c     --- now need to assign the torsions for the ring - this was held
 c     --- rigid in their work.
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     N3
@@ -1819,7 +1819,7 @@ c     --- N3-C4-C5-N1
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     C4
@@ -1857,7 +1857,7 @@ c     --- C4-C5-N1-C2
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     C4
@@ -1895,7 +1895,7 @@ c     --- C4-C5-N1-C7
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     C5
@@ -1933,7 +1933,7 @@ c     --- C5-N1-C2-N3
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     C7
@@ -1971,7 +1971,7 @@ c     --- C7-N1-C2-N3
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     N1
@@ -2009,7 +2009,7 @@ c     --- N1-C2-N3-C4
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     N1
@@ -2047,7 +2047,7 @@ c     --- N1-C2-N3-C6
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     C2
@@ -2085,7 +2085,7 @@ c     --- C2-N3-C4-C5
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,1)
 c     C6

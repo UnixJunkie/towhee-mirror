@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for a generic Hard Sphere forcefield        *
 c     *                                                                *
 c     * originally written 08-11-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -316,6 +316,42 @@ c     --- a hard sphere version of freely jointed tangent sphere "water"
       ctnlocal = 'null'
       call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
 
+c     --- a hard sphere test version Cl for testing Ewald bonded logic
+      type = type + 1
+      ii = twh_getnbtype(type,type)
+      nbclocal(1) = 1.0d0
+      masslocal = 35.453d0
+      elelocal =  'Cl'
+      bplocal = 'null'
+      call twh_set_nbcoeff(ii,nbclocal) 
+      call twh_mass(GLB_SET,type,masslocal) 
+      call twh_elementname(GLB_SET,type,elelocal) 
+      call twh_bondpatt(GLB_SET,type,bplocal) 
+      call twh_nbff(GLB_SET,type,ffname)
+      nbnlocal = 'Cl-bond'
+      cbnlocal = 'nonbond'
+      canlocal = 'nonbond'
+      ctnlocal = 'nonbond'
+      call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
+
+c     --- a hard sphere version of clayff Na
+      type = type + 1
+      ii = twh_getnbtype(type,type)
+      nbclocal(1) = 1.0d0
+      masslocal = 22.990d0
+      elelocal =  'Na'
+      bplocal = 'null'
+      call twh_set_nbcoeff(ii,nbclocal) 
+      call twh_mass(GLB_SET,type,masslocal) 
+      call twh_elementname(GLB_SET,type,elelocal) 
+      call twh_bondpatt(GLB_SET,type,bplocal) 
+      call twh_nbff(GLB_SET,type,ffname)
+      nbnlocal = 'Na-bond'
+      cbnlocal = 'nonbond'
+      canlocal = 'nonbond'
+      ctnlocal = 'nonbond'
+      call twh_set_names(type,nbnlocal,cbnlocal,canlocal,ctnlocal) 
+
       ntypes = type
       call twh_ffcheck(lfailure,0,type)
       if ( lfailure ) return
@@ -415,6 +451,20 @@ c     --- set nvsame
       nvslocal = ii
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
+c     --- nonbonded terms as the bonding potential
+      type = type + 1
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_NONBOND)
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+      isame = 0
+      isame = isame + 1
+      vnlocal(isame,1) = 'nonbond'
+      vnlocal(isame,2) = 'nonbond'
+c     --- set nvsame
+      nvslocal = isame
+      call twh_set_vibnames(type,nvslocal,vnlocal)
+
+
       nbondtypes = type
       call twh_ffcheck(lfailure,1,type)
       if ( lfailure ) return
@@ -503,7 +553,7 @@ c     * nonbonded dihedral interactions                                *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_set_torcoeff(type,tclocal)

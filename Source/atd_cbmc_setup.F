@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 07-24-2014 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -35,7 +35,6 @@ c     --- function declarations
 #define FUNCTION_GAUSSPROB
 #endif
 #define FUNCTION_EXPON
-#define FUNCTION_GET_ANGLESTYLE
 #define FUNCTION_GET_BENCOEFF
 #define FUNCTION_GET_IJBEN2
 #define FUNCTION_GET_IJBEN3
@@ -55,35 +54,43 @@ c     --- function declarations
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
+      character*5 hybrid
       character*20 atest
       character*25 distname
       character*30 peakstyle,cbmc_analysis,cbmc_fit_strategy
       character*50 twobbias_style,twobbias_init,threebbias_init
       character*50 threebbias_style
 c     --- local logical scalars
-      logical lovrlap,lfound,lrigid,linit,lthreemem
+      logical lovrlap,lfound,linit,lthreemem,lperiodic,lrigid,lreport
 c     --- local logical arrays
       logical lyescbmc
       dimension lyescbmc(NTMAX)
 c     --- local integer parameters
       integer maxextrema
       parameter (maxextrema = 2*(CBMC_MAXTORPEAKS+CBMC_MAXBENDPEAKS))
+      integer maxscan
+      parameter (maxscan = 1000)
 c     --- local integer scalars
       integer imolty,iunit,ivib,junit,itest,itype,ibend,kunit,itor
-      integer nextrema,nmaxima,iextrema,lunit,ipeak,npeak
+      integer nextrema,nmaxima,iextrema,lunit,ipeak,npeak,ihigh,ilow
+      integer nminima
       integer imax,junitb,kunitb,icrossbend,jbend,kbend,ibondmax
       integer bij_type,bjk_type,iscan_bij,iscan_bjk
-      integer type,nmolty,nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
+      integer nmolty,nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
       integer cbmc_dihedgen_code,bonddist,vibtype,ivalue,ncompute
       integer icompute,numboxes,nummol,invib
-      integer count,bendtype,bendstyle,vibstyle
-      integer angleadist
+      integer bendtype,bendstyle,vibstyle
+      integer angleadist,torffnum,torstyle,anglebdist,jtype
+      integer ithreemem,jthreemem,kthreemem,kbthreemem
+      integer cfile
 #if DEBUG_ATD_CBMC_SETUP
       integer style_code,imgm
 #endif
 c     --- local integer arrays
       integer computelist
       dimension computelist(NTMAX)
+      integer minimalist
+      dimension minimalist(maxscan)
 c     --- local dp scalars
       double precision rmax,sum_x,sum_xx,length,theta,truenorm,arbnorm
       double precision energy,weight,sum_w,distone,disttwo,angcos
@@ -96,7 +103,7 @@ c     --- local dp scalars
       double precision benda_mult,bendb_mult,dihed_mult
       double precision viblo,vibhi,onethird,mean,std_dev
       double precision radtodeg,ptest
-      double precision lovalue,hivalue,dpar
+      double precision lovalue,hivalue,dpar,bbideal,rigidlen
 #if DEBUG_ATD_CBMC_SETUP
       double precision ideal_frac
       double precision phidisp,pdf_bias,lodim,hidim
@@ -108,12 +115,20 @@ c     --- local dp arrays
       dimension xtcord(4),ytcord(4),ztcord(4)
       double precision extrema
       dimension extrema(maxextrema,2)
+      double precision distweight
+      dimension distweight(0:maxscan,2)
       double precision prevweight,prevloc,prevenergy
       dimension prevweight(2),prevloc(2),prevenergy(2)
 #if DEBUG_ATD_CBMC_SETUP
       double precision delta_dist
       dimension delta_dist(0:CBMCMAXTOR)
 #endif
+
+c     --- open the file for atd cbmc information output
+      cfile = 44
+      call twh_openfile(lfailure,cfile,'towhee_cbmc','DEFAULT','UNKNOWN'
+     &     ,'DEFAULT')
+      if ( lfailure ) return
 
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
@@ -124,17 +139,15 @@ c     --- retrieve constants
       call twh_constant_radtodeg(GLB_GET,radtodeg)
       call twh_cbmc_analysis(GLB_GET,cbmc_analysis)
       call twh_cbmc_fit_strategy(GLB_GET,cbmc_fit_strategy)
-
-c     --- open the file for atd cbmc information output
-      call twh_openfile(lfailure,44,'towhee_cbmc','DEFAULT','UNKNOWN'
-     &     ,'DEFAULT')
+      lreport = .false.
+c     --- output detailed CBMC information
+      call twh_rwcbmcexplicit(lfailure,WRITE_FLAG,cfile)
       if ( lfailure ) return
 
 c     --- determine which molecules need cbmc parameters
       do imolty = 1,nmolty
          lyescbmc(imolty) = .false.
       enddo
-
 c     --- check for a cbmc init
       call twh_linit(GLB_GET,linit)
       if ( linit ) then
@@ -152,7 +165,7 @@ c     --- check for a cbmc init
             enddo
          enddo
       endif
-
+c     --- chemical potential per step
       do imolty = 1,nmolty
          call twh_chempotperstep(GLB_GET,imolty,ivalue)
          if ( ivalue .gt. 0 ) lyescbmc(imolty ) = .true.
@@ -238,8 +251,7 @@ c     --- avb3 regrowth
          endif
       enddo
 
-c     --- set ibox to zero so we use the full coulombic energies instead
-c     --- of one scaled by Ewald parameters
+c     --- disable all box information while computing energies
       ibox = 0
 c     --- initialize
       do ipeak = 1,2
@@ -253,7 +265,7 @@ c     --- initialize
      &     ,'see towhee_cbmc for full details'
 
 c     --- set up information needed to generation trials in a cbmc move
-      write(44,'(a53)')
+      write(cfile,'(a53)')
      &     'Determining CBMC Arbitrary Trial Distributions: Bonds'
       call twh_cbmc_bondgen_code(GLB_GET,cbmc_bondgen_code)
       call twh_max_bond_length(GLB_GET,rmax)
@@ -376,8 +388,8 @@ c                    --- determine gaussian parameters
                      do itest = 0,imax
                         length = dble(itest)*rmax/dble(imax)
                         lovrlap = .false.
-                        energy = twh_vbond(lfailure,vibtype,length
-     &                       ,imolty,iunit,junit,lovrlap)
+                        energy = twh_vbond(lfailure,lreport,ibox,vibtype
+     &                       ,length,imolty,iunit,junit,lovrlap)
                         if ( lfailure ) return
                         if ( lovrlap ) then
                            weight = 0.0d0
@@ -427,7 +439,7 @@ c              --- cheack bonddist and get its name
                   return
                endif
 c              --- output trial generation information
-               write(44,'(a7,1x,i5,1x,a6,1x,2(i5,1x),1x,a4,1x,a25)')
+               write(cfile,'(a7,1x,i5,1x,a6,1x,2(i5,1x),1x,a4,1x,a25)')
      &              'Moltyp:',imolty,'Units:',iunit,junit
      &              ,'ATD:',distname
 c              --- store the bondnorms
@@ -442,19 +454,19 @@ c              --- output trial generation details
      &                 ,3,mean)
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &                 ,4,std_dev)
-                  write(44,'(6x,a5,1x,f10.5,1x,a8,1x,f10.7)') 
+                  write(cfile,'(6x,a5,1x,f10.5,1x,a8,1x,f10.7)') 
      &                 ,'Mean:',mean,'Std Dev:',std_dev
                elseif ( bonddist .eq. DIST_DELTA ) then
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib,3
      &                 ,length)
-                  write(44,'(6x,a7,1x,f10.7)') 
+                  write(cfile,'(6x,a7,1x,f10.7)') 
      &                 ,'Length:',length
                elseif ( bonddist .eq. DIST_R_SQ ) then
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &                 ,3,lovalue)
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &                 ,4,hivalue)
-                  write(44,'(6x,a10,1x,f10.7,1x,a11,1x,f10.7)') 
+                  write(cfile,'(6x,a10,1x,f10.7,1x,a11,1x,f10.7)') 
      &                 ,'Low bound:',lovalue**(1.0d0/3.0d0)
      &                 ,'High bound:',(hivalue+lovalue)**(1.0d0/3.0d0)
                else
@@ -464,8 +476,9 @@ c              --- output trial generation details
                endif
 c              --- compute the expected acceptance rate
                if ( cbmc_analysis .eq. 'full' ) then
-                  call twh_cbbond_par(lfailure,imolty,iunit,ivib,dpar)
-                  write(44,'(6x,a25,1x,f7.3,a1)')
+                  call twh_cbbond_par(lfailure,ibox,imolty,iunit
+     &                 ,ivib,dpar)
+                  write(cfile,'(6x,a25,1x,f7.3,a1)')
      &                 'Expected Acceptance Rate:',100.0d0*dpar,'%'
                endif
             enddo
@@ -475,29 +488,27 @@ c              --- compute the expected acceptance rate
       call twh_cbmc_bendgen_code(GLB_GET,cbmc_bendgen_code)
       call twh_bend_a_sdev_multiplier(GLB_GET,benda_mult)
       call twh_bend_b_sdev_multiplier(GLB_GET,bendb_mult)
-      write(44,'(a)') 
+      write(cfile,'(a)') 
      &     'Determining CBMC Arbitrary Trial Distributions: Angle A'
       do icompute = 1,ncompute
          imolty = computelist(icompute)
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
+c           --- checking for three memebered rings
+            call twh_inring(GLB_GET,imolty,iunit,ithreemem)
             do ibend = 1,twh_get_inben(imolty,iunit)
                call twh_ijben2(GLB_GET,imolty,iunit,ibend,junit)
                call twh_ijben3(GLB_GET,imolty,iunit,ibend,kunit)
                call twh_itben(GLB_GET,imolty,iunit,ibend,bendtype)
-               bendstyle = twh_get_anglestyle(bendtype)
+               call twh_anglestyle(GLB_GET,bendtype,bendstyle)
 c              --- first, check for the special case of 3-membered ring
                call twh_invib(GLB_GET,imolty,iunit,invib)
                lthreemem = .false.
-               do ivib = 1,invib
-                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,itest)
-                  if ( kunit .eq. itest ) then
-c                    --- this angle is also a bond
-                     lthreemem = .true.
-                     call twh_itvib(GLB_GET,imolty,iunit,ivib,vibtype)
-                     call twh_vibstyle(GLB_GET,vibtype,vibstyle)
-                  endif
-               enddo
+               if ( ithreemem .lt. 0 ) then
+c                 --- check if we are in a three memebered ring with k
+                  call twh_inring(GLB_GET,imolty,kunit,kthreemem)
+                  if ( kthreemem .lt. 0 ) lthreemem = .true.
+               endif
                if ( lthreemem .and. 
      &              vibstyle .eq. BOND_STYLE_FIXED ) then
 c                  --- the rigid bond of the 3 membered ring determines
@@ -600,10 +611,12 @@ c                 --- fetch the appropriate bond lengths for the fit
                      if ( lthreemem ) then
 c                       --- compute 3-mem ring bond energy
                         length = twh_lawofcosine(distone,disttwo,angcos)
-                        energy = energy + twh_vbond(lfailure,vibtype
-     &                       ,length,imolty,iunit,kunit,lovrlap)
+                        energy = energy + twh_vbond(lfailure,lreport
+     &                       ,ibox,vibtype,length
+     &                       ,imolty,iunit,kunit,lovrlap)
                      else
-                        energy = energy + twh_vangle(lfailure,lovrlap,1
+                        energy = energy + twh_vangle(lfailure,lreport
+     &                       ,lovrlap,1
      &                       ,imolty,iunit,ibend,0,angcos,distone
      &                       ,disttwo,xbacord,ybacord,zbacord)
                      endif
@@ -664,7 +677,7 @@ c              --- output based upon the angleadist
 c              --- output trial generation information
                call twh_cbmcbendcount(GLB_GET,imolty,iunit,ibend,ibend
      &              ,npeak)
-               write(44,'(a7,1x,i5,1x,a6,1x,3(i5,1x),a6,1x,i3
+               write(cfile,'(a7,1x,i5,1x,a6,1x,3(i5,1x),a6,1x,i3
      &              ,1x,a4,1x,a25)')
      &              'Moltyp:',imolty,'Units:',iunit,junit,kunit
      &              ,'Peaks:',npeak,'ATD:',distname
@@ -672,7 +685,7 @@ c              --- output trial generation information
                   do ipeak = 1,npeak
                      call twh_cbmcbendinfo(GLB_GET,imolty,iunit,ibend
      &                    ,ibend,ipeak,1,length)
-                     write(44,'(6x,a5,1x,i3,1x,a20,1x,f9.4)')
+                     write(cfile,'(6x,a5,1x,i3,1x,a20,1x,f9.4)')
      &                    'Peak:',ipeak,'Triangle length (A):'
      &                    ,length
                   enddo
@@ -680,12 +693,12 @@ c              --- output trial generation information
                   do ipeak = 1,npeak
                      call twh_cbmcbendinfo(GLB_GET,imolty,iunit,ibend
      &                    ,ibend,ipeak,1,mean)
-                     write(44,'(6x,a5,1x,i3,1x,a20,1x,f9.4)')
+                     write(cfile,'(6x,a5,1x,i3,1x,a20,1x,f9.4)')
      &                    'Peak:',ipeak,'Allowed Angle (deg):'
      &                    ,mean*radtodeg
                   enddo
                elseif ( angleadist .eq. DIST_GAUSSIAN ) then
-                  write(44,'(6x,a21,2(1x,f8.4))')
+                  write(cfile,'(6x,a21,2(1x,f8.4))')
      &                 'Fitting Bond Lengths:',distone,disttwo
                   do ipeak = 1,npeak
                      call twh_cbmcbendinfo(GLB_GET,imolty,iunit,ibend
@@ -696,7 +709,7 @@ c              --- output trial generation information
      &                    ,ibend,ipeak,3,lovalue)
                      call twh_cbmcbendinfo(GLB_GET,imolty,iunit,ibend
      &                    ,ibend,ipeak,4,hivalue)
-                     write(44,'(6x,a5,1x,i3,1x,a17,1x,f9.4,1x
+                     write(cfile,'(6x,a5,1x,i3,1x,a17,1x,f9.4,1x
      &                    ,a14,1x,f9.4,1x,a16,1x,f9.4,1x,a17,1x,f9.4)')
      &                    'Peak:',ipeak,'Angle Mean (deg):'
      &                    ,mean*radtodeg,'Std Dev (deg):'
@@ -710,7 +723,7 @@ c              --- output trial generation information
      &                    ,ibend,ipeak,1,lovalue)
                      call twh_cbmcbendinfo(GLB_GET,imolty,iunit,ibend
      &                    ,ibend,ipeak,2,hivalue)
-                     write(44,'(6x,a5,1x,i3,1x,a14,1x,f9.4
+                     write(cfile,'(6x,a5,1x,i3,1x,a14,1x,f9.4
      &                    ,1x,a15,1x,f9.4)')
      &                    'Peak:',ipeak
      &                    ,'Low Bound (A):',lovalue
@@ -722,73 +735,277 @@ c              --- output trial generation information
          enddo
       enddo
 
+      write(cfile,'(a)') 
+     &     'Determining CBMC Arbitrary Trial Distributions: Angle B'
+      do icompute = 1,ncompute
+         imolty = computelist(icompute)
+         call twh_nunit(GLB_GET,imolty,nunit)
+         do iunit = 1,nunit
+c           --- loop over the first bends
+            do ibend = 1,twh_get_inben(imolty,iunit)
+               junit = twh_get_ijben2(imolty,iunit,ibend)
+               kunit = twh_get_ijben3(imolty,iunit,ibend)
+               itype = twh_get_itben(imolty,iunit,ibend)
+               thetaone = twh_get_bencoeff(itype,0)
+               phione = 0.0d0
+c              --- loop over the second bends
+               do jbend = 1,twh_get_inben(imolty,iunit)
+                  junitb = twh_get_ijben2(imolty,iunit,jbend)
+                  kunitb = twh_get_ijben3(imolty,iunit,jbend)
+                  if ( ibend .ne. jbend .and.
+     &                 junit .eq. junitb ) then
+c                    --- set a default anglebdist
+                     anglebdist = DIST_NULL
+                     call twh_inring(GLB_GET,imolty,junit,jthreemem)
+c                    --- get the values for the combo-angle
+                     icrossbend = 0
+                     do kbend = 1,twh_get_inben(imolty,kunit)
+                        if ( twh_get_ijben2(imolty,kunit,kbend) 
+     &                       .eq. junit
+     &                       .and. twh_get_ijben3(imolty,kunit,kbend)
+     &                       .eq. kunitb ) then
+                           icrossbend = kbend
+                        endif
+                     enddo
+                     if ( icrossbend .eq. 0 ) then
+                        write(6,*)
+     &                       'ATD_CBMC_SETUP: problem finding bend'
+                        lfailure = .true.
+                        return
+                     endif
+c                    --- check to see if we are sampling a rigid bend
+                     bendtype = twh_get_itben(imolty,kunit,icrossbend)
+c                    --- check three membered ring
+                     lrigid = .false.
+                     if ( jthreemem .lt. 0 ) then
+                        call twh_inring(GLB_GET,imolty,kunit,kthreemem)
+                        call twh_inring(GLB_GET,imolty,kunitb
+     &                       ,kbthreemem)
+                        if ( kthreemem .lt. 0 .and.
+     &                       kbthreemem .lt. 0 ) then
+                           lthreemem = .true.
+c                          --- check for corner case of rigid 3 mem
+                           call twh_invib(GLB_GET,imolty,kunit,invib)
+                           do ivib = 1,invib
+                              call twh_ijvib(GLB_GET,imolty,kunit,ivib
+     &                             ,itest)
+                              if ( itest .eq. kunitb ) then
+                                 call twh_itvib(GLB_GET,imolty,kunit
+     &                                ,ivib,vibtype)
+                                 call twh_vibstyle(GLB_GET,vibtype
+     &                                ,vibstyle)
+                                 if ( vibstyle .eq.
+     &                                BOND_STYLE_FIXED ) then
+                                    lrigid = .true.
+                                    call twh_vibcoeff(GLB_GET,vibtype
+     &                                   ,0,rigidlen)
+                                 endif
+                              endif
+                           enddo
+                        endif
+                     endif
+                     call twh_anglestyle(GLB_GET,bendtype,bendstyle)
+                     if ( bendstyle .eq. ANG_STYLE_RIGID ) then
+                        anglebdist = DIST_DELTA
+c                       --- store the rigid angle
+                        call twh_bencoeff(GLB_GET,bendtype,0,mean)
+                        npeak = 1
+                        call twh_cbmcbendcount(GLB_SET,imolty,iunit
+     &                       ,ibend,jbend,npeak)
+                        call twh_cbmcbendinfo(GLB_SET,imolty,iunit
+     &                       ,ibend,jbend,npeak,1,mean)
+                     elseif ( lthreemem .and. lrigid ) then
+                        anglebdist = DIST_TRIANGLE
+c                       --- the ends of the angles are bonded by a rigid
+c                       --- bond, store this distance
+                        npeak =1
+                        call twh_cbmcbendcount(GLB_SET,imolty,iunit
+     &                       ,ibend,jbend,npeak)
+                        call twh_cbmcbendinfo(GLB_SET,imolty,iunit
+     &                       ,ibend,jbend,rigidlen,npeak)
+                     elseif ( cbmc_bendgen_code .eq. CBMC_IDEAL ) then
+c                        --- uniform distribution
+                        anglebdist = DIST_UNIFORM
+                     elseif ( cbmc_bendgen_code .eq.
+     &                       CBMC_GLOBAL_GAUSSIAN ) then
+c                       --- global standard deviation
+                        call twh_sdevbenb(GLB_GET,std_dev)
+c                       --- get hybridization on junit
+                        call twh_ntype(GLB_GET,imolty,junit,jtype)
+                        call twh_bondpatt(GLB_GET,jtype,hybrid)
+                        if ( hybrid .eq. 'sp3' ) then
+c                           --- sp3 like bonding structure.  This is 
+c                           --- threefold symmetric and there is not
+c                           --- much reason to sample very hard in the
+c                           ---- vicinity of the first angle.  Do this
+c                           --- using two different gaussian peaks that
+c                           --- are centered at 2Pi/3 and 4Pi/3.
+c                           --- Choose randomly between the two centers
+                           anglebdist = DIST_GAUSSIAN
+                           npeak = 2
+                           call twh_cbmcbendcount(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,npeak)
+c                          --- centered at -2Pi/3, and between 0 and -Pi
+                           ipeak = 1
+                           mean = -twopi/3.0
+                           lolimit = -onepi
+                           hilimit = 0.0d0
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,1,mean)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,2,std_dev)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,3,lolimit)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,4,hilimit)
+c                          --- centered at 2Pi/3, and between 0 and Pi
+                           ipeak = 2
+                           mean = twopi/3.0
+                           lolimit = 0.0d0
+                           hilimit = onepi
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,1,mean)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,2,std_dev)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,3,lolimit)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,4,hilimit)
+                        elseif ( hybrid .eq. 'sp2' .or.
+     &                          hybrid .eq. 'arom') then
+c                          --- sp2 like bonding structure.  This is 
+c                          --- twofold symmetric and there is not much 
+c                          --- reason to sample very hard in
+c                          --- the vicinity of the first angle.  Do
+c                          --- this using a single gaussian peak
+c                          --- centered at Pi, between 0 and 2Pi
+                           anglebdist = DIST_GAUSSIAN
+                           npeak = 1
+                           call twh_cbmcbendcount(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,npeak)
+                           ipeak = 1
+                           mean = onepi
+                           lolimit = 0.0d0
+                           hilimit = twopi
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,1,mean)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,2,std_dev)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,3,lolimit)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,4,hilimit)
+                        else
+c                          --- no plan for other bonding patterns
+c                          --- so just use uniform
+                           anglebdist = DIST_UNIFORM
+                           npeak = 0
+                           call twh_cbmcbendcount(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,npeak)
+                        endif
 
-      if ( cbmc_bendgen_code .eq. CBMC_AUTOFIT_GAUSSIAN .or.
-     &     cbmc_bendgen_code .eq. CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN
-     &     ) then
-         write(44,'(a46)') 
-     &        'Determining Autofit Gaussian bend B parameters'
-         do icompute = 1,ncompute
-            imolty = computelist(icompute)
-            call twh_nunit(GLB_GET,imolty,nunit)
-            do iunit = 1,nunit
-               do ibend = 1,twh_get_inben(imolty,iunit)
-                  junit = twh_get_ijben2(imolty,iunit,ibend)
-                  kunit = twh_get_ijben3(imolty,iunit,ibend)
-c                 --- fetch the appropriate bond lengths
-                  call twh_cbmc_fitbond(lfailure,imolty,junit,kunit
-     &                 ,distone)
-                  if ( lfailure ) return
-                  itype = twh_get_itben(imolty,iunit,ibend)
-                  thetaone = twh_get_bencoeff(itype,0)
-                  phione = 0.0d0
-                  do jbend = 1,twh_get_inben(imolty,iunit)
-                     junitb = twh_get_ijben2(imolty,iunit,jbend)
-                     kunitb = twh_get_ijben3(imolty,iunit,jbend)
-                     if ( ibend .ne. jbend .and.
-     &                    junit .eq. junitb ) then
+                     elseif ( cbmc_bendgen_code
+     &                    .eq. CBMC_AUTOFIT_GAUSSIAN
+     &                    .or. cbmc_bendgen_code
+     &                    .eq. CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN ) then
+
+                        if ( cbmc_bendgen_code
+     &                       .eq. CBMC_AUTOFIT_GAUSSIAN ) then
+                           anglebdist = DIST_GAUSSIAN
+                        else
+                           anglebdist = DIST_UNIFORM_GAUSSIAN
+                        endif
+
+c                       --- fetch the appropriate bond lengths
+                        call twh_cbmc_fitbond(lfailure,imolty,junit
+     &                       ,kunit,distone)
+                        if ( lfailure ) return
                         call twh_cbmc_fitbond(lfailure,imolty,junit
      &                       ,kunitb,disttwo)
                         if ( lfailure ) return
                         itype = twh_get_itben(imolty,iunit,jbend)
                         thetatwo = twh_get_bencoeff(itype,0)
-c                       --- get the values for the combo-angle
-                        icrossbend = 0
-                        do kbend = 1,twh_get_inben(imolty,kunit)
-                           if ( twh_get_ijben2(imolty,kunit,kbend) 
-     &                          .eq. junit
-     &                          .and. twh_get_ijben3(imolty,kunit,kbend)
-     &                          .eq. kunitb ) then
-                              icrossbend = kbend
+
+c                       --- initialize nminima
+                        nminima = 0
+                        imax = 1000
+                        do itest = 0,imax
+                           phitwo = dble(itest)*twopi/dble(imax)
+     &                          - onepi
+                           distweight(itest,1) = phitwo
+                           lovrlap = .false.
+                           call twh_coneangle(thetaone,phione
+     &                          ,thetatwo,phitwo,angcos)
+                           energy = twh_vangle(lfailure,lreport
+     &                          ,lovrlap,1
+     &                          ,imolty,kunit,icrossbend,0,angcos
+     &                          ,distone,disttwo,xbacord,ybacord
+     &                          ,zbacord)
+                           if ( lfailure ) return
+                           if ( lovrlap ) then
+                              weight = 0.0d0
+                           else
+                              weight = twh_expon(-beta*energy)
                            endif
+                           distweight(itest,2) = weight
                         enddo
-                        if ( icrossbend .eq. 0 ) then
-                           write(6,*)
-     &                          'ATD_CBMC_SETUP: problem finding bend'
+c                       --- find the minimums
+                        lperiodic = .true.
+                        call twh_finddistmins(lfailure,lperiodic
+     &                       ,maxscan,imax
+     &                       ,distweight,nminima,minimalist)
+                        if ( lfailure ) return
+c                       --- safety check minimums
+                        if ( nminima .eq. 0 ) then
+                           write(6,*) 'ATD_CBMC_SETUP: no minimums'
+     &                          ,' for angle B'
+                           write(6,*) 'imolty,iunit,ibend,jbend'
+     &                          ,imolty,iunit,ibend,jbend
+                           lfailure = .true.
+                           return
+                        elseif ( nminima .gt. CBMC_MAXBENDPEAKS )then
+                           write(6,*) 'ATD_CBMC_SETUP: nminima >'
+     &                          ,' CBMC_MAXBENDPEAKS'
+                           write(6,*) 'nminima',nminima
+                           write(6,*) 'CBMC_MAXBENDPEAKS'
+     &                          ,CBMC_MAXBENDPEAKS
+                           do ipeak=1,nminima
+                              
+                              write(6,*) 'Minimum,pos,value:'
+     &                             ,minimalist(ipeak)
+     &                             ,distweight(ipeak,1)
+     &                             ,distweight(ipeak,2)
+                           enddo
                            lfailure = .true.
                            return
                         endif
-c                       --- initialize extrema
-                        nextrema = 0
-c                       --- check to see if we are sampling a rigid bend
-                        type = twh_get_itben(imolty,kunit,icrossbend)
-                        if ( twh_get_anglestyle(type)
-     &                       .eq. ANG_STYLE_RIGID ) then
-c                          --- rigid angle, handled in CBMC move
-                           lrigid = .true.
-                        else
-                           lrigid = .false.
-                        endif
-
-                        if ( .not. lrigid ) then
-                           imax = 1000
-                           do itest = -1,imax
-                              phitwo = dble(itest)*twopi/dble(imax)
-     &                             -onepi
+c                       --- find the minimums
+                        do ipeak = 1,nminima
+c                          --- set the low limit
+                           ilow = minimalist(ipeak)
+                           lolimit = distweight(ilow,1)
+c                          --- set the high limit
+                           if ( ipeak .eq. nminima ) then
+c                             --- the high is actually the first low
+c                              --- shifted up twopi
+                              ihigh = minimalist(1)
+                              hilimit = distweight(ihigh,1) + twopi
+                           else
+c                             --- the high limit is just the next min
+                              ihigh = minimalist(ipeak+1)
+                              hilimit = distweight(ihigh,1)
+                           endif
+                           sum_w = 0.0d0
+                           sum_x = 0.0d0
+                           sum_xx = 0.0d0
+                           do itest = 0,imax
+                              phitwo = lolimit + dble(itest)
+     &                             *(hilimit-lolimit)/dble(imax)
                               lovrlap = .false.
                               call twh_coneangle(thetaone,phione
      &                             ,thetatwo,phitwo,angcos)
-                              energy = twh_vangle(lfailure,lovrlap,1
+                              energy = twh_vangle(lfailure,lreport
+     &                             ,lovrlap,1
      &                             ,imolty,kunit,icrossbend,0,angcos
      &                             ,distone,disttwo,xbacord,ybacord
      &                             ,zbacord)
@@ -798,185 +1015,156 @@ c                          --- rigid angle, handled in CBMC move
                               else
                                  weight = twh_expon(-beta*energy)
                               endif
-                              if ( itest .gt. 0 ) then
-c                                --- see if the previous location was an
-c                                --- extrema
-                                 lfound = .false.
-                                 if ( (prevweight(1) .gt. weight .and.
-     &                                prevweight(1) .gt. prevweight(2))
-     &                                .or.
-     &                                (prevweight(1) .lt. weight .and.
-     &                                prevweight(1) .lt. prevweight(2))
-     &                                ) then
-                                    lfound = .true.
-                                 elseif ( prevweight(1) .eq. 0.0d0 .and.
-     &                                   prevenergy(2) .lt.prevenergy(1)
-     &                                   .and. energy .lt. prevenergy(1)
-     &                                   ) then
-                                    lfound = .true.
-                                 endif
-                                 if ( lfound ) then
-                                    nextrema = nextrema + 1
-                                    if ( nextrema .gt. maxextrema ) then
-                                       write(6,*)
-     &                                      'ATD_CBMC_SETUP:maxextrema'
-     &                                      ,' exceeded'
-                                       lfailure = .true.
-                                       return
-                                    endif
-                                    extrema(nextrema,1) = prevloc(1)
-                                    extrema(nextrema,2) = prevweight(1)
-                                 endif
-                              endif
-c                             --- shift previous weights and locations
-                              prevweight(2) = prevweight(1)
-                              prevweight(1) = weight
-                              prevloc(2) = prevloc(1)
-                              prevloc(1) = phitwo
-c                             --- shift previous energies
-                              prevenergy(2) = prevenergy(1)
-                              prevenergy(1) = energy
+                              sum_w = sum_w + weight
+                              sum_x = sum_x + weight*phitwo
+                              sum_xx = sum_xx + weight*phitwo*phitwo
                            enddo
-                           nmaxima = nextrema/2
-                           if ( nmaxima .eq. 0 ) then
-                              write(6,*)
-     &                             'ATD_CBMC_SETUP: insufficient '
-     &                             ,'extrema found for bends'
-                              write(6,*) 'imolty,iunit,ibend',imolty
-     &                             ,iunit,ibend
-                              write(6,*) 'nextrema:',nextrema
-                              do iextrema = 1,nextrema
-                                 write(6,*) 'location, weight'
-     &                                ,extrema(iextrema,1)
-     &                                ,extrema(iextrema,2)
-                              enddo
-                              lfailure = .true.
-                              return
+c                          --- average both quantities
+                           sum_x = sum_x / sum_w
+                           sum_xx = sum_xx / sum_w
+c                          --- increment count
+                           call twh_cbmcbendcount(GLB_INCR,imolty
+     &                          ,iunit,ibend,jbend,1)
+c                          --- assign the mean
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,1,sum_x)
+c                          --- assign the standard deviation
+                           dvalue = bendb_mult
+     &                          *dsqrt(sum_xx - sum_x*sum_x)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,2,dvalue)
+c                          --- assign the limits
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,3,lolimit)
+                           call twh_cbmcbendinfo(GLB_SET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,4,hilimit)
+                           if ( anglebdist .eq.
+     &                          DIST_UNIFORM_GAUSSIAN ) then
+c                             --- one more term for ideal fraction
+                              call twh_bend_b_ideal_fraction(GLB_GET
+     &                             ,bbideal)
+                              call twh_cbmcbendinfo(GLB_SET,imolty
+     &                             ,iunit,ibend,jbend,ipeak,5
+     &                             ,bbideal)
                            endif
-                           if ( nmaxima .gt. CBMC_MAXBENDPEAKS )then
-                              write(6,*) 'ATD_CBMC_SETUP: nmaxima >'
-     &                             ,' CBMC_MAXBENDPEAKS'
-                              write(6,*) 'nmaxima',nmaxima
-                              write(6,*) 'CBMC_MAXBENDPEAKS'
-     &                             ,CBMC_MAXBENDPEAKS
-                              lfailure = .true.
-                              return
-                           endif
-                           iextrema = 0
-                           do ipeak = 1,nmaxima
-                              iextrema = iextrema + 1
-                              lfound = .false.
-                              do while ( .not. lfound ) 
-                                 if ( iextrema .gt. 1 ) then
-c                                   --- compare with previous extrema to
-c                                   --- see if this is a maxima
-                                    if ( extrema(iextrema,2) .gt. 
-     &                                   extrema(iextrema-1,2) ) then
-                                       lfound = .true.
-                                    endif
-                                 else
-c                                   --- compare with next extrema to see
-c                                   --- if this is a maxima
-                                    if ( extrema(iextrema,2) .gt.
-     &                                   extrema(iextrema+1,2) ) then
-                                       lfound = .true.
-                                    endif
-                                 endif
-                                 if ( .not. lfound ) then
-                                    iextrema = iextrema + 1
-                                 endif
-                              enddo
-c                             --- get the lo and hi bounding values
-                              if ( iextrema .eq. 1 ) then
-                                 lolimit = extrema(nextrema,1) - twopi
-                                 hilimit = extrema(iextrema+1,1)
-                              elseif ( iextrema .eq. nextrema ) then
-                                 lolimit = extrema(nextrema-1,1)
-                                 hilimit = extrema(1,1) + twopi
-                              else
-                                 lolimit = extrema(iextrema-1,1)
-                                 hilimit = extrema(iextrema+1,1)
-                              endif
-                              sum_w = 0.0d0
-                              sum_x = 0.0d0
-                              sum_xx = 0.0d0
-                              do itest = 0,imax
-                                 phitwo = lolimit + dble(itest)
-     &                                *(hilimit-lolimit)/dble(imax)
-                                 lovrlap = .false.
-                                 call twh_coneangle(thetaone,phione
-     &                                ,thetatwo,phitwo,angcos)
-                                 energy = twh_vangle(lfailure,lovrlap,1
-     &                                ,imolty,kunit,icrossbend,0,angcos
-     &                                ,distone,disttwo,xbacord,ybacord
-     &                                ,zbacord)
-                                 if ( lfailure ) return
-                                 if ( lovrlap ) then
-                                    weight = 0.0d0
-                                 else
-                                    weight = twh_expon(-beta*energy)
-                                 endif
-                                 sum_w = sum_w + weight
-                                 sum_x = sum_x + weight*phitwo
-                                 sum_xx = sum_xx + weight*phitwo*phitwo
-                              enddo
-c                             --- average both quantities
-                              sum_x = sum_x / sum_w
-                              sum_xx = sum_xx / sum_w
-c                             --- increment count
-                              call twh_cbmcbendcount(GLB_INCR,imolty
-     &                             ,iunit,ibend,jbend,1)
-c                             --- assign the mean
-                              call twh_cbmcbendinfo(GLB_SET,imolty
-     &                             ,iunit,ibend,jbend,ipeak,1,sum_x)
-c                             --- assign the standard deviation
-                              dvalue = bendb_mult
-     &                             *dsqrt(sum_xx - sum_x*sum_x)
-                              call twh_cbmcbendinfo(GLB_SET,imolty
-     &                             ,iunit,ibend,jbend,ipeak,2,dvalue)
-c                             --- assign the limits
-                              call twh_cbmcbendinfo(GLB_SET,imolty
-     &                             ,iunit,ibend,jbend,ipeak,3,lolimit)
-                              call twh_cbmcbendinfo(GLB_SET,imolty
-     &                             ,iunit,ibend,jbend,ipeak,4,hilimit)
-                              call twh_cbmcbendcount(GLB_GET,imolty
-     &                             ,iunit,ibend,jbend,count)
-                              write(44,'(a7,1x,i5,1x,a6,1x,4(i5,1x)
-     &                             ,a6,1x,i1
-     &                             ,1x,a21,1x,2(f8.4,1x)
-     &                             ,a11,1x,f7.2,1x,a8,1x,f7.2
-     &                             ,1x,a10,1x,f7.2,1x,a10,1x,f7.2)') 
-     &                             'Moltyp:',imolty,'Units:',iunit,junit
-     &                             ,kunit,kunitb,'Count:',count
-     &                             ,'Fitting Bond Lengths:'
-     &                             ,distone,disttwo
-     &                             ,'Angle Mean:',sum_x*radtodeg
-     &                             ,'Std Dev:',dvalue*radtodeg
-     &                             ,'Low Bound:',lolimit*radtodeg
-     &                             ,'High Bound:',hilimit*radtodeg
-                           enddo
-                        endif
+                        enddo
                      endif
-                  enddo
+                     call twh_cbmcbenddist(GLB_SET,imolty,iunit,ibend
+     &                    ,jbend,anglebdist)
+c                    --- output based upon the angleadist
+                     if ( anglebdist .eq. DIST_NULL ) then
+                        distname = 'Null'
+                     elseif ( anglebdist .eq. DIST_DELTA ) then
+                        distname = 'Delta'
+                     elseif ( anglebdist .eq. DIST_TRIANGLE ) then
+                        distname = 'Triangle'
+                     elseif ( anglebdist .eq. DIST_UNIFORM ) then
+                        distname = 'Uniform'
+                     elseif ( anglebdist .eq. DIST_GAUSSIAN ) then
+                        distname = 'Gaussian'
+                     elseif ( anglebdist .eq. DIST_UNIFORM_GAUSSIAN
+     &                       ) then
+                        distname = 'Uniform & Gaussian'
+                     else
+                        write(6,*) 'ATD_CBMC_SETUP:unknown Angle B dist'
+                        write(6,*) 'angle B Dist code:',anglebdist
+                        lfailure = .true.
+                        return
+                     endif
+c                    --- retreive count
+                     call twh_cbmcbendcount(GLB_GET,imolty,iunit,ibend
+     &                    ,jbend,npeak)
+c                    --- output general information about angle b dist
+                     write(cfile,'(a7,1x,i5,1x,a6,1x,4(i5,1x),a6,1x,i3
+     &                    ,1x,a4,1x,a25)')
+     &                    'Moltyp:',imolty,'Units:',iunit,junit,kunit
+     &                    ,kunitb,'Peaks:',npeak,'ATD:',distname
+
+                     if ( (anglebdist .eq. DIST_UNIFORM_GAUSSIAN .or.
+     &                    anglebdist .eq. DIST_GAUSSIAN) .and.
+     &                    ( cbmc_bendgen_code .ne.
+     &                    CBMC_GLOBAL_GAUSSIAN) ) then
+                        write(cfile,'(6x,a21,2(1x,f8.4))')
+     &                       'Fitting Bond Lengths:',distone,disttwo
+                     endif
+
+                     if ( anglebdist .eq. DIST_UNIFORM_GAUSSIAN ) then
+c                       --- uniform & gaussian has one additional line
+                        call twh_cbmcbendinfo(GLB_GET,imolty,iunit
+     &                       ,ibend,jbend,1,5,bbideal)
+                        write(cfile,'(6x,a20,1x,f8.4)')
+     &                       'Uniform Probability:',bbideal
+                     endif
+
+                     if ( anglebdist .eq. DIST_DELTA ) then
+                        do ipeak = 1,npeak
+                           call twh_cbmcbendinfo(GLB_GET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,1,mean)
+                           write(cfile,'(6x,a5,1x,i3,1x,a18,1x,f9.4)')
+     &                          'Peak:',ipeak,'Rigid Angle (deg):'
+     &                          ,mean*radtodeg
+                        enddo
+                     elseif ( anglebdist .eq. DIST_TRIANGLE ) then
+                        do ipeak = 1,npeak
+                           call twh_cbmcbendinfo(GLB_GET,imolty,iunit
+     &                          ,ibend,jbend,ipeak,1,length)
+                           write(cfile,'(6x,a5,1x,i3,1x,a20,1x,f9.4)')
+     &                          'Peak:',ipeak,'Triangle Length (A):'
+     &                          ,length
+                        enddo
+                     elseif ( anglebdist .eq. DIST_UNIFORM ) then
+c                       --- no additional information required
+                     elseif ( anglebdist .eq. DIST_UNIFORM_GAUSSIAN .or.
+     &                    anglebdist .eq. DIST_GAUSSIAN ) then
+                        do ipeak = 1,npeak
+                           call twh_cbmcbendinfo(GLB_GET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,1,mean)
+                           call twh_cbmcbendinfo(GLB_GET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,2,std_dev)
+                           call twh_cbmcbendinfo(GLB_GET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,3,lovalue)
+                           call twh_cbmcbendinfo(GLB_GET,imolty
+     &                          ,iunit,ibend,jbend,ipeak,4,hivalue)
+                           write(cfile,'(6x,a5,1x,i3,1x,a17,1x,f9.4,1x
+     &                          ,a14,1x,f9.4,1x,a16,1x,f9.4,1x
+     &                          ,a17,1x,f9.4)')
+     &                          'Peak:',ipeak,'Angle Mean (deg):'
+     &                          ,mean*radtodeg,'Std Dev (deg):'
+     &                          ,std_dev*radtodeg
+     &                          ,'Low Bound (deg):',lovalue*radtodeg
+     &                          ,'High Bound (deg):',hivalue*radtodeg
+                        enddo
+                     else
+                        write(cfile,*) 'Need information for this dist'
+                     endif
+                  endif
                enddo
             enddo
          enddo
-      endif
+      enddo
 
+c     --- dihedral fitting
+c     --- get the peak weighting style
+      write(cfile,'(a48)') 
+     &     'Determining Autofit Gaussian dihedral parameters'
       call twh_cbmc_dihedgen_code(GLB_GET,cbmc_dihedgen_code)
-      if ( cbmc_dihedgen_code .eq. CBMC_AUTOFIT_GAUSSIAN .or.
-     &     cbmc_dihedgen_code .eq. CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN
-     &     ) then
-c        --- get the peak weighting style
-         call twh_dihedral_peak_weight_style(GLB_GET,peakstyle)
-         call twh_dihedral_sdev_multiplier(GLB_GET,dihed_mult)
-         write(44,'(a48)') 
-     &        'Determining Autofit Gaussian dihedral parameters'
-         do icompute = 1,ncompute
-            imolty = computelist(icompute)
-            call twh_nunit(GLB_GET,imolty,nunit)
-            do iunit = 1,nunit
-               do itor = 1,twh_get_intor(imolty,iunit)
+      call twh_dihedral_peak_weight_style(GLB_GET,peakstyle)
+      call twh_dihedral_sdev_multiplier(GLB_GET,dihed_mult)
+      do icompute = 1,ncompute
+         imolty = computelist(icompute)
+         call twh_nunit(GLB_GET,imolty,nunit)
+         do iunit = 1,nunit
+            do itor = 1,twh_get_intor(imolty,iunit)
+               call twh_ittor(GLB_GET,imolty,iunit,itor,torffnum)
+               torffnum = abs(torffnum)
+               call twh_torstyle(GLB_GET,torffnum,torstyle)
+
+               if ( cbmc_dihedgen_code .eq. CBMC_AUTOFIT_GAUSSIAN .or.
+     &              cbmc_dihedgen_code
+     &              .eq. CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN
+     &              .and. torstyle .ne. TOR_STYLE_MRD
+     &              ) then
+
                   junit = twh_get_ijtor2(imolty,iunit,itor)
                   kunit = twh_get_ijtor3(imolty,iunit,itor)
                   lunit = twh_get_ijtor4(imolty,iunit,itor)
@@ -1068,8 +1256,9 @@ c                 --- initialize prevweights
                      ytcord(4) = ytcord(3) + length*yub
                      ztcord(4) = ztcord(3) + length*zub
                      lovrlap = .false.
-                     energy = twh_vtorsion(lfailure,ibox,1,imolty,iunit
-     &                    ,itor,xtcord,ytcord,ztcord,phic,lovrlap)
+                     energy = twh_vtorsion(lfailure,lreport,ibox,1
+     &                    ,imolty,iunit,itor,xtcord,ytcord,ztcord
+     &                    ,phic,lovrlap)
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         weight = 0.0d0
@@ -1093,10 +1282,8 @@ c                       --- see if the previous location was an extrema
                            endif
                            extrema(nextrema,1) = prevloc(1)
                            extrema(nextrema,2) = prevweight(1)
-#if DEBUG_ATD_CBMC_SETUP
-                           write(6,*) 'extrema count,loc,weight:'
-     &                          ,nextrema,prevloc(1),prevweight(1)
-#endif
+c                           write(cfile,*) 'extrema count,loc,weight:'
+c     &                          ,nextrema,prevloc(1),prevweight(1)
                         endif
                      endif
 c                    --- shift previous weights and locations
@@ -1109,16 +1296,12 @@ c                    --- shift previous weights and locations
                   if ( nmaxima .eq. 0 ) then
                      call twh_cbmctorcount(GLB_GET,imolty,iunit,itor
      &                    ,ivalue)
-                     write(44,'(a7,1x,i5,1x,a6,1x,4(i5,1x),a6,1x
+                     write(cfile,'(a7,1x,i5,1x,a6,1x,4(i5,1x),a6,1x
      &                    ,i1,1x,a5,1x,f7.2,1x,a8,1x,f7.2
      &                    ,1x,a10,1x,f7.2,1x,a10,1x,f7.2)') 
      &                    'Moltyp:',imolty,'Units:',iunit,junit
      &                    ,kunit,lunit,'Count:',ivalue
                   endif
-#if DEBUG_ATD_CBMC_SETUP
-                  write(6,*) 'nmaxima:',nmaxima
-                  write(6,*) 'nextrema:',nextrema
-#endif
                   if ( nmaxima .gt. CBMC_MAXTORPEAKS )then
                      write(6,*) 'ATD_CBMC_SETUP: nmaxima exceeds'
      &                    ,' CBMC_MAXTORPEAKS'
@@ -1150,6 +1333,11 @@ c                          --- this is a maxima
                         if ( .not. lfound ) then
                            iextrema = iextrema + 1
                         endif
+                        if ( iextrema .gt. nextrema ) then
+                           write(6,*) 'ATD_CBMC: Failure in dihedral'
+                           lfailure = .true.
+                           return
+                        endif
                      enddo
 c                    --- get the lo and hi bounding values
                      if ( iextrema .eq. 1 ) then
@@ -1175,9 +1363,9 @@ c                    --- get the lo and hi bounding values
                         ytcord(4) = ytcord(3) + length*yub
                         ztcord(4) = ztcord(3) + length*zub
                         lovrlap = .false.
-                        energy = twh_vtorsion(lfailure,ibox,1,imolty
-     &                       ,iunit,itor,xtcord,ytcord,ztcord,phic
-     &                       ,lovrlap)
+                        energy = twh_vtorsion(lfailure,lreport,ibox,1
+     &                       ,imolty,iunit,itor,xtcord,ytcord,ztcord
+     &                       ,phic,lovrlap)
                         if ( lfailure ) return
                         if ( lovrlap ) then
                            weight = 0.0d0
@@ -1212,7 +1400,7 @@ c                    --- assign the raw weight
 
                      call twh_cbmctorcount(GLB_GET,imolty,iunit,itor
      &                    ,ivalue)
-                     write(44,'(a7,1x,i5,1x,a6,1x,4(i5,1x),a6,1x
+                     write(cfile,'(a7,1x,i5,1x,a6,1x,4(i5,1x),a6,1x
      &,i1,1x,a5,1x,f7.2,1x,a8,1x,f7.2
      &,1x,a10,1x,f7.2,1x,a10,1x,f7.2)') 
      &                    'Moltyp:',imolty,'Units:',iunit,junit
@@ -1284,10 +1472,10 @@ c                    --- normalize
       enddo
       close(99)
 #endif
-               enddo
+               endif
             enddo
          enddo
-      endif
+      enddo
 
 c     --- two bond (and three bond that used two bond) fixed endpoint 
 c     --- biasing setup
@@ -1299,7 +1487,7 @@ c     --- biasing setup
      &     .or. threebbias_style .eq.
      &     'autofit gaussian using max and min 2-4 distance'
      &     .or. twobbias_init .eq. 'autofit gaussian' ) then
-         write(44,'(a52,1x,a10)') 
+         write(cfile,'(a52,1x,a10)') 
      &        'Determining Autofit Gaussian two bond fixed endpoint'
      &        ,'parameters'
 c        --- get the vibrange values
@@ -1368,8 +1556,9 @@ c                    --- scan bij on two_bond_bias_range
      &                       + (dble(iscan_bij)/dble(ibondmax))
      &                       *(twobvibtwo - twobvibone) )
 c                       --- compute the bij energy
-                        bij_energy = twh_vbond(lfailure,bij_type,distone
-     &                       ,imolty,iunit,junit,lovrlap)
+                        bij_energy = twh_vbond(lfailure,lreport
+     &                       ,ibox,bij_type,distone,imolty,iunit,junit
+     &                       ,lovrlap)
                         if ( lfailure ) return
 c                       --- scan bjk on two_bond_bias_range
                         do iscan_bjk = 0,ibondmax
@@ -1377,11 +1566,13 @@ c                       --- scan bjk on two_bond_bias_range
      &                          + (dble(iscan_bjk)/dble(ibondmax))
      &                          *(twobvibtwo - twobvibone) )
 c                          --- compute the bjk energy
-                           bjk_energy = twh_vbond(lfailure,bjk_type
-     &                          ,disttwo,imolty,junit,kunit,lovrlap)
+                           bjk_energy = twh_vbond(lfailure,lreport
+     &                          ,ibox,bjk_type,disttwo
+     &                          ,imolty,junit,kunit,lovrlap)
                            if ( lfailure ) return
 c                          --- compute the aijk energy
-                           aijk_energy = twh_vangle(lfailure,lovrlap,1
+                           aijk_energy = twh_vangle(lfailure,lreport
+     &                          ,lovrlap,1
      &                          ,imolty,iunit,ibend,0,angcos,distone
      &                          ,disttwo,xbacord,ybacord,zbacord)
                            if ( lfailure ) return
@@ -1414,7 +1605,7 @@ c                 --- assign the standard deviation
                   dvalue = dsqrt(sum_xx - sum_x*sum_x)
                   call twh_two_bond_bias_info(GLB_SET,imolty,iunit
      &                 ,ibend,2,dvalue) 
-                  write(44,'(a7,1x,i5,1x,a6,1x,3(i5,1x),a5,1x,f10.5
+                  write(cfile,'(a7,1x,i5,1x,a6,1x,3(i5,1x),a5,1x,f10.5
      &                 ,1x,a8,1x,f10.7)') 
      &                 'Moltyp:',imolty,'Units:',iunit,junit,kunit
      &                 ,'Mean:',sum_x
@@ -1426,7 +1617,7 @@ c                 --- assign the standard deviation
 
       call twh_three_bond_bias_initial_value(GLB_GET,threebbias_init)
       if ( threebbias_init  .eq. 'autofit gaussian' ) then
-         write(44,'(a50)') 
+         write(cfile,'(a50)') 
      &        'Determining Autofit Gaussian Three Bond parameters'
          do icompute = 1,ncompute
             imolty = computelist(icompute)
@@ -1530,8 +1721,9 @@ c                    --- compute the 1-4 distance
      &                    + (ztcord(4)-ztcord(1))**2
                      rik = dsqrt(riksq)
                      lovrlap = .false.
-                     energy = twh_vtorsion(lfailure,ibox,1,imolty,iunit
-     &                    ,itor,xtcord,ytcord,ztcord,phic,lovrlap)
+                     energy = twh_vtorsion(lfailure,lreport,ibox,1
+     &                    ,imolty,iunit,itor,xtcord,ytcord,ztcord
+     &                    ,phic,lovrlap)
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         weight = 0.0d0
@@ -1552,7 +1744,7 @@ c                 --- assign the standard deviation
                   dvalue = dsqrt(sum_xx - sum_x*sum_x)
                   call twh_three_bond_bias_info(GLB_SET,imolty,iunit
      &                 ,itor,2,dvalue)
-                  write(44,'(a7,1x,i5,1x,a6,1x,4(i5,1x)
+                  write(cfile,'(a7,1x,i5,1x,a6,1x,4(i5,1x)
      &,a5,1x,f7.2,1x,a8,1x,f7.2)') 
      &                 'Moltyp:',imolty,'Units:',iunit,junit
      &                 ,kunit,lunit,'Mean:',sum_x,'Std Dev:',dvalue
@@ -1562,18 +1754,18 @@ c                 --- assign the standard deviation
       endif
 
 c     --- close the towhee_cbmc file
-      close(44)
+      close(cfile)
 
       return
       end
 
-      subroutine twh_cbbond_par(lfailure,imolty,iunit,ivib,dpar)
+      subroutine twh_cbbond_par(lfailure,ibox,imolty,iunit,ivib,dpar)
 c     ******************************************************************
 c     * scans the bond distribution and makes a prediction about the   *
 c     * expected acceptance rate                                       *
 c     *                                                                *
 c     * originally written 07-16-2014 by M.G. Martin                   *
-c     * last modified 07-16-2014 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -1582,10 +1774,10 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer imolty,iunit,ivib
+      integer ibox,imolty,iunit,ivib
       double precision dpar
 c     --- local variables
-      logical lovrlap,lscan
+      logical lovrlap,lscan,lreport
       integer junit,bonddist,imax,jmax,itest,jtest,vibtype
       double precision rmax,beta
       double precision ptrue_i,ptrue_j,pgen_i,pgen_j,paccept,sumpaccept
@@ -1597,7 +1789,6 @@ c     --- local variables
 c     --- retrieve constants
       call twh_beta(GLB_GET,beta)
       call twh_max_bond_length(GLB_GET,rmax)
-
       call twh_ijvib(GLB_GET,imolty,iunit,ivib,junit)
       call twh_itvib(GLB_GET,imolty,iunit,ivib,vibtype)
       call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
@@ -1605,6 +1796,7 @@ c     --- retrieve constants
       call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &     ,2,arbnorm)
       lscan = .false.
+      lreport = .false.
 c     --- get the bonddist
       call twh_cbbonddist(GLB_GET,imolty,iunit,ivib,bonddist)
       if ( bonddist .eq. DIST_DELTA ) then
@@ -1644,7 +1836,7 @@ c        --- sample the acceptance rate
             length_i = lolimit
      &           + (hilimit-lolimit)*dble(itest)/dble(imax)
             lovrlap = .false.
-            energy_i = twh_vbond(lfailure,vibtype,length_i
+            energy_i = twh_vbond(lfailure,lreport,ibox,vibtype,length_i
      &           ,imolty,iunit,junit,lovrlap)
             if ( lfailure ) return
             if ( lovrlap ) then
@@ -1667,8 +1859,8 @@ c        --- sample the acceptance rate
                length_j = lolimit
      &              + (hilimit-lolimit)*dble(jtest)/dble(jmax)
                lovrlap = .false.
-               energy_j = twh_vbond(lfailure,vibtype,length_j
-     &              ,imolty,iunit,junit,lovrlap)
+               energy_j = twh_vbond(lfailure,lreport,ibox,vibtype
+     &              ,length_j,imolty,iunit,junit,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) then
                   ptrue_j = 0.0d0
@@ -1769,6 +1961,194 @@ c           --- so just use 1.0 as a crude "equilbrium" guess
          lfailure = .true.
          return
       endif
+
+      return
+      end
+
+      subroutine twh_finddistmins(lfailure,lperiodic,maxscan,imax
+     &     ,distweight,nminima,minimalist)
+c     ******************************************************************
+c     * finds the points of minimum value in a distribution            *
+c     * intended for use with fitting functions for arbitrary trial    *
+c     * distributions                                                  *
+c     *                                                                *
+c     * originally written 07-29-2014 by M.G. Martin                   *
+c     * last modified 07-29-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      logical lfailure,lperiodic
+      integer maxscan,imax,nminima
+      integer minimalist
+      dimension minimalist(maxscan)
+      double precision distweight
+      dimension distweight(0:maxscan,2)
+c     --- local variables
+      logical ldone
+      integer itest,iloop,loopdelta,ileft,iright,itworight
+      double precision testvalue
+
+c     --- check the first point
+      if ( lperiodic ) then
+c        --- this is also the last point
+         if ( (distweight(imax-1,2) .gt. distweight(imax,2)) .and.
+     &        (distweight(1,2) .gt. distweight(0,2)) ) then
+            nminima = nminima + 1
+            minimalist(nminima) = 0
+         endif
+      else
+c        --- not periodic, so minimum if the next point is larger
+         if ( distweight(1,2) .gt. distweight(0,2) ) then
+            nminima = nminima + 1
+            minimalist(nminima) = 0
+         elseif ( distweight(1,2) .eq. distweight(0,2) ) then
+c           --- could be a special case of flat distribution minimum
+c           --- check if the series of points larger are all equal to 
+c           --- or less than this point
+            ldone = .false.
+            iloop = 0
+            do while ( (iloop .lt. imax) .and. (.not. ldone) )
+               iloop = iloop + 1
+               if ( distweight(iloop,2) .gt. distweight(0,2) ) then
+c                 --- larger point found, we are a minimum
+                  ldone = .true.
+                  nminima = nminima + 1
+                  minimalist(nminima) = 0
+               elseif ( distweight(iloop,2) .lt. distweight(0,2) ) then
+c                 --- flat part was a maximum, we are done
+                  ldone = .true.
+               endif
+            enddo
+            if ( .not. ldone ) then
+               write(6,*) 'FINDDISTMINS: completely flat distribution'
+               write(6,*) 'not sure how to handle this yet'
+               lfailure = .true.
+               return
+            endif
+         endif
+      endif
+c     --- check interior points
+      do itest = 1,imax-1
+         testvalue = distweight(itest,2)
+         if ( (distweight(itest-1,2) .gt. testvalue) .and.
+     &        (distweight(itest+1,2) .gt. testvalue) ) then
+c           --- simple minima point found
+            nminima = nminima + 1
+            minimalist(nminima) = itest
+         elseif ( (distweight(itest-1,2) .eq. testvalue) .or.
+     &           (distweight(itest+1,2) .eq. testvalue) ) then
+c           --- flat part in the distribution
+            ldone = .false.
+            loopdelta = 0
+            do while ( .not. ldone )
+               loopdelta = loopdelta + 1
+               ileft = itest - loopdelta
+               iright = itest + loopdelta
+               if ( ileft .lt. 0 ) then
+                  if ( lperiodic ) then
+c                    --- wrap around
+                     ileft = imax + ileft
+                  else
+c                    --- we went too far, not a minimum
+                     ldone = .true.
+                  endif
+               endif
+               if ( iright .gt. imax ) then
+                  if ( lperiodic ) then
+c                    --- wrap around
+                     iright = iright - imax
+                  else
+c                    --- we went too far, not a minimum
+                     ldone = .true.
+                  endif
+               endif
+c              --- detect flat distribution
+               if ( ileft .eq. itest .or. iright .eq. itest ) then
+c                 --- we went all the way around
+                  write(6,*) 'FINDDISTMINS: flat distribution'
+                  write(6,*) 'not sure how to handle this yet'
+                  lfailure = .true.
+                  return
+               endif
+               if ( (distweight(ileft,2) .lt. testvalue) .or.
+     &              (distweight(iright,2) .lt. testvalue) ) then
+c                 --- not a minimum
+                  ldone = .true.
+               elseif ( distweight(ileft,2) .gt. testvalue ) then
+                  if (distweight(iright,2) .gt. testvalue ) then
+c                    --- simple minimum found
+                     nminima = nminima + 1
+                     minimalist(nminima) = itest
+                     ldone = .true.
+                  elseif  (distweight(iright,2) .eq. testvalue ) then
+c                    --- check for the corner case where left is higher
+c                    --- right is equal, two right is higher
+                     itworight = iright + 1
+                     if ( itworight .gt. imax ) then
+                        if ( lperiodic ) then
+c                          --- shift
+                           itworight = itworight - imax
+                        else
+c                          --- we hit the wall, not a min
+                           ldone = .true.
+                        endif
+                     endif
+                     if ( distweight(itworight,2) .gt. testvalue ) then
+                        ldone = .true.
+                        nminima = nminima + 1
+                        minimalist(nminima) = itest
+                     else
+c                       --- we found the end of the dist, not centered
+                        ldone = .true.
+                     endif
+                  endif
+               else
+c                 --- left is equal, if right is not we are done
+                  if ( distweight(iright,2) .ne. testvalue ) then
+                     ldone = .true.
+                  endif
+               endif
+
+            enddo
+         endif
+      enddo
+      if ( .not. lperiodic ) then
+c        -- check last
+         write(6,*) 'need to implement nonperiodic'
+         lfailure = .true.
+         return
+      endif
+
+      return
+      end
+
+      subroutine twh_find_vibtype(lfailure,imolty,unita,unitb,vibtype)
+c     ******************************************************************
+c     * finds the vibration type for two atoms in a molecule           *
+c     *                                                                *
+c     * originally written 07-31-2014 by M.G. Martin                   *
+c     * last modified 07-31-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      logical lfailure
+      integer imolty,unita,unitb,vibtype
+c     --- local variables
+      integer ivib,nvib,itest
+
+      call twh_invib(GLB_GET,imolty,unita,nvib)
+      do ivib = 1,nvib
+         call twh_ijvib(GLB_GET,imolty,unita,ivib,itest)
+         if ( itest .eq. unitb ) then
+c           --- found, return the type
+            call twh_itvib(GLB_GET,imolty,unita,ivib,vibtype)
+            return
+         endif
+      enddo
+
+c     --- if we made it here, did not find the bond
+      write(6,*) 'FIND_VIBTYPE bond not found:',imolty,unita,unitb
+      lfailure = .true.
 
       return
       end

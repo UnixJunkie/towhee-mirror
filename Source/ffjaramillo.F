@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the jaramillo    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 7-31-2006 by O. Yazaydin                    *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -338,7 +338,7 @@ c     * torsions - OPLS style Cosine Series                            *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal (-1) = (1.0d0)
       tclocal(1) =  (0.00d0)*(CON_EVTOK)*(0.5d0)

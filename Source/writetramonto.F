@@ -137,7 +137,7 @@ c     * writes out the information for a single atom in the tramonto   *
 c     * format                                                         *
 c     *                                                                *
 c     * originally written 08-04-2006 by M.G. Martin                   *
-c     * last modified 08-12-2011 by M.G. Martin                        *
+c     * last modified 08-16-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_POTENTIAL
@@ -151,7 +151,7 @@ c     ---- variables passed to/from this subroutine
       integer atomcode
       dimension atomcode(NNTYPE)
 c     --- local variables
-      logical lcoulomb
+      logical lelect
       integer type,ij,isolvtype
       double precision xtemp,ytemp,ztemp
 
@@ -183,8 +183,8 @@ c              --- not coded up for tramonto yet
       call twh_coordinates(GLB_GET,testcrd,ichain,iunit,xtemp,ytemp
      &     ,ztemp)
 c     --- write to dft_surf.dat
-      call twh_lcoulomb(GLB_GET,lcoulomb)
-      if ( lcoulomb ) then
+      call twh_lelect(GLB_GET,lelect)
+      if ( lelect ) then
          write(72,22) atomcode(type),ichain-1,xtemp,ytemp,ztemp
      &        ,twh_get_qqatom(imolty,iunit)
       else

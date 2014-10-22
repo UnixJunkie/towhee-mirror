@@ -271,7 +271,7 @@ c     ******************************************************************
 c     * dihedral terms for Cui1998                                     *
 c     *                                                                *
 c     * originally written 05-02-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -288,7 +288,7 @@ c     --- local variables
       type = 0
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,10)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COS_POW)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_ntorloop(GLB_SET,type,7)
       tclocal(0) = 595.4d0
@@ -311,7 +311,7 @@ c     --- CFx - CF2(T) - CF2(T) - CFy
       call twh_set_tornames(type,nsame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,22)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_FL)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 269.6d0
       tclocal(1) = 503.6d0

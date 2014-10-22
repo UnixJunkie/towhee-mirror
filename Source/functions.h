@@ -1,10 +1,9 @@
 c     ******************************************************************
 c     * functions.h                                                    *
-c     * contains all of the type declarations for the functions in     *
-c     * towhee                                                         *
+c     * contains all of the function type declarations in towhee       *
 c     *                                                                *
 c     * originally written 11-12-2002 by M.G. Martin                   *
-c     * last modified 08-15-2013 by M.G. Martin                        *
+c     * last modified 08-08-2014 by M.G. Martin                        *
 c     ******************************************************************
 #ifdef FUNCTION_ARCCOS
       double precision twh_arccos
@@ -598,11 +597,6 @@ c
 #undef FUNCTION_GET_PMVOL
 #endif
 c
-#ifdef FUNCTION_GET_QBASEVALUE
-      double precision twh_get_qbasevalue
-#undef FUNCTION_GET_QBASEVALUE
-#endif
-c
 #ifdef FUNCTION_GET_QBIFF
       character*(FFNAMELEN) twh_get_qbiff
 #undef FUNCTION_GET_QBIFF
@@ -827,11 +821,6 @@ c
 #ifdef FUNCTION_VBONBON
       double precision twh_vbonbon 
 #undef FUNCTION_VBONBON
-#endif
-c
-#ifdef FUNCTION_VCOULOMB
-      double precision twh_vcoulomb 
-#undef FUNCTION_VCOULOMB
 #endif
 c
 #ifdef FUNCTION_VEEFONE

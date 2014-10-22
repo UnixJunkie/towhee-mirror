@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *         *cord(2) is iuother                                    *
 c     *         *cord(3) is iufrom                                     *
 c     *                                                                *
 c     * originally written 01-23-2001 by M.G. Martin                   *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -155,10 +155,10 @@ c              --- add in a bit of noise to avoid exactly zero
                scale = length/(lenone+lentwo)
                lenone = scale*lenone
                lentwo = scale*lentwo
-               vbias = vbias + twh_vbond(lfailure,btone,lenone,imolty
-     &              ,iunit,junit,lovrlap) 
-     &              + twh_vbond(lfailure,bttwo,lentwo,imolty,junit
-     &              ,kunit,lovrlap)
+               vbias = vbias + twh_vbond(lfailure,.false.,ibox,btone
+     &              ,lenone,imolty,iunit,junit,lovrlap) 
+     &              + twh_vbond(lfailure,.false.,ibox,bttwo,lentwo
+     &              ,imolty,junit,kunit,lovrlap)
                if ( lfailure ) return
             else
 c              --- compute the angle assuming the bond lengths are at 
@@ -168,7 +168,8 @@ c              --- their equilibrium values
             endif
 
 c           --- get bias energies from vangle
-            vbias = vbias + twh_vangle(lfailure,lovrlap,ibox,imolty
+            vbias = vbias + twh_vangle(lfailure,.false.,lovrlap,ibox
+     &           ,imolty
      &           ,iunit,index,0,thetac,lenone,lentwo,ddum3,ddum3,ddum3)
             if ( lfailure ) return
 c           --- convert the vbias energy into a probability
@@ -311,15 +312,17 @@ c           --- compute the index for this torsion
                xatmp(2) = mvect(iphi,1)
                yatmp(2) = mvect(iphi,2)
                zatmp(2) = mvect(iphi,3)
-               vbias = vbias + twh_vangle(lfailure,lovrlap,ibox,imolty
+               vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
+     &              ,ibox,imolty
      &              ,iunit,index,1,thetac,dumb,dumc,xatmp,yatmp,zatmp)
                if ( lfailure ) return
 c              --- compute the torsion energy
                xttmp(3) = mvect(iphi,1)
                yttmp(3) = mvect(iphi,2)
                zttmp(3) = mvect(iphi,3)
-               vbias = vbias + twh_vtorsion(lfailure,ibox,1,imolty
-     &              ,iufrom,torind,xttmp,yttmp,zttmp,duma,lovrlap)
+               vbias = vbias + twh_vtorsion(lfailure,.false.,ibox,1
+     &              ,imolty,iufrom,torind,xttmp,yttmp,zttmp,duma
+     &              ,lovrlap)
                if ( lfailure ) return
             enddo
 
@@ -479,16 +482,16 @@ c                    --- compute the scaled bond lengths
                      scale = minlen/(lenone+lentwo)
                      lenone = scale*lenone
                      lentwo = scale*lentwo
-                     vbias = vbias + twh_vbond(lfailure,btone,lenone
-     &                    ,imolty,iunext,iuthree,lovrlap) 
-     &                    + twh_vbond(lfailure,bttwo,lentwo,imolty
-     &                    ,iuthree,iuother,lovrlap) 
+                     vbias = vbias + twh_vbond(lfailure,.false.,ibox
+     &                    ,btone,lenone,imolty,iunext,iuthree,lovrlap) 
+     &                    + twh_vbond(lfailure,.false.,ibox,bttwo,lentwo
+     &                    ,imolty,iuthree,iuother,lovrlap) 
                      if ( lfailure ) return
                   endif
 c                 --- compute biasing energy from the angle
-                  vbias = vbias + twh_vangle(lfailure,lovrlap,ibox
-     &                 ,imolty,iunext,goodind,0,thetac,lenone,lentwo
-     &                 ,ddum3,ddum3,ddum3)
+                  vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
+     &                 ,ibox,imolty,iunext,goodind,0,thetac
+     &                 ,lenone,lentwo,ddum3,ddum3,ddum3)
                   if ( lfailure ) return
                elseif ( eqlength .le. maxlen ) then
 c                 --- the equilbrium length for this angle falls in the 
@@ -504,9 +507,9 @@ c                 --- compute strained angle using law of cosine
                   thetac = (maxlen*maxlen - lenone*lenone 
      &                 - lentwo*lentwo) / (-2.0d0*lenone*lentwo)
 c                 --- compute biasing energy from the angle
-                  vbias = vbias + twh_vangle(lfailure,lovrlap,ibox
-     &                 ,imolty,iunext,goodind,0,thetac,lenone,lentwo
-     &                 ,ddum3,ddum3,ddum3)
+                  vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
+     &                 ,ibox,imolty,iunext,goodind,0,thetac
+     &                 ,lenone,lentwo,ddum3,ddum3,ddum3)
                   if ( lfailure ) return
                endif
 c              --- compute febias from the biasing energy

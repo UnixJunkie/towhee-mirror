@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * initializes arrays which are required to solve the loop        *
 c     * closure problem                                                *
 c     *                                                                *
 c     * originally rewritten from E. Coutsias 05-01-2003 by C.D. Lorenz*
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -58,6 +58,7 @@ c     --- variables passed to/from the subroutine
       double precision eta
       dimension eta(3)
 c     --- local varibles
+      logical lovrlap,lreport
       integer i,j,k,ii
      
       double precision xcord,ycord,zcord,distone,disttwo
@@ -76,6 +77,8 @@ c     --- local varibles
 
       call twh_constant_pi(GLB_GET,onepi)
 
+      lovrlap = .false.
+      lreport = .false.
       temp(1) = 0.0
       temp(2) = 0.0
       temp(3) = 0.0
@@ -142,7 +145,7 @@ c     --- various arrays used to solve the loop closure problem
       torz(3) = initcoords(4,3)
       torz(4) = initcoords(5,3)
  
-      t_ang0(1) = -1.0d0 * twh_vtorsion(lfailure,ibox,0,0,0,0
+      t_ang0(1) = -1.0d0 * twh_vtorsion(lfailure,lreport,ibox,0,0,0,0
      &     ,torx,tory,torz,dumang,.false.)
       if ( lfailure ) return
 
@@ -159,7 +162,7 @@ c     --- various arrays used to solve the loop closure problem
       torz(3) = initcoords(7,3)
       torz(4) = initcoords(8,3)
  
-      t_ang0(2) = -1.0d0 * twh_vtorsion(lfailure,ibox,0,0,0,0
+      t_ang0(2) = -1.0d0 * twh_vtorsion(lfailure,lreport,ibox,0,0,0,0
      &     ,torx,tory,torz,dumang,.false.)
       if ( lfailure ) return
 
@@ -221,8 +224,12 @@ c        ---! xi
          xcord(3) = rr_n2(1)
          ycord(3) = rr_n2(2)
          zcord(3) = rr_n2(3)
-         lcxi(i+2) = twh_vangle(lfailure,.false.,ibox,0,0,0,-1,dumang
-     &        ,distone,disttwo,xcord,ycord,zcord)
+         lcxi(i+2) = twh_vangle(lfailure,.false.,lovrlap,ibox
+     &        ,0,0,0,-1,dumang,distone,disttwo,xcord,ycord,zcord)
+         if ( lovrlap ) then
+            write(6,*) 'INITLOOPCLOSURE: unexpected overlap'
+            lfailure = .true.
+         endif
          if ( lfailure ) return
 
 c        ---! eta
@@ -235,8 +242,12 @@ c        ---! eta
          xcord(3) = rr_c1(1)
          ycord(3) = rr_c1(2)
          zcord(3) = rr_c1(3)
-         eta(i+1) = twh_vangle(lfailure,.false.,ibox,0,0,0,-1,dumang
-     &        ,distone,disttwo,xcord,ycord,zcord)
+         eta(i+1) = twh_vangle(lfailure,.false.,lovrlap,ibox
+     &        ,0,0,0,-1,dumang,distone,disttwo,xcord,ycord,zcord)
+         if ( lovrlap ) then
+            write(6,*) 'INITLOOPCLOSURE: unexpected overlap'
+            lfailure = .true.
+         endif
          if ( lfailure ) return
 
 c        ! delta: pi -  dih of N(1)CA(1)CA(3)C(3)
@@ -254,7 +265,7 @@ c        ! delta: pi -  dih of N(1)CA(1)CA(3)C(3)
          torz(3) = rr_a2(3)
          torz(4) = rr_n2(3)
    
-         delta(i+1) = onepi + twh_vtorsion(lfailure,ibox,0,0,0,0
+         delta(i+1) = onepi + twh_vtorsion(lfailure,lreport,ibox,0,0,0,0
      &        ,torx,tory,torz,dumang,.false.)
          if ( lfailure ) return
       enddo

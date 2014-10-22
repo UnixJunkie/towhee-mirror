@@ -19,11 +19,12 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vangle(lfailure,lovrlap,ibox,imolty,iunit,ibend,iflag
-     &     ,angcos,distone,disttwo,xcord,ycord,zcord)
+      function twh_vangle(lfailure,lreport,lovrlap,ibox,imolty,iunit
+     &     ,ibend,iflag,angcos,distone,disttwo,xcord,ycord,zcord)
 c     ******************************************************************
 c     * computes the bond bending energy given an angle type and the   *
 c     * angle.                                                         *
+c     * lreport: store all of the angle terms for a report             *
 c     * ibox: the box the molecule is in (used for mimage)             *
 c     * imolty: the molecule type                                      *
 c     * iunit: the unit of the first atom in the bend                  *
@@ -44,7 +45,7 @@ c     *          Note: we are a bit tricky as lovrlap is not intialized*
 c     *          in this routine, should be intialized by the caller   *
 c     *                                                                *
 c     * rewritten from old sumup subroutines 01-21-2000 by M.G. Martin *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-18-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -67,20 +68,22 @@ c     ******************************************************************
 
 #define DEBUG_VANGLE 0
 c     --- variables passed to and from the function
-      logical lfailure,lovrlap
+      logical lfailure,lovrlap,lreport
       integer ibox,imolty,iunit,ibend,iflag
       double precision distone,disttwo,angcos
       double precision xcord,ycord,zcord
       dimension xcord(3),ycord(3),zcord(3)
 c     --- local variables
 c     --- logical scalars
-      logical ldononbond
+      logical ldononbond,lbondang
 c     --- integer scalars
       integer style,iutype,jutype,type,junit,iorder,bone,btwo,iallow
+      integer bangtype
 c     --- double precision scalars
-      double precision dist,distsq,qqa,qqb
+      double precision dist,distsq,vbondang,vvdw,vcharge
       double precision angle,differ,value,prefac,diffsquare,diffcube
-      double precision xone,yone,zone,xtwo,ytwo,ztwo,dv,qqfact
+      double precision xone,yone,zone,xtwo,ytwo,ztwo,dv
+      double precision fac_one,fac_two
 #if DEBUG_VANGLE
       double precision radtodeg
 #endif
@@ -93,6 +96,7 @@ c     --- double precision arrays
 
       twh_vangle = 0.0d0
       ldononbond = .false.
+      lbondang = .false.
       if ( abs(iflag) .eq. 1 ) then
 c        --- compute the bond lengths and angles from the coordinates
          call twh_mimage(ibox,xcord(1),ycord(1),zcord(1)
@@ -108,15 +112,16 @@ c        --- compute the bond lengths and angles from the coordinates
       endif
 
 #if DEBUG_VANGLE
-      write(6,*) 'imolty,iunit,ibend:',imolty,iunit,ibend
       angle = twh_arccos(angcos)
       call twh_constant_radtodeg(GLB_GET,radtodeg)
-      write(6,*) 'angle:',angle*radtodeg
+      call twh_ijben2(GLB_GET,imolty,iunit,ibend,bone)
+      call twh_ijben3(GLB_GET,imolty,iunit,ibend,btwo)
+      write(6,*) 'imolty,units,angle,:',imolty,iunit,bone,btwo
+     &     ,angle*radtodeg
 #endif
 
 c     --- determine type, style and order of the angle
       type = twh_get_itben(imolty,iunit,ibend)
-      call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
 
       style = twh_get_anglestyle(type)
 
@@ -158,11 +163,12 @@ c        --- Compass quartic angle with autodetection
          twh_vangle = twh_get_bencoeff(type,1)*(value)
      &        + twh_get_bencoeff(type,2)*(value*differ)
      &        + twh_get_bencoeff(type,3)*(value*value)
-         call twh_ntype(GLB_GET,imolty,iunit,iutype)
          if ( twh_get_lbonang(type) ) then
+            lbondang = .true.
 c           --- add in both of the bond-angle cross terms
             bone = twh_get_ibtben1(imolty,iunit,ibend)
             btwo = twh_get_ibtben2(imolty,iunit,ibend)
+            call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
                prefac = twh_get_bencoeff(type,4)*(distone 
@@ -176,13 +182,13 @@ c              --- force constants match with inverted bond order
      &              + twh_get_bencoeff(type,4)*(disttwo 
      &              - twh_get_vibcoeff(btwo,0))
             else
-               write(6,*) 'iutype',iutype,'ang type',type
+               write(6,*) 'ang type',type
                write(6,*) 'iorder',iorder
                write(6,*) 'VANGLE: bad type'
                lfailure = .true.
                return
             endif
-            twh_vangle = twh_vangle + prefac*differ
+            vbondang = prefac*differ
          endif
       elseif ( style .eq. ANG_STYLE_CHARMM_UB ) then
 c         --- Charmm harmonic with urey-bradley
@@ -212,9 +218,10 @@ c        --- Compass quartic angle with explicit ordering of terms
          twh_vangle = twh_get_bencoeff(type,1)*(value)
      &        + twh_get_bencoeff(type,2)*(value*differ)
      &        + twh_get_bencoeff(type,3)*(value*value)
-         call twh_ntype(GLB_GET,imolty,iunit,iutype)
          if ( twh_get_lbonang(type) ) then
+            lbondang = .true.
 c           --- add in both of the bond angle cross terms
+            call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
                prefac = twh_get_bencoeff(type,4)
@@ -232,7 +239,7 @@ c              --- force constants match with inverted bond order
                lfailure = .true.
                return
             endif
-            twh_vangle = twh_vangle + prefac*differ
+            vbondang = prefac*differ
          endif
       elseif ( style .eq. ANG_STYLE_FOURIER ) then
 c        --- Fourier expansion with constant minus single term
@@ -258,9 +265,10 @@ c        --- MM2 sixth power angle with autodetection
          twh_vangle = twh_get_bencoeff(type,1)*value*
      &        (1.0d0 + twh_get_bencoeff(type,2)*value*value)
          if ( twh_get_lbonang(type) ) then
+            lbondang = .true.
 c           --- add in both of the bond-angle cross terms
 c           --- check based upon only the first letter for this term
-            call twh_ntype(GLB_GET,imolty,iunit,iutype)
+            call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
                bone = twh_get_ibtben1(imolty,iunit,ibend)
@@ -270,13 +278,13 @@ c              --- force constants match with inverted bond order
                bone = twh_get_ibtben2(imolty,iunit,ibend)
                btwo = twh_get_ibtben1(imolty,iunit,ibend)
             else
-               write(6,*) 'iutype',iutype,'ang type',type
+               write(6,*) 'ang type',type
                write(6,*) 'orderben:',iorder
                write(6,*) 'VANGLE: bad type'
                lfailure = .true.
                return
             endif
-            twh_vangle = twh_vangle + twh_get_bencoeff(type,4)*differ*(
+            vbondang = twh_get_bencoeff(type,4)*differ*(
      &           ( distone - twh_get_vibcoeff(bone,0) ) +
      &           ( disttwo - twh_get_vibcoeff(btwo,0) ) )
          endif
@@ -314,41 +322,117 @@ c        --- MMFF cubic plus a bond-angle cross term
          twh_vangle = twh_get_bencoeff(type,1)*diffsquare
      &        + twh_get_bencoeff(type,2)*diffcube
 c        --- cross terms
-         call twh_ntype(GLB_GET,imolty,iunit,iutype)
          if ( twh_get_lbonang(type) ) then
+            lbondang = .true.
 c           --- add in both of the bond-angle cross terms
             bone = twh_get_ibtben1(imolty,iunit,ibend)
             btwo = twh_get_ibtben2(imolty,iunit,ibend)
+            call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
-               prefac = twh_get_bencoeff(type,3)
+               fac_one = twh_get_bencoeff(type,3)
      &              *(distone - twh_get_vibcoeff(bone,0))
-     &              + twh_get_bencoeff(type,4)
+               fac_two = twh_get_bencoeff(type,4)
      &              *(disttwo - twh_get_vibcoeff(btwo,0))
             elseif ( iorder .eq. ORD_REVERSE ) then
 c              --- force constants match with inverted bond order
-               prefac = twh_get_bencoeff(type,4)
+               fac_one = twh_get_bencoeff(type,4)
      &              *(distone - twh_get_vibcoeff(bone,0))
-     &              + twh_get_bencoeff(type,3)
+               fac_two = twh_get_bencoeff(type,3)
      &              *(disttwo - twh_get_vibcoeff(btwo,0))
             else
-               write(6,*) 'iutype',iutype,'ang type',type
+               write(6,*) 'ang type',type
                write(6,*) 'benorder:',iorder
                write(6,*) 'VANGLE: bad type'
                lfailure = .true.
                return
             endif
-            twh_vangle = twh_vangle + prefac*differ
+            vbondang = (fac_one + fac_two)*differ
+#if DEBUG_VANGLE
+            write(6,'(4(a,1x,f8.3,1x))')
+     &           ,'angle:',angle*radtodeg
+     &           ,'differ:',differ*radtodeg
+     &           ,'delta one:',distone-twh_get_vibcoeff(bone,0)
+     &           ,'ba one:',fac_one*differ/CON_KCALTOK
+            write(6,'(4(a,1x,f8.3,1x))')
+     &           ,'angle:',angle*radtodeg
+     &           ,'differ:',differ*radtodeg
+     &           ,'delta two:',disttwo-twh_get_vibcoeff(btwo,0)
+     &           ,'ba two:',fac_two*differ/CON_KCALTOK
+#endif            
          endif
       elseif ( style .eq. ANG_STYLE_HARM_COS_OT ) then
 c        --- harmonic cosine plus nonbond between the 1-3 atoms
          twh_vangle = twh_get_bencoeff(type,1)
      &        *(angcos - twh_get_bencoeff(type,-1))**2
          ldononbond = .true.
+
+      elseif ( style .eq. ANG_STYLE_MMFFC_ANG ) then
+c        --- MMFF cubic plus a bond-angle cross term
+         angle = twh_arccos(angcos)
+         differ = angle - twh_get_bencoeff(type,0)
+         diffsquare = differ*differ
+         diffcube = differ*diffsquare
+         twh_vangle = twh_get_bencoeff(type,1)*diffsquare
+     &        + twh_get_bencoeff(type,2)*diffcube
+c        --- cross terms
+         call twh_itbang(GLB_GET,imolty,iunit,ibend,bangtype)
+         if ( bangtype .ne. 0 ) then
+            lbondang = .true.
+c           --- add in both of the bond-angle cross terms
+            bone = twh_get_ibtben1(imolty,iunit,ibend)
+            btwo = twh_get_ibtben2(imolty,iunit,ibend)
+            call twh_orderbang(GLB_GET,imolty,iunit,ibend,iorder)
+            if ( iorder .eq. ORD_FORWARD ) then
+c              --- force constants match up with bond order
+               fac_one = twh_get_bencoeff(bangtype,1)
+     &              *(distone - twh_get_vibcoeff(bone,0))
+               fac_two = twh_get_bencoeff(bangtype,2)
+     &              *(disttwo - twh_get_vibcoeff(btwo,0))
+            elseif ( iorder .eq. ORD_REVERSE ) then
+c              --- force constants match with inverted bond order
+               fac_one = twh_get_bencoeff(bangtype,2)
+     &              *(distone - twh_get_vibcoeff(bone,0))
+               fac_two = twh_get_bencoeff(bangtype,1)
+     &              *(disttwo - twh_get_vibcoeff(btwo,0))
+            else
+               write(6,*) 'iutype',iutype,'bang type',bangtype
+               write(6,*) 'orderbang:',iorder
+               write(6,*) 'VANGLE: bad type'
+               lfailure = .true.
+               return
+            endif
+            vbondang = (fac_one + fac_two)*differ
+#if DEBUG_VANGLE
+            write(6,'(4(a,1x,f8.3,1x))')
+     &           ,'angle:',angle*radtodeg
+     &           ,'differ:',differ*radtodeg
+     &           ,'delta one:',distone-twh_get_vibcoeff(bone,0)
+     &           ,'ba one:',fac_one*differ/CON_KCALTOK
+            write(6,'(4(a,1x,f8.3,1x))')
+     &           ,'angle:',angle*radtodeg
+     &           ,'differ:',differ*radtodeg
+     &           ,'delta two:',disttwo-twh_get_vibcoeff(btwo,0)
+     &           ,'ba two:',fac_two*differ/CON_KCALTOK
+#endif            
+         endif
+
+
       else
          write(6,*) 'VANGLE: non defined bond angle type'
          lfailure = .true.
          return
+      endif
+
+      if ( lreport ) then
+         call twh_report(GLB_INCR,REP_ANG_REG,twh_vangle)
+      endif
+
+      if ( lbondang ) then
+         if ( lreport ) then
+            call twh_report(GLB_INCR,REP_ANG_BA,vbondang)
+         endif
+         twh_vangle = twh_vangle + vbondang
       endif
 
       if ( ldononbond ) then
@@ -359,16 +443,19 @@ c        --- get the nonbonded vdw energy
          junit = twh_get_ijben3(imolty,iunit,ibend)
          call twh_ntype(GLB_GET,imolty,iunit,iutype)
          call twh_ntype(GLB_GET,imolty,junit,jutype)
-c        --- assign the charges
-         call twh_qqatom(GLB_GET,imolty,iunit,qqa)
-         call twh_qqatom(GLB_GET,imolty,junit,qqb)
-         twh_vangle = twh_vangle + twh_vtwobody(lfailure,distsq
+         vvdw = twh_vtwobody(lfailure,distsq
      &        ,iutype,jutype,0,lovrlap,vf,dv)
-         if ( lfailure ) return
-c        --- get the nonbonded coulombic energy (only the real space
-c        --- part)
-         call twh_constant_qqfact(GLB_GET,qqfact)
-         twh_vangle = twh_vangle + qqfact*qqa*qqb/dist
+         if ( lovrlap .or. lfailure ) return
+
+         call twh_vcoulomb( 0,ibox,dist,imolty,iunit
+     &     ,imolty,junit,vf, dv,lovrlap,vcharge)
+         if ( lovrlap ) return
+
+         if ( lreport ) then
+            call twh_report(GLB_INCR,REP_ANG_VDW,vvdw)
+            call twh_report(GLB_INCR,REP_ANG_CHG,vcharge)
+         endif
+         twh_vangle = twh_vangle + vvdw + vcharge
       endif
 
       return

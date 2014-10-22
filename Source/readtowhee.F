@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 07-30-2013 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -54,7 +54,7 @@ c     --- logical scalars
       logical lhenry,lgetinitstyle,linit,lusecom,lvalue
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
-      logical loutlammps,lshift,ltailc,lcoulomb,lewald,ldualcutoff
+      logical loutlammps,lshift,ltailc,lelect,lewald,ldualcutoff
       logical in_c_flag,lfieldcoords,lallow,lbondgraph
 c     --- logical arrays
       logical lpdbset
@@ -2395,21 +2395,15 @@ c        --- error check
          endif
       endif
 
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- move error checking
-c        --- make sure at least one move has a probability >= 1.0d0
-         if ( pmmin .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one move must have a'
-     &           ,' probability of 1.0'
-            lfailure = .true.
-            return
-         endif
+c     --- make sure at least one move has a probability >= 1.0d0
+      if ( pmmin .lt. 1.0d0 ) then
+         write(6,*) 'READTOWHEE: at least one move must have a'
+     &        ,' probability of 1.0'
+         lfailure = .true.
+         return
+      endif
 
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c     --- get all of the variables associated with the details of the 
 c     --- configurational-bias monte carlo moves
       call twh_rwcbmc(lfailure,READ_FLAG,4)
@@ -2724,8 +2718,6 @@ c     --- read in the initial SAFE parameters if needed
 c     --- check the molecule input to make sure it is consistent
       call twh_checkstruc(lfailure)
       if ( lfailure ) return
-      call twh_atd_cbmc_setup(lfailure)
-      if ( lfailure ) return
 
 c     --- work through the molecular architecture and see if there 
 c     --- are rings
@@ -2879,7 +2871,11 @@ c     --- set lusecom
 
 c     --- set up the inclusion table
       call twh_setinclude
- 
+
+c     --- setup all of the trial distributions for CBMC
+      call twh_atd_cbmc_setup(lfailure)
+      if ( lfailure ) return
+
 c     --- Begin outputting information about the simulation
       if ( ensemble .eq. ENS_NPT ) then
          if ( numboxes .eq. 1 ) then
@@ -2922,8 +2918,8 @@ c     --- Begin outputting information about the simulation
          return
       endif
          
-      call twh_lcoulomb(GLB_GET,lcoulomb)
-      if ( lcoulomb ) then
+      call twh_lelect(GLB_GET,lelect)
+      if ( lelect ) then
          write(6,*) 
      &        'Coulombic inter- and intra-molecular interactions'
          call twh_lewald(GLB_GET,lewald)
@@ -3095,9 +3091,9 @@ c        --- generate a new initial configuration
 c        --- read the initial conformation from a file
          call twh_rwconf(lfailure,nchain,READ_FLAG,0,atomcount)
          if ( lfailure ) return
-         call twh_lcoulomb(GLB_GET,lcoulomb)
+         call twh_lelect(GLB_GET,lelect)
          call twh_lewald(GLB_GET,lewald)
-         if ( lcoulomb ) then
+         if ( lelect ) then
 c           --- set ewald parameters: 
             do ibox = 1, numboxes
                call twh_resetcoulomb(lfailure,ibox)
@@ -3386,7 +3382,7 @@ c     * lpdbset                                                        *
 c     * lfailure                                                       *
 c     * lpdb, lpdbset, lerror are modified in this subroutine          *
 c     *                                                                *
-c     * last modified 05-29-2013 by M.G. Martin                        *
+c     * last modified 08-11-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_INAA
@@ -3411,7 +3407,7 @@ c     --- integer scalars
       integer numunits,aminonum
 c     --- integer arrays
       integer iatmp
-      dimension iatmp(4)
+      dimension iatmp(6)
 c     --- double precision scalars
       double precision charge
 
@@ -3479,7 +3475,7 @@ c        --- read in bond bending
          endif
          do iben = 1, twh_get_inben(imolty,iunit)
             call twh_read_integer_array(lfailure,4,'bending',
-     &         4,.false.,iatmp)
+     &         6,.false.,iatmp)
             if ( lfailure ) return
             call twh_ijben2(GLB_SET,imolty,iunit,iben,iatmp(1))
             call twh_ijben3(GLB_SET,imolty,iunit,iben,iatmp(2))
@@ -3492,6 +3488,8 @@ c        --- read in bond bending
             endif
             call twh_itben(GLB_SET,imolty,iunit,iben,iatmp(3))
             call twh_orderben(GLB_SET,imolty,iunit,iben,iatmp(4))
+            call twh_itbang(GLB_SET,imolty,iunit,iben,iatmp(5))
+            call twh_orderbang(GLB_SET,imolty,iunit,iben,iatmp(6))
          enddo
 
 c        --- read in torsions

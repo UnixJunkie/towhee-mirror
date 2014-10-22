@@ -1366,7 +1366,7 @@ c     ******************************************************************
 c     * performs the initial atom insertion for swap moves             *
 c     *                                                                *
 c     * split from swapmoves.F 12-07-2008 by M.G. Martin               *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 09-03-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -1776,9 +1776,6 @@ c        --- there is some trickery in the grand canonical ensemble
          if ( nch_nb_one .gt. 1 ) then
             rbf = w1test(icordflag)*twh_random()
             bsum = 0.0d0 
-#if DEBUG_SWAPMOVES
-      write(6,*) 'w1test:',w1test
-#endif
             do ip = 1, nch_nb_one
                if ( .not. lnbterm(ip) ) then
                   bsum = bsum + bfactor(ip)
@@ -1791,7 +1788,8 @@ c                    --- select this position
             enddo
 c           --- error check
             write(6,*) 'big time screwup in INITIAL_ATOM_INSERTION'
-            write(6,*) 'w1test(2)',w1test(2)
+            write(6,*) 'icordflag,w1test(icf)',icordflag
+     &           ,w1test(icordflag)
             lfailure = .true.
             return
 c           --- pseudo while loop success kickout

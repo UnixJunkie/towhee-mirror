@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the trappe-uaf   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 11-11-2005 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -306,7 +306,7 @@ c     * + k3*(1 + Cos(3*phi)                                           *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -327,7 +327,7 @@ c     --- set ntsame
 
 c     -- CH split OPLS torsion Siepmann et al Mol Phys 90 687-693 (1997)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = -251.06d0
@@ -354,7 +354,7 @@ c     --- set ntsame
 
 c     --- Mundy et al, Faraday Disc 104, 17-36 (1996)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) =    0.00d0

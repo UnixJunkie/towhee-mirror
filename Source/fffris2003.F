@@ -30,7 +30,7 @@ c     * the parameters listed here are those noted as hybrid/UA in that*
 c     * paper                                                          *
 c     *                                                                *
 c     * originally written 10-13-2003 by M.G. Martin                   *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -292,7 +292,7 @@ c     --- O-Si-CH3
 c     --- torsion potentials
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(-1) = 0.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -310,7 +310,7 @@ c     --- Si-O-Si-O
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(-1) = 0.0d0
       call twh_ntorloop(GLB_SET,type,1)

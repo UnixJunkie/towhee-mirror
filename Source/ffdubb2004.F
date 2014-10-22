@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the dubb2004     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 12-10-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -498,7 +498,7 @@ c     * torsions - cosine power series                                 *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,10)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COS_POW)
       call twh_ntorloop(GLB_SET,type,5)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 1204.654d0
@@ -521,7 +521,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,10)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COS_POW)
       call twh_ntorloop(GLB_SET,type,3)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 1293.324d0
@@ -542,7 +542,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,10)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COS_POW)
       call twh_ntorloop(GLB_SET,type,3)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 2045.657d0
@@ -563,7 +563,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
 c     ******************************************************************
-c     * more torsions, these are stolen from the TraPPE force field    *
+c     * more torsions, these are taken from the TraPPE force field     *
 c     * and are used in place of the rather bizarre Dubb2004 torsions  *
 c     * that involve a hydrogen represented on the united-atom of CH   *
 c     *                                                                *
@@ -572,7 +572,7 @@ c     * [personal communication M.G. Martin with T.J.H. Vlught 12/2004 *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = -251.06d0
@@ -602,7 +602,7 @@ c     * more torsions - null interactions                              *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_ntorloop(GLB_SET,type,5)
       call twh_loftor(GLB_SET,type,.false.)
       call twh_torff(GLB_SET,type,ffname)

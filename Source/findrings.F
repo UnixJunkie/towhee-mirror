@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * also determines the index of each molecule for use in an       *
 c     * interior regrowth                                              *
 c     *                                                                *
 c     * completely rewritten 10-09-2002 by C.D. Lorenz                 *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 07-31-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit  none
 #define FUNCTION_GET_INVIB
@@ -46,8 +46,9 @@ c     --- logical arrays
       logical lring
       dimension lring(NUMAX)
 c     --- integer scalars
-      integer iunit,startunit,lowringnum,currentunit,nextunit,ivib,itest
+      integer iunit,startunit,lowringnum,currentunit,nextunit,itest
       integer nunit,testring,aminonum
+      integer ivib,nvib,ibend,nbend,atest,btest
 c     --- integer arrays
       integer vibpointer,prevunit,visitcount
       dimension vibpointer(NUMAX),prevunit(NUMAX),visitcount(NUMAX)
@@ -181,6 +182,31 @@ c           --- see if there are any atoms that are not in a ring
                if ( .not. lring(iunit) ) ldone = .false.
             enddo
             if ( ldone ) startunit = nunit
+         endif
+      enddo
+
+      do iunit = 1,nunit
+         call twh_inring(GLB_GET,imolty,iunit,testring)
+         if ( testring .ne. 0 ) then
+c           --- check for three memebered ring
+            call twh_invib(GLB_GET,imolty,iunit,nvib)
+            call twh_inben(GLB_GET,imolty,iunit,nbend)
+            do ivib = 1,nvib
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,itest)
+c              --- look for a bend that ends with the same unit
+               do ibend = 1,nbend
+                  call twh_ijben3(GLB_GET,imolty,iunit,ibend,btest)
+                  if ( itest .eq. btest ) then
+c                    --- three membered ring found
+                     call twh_ijben2(GLB_GET,imolty,iunit,ibend,atest)
+c                    --- switch the ring number to negative
+                     if ( testring .gt. 0 ) testring = -testring
+                     call twh_inring(GLB_SET,imolty,iunit,testring)
+                     call twh_inring(GLB_SET,imolty,atest,testring)
+                     call twh_inring(GLB_SET,imolty,btest,testring)
+                  endif
+               enddo
+            enddo
          endif
       enddo
 

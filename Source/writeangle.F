@@ -26,7 +26,7 @@ c     * the file index                                                 *
 c     * index: file index for output                                   *
 c     *                                                                *
 c     * originally written 02-22-2002 by M.G. Martin                   *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ANGLESTYLE
@@ -123,7 +123,7 @@ c     --- retrieve constant
      &              ,'m:',twh_get_bencoeff(type,2)
  91            format(a5,1x,i4,1x,a37,1x,a22,/
      &              ,11x,a6,1x,f10.3,1x,a2,1x,f5.2,1x,a2,1x,f4.1)
-               call writeanglek(type)
+               call twh_writeanglek(type)
             elseif ( style .eq. ANG_STYLE_TTFOURIER ) then
                write(index,101) 'Type:',type
      &              ,'Style: UFF Three Term Fourier Expansion','Angle:'
@@ -133,7 +133,7 @@ c     --- retrieve constant
      &              ,'C2:',twh_get_bencoeff(type,3)
  101           format(a5,1x,i4,1x,a39,/,11x,a6,1x,f7.3
      &              ,3(1x,a3,1x,f10.3))
-               call writeanglek(type)
+               call twh_writeanglek(type)
             elseif ( style .eq. ANG_STYLE_NONE ) then
                write(index,111) type
  111            format('Type: ',i3,1x,'Style: No Interaction')
@@ -189,6 +189,26 @@ c     --- retrieve constant
  161           format('Type: ',i3,1x
      &              ,'Style: Harmonic Cosine Angle plus 1-3 nonbond: '
      &              ,f10.3,1x,'Constant: ',f10.1)
+            elseif ( style .eq. ANG_STYLE_MMFFC_ANG ) then
+               write(index,251) type,radtodeg*twh_get_bencoeff(type,0)
+     &              ,twh_get_bencoeff(type,1),twh_get_bencoeff(type,2)
+ 251           format('Type:',1x,i4,1x,'Style: MMFF Cubic Combo Angle'
+     &              ,/,10x,'Angle:',1x,f10.3,1x,/
+     &              ,10x,'Constants:',2(1x,f10.3))
+               call twh_angleorder(GLB_GET,type,order)
+               write(index,254) order
+ 254           format(10x,'Angle Order:',1x,a15)
+
+            elseif ( style .eq. ANG_STYLE_MMFFC_BA ) then
+               write(index,351) type
+ 351           format('Type:',1x,i4,1x
+     &              ,'Style: MMFF Cubic Combo Bond-Angle')
+               write(index,353) twh_get_bencoeff(type,1)
+     &              ,twh_get_bencoeff(type,2)
+ 353           format(10x,'Bond-Angle Constants:',2(1x,f10.2))
+               call twh_angleorder(GLB_GET,type,order)
+               write(index,354) order
+ 354           format(10x,'Angle Order:',1x,a15)
             else
                write(index,*) 'WRITEANGLE: angle type ',type,
      &              'has an invalid anglestyle',style
@@ -202,11 +222,11 @@ c     --- retrieve constant
       return
       end
     
-      subroutine writeanglek(type)
+      subroutine twh_writeanglek(type)
 c     *****************************************************************
 c     * writes out the energetic parameters for the angles            *
 c     *                                                               *
-c     * last modified 10-13-2008 by M.G. Martin                       *
+c     * last modified 08-13-2014 by M.G. Martin                       *
 c     *****************************************************************
       implicit none
 #define FUNCTION_GET_BENPREFACT

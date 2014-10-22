@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the CatlowFaux   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -603,7 +603,7 @@ c     * nonbond vdw with no coulombic                                  *
 c     * any scaling factors for the 1-4 are accounted for in ffnonbond *
 c     ******************************************************************
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.0d0
 c     --- N. Raj, G. Sastre, C.R.A. Catlow J. Phys. Chem. B
@@ -624,7 +624,7 @@ c     * any scaling factors for the 1-4 vdw are accounted for in       *
 c     * ffnonbond, the coulombic is not scaled                         *
 c     ******************************************************************
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_set_torcoeff(type,tclocal)

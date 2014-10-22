@@ -961,7 +961,7 @@ c     * read_dihedral_coeff                                            *
 c     * reads in the dihedral coefficients                             *
 c     *                                                                *
 c     * rewritten from LAMMPS 2001 03-01-2002 by M.G. Martin           *
-c     * last modified 04-17-2006 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -993,7 +993,7 @@ c        --- Gromos general Cosine series
          do i = 1,ndihedtypes
             read (2,*) jtmp,(tmp(j),j=1,3)
 c           --- assign the type for the Amber/Charmm/Gromos Cos series
-            call twh_torstyle(GLB_SET,i,3)
+            call twh_torstyle(GLB_SET,i,TOR_STYLE_GCA_COS)
 c           --- only a single loop
             call twh_ntorloop(GLB_SET,i,1)
 c           --- set default 1-4 to false and zero
@@ -1015,7 +1015,7 @@ c        --- the cross terms and explicit declaration of ordering.
          do i = 1,ndihedtypes
             read (2,*) jtmp,(tmp(j),j=1,6)
 c           --- assign the type for explicit class 2
-            call twh_torstyle(GLB_SET,i,9)
+            call twh_torstyle(GLB_SET,i,TOR_STYLE_COMP_X_EX)
 c           --- by default assume 1-4 interactions with 1.0 scale
             call twh_loftor(GLB_SET,i,.true.)
             tclocal(-1) = 1.0d0
@@ -1034,7 +1034,7 @@ c        --- LAMMPS multiharmonic, same as the Towhee Cosine Power
 c        --- Series
          do i = 1,ndihedtypes
             read (2,*) jtmp,(tmp(j),j=1,5)
-            call twh_torstyle(GLB_SET,i,10)
+            call twh_torstyle(GLB_SET,i,TOR_STYLE_COS_POW)
 c           --- assume no 1-4 interactions
             call twh_loftor(GLB_SET,i,.false.)
             tclocal(-1) = 0.0d0
@@ -1054,7 +1054,7 @@ c        --- LAMMPS charmm, same as Amber/Charmm/Gromos in Towhee
          do i = 1,ndihedtypes
             read (2,*) jtmp,(tmp(j),j=1,4)
 c           --- Amber/Charmm/Gromos style
-            call twh_torstyle(GLB_SET,i,3)
+            call twh_torstyle(GLB_SET,i,TOR_STYLE_GCA_COS)
 c           --- this potential has 1-4 interactions if tmp(4) is .gt. 0
             if ( tmp(4) .gt. 0.0d0 ) then
                call twh_loftor(GLB_SET,i,.true.)

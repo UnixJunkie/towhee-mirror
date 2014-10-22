@@ -28,7 +28,7 @@ c     * Potentials for Carboxylic Acids and Their Phase Behavior"      *
 c     * AIChE Journal, 56, 2, 485-505 (2010)                           *
 c     *                                                                *
 c     * originally written 12-03-2005 by M.G. Martin                   *
-c     * last modified 07-18-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -192,7 +192,7 @@ c     * nonbonded interactions for dihedrals                           *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.0d0
       call twh_set_torcoeff(type,tclocal)

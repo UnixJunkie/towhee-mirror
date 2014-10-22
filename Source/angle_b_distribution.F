@@ -166,3 +166,42 @@ c     --- variables passed to/from the subroutine
      &     /(dsin(ang_alpha)*dsin(ang_beta))
       return
       end
+
+
+      subroutine twh_three_ring_torsion(distjk,distjl,distkl,distlm
+     &     ,angc_jlm,angc_klm,phic)
+c     ******************************************************************
+c     * computes the cosine of the dihedral angle for a torsion that   *
+c     * spans atoms J - K - L - M, where J - K - L form a three mem    *
+c     * ring and M is bonded to L                                      *
+c     *                                                                *
+c     * originally written 08-02-2014 by M.G. Martin                   *
+c     * last modified 08-03-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+#define FUNCTION_ARCCOS
+#define FUNCTION_INVERSELAWOFCOSINE
+#define FUNCTION_LAWOFCOSINE
+#include "functions.h"
+c     --- variables passed to/from the subroutine
+      double precision distjk,distjl,distkl,distlm,angc_jlm,angc_klm
+      double precision phic
+c     --- local variables
+      double precision anglec,ang_alpha,ang_beta,ang_gamma
+      double precision distkm,distjm
+
+      anglec = twh_inverselawofcosine(distkl,distjk,distjl)
+      ang_alpha = twh_arccos(anglec)
+
+      distkm = twh_lawofcosine(distkl,distlm,angc_klm)
+      anglec = twh_inverselawofcosine(distkm,distkl,distlm)
+      ang_beta = twh_arccos(anglec)
+
+      distjm = twh_lawofcosine(distlm,distjl,angc_jlm)
+      anglec = twh_inverselawofcosine(distjk,distkm,distjm)
+      ang_gamma = twh_arccos(anglec)
+c     --- use all of that to compute the torsion
+      call twh_angle_b_rigid_cosine(ang_alpha,ang_beta,ang_gamma,phic)
+
+      return
+      end

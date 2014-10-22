@@ -28,7 +28,7 @@ c     * Note: UFF is a bit unusual in that it transforms its basic     *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-01-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -3574,7 +3574,7 @@ c                 --- but not sure what else to do
                lfound = .false.
             endif
             if ( lfound ) then
-               call twh_torstyle(GLB_SET,type,14)
+               call twh_torstyle(GLB_SET,type,TOR_STYLE_UFF)
                tclocal(-1) = 1.0d0
                call twh_loftor(GLB_SET,type,.true.)
                call twh_set_torcoeff(type,tclocal) 
@@ -3609,7 +3609,7 @@ c                       V0 = 2.0 kcal/mol, n = 3, phi = 180
                         tclocal(3) = 3.0d0
                         tclocal(2) = -1.0d0
                         tclocal(1) = (0.5d0)*CON_KCALTOK*(2.0d0)
-                        call twh_torstyle(GLB_SET,type,14)
+                        call twh_torstyle(GLB_SET,type,TOR_STYLE_UFF)
                         tclocal(-1) = 1.0d0
                         call twh_loftor(GLB_SET,type,.true.)
                         call twh_set_torcoeff(type,tclocal)
@@ -3635,7 +3635,7 @@ c                       --- set manually
 c     --- now add in a null torsion for everything else (a dreaded 
 c     --- quadruple wildcard torsion)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       tclocal(-1) = 1.0d0
       call twh_loftor(GLB_SET,type,.true.)
       call twh_set_torcoeff(type,tclocal)

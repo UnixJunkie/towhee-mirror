@@ -147,7 +147,6 @@ c              --- Potential energy
             enddo
          enddo
       enddo
-
       call twh_ewald_numvect(GLB_SET,ibox,ncount)
       return 
       end

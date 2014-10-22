@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the gromos43a1   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1830,7 +1830,7 @@ c     torcoeff(+3) to 0.0 (for the +1 case) or 180.0 (for the -1 case).
 
 c     --- X - C - C - X
       type = 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1843,7 +1843,7 @@ c     --- gromos p is -1
 
 c     --- X - C - OA - X (at ring)
       type = 2
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1856,7 +1856,7 @@ c     --- gromos p is -1
 
 c     --- X - C - OA - X (carboxyl)
       type = 3
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1869,7 +1869,7 @@ c     --- gromos p is -1
 
 c     --- X - C - N,NT,NE,NZ,NR - X 
       type = 4
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1882,7 +1882,7 @@ c     --- gromos p is -1
 
 c     --- X - C - CR1 - X (6-ring)
       type = 5
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1896,7 +1896,7 @@ c     --- gromos p is -1
 c     --- X - CH1 (sugar) - NR (base) - X
 c     --- Null torsion, used for all "extra" torsions in gromos scheme
       type = 6
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,0)
@@ -1909,7 +1909,7 @@ c     --- gromos p does not matter (null torsion)
 
 c     --- O - CH1 - CHn - (X != O)
       type = 7
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1922,7 +1922,7 @@ c     --- gromos p is +1
 
 c     --- O - CH1 - CHn - O
       type = 8
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1935,7 +1935,7 @@ c     --- gromos p is +1
 
 c     --- X - OA - P - X
       type = 9
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1948,7 +1948,7 @@ c     --- gromos p is +1
 
 c     --- X - S - S - X
       type = 10
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1961,7 +1961,7 @@ c     --- gromos p is +1
 
 c     --- X - OA - P - X
       type = 11
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1974,7 +1974,7 @@ c     --- gromos p is +1
 
 c     --- X - CHn - OA (not sugar) - X
       type = 12
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -1987,7 +1987,7 @@ c     --- gromos p is +1
 
 c     --- X - CH2 - S - X
       type = 13
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2000,7 +2000,7 @@ c     --- gromos p is +1
 
 c     --- X - C,CHn,SI - NT,NL,OA(sugar) - X
       type = 14
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2013,7 +2013,7 @@ c     --- gromos p is +1
 
 c     --- HC - C - S - X
       type = 15
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2026,7 +2026,7 @@ c     --- gromos p is +1
 
 c     --- HC - C - C - X
       type = 16
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2039,7 +2039,7 @@ c     --- gromos p is +1
 
 c     --- X - CHn,SI - CHn - X
       type = 17
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2052,7 +2052,7 @@ c     --- gromos p is +1
 
 c     --- X - NR - FE - X
       type = 18
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2065,7 +2065,7 @@ c     --- gromos p is +1
 
 c     --- X - CHn - N,NE - X
       type = 19
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2078,7 +2078,7 @@ c     --- gromos p is -1
 
 c     --- X - CHn - C,NR(ring),CR1 - X
       type = 20
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2091,7 +2091,7 @@ c     --- gromos p is +1
 
 c     --- X - CHn - NT - X
       type = 21
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)

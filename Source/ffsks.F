@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the SKS          *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 12-13-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -171,7 +171,7 @@ c     --- C.D. Wick; M.G. Martin; J.I. Siepmann;
 c     --- J. Phys. Chem. B 104, 8008-8016 (2000)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(1) = (355.0d0)*(0.5d0)
       tclocal(2) = (-68.19d0)*(0.5d0)

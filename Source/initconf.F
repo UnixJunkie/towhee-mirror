@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-16-2011 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -58,7 +58,7 @@ c     --- character scalars
       character*20 initboxtype,initstyle,teststyle,initlattice
 c     --- logical scalars
       logical lopentemplate,lopencoords,lopenpartial,lallow
-      logical lterm,lgrowcbmc,lfound,lcoulomb,lewald
+      logical lterm,lgrowcbmc,lfound,lelect,lewald
 c     --- integer scalars
       integer idim,jdim,istart,iend,iadjust,itest,nchain,kmax
       integer ic,jc,kc,intemp,idum,nchbox,jbox,ensemble
@@ -194,9 +194,9 @@ c     --- and below
          enddo
       enddo
 
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
-      if ( lcoulomb ) then
+      if ( lelect ) then
 c        --- set ewald parameters: 
          do ibox = 1, numboxes
             call twh_resetcoulomb(lfailure,ibox)

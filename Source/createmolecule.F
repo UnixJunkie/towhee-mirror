@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * to construct all of the molecule connectivity templates needed *
 c     * for a Towhee run                                               *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 11-21-2011 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJIMPROP2
@@ -134,7 +134,7 @@ c              --- set the atomtype and charge for this atom
                if ( lfailure ) return
                call twh_qqatom(GLB_SET,nmolty,current,charge)
                if ( charge .ne. 0.0d0) then
-                  call twh_lcoulomb(GLB_SET,.true.)
+                  call twh_lelect(GLB_SET,.true.)
                   call twh_lewald(GLB_SET,.true.)
                endif
                call twh_ntype(GLB_SET,nmolty,current,atomtype)
@@ -694,7 +694,7 @@ c     * There is a safety check to make sure we don't have more than   *
 c     * MAXTOR dihedrals from any atom                                 *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_TORSTYLE
@@ -741,7 +741,7 @@ c           --- found a new dihedral, add it to the data structure
                lfailure = .true.
                return
             endif
-            if ( twh_get_torstyle(ttype) .eq. 9 
+            if ( twh_get_torstyle(ttype) .eq. TOR_STYLE_COMP_X_EX
      &           .and. iorder .eq. -1 ) then
 c              --- this is the explicitly declared class 2 torsion 
 c              --- which is not symmetric so we declare a negative 
@@ -992,12 +992,12 @@ c     --- local variables
       parameter (toler = 0.001d0)
 
 c     --- determine how to combine this regular and improper
-      tstyle = twh_get_torstyle(tortype)
+      call twh_torstyle(GLB_GET,tortype,tstyle)
       istyle = twh_get_impstyle(imptype)
 
-      if ( tstyle .eq. 3 .and. istyle .eq. 1 ) then
+      if ( tstyle .eq. TOR_STYLE_GCA_COS .and. istyle .eq. 1 ) then
 c        --- we can handle this
-         newstyle = 4
+         newstyle = TOR_STYLE_GCA_CUB
       else
          write(6,*) 'CREATEMOLECULE: cannot combine regular torsion '
      &        ,'style ',tstyle,' with improper style ',istyle

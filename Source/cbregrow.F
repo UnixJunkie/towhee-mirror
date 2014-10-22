@@ -348,7 +348,7 @@ c        --- burn a random number
       write(6,*) 'wrosen',wrosen
       write(6,*) 'wdlog ',wdlog
       write(6,*) 'accept',laccept
-c     --- force acceptance to debug
+c     --- DEBUG: force acceptance
 c      if ( .not. loverlap(CRD_NEW) ) laccept = .true.
 #endif
 

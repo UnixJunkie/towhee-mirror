@@ -287,7 +287,7 @@ c     * compute the energy change for all of the two-body interactions *
 c     * involving the molecules in chaininfo                           *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -302,7 +302,6 @@ c     --- variables passed to/from the subroutine
       dimension dv_foreign(MAX_FOREIGN_LAMBDA)
 c     --- local variables
       integer lambda,ioldnew,scp_num_foreign_lambda
-      double precision qqfact
       double precision v_inter,v_elect,l_velect,l_vinter
       dimension v_inter(2),v_elect(2),l_velect(2),l_vinter(2)
       double precision v_foreign
@@ -314,7 +313,6 @@ c     --- no energy changes in the ideal box
       if ( activebox .eq. 0 ) return
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
 
 c     --- initialize
@@ -347,7 +345,7 @@ c     --- initialize
       write(6,*) 'EC_TWO_BODY_DV v_inter(old):',v_inter(CRD_OLD)
 #endif
       dv_inter = v_inter(CRD_NEW) - v_inter(CRD_OLD)
-      dv_elect = qqfact*(v_elect(CRD_NEW) - v_elect(CRD_OLD))
+      dv_elect = v_elect(CRD_NEW) - v_elect(CRD_OLD)
       dl_vinter = l_vinter(CRD_NEW) - l_vinter(CRD_OLD)
       dl_velect = l_velect(CRD_NEW) - l_velect(CRD_OLD)
       do lambda = 1,scp_num_foreign_lambda
@@ -418,7 +416,7 @@ c     * Error conditions:                                              *
 c     *   returns early of loverlap is true                            *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -432,7 +430,6 @@ c     --- variables passed to/from the subroutine
       double precision dv_intra,dv_elect,dv_vib,dv_ben,dv_tor
 c     --- local variables
       integer ichain,imove,iflag,testcrd
-      double precision qqfact
       double precision vintra,velect,vvib,vbend,vtor
       dimension vintra(2),velect(2),vvib(2),vbend(2),vtor(2)
 
@@ -440,9 +437,6 @@ c     --- local variables
       write(6,*) 'start TWH_EC_INTRA_DV'
       write(6,*) 'lintra,lbonded:',lintra,lbonded
 #endif
-
-c     --- retrieve constant
-      call twh_constant_qqfact(GLB_GET,qqfact)
 
       do imove = 1,nchainmove
          ichain = chaininfo(imove,3)
@@ -500,7 +494,7 @@ c                 --- improper torsions
          enddo
 
          dv_intra = dv_intra + vintra(CRD_NEW) - vintra(CRD_OLD)
-         dv_elect = dv_elect + qqfact*(velect(CRD_NEW)-velect(CRD_OLD))
+         dv_elect = dv_elect + velect(CRD_NEW)-velect(CRD_OLD)
          dv_vib = dv_vib + vvib(CRD_NEW) - vvib(CRD_OLD)
          dv_ben = dv_ben + vbend(CRD_NEW) - vbend(CRD_OLD)
          dv_tor = dv_tor + vtor(CRD_NEW) - vtor(CRD_OLD)
@@ -838,7 +832,7 @@ c     * ichain in the activebox for all terms that involve any of the  *
 c     * atoms in the atomlist                                          *
 c     *                                                                *
 c     * originally written 10-18-2006 by M.G. Martin                   *
-c     * last modified 10-25-2006 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -915,7 +909,8 @@ c                 --- compute bond energy
                   call twh_itvib(GLB_GET,imolty,targetatom,ivib
      &                 ,bondtype)
                   dvatomlist = dvatomlist + dvpm(icord)*
-     &                 twh_vbond(lfailure,bondtype,length,imolty
+     &                 twh_vbond(lfailure,.false.,activebox,bondtype
+     &                 ,length,imolty
      &                 ,targetatom,otheratom,loverlap(icord))
                   if ( lfailure ) return
                   if ( loverlap(icord) ) return
@@ -1133,7 +1128,7 @@ c     * ichain in the activebox for terms that involve any of the atoms*
 c     * in the atomlist                                                *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-08-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1210,7 +1205,7 @@ c                    --- fetch the coordinates for jatom
      &                    ,xpos(3),ypos(3),zpos(3))
 c                    --- compute angle energy
                      dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                    *twh_vangle(lfailure,loverlap(ioldnew)
+     &                    *twh_vangle(lfailure,.false.,loverlap(ioldnew)
      &                    ,activebox,imolty,targetatom,ibend,styleflag
      &                    ,angcos,distone,disttwo,xpos,ypos,zpos)
                      if ( lfailure ) return
@@ -1267,7 +1262,8 @@ c                          --- fetch jatom
      &                          ,jatom,xpos(3),ypos(3),zpos(3))
 c                          --- compute energy change
                            dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                          *twh_vangle(lfailure,loverlap(ioldnew)
+     &                          *twh_vangle(lfailure,.false.
+     &                          ,loverlap(ioldnew)
      &                          ,activebox,imolty,iatom,ibend,styleflag
      &                          ,angcos,distone,disttwo,xpos,ypos,zpos)
                            if ( lfailure ) return
@@ -1458,7 +1454,7 @@ c     * molecule ichain in the activebox for all regular torsions that *
 c     * involve any of the atoms in the atomlist                       *
 c     *                                                                *
 c     * originally written 10-13-2006 by M.G. Martin                   *
-c     * last modified 10-25-2006 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1543,8 +1539,8 @@ c                       --- see if this atom is in the atomlist
                      enddo
 c                    --- compute torsion energy
                      dvatomlist = dvatomlist + dvpm(icord)*
-     &                    twh_vtorsion(lfailure,activebox,1,imolty
-     &                    ,icompute,itor
+     &                    twh_vtorsion(lfailure,.false.,activebox,1
+     &                    ,imolty,icompute,itor
      &                    ,xtemp,ytemp,ztemp,ddum,loverlap(icord))   
                      if ( lfailure ) return
                      if ( loverlap(icord) ) return
@@ -1820,7 +1816,7 @@ c     * energy (dvintra) and an intramolecular and self-term electro   *
 c     * energy (dvelect)                                               *
 c     *                                                                *
 c     * originally written 10-23-2006 by M.G. Martin                   *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1828,7 +1824,6 @@ c     ******************************************************************
 #define FUNCTION_EWALD_SELF
 #define FUNCTION_LINCLUDE
 #define FUNCTION_ONEFIVETYPE
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
 #include "functions.h"
@@ -1844,28 +1839,26 @@ c     --- variables passed to/from the subroutine
       double precision dvintra,dvelect
 c     --- local variables
 c     --- logical scalars
-      logical ltorsion,lcompute,lvalidintra,luse_ct,luse_ci
-      logical luse_vt,luse_vi,lcoulomb,lewald
+      logical lcompute,lvalidintra,luse_ct,luse_ci
+      logical luse_vt,luse_vi,lelect,lewald
 c     --- integer scalars
       integer testunit,iatomlist,icord,ioldnew,ntii,ntjj,imolty
       integer iunit,gcord,cutstyle,ioftype,nunit
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,dvdlv,dvdlc
-      double precision rxuij,ryuij,rzuij,rijsq,rij,qqfact,rcelect
+      double precision rxuij,ryuij,rzuij,rijsq,rij
+      double precision vcoulomb
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
 
 c     --- set defaults
-      ltorsion = .false.
       cutstyle = CUTSTYLE_FULL
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_moltyp(GLB_GET,ichain,imolty)
       call twh_nunit(GLB_GET,imolty,nunit)
-      call twh_rcelect(GLB_GET,activebox,rcelect)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
 
       do testunit = 1,nunit
@@ -1920,14 +1913,14 @@ c                          --- compute nonbonded intramolecular energy
                               if (loverlap(ioldnew)) return
                            endif
 c                          --- compute nonbonded electrostatic energy
-                           if ( lcoulomb ) then
+                           if ( lelect ) then
                               if ( luse_ct .and. luse_ci ) then
                                  rij = dsqrt(rijsq)
+                                 call twh_vcoulomb(-1,activebox,rij
+     &                                ,imolty,iunit,imolty,testunit,vf
+     &                                ,dvdlc,loverlap(ioldnew),vcoulomb)
                                  dvelect = dvelect
-     &                                + dvpm(ioldnew)*qqfact
-     &                                *twh_vcoulomb(activebox,rij,imolty
-     &                                ,iunit,imolty,testunit,ltorsion,vf
-     &                                ,dvdlc,loverlap(ioldnew))
+     &                                + dvpm(ioldnew)*vcoulomb
                                  if (loverlap(ioldnew)) return
                               endif
                            endif
@@ -1935,11 +1928,9 @@ c                          --- compute nonbonded electrostatic energy
 c                          --- compute the ewald intramolecular
 c                          --- (self and correction) terms
                            rij = dsqrt(rijsq)
-                           if ( rij .lt. rcelect ) then
-                              dvelect = dvelect + dvpm(ioldnew)
-     &                             *qqfact*twh_ewald_correct(activebox
-     &                             ,imolty,iunit,testunit,rij)
-                           endif
+                           dvelect = dvelect + dvpm(ioldnew)
+     &                          *twh_ewald_correct(activebox
+     &                          ,imolty,iunit,testunit,rij)
                         endif
                      endif
                   enddo
@@ -1955,7 +1946,7 @@ c     --- atomlist self interactions
             do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
                icord = atomlist(iatomlist,ioldnew)
                if ( icord .ne. CRD_NONE ) then
-                  dvelect = dvelect + dvpm(ioldnew)*qqfact
+                  dvelect = dvelect + dvpm(ioldnew)
      &                 *twh_ewald_self(activebox,imolty,iunit)
                endif
             enddo
@@ -2102,10 +2093,9 @@ c     * computes the two-body energy change for a list of atoms on     *
 c     * molecule ichain in the activebox                               *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 #include "dvpm.h"
@@ -2124,26 +2114,23 @@ c     --- variables passed to/from the subroutine
       double precision dvdl_vdw,dvdl_c
 c     --- logical scalars
       logical lsame,lfetch,leval_vdw,leval_coul,leval_v_j,leval_c_j
-      logical ltorsion,leval_c_i,leval_v_i
+      logical leval_c_i,leval_v_i
 c     --- integer scalars
       integer ioldnew,testmolty,testlist,testchain,iunit,numunit
       integer testtype,testcord,ilist,icord,iatom,cutstyle,imolty,itype
       integer lambda,nmolty,ncmt,scp_num_foreign_lambda
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
-      double precision rijsq,dl_vdw,dl_c,rij,qqfact
+      double precision rijsq,dl_vdw,dl_c,rij,vcoulomb
 c     --- double precision arrays
       double precision vfor
       dimension vfor(MAX_FOREIGN_LAMBDA)
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
 
 c     --- use the full potential
       cutstyle = CUTSTYLE_FULL
-c     --- not a torsion interaction
-      ltorsion = .false.
 c     --- set the molecule type for ichain
       call twh_moltyp(GLB_GET,ichain,imolty)
 c     --- retrieve nmolty
@@ -2229,13 +2216,12 @@ c                                --- compute change in vdw energy
                               if ( leval_coul ) then
 c                                --- compute change in real coulomb
                                  rij = dsqrt(rijsq)
-                                 ltorsion = .false.
-                                 dvelect = dvelect 
-     &                                + dvpm(ioldnew)*qqfact*
-     &                                twh_vcoulomb(activebox,rij
+                                 call twh_vcoulomb(-1,activebox,rij
      &                                ,imolty,iatom,testmolty,iunit
-     &                                ,ltorsion,vfor,dl_c
-     &                                ,loverlap(ioldnew))
+     &                                ,vfor,dl_c,loverlap(ioldnew)
+     &                                ,vcoulomb)
+                                 dvelect = dvelect 
+     &                                + dvpm(ioldnew)*vcoulomb
                                  if ( scp_num_foreign_lambda .ne. 0
      &                                ) then
                                     dvdl_c = dvdl_c

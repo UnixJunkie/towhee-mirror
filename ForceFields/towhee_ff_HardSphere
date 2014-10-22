@@ -1,7 +1,7 @@
 towhee_ff Version
           15
 Number of Nonbonded Types
-          14
+          16
 Potential Type
 Hard Sphere                   
 Classical Mixrule
@@ -300,8 +300,50 @@ FJ-tan-H
 FJ-tan-H  
 FJ-tan-H  
 null      
+Atom Type Number
+          15
+Nonbond Coefficients
+    0.1000000000E+01
+Mass
+    0.3545300000E+02
+Element
+Cl
+Bond Pattern
+null 
+Base Charge 
+    0.0000000000E+00
+Polarizability
+    0.1000000000E+01
+Force Field Name
+HardSphere
+Atom Names
+Cl-bond   
+nonbond   
+nonbond   
+nonbond   
+Atom Type Number
+          16
+Nonbond Coefficients
+    0.1000000000E+01
+Mass
+    0.2299000000E+02
+Element
+Na
+Bond Pattern
+null 
+Base Charge 
+    0.0000000000E+00
+Polarizability
+    0.1000000000E+01
+Force Field Name
+HardSphere
+Atom Names
+Na-bond   
+nonbond   
+nonbond   
+nonbond   
 Number of Bonded Terms
-           6
+           7
 Bond Type Number
            1
 Bond Style
@@ -390,6 +432,19 @@ Number of Atoms with Same Parameters
 Atom Names
 R-tan-O    R-tan-H   
 FJ-tan-O   FJ-tan-H  
+Bond Type Number
+           7
+Bond Style
+           7
+Bond Coefficients
+Vibration Order
+wild      
+Force Field Name
+HardSphere
+Number of Atoms with Same Parameters  
+           1
+Atom Names
+nonbond    nonbond   
 Number of Angle Terms
            4
 Angle Type Number

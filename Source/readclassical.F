@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * reads in all input parameters from towhee_input that are       *
 c     * related to the classical potential style                       *
 c     *                                                                *
 c     * split out of readtowhee 11-01-2004 by M.G. Martin              *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-27-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -271,21 +271,27 @@ c     --- set rminsq
 
       if ( electrostatic_form .eq. 'none' ) then
 c        --- no electrostatic interactions
-         call twh_lcoulomb(GLB_SET,.false.)
+         call twh_elect_form_code(GLB_SET,EF_CODE_NONE)
+         call twh_lelect(GLB_SET,.false.)
          call twh_lewald(GLB_SET,.false.)
          call twh_ewald_kalp(GLB_SET,0.0d0)
          call twh_ewald_kmax(GLB_SET,1,0)
 c        --- reset qqfact to zero
          dvalue = 0.0d0
          call twh_constant_qqfact(GLB_SET,dvalue)
+      elseif ( electrostatic_form .eq. 'buffered coulombic' ) then
+         call twh_elect_form_code(GLB_SET,EF_CODE_BUF)
+         call twh_lelect(GLB_SET,.true.)
+
       elseif ( electrostatic_form .eq. 'coulomb' ) then
-         call twh_lcoulomb(GLB_SET,.true.)
+         call twh_lelect(GLB_SET,.true.)
 c        --- read in the coulombstyle
          call twh_read_labeled_string(lfailure,4, 'coulombstyle'
      &        ,.true.,idname,coulombstyle)
          if ( lfailure ) return
          call twh_coulombstyle(GLB_SET,coulombstyle)
          if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then
+            call twh_elect_form_code(GLB_SET,EF_CODE_COUL_EWALD)
 c           --- coulombic interactions with fixed kmax values
             call twh_lewald(GLB_SET,.true.)
 c           --- read in ewald sum kalp and kmax parameters
@@ -317,6 +323,7 @@ c           --- set all of the boxes to this initial kmax
                call twh_ewald_kmax(GLB_SET,ibox,kmax)
             enddo
          elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
+            call twh_elect_form_code(GLB_SET,EF_CODE_COUL_EWALD)
 c           --- coulombic interactions with fixed electrostatic cutoff
             call twh_lewald(GLB_SET,.true.)
 c           --- read in the ewald precision
@@ -342,6 +349,7 @@ c           --- read in the electostatic cutoff
 c           --- set all of the boxes to this initial rcelect
             call twh_rcelect(GLB_INIT,numboxes,rcelect)
          elseif ( coulombstyle .eq. 'minimum image' ) then
+            call twh_elect_form_code(GLB_SET,EF_CODE_COUL_NOCUT)
 c            --- explicit minimum image coulombic interactions
             call twh_lewald(GLB_SET,.false.)
             kmax = 0

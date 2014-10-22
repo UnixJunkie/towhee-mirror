@@ -14912,7 +14912,7 @@ c     ******************************************************************
 c     * Charmm27 standard  dihedral                                    *
 c     *                                                                *
 c     * split from original ffcharmm27 03-05-2006 by M.G. Martin       *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -14933,7 +14933,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -15002,7 +15002,7 @@ c     --- set ntsame
       
 C     --- Null Torsion: zero energy
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,0)
@@ -15559,7 +15559,7 @@ c     --- set ntsame
 c     --- null2 : null torsions split into two groups
 c     --- in order to keep maxsamet at 90
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,0)
@@ -16115,7 +16115,7 @@ c     --- set ntsame
 c     --- null3 : null torsions split into third group
 c     --- in order to keep maxsamet at 90
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,0)
@@ -16333,7 +16333,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16431,7 +16431,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16493,7 +16493,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16645,7 +16645,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -16692,7 +16692,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16730,7 +16730,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16792,7 +16792,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16836,7 +16836,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,4)
@@ -16871,7 +16871,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -16930,7 +16930,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -16974,7 +16974,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17024,7 +17024,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -17059,7 +17059,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17079,7 +17079,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17099,7 +17099,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -17128,7 +17128,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17148,7 +17148,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -17186,7 +17186,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17440,7 +17440,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -17463,7 +17463,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17489,7 +17489,7 @@ c     -- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17557,7 +17557,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17589,7 +17589,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -17630,7 +17630,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17674,7 +17674,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17700,7 +17700,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -17726,7 +17726,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,4)
@@ -17755,7 +17755,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,5)
@@ -17794,7 +17794,7 @@ c     --- set ntsame
 
 c     *** Protein sections for dihedral terms (if not listed above)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17844,7 +17844,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17906,7 +17906,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
       
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -17950,7 +17950,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18186,7 +18186,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -18263,7 +18263,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18361,7 +18361,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18429,7 +18429,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18461,7 +18461,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18559,7 +18559,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18597,7 +18597,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -18704,7 +18704,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18742,7 +18742,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18792,7 +18792,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -18824,7 +18824,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -18940,7 +18940,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19002,7 +19002,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19046,7 +19046,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -19078,7 +19078,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -19107,7 +19107,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19162,7 +19162,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19230,7 +19230,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19268,7 +19268,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19288,7 +19288,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -19326,7 +19326,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -19364,7 +19364,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19420,7 +19420,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19506,7 +19506,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19532,7 +19532,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19558,7 +19558,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19590,7 +19590,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19634,7 +19634,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19654,7 +19654,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19806,7 +19806,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19826,7 +19826,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19858,7 +19858,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -19890,7 +19890,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -19934,7 +19934,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -19981,7 +19981,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -20028,7 +20028,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -20063,7 +20063,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20095,7 +20095,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20139,7 +20139,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20165,7 +20165,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20215,7 +20215,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20241,7 +20241,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20267,7 +20267,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20293,7 +20293,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20319,7 +20319,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20351,7 +20351,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20371,7 +20371,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20403,7 +20403,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20693,7 +20693,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20713,7 +20713,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20734,7 +20734,7 @@ c     --- set ntsame
 
 c     *** Nucleic acid dihedral terms (if not listed above) ***
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,4)
@@ -20781,7 +20781,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20879,7 +20879,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20971,7 +20971,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -20997,7 +20997,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21035,7 +21035,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21079,7 +21079,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21117,7 +21117,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21143,7 +21143,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21163,7 +21163,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21201,7 +21201,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21227,7 +21227,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21253,7 +21253,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21273,7 +21273,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21299,7 +21299,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21325,7 +21325,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21393,7 +21393,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21431,7 +21431,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21451,7 +21451,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21477,7 +21477,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21521,7 +21521,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21547,7 +21547,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -21576,7 +21576,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21596,7 +21596,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -21622,7 +21622,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -21648,7 +21648,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -21671,7 +21671,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -21694,7 +21694,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21732,7 +21732,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21752,7 +21752,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -21793,7 +21793,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -21834,7 +21834,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21878,7 +21878,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21916,7 +21916,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21954,7 +21954,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -21992,7 +21992,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -22054,7 +22054,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,4)
@@ -22095,7 +22095,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22127,7 +22127,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -22159,7 +22159,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22185,7 +22185,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -22217,7 +22217,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22255,7 +22255,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22341,7 +22341,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22367,7 +22367,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22393,7 +22393,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22437,7 +22437,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -22466,7 +22466,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22492,7 +22492,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22524,7 +22524,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -22553,7 +22553,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22573,7 +22573,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,4)
@@ -22608,7 +22608,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22640,7 +22640,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22660,7 +22660,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -22689,7 +22689,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,4)
@@ -22730,7 +22730,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22750,7 +22750,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -22782,7 +22782,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,5)
@@ -22814,7 +22814,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22858,7 +22858,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,3)
@@ -22890,7 +22890,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -22919,7 +22919,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -22963,7 +22963,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,2)
@@ -22986,7 +22986,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -23006,7 +23006,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -23026,7 +23026,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -23046,7 +23046,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)

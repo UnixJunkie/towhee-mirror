@@ -10791,7 +10791,7 @@ c     ******************************************************************
 c     * OPLS-1996 dihedral                                             *
 c     *                                                                *
 c     * originally written 07-01-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -10812,7 +10812,7 @@ c     --- initialize type count
       type = 0
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)

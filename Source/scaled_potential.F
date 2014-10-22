@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2007 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -55,7 +55,7 @@ c     * Thereafter, calling scp_scale_atoms(ntii,ntjj) will tell you   *
 c     *  whether interaction between two atom types are scaled.        *
 c     *                                                                *
 c     *                                                                *
-c     * Functions begin with scp_ for SCaled Potential.                *
+c     * Functions begin with scp_ for Scaled Potential.                *
 c     *                                                                *
 c     * The structure of the file scaled_potential.F is in the spirit  *
 c     * of an 'object' data structure.  There are globally defined     *

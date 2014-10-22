@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -85,6 +85,8 @@ c     --- initialize input arrays
       call twh_inben(GLB_INIT,NTMAX,NUMAX,0)
       call twh_itben(GLB_INIT,NTMAX,NUMAX,MAXBEND,0)
       call twh_orderben(GLB_INIT,NTMAX,NUMAX,MAXBEND,ORD_NULL)
+      call twh_itbang(GLB_INIT,NTMAX,NUMAX,MAXBEND,0)
+      call twh_orderbang(GLB_INIT,NTMAX,NUMAX,MAXBEND,ORD_NULL)
       call twh_inimprop(GLB_INIT,NTMAX,NUMAX,0)
       call twh_ijimprop2(GLB_INIT,NTMAX,NUMAX,MAXIMPROP,0)
       call twh_ijimprop3(GLB_INIT,NTMAX,NUMAX,MAXIMPROP,0)
@@ -176,7 +178,7 @@ c     --- initialize input parameters
       call twh_rminsq(GLB_SET,0.0d0)
       call twh_electrostatic_form(GLB_SET,'coulomb')
       call twh_coulombstyle(GLB_SET,'ewald_fixed_kmax')
-      call twh_lcoulomb(GLB_SET,.true.)
+      call twh_lelect(GLB_SET,.true.)
       call twh_lewald(GLB_SET,.true.)
       call twh_ewald_kalp(GLB_SET,5.6d0)
       call twh_ewald_calp(GLB_INIT,MAXBOX,0.0d0)
@@ -343,7 +345,7 @@ c     --- initialize bond increments
 
       call twh_loftor(GLB_INIT,TTORMAX,.false.)
       call twh_ntorloop(GLB_INIT,TTORMAX,0)
-      call twh_torstyle(GLB_INIT,TTORMAX,0)
+      call twh_torstyle(GLB_INIT,TTORMAX,TOR_STYLE_NULL)
       call twh_torstring(GLB_INIT,TTORMAX,4,ctemp)
       call twh_tornames(GLB_INIT,TTORMAX,MAXSAMET,MAXTNAME,ctemp)
       call twh_torff(GLB_INIT,TTORMAX,ctemp)

@@ -8523,7 +8523,7 @@ c     ******************************************************************
 c     * sets the parameters for the Class-2 dihedral interactions      *
 c     *                                                                *
 c     * originally written 05-10-2006 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -8541,7 +8541,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14221d0*CON_KCALTOK
@@ -8579,7 +8579,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -8617,7 +8617,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -8655,7 +8655,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.47142d0*CON_KCALTOK
@@ -8693,7 +8693,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10262d0*CON_KCALTOK
@@ -8731,7 +8731,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14221d0*CON_KCALTOK
@@ -8769,7 +8769,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14221d0*CON_KCALTOK
@@ -8807,7 +8807,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -8845,7 +8845,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -8883,7 +8883,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.65141d0*CON_KCALTOK
@@ -8921,7 +8921,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.14452d0*CON_KCALTOK
@@ -8959,7 +8959,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.20516d0*CON_KCALTOK
@@ -8997,7 +8997,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9035,7 +9035,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9073,7 +9073,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.82986d0*CON_KCALTOK
@@ -9111,7 +9111,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.50374d0*CON_KCALTOK
@@ -9149,7 +9149,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10689d0*CON_KCALTOK
@@ -9187,7 +9187,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.43625d0*CON_KCALTOK
@@ -9225,7 +9225,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.85389d0*CON_KCALTOK
@@ -9263,7 +9263,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.33688d0*CON_KCALTOK
@@ -9301,7 +9301,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9339,7 +9339,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.18242d0*CON_KCALTOK
@@ -9377,7 +9377,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9415,7 +9415,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.33554d0*CON_KCALTOK
@@ -9453,7 +9453,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04055d0*CON_KCALTOK
@@ -9491,7 +9491,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.09980d0*CON_KCALTOK
@@ -9529,7 +9529,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9567,7 +9567,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.85389d0*CON_KCALTOK
@@ -9605,7 +9605,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.33688d0*CON_KCALTOK
@@ -9643,7 +9643,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9681,7 +9681,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9719,7 +9719,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.24410d0*CON_KCALTOK
@@ -9757,7 +9757,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9795,7 +9795,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.33554d0*CON_KCALTOK
@@ -9833,7 +9833,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04055d0*CON_KCALTOK
@@ -9871,7 +9871,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -9909,7 +9909,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.09980d0*CON_KCALTOK
@@ -9947,7 +9947,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.48448d0*CON_KCALTOK
@@ -9985,7 +9985,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.08238d0*CON_KCALTOK
@@ -10023,7 +10023,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.14673d0*CON_KCALTOK
@@ -10061,7 +10061,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -10099,7 +10099,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -10137,7 +10137,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.96515d0*CON_KCALTOK
@@ -10175,7 +10175,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.56222d0*CON_KCALTOK
@@ -10213,7 +10213,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.22990d0*CON_KCALTOK
@@ -10251,7 +10251,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -10289,7 +10289,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.76787d0*CON_KCALTOK
@@ -10327,7 +10327,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14221d0*CON_KCALTOK
@@ -10365,7 +10365,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00527d0*CON_KCALTOK
@@ -10403,7 +10403,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -10441,7 +10441,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.65141d0*CON_KCALTOK
@@ -10479,7 +10479,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.20516d0*CON_KCALTOK
@@ -10517,7 +10517,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.82986d0*CON_KCALTOK
@@ -10555,7 +10555,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.12657d0*CON_KCALTOK
@@ -10593,7 +10593,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.28279d0*CON_KCALTOK
@@ -10631,7 +10631,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.31486d0*CON_KCALTOK
@@ -10669,7 +10669,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -10707,7 +10707,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.29556d0*CON_KCALTOK
@@ -10745,7 +10745,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.28228d0*CON_KCALTOK
@@ -10783,7 +10783,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02536d0*CON_KCALTOK
@@ -10821,7 +10821,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02536d0*CON_KCALTOK
@@ -10859,7 +10859,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.16688d0*CON_KCALTOK
@@ -10897,7 +10897,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.13896d0*CON_KCALTOK
@@ -10935,7 +10935,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.60185d0*CON_KCALTOK
@@ -10973,7 +10973,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.13593d0*CON_KCALTOK
@@ -11011,7 +11011,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.31522d0*CON_KCALTOK
@@ -11049,7 +11049,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.20352d0*CON_KCALTOK
@@ -11087,7 +11087,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06021d0*CON_KCALTOK
@@ -11125,7 +11125,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.50812d0*CON_KCALTOK
@@ -11163,7 +11163,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.44244d0*CON_KCALTOK
@@ -11201,7 +11201,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.57878d0*CON_KCALTOK
@@ -11239,7 +11239,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.36835d0*CON_KCALTOK
@@ -11277,7 +11277,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.25034d0*CON_KCALTOK
@@ -11315,7 +11315,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.13634d0*CON_KCALTOK
@@ -11353,7 +11353,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.09115d0*CON_KCALTOK
@@ -11391,7 +11391,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.21158d0*CON_KCALTOK
@@ -11429,7 +11429,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.22085d0*CON_KCALTOK
@@ -11467,7 +11467,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.64969d0*CON_KCALTOK
@@ -11505,7 +11505,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.33769d0*CON_KCALTOK
@@ -11543,7 +11543,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.35521d0*CON_KCALTOK
@@ -11581,7 +11581,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.05261d0*CON_KCALTOK
@@ -11619,7 +11619,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.13265d0*CON_KCALTOK
@@ -11657,7 +11657,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.81269d0*CON_KCALTOK
@@ -11695,7 +11695,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.55446d0*CON_KCALTOK
@@ -11733,7 +11733,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.61216d0*CON_KCALTOK
@@ -11771,7 +11771,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.24192d0*CON_KCALTOK
@@ -11809,7 +11809,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.73936d0*CON_KCALTOK
@@ -11847,7 +11847,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.15983d0*CON_KCALTOK
@@ -11885,7 +11885,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.63913d0*CON_KCALTOK
@@ -11923,7 +11923,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.12746d0*CON_KCALTOK
@@ -11961,7 +11961,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      3.00865d0*CON_KCALTOK
@@ -11999,7 +11999,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.12836d0*CON_KCALTOK
@@ -12037,7 +12037,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.73371d0*CON_KCALTOK
@@ -12075,7 +12075,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.04534d0*CON_KCALTOK
@@ -12113,7 +12113,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      3.81342d0*CON_KCALTOK
@@ -12151,7 +12151,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.74928d0*CON_KCALTOK
@@ -12189,7 +12189,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.33769d0*CON_KCALTOK
@@ -12227,7 +12227,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.35521d0*CON_KCALTOK
@@ -12265,7 +12265,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.29338d0*CON_KCALTOK
@@ -12303,7 +12303,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.13265d0*CON_KCALTOK
@@ -12341,7 +12341,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.61391d0*CON_KCALTOK
@@ -12379,7 +12379,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06313d0*CON_KCALTOK
@@ -12417,7 +12417,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.55446d0*CON_KCALTOK
@@ -12455,7 +12455,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.61216d0*CON_KCALTOK
@@ -12493,7 +12493,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.84384d0*CON_KCALTOK
@@ -12531,7 +12531,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.73936d0*CON_KCALTOK
@@ -12569,7 +12569,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08342d0*CON_KCALTOK
@@ -12607,7 +12607,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.00627d0*CON_KCALTOK
@@ -12645,7 +12645,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.74647d0*CON_KCALTOK
@@ -12683,7 +12683,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.12836d0*CON_KCALTOK
@@ -12721,7 +12721,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.04534d0*CON_KCALTOK
@@ -12759,7 +12759,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.48190d0*CON_KCALTOK
@@ -12797,7 +12797,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.74928d0*CON_KCALTOK
@@ -12835,7 +12835,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.01294d0*CON_KCALTOK
@@ -12873,7 +12873,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.02312d0*CON_KCALTOK
@@ -12911,7 +12911,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.89385d0*CON_KCALTOK
@@ -12949,7 +12949,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.10132d0*CON_KCALTOK
@@ -12987,7 +12987,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.28292d0*CON_KCALTOK
@@ -13025,7 +13025,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.28292d0*CON_KCALTOK
@@ -13063,7 +13063,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00292d0*CON_KCALTOK
@@ -13101,7 +13101,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00292d0*CON_KCALTOK
@@ -13139,7 +13139,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.13292d0*CON_KCALTOK
@@ -13177,7 +13177,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.13292d0*CON_KCALTOK
@@ -13215,7 +13215,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.13292d0*CON_KCALTOK
@@ -13253,7 +13253,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.76701d0*CON_KCALTOK
@@ -13291,7 +13291,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -13329,7 +13329,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.89744d0*CON_KCALTOK
@@ -13367,7 +13367,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -13405,7 +13405,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.01914d0*CON_KCALTOK
@@ -13443,7 +13443,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -13481,7 +13481,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -13519,7 +13519,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02536d0*CON_KCALTOK
@@ -13557,7 +13557,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.85000d0*CON_KCALTOK
@@ -13595,7 +13595,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02536d0*CON_KCALTOK
@@ -13633,7 +13633,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.76883d0*CON_KCALTOK
@@ -13671,7 +13671,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02536d0*CON_KCALTOK
@@ -13709,7 +13709,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.11947d0*CON_KCALTOK
@@ -13747,7 +13747,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10799d0*CON_KCALTOK
@@ -13785,7 +13785,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02536d0*CON_KCALTOK
@@ -13823,7 +13823,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.73479d0*CON_KCALTOK
@@ -13861,7 +13861,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.50144d0*CON_KCALTOK
@@ -13899,7 +13899,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.57168d0*CON_KCALTOK
@@ -13937,7 +13937,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.82409d0*CON_KCALTOK
@@ -13975,7 +13975,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.96268d0*CON_KCALTOK
@@ -14013,7 +14013,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.06778d0*CON_KCALTOK
@@ -14051,7 +14051,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.74205d0*CON_KCALTOK
@@ -14089,7 +14089,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14127,7 +14127,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14165,7 +14165,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.98503d0*CON_KCALTOK
@@ -14203,7 +14203,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.96268d0*CON_KCALTOK
@@ -14241,7 +14241,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.27375d0*CON_KCALTOK
@@ -14279,7 +14279,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14317,7 +14317,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14355,7 +14355,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.64206d0*CON_KCALTOK
@@ -14393,7 +14393,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.01789d0*CON_KCALTOK
@@ -14431,7 +14431,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.15525d0*CON_KCALTOK
@@ -14469,7 +14469,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14507,7 +14507,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14545,7 +14545,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -14583,7 +14583,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.38751d0*CON_KCALTOK
@@ -14621,7 +14621,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.02042d0*CON_KCALTOK
@@ -14659,7 +14659,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.60915d0*CON_KCALTOK
@@ -14697,7 +14697,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.38601d0*CON_KCALTOK
@@ -14735,7 +14735,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.02553d0*CON_KCALTOK
@@ -14773,7 +14773,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.84192d0*CON_KCALTOK
@@ -14811,7 +14811,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.47706d0*CON_KCALTOK
@@ -14849,7 +14849,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.70037d0*CON_KCALTOK
@@ -14887,7 +14887,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00518d0*CON_KCALTOK
@@ -14925,7 +14925,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.09831d0*CON_KCALTOK
@@ -14963,7 +14963,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.09831d0*CON_KCALTOK
@@ -15001,7 +15001,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.07804d0*CON_KCALTOK
@@ -15039,7 +15039,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.78734d0*CON_KCALTOK
@@ -15077,7 +15077,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.35104d0*CON_KCALTOK
@@ -15115,7 +15115,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.27200d0*CON_KCALTOK
@@ -15153,7 +15153,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.59508d0*CON_KCALTOK
@@ -15191,7 +15191,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.03130d0*CON_KCALTOK
@@ -15229,7 +15229,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.54742d0*CON_KCALTOK
@@ -15267,7 +15267,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25244d0*CON_KCALTOK
@@ -15305,7 +15305,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.34500d0*CON_KCALTOK
@@ -15343,7 +15343,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.07669d0*CON_KCALTOK
@@ -15381,7 +15381,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.13163d0*CON_KCALTOK
@@ -15419,7 +15419,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00423d0*CON_KCALTOK
@@ -15457,7 +15457,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -15495,7 +15495,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.80113d0*CON_KCALTOK
@@ -15533,7 +15533,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.47228d0*CON_KCALTOK
@@ -15571,7 +15571,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.12369d0*CON_KCALTOK
@@ -15609,7 +15609,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.34117d0*CON_KCALTOK
@@ -15647,7 +15647,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.69764d0*CON_KCALTOK
@@ -15685,7 +15685,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.01963d0*CON_KCALTOK
@@ -15723,7 +15723,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.72366d0*CON_KCALTOK
@@ -15761,7 +15761,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.02177d0*CON_KCALTOK
@@ -15799,7 +15799,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.81111d0*CON_KCALTOK
@@ -15837,7 +15837,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00018d0*CON_KCALTOK
@@ -15875,7 +15875,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.16354d0*CON_KCALTOK
@@ -15913,7 +15913,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.33790d0*CON_KCALTOK
@@ -15951,7 +15951,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.32843d0*CON_KCALTOK
@@ -15989,7 +15989,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.22137d0*CON_KCALTOK
@@ -16027,7 +16027,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.60319d0*CON_KCALTOK
@@ -16065,7 +16065,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.43776d0*CON_KCALTOK
@@ -16103,7 +16103,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -16141,7 +16141,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -16179,7 +16179,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.39998d0*CON_KCALTOK
@@ -16217,7 +16217,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06899d0*CON_KCALTOK
@@ -16255,7 +16255,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -16293,7 +16293,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -16331,7 +16331,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05795d0*CON_KCALTOK
@@ -16369,7 +16369,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05795d0*CON_KCALTOK
@@ -16407,7 +16407,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.62970d0*CON_KCALTOK
@@ -16445,7 +16445,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02111d0*CON_KCALTOK
@@ -16483,7 +16483,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -16521,7 +16521,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.84192d0*CON_KCALTOK
@@ -16559,7 +16559,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.35031d0*CON_KCALTOK
@@ -16597,7 +16597,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06899d0*CON_KCALTOK
@@ -16635,7 +16635,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00518d0*CON_KCALTOK
@@ -16673,7 +16673,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.07804d0*CON_KCALTOK
@@ -16711,7 +16711,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05795d0*CON_KCALTOK
@@ -16749,7 +16749,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.07669d0*CON_KCALTOK
@@ -16787,7 +16787,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.28345d0*CON_KCALTOK
@@ -16825,7 +16825,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02111d0*CON_KCALTOK
@@ -16863,7 +16863,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.60503d0*CON_KCALTOK
@@ -16901,7 +16901,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.15144d0*CON_KCALTOK
@@ -16939,7 +16939,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.15144d0*CON_KCALTOK
@@ -16977,7 +16977,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.52832d0*CON_KCALTOK
@@ -17015,7 +17015,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.36054d0*CON_KCALTOK
@@ -17053,7 +17053,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.78277d0*CON_KCALTOK
@@ -17091,7 +17091,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.19180d0*CON_KCALTOK
@@ -17129,7 +17129,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.38747d0*CON_KCALTOK
@@ -17167,7 +17167,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.31224d0*CON_KCALTOK
@@ -17205,7 +17205,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.15506d0*CON_KCALTOK
@@ -17243,7 +17243,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.51543d0*CON_KCALTOK
@@ -17281,7 +17281,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.29980d0*CON_KCALTOK
@@ -17319,7 +17319,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.15506d0*CON_KCALTOK
@@ -17357,7 +17357,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.51543d0*CON_KCALTOK
@@ -17395,7 +17395,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.30657d0*CON_KCALTOK
@@ -17433,7 +17433,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.08323d0*CON_KCALTOK
@@ -17471,7 +17471,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.61648d0*CON_KCALTOK
@@ -17509,7 +17509,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.10617d0*CON_KCALTOK
@@ -17547,7 +17547,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.10617d0*CON_KCALTOK
@@ -17585,7 +17585,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.88005d0*CON_KCALTOK
@@ -17623,7 +17623,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.48076d0*CON_KCALTOK
@@ -17661,7 +17661,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.21665d0*CON_KCALTOK
@@ -17699,7 +17699,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.11690d0*CON_KCALTOK
@@ -17737,7 +17737,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.91910d0*CON_KCALTOK
@@ -17775,7 +17775,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.42163d0*CON_KCALTOK
@@ -17813,7 +17813,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.77376d0*CON_KCALTOK
@@ -17851,7 +17851,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.30194d0*CON_KCALTOK
@@ -17889,7 +17889,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.02385d0*CON_KCALTOK
@@ -17927,7 +17927,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.75350d0*CON_KCALTOK
@@ -17965,7 +17965,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.49987d0*CON_KCALTOK
@@ -18003,7 +18003,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.01820d0*CON_KCALTOK
@@ -18041,7 +18041,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.04107d0*CON_KCALTOK
@@ -18079,7 +18079,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.80396d0*CON_KCALTOK
@@ -18117,7 +18117,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.19879d0*CON_KCALTOK
@@ -18155,7 +18155,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02650d0*CON_KCALTOK
@@ -18193,7 +18193,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.10939d0*CON_KCALTOK
@@ -18231,7 +18231,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.34822d0*CON_KCALTOK
@@ -18269,7 +18269,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.05427d0*CON_KCALTOK
@@ -18307,7 +18307,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.08074d0*CON_KCALTOK
@@ -18345,7 +18345,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.30425d0*CON_KCALTOK
@@ -18383,7 +18383,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.89653d0*CON_KCALTOK
@@ -18421,7 +18421,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.01348d0*CON_KCALTOK
@@ -18459,7 +18459,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.15010d0*CON_KCALTOK
@@ -18497,7 +18497,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06220d0*CON_KCALTOK
@@ -18535,7 +18535,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.33448d0*CON_KCALTOK
@@ -18573,7 +18573,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.77196d0*CON_KCALTOK
@@ -18611,7 +18611,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.87916d0*CON_KCALTOK
@@ -18649,7 +18649,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.96991d0*CON_KCALTOK
@@ -18687,7 +18687,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.26201d0*CON_KCALTOK
@@ -18725,7 +18725,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.56463d0*CON_KCALTOK
@@ -18763,7 +18763,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.00206d0*CON_KCALTOK
@@ -18801,7 +18801,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.65430d0*CON_KCALTOK
@@ -18839,7 +18839,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.75325d0*CON_KCALTOK
@@ -18877,7 +18877,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.91513d0*CON_KCALTOK
@@ -18915,7 +18915,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.33446d0*CON_KCALTOK
@@ -18953,7 +18953,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.21185d0*CON_KCALTOK
@@ -18991,7 +18991,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00779d0*CON_KCALTOK
@@ -19029,7 +19029,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.81758d0*CON_KCALTOK
@@ -19067,7 +19067,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.82969d0*CON_KCALTOK
@@ -19105,7 +19105,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.45173d0*CON_KCALTOK
@@ -19143,7 +19143,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.88202d0*CON_KCALTOK
@@ -19181,7 +19181,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.97609d0*CON_KCALTOK
@@ -19219,7 +19219,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.38673d0*CON_KCALTOK
@@ -19257,7 +19257,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -4.18481d0*CON_KCALTOK
@@ -19295,7 +19295,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.64539d0*CON_KCALTOK
@@ -19333,7 +19333,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.16195d0*CON_KCALTOK
@@ -19371,7 +19371,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.16195d0*CON_KCALTOK
@@ -19409,7 +19409,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.19072d0*CON_KCALTOK
@@ -19447,7 +19447,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.15868d0*CON_KCALTOK
@@ -19485,7 +19485,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.51920d0*CON_KCALTOK
@@ -19523,7 +19523,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.03551d0*CON_KCALTOK
@@ -19561,7 +19561,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.03551d0*CON_KCALTOK
@@ -19599,7 +19599,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.67816d0*CON_KCALTOK
@@ -19637,7 +19637,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06313d0*CON_KCALTOK
@@ -19675,7 +19675,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25765d0*CON_KCALTOK
@@ -19713,7 +19713,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.42191d0*CON_KCALTOK
@@ -19751,7 +19751,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.32659d0*CON_KCALTOK
@@ -19789,7 +19789,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.91914d0*CON_KCALTOK
@@ -19827,7 +19827,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25952d0*CON_KCALTOK
@@ -19865,7 +19865,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.17631d0*CON_KCALTOK
@@ -19903,7 +19903,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.23992d0*CON_KCALTOK
@@ -19941,7 +19941,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06504d0*CON_KCALTOK
@@ -19979,7 +19979,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.59636d0*CON_KCALTOK
@@ -20017,7 +20017,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.76586d0*CON_KCALTOK
@@ -20055,7 +20055,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06783d0*CON_KCALTOK
@@ -20093,7 +20093,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.12062d0*CON_KCALTOK
@@ -20131,7 +20131,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.67649d0*CON_KCALTOK
@@ -20169,7 +20169,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.43471d0*CON_KCALTOK
@@ -20207,7 +20207,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.36976d0*CON_KCALTOK
@@ -20245,7 +20245,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.37478d0*CON_KCALTOK
@@ -20283,7 +20283,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.44687d0*CON_KCALTOK
@@ -20321,7 +20321,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.14042d0*CON_KCALTOK
@@ -20359,7 +20359,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.69729d0*CON_KCALTOK
@@ -20397,7 +20397,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.21835d0*CON_KCALTOK
@@ -20435,7 +20435,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.39260d0*CON_KCALTOK
@@ -20473,7 +20473,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.58920d0*CON_KCALTOK
@@ -20511,7 +20511,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.97508d0*CON_KCALTOK
@@ -20549,7 +20549,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.01379d0*CON_KCALTOK
@@ -20587,7 +20587,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.97688d0*CON_KCALTOK
@@ -20625,7 +20625,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.81758d0*CON_KCALTOK
@@ -20663,7 +20663,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.55898d0*CON_KCALTOK
@@ -20701,7 +20701,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.11104d0*CON_KCALTOK
@@ -20739,7 +20739,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.47166d0*CON_KCALTOK
@@ -20777,7 +20777,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.01733d0*CON_KCALTOK
@@ -20815,7 +20815,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.02326d0*CON_KCALTOK
@@ -20853,7 +20853,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.08745d0*CON_KCALTOK
@@ -20891,7 +20891,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.53946d0*CON_KCALTOK
@@ -20929,7 +20929,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.97609d0*CON_KCALTOK
@@ -20967,7 +20967,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.38673d0*CON_KCALTOK
@@ -21005,7 +21005,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.16195d0*CON_KCALTOK
@@ -21043,7 +21043,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.19072d0*CON_KCALTOK
@@ -21081,7 +21081,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.33806d0*CON_KCALTOK
@@ -21119,7 +21119,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.72370d0*CON_KCALTOK
@@ -21157,7 +21157,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.03551d0*CON_KCALTOK
@@ -21195,7 +21195,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.67816d0*CON_KCALTOK
@@ -21233,7 +21233,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00936d0*CON_KCALTOK
@@ -21271,7 +21271,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.44354d0*CON_KCALTOK
@@ -21309,7 +21309,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.81678d0*CON_KCALTOK
@@ -21347,7 +21347,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00824d0*CON_KCALTOK
@@ -21385,7 +21385,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =    -12.28892d0*CON_KCALTOK
@@ -21423,7 +21423,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -9.80043d0*CON_KCALTOK
@@ -21461,7 +21461,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -8.09353d0*CON_KCALTOK
@@ -21499,7 +21499,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -6.30251d0*CON_KCALTOK
@@ -21537,7 +21537,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10000d0*CON_KCALTOK
@@ -21575,7 +21575,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -21613,7 +21613,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -21651,7 +21651,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.21439d0*CON_KCALTOK
@@ -21689,7 +21689,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.21002d0*CON_KCALTOK
@@ -21727,7 +21727,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.79198d0*CON_KCALTOK
@@ -21765,7 +21765,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.97980d0*CON_KCALTOK
@@ -21803,7 +21803,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.01077d0*CON_KCALTOK
@@ -21841,7 +21841,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.89787d0*CON_KCALTOK
@@ -21879,7 +21879,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -8.47771d0*CON_KCALTOK
@@ -21917,7 +21917,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.40226d0*CON_KCALTOK
@@ -21955,7 +21955,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -4.41192d0*CON_KCALTOK
@@ -21993,7 +21993,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.58032d0*CON_KCALTOK
@@ -22031,7 +22031,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10853d0*CON_KCALTOK
@@ -22069,7 +22069,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -4.93740d0*CON_KCALTOK
@@ -22107,7 +22107,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.38748d0*CON_KCALTOK
@@ -22145,7 +22145,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.67578d0*CON_KCALTOK
@@ -22183,7 +22183,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.40393d0*CON_KCALTOK
@@ -22221,7 +22221,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.62698d0*CON_KCALTOK
@@ -22259,7 +22259,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.55057d0*CON_KCALTOK
@@ -22297,7 +22297,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -22335,7 +22335,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00239d0*CON_KCALTOK
@@ -22373,7 +22373,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.39998d0*CON_KCALTOK
@@ -22411,7 +22411,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06899d0*CON_KCALTOK
@@ -22449,7 +22449,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05795d0*CON_KCALTOK
@@ -22487,7 +22487,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05795d0*CON_KCALTOK
@@ -22525,7 +22525,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.12175d0*CON_KCALTOK
@@ -22563,7 +22563,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.02111d0*CON_KCALTOK
@@ -22601,7 +22601,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.64590d0*CON_KCALTOK
@@ -22639,7 +22639,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.48113d0*CON_KCALTOK
@@ -22677,7 +22677,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.71561d0*CON_KCALTOK
@@ -22715,7 +22715,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.27474d0*CON_KCALTOK
@@ -22753,7 +22753,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.07367d0*CON_KCALTOK
@@ -22791,7 +22791,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.10617d0*CON_KCALTOK
@@ -22829,7 +22829,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.97384d0*CON_KCALTOK
@@ -22867,7 +22867,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.80324d0*CON_KCALTOK
@@ -22905,7 +22905,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.85478d0*CON_KCALTOK
@@ -22943,7 +22943,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.69614d0*CON_KCALTOK
@@ -22981,7 +22981,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.42163d0*CON_KCALTOK
@@ -23019,7 +23019,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.97612d0*CON_KCALTOK
@@ -23057,7 +23057,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.32048d0*CON_KCALTOK
@@ -23095,7 +23095,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.77376d0*CON_KCALTOK
@@ -23133,7 +23133,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23171,7 +23171,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23209,7 +23209,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23247,7 +23247,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23285,7 +23285,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23323,7 +23323,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23361,7 +23361,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.71443d0*CON_KCALTOK
@@ -23399,7 +23399,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23437,7 +23437,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23475,7 +23475,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23513,7 +23513,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23551,7 +23551,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23589,7 +23589,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.01853d0*CON_KCALTOK
@@ -23627,7 +23627,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23665,7 +23665,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.05556d0*CON_KCALTOK
@@ -23703,7 +23703,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23741,7 +23741,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23779,7 +23779,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23817,7 +23817,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23855,7 +23855,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23893,7 +23893,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23931,7 +23931,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -23969,7 +23969,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24007,7 +24007,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24045,7 +24045,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24083,7 +24083,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24121,7 +24121,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24159,7 +24159,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24197,7 +24197,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24235,7 +24235,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24273,7 +24273,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24311,7 +24311,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24349,7 +24349,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24387,7 +24387,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24425,7 +24425,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24463,7 +24463,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24501,7 +24501,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24539,7 +24539,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24577,7 +24577,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.83870d0*CON_KCALTOK
@@ -24615,7 +24615,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.83870d0*CON_KCALTOK
@@ -24653,7 +24653,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24691,7 +24691,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24729,7 +24729,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.59820d0*CON_KCALTOK
@@ -24767,7 +24767,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06655d0*CON_KCALTOK
@@ -24805,7 +24805,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24843,7 +24843,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06655d0*CON_KCALTOK
@@ -24881,7 +24881,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -24919,7 +24919,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.28800d0*CON_KCALTOK
@@ -24957,7 +24957,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06655d0*CON_KCALTOK
@@ -24995,7 +24995,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.15954d0*CON_KCALTOK
@@ -25033,7 +25033,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08185d0*CON_KCALTOK
@@ -25071,7 +25071,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25109,7 +25109,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.04369d0*CON_KCALTOK
@@ -25147,7 +25147,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25185,7 +25185,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25223,7 +25223,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.59820d0*CON_KCALTOK
@@ -25261,7 +25261,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25299,7 +25299,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.15954d0*CON_KCALTOK
@@ -25337,7 +25337,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25375,7 +25375,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25413,7 +25413,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25451,7 +25451,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25489,7 +25489,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25527,7 +25527,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25565,7 +25565,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25603,7 +25603,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25641,7 +25641,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25679,7 +25679,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25717,7 +25717,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25755,7 +25755,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25793,7 +25793,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25831,7 +25831,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.46099d0*CON_KCALTOK
@@ -25869,7 +25869,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25907,7 +25907,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.52460d0*CON_KCALTOK
@@ -25945,7 +25945,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -25983,7 +25983,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26021,7 +26021,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26059,7 +26059,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26097,7 +26097,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -7.55028d0*CON_KCALTOK
@@ -26135,7 +26135,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10686d0*CON_KCALTOK
@@ -26173,7 +26173,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04612d0*CON_KCALTOK
@@ -26211,7 +26211,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26249,7 +26249,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26287,7 +26287,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10686d0*CON_KCALTOK
@@ -26325,7 +26325,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04612d0*CON_KCALTOK
@@ -26363,7 +26363,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.03422d0*CON_KCALTOK
@@ -26401,7 +26401,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10686d0*CON_KCALTOK
@@ -26439,7 +26439,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.20209d0*CON_KCALTOK
@@ -26477,7 +26477,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26515,7 +26515,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.27869d0*CON_KCALTOK
@@ -26553,7 +26553,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26591,7 +26591,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04612d0*CON_KCALTOK
@@ -26629,7 +26629,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.78389d0*CON_KCALTOK
@@ -26667,7 +26667,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26705,7 +26705,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26743,7 +26743,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26781,7 +26781,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26819,7 +26819,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26857,7 +26857,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26895,7 +26895,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -26933,7 +26933,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.16164d0*CON_KCALTOK
@@ -26971,7 +26971,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27009,7 +27009,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.83870d0*CON_KCALTOK
@@ -27047,7 +27047,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.71443d0*CON_KCALTOK
@@ -27085,7 +27085,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.28800d0*CON_KCALTOK
@@ -27123,7 +27123,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27161,7 +27161,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.15954d0*CON_KCALTOK
@@ -27199,7 +27199,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27237,7 +27237,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27275,7 +27275,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.59820d0*CON_KCALTOK
@@ -27313,7 +27313,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27351,7 +27351,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.46099d0*CON_KCALTOK
@@ -27389,7 +27389,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27427,7 +27427,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.52460d0*CON_KCALTOK
@@ -27465,7 +27465,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27503,7 +27503,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -7.55028d0*CON_KCALTOK
@@ -27541,7 +27541,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.05556d0*CON_KCALTOK
@@ -27579,7 +27579,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27617,7 +27617,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27655,7 +27655,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27693,7 +27693,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27731,7 +27731,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27769,7 +27769,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -27807,7 +27807,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.27873d0*CON_KCALTOK
@@ -27845,7 +27845,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.89504d0*CON_KCALTOK
@@ -27883,7 +27883,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.18252d0*CON_KCALTOK
@@ -27921,7 +27921,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.12170d0*CON_KCALTOK
@@ -27959,7 +27959,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.86931d0*CON_KCALTOK
@@ -27997,7 +27997,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.05946d0*CON_KCALTOK
@@ -28035,7 +28035,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.39765d0*CON_KCALTOK
@@ -28073,7 +28073,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.55691d0*CON_KCALTOK
@@ -28111,7 +28111,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.92132d0*CON_KCALTOK
@@ -28149,7 +28149,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28187,7 +28187,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28225,7 +28225,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28263,7 +28263,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.53495d0*CON_KCALTOK
@@ -28301,7 +28301,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.37453d0*CON_KCALTOK
@@ -28339,7 +28339,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.49995d0*CON_KCALTOK
@@ -28377,7 +28377,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.67336d0*CON_KCALTOK
@@ -28415,7 +28415,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.14959d0*CON_KCALTOK
@@ -28453,7 +28453,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.45190d0*CON_KCALTOK
@@ -28491,7 +28491,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.83149d0*CON_KCALTOK
@@ -28529,7 +28529,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28567,7 +28567,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.22074d0*CON_KCALTOK
@@ -28605,7 +28605,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28643,7 +28643,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.15856d0*CON_KCALTOK
@@ -28681,7 +28681,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28719,7 +28719,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28757,7 +28757,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28795,7 +28795,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28833,7 +28833,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28871,7 +28871,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28909,7 +28909,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28947,7 +28947,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -28985,7 +28985,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29023,7 +29023,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29061,7 +29061,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.02126d0*CON_KCALTOK
@@ -29099,7 +29099,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.02126d0*CON_KCALTOK
@@ -29137,7 +29137,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14077d0*CON_KCALTOK
@@ -29175,7 +29175,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14077d0*CON_KCALTOK
@@ -29213,7 +29213,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25828d0*CON_KCALTOK
@@ -29251,7 +29251,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.03101d0*CON_KCALTOK
@@ -29289,7 +29289,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25828d0*CON_KCALTOK
@@ -29327,7 +29327,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29365,7 +29365,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29403,7 +29403,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29441,7 +29441,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29479,7 +29479,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.22074d0*CON_KCALTOK
@@ -29517,7 +29517,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.22074d0*CON_KCALTOK
@@ -29555,7 +29555,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29593,7 +29593,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.15856d0*CON_KCALTOK
@@ -29631,7 +29631,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06051d0*CON_KCALTOK
@@ -29669,7 +29669,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29707,7 +29707,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29745,7 +29745,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29783,7 +29783,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06051d0*CON_KCALTOK
@@ -29821,7 +29821,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -29859,7 +29859,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08560d0*CON_KCALTOK
@@ -29897,7 +29897,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00105d0*CON_KCALTOK
@@ -29935,7 +29935,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08560d0*CON_KCALTOK
@@ -29973,7 +29973,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30011,7 +30011,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06051d0*CON_KCALTOK
@@ -30049,7 +30049,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30087,7 +30087,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06051d0*CON_KCALTOK
@@ -30125,7 +30125,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06941d0*CON_KCALTOK
@@ -30163,7 +30163,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06941d0*CON_KCALTOK
@@ -30201,7 +30201,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.18617d0*CON_KCALTOK
@@ -30239,7 +30239,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.76207d0*CON_KCALTOK
@@ -30277,7 +30277,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00604d0*CON_KCALTOK
@@ -30315,7 +30315,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.39820d0*CON_KCALTOK
@@ -30353,7 +30353,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05273d0*CON_KCALTOK
@@ -30391,7 +30391,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30429,7 +30429,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30467,7 +30467,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.27873d0*CON_KCALTOK
@@ -30505,7 +30505,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.14247d0*CON_KCALTOK
@@ -30543,7 +30543,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.86931d0*CON_KCALTOK
@@ -30581,7 +30581,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.05946d0*CON_KCALTOK
@@ -30619,7 +30619,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.39765d0*CON_KCALTOK
@@ -30657,7 +30657,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.63986d0*CON_KCALTOK
@@ -30695,7 +30695,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30733,7 +30733,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30771,7 +30771,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30809,7 +30809,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30847,7 +30847,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30885,7 +30885,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30923,7 +30923,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30961,7 +30961,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -30999,7 +30999,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31037,7 +31037,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10240d0*CON_KCALTOK
@@ -31075,7 +31075,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10240d0*CON_KCALTOK
@@ -31113,7 +31113,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.21825d0*CON_KCALTOK
@@ -31151,7 +31151,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.37534d0*CON_KCALTOK
@@ -31189,7 +31189,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31227,7 +31227,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31265,7 +31265,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10240d0*CON_KCALTOK
@@ -31303,7 +31303,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31341,7 +31341,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31379,7 +31379,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31417,7 +31417,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31455,7 +31455,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31493,7 +31493,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31531,7 +31531,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31569,7 +31569,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31607,7 +31607,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31645,7 +31645,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31683,7 +31683,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.16552d0*CON_KCALTOK
@@ -31721,7 +31721,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.18784d0*CON_KCALTOK
@@ -31759,7 +31759,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31797,7 +31797,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31835,7 +31835,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -31873,7 +31873,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.07952d0*CON_KCALTOK
@@ -31911,7 +31911,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.07952d0*CON_KCALTOK
@@ -31949,7 +31949,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08324d0*CON_KCALTOK
@@ -31987,7 +31987,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.29348d0*CON_KCALTOK
@@ -32025,7 +32025,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32063,7 +32063,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32101,7 +32101,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.23721d0*CON_KCALTOK
@@ -32139,7 +32139,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32177,7 +32177,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32215,7 +32215,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32253,7 +32253,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32291,7 +32291,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32329,7 +32329,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32367,7 +32367,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32405,7 +32405,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.57451d0*CON_KCALTOK
@@ -32443,7 +32443,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.23846d0*CON_KCALTOK
@@ -32481,7 +32481,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.18490d0*CON_KCALTOK
@@ -32519,7 +32519,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.09834d0*CON_KCALTOK
@@ -32557,7 +32557,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.01017d0*CON_KCALTOK
@@ -32595,7 +32595,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      1.20626d0*CON_KCALTOK
@@ -32633,7 +32633,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.90445d0*CON_KCALTOK
@@ -32671,7 +32671,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32709,7 +32709,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32747,7 +32747,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32785,7 +32785,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32823,7 +32823,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32861,7 +32861,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32899,7 +32899,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32937,7 +32937,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -32975,7 +32975,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33013,7 +33013,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33051,7 +33051,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.23608d0*CON_KCALTOK
@@ -33089,7 +33089,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.27010d0*CON_KCALTOK
@@ -33127,7 +33127,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.13105d0*CON_KCALTOK
@@ -33165,7 +33165,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.51743d0*CON_KCALTOK
@@ -33203,7 +33203,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.48597d0*CON_KCALTOK
@@ -33241,7 +33241,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.06103d0*CON_KCALTOK
@@ -33279,7 +33279,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.27070d0*CON_KCALTOK
@@ -33317,7 +33317,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.18475d0*CON_KCALTOK
@@ -33355,7 +33355,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04342d0*CON_KCALTOK
@@ -33393,7 +33393,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.21535d0*CON_KCALTOK
@@ -33431,7 +33431,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33469,7 +33469,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.45208d0*CON_KCALTOK
@@ -33507,7 +33507,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.45208d0*CON_KCALTOK
@@ -33545,7 +33545,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -3.12890d0*CON_KCALTOK
@@ -33583,7 +33583,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.45208d0*CON_KCALTOK
@@ -33621,7 +33621,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33659,7 +33659,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33697,7 +33697,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33735,7 +33735,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.17422d0*CON_KCALTOK
@@ -33773,7 +33773,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.17422d0*CON_KCALTOK
@@ -33811,7 +33811,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -33849,7 +33849,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25039d0*CON_KCALTOK
@@ -33887,7 +33887,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05589d0*CON_KCALTOK
@@ -33925,7 +33925,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08733d0*CON_KCALTOK
@@ -33963,7 +33963,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.07400d0*CON_KCALTOK
@@ -34001,7 +34001,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.21902d0*CON_KCALTOK
@@ -34039,7 +34039,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.33106d0*CON_KCALTOK
@@ -34077,7 +34077,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.86250d0*CON_KCALTOK
@@ -34115,7 +34115,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.09615d0*CON_KCALTOK
@@ -34153,7 +34153,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.09726d0*CON_KCALTOK
@@ -34191,7 +34191,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.61134d0*CON_KCALTOK
@@ -34229,7 +34229,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.03550d0*CON_KCALTOK
@@ -34267,7 +34267,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.13227d0*CON_KCALTOK
@@ -34305,7 +34305,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.11305d0*CON_KCALTOK
@@ -34343,7 +34343,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.06336d0*CON_KCALTOK
@@ -34381,7 +34381,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.66753d0*CON_KCALTOK
@@ -34419,7 +34419,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.14077d0*CON_KCALTOK
@@ -34457,7 +34457,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.25828d0*CON_KCALTOK
@@ -34495,7 +34495,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.03101d0*CON_KCALTOK
@@ -34533,7 +34533,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.22074d0*CON_KCALTOK
@@ -34571,7 +34571,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -34609,7 +34609,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.15856d0*CON_KCALTOK
@@ -34647,7 +34647,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -34685,7 +34685,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -34723,7 +34723,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.76207d0*CON_KCALTOK
@@ -34761,7 +34761,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.00604d0*CON_KCALTOK
@@ -34799,7 +34799,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.05118d0*CON_KCALTOK
@@ -34837,7 +34837,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.49610d0*CON_KCALTOK
@@ -34875,7 +34875,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.55961d0*CON_KCALTOK
@@ -34913,7 +34913,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.94351d0*CON_KCALTOK
@@ -34951,7 +34951,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10240d0*CON_KCALTOK
@@ -34989,7 +34989,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35027,7 +35027,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35065,7 +35065,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35103,7 +35103,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35141,7 +35141,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35179,7 +35179,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.16552d0*CON_KCALTOK
@@ -35217,7 +35217,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.07952d0*CON_KCALTOK
@@ -35255,7 +35255,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.08324d0*CON_KCALTOK
@@ -35293,7 +35293,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.29348d0*CON_KCALTOK
@@ -35331,7 +35331,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35369,7 +35369,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35407,7 +35407,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.45208d0*CON_KCALTOK
@@ -35445,7 +35445,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35483,7 +35483,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35521,7 +35521,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35559,7 +35559,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -35597,7 +35597,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04732d0*CON_KCALTOK
@@ -35635,7 +35635,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00899d0*CON_KCALTOK
@@ -35673,7 +35673,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.11972d0*CON_KCALTOK
@@ -35711,7 +35711,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.24116d0*CON_KCALTOK
@@ -35749,7 +35749,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.40336d0*CON_KCALTOK
@@ -35787,7 +35787,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00899d0*CON_KCALTOK
@@ -35825,7 +35825,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.47139d0*CON_KCALTOK
@@ -35863,7 +35863,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.04732d0*CON_KCALTOK
@@ -35901,7 +35901,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.33741d0*CON_KCALTOK
@@ -35939,7 +35939,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.11972d0*CON_KCALTOK
@@ -35977,7 +35977,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.24116d0*CON_KCALTOK
@@ -36015,7 +36015,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.68426d0*CON_KCALTOK
@@ -36053,7 +36053,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36091,7 +36091,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.42649d0*CON_KCALTOK
@@ -36129,7 +36129,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.54064d0*CON_KCALTOK
@@ -36167,7 +36167,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -2.32740d0*CON_KCALTOK
@@ -36205,7 +36205,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.05169d0*CON_KCALTOK
@@ -36243,7 +36243,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.59315d0*CON_KCALTOK
@@ -36281,7 +36281,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.81612d0*CON_KCALTOK
@@ -36319,7 +36319,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -1.19767d0*CON_KCALTOK
@@ -36357,7 +36357,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10303d0*CON_KCALTOK
@@ -36395,7 +36395,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.09231d0*CON_KCALTOK
@@ -36433,7 +36433,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.10303d0*CON_KCALTOK
@@ -36471,7 +36471,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36509,7 +36509,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36547,7 +36547,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36585,7 +36585,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00696d0*CON_KCALTOK
@@ -36623,7 +36623,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00696d0*CON_KCALTOK
@@ -36661,7 +36661,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.32493d0*CON_KCALTOK
@@ -36699,7 +36699,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36737,7 +36737,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36775,7 +36775,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36813,7 +36813,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36851,7 +36851,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36889,7 +36889,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36927,7 +36927,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -36965,7 +36965,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37003,7 +37003,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37041,7 +37041,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37079,7 +37079,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37117,7 +37117,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37155,7 +37155,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37193,7 +37193,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37231,7 +37231,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.00000d0*CON_KCALTOK
@@ -37269,7 +37269,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.29303d0*CON_KCALTOK
@@ -37307,7 +37307,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.22275d0*CON_KCALTOK
@@ -37345,7 +37345,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      2.18489d0*CON_KCALTOK
@@ -37383,7 +37383,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =      0.29723d0*CON_KCALTOK
@@ -37421,7 +37421,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.16410d0*CON_KCALTOK
@@ -37459,7 +37459,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.90684d0*CON_KCALTOK
@@ -37497,7 +37497,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.35619d0*CON_KCALTOK
@@ -37535,7 +37535,7 @@ c     --- local variables
 
       type = type + 1
       call twh_torff(GLB_SET,type,ffname)
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(0) =     -0.12741d0*CON_KCALTOK

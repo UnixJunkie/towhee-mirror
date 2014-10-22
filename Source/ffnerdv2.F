@@ -28,7 +28,7 @@ c     * sets up all of the force field parameters for version 2 of the *
 c     * NERD forcefield                                                *
 c     *                                                                *
 c     * rewritten from ffnerdv1 08-18-2004 by M.G. Martin              *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -747,7 +747,7 @@ c     ******************************************************************
 
 c     C* - CH2sp3  - CH2sp3 - C* linear alkanes [jcp1998]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 0.0d0
       tclocal(1) = 355.04d0
@@ -767,7 +767,7 @@ c     --- set ntsame
 
 c     C* - CH*sp3  - CHsp3 - C* branched alkanes [mp2000]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 1416.3d0
       tclocal(1) = 398.3d0
@@ -787,7 +787,7 @@ c     --- set ntsame
 
 c     C* - CH*sp3  - CHsp3 - C* branched alkanes [jcp2001b]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 0.0d0
       tclocal(1) = 0.0d0
@@ -825,7 +825,7 @@ c     --- set ntsame
 
 c     C-C-C=C linear alkenes [jcp2001a]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 47.97d0
       tclocal(1) = 86.31d0

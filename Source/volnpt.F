@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -35,7 +35,7 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * originally written in 1995                                     *
-c     * last modified 11-27-2011 by M.G.Martin                         *
+c     * last modified 08-26-2014 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -56,7 +56,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical ovrlap,lvol,lfound,laccept,lreject,lbad,lbonded,lperiodic
-      logical lcoulomb,lewald
+      logical lelect,lewald
 c     --- integer scalars
       integer ichain,iunit,imolty,boxvch,ibox,cpnumber,numboxes
       integer idim,jdim,movevector,ivector,jvector,icount,nchain
@@ -85,7 +85,7 @@ c     --- retrieve constants
       call twh_cp_number(GLB_GET,cpnumber)
       call twh_nchain(GLB_GET,nchain)
       call twh_potentialstyle(GLB_GET,potentialstyle)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
       call twh_numboxes(GLB_GET,numboxes)
 
@@ -298,7 +298,7 @@ c           --- adjust all of the unit coordinates
 
       lvol = .true.
 c     --- set new coulombic parameters for the new box length
-      if ( lcoulomb ) then
+      if ( lelect ) then
          call twh_resetcoulomb(lfailure,boxvch)
          if ( lfailure ) return
       endif
@@ -416,7 +416,7 @@ c        --- restore old box lengths, energy, configration etc
          enddo
 c        --- restore hinverse and boxvolume
          call twh_inverthmatrix(boxvch)
-         if ( lcoulomb ) then
+         if ( lelect ) then
             call twh_resetcoulomb(lfailure,boxvch)
             if ( lfailure ) return
             if ( lewald ) call twh_recip(boxvch,4)

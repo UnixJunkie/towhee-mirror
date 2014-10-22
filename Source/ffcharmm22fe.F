@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the charmm22fe   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 08-01-2006 by O. Yazaydin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -580,7 +580,7 @@ c     ******************************************************************
       call twh_constant_pi(GLB_GET,onepi)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -606,7 +606,7 @@ c     --- wild - CT3 - CF1 - wild
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -624,7 +624,7 @@ c     --- wild - CT3 - CF2 - wild
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_ntorloop(GLB_SET,type,1)

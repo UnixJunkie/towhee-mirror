@@ -61,7 +61,7 @@ c     --- double precision scalars
       double precision valuei,valuej,twopi
       double precision ai,aj,alphai,alphaj,gi,gj,nni,nnj,power,bbb
       double precision epsscale,radscale,gamma,nbbeta,rii,rjj,rij,rcut
-      double precision dvibone,dvibtwo,dvibthree
+      double precision dvibone,dvibtwo,dvibthree,rijfinal,epsfinal
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
@@ -559,35 +559,38 @@ c                       --- set rij to either value
                      else
 c                       --- augmented arithmetic for R terms
                         gamma = (rii - rjj)/(rii + rjj)
-                        rij = radscale*0.5d0*(rii + rjj) * (1.0d0 
+                        rij = 0.5d0*(rii + rjj) * (1.0d0 
      &                       + bbb*(1.0d0 
      &                       - twh_expon(-nbbeta*gamma*gamma)))
                      endif
-c                    --- store rij in coeff 5
-                     call twh_nbcoeff(GLB_SET,5,ij,rij)
-c                    --- store 1.07 rij in coeff 7
-                     dtemp = 1.07d0*rij
-                     call twh_nbcoeff(GLB_SET,7,ij,dtemp)
-c                    --- store 0.07 rij in coeff 8
-                     dtemp = 0.07d0*rij
-                     call twh_nbcoeff(GLB_SET,8,ij,dtemp)
-c                    --- store 1.12*rij^7 in coeff 9
-                     dtemp = 1.12d0*(rij**7)
-                     call twh_nbcoeff(GLB_SET,9,ij,dtemp)
-c                    --- store 0.12*rij^7 in coeff 10
-                     dtemp = 0.12d0*(rij**7)
-                     call twh_nbcoeff(GLB_SET,10,ij,dtemp)
+                     rijfinal = radscale*rij
 c                    --- slater-kirkwood for epsilon
                      gi = twh_get_nbcoeff(4,ii)
                      gj = twh_get_nbcoeff(4,jj)
                      nni = twh_get_nbcoeff(2,ii)
                      nnj = twh_get_nbcoeff(2,jj)
-                     dtemp = epsscale
+c                    --- use the unscaled rij to compute epsilon
+                     epsfinal = epsscale
      &                    *((181.16d0*CON_KCALTOK*gi*gj*alphai*alphaj)
      &                    /( dsqrt(alphai/nni) + dsqrt(alphaj/nnj) ))
      &                    *(1.0d0/(rij**6))
+c                    --- store the scaled rij in coeff 5
+                     dtemp = rijfinal
+                     call twh_nbcoeff(GLB_SET,5,ij,dtemp)
+c                    --- store 1.07 rij in coeff 7
+                     dtemp = 1.07d0*rijfinal
+                     call twh_nbcoeff(GLB_SET,7,ij,dtemp)
+c                    --- store 0.07 rij in coeff 8
+                     dtemp = 0.07d0*rijfinal
+                     call twh_nbcoeff(GLB_SET,8,ij,dtemp)
+c                    --- store 1.12*rij^7 in coeff 9
+                     dtemp = 1.12d0*(rijfinal**7)
+                     call twh_nbcoeff(GLB_SET,9,ij,dtemp)
+c                    --- store 0.12*rij^7 in coeff 10
+                     dtemp = 0.12d0*(rijfinal**7)
+                     call twh_nbcoeff(GLB_SET,10,ij,dtemp)
 c                    --- store epsilon in coeff 6
-                     call twh_nbcoeff(GLB_SET,6,ij,dtemp)
+                     call twh_nbcoeff(GLB_SET,6,ij,epsfinal)
                   else
                      lproblem = .true.
                   endif

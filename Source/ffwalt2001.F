@@ -28,7 +28,7 @@ c     * sets up all of the force field parameters for the walt2001     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 02-02-2005 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -264,7 +264,7 @@ c     * torsions - 2-fold cosine                                       *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,16)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_TF_COS)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(1) = (0.5d0)*(25.12d0)*CON_KJTOK
       call twh_set_torcoeff(type,tclocal)

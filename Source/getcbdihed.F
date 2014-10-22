@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -365,8 +365,9 @@ c                 --- we can only get here if there is a problem
                   write(6,*) 'GETCBDIHED: type not found'
                   lfailure = .true.
                   return
- 66               vxvib(itor) = vxvib(itor) + twh_vbond(lfailure,itype
-     &                 ,length,imolty,iu,jut2,lovrlap)
+ 66               vxvib(itor) = vxvib(itor) + twh_vbond(lfailure
+     &                 ,.false.,ibox,itype,length,imolty,iu,jut2
+     &                 ,lovrlap)
                   if ( lfailure ) return
                   if ( lovrlap ) goto 90
                enddo
@@ -392,8 +393,8 @@ c           --- compute the xtra and growbond angle energies
                      endif
                   enddo
                   call twh_txangle(GLB_GET,count,ibend,itype)
-                  vxbend(itor) = vxbend(itor) + twh_vangle(lfailure,
-     &                 lovrlap,ibox,imolty,iutmp(1),itype,1
+                  vxbend(itor) = vxbend(itor) + twh_vangle(lfailure
+     &                 ,.false.,lovrlap,ibox,imolty,iutmp(1),itype,1
      &                 ,anglec,dumb,dumc,xatmp,yatmp,zatmp)
                   if ( lfailure ) return
                   if ( lovrlap ) goto 90
@@ -531,9 +532,9 @@ c                             --- use old/new unit coordinates
 c                       --- store unit numbers
                         ttype = torbead(1)
 c                       --- add torsion energy to vdha
-                        vdha = vdha + twh_vtorsion(lfailure,ibox,1
-     &                       ,imolty,ttype,it,xttmp,yttmp,zttmp,dum
-     &                       ,lovrlap)
+                        vdha = vdha + twh_vtorsion(lfailure,.false.
+     &                       ,ibox,1,imolty,ttype,it,xttmp,yttmp,zttmp
+     &                       ,dum,lovrlap)
                         if ( lfailure ) return
                         if ( lovrlap ) goto 90
                      endif

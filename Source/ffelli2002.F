@@ -31,7 +31,7 @@ c     *       the nonbonded types                                      *
 c     * angles and torsions are strictly nonbonded interactions        *
 c     *                                                                *
 c     * originally written 04-11-2005 by M.G. Martin                   *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -543,7 +543,7 @@ c     * square well dihedrals                                          *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,18)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_SQUARE_WELL)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(-1) = 0.0d0
       tclocal(1) = 3.57d0 - 0.15d0
@@ -561,7 +561,7 @@ c     4-18-2005]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,18)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_SQUARE_WELL)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(-1) = 0.0d0
       tclocal(1) = 3.14

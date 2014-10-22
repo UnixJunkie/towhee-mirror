@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the OPLS-ua      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 05-28-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1493,7 +1493,7 @@ c     ** Torsions using the OPLS-UA torsional style **
 c     ** This is the majority of the torsions **
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (1.363d0)*CON_KCALTOK
       tclocal(1) =  (0.343d0)*CON_KCALTOK*(0.5d0)
@@ -1510,7 +1510,7 @@ c     --- 1-butene [jacs_1984_JMS]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (2.713d0)*CON_KCALTOK
       tclocal(1) =  (1.526d0)*CON_KCALTOK*(0.5d0)
@@ -1527,7 +1527,7 @@ c     --- isopentane [jacs_1984_JMS]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.0d0)*CON_KCALTOK
       tclocal(1) =  (1.522d0)*CON_KCALTOK*(0.5d0)
@@ -1544,7 +1544,7 @@ c     --- n-butane [jacs_1984_JMS]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.0d0)*CON_KCALTOK
       tclocal(1) =  (1.411d0)*CON_KCALTOK*(0.5d0)
@@ -1566,7 +1566,7 @@ c     --- other n-alkanes [jacs_1984_JMS] including no CH3 ends
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.0d0)*CON_KCALTOK
       tclocal(1) =  (0.834d0)*CON_KCALTOK*(0.5d0)
@@ -1586,7 +1586,7 @@ c     --- set ntsame
       call twh_set_tornames(type,ii,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.0d0)*CON_KCALTOK
       tclocal(1) =  (0.702d0)*CON_KCALTOK*(0.5d0)
@@ -1604,7 +1604,7 @@ c     assuming this is true for longer primary alkanols as well
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.429d0)*CON_KCALTOK
       tclocal(1) =  (0.784d0)*CON_KCALTOK*(0.5d0)
@@ -1622,7 +1622,7 @@ c     assuming this is true for longer secondary alkanols as well
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.0d0)*CON_KCALTOK
       tclocal(1) =  (0.0d0)*CON_KCALTOK*(0.5d0)
@@ -1640,7 +1640,7 @@ c     --- assuming this is true for longer tertiary alkanols as well
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.2100d0)*CON_KCALTOK
       tclocal(1) =  (-0.2067d0)*CON_KCALTOK*(0.5d0)
@@ -1658,7 +1658,7 @@ c     assuming this is true for longer alkyl chains as well
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (0.00d0)*CON_KCALTOK
       tclocal(1) =  (1.4600d0)*CON_KCALTOK*(0.5d0)
@@ -1677,7 +1677,7 @@ c     assuming this is true for longer alkyl tails as well
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = (7.0100d0)*CON_KCALTOK
       tclocal(1) =  (1.5820d0)*CON_KCALTOK*(0.5d0)
@@ -1698,7 +1698,7 @@ c     ** Torsions that use the 2 term cosine series  **
 c     ** this is much less common for this forcefield **
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,13)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_T)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(1) =  (2.8d0)*CON_KCALTOK*(0.5d0)
       tclocal(2) =  (21.2d0)*CON_KCALTOK*(0.5d0)
@@ -1715,7 +1715,7 @@ c     --- set ntsame
       call twh_set_tornames(type,ii,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,13)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_T)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(1) =  (0.0d0)*CON_KCALTOK*(0.5d0)
       tclocal(2) =  (20.0d0)*CON_KCALTOK*(0.5d0)

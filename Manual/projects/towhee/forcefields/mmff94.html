@@ -44,23 +44,9 @@
        The supplementary information is very useful and is available via anonymous ftp at <b>ftp.wiley.com</b> in the
        <b>/public/journals/jcc/suppmat/17/490</b> directory.  Those files are the primary source for the implementation in Towhee.
       </li>
-      <li>There is useful additional information about the definitions of the angle types. stretch-bend types, and torsion types available on the 
-       <a href="http://www.charmm.org/document/Charmm/c27b4/mmff_params.html">CHARMM MMFF94 params</a> website.  
-       Note that there are two logic errors in the 
-       <a href="http://www.charmm.org/document/Charmm/c27b4/mmff_params.html#%20MMFFSTBN">CHARMM MMFF94 stretch-bend</a>
-       <ul>
-        <li>Their table lists a stretch-bend type of 2 for an angle type of 2, a bond(ij) type of 0 and a bond(jk) type of 1.  This is impossible as
-         an angle that is not in a three or four membered ring that has those bond types has an angle type of 1, not 2.  Towhee assigns a stretch-bend
-         type of 2 for an angle type of 1, a bond(ij) of 0, and a bond(jk) of 1.
-        </li>
-        <li>Their table lists a stretch-bend type of 11 for an angle type of 7, a bond(ij) type of 1 and a bond(jk) type of 1.  This is impossible as
-         an angle that is in a four membered ring with has those bond types has an angle type of 8, not 7.  Towhee assigns a stretch-bend
-         type of 11 for an angle type of 8, a bond(ij) of 1, and a bond(jk) of 1.
-        </li>
-       </ul>
-      </li>
       <li>A useful test suite of compounds and MMFF energies is available at <a href="http://www.ccl.net/cca/data/MMFF94/">http://www.ccl.net/cca/data/MMFF94/</a>.
-       The Towee implementation has not yet been validated for these compounds (hopefully soon).
+       The Towhee implementation was validated for a handful of these compounds startimg with version 7.2.0 and this led to the discovery (and resolution) of many mistakes
+       that existed in previous implementations.  This implmentation is still not fully validated for the entire test suite so testing is highly recomended before using this forcefield.
       </li>
      </ul>
 
@@ -72,6 +58,7 @@
       If two atom types have the same number then they have the same interactions.  That means there are redundant atom types in the MMFF force field.
       These names and descriptions are from Table III of 
       <a href="../references.html#halgren_jcc_1996_I">Halgren 1996 (I)</a>.
+      A note is added when the base charge of the atom (before applying the bond increment method of charge assignement) is nonzero.
       Note that the capitalization and spacing pattern is important and must be followed exactly as listed here.
       <ul>
 
@@ -110,7 +97,7 @@
         <li><b>CR3R</b> : (MMFF number 22)  CARBON IN A 3-MEMBERED RING                      </li>
         <li><b>CE4R</b> : (MMFF number 30)  OLEFINIC CARBON IN 4-MEMBERED RINGS              </li>
         <li><b>CB  </b> : (MMFF number 37)  CARBON AS IN BENZENE, PYRROLE                    </li>
-        <li><b>CO2M</b> : (MMFF number 41)  CARBOXYLATE ANION CARBON                         </li>
+        <li><b>CO2M</b> : (MMFF number 41)  CARBOXYLATE ANION CARBON (base charge -0.5)      </li>
         <li><b>CS2M</b> : (MMFF number 41)  CARBON IN THIOCARBOXYLATE ANION                  </li>
         <li><b>CGD+</b> : (MMFF number 57)  GUANIDINIUM CARBON                               </li>
         <li><b>CNN+</b> : (MMFF number 57)  C IN +N=C-N RESONANCE STRUCTURES                 </li>
@@ -227,7 +214,7 @@
         <li><b>=N= </b> : (MMFF number 53)  NITROGEN IN C=N=N OR -N=N=N                      </li>
         <li><b>N+=C</b> : (MMFF number 54)  POSITIVELY CHARGED IMINIUM NITROGEN              </li>
         <li><b>N+=N</b> : (MMFF number 54)  POSITIVELY CHARGED NITROGEN DOUBLE-BONDED TO N   </li>
-        <li><b>NCN+</b> : (MMFF number 55)  N IN +N=C-N RESONANCE STRUCTURES - FORMAL CHARGE=</li>
+        <li><b>NCN+</b> : (MMFF number 55)  N IN +N=C-N RESONANCE STRUCTURES - FORMAL CHARGE=1/2</li>
         <li><b>NGD+</b> : (MMFF number 56)  GUANIDINIUM-TYPE NITROGEN - FORMAL CHARGE=1/3    </li>
         <li><b>NPD+</b> : (MMFF number 58)  PYRIDINIUM-TYPE NITROGEN - FORMAL CHARGE=1       </li>
         <li><b>NR% </b> : (MMFF number 61)  ISONITRILE NITROGEN [FC = 0] OR DIAZO NITROGEN [F</li>
@@ -273,7 +260,7 @@
         <li><b>O=N </b> : (MMFF number  7)  NITROSO OXYGEN                                   </li>
         <li><b>O=S </b> : (MMFF number  7)  O=S IN SULFOXIDES                                </li>
         <li><b>O=S=</b> : (MMFF number  7)  O=S ON SULFUR DOUBLY BONDED TO, E.G., CARBON     </li>
-        <li><b>O2CM</b> : (MMFF number 32)  OXYGEN IN CARBOXYLATE ANION                      </li>
+        <li><b>O2CM</b> : (MMFF number 32)  OXYGEN IN CARBOXYLATE ANION (base charge -0.25)  </li>
         <li><b>OXN </b> : (MMFF number 32)  N-OXIDE OXYGEN                                   </li>
         <li><b>O2N </b> : (MMFF number 32)  NITRO OXYGEN                                     </li>
         <li><b>O2NO</b> : (MMFF number 32)  NITRO-GROUP OXYGEN IN NITRATE                    </li>
@@ -350,6 +337,7 @@
      <b>Coulombic interactions</b> 
      <ul>
       This force field uses point charges and has been set up to assign the point charges using the bond increment method.
+      A nonzero base charge is applied to some atoms as noted in the atom descriptions seen above.
      </ul>
      <a href="../towhee_capabilities.html">Return to the Towhee Capabilities web page</a> 
      <p>&nbsp;</p>
@@ -360,7 +348,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->December 16, 2006<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->October 22, 2014<!-- #EndDate -->
   </font>
   <br></br>
  </body>

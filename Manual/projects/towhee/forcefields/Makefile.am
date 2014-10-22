@@ -26,6 +26,7 @@ dubb2004.html \
 elli2002.html \
 epm.html \
 fris2003.html \
+fris2008.html \
 gala1994.html \
 gordon.html \
 gromos43a1.html \

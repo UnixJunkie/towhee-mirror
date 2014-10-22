@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters to test the          *
 c     * gordon n-6 forcefield                                          *
 c     *                                                                *
 c     * originally written 11-30-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -278,7 +278,7 @@ c     CHx - CH2(sp3) - CHy [TraPPE-1]
 
 c     --- TraPPE-UA dihedral
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0

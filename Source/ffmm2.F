@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the MM2          *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 12-20-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -332,7 +332,7 @@ c     * MM2 torsions cosine series                                     *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(1) = (0.20d0)*CON_KCALTOK*(0.5d0)
@@ -349,7 +349,7 @@ c     C-C-C-C not cyclobutane [jacs1977]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(1) = (0.00d0)*CON_KCALTOK*(0.5d0)
@@ -366,7 +366,7 @@ c     C-C-C-H [jacs1977]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       tclocal(1) = (0.00d0)*CON_KCALTOK*(0.5d0)

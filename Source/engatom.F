@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -158,7 +158,7 @@ c     * computes the classical energy on an atom by atom basis for the *
 c     * configurational-bias class of moves                            *
 c     *                                                                *
 c     * split from engatom 10-24-2005 by M.G. Martin                   *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LEXIST
@@ -166,7 +166,6 @@ c     ******************************************************************
 #define FUNCTION_EWALD_SELF
 #define FUNCTION_LINCLUDE
 #define FUNCTION_ONEFIVETYPE
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VFIELD
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
@@ -197,7 +196,7 @@ c     --- variables passed to/from the subroutine
       dimension vtrewald(dimtrials)
 c     --- local variables
 c     --- logical scalars
-      logical lcompute,lusecom,lcoulomb,lewald,ldualcutoff
+      logical lcompute,lusecom,lelect,lewald,ldualcutoff
 c     --- logical arrays
       logical lcmno
       dimension lcmno(nchain)
@@ -207,9 +206,9 @@ c     --- integer scalars
       integer cnt,iu,jmolty,ii,numjunits,ncmt
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
-      double precision rcm,rcmsq,rijsq,rij,qqfact,xcmj,ycmj,zcmj,rcmj
+      double precision rcm,rcmsq,rijsq,rij,xcmj,ycmj,zcmj,rcmj
       double precision vinter,vintra,vext,velect,vewald,dvtemp,rcelect
-      double precision rcutin,rcutinsq
+      double precision rcutin,rcutinsq,vcoulomb
 c     --- double precision arrays
       double precision cord
       dimension cord(3)
@@ -219,12 +218,11 @@ c     --- double precision arrays
 c      write(6,*) 'start ENGATOM',ntogrow
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_nmolty(GLB_GET,nmolty)
       call twh_nunit(GLB_GET,imolty,iunit)
       call twh_lusecom(GLB_GET,lusecom)
       if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,ibox,rcelect)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
       call twh_rcutin(GLB_GET,rcutin)
       call twh_rcutinsq(GLB_GET,rcutinsq)
@@ -254,7 +252,7 @@ c                 --- minimum image the pseudo-ctrmas pair separation
                   else
 c                    --- when not using dual cut-off start with vdw
                      call twh_rcut(GLB_GET,rcm)
-                     if ( lcoulomb ) then
+                     if ( lelect ) then
 c                       --- switch to rcelect if it is bigger than rcm
                         if ( rcelect .gt. rcm ) rcm = rcelect
                      endif
@@ -310,8 +308,8 @@ c           --- loop over all the grown beads
 
 c              --- see if iu has nonbonded intramolecular interaction 
 c              --- with ii must compute the distances if linclude is 
-c              -- true or lcoulomb
-               if ( lcoulomb .or. twh_linclude(imolty,ii,iu) ) then
+c              -- true or lelect
+               if ( lelect .or. twh_linclude(imolty,ii,iu) ) then
 c                 --- assign bead type for ii,iu, and the cross term
                   call twh_ntype(GLB_GET,imolty,ii,ntii)
                   call twh_ntype(GLB_GET,imolty,iu,ntjj)
@@ -341,11 +339,12 @@ c                    --- special one-five nonbond
                   endif
                   if ( lovrtest ) goto 19
 
-                  if ( lcoulomb ) then
+                  if ( lelect ) then
 c                    --- intramolecular electrostatics
                      rij = dsqrt(rijsq)
-                     velect = velect + twh_vcoulomb(ibox,rij,imolty,ii
-     &                    ,imolty,iu,.false.,vf,dvtemp,lovrtest)
+                     call twh_vcoulomb(-1,ibox,rij,imolty,ii
+     &                    ,imolty,iu,vf,dvtemp,lovrtest,vcoulomb)
+                     velect = velect + vcoulomb
                      if ( lovrtest ) goto 19
                   endif
                elseif ( lewald .and. ibox .ne. 0 ) then
@@ -455,7 +454,7 @@ c                       --- must be engastyle 1, so no previous bead
                         rcm = rcutin + rcmj
                      else
                         call twh_rcut(GLB_GET,rcm)
-                        if ( lcoulomb ) then
+                        if ( lelect ) then
 c                          --- check the coulombic cutoff
                            if ( rcelect .gt. rcm ) rcm = rcelect
                         endif
@@ -485,7 +484,7 @@ c                    --- compute vinter (ex. lennard-jones)
                      if ( lovrtest ) goto 19
 
 c                    --- compute velect (coulomb and ewald)
-                     if ( lcoulomb ) then
+                     if ( lelect ) then
                         if ( ldualcutoff ) then
                            if ( rijsq .lt. rcutinsq ) then
 c                             --- compute this here
@@ -500,9 +499,10 @@ c                          --- always compute if not dual cutoff
                         endif
                         if ( lcompute ) then
                            rij = dsqrt(rijsq)
-                           velect = velect + twh_vcoulomb(ibox,rij
-     &                          ,imolty,ii,jmolty,jj,.false.,vf,dvtemp
-     &                          ,lovrtest)
+                           call twh_vcoulomb(-1,ibox,rij
+     &                          ,imolty,ii,jmolty,jj,vf,dvtemp
+     &                          ,lovrtest,vcoulomb)
+                           velect = velect + vcoulomb
                            if ( lovrtest ) goto 19
                         endif
                      endif
@@ -518,8 +518,7 @@ C        *********************************************
  19      lnbterm(itrial) = lovrtest
          if ( .not. lnbterm(itrial) ) then
 c           --- add in the appropriate factor for coulombic intractions
-            velect = velect*qqfact
-            vewald = vewald*qqfact
+            vewald = vewald
             vctry(itrial) = vinter + vintra + vext + velect + vewald
             vtrintra(itrial) = vintra
             vtrext(itrial)   = vext

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * computes the energy from all of the external fields with the   *
 c     * atom in box ibox                                               *
 c     *                                                                *
 c     * originally written 11-17-2004 by M.G. Martin                   *
-c     * last update 12-06-2008 by M.G. Martin                          *
+c     * last update 09-03-2014 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -227,14 +227,22 @@ c                    --- particle interacts only with right face of wall
 c                 --- negative distances do not interact with this wall
                   call twh_fielddp(GLB_GET,ifield,2,dpfieldtwo)
                   if ( dist .ge. 0.0d0 .and. dist .le. dpfieldtwo ) then
-                     invdist = 1.0d0/dist
-                     invdist3 = invdist*invdist*invdist
-                     invdist9 = invdist3*invdist3*invdist3
-                     call twh_fieldnbparam(GLB_GET,ifield,ntii,1,fnbone)
-                     call twh_fieldnbparam(GLB_GET,ifield,ntii,2,fnbtwo)
-                     call twh_fieldnbparam(GLB_GET,ifield,ntii,3,fnbthr)
-                     twh_vfield = twh_vfield + (fnbone*invdist9)
-     &                    + (fnbtwo*invdist3) + fnbthr
+                     if ( dist .lt. SMALLEST ) then
+c                       --- too small, overlap energy
+                        lovrlap = .true.
+                     else
+                        invdist = 1.0d0/dist
+                        invdist3 = invdist*invdist*invdist
+                        invdist9 = invdist3*invdist3*invdist3
+                        call twh_fieldnbparam(GLB_GET,ifield,ntii,1
+     &                       ,fnbone)
+                        call twh_fieldnbparam(GLB_GET,ifield,ntii,2
+     &                       ,fnbtwo)
+                        call twh_fieldnbparam(GLB_GET,ifield,ntii,3
+     &                       ,fnbthr)
+                        twh_vfield = twh_vfield + (fnbone*invdist9)
+     &                       + (fnbtwo*invdist3) + fnbthr
+                     endif
                   endif
                elseif ( fieldtype .eq. FLD_HOOPER_UMBRELLA ) then
 c                 --- computes the interaction energy of an atom with a 

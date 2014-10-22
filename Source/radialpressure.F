@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -34,7 +34,7 @@ c     * implemented it as a curiosity for the discontinuous well       *
 c     * potentials (MGM 06-27-2005)                                    *
 c     *                                                                *
 c     * originally written 06-27-2005 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -50,7 +50,7 @@ c     --- parameters
       parameter (nwellmax=5)
 c     --- local variables
 c     --- logical scalars
-      logical lcoulomb
+      logical lelect
 c     --- integer scalars
       integer ichain,jchain,ilist,jlist,jstart,ivalue,iwell
       integer ii,jj,ntii,ntjj,ntij,imolty,jmolty,nmolty
@@ -79,8 +79,8 @@ c     --- retrieve constants
       call twh_radial_pressure_delta(GLB_GET,radial_pressure_delta)
 
 c     --- safety check to make sure we don't have coulomb
-      call twh_lcoulomb(GLB_GET,lcoulomb)
-      if ( lcoulomb ) then
+      call twh_lelect(GLB_GET,lelect)
+      if ( lelect ) then
          write(6,*) 'RADIALPRESSURE: not functional for combination of'
          write(6,*) 'hard core potentials with coulombic interactions'
          write(6,*) 'please disable the pressure calculation for this'

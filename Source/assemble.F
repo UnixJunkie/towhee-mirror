@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2007 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -45,7 +45,7 @@ c     * lautotorsion: true if we are autodetecting all torsions, false *
 c     *               if some torsions have already been determined    *
 c     *                                                                *
 c     * originally written 02-26-2001 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_AAFF
@@ -93,9 +93,9 @@ c     --- character string arrays
       character*15 spectornames
       dimension spectornames(spectorcount)
 c     --- integer scalars
-      integer param,type,isame,iof,iorder
+      integer param,type,isame,iof,iorder,inbend
       integer iatom,jatom,katom,latom,matom,ivib,ibend,itor,jvib
-      integer iaa,iindex,kindex,lindex
+      integer iaa,iindex,kindex,lindex,iorderba,paramba
       integer iatom_nvib,jatom_nvib,katom_nvib,latom_nvib,itest,jtest
 c     --- integer arrays
       integer partners
@@ -161,7 +161,7 @@ c     --- currently independent of match_style
          enddo
       enddo
 
-c     --- determine bending angles and types
+c     --- determine bending angles
       do iatom = 1,totatoms
          call twh_invib(GLB_GET,imolty,iatom,iatom_nvib)
          do ivib = 1,iatom_nvib
@@ -170,34 +170,48 @@ c     --- determine bending angles and types
             do jvib = 1,jatom_nvib
                call twh_ijvib(GLB_GET,imolty,jatom,jvib,katom)
                if ( iatom .ne. katom ) then
-                  iorder = ORD_NULL
-c                 --- initialize param (only done once)
-                  param = 0
 c                 --- we found a bending angle
                   call twh_inben(GLB_INCR,imolty,iatom,1)
                   ibend = twh_get_inben(imolty,iatom)
                   call twh_ijben2(GLB_SET,imolty,iatom,ibend,jatom)
                   call twh_ijben3(GLB_SET,imolty,iatom,ibend,katom)
-                  if ( match_style .eq. 'standard' 
-     &                 .or. match_style .eq. 'stereoselective' ) then
-                     call twh_angle_match_standard(lfailure,imolty,iatom
-     &                    ,jatom,katom,iorder,param,forcefield)
-                     if ( lfailure ) return
-                  elseif ( match_style .eq. 'MMFF checkdown' ) then
-                     call twh_angle_match_mmff(lfailure,imolty,iatom
-     &                    ,jatom,katom,iorder,param,forcefield)
-                     if ( lfailure ) return
-                  else
-                     write(6,*) 'ASSEMBLE: unknown match_style'
-                     write(6,*) match_style
-                     lfailure = .true.
-                     return
-                  endif
-
-                  call twh_orderben(GLB_SET,imolty,iatom,ibend,iorder)
-                  call twh_itben(GLB_SET,imolty,iatom,ibend,param)
                endif
             enddo
+         enddo
+      enddo
+
+c     --- set the bending angle types now that all the angles are set
+      do iatom = 1,totatoms
+         call twh_inben(GLB_GET,imolty,iatom,inbend)
+         do ibend = 1,inbend
+            call twh_ijben2(GLB_GET,imolty,iatom,ibend,jatom)
+            call twh_ijben3(GLB_GET,imolty,iatom,ibend,katom)
+            iorder = ORD_NULL
+            iorderba = ORD_NULL
+c           --- initialize param (only done once)
+            param = 0
+            paramba = 0
+            if ( match_style .eq. 'standard' 
+     &           .or. match_style .eq. 'stereoselective' ) then
+               call twh_angle_match_standard(lfailure,imolty,iatom
+     &              ,jatom,katom,iorder,param,forcefield)
+               if ( lfailure ) return
+            elseif ( match_style .eq. 'MMFF checkdown' ) then
+               call twh_angle_match_mmff(lfailure,imolty,iatom
+     &              ,jatom,katom,param,iorderba,paramba
+     &              ,forcefield)
+               if ( lfailure ) return
+            else
+               write(6,*) 'ASSEMBLE: unknown match_style'
+               write(6,*) match_style
+               lfailure = .true.
+               return
+            endif
+
+            call twh_orderben(GLB_SET,imolty,iatom,ibend,iorder)
+            call twh_itben(GLB_SET,imolty,iatom,ibend,param)
+            call twh_orderbang(GLB_SET,imolty,iatom,ibend,iorderba)
+            call twh_itbang(GLB_SET,imolty,iatom,ibend,paramba)
          enddo
       enddo
 
@@ -512,7 +526,9 @@ c              --- required forcefield file
             if ( match_style .eq. 'standard' ) then
                call twh_improper_match_standard(names,param,forcefield)
             elseif ( match_style .eq. 'MMFF checkdown' ) then
-               call twh_improper_match_mmff(names,param,forcefield)
+               call twh_improper_match_mmff(lfailure,names,param
+     &              ,forcefield)
+               if ( lfailure ) return
             else
                write(6,*) 'ASSEMBLE: unknown improper match_style'
                write(6,*) match_style
@@ -1104,125 +1120,227 @@ c              --- need all to be wild
       end
 
       subroutine twh_angle_match_mmff(lfailure,imolty,iatom,jatom,katom
-     &     ,iorder,param,forcefield)
+     &     ,param,iorderba,paramba,forcefield)
 c     ******************************************************************
 c     * searches for angle matches using the MMFF checkdown procedure  *
 c     * that runs through a series of two-letter character codes and   *
 c     * takes the first iteration that provides a complete match       *
 c     *                                                                *
 c     * originally written 12-15-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-14-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_BENDFF
 #define FUNCTION_GET_BENDNAMES
-#define FUNCTION_GET_CANAME
 #define FUNCTION_GET_NBSAME
-#define FUNCTION_GET_NTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer imolty,iatom,jatom,katom,iorder,param
+      integer imolty,iatom,jatom,katom,param,iorderba,paramba
       character*(FFNAMELEN) forcefield
 c     --- local variables
+c     --- logical scalars
+      logical lfound
 c     --- integer scalars
-      integer type,index,inum,count,istart,iend,angletype,batype
+      integer type,index,inum,count,angletype
+      integer anglestyle,typei,typej,typek,rownum
 c     --- character string scalars
       character*(FFNAMELEN) testname
-      character*15 forwardorder,reverseorder,testorder
-      character*15 altforward,altreverse
+      character*15 matchorder,testorder
 c     --- character string arrays
       character*(FFNAMELEN) names
       dimension names(3)
       character*2 key,testkey
       dimension key(3),testkey(3)
+c     --- double precision scalars
+      double precision dummass
 
-c     --- get the forward mmff angle type
+c     --- get the mmff angle order value
       call twh_mmff_angle_type(lfailure,imolty,iatom,jatom,katom
-     &     ,angletype,batype)
+     &     ,angletype)
       if ( lfailure ) return
-      write(forwardorder,99) 'MMFF sb:',batype,'a:',angletype
-c     --- get the reverse mmff angle type
-      call twh_mmff_angle_type(lfailure,imolty,katom,jatom,iatom
-     &     ,angletype,batype)
-      if ( lfailure ) return
-      write(reverseorder,99) 'MMFF sb:',batype,'a:',angletype
- 99   format(a8,i2,1x,a2,i1)
+      write(matchorder,99) 'MMFF a:',angletype
 
-c     --- create the alternate forward and reverse with wilcards for
-c     --- the stretch-bend
-      altforward = forwardorder
-      altforward(9:10) = '**'
-      altreverse = reverseorder
-      altreverse(9:10) = '**'
+ 99   format(a7,i1)
 
 c     --- use the angle names for this type
-      names(1) = twh_get_caname(twh_get_ntype(imolty,iatom))
-      names(2) = twh_get_caname(twh_get_ntype(imolty,jatom))
-      names(3) = twh_get_caname(twh_get_ntype(imolty,katom))
+      call twh_ntype(GLB_GET,imolty,iatom,typei)
+      call twh_ntype(GLB_GET,imolty,jatom,typej)
+      call twh_ntype(GLB_GET,imolty,katom,typek)
+      call twh_caname(GLB_GET,typei,names(1))
+      call twh_caname(GLB_GET,typej,names(2))
+      call twh_caname(GLB_GET,typek,names(3))
 
-      do index = 1,5
-         istart = 2*index-1
-         iend = 2*index
-         do count = 1,3
-            key(count) = names(count)(istart:iend)
-         enddo
+      lfound = .false.
+      index = 0
+      do while ( .not. lfound .and. index .lt. 5 )
+         index = index + 1
+c        --- this elaborate scheme is described in footnote 68 of
+c        --- MMFF I
+         if ( index .eq. 1 ) then
+c           --- 1-1-1
+            key(1) = names(1)(1:2)
+            key(2) = names(2)(1:2)
+            key(3) = names(3)(1:2)
+         elseif ( index .eq. 2 ) then
+c           --- 2-2-2
+            key(1) = names(1)(3:4)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(3:4)
+         elseif ( index .eq. 3 ) then
+c           --- 3-2-3
+            key(1) = names(1)(5:6)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(5:6)
+         elseif ( index .eq. 4 ) then
+c           --- 4-2-4
+            key(1) = names(1)(7:8)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(7:8)
+         elseif ( index .eq. 5 ) then
+c           --- 5-2-5
+            key(1) = names(1)(9:10)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(9:10)
+         endif
 
-         do type = 1,TBENMAX
+         type = 0
+         do while ( type .lt. TBENMAX .and. .not. lfound )
+            type = type + 1
 c           --- see if the forcefield name matches
-            if ( twh_get_bendff(type) .eq. forcefield ) then
+            call twh_anglestyle(GLB_GET,type,anglestyle)
+            call twh_angleorder(GLB_GET,type,testorder)
+            if ( twh_get_bendff(type) .eq. forcefield .and.
+     &           anglestyle .ne. ANG_STYLE_MMFFC_BA .and.
+     &           testorder .eq. matchorder ) then
 c              --- get the bendnames
                do inum = 1,twh_get_nbsame(type)
                   do count = 1,3
                      testname = twh_get_bendnames(type,inum,count)
                      testkey(count) = testname(1:2)
                   enddo
-c                 --- check for a forward match
                   if ( key(1) .eq. testkey(1) .and.
      &                 key(2) .eq. testkey(2) .and.
      &                 key(3) .eq. testkey(3) ) then
-c                    --- check the angleorder
-                     call twh_angleorder(GLB_GET,type,testorder)
-                     if ( testorder .eq. forwardorder
-     &                    .or. testorder .eq. altforward ) then
-c                       --- forward match
-                        iorder = ORD_FORWARD
-                        param = type
-                        return
-                     endif
-                  endif
-c                 --- check for a reverse match
-                  if ( key(1) .eq. testkey(3) .and.
-     &                 key(2) .eq. testkey(2) .and.
-     &                 key(3) .eq. testkey(1) ) then
-c                    --- check the angleorder
-                     call twh_angleorder(GLB_GET,type,testorder)
-                     if ( testorder .eq. reverseorder
-     &                    .or. testorder .eq. altreverse ) then
-c                       --- reverse match
-                        iorder = ORD_REVERSE
-                        param = type
-                        return
-                     endif
+                     param = type
+                     lfound = .true.
+                  elseif ( key(1) .eq. testkey(3) .and.
+     &                    key(2) .eq. testkey(2) .and.
+     &                    key(3) .eq. testkey(1) ) then
+                     param = type
+                     lfound = .true.
                   endif
                enddo
             endif
          enddo
       enddo
 
-c     --- if we got this far then a match was not found
-      write(6,*) 'parameters not found for angle'
-      write(6,*) 'molecule type:',imolty
-      write(6,*) 'atoms ',iatom,jatom,katom
-      write(6,*) 'names:'
-      write(6,'(3(a10,/))') names(1),names(2),names(3)
-      write(6,*) 'forward and reverse orders'
-      write(6,*) forwardorder
-      write(6,*) reverseorder
-      write(6,*) 'alternate forward and reverse orders'
-      write(6,*) altforward
-      write(6,*) altreverse
-      lfailure = .true.
+      if ( .not. lfound ) then
+         write(6,*) 'parameters not found for angle'
+         write(6,*) 'molecule type:',imolty
+         write(6,*) 'atoms ',iatom,jatom,katom
+         write(6,*) 'names:'
+         write(6,'(3(a10,/))') names(1),names(2),names(3)
+         write(6,*) 'match order'
+         write(6,*) matchorder
+         lfailure = .true.
+         return
+      endif
+
+c     --- if this is not a combo angle style then just return
+      call twh_anglestyle(GLB_GET,param,anglestyle)
+      if ( anglestyle .ne. ANG_STYLE_MMFFC_ANG ) return
+
+c     --- now set up the bond-angle term in addition in the case where
+c     --- the original type is combo
+c     --- completely different process, either a complete match to the
+c     --- first option, or we go to rows of the periodic table
+
+      do count = 1,3
+         key(count) = names(count)(1:2)
+      enddo
+
+      lfound = .false.
+      type = 0
+      do while ( type .lt. TBENMAX .and. .not. lfound )
+         type = type + 1
+c        --- see if the forcefield name matches
+         call twh_anglestyle(GLB_GET,type,anglestyle)
+         call twh_angleorder(GLB_GET,type,testorder)
+         if ( twh_get_bendff(type) .eq. forcefield .and.
+     &        anglestyle .eq. ANG_STYLE_MMFFC_BA .and.
+     &        testorder .eq. matchorder ) then
+c           --- get the bendnames
+            do inum = 1,twh_get_nbsame(type)
+               do count = 1,3
+                  testname = twh_get_bendnames(type,inum,count)
+                  testkey(count) = testname(1:2)
+               enddo
+               if ( key(1) .eq. testkey(1) .and.
+     &              key(2) .eq. testkey(2) .and.
+     &              key(3) .eq. testkey(3) ) then
+c                    --- forward match
+                  iorderba = ORD_FORWARD
+                  paramba = type
+                  lfound = .true.
+               elseif ( key(1) .eq. testkey(3) .and.
+     &                 key(2) .eq. testkey(2) .and.
+     &                 key(3) .eq. testkey(1) ) then
+c                    --- reverse match
+                  iorderba = ORD_REVERSE
+                  paramba = type
+                  lfound = .true.
+               endif
+            enddo
+         endif
+      enddo
+
+      if ( lfound ) return
+
+c     --- the final assignment for bond-angle uses the row of the
+c     --- periodic table
+      call twh_elementname(GLB_GET,typei,testkey(1))
+      call twh_elementname(GLB_GET,typej,testkey(2))
+      call twh_elementname(GLB_GET,typek,testkey(3))
+
+c     --- convert the element names into rows
+      do count = 1,3
+         call twh_getelement(lfailure,'get row',dummass,testkey(count)
+     &        ,rownum)
+         if ( lfailure ) return
+         write(key(count),'(a1,i1)') 'r',rownum
+      enddo
+
+      type = 0
+      do while ( type .lt. TBENMAX .and. .not. lfound )
+         type = type + 1
+         call twh_anglestyle(GLB_GET,type,anglestyle)
+         if ( twh_get_bendff(type) .eq. forcefield .and.
+     &        anglestyle .eq. ANG_STYLE_MMFFC_BA ) then
+            do inum = 1,twh_get_nbsame(type)
+               do count = 1,3
+                  testname = twh_get_bendnames(type,inum,count)
+                  testkey(count) = testname(1:2)
+               enddo
+            
+               if ( key(1) .eq. testkey(1) .and.
+     &              key(2) .eq. testkey(2) .and.
+     &              key(3) .eq. testkey(3) ) then
+c                 --- forward match
+                  iorderba = ORD_FORWARD
+                  paramba = type
+                  lfound = .true.
+               elseif ( key(1) .eq. testkey(3) .and.
+     &                 key(2) .eq. testkey(2) .and.
+     &                 key(3) .eq. testkey(1) ) then
+c                 --- reverse match
+                  iorderba = ORD_REVERSE
+                  paramba = type
+                  lfound = .true.
+               endif
+            enddo
+         endif
+      enddo
 
       return
       end
@@ -1708,7 +1826,7 @@ c     ******************************************************************
 c     * uses the MMFF checkdown procedure to find a torsion match      *
 c     *                                                                *
 c     * originally written 12-15-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-14-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CTNAME
@@ -1724,9 +1842,8 @@ c     --- variables passed to/from the subroutine
 
 c     --- local variables
 c     --- integer scalars
-      integer type,index,inum,count,istart,iend
+      integer type,index,inum,count
 c     --- character string scalars
-      character*2 wildcard
       character*(FFNAMELEN) testname
       character*15 forwardorder,reverseorder,testorder
 c     --- character string arrays
@@ -1752,11 +1869,39 @@ c     --- use the torsion names for this type
       names(4) = twh_get_ctname(twh_get_ntype(imolty,latom))
 
       do index = 1,5
-         istart = 2*index-1
-         iend = 2*index
-         do count = 1,4
-            key(count) = names(count)(istart:iend)
-         enddo
+c        --- this elaborate scheme is described in footnote 68 of
+c        --- MMFF I
+         if ( index .eq. 1 ) then
+c           --- 1-1-1-1
+            key(1) = names(1)(1:2)
+            key(2) = names(2)(1:2)
+            key(3) = names(3)(1:2)
+            key(4) = names(4)(1:2)
+         elseif ( index .eq. 2 ) then
+c           --- 2-2-2-2
+            key(1) = names(1)(3:4)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(3:4)
+            key(4) = names(4)(3:4)
+         elseif ( index .eq. 3 ) then
+c           --- 3-2-2-5
+            key(1) = names(1)(5:6)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(3:4)
+            key(4) = names(4)(9:10)
+         elseif ( index .eq. 4 ) then
+c           --- 5-2-2-3
+            key(1) = names(1)(9:10)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(3:4)
+            key(4) = names(4)(5:6)
+         elseif ( index .eq. 5 ) then
+c           --- 5-2-2-5
+            key(1) = names(1)(9:10)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(3:4)
+            key(4) = names(4)(9:10)
+         endif
 
          do type = 1,TTORMAX
 c           --- see if the forcefield name matches
@@ -1796,95 +1941,6 @@ c                       --- reverse match
                enddo
             endif
          enddo
-      enddo
-
-      index = 1
-      istart = 2*index-1
-      iend = 2*index
-      do count = 1,4
-         key(count) = names(count)(istart:iend)
-      enddo
-
-      wildcard = ' 0'
-      do type = 1,TTORMAX
-c        --- see if the forcefield name matches
-         if ( twh_get_torff(type) .eq. forcefield ) then
-c            --- get the tornames
-            do inum = 1,twh_get_ntsame(type)
-               do count = 1,4
-                  testname = twh_get_tornames(type,inum,count)
-                  testkey(count) = testname(1:2)
-               enddo
-c              --- check for a first position single-wild forward match
-               if ( wildcard .eq. testkey(1) .and.
-     &              key(2) .eq. testkey(2) .and.
-     &              key(3) .eq. testkey(3) .and.
-     &              key(4) .eq. testkey(4) ) then
-c                 --- forward match
-                  param = type
-                  return
-               endif
-c              --- check for a final position single-wild forward match
-               if ( key(1) .eq. testkey(1) .and.
-     &              key(2) .eq. testkey(2) .and.
-     &              key(3) .eq. testkey(3) .and.
-     &              wildcard .eq. testkey(4) ) then
-c                 --- forward match
-                  param = type
-                  return
-               endif
-c              --- check for a first position single-wild reverse match
-               if ( wildcard .eq. testkey(4) .and.
-     &              key(2) .eq. testkey(3) .and.
-     &              key(3) .eq. testkey(2) .and.
-     &              key(4) .eq. testkey(1) ) then
-c                 --- reverse match
-                  param = type
-                  return
-               endif
-c              --- check for a final position single-wild reverse match
-               if ( key(1) .eq. testkey(4) .and.
-     &              key(2) .eq. testkey(3) .and.
-     &              key(3) .eq. testkey(2) .and.
-     &              wildcard .eq. testkey(1) ) then
-c                 --- reverse match
-                  param = type
-                  return
-               endif
-            enddo
-         endif
-      enddo
-
-c     --- check for double-wildcard matches
-      do type = 1,TTORMAX
-c        --- see if the forcefield name matches
-         if ( twh_get_torff(type) .eq. forcefield ) then
-c            --- get the tornames
-            do inum = 1,twh_get_ntsame(type)
-               do count = 1,4
-                  testname = twh_get_tornames(type,inum,count)
-                  testkey(count) = testname(1:2)
-               enddo
-c              --- check for a double-wild forward match
-               if ( wildcard .eq. testkey(1) .and.
-     &              key(2) .eq. testkey(2) .and.
-     &              key(3) .eq. testkey(3) .and.
-     &              wildcard .eq. testkey(4) ) then
-c                 --- forward match
-                  param = type
-                  return
-               endif
-c              --- check for a double-wild reverse match
-               if ( wildcard .eq. testkey(4) .and.
-     &              key(2) .eq. testkey(3) .and.
-     &              key(3) .eq. testkey(2) .and.
-     &              wildcard .eq. testkey(1) ) then
-c                 --- reverse match
-                  param = type
-                  return
-               endif
-            enddo
-         endif
       enddo
 
 c     --- if we got this far then a match was not found
@@ -1952,7 +2008,7 @@ c     --- if we made it this far there is a problem
       end
 
       subroutine twh_mmff_angle_type(lfailure,imolty,iatom,jatom
-     &     ,katom,angletype,batype)
+     &     ,katom,angletype)
 c     ******************************************************************
 c     * determine the mmff angle, and stretch-bend types               *
 c     *                                                                *
@@ -1971,27 +2027,13 @@ c     *    is 1                                                        *
 c     * 8: Is in a four-membered ring and the sum of the bond types    *
 c     *    is 2                                                        *
 c     *                                                                *
-c     * bond-angle type rules                                          *
-c     * 0: angle:0 bij: 0 bjk: 0                                       *
-c     * 1: angle:1 bij: 1 bjk: 0                                       *
-c     * 2: angle:1 bij: 0 bjk: 1                                       *
-c     * 3: angle:2 bij: 1 bjk: 1                                       *
-c     * 4: angle:4 bij: 0 bjk: 0                                       *
-c     * 5: angle:3 bij: 0 bjk: 0                                       *
-c     * 6: angle:5 bij:	1 bjk: 0                                       *
-c     * 7: angle:5 bij: 0 bjk: 1                                       *
-c     * 8: angle:6 bij: 1 bjk: 1                                       *
-c     * 9: angle:7 bij:	1 bjk: 0                                       *
-c     * 10: angle:7 bij: 0 bjk: 1                                      *
-c     * 11: angle:8 bij: 1 bkj: 1                                      *
-c     *                                                                *
 c     * originally written 12-15-2006 by M.G. Martin                   *
-c     * last modified 12-15-2006 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer imolty,iatom,jatom,katom,angletype,batype
+      integer imolty,iatom,jatom,katom,angletype
 c     --- local variables
 c     --- integer scalars
       integer invib,ivib,bondsum,itest,ibend,inbend,jtest,bij,bjk
@@ -2003,9 +2045,9 @@ c     --- compute the sum of the bond types
       call twh_mmff_bond_type(lfailure,imolty,jatom,katom,bjk)
       if ( lfailure ) return
       bondsum = bij + bjk
-
 c     --- determine if this is a four-membered ring
       call twh_inben(GLB_GET,imolty,katom,inbend)
+
       do ibend = 1,inbend
          call twh_ijben3(GLB_GET,imolty,katom,ibend,itest)
          if ( itest .eq. iatom ) then
@@ -2016,21 +2058,16 @@ c              --- four-membered ring
                if ( bondsum .eq. 2 ) then
 c                 --- four-membered ring with a bondsum of 2
                   angletype = 8
-                  batype = 11
+                  return
                elseif ( bondsum .eq. 1 ) then
 c                 --- four-membered ring with a bondsum of 1
                   angletype = 7
-                  if ( bij .eq. 1 ) then
-                     batype = 9
-                  else
-                     batype = 10
-                  endif
+                  return
                else
 c                 --- four-membered ring with a bondsum of 0
                   angletype = 4
-                  batype = 4
+                  return
                endif
-               return
             endif
          endif
       enddo
@@ -2044,19 +2081,12 @@ c           --- three-membered ring
             if ( bondsum .eq. 2 ) then
 c              --- three-membered ring with a bondsum of 2
                angletype = 6
-               batype = 8
             elseif ( bondsum .eq. 1 ) then
 c              --- three-membered ring with a bondsum of 1
                angletype = 5
-               if ( bij .eq. 1 ) then
-                  batype = 6
-               else
-                  batype = 7
-               endif
             else
 c              --- three-membered ring with a bondsum of 0
                angletype = 3
-               batype = 5
             endif
             return
          endif
@@ -2064,17 +2094,6 @@ c              --- three-membered ring with a bondsum of 0
 
 c     --- not a three or four membered ring
       angletype = bondsum
-      if ( angletype .eq. 2 ) then
-         batype = 3
-      elseif ( angletype .eq. 1 ) then
-         if ( bij .eq. 1 ) then
-            batype = 1
-         else
-            batype = 2
-         endif
-      else
-         batype = 0
-      endif
 
       return
       end
@@ -2410,12 +2429,13 @@ c     --- check for triple wildcard matches in all but spot 1
       return
       end
 
-      subroutine twh_improper_match_mmff(names,param,forcefield)
+      subroutine twh_improper_match_mmff(lfailure,names,param
+     &     ,forcefield)
 c     ******************************************************************
 c     * computes the improper types using the MMFF checkdown procedure *
 c     *                                                                *
 c     * originally written 12-20-2006 by M.G. Martin                   *
-c     * last modified 12-20-2006 by M.G. Martin                        *
+c     * last modified 08-15-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IMPFF
@@ -2423,14 +2443,14 @@ c     ******************************************************************
 #define FUNCTION_GET_NIMPSAME
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       character*(FFNAMELEN) names
       dimension names(4)
       integer param
       character*(FFNAMELEN) forcefield
 c     --- local variables
-      integer index,istart,iend,count,type,inum
+      integer index,count,type,inum
 c     --- character string scalars
-      character*2 wildcard
       character*(FFNAMELEN) testname
 c     --- character string arrays
       character*2 key,testkey
@@ -2441,11 +2461,38 @@ c     --- so we just need to check for matches, but using the checkdown
 c     --- procedure
 
       do index = 1,5
-         istart = 2*index-1
-         iend = 2*index
-         do count = 1,4
-            key(count) = names(count)(istart:iend)
-         enddo
+c        --- uses the checkdown procedure in footnote 68 of MMFF I
+         if ( index .eq. 1 ) then
+c           --- 1-1-1:1
+            key(1) = names(1)(1:2)
+            key(2) = names(2)(1:2)
+            key(3) = names(3)(1:2)
+            key(4) = names(4)(1:2)
+         elseif ( index .eq. 2 ) then
+c           --- 2-2-2:2
+            key(1) = names(1)(3:4)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(3:4)
+            key(4) = names(4)(3:4)
+         elseif ( index .eq. 3 ) then
+c           --- 3-2-3:3
+            key(1) = names(1)(5:6)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(5:6)
+            key(4) = names(4)(5:6)
+         elseif ( index .eq. 4 ) then
+c           --- 4-2-4:4
+            key(1) = names(1)(7:8)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(7:8)
+            key(4) = names(4)(7:8)
+         elseif ( index .eq. 5 ) then
+c           --- 5-2-5:5
+            key(1) = names(1)(9:10)
+            key(2) = names(2)(3:4)
+            key(3) = names(3)(9:10)
+            key(4) = names(4)(9:10)
+         endif
 
          do type = 1,TIMPMAX
 c           --- see if the forcefield name matches
@@ -2461,7 +2508,7 @@ c                 --- check for a forward match
      &                 key(2) .eq. testkey(2) .and.
      &                 key(3) .eq. testkey(3) .and.
      &                 key(4) .eq. testkey(4) ) then
-c                    --- forward match
+c                    --- match
                      param = type
                      return
                   endif
@@ -2470,35 +2517,43 @@ c                    --- forward match
          enddo
       enddo
 
-c     --- if that did not work then check for triple wildcard matches
-c     --- on all except for jatom, just using the first key
-      index = 1
-      istart = 2*index-1
-      iend = 2*index
+      write(6,*) 'IMPROPER_MATCH_MMFF: did not find improper params'
       do count = 1,4
-         key(count) = names(count)(istart:iend)
+         write(6,*) names(count)
       enddo
+      lfailure = .true.
 
-      wildcard = ' 0'
-      do type = 1,TIMPMAX
-c        --- see if the forcefield name matches
-         if ( twh_get_impff(type) .eq. forcefield ) then
-c           --- get the tornames
-            do inum = 1,twh_get_nimpsame(type)
-               do count = 1,4
-                  testname = twh_get_impnames(type,inum,count)
-                  testkey(count) = testname(1:2)
-               enddo
-c              --- check for a triple-wild match
-               if ( wildcard .eq. testkey(1) .and.
-     &              key(2) .eq. testkey(2) .and.
-     &              wildcard .eq. testkey(3) .and.
-     &              wildcard .eq. testkey(4) ) then
-c                 --- match
-                  param = type
-                  return
-               endif
-            enddo
+      return
+      end
+
+      subroutine twh_mmffcheckdown_bond_to_row(lfailure,atomname,rownum)
+c     ******************************************************************
+c     * converts a bond name into the first matching element and the   *
+c     * returns that periodic table row (where the first row is 0)     *
+c     *                                                                *
+c     * originally written 08-09-2014 by M.G. Martin                   *
+c     * last modified 08-09-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      logical lfailure
+      character*(FFNAMELEN) atomname
+      integer rownum
+c     --- local variables
+      integer itype
+      character*2 elementname
+      character*(FFNAMELEN) atomtest
+      double precision testmass
+
+      do itype = 1,NNTYPE
+         call twh_cbname(GLB_GET,itype,atomtest)
+         if ( atomtest .eq. atomname ) then
+c           --- match found
+            call twh_elementname(GLB_GET,itype,elementname)
+            write(6,*) 'elementname:',elementname
+            call twh_getelement(lfailure,'get row',testmass,elementname
+     &           ,rownum )
+            return
          endif
       enddo
 

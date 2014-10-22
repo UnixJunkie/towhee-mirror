@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 02-05-2013 by M.G. Martin                        *
+c     * last modified 08-11-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -95,7 +95,7 @@ c     --- integer scalars
       integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile,nmolty
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
       integer aminonum,potentialstyle,numboxes,rng_code
-      integer npair,inix,iniy,iniz,nvmove,ensemble
+      integer npair,inix,iniy,iniz,nvmove,ensemble,itbang,iobang
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -1121,9 +1121,12 @@ c              --- include pdb stuff
             write(15,*) twh_get_inben(imolty,iatom)
             do ibend = 1,twh_get_inben(imolty,iatom)
                call twh_orderben(GLB_GET,imolty,iatom,ibend,iorder)
+               call twh_itbang(GLB_GET,imolty,iatom,ibend,itbang)
+               call twh_orderbang(GLB_GET,imolty,iatom,ibend,iobang)
                write(15,*) twh_get_ijben2(imolty,iatom,ibend)
      &              ,twh_get_ijben3(imolty,iatom,ibend)
      &              ,twh_get_itben(imolty,iatom,ibend),iorder
+     &              ,itbang,iobang
             enddo
             write(15,'(a7)') 'torsion'
             write(15,*) twh_get_intor(imolty,iatom)
@@ -1153,7 +1156,7 @@ c              --- include pdb stuff
       endif
 
  44   format(f6.4)
- 100  format(10x,20(f6.4,1x))
+ 100  format(10x,20(e10.5,1x))
  101  format(10x,20(f7.4,1x))
          
 c     write(6.*) 'finished WRITETOWHEE'

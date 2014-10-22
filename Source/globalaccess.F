@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * for accessing global data along with subroutines that bundle   *
 c     * the adjustment of multiple global data structures              *
 c     *                                                                *
 c     * originally written 03-24-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-08-2014 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_create_torsion(imolty,iunit,itor2,itor3,itor4
@@ -1804,7 +1804,7 @@ c     * replace the memory with a moderately expensive loop as this    *
 c     * function/data is rarely used                                   *
 c     *                                                                *
 c     * originally written 03-31-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LBENDHERE
@@ -1814,7 +1814,7 @@ c     ******************************************************************
 c     --- variables passed to/from the function
       integer bendtype
 c     --- local variables
-      integer imolty,iunit,ibend,nmolty,nunit
+      integer imolty,iunit,ibend,nmolty,nunit,batype
 
       call twh_nmolty(GLB_GET,nmolty)
       do imolty = 1,nmolty
@@ -1823,6 +1823,11 @@ c     --- local variables
             do ibend = 1,twh_get_inben(imolty,iunit)
                if ( twh_get_itben(imolty,iunit,ibend)
      &              .eq. bendtype ) then
+                  twh_get_lbendhere = .true.
+                  return
+               endif
+               call twh_itbang(GLB_GET,imolty,iunit,ibend,batype)
+               if ( batype .eq. bendtype ) then
                   twh_get_lbendhere = .true.
                   return
                endif
@@ -2458,24 +2463,6 @@ c     ******************************************************************
 #include "functions.h"
 
       call twh_pmvol(GLB_GET,twh_get_pmvol)
-  
-      return
-      end
-
-      function twh_get_qbasevalue(itype)
-c     ******************************************************************
-c     * gets the qbasevalue data                                       *
-c     *                                                                *
-c     * originally written 04-13-2006 by M.G. Martin                   *
-c     * last modified 04-13-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-#define FUNCTION_GET_QBASEVALUE
-#include "functions.h"
-c     --- variables passed to/from the subroutine
-      integer itype
-
-      call twh_qbasevalue(GLB_GET,itype,twh_get_qbasevalue)
   
       return
       end

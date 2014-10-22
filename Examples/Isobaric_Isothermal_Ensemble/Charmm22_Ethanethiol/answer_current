@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.1.0   (July 25 2014)      
+ MCCCS Towhee - Version 7.2.0   (October 22 2014)   
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -184,7 +184,6 @@ unit:    7 name:HA         charge:   0.09000
 unit:    8 name:HA         charge:   0.09000
 unit:    9 name:HA         charge:   0.09000
  Verifying input structures are consistent
-Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full details
 Determining cyclic subunits for molecule type          1
 Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
@@ -242,6 +241,7 @@ Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     
   29 HS           29 HS             0.8018    50.3217     0.0000     0.8018    50.3217
   29 HS           49 S              2.1827   106.7484     0.0000     2.1827   106.7484
   49 S            49 S              3.5636   226.4475     0.0000     3.5636   226.4475
+Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full details
  Isobaric-isothermal ensemble
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
@@ -286,30 +286,43 @@ External pressure [kPa]:       101.32500
 Initial Energies for Box     1
 Total molecules in this box         90
 Molecules of type   1 :         90
- total vibration        95874.967 [K]       190.52425 [kcal/mol]
-    regular             95874.967 [K]       190.52425 [kcal/mol]
-    bond-bond(1-2)          0.000 [K]         0.00000 [kcal/mol]
- total angle           148601.703 [K]       295.30366 [kcal/mol]
-    regular            148601.703 [K]       295.30366 [kcal/mol]
-    angle-angle             0.000 [K]         0.00000 [kcal/mol]
- total torsion         -31099.665 [K]       -61.80175 [kcal/mol]
-    regular            -31099.665 [K]       -61.80175 [kcal/mol]
-    improper                0.000 [K]         0.00000 [kcal/mol]
- total nonbond        -266264.362 [K]      -529.12476 [kcal/mol]
-    intramolecular       -412.723 [K]        -0.82017 [kcal/mol]
-    2-body nonbond    -250515.798 [K]      -497.82896 [kcal/mol]
-    3-body nonbond          0.000 [K]         0.00000 [kcal/mol]
-    tail correct.      -15335.841 [K]       -30.47563 [kcal/mol]
- total coulombic       170699.539 [K]       339.21683 [kcal/mol]
-    real space          32053.062 [K]        63.69635 [kcal/mol]
-      intramolec.       42897.284 [K]        85.24616 [kcal/mol]
-      intermolec.      -10844.222 [K]       -21.54981 [kcal/mol]
-    self              -438379.583 [K]      -871.15485 [kcal/mol]
-    correction         573097.514 [K]      1138.86846 [kcal/mol]
-    recip sum            3928.546 [K]         7.80687 [kcal/mol]
- external field             0.000 [K]         0.00000 [kcal/mol]
- solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical            117812.1829 [K]           234.118236 [kcal/mol]
+ Total vibration (atoms ij bonded together)                 95874.967 [K]       190.52425 [kcal/mol]
+  bond (ij) regular                                         95874.967 [K]       190.52425 [kcal/mol]
+  bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
+  bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
+  bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                148601.703 [K]       295.30366 [kcal/mol]
+  angle (ijk) regular                                      148601.703 [K]       295.30366 [kcal/mol]
+  bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
+  angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
+  angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
+  angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                   -31099.665 [K]       -61.80175 [kcal/mol]
+  torsion (ijkl) regular                                    47683.650 [K]        94.75770 [kcal/mol]
+  torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
+  torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
+  torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
+  torsion (ijk-jkl-ijkl) angle-angle-torsion                    0.000 [K]         0.00000 [kcal/mol]
+  torsion (i-l) one-four van der waals                      -8549.333 [K]       -16.98937 [kcal/mol]
+  torsion (i-l) one-four Electric                          -70233.982 [K]      -139.57008 [kcal/mol]
+ Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw              -266264.362 [K]      -529.12476 [kcal/mol]
+  intramolecular                                             -412.723 [K]        -0.82017 [kcal/mol]
+  2-body vdw intermolecular                               -250515.798 [K]      -497.82896 [kcal/mol]
+  3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
+  tail correction                                          -15335.841 [K]       -30.47563 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) Electric          170699.539 [K]       339.21683 [kcal/mol]
+  total real space Electric                                 32053.062 [K]        63.69635 [kcal/mol]
+   intramolecular Electric                                  42897.284 [K]        85.24616 [kcal/mol]
+   intermolecular Electric                                 -10844.222 [K]       -21.54981 [kcal/mol]
+  self                                                    -438379.583 [K]      -871.15485 [kcal/mol]
+  correction                                               573097.514 [K]      1138.86846 [kcal/mol]
+  reciprocal sum                                             3928.546 [K]         7.80687 [kcal/mol]
+ Total external field                                           0.000 [K]         0.00000 [kcal/mol]
+ Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
+Total classical                                            117812.183 [K]       234.11824 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)               -274813.695 [K]      -546.11413 [kcal/mol]
+ Aggregate Electric (bond and nonbond)                     100465.557 [K]       199.64675 [kcal/mol]
  initial virial pressure in box  1 =      -44371.46
 
  +++++ start of markov chain +++++
@@ -343,30 +356,43 @@ Molecule:  1 Box: 1 Attempts:             29. Accepted:              8. Accepted
 Final Energies for Box     1
 Total molecules in this box         90
 Molecules of type   1 :         90
- total vibration        96168.992 [K]       191.10854 [kcal/mol]
-    regular             96168.992 [K]       191.10854 [kcal/mol]
-    bond-bond(1-2)          0.000 [K]         0.00000 [kcal/mol]
- total angle           149255.605 [K]       296.60310 [kcal/mol]
-    regular            149255.605 [K]       296.60310 [kcal/mol]
-    angle-angle             0.000 [K]         0.00000 [kcal/mol]
- total torsion         -30115.442 [K]       -59.84588 [kcal/mol]
-    regular            -30115.442 [K]       -59.84588 [kcal/mol]
-    improper                0.000 [K]         0.00000 [kcal/mol]
- total nonbond        -264062.794 [K]      -524.74977 [kcal/mol]
-    intramolecular       -420.897 [K]        -0.83641 [kcal/mol]
-    2-body nonbond    -248249.403 [K]      -493.32515 [kcal/mol]
-    3-body nonbond          0.000 [K]         0.00000 [kcal/mol]
-    tail correct.      -15392.494 [K]       -30.58821 [kcal/mol]
- total coulombic       171000.861 [K]       339.81562 [kcal/mol]
-    real space          32275.495 [K]        64.13837 [kcal/mol]
-      intramolec.       43021.708 [K]        85.49342 [kcal/mol]
-      intermolec.      -10746.213 [K]       -21.35504 [kcal/mol]
-    self              -438918.730 [K]      -872.22625 [kcal/mol]
-    correction         573750.314 [K]      1140.16571 [kcal/mol]
-    recip sum            3893.782 [K]         7.73779 [kcal/mol]
- external field             0.000 [K]         0.00000 [kcal/mol]
- solvation                  0.000 [K]         0.00000 [kcal/mol]
- total classical            122247.2227 [K]           242.931618 [kcal/mol]
+ Total vibration (atoms ij bonded together)                 96168.992 [K]       191.10854 [kcal/mol]
+  bond (ij) regular                                         96168.992 [K]       191.10854 [kcal/mol]
+  bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
+  bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
+  bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                149255.605 [K]       296.60310 [kcal/mol]
+  angle (ijk) regular                                      149255.605 [K]       296.60310 [kcal/mol]
+  bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
+  angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
+  angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
+  angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                   -30115.442 [K]       -59.84588 [kcal/mol]
+  torsion (ijkl) regular                                    48827.745 [K]        97.03127 [kcal/mol]
+  torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
+  torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
+  torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
+  torsion (ijk-jkl-ijkl) angle-angle-torsion                    0.000 [K]         0.00000 [kcal/mol]
+  torsion (i-l) one-four van der waals                      -8427.558 [K]       -16.74738 [kcal/mol]
+  torsion (i-l) one-four Electric                          -70515.629 [K]      -140.12977 [kcal/mol]
+ Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw              -264062.794 [K]      -524.74977 [kcal/mol]
+  intramolecular                                             -420.897 [K]        -0.83641 [kcal/mol]
+  2-body vdw intermolecular                               -248249.403 [K]      -493.32515 [kcal/mol]
+  3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
+  tail correction                                          -15392.494 [K]       -30.58821 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) Electric          171000.861 [K]       339.81562 [kcal/mol]
+  total real space Electric                                 32275.495 [K]        64.13837 [kcal/mol]
+   intramolecular Electric                                  43021.708 [K]        85.49342 [kcal/mol]
+   intermolecular Electric                                 -10746.213 [K]       -21.35504 [kcal/mol]
+  self                                                    -438918.730 [K]      -872.22625 [kcal/mol]
+  correction                                               573750.314 [K]      1140.16571 [kcal/mol]
+  reciprocal sum                                             3893.782 [K]         7.73779 [kcal/mol]
+ Total external field                                           0.000 [K]         0.00000 [kcal/mol]
+ Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
+Total classical                                            122247.223 [K]       242.93162 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)               -272490.352 [K]      -541.49714 [kcal/mol]
+ Aggregate Electric (bond and nonbond)                     100485.233 [K]       199.68585 [kcal/mol]
 Averages               Units Type       Box  1
  Volume                 nm^3       0.10774E+02
  Volume^2               nm^6       0.11607E+03

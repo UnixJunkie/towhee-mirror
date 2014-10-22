@@ -28,7 +28,7 @@ c     * it then sets up some arrays of information that is useful when *
 c     * computing bending angles, and torsions                         *
 c     *                                                                *
 c     * Originally written 12-15-2000 by M.G. Martin                   *
-c     * Last modified 07-21-2014 by M.G. Martin                        *
+c     * Last modified 08-07-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -600,7 +600,7 @@ c              --- interaction
      &                       ,iunit,iben
                         write(6,*) 'Has nonsymmetric type: itestb,itest'
      &                       ,',jben',itestb,itest,jben
-                        write(6,*) 'iunit iben type '
+                        write(6,*) 'itest iben type '
      &                       ,twh_get_itben(imolty,iunit,iben)
                         write(6,*) 'itestb jben type '
      &                       ,twh_get_itben(imolty,itestb,jben)

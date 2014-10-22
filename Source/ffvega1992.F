@@ -29,7 +29,7 @@ c     * I added some default values for the bonded terms for those who *
 c     * might want to study square well chains                         *
 c     *                                                                *
 c     * originally written 06-24-2005 by M.G. Martin                   *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 08-13-2014 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -222,7 +222,7 @@ c     wild - wild - wild
 
 c     --- torsion potentials nonbond interaction for all
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_set_torcoeff(type,tclocal)

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,7 +32,7 @@ c     *   in the other box.  the maximum change is controled by rmcell *
 c     *   and the number of successfule trial moves is stored in bscel *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -48,7 +48,7 @@ c     --- variables that are passed to/from the subroutines
 c     --- local variables
 c     --- logical scalars
       logical lovrlap,lfound,ladjust,laccept,lreject,lbad,lperiodic
-      logical lcoulomb,lewald
+      logical lelect,lewald
 c     --- logical arrays
       logical lbonded
       dimension lbonded(2)
@@ -87,7 +87,7 @@ c     --- retrieve constants
       call twh_nchain(GLB_GET,nchain)
       call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_nboxpair(GLB_GET,nboxpair)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
 
       if ( nboxpair .eq. 0 ) then
@@ -349,7 +349,7 @@ c     --- compute the energy change
       do ilabel = 1,2
          call twh_pairbox(GLB_GET,imove,ilabel,ibox)
 c        --- set coulombic parameters for this new box length
-         if ( lcoulomb ) then
+         if ( lelect ) then
             call twh_resetcoulomb(lfailure,ibox)
             if ( lfailure ) return
          endif
@@ -519,7 +519,7 @@ c        --- volume move was rejected: restore old box lengths
 c           --- reset old volume and hinverse
             call twh_inverthmatrix(ibox)
 
-            if ( lcoulomb ) then
+            if ( lelect ) then
                call twh_resetcoulomb(lfailure,ibox)
                if ( lfailure ) return
                if ( lewald ) call twh_recip(ibox,4)

@@ -34,7 +34,7 @@ c     * for the bond and angle assignment and 3 characters for torsion *
 c     * this is handled using the c2temp and c3temp variables          *
 c     *                                                                *
 c     * rewritten from oplsaa.F 09-23-2003 by M.G. Martin              *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -5579,7 +5579,7 @@ c     --- the new version of OPLS (05/01).  Below are the values from
 c     --- the publically avaiable version of the parameters at that date
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -5721,7 +5721,7 @@ c     CT-C=-C=-HC [wlj2004]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -5739,7 +5739,7 @@ c     --- HC~ - CM - CT - HC~
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -5763,7 +5763,7 @@ c     --- HC~ - CT - CT - CM
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.300d0)*(CON_KCALTOK)*(0.5d0)
@@ -5805,7 +5805,7 @@ c     CO-CO-CT-CO hydrocarbon [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -5848,7 +5848,7 @@ c     CM-C=-C=-HC     diene - generic [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -5923,7 +5923,7 @@ c     HC-CM-CT-O? alcohols, ethers AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.711d0)*(CON_KCALTOK)*(0.5d0)
@@ -5969,7 +5969,7 @@ c     CT-CM-CT-O? alcohols, ethers AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (9.508d0)*(CON_KCALTOK)*(0.5d0)
@@ -5986,7 +5986,7 @@ c     OH-CT-CT-OH diols only AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (12.234d0)*(CON_KCALTOK)*(0.5d0)
@@ -6003,7 +6003,7 @@ c     OH-CT-CT-OH triols only AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6045,7 +6045,7 @@ c     HC-CT-OS-CO ethers AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.650d0)*(CON_KCALTOK)*(0.5d0)
@@ -6072,7 +6072,7 @@ c     CT-OS-CO-CT ethers AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.521d0)*(CON_KCALTOK)*(0.5d0)
@@ -6089,7 +6089,7 @@ c     CT-OS-CT-O? acetals AA [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (8.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -6106,7 +6106,7 @@ c     --- NT - CT - CT - OH (2-aminoethanol 6-31G* fit wj) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.550d0)*(CON_KCALTOK)*(0.5d0)
@@ -6123,7 +6123,7 @@ c     --- OS - CT - CT - OS (polyethers, crown ethers) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6142,7 +6142,7 @@ c     --- file.   this is the one listed first as OPLS torsion 166
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6196,7 +6196,7 @@ c     --- H - NA - CB - wild [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6220,7 +6220,7 @@ c     --- file.  this is the one listed third  as OPLS torsion 177
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.423d0)*(CON_KCALTOK)*(0.5d0)
@@ -6242,7 +6242,7 @@ c     --- null Torsion with all parameters set to 0.0
 c     --- Still needed so that the 1-4 interactions are computed
 c     --- properly
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6712,7 +6712,7 @@ c     HC-CY-N -C '     small ring [wlj2001]
 c     --- more null Torsions with all parameters set to 0.0
 c     --- needed for the 1-4 interactions 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6769,7 +6769,7 @@ c     HC-CT-C -O all carbonyls [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6826,7 +6826,7 @@ c     HC-CT-CT-C* aromatics [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6843,7 +6843,7 @@ c     CT-S -S -CT disulfide all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6860,7 +6860,7 @@ c     HC-CT-S -S disulfide all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.941d0)*(CON_KCALTOK)*(0.5d0)
@@ -6877,7 +6877,7 @@ c     CT-CT-S -S disulfide all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6894,7 +6894,7 @@ c     HC-CT-SH-HS thiol all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.7590)*(CON_KCALTOK)*(0.5d0)
@@ -6911,7 +6911,7 @@ c     CT-CT-SH-HS thiol all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -6938,7 +6938,7 @@ c     HC-CT-CT-SY [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.262d0)*(CON_KCALTOK)*(0.5d0)
@@ -6960,7 +6960,7 @@ c     CT-CT-CT-SY [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7007,7 +7007,7 @@ c     CT-CT-CT-Br alkyl bromide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.013d0)*(CON_KCALTOK)*(0.5d0)
@@ -7024,7 +7024,7 @@ c     HC-CT-CT-NT amine all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.190d0)*(CON_KCALTOK)*(0.5d0)
@@ -7051,7 +7051,7 @@ c     CT-CT-N2-H3 guanidinium [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.392d0)*(CON_KCALTOK)*(0.5d0)
@@ -7068,7 +7068,7 @@ c     CT-CT-CT-NT amine all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7086,7 +7086,7 @@ c     HO-OH-CA-CA phenol all-atom [wlj2001]
 
 c     N-C-C-C peptides Chi-1 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.845d0)*(CON_KCALTOK)*(0.5d0)
@@ -7115,7 +7115,7 @@ c     N -CT-CT-CA Chi-1 peptides AA [wlj2001]
 
 c     C(O)-N-C-C(O) peptides Phi
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-2.365d0)*(CON_KCALTOK)*(0.5d0)
@@ -7138,7 +7138,7 @@ c     --- C_n - N - CT - C_a  [jacs1996]
 
 c     N-C-C(O)-N peptides Psi
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.816d0)*(CON_KCALTOK)*(0.5d0)
@@ -7156,7 +7156,7 @@ c     --- N - CT - C_n - N  [jacs1996]
 
 c     C(O)-N-C-C peptides Phi'
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7174,7 +7174,7 @@ c     --- C_n - N - CT - CT  [jacs1996]
 
 c     Cbeta-C-C(O)-N peptides Psi'
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.173d0)*(CON_KCALTOK)*(0.5d0)
@@ -7191,7 +7191,7 @@ c     --- CT - CT - C_n - N  [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7228,7 +7228,7 @@ c     H -N -C -C '     dicarbonyls  [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.300d0)*(CON_KCALTOK)*(0.5d0)
@@ -7285,7 +7285,7 @@ c     OH-C -N -CT'     carbamates [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7327,7 +7327,7 @@ c     O -C -N -CY'     small ring amides [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7354,7 +7354,7 @@ c     CA-CA-C -N      aryl amides [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-3.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7371,7 +7371,7 @@ c     N?-CA-SH-HS aromatic thiol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7394,7 +7394,7 @@ c     HC-CT-S -CA sulfide all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.619d0)*(CON_KCALTOK)*(0.5d0)
@@ -7412,7 +7412,7 @@ c     --- CT - CT - CT - S [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.925d0)*(CON_KCALTOK)*(0.5d0)
@@ -7430,7 +7430,7 @@ c     --- CT - CT - S -CT [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7452,7 +7452,7 @@ c     H -N2-CA-CA guanidinium ion [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7469,7 +7469,7 @@ c     CT-N2-CA-N2 methyl guanidinium [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7486,7 +7486,7 @@ c     HC-CT-N2-CA methylguanidinium [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.829d0)*(CON_KCALTOK)*(0.5d0)
@@ -7503,7 +7503,7 @@ c     CT-CT-N2-CA ethylguanidinum ion [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7520,7 +7520,7 @@ c     HC-CT-CT-N2 ethylguanidinum ion [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7538,7 +7538,7 @@ c     --- C_n - N - CT - HC~ [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7556,7 +7556,7 @@ c     --- N - CT - CT - HC~ [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.964d0)*(CON_KCALTOK)*(0.5d0)
@@ -7574,7 +7574,7 @@ c     --- N - CT - CT - CT [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -7591,7 +7591,7 @@ c     CM-CM-C -N vinyl amides [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (3.250d0)*(CON_KCALTOK)*(0.5d0)
@@ -7609,7 +7609,7 @@ c     --- CT - CT - C_n - N [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7627,7 +7627,7 @@ c     --- CT - CT - C_n - O [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7650,7 +7650,7 @@ c     HC-CT-CT-C all carbonyls
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-2.060d0)*(CON_KCALTOK)*(0.5d0)
@@ -7668,7 +7668,7 @@ c     --- CT - CT - CT - C_n [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (6.280d0)*(CON_KCALTOK)*(0.5d0)
@@ -7686,7 +7686,7 @@ c     --- N - CT - CT - OH  [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-6.180d0)*(CON_KCALTOK)*(0.5d0)
@@ -7710,7 +7710,7 @@ c     --- C_a - CT - CT - OH  [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.428d0)*(CON_KCALTOK)*(0.5d0)
@@ -7732,7 +7732,7 @@ c     N -CT-CT-S? Chi for Cys (mod 11/99) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-4.344d0)*(CON_KCALTOK)*(0.5d0)
@@ -7764,7 +7764,7 @@ c     C -CT-CT-S? Chi for Cys (mod 11/99) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7781,7 +7781,7 @@ c     HC-CT-C*-CW 3-methylindole [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.714d0)*(CON_KCALTOK)*(0.5d0)
@@ -7798,7 +7798,7 @@ c     CT-CT-C*-CW 3-ethylindole [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -7815,7 +7815,7 @@ c     HC-CT-CC-N? HID, HIE, HIP, 5-ethylimidazole [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.366d0)*(CON_KCALTOK)*(0.5d0)
@@ -7832,7 +7832,7 @@ c     CT-CT-CC-N? HID, HIE, HIP, 5-ethylimidazole [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7849,7 +7849,7 @@ c     HC-CT-CT-NO nitroethane [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-3.185d0)*(CON_KCALTOK)*(0.5d0)
@@ -7866,7 +7866,7 @@ c     CT-CT-CT-C carboxylate ion [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -7888,7 +7888,7 @@ c     CA-CT-C -O RCOOH acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -7905,7 +7905,7 @@ c     CT-CT-C -OH RCOOH acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (5.260d0)*(CON_KCALTOK)*(0.5d0)
@@ -7922,7 +7922,7 @@ c     NT-CT-C -OH neutral amino acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-2.589d0)*(CON_KCALTOK)*(0.5d0)
@@ -7939,7 +7939,7 @@ c     HC-CT-OH-HO axial cyclohexanol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.550d0)*(CON_KCALTOK)*(0.5d0)
@@ -7956,7 +7956,7 @@ c     C -CT-CT-C dicarboxylic acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -7978,7 +7978,7 @@ c     S=-C -OH-HO'     thioacids    guess             [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.5d0)*(CON_KCALTOK)*(0.5d0)
@@ -8000,7 +8000,7 @@ c     HC-C -OH-HO carboxylic acid - alphatic [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8017,7 +8017,7 @@ c     C -CT-CT-HC dicarboxylic acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.750d0)*(CON_KCALTOK)*(0.5d0)
@@ -8034,7 +8034,7 @@ c     CT-CT-C -O dicarboxylic acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8051,7 +8051,7 @@ c     CT-CT-C -OH dicarboxylic acid [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.737d0)*(CON_KCALTOK)*(0.5d0)
@@ -8068,7 +8068,7 @@ c     CT-N -CT-C Proline (fit to AM1) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (4.753d0)*(CON_KCALTOK)*(0.5d0)
@@ -8085,7 +8085,7 @@ c     CT-N -CT-CT Proline (fit to AM1) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.859d0)*(CON_KCALTOK)*(0.5d0)
@@ -8102,7 +8102,7 @@ c     CT-CT-N -CT Proline (fit to AM1) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8124,7 +8124,7 @@ c     CT-CT-C+-HC carbocation [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8141,7 +8141,7 @@ c     HC-CT-C -CT ketone [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8173,7 +8173,7 @@ c     HC-CT-C -Br acyl halide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.277d0)*(CON_KCALTOK)*(0.5d0)
@@ -8190,7 +8190,7 @@ c     CT-CT-C -O aldehyde & ketone [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8208,7 +8208,7 @@ c     --- HC~ - CT - CT - C_k [jacs1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.697d0)*(CON_KCALTOK)*(0.5d0)
@@ -8235,7 +8235,7 @@ c     C*-CT-CT-C [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.454d0)*(CON_KCALTOK)*(0.5d0)
@@ -8252,7 +8252,7 @@ c     CT-CT-C -CT ketone [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (3.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -8269,7 +8269,7 @@ c     C -C -OH-HO oxalic acid, etc. [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.25d0)*(CON_KCALTOK)*(0.5d0)
@@ -8286,7 +8286,7 @@ c     CA-CT-P -OS phosphonates [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (3.5d0)*(CON_KCALTOK)*(0.5d0)
@@ -8303,7 +8303,7 @@ c     CT-P -OS-CT phosphonates [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8325,7 +8325,7 @@ c     HC-CT-P -OS phosphonates [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8342,7 +8342,7 @@ c     O2-P -OS-C? MeOPO3 (2-) mll [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8359,7 +8359,7 @@ c     CA-CA-OS-P PhOPO3 (2-) mll [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8376,7 +8376,7 @@ c     NT-CT-CT-Cl 2-chloroethylamines [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.25d0)*(CON_KCALTOK)*(0.5d0)
@@ -8393,7 +8393,7 @@ c     Cl-CT-CT-Cl dichloride [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (4.478d0)*(CON_KCALTOK)*(0.5d0)
@@ -8410,7 +8410,7 @@ c     HO-OH-CT-CT trifluoroethanol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -8427,7 +8427,7 @@ c     HC-CT-OH-HO trifluoroethanol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -8460,7 +8460,7 @@ c     HC-CO-OHt-HO triol AA
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -8477,7 +8477,7 @@ c     F -CT-CT-HC trifluoroethanol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -8494,7 +8494,7 @@ c     F -CT-CT-OH trifluoroethanol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -8511,7 +8511,7 @@ c     F -CT-CT-OH trifluoroethanol [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.671d0)*(CON_KCALTOK)*(0.5d0)
@@ -8528,7 +8528,7 @@ c     H -N -SY-CA sulfonamide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.362d0)*(CON_KCALTOK)*(0.5d0)
@@ -8545,7 +8545,7 @@ c     HC-CT-N -SY sulfonamide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.074d0)*(CON_KCALTOK)*(0.5d0)
@@ -8562,7 +8562,7 @@ c     CT-N -SY-CA sulfonamide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.929d0)*(CON_KCALTOK)*(0.5d0)
@@ -8579,7 +8579,7 @@ c     CT-CT-N -SY sulfonamide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.656d0)*(CON_KCALTOK)*(0.5d0)
@@ -8596,7 +8596,7 @@ c     CA-CA-SY-N sulfonamide [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.300d0)*(CON_KCALTOK)*(0.5d0)
@@ -8618,7 +8618,7 @@ c     CT-CT-CT-F alkyl fluoride [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-2.5d0)*(CON_KCALTOK)*(0.5d0)
@@ -8640,7 +8640,7 @@ c     F -CT-CT-F 1,2-difluoride [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.552d0)*(CON_KCALTOK)*(0.5d0)
@@ -8698,7 +8698,7 @@ c     --- CT - CO - CO - OHt
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.552d0)*(CON_KCALTOK)*(0.5d0)
@@ -8746,7 +8746,7 @@ c     --- CO - CO - OHt - HO
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.674d0)*(CON_KCALTOK)*(0.5d0)
@@ -8764,7 +8764,7 @@ c     --- CT - CT - OHp - HO  [jcc1997]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (9.066d0)*(CON_KCALTOK)*(0.5d0)
@@ -8782,7 +8782,7 @@ c     --- OHp - CT - CT - OHp  [jcc1997]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.375d0)*(CON_KCALTOK)*(0.5d0)
@@ -8804,7 +8804,7 @@ c     CT-OS-CO-OH hexopyranoses [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.257d0)*(CON_KCALTOK)*(0.5d0)
@@ -8821,7 +8821,7 @@ c     OS-CO-OH-HO hexopyranoses [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (4.319d0)*(CON_KCALTOK)*(0.5d0)
@@ -8838,7 +8838,7 @@ c     OH-CT-CT-OS hexopyranoses [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8855,7 +8855,7 @@ c     ??-NA-CR-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8907,7 +8907,7 @@ c     ??-NA-NB-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8924,7 +8924,7 @@ c     ??-NB-CV-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8946,7 +8946,7 @@ c     ??-CW-CW-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8963,7 +8963,7 @@ c     ??-C*-CW-?? 'wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -8980,7 +8980,7 @@ c     ??-C*-CB-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9002,7 +9002,7 @@ c     ??-C -CB-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9019,7 +9019,7 @@ c     ??-CB-CN-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9036,7 +9036,7 @@ c     ??-NA-CN-?? [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9053,7 +9053,7 @@ c     HC-CT-C -OS     esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (4.669d0)*(CON_KCALTOK)*(0.5d0)
@@ -9075,7 +9075,7 @@ c     HC-C -OS-CT     esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -9092,7 +9092,7 @@ c     O -C -OS-CT     esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -9109,7 +9109,7 @@ c     C -OS-CT-HC     esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -9126,7 +9126,7 @@ c     CT-CT-C -OS     esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.220d0)*(CON_KCALTOK)*(0.5d0)
@@ -9143,7 +9143,7 @@ c     CT-CT-OS-C      esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9160,7 +9160,7 @@ c     CT-CT-NO-ON nitroethane [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9177,7 +9177,7 @@ c     CA-CA-NO-ON nitrobenzene [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9194,7 +9194,7 @@ c     CT-NY-CA-NZ     neutral arg [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.416d0)*(CON_KCALTOK)*(0.5d0)
@@ -9211,7 +9211,7 @@ c     CT-NT-CT-CT amine [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (11.035d0)*(CON_KCALTOK)*(0.5d0)
@@ -9228,7 +9228,7 @@ c     NT-CT-CT-NT     amine all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -9245,7 +9245,7 @@ c     HC-CT-NT-CT     amine all-atom [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.700d0)*(CON_KCALTOK)*(0.5d0)
@@ -9262,7 +9262,7 @@ c     CT-CT-CW-NA     2-ethyl pyrrole [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.900d0)*(CON_KCALTOK)*(0.5d0)
@@ -9289,7 +9289,7 @@ c     CT-CM-C -O?'     2-Me-1,3-butadiene-like
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.800d0)*(CON_KCALTOK)*(0.5d0)
@@ -9306,7 +9306,7 @@ c     CT-C -C=-CM     methyl vinyl ketone [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (3.200d0)*(CON_KCALTOK)*(0.5d0)
@@ -9328,7 +9328,7 @@ c     CM-CM-C -OH     acrylic acid-like [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.500d0)*(CON_KCALTOK)*(0.5d0)
@@ -9350,7 +9350,7 @@ c     CM-CM-C -O      acrolein-like [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9372,7 +9372,7 @@ c     CA-CA-C -HC     aryl aldehyde [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9419,7 +9419,7 @@ c     CA-CA-C -OH     aryl acid, ester [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9436,7 +9436,7 @@ c     CA-CA-OS-C      phenyl acetate [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9468,7 +9468,7 @@ c     S=-C -OS-CT'     thioesters   guess [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (4.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9490,7 +9490,7 @@ c     CA-C -OS-CT     benzoic esters [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.500d0)*(CON_KCALTOK)*(0.5d0)
@@ -9507,7 +9507,7 @@ c     CT-C -OS-CA     phenyl acetate [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -9544,7 +9544,7 @@ c     CB-CA-N2-H      aniline-like [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-7.582d0)*(CON_KCALTOK)*(0.5d0)
@@ -9561,7 +9561,7 @@ c     CA-CA-NT-CT     substituted-aniline [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.817d0)*(CON_KCALTOK)*(0.5d0)
@@ -9578,7 +9578,7 @@ c     CT-CM-CT-CT     alkenes [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.346d0)*(CON_KCALTOK)*(0.5d0)
@@ -9600,7 +9600,7 @@ c     C=-CM-CT-CT     alkenes [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.241d0)*(CON_KCALTOK)*(0.5d0)
@@ -9617,7 +9617,7 @@ c     CM-CM-CA-CA     styrene [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.205d0)*(CON_KCALTOK)*(0.5d0)
@@ -9634,7 +9634,7 @@ c     CT-CM-CA-CA     1-methylstyrene [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9741,7 +9741,7 @@ c     HC-CM-C=-C= [wlj2004]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -9848,7 +9848,7 @@ c     CA-C!-CR-S      biphenyl-like [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.600d0)*(CON_KCALTOK)*(0.5d0)
@@ -9865,7 +9865,7 @@ c     Cl-CM-CM-Cl     chloroalkene [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9887,7 +9887,7 @@ c     HC-CT-CT-P+      phosphonium ion [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9904,7 +9904,7 @@ c     CT-CT-P+-CT  phosphonium ion [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (3.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -9926,7 +9926,7 @@ c     C -NC-OS-CT     oxime   11/00 [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-3.50d0)*(CON_KCALTOK)*(0.5d0)
@@ -9948,7 +9948,7 @@ c     C=-CM-OS-CT     vinyl ether [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.500d0)*(CON_KCALTOK)*(0.5d0)
@@ -9975,7 +9975,7 @@ c     CM-C=-CT-O?     allyl alcohols, ethers [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.90d0)*(CON_KCALTOK)*(0.5d0)
@@ -10002,7 +10002,7 @@ c     C=-CT-OH-HO     allyl alcohols [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.0d0)*(CON_KCALTOK)*(0.5d0)
@@ -10034,7 +10034,7 @@ c     HC-CT-CT-SY     sulfone [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -10051,7 +10051,7 @@ c     CA-CA-SY-CT     sulfone 10/00 B3LYP PhSO2Me [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.50d0)*(CON_KCALTOK)*(0.5d0)
@@ -10083,7 +10083,7 @@ c     CK-N*-CT-OS'     imidazoles, indoles, purines [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.50d0)*(CON_KCALTOK)*(0.5d0)
@@ -10105,7 +10105,7 @@ c     C?-N*-CT-OS     imidazoles, indoles, purines [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -10137,7 +10137,7 @@ c     CK-N*-CT-CT     imidazoles, indoles, purines [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -10159,7 +10159,7 @@ c     C?-N*-CT-CT'     imidazoles, indoles, purines [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.500d0)*(CON_KCALTOK)*(0.5d0)
@@ -10176,7 +10176,7 @@ c     N?-CT-OS-CT     imidazoles, indoles, purines [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10208,7 +10208,7 @@ c     OH-C -N -H '     carbamates [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-1.396d0)*(CON_KCALTOK)*(0.5d0)
@@ -10235,7 +10235,7 @@ c     C -N -CY-C$'     small ring       [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10252,7 +10252,7 @@ c     O -C$-N$-CY'     small ring amides [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-2.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10274,7 +10274,7 @@ c     N -C -OH-HO     carbamates [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10291,7 +10291,7 @@ c     S=-C -N -H      thioamides   wlj 01/00  [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10318,7 +10318,7 @@ c     S=-C -N -CM'     thioamides   (Wiberg & Rush) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10335,7 +10335,7 @@ c     CT-S -CA-CA     thioanisole  fit to MP4 [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10352,7 +10352,7 @@ c     O -C -C -CT'     dicarbonyls Kahn & Bruice  [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10369,7 +10369,7 @@ c     O -C -C -HC'     dicarbonyls BMC 8,1881(2000) [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.800d0)*(CON_KCALTOK)*(0.5d0)
@@ -10386,7 +10386,7 @@ c     HC-C -C -CT'     dicarbonyls    [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.800d0)*(CON_KCALTOK)*(0.5d0)
@@ -10403,7 +10403,7 @@ c     HC-C -C -HC'     dicarbonyls    [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.700d0)*(CON_KCALTOK)*(0.5d0)
@@ -10420,7 +10420,7 @@ c     CT-C -C -CT'     dicarbonyls    [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.00d0)*(CON_KCALTOK)*(0.5d0)
@@ -10437,7 +10437,7 @@ c     C -C -CT-HC'     dicarbonyls    [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.900d0)*(CON_KCALTOK)*(0.5d0)
@@ -10454,7 +10454,7 @@ c     N -C -C -HC'     dicarbonyls   [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (-0.500d0)*(CON_KCALTOK)*(0.5d0)
@@ -10471,7 +10471,7 @@ c     N -C -C -CT'     dicarbonyls  [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.400d0)*(CON_KCALTOK)*(0.5d0)
@@ -10488,7 +10488,7 @@ c     C -C -N -CT'     dicarbonyls   [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (1.600d0)*(CON_KCALTOK)*(0.5d0)
@@ -10505,7 +10505,7 @@ c     O -C -C -O '     dicarbonyls  [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (4.542d0)*(CON_KCALTOK)*(0.5d0)
@@ -10522,7 +10522,7 @@ c     CT-C -N -OH     hydroxamic acids   [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)
@@ -10539,7 +10539,7 @@ c     O -C -N -OH     hydroxamic acids [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (5.519d0)*(CON_KCALTOK)*(0.5d0)
@@ -10556,7 +10556,7 @@ c     C -N -OH-HO'     hydroxamic acids [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (2.722d0)*(CON_KCALTOK)*(0.5d0)
@@ -10573,7 +10573,7 @@ c     H -N -OH-HO     hydroxamic acids [wlj2001]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,2)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_OPLS_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.5d0
       tclocal(1) =  (0.000d0)*(CON_KCALTOK)*(0.5d0)

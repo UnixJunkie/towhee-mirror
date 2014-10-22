@@ -1,5 +1,5 @@
 #number of jobs
-55
+56
 #stdout filename
 par_answer_current 
 #working directories
@@ -52,6 +52,7 @@ par_answer_current
 /towheebase/Examples/Isobaric_Isothermal_Ensemble/Gromos_Methylpropylsulfide
 /towheebase/Examples/Isobaric_Isothermal_Ensemble/Henry_Law
 /towheebase/Examples/Isobaric_Isothermal_Ensemble/Ideal_Chain
+/towheebase/Examples/Isobaric_Isothermal_Ensemble/MMFF94_Ethyleneoxide
 /towheebase/Examples/Isobaric_Isothermal_Ensemble/OPLS_Propanamide
 /towheebase/Examples/Isobaric_Isothermal_Ensemble/SMMKmain_2244688nonane
 /towheebase/Examples/Isobaric_Isothermal_Ensemble/Solid_LJium

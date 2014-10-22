@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the smmk force   *
 c     * field as described in the main text                            *
 c     *                                                                *
 c     * originally written 12-14-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -195,7 +195,7 @@ c     * opls style torsions                                            *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 0.0d0
       tclocal(1) = 355.03d0
@@ -214,7 +214,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = -251.06d0
       tclocal(1) = 428.73d0

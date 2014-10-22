@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 07-16-2014 by M.G. Martin */
+/* last significant modification 08-27-2014 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -50,7 +50,7 @@
 
 /* cbmcmaxbend = maximum number of bending parameters for */
 /* use generating trial angle distributions */
-#define CBMCMAXBEND 4
+#define CBMCMAXBEND 5
 
 /* cbmcmaxtor = maximum number of torsion parameters for */
 /* use generation trial dihedral distributions */
@@ -95,7 +95,7 @@
 #define TVIBMAX 8200
 
 /* tbenmax = maximum number of types of bond angles */
-#define TBENMAX 2350
+#define TBENMAX 2700
 
 /* ttormax = maximum number of types of torsions */
 #define TTORMAX 930
@@ -585,6 +585,34 @@
 #define ANG_STYLE_MULTI_RIGID 14
 #define ANG_STYLE_MMFF 15
 #define ANG_STYLE_HARM_COS_OT 16
+#define ANG_STYLE_MMFFC_ANG 17
+#define ANG_STYLE_MMFFC_BA 18
+
+/* torsion style integer codes, do not change for compatibility */
+#define TOR_STYLE_NULL -1
+#define TOR_STYLE_SIM_HARM 1
+#define TOR_STYLE_OPLS_COS 2
+#define TOR_STYLE_GCA_COS 3
+#define TOR_STYLE_GCA_CUB 4
+#define TOR_STYLE_COMP_X_AD 5
+#define TOR_STYLE_COMP_R_AD 6
+#define TOR_STYLE_TRAPPE_COS 7
+#define TOR_STYLE_NB 8
+#define TOR_STYLE_COMP_X_EX 9
+#define TOR_STYLE_COS_POW 10
+#define TOR_STYLE_O_OPLS_C 11
+#define TOR_STYLE_SUN_COS 12
+#define TOR_STYLE_O_OPLS_T 13
+#define TOR_STYLE_UFF 14
+#define TOR_STYLE_DREIDING 15
+#define TOR_STYLE_TF_COS 16
+#define TOR_STYLE_TRAPPE_PLAN 17
+#define TOR_STYLE_SQUARE_WELL 18
+#define TOR_STYLE_AMBER 19
+#define TOR_STYLE_OPLS_FL 20
+#define TOR_STYLE_MRD 21
+#define TOR_STYLE_FL 22
+#define TOR_STYLE_DRUKKER 23
 
 /* torsion scaling codes, value arbitrary */
 #define CODE_ZERO 0
@@ -686,5 +714,31 @@
 #define PNT_BLOCKVALUE 43
 
 #define MAX_DOUBLE_POINTERS 50
+
+/* report integer, values arbitrary, but should be nonzero */
+#define REP_BON_REG 1
+#define REP_BON_VDW 2
+#define REP_BON_CHG 3
+#define REP_ANG_REG 4
+#define REP_ANG_BA 5
+#define REP_ANG_VDW 6
+#define REP_ANG_CHG 7
+#define REP_TOR_REG 8
+#define REP_TOR_AT 9
+#define REP_TOR_BT 10
+#define REP_TOR_BB 11
+#define REP_TOR_AAT 12
+#define REP_TOR_VDW 13
+#define REP_TOR_CHG 14
+
+#define REP_MAX 14
+
+/* electrostatic form integer code, values arbitrary */
+#define EF_CODE_NONE 0
+#define EF_CODE_SASA 1
+#define EF_CODE_EFF 2
+#define EF_CODE_BUF 3
+#define EF_CODE_COUL_NOCUT 4
+#define EF_CODE_COUL_EWALD 5
 
 /* the end */

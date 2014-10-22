@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -337,7 +337,8 @@ c        --- chain that has been chosen for the concerted
 c        --- rotation move 
 c        --- first need to calculate the current angle 
 c        --- between the three atoms
-         driver_alpha = (twh_vangle(lfailure,loverlap(1),ibox,imolty,1,1
+         driver_alpha = (twh_vangle(lfailure,.false.,loverlap(1)
+     &        ,ibox,imolty,1,1
      &        ,-1,cosda,dist12,dist23,tempx,tempy,tempz))
          if ( lfailure ) return
          x_unitvec = (tempx(2) - tempx(1))/dist12
@@ -663,7 +664,8 @@ c                          --- store coordinates
                            call twh_coordinates(GLB_GET,testcord,ichain
      &                          ,iuthree,xtmp(3),ytmp(3),ztmp(3))
                            dvbend = dvbend + dvpm(ioldnew)*
-     &                          twh_vangle(lfailure,loverlap(ioldnew)
+     &                          twh_vangle(lfailure,.false.
+     &                          ,loverlap(ioldnew)
      &                          ,ibox,imolty,iuone,ibend,1
      &                          ,duma,dumb,dumc,xtmp,ytmp,ztmp)
                            if ( lfailure ) return
@@ -754,9 +756,9 @@ c                          --- determine atom positions
                            enddo
 c                          --- compute torsion energy
                            dvtors = dvtors + dvpm(ioldnew)*
-     &                          twh_vtorsion(lfailure,ibox,1,imolty
-     &                          ,icompute,itor,xtmp,ytmp,ztmp,ddum
-     &                          ,loverlap(ioldnew))
+     &                          twh_vtorsion(lfailure,.false.,ibox,1
+     &                          ,imolty,icompute,itor,xtmp,ytmp,ztmp
+     &                          ,ddum,loverlap(ioldnew))
                            if ( lfailure ) return
                            if ( loverlap(ioldnew) ) then
                               if (ioldnew .eq. 2) then

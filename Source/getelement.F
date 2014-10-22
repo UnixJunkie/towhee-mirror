@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,7 +20,7 @@ c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_getelement(lfailure,flag,testmass,testelement
-     &,ielement )
+     &     ,ivalue )
 c     ******************************************************************
 c     * checks our list of elemental masses and returns that element   *
 c     * if its mass is within the tolerance of testmass                *
@@ -28,7 +28,7 @@ c     * alternatively returns a mass given an element name             *
 c     * or, returns a mass given an atom number                        *
 c     *                                                                *
 c     * originally written 03-26-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debugging logical
@@ -37,9 +37,11 @@ c     --- variables passed to the function
       logical lfailure
       character*2 testelement
       character*(*) flag
-      integer ielement
+      integer ivalue
       double precision testmass
 c     --- local variables
+      logical lfound
+      integer ielement,irow
       integer totalmasses,imass
       parameter ( totalmasses = 110)
       double precision toler
@@ -163,9 +165,10 @@ c     --- local variables
       masslist(107) = 264.d0
       masslist(108) = 277.d0
       masslist(109) = 268.d0
-      masslist(110) = 1.00794d0
+c      masslist(110) = 1.00794d0
 
 
+c      elelist(0) = 'H '
       elelist(1) = ' H'
       elelist(2) = 'He'
       elelist(3) = 'Li'
@@ -275,7 +278,6 @@ c     --- local variables
       elelist(107) = 'Bh'
       elelist(108) = 'Hs'
       elelist(109) = 'Mt'
-      elelist(110) = 'H '
 
       if ( flag .eq. 'getelement' ) then
 c        --- see if we match any of these masses
@@ -303,19 +305,57 @@ c        --- if we got here then there was no match
          testmass = 1.0d0
       elseif ( flag .eq. 'get int' ) then
 c        --- match with element names and return the element integer
-         do imass = 1,totalmasses
+         lfound = .false.
+         imass = 0
+         do while ( imass .lt. totalmasses .and. ( .not. lfound ) )
+            imass = imass + 1
             if ( testelement .eq. elelist(imass) ) then
 c              --- this is a match
                ielement = imass
-               return
+               lfound = .true.
             endif
          enddo
-c        --- if we got here then there was no match
-         write(6,*) 'GETELEMENT: no match found for element',testelement
+         if ( .not. lfound ) then
+c           --- if we got here then there was no match
+            write(6,*) 'GETELEMENT: no match found for element'
+     &           ,testelement
+            ielement = 0
+         endif
+
+      elseif ( flag .eq. 'get row' ) then
+         lfound = .false.
          ielement = 0
+         do while ( ielement .lt. totalmasses .and. .not. lfound )
+            ielement = ielement + 1
+            if ( elelist(ielement) .eq. testelement ) then
+               lfound = .true.
+            endif
+         enddo
+         if ( lfound ) then
+            if ( ielement .le. 2 ) then
+c              --- row 0
+               irow = 0
+            elseif ( ielement .le. 10 ) then
+               irow = 1
+            elseif ( ielement .le. 18 ) then
+               irow = 2
+            elseif ( ielement .le. 36 ) then
+               irow = 3
+            elseif ( ielement .le. 54 ) then
+               irow = 4
+            elseif ( ielement .le. 86 ) then
+               irow = 5
+            else
+               irow = 6
+            endif
+            ivalue = irow
+         else
+            write(6,*) 'GETELEMENT: match not found in get row'
+            lfailure = .true.
+         endif
       elseif ( flag .eq. 'get e and m' ) then
-         testmass = masslist(ielement)
-         testelement = elelist(ielement)
+         testmass = masslist(ivalue)
+         testelement = elelist(ivalue)
       else
          write(6,*) 'GETELEMENT: invalid flag'
          write(6,*) flag

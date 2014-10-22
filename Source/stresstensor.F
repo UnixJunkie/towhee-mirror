@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -42,7 +42,7 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 07-26-2013 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -60,7 +60,7 @@ c     --- variables passed to/from the subroutine
 
 c     --- local variables
       logical lovrlap,leval_c,leval_v,lperiodic,scp_scale_twobody
-      logical luse_ci,luse_cj,luse_vi,luse_vj,ltailc,lcoulomb
+      logical luse_ci,luse_cj,luse_vi,luse_vj,ltailc,lelect
       logical lewald
 c     --- integer scalars
       integer ichain,jchain,indx,ensemble
@@ -78,7 +78,7 @@ c     --- double precision arrays
 
 c     --- retrieve constants
       call twh_rcelect(GLB_GET,ibox,rcelect)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
       call twh_boxvolume(GLB_GET,ibox,boxvolume)
 
@@ -132,7 +132,7 @@ c                 --- need to compute the center of mass separations
                   rijsq = rx_ij*rx_ij + ry_ij*ry_ij + rz_ij*rz_ij
 c                 --- set rcm to the nonbond cutoff
                   call twh_rcut(GLB_GET,rcm)
-                  if ( lcoulomb ) then
+                  if ( lelect ) then
 c                    --- compare with the electrostatic cutoff
                      if ( rcelect .gt. rcm ) rcm = rcelect
                   endif
@@ -156,7 +156,7 @@ c                       --- loop over all beads of jchain
 c                          --- check if nonzero interaction sites
                            call twh_luse_v(GLB_GET,jmolty,jj,luse_vj)
                            leval_v = luse_vi .and. luse_vj
-                           if ( lcoulomb ) then
+                           if ( lelect ) then
                               call twh_luse_c(GLB_GET,jmolty,jj,luse_cj)
                               leval_c = luse_ci .and. luse_cj
                            else

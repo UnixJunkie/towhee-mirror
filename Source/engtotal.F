@@ -24,7 +24,7 @@ c     ******************************************************************
       subroutine twh_engtotal(lfailure,lovrlap,vclassical,vinter
      &,vthrinter,vtail
      &,vintra,vvib,vbend,vtg,vext,velect,vsolvation,vquantum,vforeign,
-     & dl_inter, dl_elect,ibox, lmolecmove, lmovelist, lprint,lbonded)
+     & dl_inter, dl_elect,ibox, lmolecmove, lmovelist, lreport,lbonded)
 c     ******************************************************************
 c     * calculates the total potential energy for a configuration.     *
 c     *                                                                *
@@ -62,7 +62,7 @@ c     *            the simulation.  If this is a move then we use the  *
 c     *            additional COM cutoff.                              *
 c     * lmovelist is true if we are performing a move and only need the*
 c     *            interactions for a subset of the molecules          *
-c     * lprint is true if we want to print out all of the energies     *
+c     * lreport is true if we want to print out all of the energies    *
 c     * lbonded is true if we are computing bonded interactions        *
 c     *            (vibration, bending, torsion etc)                   *
 c     *                                                                *
@@ -70,7 +70,7 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 01-09-2012 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -79,7 +79,7 @@ c     ******************************************************************
 #define FUNCTION_GET_NTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      logical lfailure,lovrlap, lmolecmove,lmovelist,lprint,lbonded
+      logical lfailure,lovrlap, lmolecmove,lmovelist,lreport,lbonded
       integer ibox
       double precision vclassical,vinter,vintra,vthrinter,vtail,vvib
       double precision vbend,vtg,velect,vsolvation,vext,vquantum
@@ -88,7 +88,7 @@ c     --- variables passed to/from the subroutine
 
 c     --- local variables
 c     --- logical scalars
-      logical lmadelung,ltailc,lcoulomb,lewald
+      logical lmadelung,ltailc,lelect,lewald
 c     --- character scalars
       character*20 external_code
 c     --- integer scalars
@@ -96,7 +96,7 @@ c     --- integer scalars
       integer classical_potnum,nchain,nmolty,nchbox
       integer scp_num_foreign_lambda,potentialstyle,numboxes
 c     --- double precision scalars
-      double precision maddist,sself,correct,vtmp,qqfact
+      double precision maddist,sself,correct,vtmp
       double precision velectinter,velectintra,vtwointer,vangleangle
       double precision vimpr,vrealelect,vrecipsum,vbondbond
 c     --- double precision arrays
@@ -106,11 +106,15 @@ c     --- double precision arrays
 c      write(6,*) 'start ENGTOTAL'
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_ltailc(GLB_GET,ltailc)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
+
+      if ( lreport ) then
+c        --- initialize report variables
+         call twh_report(GLB_INIT,REP_MAX,0.0d0)
+      endif
 
       cutstyle = 0
       lovrlap = .false.
@@ -197,7 +201,7 @@ c     ---  check the molecule count
          endif
 
          if ( lewald ) then
-c     TODO: add foreign energy terms here
+c           --- TODO: add foreign energy terms here
             call twh_engtotal_ewald(lfailure,vrecipsum,sself,correct
      &           , ibox )
             if ( lfailure ) return
@@ -212,7 +216,7 @@ c     TODO: add foreign energy terms here
     
          if ( lbonded ) then
             call twh_engtotal_vibbendtors(lfailure,vvib,vbend,vtg
-     &           ,vangleangle,vimpr,vbondbond,lovrlap,lprint,ibox)
+     &           ,vangleangle,vimpr,vbondbond,lovrlap,lreport,ibox)
             if ( lfailure ) return
             if ( lovrlap ) then
                return
@@ -226,10 +230,9 @@ c     TODO: add foreign energy terms here
          call twh_engtotal_solv(lfailure, vsolvation, ibox )
          if ( lfailure ) return
       
-         if ( lcoulomb ) then
+         if ( lelect ) then
             vrealelect = velectintra + velectinter
-            velect = vrealelect + sself + correct + vrecipsum/qqfact
-            velect = qqfact*velect 
+            velect = vrealelect + sself + correct + vrecipsum
          endif
 
          vinter = vtwointer + vthrinter + vtail
@@ -270,7 +273,7 @@ c     --- compute external energies
          endif
       endif
          
-      if ( lprint ) then
+      if ( lreport ) then
          call twh_eng_print(nmcount, vvib, vbondbond, vbend, 
      &       vangleangle, vtg, vimpr, vintra, vinter, vtwointer, 
      &       vthrinter, velect, vrealelect, sself, correct, vrecipsum, 
@@ -324,11 +327,10 @@ c     *   May halt program                                             *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 03-03-2014 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -341,14 +343,14 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lcompute,leval_c,leval_v,lusecom,lmovemei,lmovemej
-      logical luse_ci,luse_cj,luse_vi,luse_vj,lcoulomb
+      logical luse_ci,luse_cj,luse_vi,luse_vj,lelect
 c     --- integer scalars
       integer ichain,imolty,jchain,jmolty,ii,ntii,jj,ntjj,l,nchain
       integer numiunit,numjunit,scp_num_foreign_lambda
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision xcmi,ycmi,zcmi,rcmi,rcm,rcmsq,rijsq,rij,dvdl
-      double precision qqfact,xcmj,ycmj,zcmj,rcmj,rcelect
+      double precision xcmj,ycmj,zcmj,rcmj,rcelect,vcoulomb
 c     --- vf holds incremental foreign energies from vtwobody, vcoulomb
 c     --- calls
 c     --- vfelec and vftwo keep running totals, their sum becomes
@@ -358,11 +360,10 @@ c     --- vforeign
      &      vftwo(MAX_FOREIGN_LAMBDA)
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
       call twh_lusecom(GLB_GET,lusecom)
       call twh_rcelect(GLB_GET,ibox,rcelect)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
 
       vtwointer = 0.0d0
       velectinter = 0.0d0
@@ -416,7 +417,7 @@ c                    --- minimum image the ctrmas pair separations
                      call twh_rcmu(GLB_GET,jchain,rcmj)
 c                    --- start with the vdw cutoff
                      call twh_rcut(GLB_GET,rcm)
-                     if ( lcoulomb ) then
+                     if ( lelect ) then
 c                       --- check the coulombic cutoff
                         if ( rcelect .gt. rcm ) rcm = rcelect
                      endif
@@ -467,14 +468,12 @@ c                          --- minimum image the pair separation
                                  endif
                               endif
 c                             --- electrostatics.
-c                             --- qqfact converts dl_elect and vforeign
-c                             --- to [K]; velectinter stays [EE]
-                              if ( lcoulomb .and. leval_c) then
+                              if ( lelect .and. leval_c) then
                                  rij = dsqrt(rijsq)
-                                 velectinter = velectinter 
-     &                                + twh_vcoulomb(ibox,rij,imolty,ii
-     &                                ,jmolty,jj,.false.,vf,dvdl
-     &                                ,lovrlap)
+                                 call twh_vcoulomb(-1,ibox,rij,imolty,ii
+     &                                ,jmolty,jj,vf,dvdl,lovrlap
+     &                                ,vcoulomb)
+                                 velectinter = velectinter + vcoulomb
                                  if ( lovrlap ) then
                                     call twh_engtotal_overlap(lfailure
      &                                   ,lmolecmove,ichain,ii,jchain,jj
@@ -482,9 +481,9 @@ c                             --- to [K]; velectinter stays [EE]
      &                                   ,rzuj)
                                     if ( lfailure ) return
                                  endif
-                                 dl_elect = dl_elect + dvdl * qqfact
+                                 dl_elect = dl_elect + dvdl
                                  do l = 1, scp_num_foreign_lambda
-                                    vfelec(l)=vfelec(l)+qqfact*vf(l)
+                                    vfelec(l) = vfelec(l) + vf(l)
                                  enddo
                                  if ( lmadelung ) then
                                    if ( rij .lt. maddist ) maddist = rij
@@ -766,10 +765,9 @@ c     * Error conditions:                                              *
 c     *  none                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 10-22-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_CMP_GT
 #define FUNCTION_DISTANCE
 #define FUNCTION_EWALD_CORRECT
 #define FUNCTION_EWALD_SELF
@@ -783,10 +781,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       integer ichain,imolty,ii,jj,nchain,numiunit
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
-      double precision rij,rcelect
-
-c     --- retrieve constants
-      call twh_rcelect(GLB_GET,ibox,rcelect)
+      double precision rij
 
       sself = 0.0d0
       correct = 0.0d0
@@ -815,10 +810,8 @@ c                       --- vtorsion
                      call twh_mimage(ibox,rxui,ryui,rzui,rxuj,ryuj
      &                       ,rzuj,rxuij,ryuij,rzuij)
                      rij = twh_distance(rxuij,ryuij,rzuij)
-                     if ( twh_cmp_gt(rcelect, rij) ) then 
-                        correct = correct
-     &                       + twh_ewald_correct(ibox,imolty,ii,jj,rij)
-                     endif
+                     correct = correct
+     &                    + twh_ewald_correct(ibox,imolty,ii,jj,rij)
                   endif
                enddo
             enddo
@@ -852,13 +845,12 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 04-22-2009 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
 #define FUNCTION_LINCLUDE
 #define FUNCTION_ONEFIVETYPE
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
 #include "functions.h"
@@ -868,16 +860,16 @@ c     --- variables passed to/from the subroutine
       integer cutstyle,ibox
 
 c     --- local variables
-      logical lcompute,lmoveme,lcoulomb
+      logical lcompute,lmoveme,lelect
       integer ichain,imolty,ii,ntii,jj,ntjj,ioftype,nchain,nunit
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
-      double precision rijsq,rij,dvdl,rminsq
+      double precision rijsq,rij,dvdl,rminsq,vcoulomb
 c     --- foreign energies ignored for intramolecular evaluations
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
 
 c     --- retrieve constants
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
 
       vintra = 0.0d0 
       velectintra = 0.0d0 
@@ -939,13 +931,14 @@ c                          --- use special one-five terms for energy
                            endif
                            return
                         endif
-                        if ( lcoulomb ) then
+                        if ( lelect ) then
 c                          --- for volume moves we only need the intra
 c                          --- coulomb
                            rij = dsqrt(rijsq)
-                           velectintra = velectintra + twh_vcoulomb(ibox
-     &                          ,rij,imolty,ii,imolty,jj,.false.,vf
-     &                          ,dvdl,lovrlap)
+                           call twh_vcoulomb(-1,ibox
+     &                          ,rij,imolty,ii,imolty,jj,vf,dvdl
+     &                          ,lovrlap,vcoulomb)
+                           velectintra = velectintra + vcoulomb
                            if ( lovrlap ) then
                               if ( .not. lmolecmove ) then
                                  write(6,*) 'overlap intra coulomb'
@@ -970,7 +963,7 @@ c                          --- coulomb
 
 
       subroutine twh_engtotal_vibbendtors(lfailure,vvib,vbend,vtg
-     &     ,vangleangle,vimpr,vbondbond,lovrlap,lprint,ibox)
+     &     ,vangleangle,vimpr,vbondbond,lovrlap,lreport,ibox)
 c     ******************************************************************
 c     * Calculate vibrational, bending and torsional energies          *
 c     * Arguments set by subroutine:                                   *
@@ -986,13 +979,13 @@ c     *  lovrlap -- Atomic overlap found?                              *
 c     *                                                                *
 c     * Arguments set by caller:                                       *
 c     *  ibox -- the box we are computing the energy in                *
-c     *  lprint -- print out all of the energies?                      *
+c     *  lreport -- print out all of the energies?                      *
 c     *                                                                *
 c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 07-24-2014 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1025,7 +1018,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       double precision vvib, vbend, vtg, vangleangle, vimpr, vbondbond
-      logical lfailure,lovrlap, lprint
+      logical lfailure,lovrlap, lreport
       integer ibox
 
 c     --- local variables
@@ -1072,8 +1065,8 @@ c                       --- completely through the periodic box
                      call twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj
      &                       ,rzuj,rxuij,ryuij,rzuij )
                      dist = twh_distance(rxuij,ryuij,rzuij)
-                     vvib = vvib + twh_vbond(lfailure,it,dist,imolty
-     &                       ,ii,ip1,lovrlap)
+                     vvib = vvib + twh_vbond(lfailure,lreport,ibox
+     &                    ,it,dist,imolty,ii,ip1,lovrlap)
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         write(6,*) 'overlap vibration'
@@ -1100,7 +1093,8 @@ c                       --- store the coordinates
      &                       ,xtmp(2),ytmp(2),ztmp(2))
                      call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip2
      &                       ,xtmp(3),ytmp(3),ztmp(3))
-                     vbend = vbend + twh_vangle(lfailure,lovrlap,ibox
+                     vbend = vbend + twh_vangle(lfailure,lreport
+     &                    ,lovrlap,ibox
      &                    ,imolty,ii,jjben,1,duma,dumb,dumc,xtmp,ytmp
      &                    ,ztmp)
                      if ( lfailure ) return
@@ -1142,28 +1136,28 @@ c                    --- compute energy as a bond vibration term
             enddo
 
 c           --- regular torsions 
-            do ii = 2, nunit
+            do ii = 1, nunit-1
 c              --- store the charge on atom ii
                ttype(1) = ii
                do iitor = 1, twh_get_intor(imolty,ii)
                   ttype(4) = twh_get_ijtor4(imolty,ii,iitor)
-                  if ( ttype(4) .lt. ii ) then
-c                       --- store unit numbers
+                  if ( ttype(4) .gt. ii ) then
+c                    --- store unit numbers
                      ttype(2) = twh_get_ijtor2(imolty,ii,iitor)
                      ttype(3) = twh_get_ijtor3(imolty,ii,iitor)
-c                       --- store atom positions
+c                    --- store atom positions
                      do ibead = 1,4
                         call twh_coordinates(GLB_GET,CRD_REAL,ichain
-     &                          ,ttype(ibead)
-     &                          ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
+     &                       ,ttype(ibead)
+     &                       ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
                      enddo
-c                       --- add in the torsional energy
-                     vtg = vtg + twh_vtorsion(lfailure,ibox,1,imolty,ii
-     &                    ,iitor,xtmp,ytmp,ztmp,duma,lovrlap)
+c                    --- add in the torsional energy
+                     vtg = vtg + twh_vtorsion(lfailure,lreport,ibox,1
+     &                    ,imolty,ii,iitor,xtmp,ytmp,ztmp,duma,lovrlap)
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         write(6,*) 'overlap torsion'
-                        write(6,*) 'imolty,ttype',imolty,ttype
+                        write(6,*) 'imolty,ttype',imolty,ttype(2)
                         return
                      endif
                   endif
@@ -1206,7 +1200,7 @@ c                    --- store the coordinates
                   enddo
                   vimpr = vimpr + twh_vimproper(ibox,imolty,ii,iitor
      &                    ,xtmp,ytmp,ztmp,duma,lbadstereo)
-                  if ( lbadstereo .and. lprint ) then
+                  if ( lbadstereo .and. lreport ) then
                      write(6,*) 'ENGTOTAL: Bad stereochemistry '
                      write(6,*) 'moltyp chain unit imptor'
      &                       ,imolty,ichain,ii,iitor
@@ -1427,7 +1421,7 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 06-10-2009 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -1444,21 +1438,25 @@ c     --- variables passed to/from the subroutine
       logical lmadelung
       integer nmcount, ibox, l
 c     --- local variables
+c     --- character string
+      character*54 outtext
 c     --- logical scalars
-      logical scp_eval_derivative,ltailc,lcoulomb,lewald
+      logical scp_eval_derivative,ltailc,lelect,lewald
 c     --- integer scalars
       integer imolty,classical_potnum,nmolty,scp_num_foreign_lambda
       integer potentialstyle
 c     --- double precision scalars
-      double precision qqfact
+      double precision qqfact,vreport,sumvdw,sumchg
 
 c     --- retrieve constants
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_nmolty(GLB_GET,nmolty)
       call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_ltailc(GLB_GET,ltailc)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
+
+      sumvdw = 0.0d0
+      sumchg = 0.0d0
 
       write(6,'(a27,1x,i10)'),'Total molecules in this box', nmcount
       do imolty = 1, nmolty
@@ -1466,80 +1464,154 @@ c     --- retrieve constants
      &        ,twh_get_ncmt(ibox,imolty)
  8       format(a17,1x,i3,1x,a2,i10)
       enddo
+
+c     --- global output format
+ 111     format(a54,f15.3,' [K] ',f15.5,' [kcal/mol]')
+
 c     --- output classical energies
       if ( potentialstyle .eq. POT_INTERNAL ) then
-         write(6,10) vvib+vbondbond,(vvib+vbondbond)/CON_KCALTOK
- 10      format(' total vibration  ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,12) vvib,vvib/CON_KCALTOK
- 12      format('    regular       ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,14) vbondbond,vbondbond/CON_KCALTOK
- 14      format('    bond-bond(1-2)',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,20) vbend+vangleangle,(vbend+vangleangle)/CON_KCALTOK
- 20      format(' total angle      ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,22) vbend,vbend/CON_KCALTOK
- 22      format('    regular       ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,24) vangleangle,vangleangle/CON_KCALTOK
- 24      format('    angle-angle   ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,30) vtg+vimpr,(vtg+vimpr)/CON_KCALTOK
- 30      format(' total torsion    ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,32) vtg,vtg/CON_KCALTOK
- 32      format('    regular       ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,35) vimpr,vimpr/CON_KCALTOK
- 35      format('    improper      ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,40) vintra+vinter,(vintra+vinter)/CON_KCALTOK
-c        --- van der waals
- 40      format(' total nonbond    ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,42) vintra,vintra/CON_KCALTOK
- 42      format('    intramolecular',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,44) vtwointer,vtwointer/CON_KCALTOK
- 44      format('    2-body nonbond',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,45) vthrinter,vthrinter/CON_KCALTOK
- 45      format('    3-body nonbond',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         if ( ltailc ) write(6,46) vtail,vtail/CON_KCALTOK
- 46      format('    tail correct. ',f15.3,' [K] ',f15.5,' [kcal/mol]')
-         if ( lcoulomb ) then
-            write(6,60) velect,velect/CON_KCALTOK
- 60         format(' total coulombic  ',f15.3,' [K] ',f15.5
-     &           ,' [kcal/mol]')
-            if ( lewald ) then
-               write(6,61) vrealelect*qqfact,vrealelect*qqfact
-     &              /CON_KCALTOK
- 61            format('    real space    ',f15.3,' [K] ',f15.5
-     &              ,' [kcal/mol]')
-               write(6,68) velectintra*qqfact,velectintra*qqfact
-     &              /CON_KCALTOK
- 68            format('      intramolec. ',f15.3,' [K] ',f15.5
-     &              ,' [kcal/mol]')
-               write(6,67) velectinter*qqfact,velectinter*qqfact
-     &              /CON_KCALTOK
- 67            format('      intermolec. ',f15.3,' [K] ',f15.5
-     &              ,' [kcal/mol]')
-               write(6,62) sself*qqfact,sself*qqfact/CON_KCALTOK
- 62            format('    self          ',f15.3,' [K] ',f15.5
-     &              ,' [kcal/mol]')
-               write(6,64) correct*qqfact,correct*qqfact/CON_KCALTOK
- 64            format('    correction    ',f15.3,' [K] ',f15.5
-     &              ,' [kcal/mol]')
-               write(6,66) vrecipsum,vrecipsum/CON_KCALTOK
- 66            format('    recip sum     ',f15.3,' [K] ',f15.5
-     &              ,' [kcal/mol]')
-            endif
 
+         outtext = ' Total vibration (atoms ij bonded together)'
+         write(6,111) outtext
+     &        ,vvib+vbondbond,(vvib+vbondbond)/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_BON_REG,vreport)
+         outtext = '  bond (ij) regular'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_BON_VDW,vreport)
+         sumvdw = sumvdw + vreport
+         outtext = '  bond (ij) van der waals'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_BON_CHG,vreport)
+         sumchg = sumchg + vreport
+         outtext = '  bond (ij) Electric'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         outtext = '  bond-bond (ij-jk)'
+         write(6,111) outtext,vbondbond,vbondbond/CON_KCALTOK
+
+         outtext = ' Total angle (atoms ijk bonded in sequence)'
+         write(6,111) outtext,vbend+vangleangle
+     &        ,(vbend+vangleangle)/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_ANG_REG,vreport)
+         outtext = '  angle (ijk) regular'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_ANG_BA,vreport)
+         outtext = '  bond-angle (ij-ijk)'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_ANG_VDW,vreport)
+         sumvdw = sumvdw + vreport
+         outtext = '  angle (ik) van der waals'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_ANG_CHG,vreport)
+         sumchg = sumchg + vreport
+         outtext = '  angle (ik) Electric'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         outtext = '  angle-angle (ijk-ijm)'
+         write(6,111) outtext,vangleangle,vangleangle/CON_KCALTOK
+
+         outtext = ' Total torsion (ijkl bonded in sequence)'
+         write(6,111) outtext,vtg,vtg/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_REG,vreport)
+         outtext = '  torsion (ijkl) regular'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_BB,vreport)
+         outtext = '  torsion (ij-kl) bond-bond'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_BT,vreport)
+         outtext = '  torsion (ij-ijkl) bond-torsion'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_AT,vreport)
+         outtext = '  torsion (ijk-ijkl) angle-torsion'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_AAT,vreport)
+         outtext = '  torsion (ijk-jkl-ijkl) angle-angle-torsion'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_VDW,vreport)
+         sumvdw = sumvdw + vreport
+         outtext = '  torsion (i-l) one-four van der waals'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         call twh_report(GLB_GET,REP_TOR_CHG,vreport)
+         sumchg = sumchg + vreport
+         outtext = '  torsion (i-l) one-four Electric'
+         write(6,111) outtext,vreport,vreport/CON_KCALTOK
+
+         outtext = ' Total improper (ijkm, i,k,m bonded to j)'
+         write(6,111) outtext,vimpr,vimpr/CON_KCALTOK
+
+         outtext = ' Total nonbond (more than 3 bonds apart) vdw'
+         sumvdw = sumvdw + vintra + vinter
+         write(6,111) outtext,vintra+vinter,(vintra+vinter)/CON_KCALTOK
+
+         outtext = '  intramolecular'
+         write(6,111) outtext,vintra,vintra/CON_KCALTOK
+
+         outtext = '  2-body vdw intermolecular'
+         write(6,111) outtext,vtwointer,vtwointer/CON_KCALTOK
+
+         outtext = '  3-body vdw intermolecular'
+         write(6,111) outtext,vthrinter,vthrinter/CON_KCALTOK
+
+         if ( ltailc ) then
+            outtext = '  tail correction'
+            write(6,111) outtext,vtail,vtail/CON_KCALTOK
          endif
-         write(6,70) vext,vext/CON_KCALTOK
- 70      format(' external field  ',f16.3,' [K] ',f15.5,' [kcal/mol]')
-         write(6,80) vsolvation,vsolvation/CON_KCALTOK
- 80      format(' solvation       ',f16.3,' [K] ',f15.5,' [kcal/mol]')
-         if ( dabs(vclassical) .gt. 1000.0d0 ) then
-c           --- use less precision past the decimal point to avoid
-c           --- printing noise
-            write(6,89) vclassical,vclassical/CON_KCALTOK
-         else
-c           --- setting precision high for debugging...
-            write(6,90) vclassical,vclassical/CON_KCALTOK
+
+         if ( lelect ) then
+            outtext =
+     &           ' Total nonbond (more than 3 bonds apart) Electric'
+            sumchg = sumchg + velect
+            write(6,111) outtext,velect,velect/CON_KCALTOK
+
+            outtext = '  total real space Electric'
+            write(6,111) outtext,vrealelect,vrealelect/CON_KCALTOK
+
+            outtext = '   intramolecular Electric'
+            write(6,111) outtext,velectintra,velectintra/CON_KCALTOK
+
+            outtext = '   intermolecular Electric'
+            write(6,111) outtext,velectinter,velectinter/CON_KCALTOK
+
+            if ( lewald ) then
+               outtext = '  self'
+               write(6,111) outtext,sself,sself/CON_KCALTOK
+
+               outtext = '  correction'
+               write(6,111) outtext,correct,correct/CON_KCALTOK
+
+               outtext = '  reciprocal sum'
+               write(6,111) outtext,vrecipsum,vrecipsum/CON_KCALTOK
+            endif
          endif
- 89      format(' total classical',f23.4,' [K] ',f20.6,' [kcal/mol]')
- 90      format(' total classical',f23.8,' [K] ',f20.10,' [kcal/mol]')
+
+         outtext = ' Total external field'
+         write(6,111) outtext,vext,vext/CON_KCALTOK
+
+         outtext = ' Total solvation'
+         write(6,111) outtext,vsolvation,vsolvation/CON_KCALTOK
+
+         outtext = 'Total classical'
+         write(6,111) outtext,vclassical,vclassical/CON_KCALTOK
+
+         outtext = ' Aggregate van der waals (bond and nonbond)'
+         write(6,111) outtext,sumvdw,sumvdw/CON_KCALTOK
+
+         outtext = ' Aggregate Electric (bond and nonbond)'
+         write(6,111) outtext,sumchg,sumchg/CON_KCALTOK
 
          call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
          if (scp_eval_derivative) then
@@ -1573,9 +1645,10 @@ c     --- output quantum energies
  100     format(' total quantum  ',f17.3,' [K] ',f15.5,' [kcal/mol]')
       endif
       
-c        --- hack to print out the madelung constant in kj/mol
+c        --- hack to print out the madelung constant
 c        --- only want to do this for a system of sodium chloride
       if ( lmadelung ) then
+         call twh_constant_qqfact(GLB_GET,qqfact)
          write(6,'(1x,a,f15.10)') 'Madelung Constant [unitless]: '
      &           ,(-velect*maddist)/(qqfact*dble(twh_get_ncmt(ibox,1)))
       endif

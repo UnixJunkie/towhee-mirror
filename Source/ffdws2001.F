@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the dws2001      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 01-10-2007 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -317,7 +317,7 @@ c     --- initialize tclocal
       enddo
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,23)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_DRUKKER)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
       tclocal(1) = 80.0d0*CON_KCALTOK
@@ -380,7 +380,7 @@ c     --- set ntsame
 
 c     HACK FIX THIS!!!
       type = type + 1
-      call twh_torstyle(GLB_SET,type,23)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_DRUKKER)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
       tclocal(1) = 80.0d0*CON_KCALTOK
@@ -413,7 +413,7 @@ c     --- set ntsame
 
 c     HACK FIX THIS!!!
       type = type + 1
-      call twh_torstyle(GLB_SET,type,23)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_DRUKKER)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
       tclocal(1) = 80.0d0*CON_KCALTOK

@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the Richar1995   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * originally written 08-11-2008 M.G. Martin                      *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -505,7 +505,7 @@ c     ******************************************************************
 c     * null torsions                                                  *
 c     ******************************************************************
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(-1) = 0.0d0
       call twh_set_torcoeff(type,tclocal)

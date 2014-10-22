@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the trappe-ua    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1422,7 +1422,7 @@ c     * + k3*(1 + Cos(3*phi)                                           *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -1450,7 +1450,7 @@ c     --- set ntsame
 
 c     -- CH split OPLS torsion Siepmann et al Mol Phys 90 687-693 (1997)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = -251.06d0
@@ -1477,7 +1477,7 @@ c     --- set ntsame
 
 c     --- Mundy et al, Faraday Disc 104, 17-36 (1996)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) =    0.00d0
@@ -1500,7 +1500,7 @@ c     --- set ntsame
 
 c     --- from jorgensen JACS 106 22 6638-6646 (1984)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) =    688.5d0
@@ -1533,7 +1533,7 @@ c     --- set ntsame
 
 c     --- alcohols [TraPPE-5]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.00d0
@@ -1560,7 +1560,7 @@ c     --- set ntsame
 
 c     --- J. Phys. Chem. B 105 3093-3104 (2001)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.00d0
@@ -1579,7 +1579,7 @@ c     CHx - CH2(sp3) - O - H [TraPPE 5]
 
 c     --- J. Phys. Chem. B 105 3093-3104 (2001)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 215.96d0
@@ -1598,7 +1598,7 @@ c     CHx - CH(sp3) - O - H [TraPPE 5]
 
 c     --- J. Phys. Chem. B 105 3093-3104 (2001)
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -1618,7 +1618,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -1650,7 +1650,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 503.24d0
@@ -1682,7 +1682,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 2035.58d0
@@ -1708,7 +1708,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 52.88d0
@@ -1728,7 +1728,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -1748,7 +1748,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 1763.9d0
@@ -1768,7 +1768,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = -251.06d0
@@ -1788,7 +1788,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -1808,7 +1808,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 0.0d0
@@ -1839,7 +1839,7 @@ c     --- J. Phys. Chem. B 104, 8008-8016 (2000) [TraPPE 4]
       call twh_constant_pi(GLB_GET,onepi)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,1)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_SIM_HARM)
       tclocal(0) =  13400.0d0
       tclocal(1) =  onepi
       call twh_set_torcoeff(type,tclocal)
@@ -1873,7 +1873,7 @@ c     --- used in harmonic potential E = torcoeff0
 *     --- (theta - torcoeff1)**2
 c     --- J. Phys. Chem. B 104, 8008-8016 (2000) [TraPPE 4]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,1)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_SIM_HARM)
       tclocal(0) =  12400.0d0
       tclocal(1) =  0.0d0
       call twh_set_torcoeff(type,tclocal)
@@ -1910,7 +1910,7 @@ c     --- C.D. Wick; M.G. Martin; J.I. Siepmann;
 c     --- J. Phys. Chem. B 104, 8008-8016 (2000)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,7)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_TRAPPE_COS)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 131.0d0
@@ -1934,7 +1934,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,7)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_TRAPPE_COS)
       tclocal(-1) = 0.5d0
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(0) = 167.0d0
@@ -1963,7 +1963,7 @@ c     * used for the rigid torsions in the aromatics                   *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,21)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_MRD)
       call twh_loftor(GLB_SET,type,.true.)
       call twh_ntorloop(GLB_SET,type,2)
 c     --- one-four scaling
@@ -2006,7 +2006,7 @@ c     * they did not use any 1-4 interactions                          *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,17)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_TRAPPE_PLAN)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(1) = 630.0d0
       tclocal(2) = 1562.4d0
@@ -2038,7 +2038,7 @@ c     --- set ntsame
       call twh_set_tornames(type,isame,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,17)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_TRAPPE_PLAN)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(1) = 630.0d0
       tclocal(2) = 1562.4d0

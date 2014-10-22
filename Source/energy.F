@@ -169,11 +169,10 @@ c     * compute the two-body energy in the active box for all molecules*
 c     * interacting with those in the chaininfo                        *
 c     *                                                                *
 c     * rewritten from engmolec 08-05-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 c     --- debug toggle
@@ -188,7 +187,7 @@ c     --- variables passed to/from the subroutine
       double precision v_foreign
       dimension v_foreign(MAX_FOREIGN_LAMBDA)
 c     --- local variables
-      logical lvalid,lcompute,leval_v,leval_c,lusecom,lcoulomb
+      logical lvalid,lcompute,leval_v,leval_c,lusecom,lelect
       logical luse_ci,luse_cj,luse_vi,luse_vj
 c     --- integer scalars
       integer cutstyle,testcrd,testchain,ichainmove,imolty,jmolty,jlist
@@ -198,7 +197,7 @@ c     --- double precision scalars
       double precision rxi,ryi,rzi,rxj,ryj,rzj,rxij,ryij,rzij,rij
       double precision xcmi,ycmi,zcmi,rcmi,rijsq,rcm,rcmsq,dvdllj,dvdlc
       double precision venergy,xcmj,ycmj,zcmj,rcmj,rcutinsq
-      double precision rcmreal,qqfact,rcelect
+      double precision rcmreal,rcelect
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
@@ -207,12 +206,11 @@ c     --- no two-body intermolecular energy in box 0
       if ( activebox .eq. 0 ) return
 
 c     --- retrieve constant
-      call twh_constant_qqfact(GLB_GET,qqfact)
       call twh_nmolty(GLB_GET,nmolty)
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
       call twh_lusecom(GLB_GET,lusecom)
       call twh_rcelect(GLB_GET,activebox,rcelect)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_rcutinsq(GLB_GET,rcutinsq)
 
 #if DEBUG_ENG_TWO_BODY
@@ -312,7 +310,7 @@ c                           --- minimum image the ctrmas pair distance
                            call twh_rcmu(GLB_GET,jchain,rcmj)
 c                          --- start with the vdw cutoff
                            call twh_rcut(GLB_GET,rcm)
-                           if ( lcoulomb ) then
+                           if ( lelect ) then
 c                             --- use the coulombic cutoff if larger
                               if ( rcelect .gt. rcm ) rcm = rcelect
                            endif
@@ -371,12 +369,12 @@ c                             --- not compute for rijsq < rcutinsq
                                     enddo
                                  endif
 c                                --- electrostatics
-                                 if ( lcoulomb .and. leval_c) then
+                                 if ( lelect .and. leval_c) then
                                     rij = dsqrt(rijsq)
-                                    venergy = twh_vcoulomb(activebox
+                                    call twh_vcoulomb(-1,activebox
      &                                   ,rij,imolty,iunit,jmolty,jj
-     &                                   ,.false., vf, dvdlc
-     &                                   ,loverlap)
+     &                                   , vf, dvdlc
+     &                                   ,loverlap,venergy)
                                     if ( loverlap ) return
 c                                   --- vcoulomb returns units [EE]
 c                                   --- convert foreign energy to
@@ -385,12 +383,12 @@ c                                   --- v_elect converted to [K]
 c                                   --- later.
                                     v_elect = v_elect + venergy
 c                                   --- derivatives in units of [K]
-                                    l_velect = l_velect+qqfact*dvdlc
+                                    l_velect = l_velect + dvdlc
                                     do lambda = 1
      &                                   ,scp_num_foreign_lambda
                                        v_foreign(lambda) 
      &                                      = v_foreign(lambda)
-     &                                      +qqfact*vf(lambda)
+     &                                      +vf(lambda)
                                     enddo
                                  endif
                               endif
@@ -476,7 +474,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-08-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJBEN2
@@ -513,8 +511,8 @@ c              --- fetch the coordinates
                call twh_coordinates(GLB_GET,icf,ichain,ip2
      &              ,xtmp(3),ytmp(3),ztmp(3))
                v_ben = v_ben + 
-     &               twh_vangle(lfailure,lovrlap,ibox,imolty,iunit
-     &               ,iben,1,duma,dumb,dumc,xtmp,ytmp,ztmp)
+     &               twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
+     &              ,iunit,iben,1,duma,dumb,dumc,xtmp,ytmp,ztmp)
                if ( lfailure ) return
                if ( lovrlap ) return
             endif
@@ -602,7 +600,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -641,8 +639,8 @@ c              --- completely through the periodic box
                call twh_mimage (ibox,rxunit,ryunit,rzunit
      &              ,rxipone,ryipone,rzipone,rxuij,ryuij,rzuij)
                dist = twh_distance(rxuij,ryuij,rzuij)
-               v_vib = v_vib + twh_vbond(lfailure,it,dist,imolty,iunit
-     &              ,ip1,lovrlap)
+               v_vib = v_vib + twh_vbond(lfailure,.false.,ibox,it,dist
+     &              ,imolty,iunit,ip1,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) return
             endif
@@ -727,15 +725,13 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-26-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_DERFC
+#define FUNCTION_EWALD_CORRECT
 #define FUNCTION_EWALD_SELF
-#define FUNCTION_GET_QQATOM
 #define FUNCTION_LINCLUDE
 #define FUNCTION_ONEFIVETYPE
-#define FUNCTION_VCOULOMB
 #define FUNCTION_VINTRA
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
@@ -746,22 +742,19 @@ c     --- variables passed to/from the subroutine
       double precision v_intra, v_elect
 c     --- local variables
 c     --- logical scalars
-      logical lcoulomb,lewald
+      logical lelect,lewald
 c     --- integer scalars
       integer iunit,ntii,jj,ntjj,ioftype,cutstyle,imolty,nunit
 c     --- double precision scalars
       double precision rxui,rzui,ryui,rxuij,ryuij,rzuij,rijsq,rij,dv
-      double precision rxuj,ryuj,rzuj,calp,rcelect
+      double precision rxuj,ryuj,rzuj
+      double precision vcoulomb
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
 
-c     --- global variables accessed (listed for convenience)
-c     dvpm
-
 c     --- retrieve constants
-      call twh_rcelect(GLB_GET,ibox,rcelect)
-      call twh_lcoulomb(GLB_GET,lcoulomb)
+      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
 
       if ( icf .eq. CRD_NONE ) return
@@ -796,12 +789,13 @@ c                 --- special one-five
                endif
                if ( lovrlap ) return
 
-               if ( lcoulomb ) then
+               if ( lelect ) then
 c                 --- electrostatics
                   rij = dsqrt(rijsq)
-                  v_elect = v_elect + twh_vcoulomb(ibox,rij,imolty
-     &                 ,iunit,imolty,jj,.false.,vf,dv,lovrlap)
+                  call twh_vcoulomb(-1,ibox,rij,imolty
+     &                 ,iunit,imolty,jj,vf,dv,lovrlap,vcoulomb)
                   if ( lovrlap ) return
+                  v_elect = v_elect + vcoulomb
                endif
             elseif ( lewald .and. ibox .ne. 0 ) then
 c              --- compute the ewald intramolecular (self and
@@ -809,12 +803,9 @@ c              --- correction) terms for the interactions of
 c              --- the placed atoms with themselves, and with 
 c              --- the rest of their own molecule.
                rij = dsqrt(rijsq)
-               if ( rij .lt. rcelect ) then
-                  call twh_ewald_calp(GLB_GET,ibox,calp)
-                  v_elect = v_elect + twh_get_qqatom(imolty,iunit)
-     &                 *twh_get_qqatom(imolty,jj)*
-     &                 (twh_derfc(calp*rij)-1.0d0)/rij
-               endif
+c              --- correction term
+               v_elect = v_elect + twh_ewald_correct(ibox,imolty
+     &              ,iunit,jj,rij)
             endif
          enddo
          if ( lewald .and. ibox .ne. 0 ) then
@@ -837,7 +828,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 10-09-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJTOR2
@@ -881,8 +872,8 @@ c                    --- store atom positions
                enddo
 c                    --- add in the torsional energy
                v_tor = v_tor + 
-     &               twh_vtorsion(lfailure,ibox,1,imolty,iunit,itor
-     &               ,xtmp,ytmp,ztmp,duma,lovrlap)
+     &               twh_vtorsion(lfailure,.false.,ibox,1,imolty,iunit
+     &              ,itor,xtmp,ytmp,ztmp,duma,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) return
             endif
@@ -1129,21 +1120,28 @@ c     * computes the ewald intramolecular correction term in ibox for  *
 c     * units iunit and junit of molecule type imolty                  *
 c     *                                                                *
 c     * originally written 10-24-2006 by M.G. Martin                   *
-c     * last modified 11-02-2007 by M.G. Martin                        *
+c     * last modified 08-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
+#define FUNCTION_CMP_GT
 #define FUNCTION_DERFC
 #define FUNCTION_EWALD_CORRECT
 #include "functions.h"
 c     ---- variables passed to/from the function
       integer ibox,imolty,iunit,junit
-      double precision rij,chargei,chargej,calp
+      double precision rij,chargei,chargej,calp,rcelect
 
-      call twh_qqatom(GLB_GET,imolty,iunit,chargei)
-      call twh_qqatom(GLB_GET,imolty,junit,chargej)
+      call twh_qqscale(GLB_GET,imolty,iunit,chargei)
+      call twh_qqscale(GLB_GET,imolty,junit,chargej)
       call twh_ewald_calp(GLB_GET,ibox,calp)
-      twh_ewald_correct = chargei*chargej*(twh_derfc(calp*rij)-1.0d0)
-     &     /rij
+      call twh_rcelect(GLB_GET,ibox,rcelect)
+
+      if ( twh_cmp_gt(rcelect,rij) ) then
+         twh_ewald_correct = chargei*chargej
+     &        *(twh_derfc(calp*rij)-1.0d0)/rij
+      else
+         twh_ewald_correct = 0.0d0
+      endif
 
       return
       end
@@ -1153,7 +1151,7 @@ c     ******************************************************************
 c     * computes the ewald self interaction energy                     *
 c     *                                                                *
 c     * originally written 10-24-2006 by M.G. Martin                   *
-c     * last modified 11-05-2007 by M.G. Martin                        *
+c     * last modified 08-18-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EWALD_SELF
@@ -1164,7 +1162,7 @@ c     --- local variables
       double precision charge,invrootpi,calp
 
       call twh_constant_invrootpi(GLB_GET,invrootpi)
-      call twh_qqatom(GLB_GET,imolty,iunit,charge)
+      call twh_qqscale(GLB_GET,imolty,iunit,charge)
       call twh_ewald_calp(GLB_GET,ibox,calp)
 c     --- self interaction term
       twh_ewald_self = -charge*charge*calp*invrootpi

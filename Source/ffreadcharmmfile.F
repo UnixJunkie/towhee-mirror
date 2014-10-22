@@ -27,7 +27,7 @@ c     * corresponding Towhee data structures so that it can create     *
 c     * a Towhee force field file                                      *
 c     *                                                                *
 c     * written by M.G. Martin and C.D. Lorenz 02-18-03                *
-c     * last modifed 07-21-2014 by M.G. Martin                         *
+c     * last modifed 08-13-2014 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -219,7 +219,7 @@ c              *** read in data for angle forcefield terms
 c           *** read in data for dihedral forcefield terms
                 read(34,*) catom1,catom2,catom3,catom4,kd,n,phio
                 ditype = ditype + 1
-                call twh_torstyle(GLB_SET,ditype,3)
+                call twh_torstyle(GLB_SET,ditype,TOR_STYLE_GCA_COS)
                 call twh_loftor(GLB_SET,ditype,.true.)
                 tclocal(-1) = 1.0d0
                 call twh_ntorloop(GLB_SET,ditype,1)

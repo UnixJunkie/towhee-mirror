@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the compass      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -3013,7 +3013,7 @@ c         + k18*(theta(ijk) - theta0)*(theta(jkl) - theta0)*Cos[phi]
 c         + k19*(b(ij) - b0)*(b(kl) - b0)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -3059,7 +3059,7 @@ c     --- c3a - c3a - c3a - c3a
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -3105,7 +3105,7 @@ c     --- c3a - c3a - c3a - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -3151,7 +3151,7 @@ c     --- c3a - c3a - c3a - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -3197,7 +3197,7 @@ c     --- c4 - c3a - c3a - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -3243,7 +3243,7 @@ c     --- h1 - c3a - c3a - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3266,7 +3266,7 @@ c     --- c3a - c3a - c4 - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -3312,7 +3312,7 @@ c     --- c3a - c3a - c4 - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3330,7 +3330,7 @@ c     --- c3a - c4 - c4 - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -3376,7 +3376,7 @@ c     --- c4 - c4 - c4 - c4  sp3 carbon backbone
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -3422,7 +3422,7 @@ c     --- c4 - c4 - c4 - h1  sp3 carbon backbone
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -3468,7 +3468,7 @@ c     --- h1 - c4 - c4 - h1  sp3 carbon backbone
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3487,7 +3487,7 @@ c     --- exist)
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3506,7 +3506,7 @@ c     --- exist)
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -3552,7 +3552,7 @@ c     --- c3a - c3a - c3a - n3o
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -3598,7 +3598,7 @@ c     --- h1 - c3a - c3a - n3o
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -3644,7 +3644,7 @@ c     --- c3a - c3a - n3o - o1=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3662,7 +3662,7 @@ c     --- c4 - c4 - n3o - o1=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -3708,7 +3708,7 @@ c     --- h1 - c4 - n3o - o1=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3726,7 +3726,7 @@ c     --- c4 - c4 - o2 - n3o
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'o1=')
@@ -3772,7 +3772,7 @@ c     --- o1= - n3o - o2 - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3790,7 +3790,7 @@ c     --- c3a - c3a - c3a - p4=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3808,7 +3808,7 @@ c     --- h1 - c3a - c3a - p4=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -3831,7 +3831,7 @@ c     --- c3a - c3a - p4= - n2=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -3877,7 +3877,7 @@ c     --- c4 - c4 - c4 - n2=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -3923,7 +3923,7 @@ c     --- h1 - c4 - c4 - n2=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -3969,7 +3969,7 @@ c     --- c4 - c4 - n2= - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4015,7 +4015,7 @@ c     --- h1 - c4 - n2= - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4061,7 +4061,7 @@ c     --- h1 - c4 - p4= - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4107,7 +4107,7 @@ c     --- h1 - c4 - p4= - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4153,7 +4153,7 @@ c     --- h1 - c4 - p4= - n2=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4171,7 +4171,7 @@ c     --- h1 - n2= - p4= - c3a
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4217,7 +4217,7 @@ c     --- h1 - n2= - p4= - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4263,7 +4263,7 @@ c     --- h1 - n2= - p4= - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4282,7 +4282,7 @@ c     --- h1 - n2= - p4= - o2
 
       type = type + 1
 c     --- null torsion
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4320,7 +4320,7 @@ c     ---* - n3 - p4= -*
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4338,7 +4338,7 @@ c     --- p4= - n2= - p4= - n2=
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4371,7 +4371,7 @@ c     ---* - o2 - p4= -* (check to see if explicitly declared elsewhere)
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4389,7 +4389,7 @@ c     ---* - c3a - n2= -*
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4407,7 +4407,7 @@ c     ---* - c3a - p4= -*
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4425,7 +4425,7 @@ c     ---* - c4 - n2= -*
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4443,7 +4443,7 @@ c     ---* - c4 - p4= -*
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4461,7 +4461,7 @@ c     ---* - n2= - p4= -*
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -4507,7 +4507,7 @@ c     --- c3a - c3a - c3a - o2
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4553,7 +4553,7 @@ c     --- h1 - c3a - c3a - o2
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4571,7 +4571,7 @@ c     --- c3a - c3a - o2 - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c3a')
@@ -4617,7 +4617,7 @@ c     --- c3a - c3a - o2 - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -4667,7 +4667,7 @@ c     --- there is a typo in the original paper for the
 c     --- angle-angle-torsion interaction.  The negative sign was 
 c     --- dropped by mistake.  It has been corrected here.
 c     --- personal communication David Rigby 08-09-2001 M.G. Martin
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4713,7 +4713,7 @@ c     --- h1 - c4 - c4 - o2
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'o2')
@@ -4759,7 +4759,7 @@ c     --- o2 - c4 - c4 -o2
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -4805,7 +4805,7 @@ c     --- c4 - c4 - o2 - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'c4')
@@ -4851,7 +4851,7 @@ c     --- c4 - c4 - o2 - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4869,7 +4869,7 @@ c     --- h1 - c4 - o2 - c3a
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4915,7 +4915,7 @@ c     --- h1 - c4 - o2 - c4
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,5)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_X_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_torstring(GLB_SET,type,1,'h1')
@@ -4961,7 +4961,7 @@ c     --- h1 - c4 - o2 - h1
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -4989,7 +4989,7 @@ c     --- h1 - o2 - si4 - o2
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -5017,7 +5017,7 @@ c     --- * - o2 - si4 - *
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -5037,7 +5037,7 @@ c     --- si4 - o2 - si4 - o2
 c     --- torsions from [JCC 2003]
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -5055,7 +5055,7 @@ c     h1 - n2z - n2t - n1t  [JCC2003]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -5073,7 +5073,7 @@ c     c4 - n2z - n2t - n1t  [JCC2003]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -5091,7 +5091,7 @@ c     n2t - n2z - c4 - h1  [JCC2003]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part
@@ -5109,7 +5109,7 @@ c     n2t - n2z - c4 - c4  [JCC2003]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,6)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_COMP_R_AD)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
 c     --- regular torsion part

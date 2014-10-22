@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * rewritten by M.G. Martin 08-09-2005 from getcbdihed            *
-c     * last modified 10-20-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -67,7 +67,7 @@ c     --- determine which type of biasing to use to select the phidisp
       if ( ldelta_dist ) then
          call twh_ittor(GLB_GET,imolty,iunit,torkey,tortype)
          call twh_torstyle(GLB_GET,tortype,torstyle)
-         if ( torstyle .eq. 21 ) then
+         if ( torstyle .eq. TOR_STYLE_MRD ) then
 c           --- multiple rigid dihedrals, use a delta distribution for
 c           --- any value of cbmc_dihedgen_code
             style_code = DIST_DELTA

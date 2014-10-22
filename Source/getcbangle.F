@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 07-24-2014 by M.G. Martin                        *
+c     * last modified 08-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -59,7 +59,6 @@ c     ******************************************************************
 #define FUNCTION_EXPON
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_BONDPATT
 #define FUNCTION_GET_IJAA0
 #define FUNCTION_GET_IJAA1
 #define FUNCTION_GET_IJAA2
@@ -72,7 +71,6 @@ c     ******************************************************************
 #define FUNCTION_GET_INAA
 #define FUNCTION_GET_INBEN
 #define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_NTYPE
 #define FUNCTION_GET_ITBEN
 #define FUNCTION_GET_ITIMPROP
 #define FUNCTION_LAWOFCOSINE
@@ -86,6 +84,11 @@ c     ******************************************************************
 #include "functions.h"
 c     --- debog toggle
 #define DEBUG_GETCBANGLE 0
+c     --- local defines
+#define TM_ONE 1
+#define TM_TWO 2
+#define TM_THREE 3
+
 c     --- variables passed to/from the subroutine
       logical luseoldone,lfailure,lovrangle
       integer iw,ichain,imolty,angstart,iuprev,testcord,ibox
@@ -94,24 +97,25 @@ c     --- variables passed to/from the subroutine
       double precision dpcbangle
 c     --- local variables
 c     --- logical scalars
-      logical lingeom,lovrlap,lbadstereo,lrigid,lrandelta,lthreemem
+      logical lingeom,lovrlap,lbadstereo,lrandelta,lthreemem
 c     --- logical arrays
       logical lovrben,lmin,lterm,lfound,lfirstold
       dimension lovrben(max_nch_bend)
-c     --- character string scalars
-      character*5 hybrid
 c     --- integer scalars
       integer count,ntogrow,iugrow,iufrom,iu2back,rimptotal,total
-      integer iczero,icone,ictwo,iulast,type,aaa,iuxtra,iangle,nangle
-      integer start_ang,index,delta_key
+      integer iczero,icone,ictwo,iulast,type,aaa,iuxtra
+      integer start_ang,index
       integer iwinner,ixtra,ic,itemp,itor,step,other,imin,angle_style
       integer iuone,ipeak,npeaks,ivalue,xtracount
       integer testzero,testone,testtwo,testthree,testfour,growprev
-      integer cbmc_bendgen_code,style_code,nchoice,iutest
-      integer ivib,numvib,vibtype,vibstyle,nbend,ibend
+      integer cbmc_bendgen_code,style_code,nchoice
+      integer ivib,numvib,vibtype,nbend,ibend
       integer fgp_index,gpf_index,ifind,itrial,itest,numtor
-      integer threecode,fourcode,ntmtorsion
-      integer cordstyle,angleadist
+      integer onecode,twocode,fourcode
+      integer cordstyle,angleadist,anglebdist,iutest
+      integer growring,prevring,fromring,gp_vtype,icode,iuaaa
+      integer testring,iutwo,iufour,jcode,ntmtor,itorsion,tmcode
+      integer torunit,prevcode,ntmbond,ibond,iangle,ntmangle
 c     --- integer arrays
       integer imptot
       dimension imptot(NNBOND)
@@ -119,20 +123,30 @@ c     --- integer arrays
       dimension tmpimptype(NNBOND,MAXIMPROP)
       integer tmpimpform
       dimension tmpimpform(NNBOND,MAXIMPROP)
+      integer tmbondinfo
+      dimension tmbondinfo(NNBOND,2)
+      integer tmangleinfo
+      dimension tmangleinfo(2*NNBOND,3)
+      integer tmtorinfo
+      dimension tmtorinfo(4,0:6)
 c     --- double precision scalars
       double precision thetaone,thetatwo,theta,phione,phitwo,std_dev
       double precision distg,vphi,rdecide,dpmin,ang_gamma
       double precision bsum_try,rbf,bs,onepi,ang_alpha,ang_beta
       double precision rxfrom,ryfrom,rzfrom,rxprev,ryprev,rzprev
       double precision rxgrow,rygrow,rzgrow,beta,angletemp
-      double precision xvecgrow,yvecgrow,zvecgrow,distgrow,anglec
+      double precision xvecgrow,yvecgrow,zvecgrow,anglec
       double precision xub,yub,zub,dum,ux,uy,uz,alpha,gamma,dumb
-      double precision icr,icphi,ictheta,wmin,vmin,twopi,distance
+      double precision icr,icphi,ictheta,wmin,vmin,twopi,distp
       double precision xvecprev,yvecprev,zvecprev,bendang,cbphi
       double precision bend_a_ideal_fraction,bend_b_ideal_fraction
-      double precision delta_shift,distlo,disthi,lobound,hibound
-      double precision testlen,vtotal,distother,distaaa
+      double precision distlo,disthi,lobound,hibound
+      double precision testlen,vtotal,distone,disttwo,distaaa
       double precision fgp_anglec,gpf_anglec,vtest,phic
+      double precision radtodeg
+      double precision distjk,distkl,distjl,distlm
+      double precision angc_jlm,angc_klm
+
 c     --- double precison arrays
       double precision ang_trial
       dimension ang_trial(max_nch_bend)
@@ -150,6 +164,8 @@ c     --- double precison arrays
       dimension ddum4(4)
       double precision vtg
       dimension vtg(max_nch_bend),vphi(max_nch_bend)
+      double precision crosslen
+      dimension crosslen(0:NNBOND,0:NNBOND)
       double precision cosang,crossang
       dimension crossang(0:NNBOND,0:NNBOND)
       dimension cosang(2)
@@ -162,8 +178,9 @@ c     --- double precison arrays
       double precision angsq
       dimension angsq(CBMC_MAXBENDPEAKS)
 
-c      write(6,*) 'START GETCBANGLE'
+c      write(6,*) 'START GETCBANGLE',iw,luseoldone
 
+      call twh_constant_radtodeg(GLB_GET,radtodeg)
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
       call twh_constant_twopi(GLB_GET,twopi)
@@ -187,15 +204,13 @@ c     --- initialize overlap for the full angle selection process
       lobound = 0.0d0
       rdecide = 0.0d0
 
-      hybrid = twh_get_bondpatt(twh_get_ntype(imolty,iufrom))
-
 c     --- initialize gcba_weight and dpcbangle
       gcba_weight = 1.0d0
       dpcbangle = 0.0d0
 
-c     ***********************************************************
-c     ** Begin Bond angle biased selection                     **
-c     ***********************************************************
+c     ******************************************************************
+c     * Begin Angle A biased selection                                 *
+c     ******************************************************************
 c     --- store r*ui positions for unit iufrom
       call twh_coordinates(GLB_GET,testcord,ichain,iufrom
      &     ,rxfrom,ryfrom,rzfrom)
@@ -207,6 +222,7 @@ c     --- determine iuprev
       if ( growprev .eq. 0 ) then
 c        --- need to choose one bead to grow on unit sphere
          call twh_growlist(GLB_GET,iw,1,iuprev)
+         prevcode = 1
          angstart = 2
 
          if ( luseoldone ) then
@@ -215,16 +231,17 @@ c           --- compute the vector from iufrom to iuprev
      &           ,rxprev,ryprev,rzprev)
             call twh_mimage( ibox,rxprev,ryprev,rzprev
      &           ,rxfrom,ryfrom,rzfrom,xvecprev,yvecprev,zvecprev)
-            distance = twh_distance(xvecprev,yvecprev,zvecprev)
-            call twh_distprev(GLB_SET,1,distance)
+            distp = twh_distance(xvecprev,yvecprev,zvecprev)
+            call twh_distprev(GLB_SET,1,distp)
          else
 c           --- set distprev to the first bondlength
-            call twh_bondlen(GLB_GET,1,distance)
-            call twh_distprev(GLB_SET,1,distance)
+            call twh_bondlen(GLB_GET,1,distp)
+            call twh_distprev(GLB_SET,1,distp)
          endif
       else
 c        --- already did all this stuff back up in getcbbond
          angstart = 1
+         prevcode = 0
       endif
 
 c     --- initialize angle-angle list
@@ -307,23 +324,26 @@ c        --- default number of trial selections is nch_bend_a (this can
 c        --- be changed later depending on the generation distribution)
          nchoice = nch_bend_a
 c        --- set up distances for angle calculations
-         call twh_bondlen(GLB_GET,count,distgrow)
-         call twh_distprev(GLB_GET,1,distance)
-c        ---- check to see if this is also a bond (3-mem ring)
+         call twh_bondlen(GLB_GET,count,distg)
+         call twh_distprev(GLB_GET,1,distp)
+c        ---- check to see if this is a 3-mem ring
          lthreemem = .false.
-         call twh_invib(GLB_GET,imolty,iugrow,numvib)
-         do ivib = 1,numvib
-            call twh_ijvib(GLB_GET,imolty,iugrow,ivib,iutest)
-            if ( iutest .eq. iuprev ) then
-c              --- also forms a 3-mem ring
+         call twh_inring(GLB_GET,imolty,iugrow,growring)
+         if ( growring .lt. 0 ) then
+c           --- check from
+            call twh_inring(GLB_GET,imolty,iufrom,fromring)
+c           --- check prev as well
+            call twh_inring(GLB_GET,imolty,iuprev,prevring)
+            if ( fromring .lt. 0 .and. prevring .lt. 0 ) then
                lthreemem = .true.
-c              --- get the type of this extra iuprev-iugrow bond
-               call twh_itvib(GLB_GET,imolty,iugrow,ivib,vibtype)
-c              --- get the vibration style
-               call twh_vibstyle(GLB_GET,vibtype,vibstyle)
             endif
-         enddo
+         endif
+
          if ( lthreemem ) then
+c           --- store the grow-prev vibration style
+            call twh_find_vibtype(lfailure,imolty,iugrow,iuprev
+     &           ,gp_vtype)
+            if ( lfailure ) return
 c           --- store the angle information for the 2 other angles
 c           --- completed by the 3-membered ring
 c           --- find the from-grow-prev
@@ -367,6 +387,7 @@ c           --- find the grow-prev-from
                return
             endif
          endif
+
 c        --- find the angle type for iugrow-iufrom-iuprev
          lfound = .false.
          ibend = 0
@@ -405,11 +426,10 @@ c           --- bond length to compute the allowed angle
             do ipeak = 1,npeaks
 c              --- combine the allowed bond lengths with existing
 c              --- lengths to compute the allowed angle
-               call twh_vibcoeff(GLB_GET,vibtype,0,testlen)
                call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index,index
      &              ,ipeak,1,testlen)
-               anglec = twh_inverselawofcosine(testlen,distance
-     &              ,distgrow)
+               anglec = twh_inverselawofcosine(testlen,distp
+     &              ,distg)
                angle = twh_arccos(anglec)
                delta_angle(ipeak) = angle
                delta_anglec(ipeak) = anglec
@@ -455,10 +475,10 @@ c           --- the bond lengths and allowed distances
      &           ,npeaks,1,distlo)
             call twh_cbmcbendinfo(GLB_GET,imolty,iugrow,index,index
      &           ,npeaks,2,disthi)
-            lobound = twh_inverselawofcosine(distance,
-     &           distgrow,distlo)
-            hibound = twh_inverselawofcosine(distance,
-     &           distgrow,disthi)
+            lobound = twh_inverselawofcosine(distp,
+     &           distg,distlo)
+            hibound = twh_inverselawofcosine(distp,
+     &           distg,disthi)
          elseif ( angleadist .eq. DIST_SINE ) then
             style_code = DIST_SINE
             npeaks = 0
@@ -598,28 +618,31 @@ c           --- initialize vang
 c           --- assign ang_trial
             ang_trial(itrial) = anglec
             if ( lthreemem ) then
-c              --- calcule the prev-grow bond energy using the law
+c              --- calculate the prev-grow bond energy using the law
 c              --- of cosine
-               testlen = twh_lawofcosine(distgrow,distance,anglec)
-               vvib(itrial) = twh_vbond(lfailure,vibtype,testlen
-     &              ,imolty,iugrow,iuprev,lovrlap)
+               testlen = twh_lawofcosine(distg,distp,anglec)
+               crosslen(prevcode,count) = testlen
+               crosslen(count,prevcode) = testlen
+               vvib(itrial) = twh_vbond(lfailure,.false.,ibox,gp_vtype
+     &              ,testlen,imolty,iugrow,iuprev,lovrlap)
                if ( lfailure ) return
 c              --- connecting this bond also computes 2 additional
 c              --- angles for the rest of the triangle
 c              --- get the angle for the from-grow-prev
-               fgp_anglec = twh_inverselawofcosine(distgrow,testlen
-     &              ,distance)
+               fgp_anglec = twh_inverselawofcosine(distg,testlen
+     &              ,distp)
                vang(itrial) = vang(itrial)
-     &              + twh_vangle(lfailure,lovrlap,ibox,imolty,iufrom
-     &              ,fgp_index,0,fgp_anglec,distgrow,testlen
+     &              + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
+     &              ,iufrom,fgp_index,0,fgp_anglec,distg,testlen
      &              ,ddum3,ddum3,ddum3)
                if ( lfailure ) return
+
 c              --- get the angle for the grow-prev-from
-               gpf_anglec = twh_inverselawofcosine(testlen,distance
-     &              ,distgrow)
+               gpf_anglec = twh_inverselawofcosine(testlen,distp
+     &              ,distg)
                vang(itrial) = vang(itrial)
-     &              + twh_vangle(lfailure,lovrlap,ibox,imolty,iugrow
-     &              ,gpf_index,0,gpf_anglec,testlen,distance
+     &              + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
+     &              ,iugrow,gpf_index,0,gpf_anglec,testlen,distp
      &              ,ddum3,ddum3,ddum3)
                if ( lfailure ) return
             else
@@ -628,8 +651,8 @@ c              --- no bond energy
             endif
 c           --- calculate the bond angle energy
             vang(itrial) = vang(itrial)
-     &           + twh_vangle(lfailure,lovrlap,ibox,imolty,iugrow
-     &           ,index,0,anglec,distgrow,distance,ddum3,ddum3,ddum3)
+     &           + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
+     &           ,iugrow,index,0,anglec,distg,distp,ddum3,ddum3,ddum3)
             if ( lfailure ) return
 c           --- no need to compute any more interactions if we 
 c           -- have an infinite energy overlap: otherwise compute angang
@@ -733,6 +756,7 @@ c        --- account for vmin
          if ( lterm ) then
 c           --- this should not happen
             write(6,*) 'GETCBANGLE: getweight returned lterm in bend'
+            write(6,*) 'vmin,wmin,dpmin:',vmin,wmin,dpmin
             lfailure = .true.
             return
          endif
@@ -745,9 +769,9 @@ c        --- store accepted angle for use later
          bendang = twh_arccos(ang_trial(iwinner))
          call twh_bendang(GLB_SET,count,bendang)
 
-c        --- store angle as a cross with iuprev for angle-angle term
-         crossang(count,0) = ang_trial(iwinner)
-         crossang(0,count) = ang_trial(iwinner)
+c        --- store cos(angle) iuprev for angle-angle term
+         crossang(count,prevcode) = ang_trial(iwinner)
+         crossang(prevcode,count) = ang_trial(iwinner)
 
 c        --- increment energy
          gcba_vvib = gcba_vvib + vvib(iwinner)
@@ -758,7 +782,7 @@ c        --- increment energy
 
       enddo
 
-c     --- start of the "B" selection
+c     --- Angle B selection step
 c     --- initialize torsion list
       do count = 1,ntogrow
          imptot(count) = 0
@@ -845,24 +869,26 @@ c              --- get out of loop so we don't count this again
                goto 22
             endif
          enddo
-         write(6,*) 'improper torsion logic messed up in getcbangle'
+         write(6,*) 'GETCBANGLE: improper torsion logic problem'
          lfailure = .true.
          return
  22      continue
       enddo
 
-c     --- skip angstart in the loop below
-      start_ang = angstart+1
+c     ******************************************************************
+c     * Begin Angle B biased selection                                 *
+c     ******************************************************************
+
 c     --- initialize cbphi(angstart) to 0.0
       call twh_cbphi(GLB_SET,angstart,0.0d0)
       if ( luseoldone ) then
 c        --- need to determine angstart
          if ( angstart .le. ntogrow) then
 c           --- set up the cone using iuprev
-            call twh_distprev(GLB_GET,1,distance)
-            xub = -xvecprev/distance
-            yub = -yvecprev/distance
-            zub = -zvecprev/distance
+            call twh_distprev(GLB_GET,1,distp)
+            xub = -xvecprev/distp
+            yub = -yvecprev/distp
+            zub = -zvecprev/distp
             call twh_cone(lfailure,1,xub,yub,zub,dum,dum,dum,dum,dum)
             if ( lfailure ) return
 
@@ -872,11 +898,11 @@ c           --- compute vector from iufrom to iugrow
      &           ,rxgrow,rygrow,rzgrow)
             call twh_mimage(ibox,rxgrow,rygrow,rzgrow
      &           ,rxfrom,ryfrom,rzfrom,xvecgrow,yvecgrow,zvecgrow)
-            call twh_bondlen(GLB_GET,angstart,distgrow)
+            call twh_bondlen(GLB_GET,angstart,distg)
 c           --- turn this into a unit vector
-            ux = xvecgrow/distgrow
-            uy = yvecgrow/distgrow
-            uz = zvecgrow/distgrow
+            ux = xvecgrow/distg
+            uy = yvecgrow/distg
+            uz = zvecgrow/distg
             call twh_bendang(GLB_GET,angstart,alpha)
 c           --- compute gamma (phi) for these unit vectors
             call twh_cone(lfailure,3,dum,dum,dum,alpha,gamma,ux,uy,uz)
@@ -885,86 +911,89 @@ c           --- compute gamma (phi) for these unit vectors
          endif
       endif
 
+c     --- determine the angstart angle index
+      icone = 0
+      call twh_growlist(GLB_GET,iw,angstart,iuone)
+      do ibend = 1,twh_get_inben(imolty,iuprev)
+         if ( twh_get_ijben2(imolty,iuprev,ibend) .eq. iufrom
+     &        .and.
+     &        twh_get_ijben3(imolty,iuprev,ibend) .eq. iuone
+     &        ) then
+            icone = ibend
+         endif
+      enddo
+
+c     --- if iufrom is a member of a three-membered ring then we have
+c     --- to check for some extra energies during this step
+      call twh_inring(GLB_GET,imolty,iufrom,fromring)
+      if ( fromring .lt. 0 ) then
+         lthreemem = .true.
+      else
+         lthreemem = .false.
+      endif
+
+c     --- skip angstart in the loop
+      start_ang = angstart+1
 c     --- determine the angles of the grown beads relative to anglestart
       do count = start_ang,ntogrow
 c        --- initialize lmin which tells us we havn't found the min yet
          lmin = .false.
          call twh_growlist(GLB_GET,iw,count,iugrow)
-c        --- check to see if there are any bonds (3-mem ring), if they
-c        --- they are rigid, and if there are any rigid angle types
-c        --- between the- current value of count and any
-c        --- atom already grown during this step
-         lrigid = .false.
-         lthreemem = .false.
-         ntmtorsion = 0
-         do aaa = angstart,count-1
-            call twh_growlist(GLB_GET,iw,aaa,iutest)
-c           --- see if there is a bond between iutest and iugrow
-            call twh_invib(GLB_GET,imolty,iutest,numvib)
-            do ivib = 1,numvib
-               call twh_ijvib(GLB_GET,imolty,iutest,ivib,ifind)
-               if ( ifind .eq. iugrow ) then
-c                 --- bond between growing beads found
-                  lthreemem = .true.
-c                 --- check the bond type
-                  call twh_itvib(GLB_GET,imolty,iutest,ivib,vibtype)
-                  call twh_vibstyle(GLB_GET,vibtype,vibstyle)
-                  if ( vibstyle .eq. BOND_STYLE_FIXED ) then
-                     lrigid = .true.
-c                    --- get the rigid bond length
-                     call twh_vibcoeff(GLB_GET,vibtype,0,testlen)
-                     call twh_bondlen(GLB_GET,angstart,distother)
-c                    --- convert to angle
-                     anglec = twh_inverselawofcosine(distgrow
-     &                    ,distother,testlen)
-                     ang_gamma = twh_arccos(anglec)
-                  endif
-               endif
-            enddo
-            if ( .not. lrigid ) then
-               call twh_growlist(GLB_GET,iw,aaa,iutest)
-c              --- check iutest - iufrom - iugrow to see if it is rigid
-               call twh_inben(GLB_GET,imolty,iugrow,nangle)
-               lfound = .false.
-               iangle = 0
-               do while ( .not. lfound .and. (iangle .lt. nangle))
-                  iangle = iangle + 1
-                  call twh_ijben2(GLB_GET,imolty,iugrow,iangle,testtwo)
-                  if ( testtwo .eq. iufrom ) then
-c                    --- check the third atom
-                     call twh_ijben3(GLB_GET,imolty,iugrow,iangle
-     &                    ,testthree)
-                     if ( testthree .eq. iutest ) then
-c                       --- match found
-                        lfound = .true.
-c                       --- check the style of the angle
-                        call twh_itben(GLB_GET,imolty,iugrow,iangle
-     &                       ,type)
-                        call twh_anglestyle(GLB_GET,type,angle_style)
-                        if ( angle_style .eq. ANG_STYLE_RIGID ) then
-                           lrigid = .true.
-c                          --- all rigid angles, will not change 
-                           delta_key = aaa
-c                          --- set the delta angle to the equilibrium
-                           call twh_bencoeff(GLB_GET,type,0,ang_gamma)
-                        endif
-                     endif
-                  endif
-               enddo
+         call twh_inring(GLB_GET,imolty,iugrow,growring)
+c        --- determine current angle index
+         ictwo = 0
+         do ibend = 1,twh_get_inben(imolty,iuprev)
+            if ( twh_get_ijben2(imolty,iuprev,ibend) .eq. iufrom
+     &           .and.
+     &           twh_get_ijben3(imolty,iuprev,ibend) .eq. iugrow
+     &           ) then
+               ictwo = ibend
             endif
          enddo
+         if ( icone .eq. 0 .or. ictwo .eq. 0 ) then
+            write(6,*) 'GETCBANGLE: angle B types not found'
+            lfailure = .true.
+            return
+         endif
+c        --- retrieve the angle B distribution for these two angles
+         call twh_cbmcbenddist(GLB_GET,imolty,iuprev,icone,ictwo
+     &        ,anglebdist)
+c        --- set default distribution as an error check
+         style_code = DIST_NULL
 c        --- set the default number of choices to nch_bend_b
          nchoice = nch_bend_b
-         if ( lrigid ) then
+         if ( anglebdist .eq. DIST_TRIANGLE .or.
+     &        anglebdist .eq. DIST_DELTA ) then
 c           --- setup the delta distribution
-c           --- fetch ang_alpha
-            call twh_bendang(GLB_GET,delta_key,ang_alpha)
+            style_code = DIST_DELTA
+            ipeak = 1
+            if ( anglebdist .eq. DIST_TRIANGLE ) then
+c              --- this completes a three memebered ring where there is
+c              --- a rigid bond between iugrow and iuone
+c              --- combine the rigid bond length with the current angle
+c              --- and bond information to create a delta distribution
+c              --- for the pseudo-dihedral angles
+               call twh_cbmcbendinfo(GLB_GET,imolty,iuprev,icone,ictwo
+     &              ,ipeak,1,testlen)
+c              --- convert into an angle for the delta distribution
+               call twh_bondlen(GLB_GET,angstart,distone)
+               call twh_bondlen(GLB_GET,count,disttwo)
+c              --- convert to angle
+               anglec = twh_inverselawofcosine(distone,disttwo,testlen)
+               ang_gamma = twh_arccos(anglec)
+            else
+c              --- ang_gamma in the bend distribution
+               call twh_cbmcbendinfo(GLB_GET,imolty,iuprev,icone,ictwo
+     &              ,ipeak,1,ang_gamma)
+            endif
+c           --- fetch ang_alpha (iuone or angstart)
+            call twh_bendang(GLB_GET,angstart,ang_alpha)
 c           --- fetch ang_beta
             call twh_bendang(GLB_GET,count,ang_beta)
-c           --- already grabbed ang_gamma so compute the delta dist
+c           --- compute the delta dist for angle B
             call twh_angle_b_rigid(ang_alpha,ang_beta,ang_gamma
      &           ,npeaks,delta_angle)
-c           --- set the number of choices to npeaks
+c           --- compare number of peaks with number of choices
             if ( npeaks .le. nchoice ) then
 c              --- sample each possible allowed angle once
                nchoice = npeaks
@@ -980,6 +1009,182 @@ c              --- randomly choose from the list of possible angles
                return
             endif
          endif
+
+         ntmbond = 0
+         ntmangle = 0
+         ntmtor = 0
+         if ( lthreemem ) then
+c           --- set up logic for additional three membered ring bonds
+            if ( growring .lt. 0 ) then
+               call twh_invib(GLB_GET,imolty,iugrow,numvib)
+               do ivib = 1,numvib
+                  call twh_ijvib(GLB_GET,imolty,iugrow,ivib,itest)
+c                 --- search the other atoms that are not iuprev
+                  do icode = angstart,count-1
+                     call twh_growlist(GLB_GET,iw,icode,iutest)
+                     if ( iutest .eq. itest ) then
+c                       --- three mem bond found
+                        ntmbond = ntmbond + 1
+                        tmbondinfo(ntmbond,1) = ivib
+                        tmbondinfo(ntmbond,2) = icode
+                     endif
+                  enddo
+               enddo
+            endif
+
+c           --- set up the extra three membered ring angles
+            do ibond = 1,ntmbond
+               icode = tmbondinfo(ibond,2)
+               call twh_growlist(GLB_GET,iw,icode,iutest)
+c              --- looking for two angles that start at iufrom and
+c              --- involve iutest and iugrow
+               call twh_inben(GLB_GET,imolty,iufrom,nbend)
+               do ibend = 1,nbend
+                  call twh_ijben2(GLB_GET,imolty,iufrom,ibend,testtwo)
+                  call twh_ijben3(GLB_GET,imolty,iufrom,ibend,testthree)
+                  if ( testtwo .eq. iutest .and.
+     &                 testthree .eq. iugrow ) then
+c                    --- order 1
+                     ntmangle = ntmangle + 1
+                     tmangleinfo(ntmangle,1) = TM_ONE
+                     tmangleinfo(ntmangle,2) = ibend
+                     tmangleinfo(ntmangle,3) = icode
+                  endif
+                  if ( testtwo .eq. iugrow .and.
+     &                 testthree .eq. iutest ) then
+c                    --- order 2
+                     ntmangle = ntmangle + 1
+                     tmangleinfo(ntmangle,1) = TM_TWO
+                     tmangleinfo(ntmangle,2) = ibend
+                     tmangleinfo(ntmangle,3) = icode
+                  endif
+               enddo
+            enddo
+
+c           --- set up three membered ring torsions
+            if ( growring .lt. 0 ) then
+c              --- iugrow-iuother-iufrom-iuother (first three in ring)
+               call twh_intor(GLB_GET,imolty,iugrow,numtor)
+               do itor = 1,numtor
+                  call twh_ijtor2(GLB_GET,imolty,iugrow,itor,testtwo)
+                  call twh_ijtor3(GLB_GET,imolty,iugrow,itor,testthree)
+                  call twh_ijtor4(GLB_GET,imolty,iugrow,itor,testfour)
+                  if ( testthree .eq. iufrom ) then
+c                    --- looping around our 3-membered ring
+c                    --- check 2 and 4
+                     twocode = -10
+                     fourcode = -10
+                     do icode = 1,count-1
+                        call twh_growlist(GLB_GET,iw,icode,iutest)
+                        if ( testtwo .eq. iutest ) then
+                           twocode = icode
+                        elseif ( testfour .eq. iutest ) then
+                           fourcode = icode
+                        endif
+                     enddo
+c                    --- check iuprev
+                     if ( testtwo .eq. iuprev ) then
+                        twocode = prevcode
+                     elseif ( testfour .eq. iuprev ) then
+                        fourcode = prevcode
+                     endif
+                     if ( twocode .ne. -10 .and.
+     &                    fourcode .ne. -10 ) then
+c                       --- count - two - from - four (jklm)
+                        ntmtor = ntmtor + 1
+                        tmtorinfo(ntmtor,0) = TM_ONE
+                        tmtorinfo(ntmtor,1) = iugrow
+                        tmtorinfo(ntmtor,2) = itor
+                        tmtorinfo(ntmtor,3) = count
+                        tmtorinfo(ntmtor,4) = twocode
+                        tmtorinfo(ntmtor,5) = -iufrom
+                        tmtorinfo(ntmtor,6) = fourcode
+                     endif
+                  endif
+               enddo
+            endif
+
+            do icode = 1,count-1
+               call twh_growlist(GLB_GET,iw,icode,iutest)
+               call twh_inring(GLB_GET,imolty,iutest,testring)
+               if ( testring .lt. 0 ) then
+c                 --- possible ring torsion
+                  call twh_intor(GLB_GET,imolty,iutest,numtor)
+                  do itor = 1,numtor
+                     call twh_ijtor2(GLB_GET,imolty,iutest,itor
+     &                    ,testtwo)
+                     call twh_ijtor3(GLB_GET,imolty,iutest,itor
+     &                    ,testthree)
+                     call twh_ijtor4(GLB_GET,imolty,iutest,itor
+     &                    ,testfour)
+                     if ( growring .lt. 0 ) then
+c                       --- iuother-iugrow-iufrom-iuother (first 3 ring)
+                        if ( testtwo .eq. iugrow .and.
+     &                       testthree .eq. iufrom ) then
+c                           --- see if the final bead exists yet
+                           fourcode = -10
+                           do jcode = 1,count-1
+                              call twh_growlist(GLB_GET,iw,jcode
+     &                             ,iufour)
+                              if ( iufour .eq. testfour ) then
+                                 fourcode = jcode
+                              endif
+                           enddo
+c                          --- check prev as well
+                           if ( iuprev .eq. testfour ) then
+                              fourcode = prevcode
+                           endif
+                           if ( fourcode .ne. -10 ) then
+                              ntmtor = ntmtor + 1
+                              tmtorinfo(ntmtor,0) = TM_TWO
+                              tmtorinfo(ntmtor,1) = iutest
+                              tmtorinfo(ntmtor,2) = itor
+                              tmtorinfo(ntmtor,3) = icode
+                              tmtorinfo(ntmtor,4) = count
+                              tmtorinfo(ntmtor,5) = -iufrom
+                              tmtorinfo(ntmtor,6) = fourcode
+                           endif
+                        endif
+                     else
+c                       --- iuother-iuother-iufrom-iugrow (first 3 ring)
+                        if ( testthree .eq. iufrom .and.
+     &                       testfour .eq. iugrow ) then
+c                          --- see if bead 2 exists
+                           twocode = -10
+                           do jcode = 1,count-1
+                              call twh_growlist(GLB_GET,iw,jcode,iutwo)
+                              if ( iutwo .eq. testtwo ) then
+                                 twocode = jcode
+                              endif
+                           enddo
+                           if ( twocode .ne. -10 ) then
+                              ntmtor = ntmtor + 1
+                              tmtorinfo(ntmtor,0) = TM_THREE
+                              tmtorinfo(ntmtor,1) = iutest
+                              tmtorinfo(ntmtor,2) = itor
+                              tmtorinfo(ntmtor,3) = icode
+                              tmtorinfo(ntmtor,4) = twocode
+                              tmtorinfo(ntmtor,5) = -iufrom
+                              tmtorinfo(ntmtor,6) = count
+                           endif
+                        endif
+                     endif
+                  enddo
+               endif
+            enddo
+
+c            do itorsion = 1,ntmtor
+c               write(6,*) 'ichain,itorsion,style,unit,index:',ichain
+c     &              ,itorsion
+c     &              ,tmtorinfo(itorsion,0),tmtorinfo(itorsion,1)
+c     &              ,tmtorinfo(itorsion,2)
+c               write(6,*) 'units 1-4:',tmtorinfo(itorsion,3)
+c     &              ,tmtorinfo(itorsion,4),tmtorinfo(itorsion,5)
+c     &              ,tmtorinfo(itorsion,6)
+c            enddo
+
+         endif
+
 c        --- compute trial energies and weights
          do itrial = 1,nchoice
             lovrlap = .false.
@@ -989,11 +1194,11 @@ c              --- compute vector from iufrom to iugrow
      &              ,rxgrow,rygrow,rzgrow)
                call twh_mimage(ibox,rxgrow,rygrow,rzgrow
      &              ,rxfrom,ryfrom,rzfrom,xvecgrow,yvecgrow,zvecgrow)
-               call twh_bondlen(GLB_GET,count,distgrow)
+               call twh_bondlen(GLB_GET,count,distg)
 c              --- turn this into a unit vector
-               ux = xvecgrow/distgrow
-               uy = yvecgrow/distgrow
-               uz = zvecgrow/distgrow
+               ux = xvecgrow/distg
+               uy = yvecgrow/distg
+               uz = zvecgrow/distg
                call twh_bendang(GLB_GET,count,alpha)
 c              --- compute gamma (phi) for these unit vectors
                call twh_cone(lfailure,3,dum,dum,dum,alpha,gamma
@@ -1019,23 +1224,16 @@ c              --- make sure this angle is in (-Pi,Pi)
                endif
             endif
 
-            style_code = DIST_NULL
 c           --- determine a value of phitwo
-            if ( lrigid ) then
+            if ( style_code .eq. DIST_DELTA ) then
 c              --- delta function
-               style_code = DIST_DELTA
-c              --- get the shift from cbphi based upon the delta_key
-               call twh_cbphi(GLB_GET,delta_key,delta_shift)
-               call twh_cbphi(GLB_GET,angstart,cbphi) 
-               delta_shift = delta_shift - cbphi
                if ( lfirstold ) then
 c                 --- if lfirstold then reset the order of the 
 c                 --- delta_angle to make sure the real old one is the
 c                 --- first entry
                   imin = 0
                   do ipeak = 1,npeaks
-                     angsq(ipeak) = ((delta_angle(itrial) + delta_shift)
-     &                    - phitwo)**2
+                     angsq(ipeak) = (delta_angle(itrial) - phitwo)**2
                      if ( ipeak .eq. 1 ) then
                         imin = ipeak
                      elseif ( angsq(ipeak) .lt. angsq(imin) ) then
@@ -1047,108 +1245,15 @@ c                 --- switch 1 with imin
                   delta_angle(1) = delta_angle(imin)
                   delta_angle(imin) = angletemp
                endif
-            elseif ( cbmc_bendgen_code .eq. CBMC_IDEAL  ) then
+            elseif ( anglebdist .eq. DIST_UNIFORM ) then
 c              --- uniform distribution
-               style_code = DIST_UNIFORM
-            elseif ( cbmc_bendgen_code .eq. CBMC_GLOBAL_GAUSSIAN ) then
-c              --- global standard deviation
-               call twh_sdevbenb(GLB_GET,std_dev)
-c              --- we are computing this value relative to angstart
-c              --- value.  Depends on the number of atoms that are 
-c              --- bonded to the central atom.
-               if ( hybrid .eq. 'sp3' ) then
-c                 --- sp3 like bonding structure.  This is 
-c                 --- threefold symmetric and there is not much 
-c                 --- reason to sample very hard in the vicinity of 
-c                 --- the first angle.  Do this using two different 
-c                 --- gaussian peaks that are centered at 2Pi/3 and 
-c                 --- 4Pi/3.  Choose randomly between the two centers
-c                 --- and do not take options that cross into the 
-c                 --- other region
-                  style_code = DIST_GAUSSIAN
-                  npeaks = 2
-                  if ( lfirstold ) then
-c                    --- rdecide is determined based on the phitwo
-c                    --- computed up above
-                     if ( phitwo .lt. 0.0d0 ) then
-c                       --- mean of -2Pi/3
-                        rdecide = 0.25
-                     else
-c                       --- mean of 2Pi/3
-                        rdecide = 0.75
-                     endif
-                  else
-c                    --- choose randomly
-                     rdecide = twh_random()
-                  endif
-                  if ( rdecide.lt. 0.5d0 ) then
-c                    --- centered at -2Pi/3, and between 0 and -Pi
-                     lolimit = -onepi
-                     hilimit = 0.0d0
-                     mean = -twopi/3.0
-                  else
-c                    --- centered at 2Pi/3, and between 0 and Pi
-                     lolimit = 0.0d0
-                     hilimit = onepi
-                     mean = twopi/3.0
-                  endif
-               elseif ( hybrid .eq. 'sp2' .or. hybrid .eq. 'arom') then
-c                 --- sp2 like bonding structure.  This is 
-c                 --- twofold symmetric and there is not much 
-c                 --- reason to sample very hard in the vicinity of 
-c                 --- the first angle.  Do this using a single
-c                 --- gaussian peak centered at Pi, between 0 and 2Pi
-                  style_code = DIST_GAUSSIAN
-                  npeaks = 1
-                  lolimit = 0.0d0
-                  hilimit = twopi
-                  mean = onepi
-                  if ( lfirstold .and. phitwo .lt. 0.0 ) then
-c                    --- switch the mean to negative pi as cone returns
-c                    --- angles between -Pi and Pi
-                     mean = mean - twopi
-                     lolimit = lolimit - twopi
-                     hilimit = hilimit - twopi
-                  endif
-               else
-c                 --- have not figured out what to do with this 
-c                 --- particular bonding pattern so just use uniform
-                  style_code = DIST_UNIFORM
-                  npeaks = 0
-               endif
-            elseif ( cbmc_bendgen_code .eq. CBMC_AUTOFIT_GAUSSIAN .or.
-     &              cbmc_bendgen_code 
-     &              .eq. CBMC_IDEAL_PLUS_AUTOFIT_GAUSSIAN ) then
-               if ( cbmc_bendgen_code .eq. CBMC_AUTOFIT_GAUSSIAN ) then
-                  style_code = DIST_GAUSSIAN
-               else
-                  style_code = DIST_UNIFORM_GAUSSIAN
-               endif
+               style_code = anglebdist
+            elseif ( anglebdist .eq. DIST_GAUSSIAN .or.
+     &              anglebdist .eq. DIST_UNIFORM_GAUSSIAN ) then
+               style_code = anglebdist
 c              --- get number of sections based on the bend numbers for
 c              --- iuprev - iufrom - growlist(iw,angstart) and
 c              --- iuprev - iufrom - iugrow
-               icone = 0
-               ictwo = 0
-               call twh_growlist(GLB_GET,iw,angstart,iuone)
-               do ibend = 1,twh_get_inben(imolty,iuprev)
-                  if ( twh_get_ijben2(imolty,iuprev,ibend) .eq. iufrom
-     &                 .and.
-     &                 twh_get_ijben3(imolty,iuprev,ibend) .eq. iuone
-     &                 ) then
-                     icone = ibend
-                  endif
-                  if ( twh_get_ijben2(imolty,iuprev,ibend) .eq. iufrom
-     &                 .and.
-     &                 twh_get_ijben3(imolty,iuprev,ibend) .eq. iugrow
-     &                 ) then
-                     ictwo = ibend
-                  endif
-               enddo
-               if ( icone .eq. 0 .or. ictwo .eq. 0 ) then
-                  write(6,*) 'GETCBANGLE: angle B types not found'
-                  lfailure = .true.
-                  return
-               endif
 
                call twh_cbmcbendcount(GLB_GET,imolty,iuprev,icone
      &              ,ictwo,npeaks)
@@ -1159,7 +1264,12 @@ c              --- iuprev - iufrom - iugrow
                   if ( lfailure ) return
                else
 c                 --- select a peak at random
-                  ipeak = int(twh_random()*dble(npeaks)) + 1
+                  if ( npeaks .gt. 1 ) then
+                     ipeak = int(twh_random()*dble(npeaks)) + 1
+                  else
+c                    --- don't do random if just 1 peak
+                     ipeak = npeaks
+                  endif
                   call twh_cbmcbendinfo(GLB_GET,imolty,iuprev,icone
      &                 ,ictwo,ipeak,1,mean)
                   call twh_cbmcbendinfo(GLB_GET,imolty,iuprev,icone
@@ -1178,9 +1288,11 @@ c                 --- select a peak at random
 
             if ( .not. lfirstold ) then
                if ( style_code .eq. DIST_UNIFORM_GAUSSIAN ) then
+c                 --- need an extra random variable to decide whether
+c                 --- uniform or gaussian
                   rdecide = twh_random()
                endif
-c              --- select an angle
+c              --- select an angle from the appropriate distribution
                if ( style_code .eq. DIST_UNIFORM ) then
 c                 --- uniform distribution
                   call twh_cbphi(GLB_GET,angstart,cbphi)
@@ -1194,7 +1306,7 @@ c                    --- select from one of the options
 c                    --- sampling the full list of angles in order
                      ipeak = itrial
                   endif
-                  phitwo = delta_angle(ipeak) + delta_shift
+                  phitwo = delta_angle(ipeak)
                elseif ( style_code .eq. DIST_UNIFORM_GAUSSIAN 
      &              .and. rdecide .le. bend_b_ideal_fraction  ) then
 c                 --- uniform distribution, but need gaussian bounds
@@ -1221,7 +1333,9 @@ c                 --- gaussian distribution, mean and stdev set above
                endif
             endif
 
-c           --- assign bias
+c           --- continuous true probablity density
+            pdf_true = 1.0d0/twopi
+c           --- compute and store the  bias
             if ( style_code .eq. DIST_UNIFORM ) then
                pdf_bias = 1.0d0/twopi
             elseif ( style_code .eq. DIST_GAUSSIAN ) then
@@ -1244,10 +1358,7 @@ c              --- every peak is equally likely, use ratio
                return
             endif
 
-c           --- continuous true probablity density
-            pdf_true = 1.0d0/twopi
-
-c           --- now shift this value relative to the angstart
+c           --- shift this value relative to the angstart
             call twh_cbphi(GLB_GET,angstart,cbphi)
             phitwo = phitwo + cbphi
 
@@ -1269,7 +1380,7 @@ c           --- initialize energies
             vtg(itrial) = 0.0d0
 
             do aaa = angstart,count-1
-               call twh_growlist(GLB_GET,iw,aaa,iuone)
+               call twh_growlist(GLB_GET,iw,aaa,iuaaa)
                call twh_cbphi(GLB_GET,aaa,phione)
                call twh_bendang(GLB_GET,aaa,thetaone)
                call twh_bendang(GLB_GET,count,thetatwo)
@@ -1283,40 +1394,22 @@ c              --- store cross angle for angle-angle computation
 c              --- fetch distances for 1-3 and bond-angle
                call twh_bondlen(GLB_GET,aaa,distaaa)
                call twh_bondlen(GLB_GET,count,distg)
-c              --- find the angle type for iugrow-iufrom-iuone
+c              --- find the angle type for iugrow-iufrom-iuaaa
                do ibend = 1, twh_get_inben(imolty,iugrow)
                   iulast = twh_get_ijben2(imolty,iugrow,ibend)
                   if ( iulast .eq. iufrom ) then
                      iu2back = twh_get_ijben3(imolty,iugrow,ibend)
-                     if ( iu2back .eq. iuone ) then
+                     if ( iu2back .eq. iuaaa ) then
 c                       --- calculate the bond angle energy
                         vphi(itrial) = vphi(itrial) 
-     &                       + twh_vangle(lfailure,lovrlap,ibox,imolty
-     &                       ,iugrow,ibend,0,anglec,distg,distaaa
-     &                       ,ddum3,ddum3,ddum3)
+     &                       + twh_vangle(lfailure,.false.,lovrlap
+     &                       ,ibox,imolty,iugrow,ibend,0,anglec
+     &                       ,distg,distaaa,ddum3,ddum3,ddum3)
                         if ( lfailure ) return
                         if ( lovrlap ) goto 13
                      endif
                   endif
                enddo
-               if ( lthreemem ) then
-c                 --- 3-mem rings are present, see if iugrow-iuone is
-c                 --- a valid bond
-                  call twh_invib(GLB_GET,imolty,iugrow,numvib)
-                  do ivib = 1,numvib
-                     call twh_ijvib(GLB_GET,imolty,iugrow,ivib,itest)
-                     if ( itest .eq. iuone ) then
-c                       --- bond between growing atoms found
-                        testlen = twh_lawofcosine(distg,distaaa,anglec)
-                        call twh_itvib(GLB_GET,imolty,iugrow,ivib
-     &                       ,vibtype)
-                        vvib(itrial) = twh_vbond(lfailure,vibtype
-     &                       ,testlen,imolty,iugrow,iuone,lovrlap)
-                        if ( lfailure ) return
-                        if ( lovrlap ) goto 13
-                     endif
-                  enddo
-               endif
             enddo
 c           --- calculate angle-angle cross terms (step = 2)
             call twh_cbmcaatot(GLB_GET,count,2,total)
@@ -1346,57 +1439,133 @@ c                 --- this is iuprev
      &              + twh_vangang(AA_ANGLE,ibox,imolty,iufrom,ic,cosang
      &              ,ddum4,ddum4,ddum4)
             enddo
+
+c           --- three mem bonds
+            do ibond = 1,ntmbond
+               ivib = tmbondinfo(ibond,1)
+               aaa = tmbondinfo(ibond,2)
+               call twh_growlist(GLB_GET,iw,aaa,iuaaa)
+               call twh_bondlen(GLB_GET,aaa,distaaa)
+               anglec = crossang(aaa,count)
+               testlen = twh_lawofcosine(distg,distaaa,anglec)
+               crosslen(aaa,count) = testlen
+               crosslen(count,aaa) = testlen
+               call twh_itvib(GLB_GET,imolty,iugrow,ivib,vibtype)
+               vvib(itrial) = twh_vbond(lfailure,.false.,ibox,vibtype
+     &              ,testlen,imolty,iugrow,iuaaa,lovrlap)
+               if ( lfailure ) return
+               if ( lovrlap ) goto 13
+            enddo
+
+c           --- three mem angles
+            do iangle = 1,ntmangle
+               tmcode = tmangleinfo(iangle,1)
+               ibend = tmangleinfo(iangle,2)
+               icode = tmangleinfo(iangle,3)
+               if ( tmcode .eq. TM_ONE ) then
+c                 --- iufrom - iuother - iugrow (jkl)
+                  call twh_bondlen(GLB_GET,icode,distjk)
+                  distkl = crosslen(icode,count)
+                  call twh_bondlen(GLB_GET,count,distjl)
+                  anglec = twh_inverselawofcosine(distjk,distkl,distjl)
+                  vphi(itrial) = vphi(itrial)
+     &                 + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
+     &                 ,iufrom,ibend,0,anglec,distjk,distkl
+     &                 ,ddum3,ddum3,ddum3)
+               elseif ( tmcode .eq. TM_TWO ) then
+c                 --- iufrom - iugrow - iuother (jkl)
+                  call twh_bondlen(GLB_GET,count,distjk)
+                  distkl = crosslen(count,icode)
+                  call twh_bondlen(GLB_GET,icode,distjl)
+                  anglec = twh_inverselawofcosine(distjk,distkl,distjl)
+                  vphi(itrial) = vphi(itrial)
+     &                 + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
+     &                 ,iufrom,ibend,0,anglec,distjk,distkl
+     &                 ,ddum3,ddum3,ddum3)
+               else
+                  write(6,*) 'GETCBANGLE: unknown tmcode in 3mem angle'
+     &                 ,tmcode
+                  lfailure = .true.
+                  return
+               endif
+            enddo
+
 c           --- calculate energy for regular torsions that involve a
 c           --- 3-membered ring that we just formed
-            if ( lthreemem ) then
-               call twh_intor(GLB_GET,imolty,iuprev,numtor)
-               do itor = 1,numtor
-                  call twh_ijtor2(GLB_GET,imolty,iuprev,itor,testtwo)
-                  if ( testtwo .eq. iufrom ) then
-c                    --- check that 3 and 4 are growing beads
-                     call twh_ijtor3(GLB_GET,imolty,iuprev,itor
-     &                    ,testthree)
-                     call twh_ijtor4(GLB_GET,imolty,iuprev,itor
-     &                    ,testfour)
-                     threecode = 0
-                     fourcode = 0
-                     if ( testthree .eq. iugrow ) then
-                        threecode = count
-                     elseif ( testfour .eq. iugrow ) then
-                        fourcode = count
-                     endif
-                     if ( threecode + fourcode .ne. 0 ) then
-                        do aaa = angstart,count-1
-                           call twh_growlist(GLB_GET,iw,aaa,iuone)
-                           if ( testthree .eq. iuone ) then
-                              threecode = aaa
-                           elseif ( testfour .eq. iuone ) then
-                              fourcode = aaa
-                           endif
-                        enddo
-                     endif
-                     if ( threecode*fourcode .ne. 0 ) then
-c                       --- torsion found, compute the torsion from the
-c                       --- angles
-c                       --- alpha = prev - from - three
-                        call twh_bendang(GLB_GET,threecode,ang_alpha)
-c                       --- beta = four - from - three
-                        ang_beta = crossang(threecode,fourcode)
-c                       --- gamma = prev - from - four
-                        call twh_bendang(GLB_GET,fourcode,ang_gamma)
-                        call twh_angle_b_rigid_cosine(ang_alpha,ang_beta
-     &                       ,ang_gamma,phic)
-                        cordstyle = -1
-                        vtest = twh_vtorsion(lfailure,ibox,cordstyle
-     &                       ,imolty,iuprev,itor,xcord,ycord,zcord
-     &                       ,phic,lovrlap)
-                        if ( lfailure ) return
-                        if ( lovrlap ) goto 13
-                        vtg(itrial) = vtg(itrial) + vtest
-                     endif
+            do itorsion = 1,ntmtor
+               tmcode = tmtorinfo(itorsion,0)
+               torunit = tmtorinfo(itorsion,1)
+               itor = tmtorinfo(itorsion,2)
+               if ( tmcode .eq. TM_ONE ) then
+c                 --- iugrow-iuother-iufrom-iuother(first three in ring)
+c                 --- j: iugrow/count
+c                 --- k: twocode
+                  twocode = tmtorinfo(itorsion,4)
+c                 --- l: iufrom 
+c                 --- m: fourcode
+                  fourcode = tmtorinfo(itorsion,6)
+                  distjk = crosslen(count,twocode)
+                  call twh_bondlen(GLB_GET,twocode,distkl)
+                  call twh_bondlen(GLB_GET,count,distjl)
+                  if ( fourcode .eq. 0 ) then
+c                    --- stored in distprev
+                     call twh_distprev(GLB_GET,1,distlm)
+                  else
+                     call twh_bondlen(GLB_GET,fourcode,distlm)
                   endif
-               enddo
-            endif
+                  angc_jlm = crossang(count,fourcode)
+                  angc_klm = crossang(twocode,fourcode)
+               elseif ( tmcode .eq. TM_TWO ) then
+c                 --- iuother-iugrow-iufrom-iuother (first 3 in ring)
+c                 --- j: uses onecode
+                  onecode = tmtorinfo(itorsion,3)
+c                 --- k: 4 is iugrow/count
+c                 --- l: 5 is iufrom
+c                 --- m: uses fourcode
+                  fourcode = tmtorinfo(itorsion,6)
+
+                  distjk = crosslen(onecode,count)
+                  call twh_bondlen(GLB_GET,count,distkl)
+                  call twh_bondlen(GLB_GET,onecode,distjl)
+                  if ( fourcode .eq. 0 ) then
+c                    --- stored in distprev
+                     call twh_distprev(GLB_GET,1,distlm)
+                  else
+                     call twh_bondlen(GLB_GET,fourcode,distlm)
+                  endif
+                  angc_jlm = crossang(onecode,fourcode)
+                  angc_klm = crossang(count,fourcode)
+
+               elseif ( tmcode .eq. TM_THREE ) then
+c                 --- iuother-iuother-iufrom-iugrow (first 3 in ring)
+c                 --- j: uses onecode
+                  onecode = tmtorinfo(itorsion,3)
+c                 --- k: uses twocode
+                  twocode = tmtorinfo(itorsion,4)
+c                 --- l: iufrom
+c                 --- m: count/iugrow
+
+                  distjk = crosslen(onecode,twocode)
+                  call twh_bondlen(GLB_GET,twocode,distkl)
+                  call twh_bondlen(GLB_GET,onecode,distjl)
+                  call twh_bondlen(GLB_GET,count,distlm)
+                  angc_jlm = crossang(onecode,count)
+                  angc_klm = crossang(twocode,count)
+
+               else
+                  write(6,*) 'GETCBANGLE: unknown tmtor code:',tmcode
+               endif
+
+               call twh_three_ring_torsion(distjk,distjl
+     &              ,distkl,distlm,angc_jlm,angc_klm,phic)
+               cordstyle = -1
+               vtest = twh_vtorsion(lfailure,.false.,ibox,cordstyle
+     &              ,imolty,torunit,itor,xcord,ycord,zcord
+     &              ,phic,lovrlap)
+               if ( lfailure ) return
+               if ( lovrlap ) goto 13
+               vtg(itrial) = vtg(itrial) + vtest
+            enddo
 c           --- calculate energy for improper torsions
             do itor = 1, imptot(count)
                ic = tmpimptype(count,itor)
@@ -1538,6 +1707,7 @@ c           --- store cross angle for angle-angle computation
             crossang(count,aaa) = anglec
             crossang(aaa,count) = anglec
          enddo
+c         write(6,*) 'iwinner,vtg(iwinner):',iwinner,vtg(iwinner)
 
       enddo
 

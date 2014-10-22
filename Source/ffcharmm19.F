@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the charmm19     *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -2067,7 +2067,7 @@ c     ******************************************************************
       call twh_constant_pi(GLB_GET,onepi)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2095,7 +2095,7 @@ c     --- X - C - CR - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2118,7 +2118,7 @@ c     --- CR - C - C - N1 [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2136,7 +2136,7 @@ c     --- CR - C - C - CR [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
 c     --- Null torsions
@@ -2168,7 +2168,7 @@ c     --- to function properly
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2201,7 +2201,7 @@ c     --- X - C - NC2 - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2219,7 +2219,7 @@ c     --- X - C - OH - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2247,7 +2247,7 @@ c     --- X - C(2) - C(2) - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2280,7 +2280,7 @@ c     --- X - C(2) - N1 - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2298,7 +2298,7 @@ c     --- X - CH - N2 - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2326,7 +2326,7 @@ c     --- X - C(2) - N3 - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2349,7 +2349,7 @@ c     --- X - C(2) - OH - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2367,7 +2367,7 @@ c     --- X - C(2) - S - X [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,3)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_GCA_COS)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2390,7 +2390,7 @@ c     --- that they explicitly list all the atoms to avoid any confusion
 c     --- with existing regular torsions
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,1)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_SIM_HARM)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)
@@ -2422,7 +2422,7 @@ c     --- C - C - CR - N1 (from C - X - X - N1) [neria1996]
       call twh_set_tornames(type,ntslocal,tnlocal)
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,1)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_SIM_HARM)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 0.4d0
       call twh_ntorloop(GLB_SET,type,1)

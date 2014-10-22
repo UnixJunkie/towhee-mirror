@@ -28,7 +28,7 @@ c     * sets up all of the force field parameters for the original     *
 c     * version of the NERD forcefield                                 *
 c     *                                                                *
 c     * originally written 06-29-2004 by N.B. du Preez                 *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -398,7 +398,7 @@ c     ******************************************************************
 
 c     C* - CH2sp3  - CH2sp3 - C* linear alkanes [jcp1998]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 0.0d0
       tclocal(1) = 355.04d0
@@ -415,7 +415,7 @@ c     C* - CH2sp3  - CH2sp3 - C* linear alkanes [jcp1998]
 
 c     C* - CH2sp3  - CHsp3 - C* branched alkanes [mp2000]
       type = type + 1
-      call twh_torstyle(GLB_SET,type,11)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_O_OPLS_C)
       call twh_loftor(GLB_SET,type,.false.)
       tclocal(0) = 1416.3d0
       tclocal(1) = 398.3d0

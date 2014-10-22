@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,7 +31,7 @@ c     * (nsoln) and the cartesian coordinates of the "nsoln" possible  *
 c     * loop closure solutions (solncoords)                            *
 c     *                                                                *
 c     * originally rewritten from E. Coutsias 05-01-2003 by C.D. Lorenz*
-c     * last modified 10-09-2008 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- functions
@@ -61,6 +61,7 @@ c     --- local parameters
       integer deg_pol
       parameter(deg_pol=16)
 c     --- local variables
+      logical lovrlap
 c     --- integer scalars
       integer i_soln,iii,jjj,kkk
 c     --- double precision scalars
@@ -147,6 +148,7 @@ c     --- double precision arrays
 
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
+      lovrlap = .false.
 
 c     --- start of get input angles section
 c     --- determines the relavent bond lengths, bond angles, and
@@ -198,7 +200,7 @@ c     ---! delta(3): dih of N(1)CA(1)CA(3)C(3)
       torz(3) = rootunit(3,3)
       torz(4) = rootunit(4,3)
 
-      delta(3) = -1.0d0 *twh_vtorsion(lfailure,ibox,0,0,0,0
+      delta(3) = -1.0d0 *twh_vtorsion(lfailure,.false.,ibox,0,0,0,0
      &     ,torx,tory,torz,dumang,.false.)
       if ( lfailure ) return
 
@@ -216,8 +218,13 @@ c     ---! lcxi(1)
       zcord(1) = rootunit(3,3)
       zcord(2) = rootunit(2,3)
       zcord(3) = rootunit(1,3)
-      lcxi(1) = onepi - twh_vangle(lfailure,.false.,ibox,0,0,0,-1
+      lcxi(1) = onepi - twh_vangle(lfailure,.false.,lovrlap
+     &     ,ibox,0,0,0,-1
      &     ,dumang,dist1,dist2,xcord,ycord,zcord)
+      if ( lovrlap ) then
+         write(6,*) 'LOOPCLOSURE: unexpect overlap'
+         lfailure = .true.
+      endif
       if ( lfailure ) return
 
 c     ---! eta(3)
@@ -232,8 +239,13 @@ c     ---! eta(3)
       zcord(1) = rootunit(2,3)
       zcord(2) = rootunit(3,3)
       zcord(3) = rootunit(4,3)
-      eta(3) = onepi - twh_vangle(lfailure,.false.,ibox,0,0,0,-1,dumang
+      eta(3) = onepi - twh_vangle(lfailure,.false.,lovrlap
+     &     ,ibox,0,0,0,-1,dumang
      &     ,dist1,dist2,xcord,ycord,zcord)
+      if ( lovrlap ) then
+         write(6,*) 'LOOPCLOSURE: unexpect overlap'
+         lfailure = .true.
+      endif
       if ( lfailure ) return
 
       do iii = 1, 3

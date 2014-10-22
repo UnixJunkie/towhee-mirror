@@ -25,7 +25,7 @@ c     ******************************************************************
 c     * sets up parameters for a generic Lennard-Jones forcefield      *
 c     *                                                                *
 c     * originally written 08-11-2004 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 08-13-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -158,7 +158,7 @@ c     * nonbonded dihedral interactions                                *
 c     ******************************************************************
 
       type = type + 1
-      call twh_torstyle(GLB_SET,type,8)
+      call twh_torstyle(GLB_SET,type,TOR_STYLE_NB)
       call twh_loftor(GLB_SET,type,.true.)
       tclocal(-1) = 1.0d0
       call twh_set_torcoeff(type,tclocal)
