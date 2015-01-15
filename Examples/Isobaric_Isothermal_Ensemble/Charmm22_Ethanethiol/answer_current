@@ -1,4 +1,6 @@
- MCCCS Towhee - Version 7.2.0   (October 22 2014)   
+ MCCCS Towhee - Version 7.2.0   (January 07 2015)   
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -71,7 +73,7 @@ Full output of updates and block averages
  pdb_output_freq:            1
  loutdft:  F
  loutlammps:  F
- pressurefreq:           20
+ pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
  potentialstyle: internal                      

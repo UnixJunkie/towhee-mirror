@@ -1,4 +1,6 @@
- MCCCS Towhee - Version 7.2.0   (October 22 2014)   
+ MCCCS Towhee - Version 7.2.0   (January 07 2015)   
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -69,7 +71,7 @@
  runoutput: full                
 Full output of updates and block averages
  pdb_output_freq:           10
- pressurefreq:           20
+ pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
  potentialstyle: internal                      
@@ -115,68 +117,68 @@ Box idim hmatrix:    2 2    0.00000   70.00000    0.00000
 Box idim hmatrix:    2 3    0.00000    0.00000   70.00000
 itest:  1 pairbox:  1   2
  pmvol: 0.500000E-02
- pmvlpr:  0.00000     1.00000    
+ pmvlpr:  0.00000      1.00000    
  rmvol: 0.100000    
  tavol: 0.500000    
  pmcell:  0.00000    
- pmcellpr:  0.00000     1.00000    
+ pmcellpr:  0.00000      1.00000    
  rmcell:  1.00000    
  tacell: 0.500000    
  pm2boxrbswap:  0.00000    
- pm2rbswmt:  0.00000     0.00000     1.00000    
+ pm2rbswmt:  0.00000      0.00000      1.00000    
  pm2rbswpr:  1.00000    
  pm2boxcbswap: 0.500000E-01
- pm2cbswmt:  0.00000     0.00000     1.00000    
+ pm2cbswmt:  0.00000      0.00000      1.00000    
  pm2cbswpr:  1.00000    
  pm1boxcbswap: 0.100000    
- pm1cbswmt:  0.00000    0.250000     1.00000    
+ pm1cbswmt:  0.00000     0.250000      1.00000    
  pmavb1:  0.00000    
  pmavb1in: 0.500000    
- pmavb1mt: 0.200000    0.500000     1.00000    
+ pmavb1mt: 0.200000     0.500000      1.00000    
 moltyp:  1 pmavb1ct: 0.330000  0.670000  1.000000
 moltyp:  2 pmavb1ct: 0.330000  0.670000  1.000000
 moltyp:  3 pmavb1ct: 0.330000  0.670000  1.000000
  avb1rad:  5.00000    
  pmavb2:  0.00000    
  pmavb2in: 0.500000    
- pmavb2mt: 0.200000    0.500000     1.00000    
+ pmavb2mt: 0.200000     0.500000      1.00000    
 moltyp:  1 pmavb2ct: 0.330000  0.670000  1.000000
 moltyp:  2 pmavb2ct: 0.330000  0.670000  1.000000
 moltyp:  3 pmavb2ct: 0.330000  0.670000  1.000000
  avb2rad:  5.00000    
  pmavb3:  0.00000    
- pmavb3mt: 0.200000    0.500000     1.00000    
+ pmavb3mt: 0.200000     0.500000      1.00000    
 moltyp:  1 pmavb3ct: 0.330000  0.670000  1.000000
 moltyp:  2 pmavb3ct: 0.330000  0.670000  1.000000
 moltyp:  3 pmavb3ct: 0.330000  0.670000  1.000000
  avb3rad:  5.00000    
  pmcb: 0.330000    
- pmcbmt:  0.00000     0.00000     1.00000    
- pmall:  0.00000     0.00000     0.00000    
+ pmcbmt:  0.00000      0.00000      1.00000    
+ pmall:  0.00000      0.00000      0.00000    
  pmback:  0.00000    
- pmbkmt:  0.00000     0.00000     1.00000    
+ pmbkmt:  0.00000      0.00000      1.00000    
  pmpivot:  0.00000    
- pmpivmt:  0.00000     0.00000     1.00000    
+ pmpivmt:  0.00000      0.00000      1.00000    
  pmconrot:  0.00000    
- pmcrmt:  0.00000     0.00000     1.00000    
+ pmcrmt:  0.00000      0.00000      1.00000    
  pmcrback:  0.00000    
- pmcrbmt:  0.00000     0.00000     1.00000    
+ pmcrbmt:  0.00000      0.00000      1.00000    
  pmplane:  0.00000    
- pmplanebox: 0.500000     1.00000    
+ pmplanebox: 0.500000      1.00000    
  planewidth:  3.00000    
  pmrow:  0.00000    
- pmrowbox: 0.500000     1.00000    
+ pmrowbox: 0.500000      1.00000    
  rowwidth:  3.00000    
  pmtraat: 0.335000    
- pmtamt:  1.00000     0.00000     0.00000    
+ pmtamt:  1.00000      0.00000      0.00000    
  rmtraa: 0.500000    
  tatraa: 0.500000    
  pmtracm: 0.670000    
- pmtcmt:  0.00000     0.00000     1.00000    
+ pmtcmt:  0.00000      0.00000      1.00000    
  rmtrac: 0.500000    
  tatrac: 0.500000    
  pmrotate:  1.00000    
- pmromt:  0.00000     0.00000     1.00000    
+ pmromt:  0.00000      0.00000      1.00000    
  rmrot: 0.500000E-01
  tarot: 0.500000    
 cbmc_analysis: normal                        

@@ -26,7 +26,7 @@ runoutput
 'full'
 pdb_output_freq
 5
-pressurefreq
+pressure_virial_freq
 2
 trmaxdispfreq
 1000

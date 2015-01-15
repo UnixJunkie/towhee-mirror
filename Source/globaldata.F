@@ -13994,26 +13994,91 @@ c     --- information variables
       return
       end
 
-      subroutine twh_pressurefreq(flag,ivalue)
+      subroutine twh_pressure_virial_freq(flag,ivalue)
 c     ******************************************************************
-c     * the frequency for computing the pressure using the virial      *
+c     * the frequency for computing the pressure using the virial or   *
+c     * radial pressures (both computed based upon pairs of molecules  *
 c     *                                                                *
 c     * originally written 12-09-2007 by M.G. Martin                   *
-c     * last modified 12-09-2007 by M.G. Martin                        *
+c     * renamed from twh_pressurefreq 12-17-2014 by M.G. Martin        *
+c     * last modified 12-17-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       integer flag,ivalue
 c     --- information variables
-      integer pressurefreq
-      save pressurefreq
+      integer pressure_virial_freq
+      save pressure_virial_freq
 
       if ( flag .eq. GLB_GET ) then
-         ivalue = pressurefreq
+         ivalue = pressure_virial_freq
       elseif ( flag .eq. GLB_SET ) then
-         pressurefreq = ivalue
+         pressure_virial_freq = ivalue
       else
-         write(6,*) 'PRESSUREFREQ: invalid global flag',flag
+         write(6,*) 'PRESSURE_PAIR_FREQ: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_pressure_thermo_freq(flag,ivalue)
+c     ******************************************************************
+c     * the frequency for computing the pressure using ghost volume    *
+c     * changes, also known as the thermodynamic pressure              *
+c     *                                                                *
+c     * originally written 12-17-2014 by M.G. Martin                   *
+c     * last modified 12-17-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,ivalue
+c     --- information variables
+      integer pressure_thermo_freq
+      save pressure_thermo_freq
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = pressure_thermo_freq
+      elseif ( flag .eq. GLB_SET ) then
+         pressure_thermo_freq = ivalue
+      else
+         write(6,*) 'PRESSURE_THERMO_FREQ: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_pressure_thermo_range(flag,index,dvalue)
+c     ******************************************************************
+c     * the range of volume changes to attempt when performing         *
+c     * additional trial volume changes to measure the thermodynamic   *
+c     * pressure.  Expressed as a fraction change of the current volume*
+c     *                                                                *
+c     * originally written 12-23-2014 by M.G. Martin                   *
+c     * last modified 12-23-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,index
+      double precision dvalue
+c     --- local variables
+      integer irange
+c     --- information variables
+      double precision pressure_thermo_range
+      dimension pressure_thermo_range(2)
+      save pressure_thermo_range
+
+      if ( flag .eq. GLB_GET ) then
+         dvalue = pressure_thermo_range(index)
+      elseif ( flag .eq. GLB_SET ) then
+         pressure_thermo_range(index) = dvalue
+      elseif ( flag .eq. GLB_INIT ) then
+         do irange = 1,index
+            pressure_thermo_range(irange) = dvalue
+         enddo
+      else
+         write(6,*) 'PRESSURE_THERMO_RANGLE: invalid global flag',flag
          stop
       endif
 

@@ -32,7 +32,7 @@ loutdft
 .false.  
 loutlammps
 .false.
-pressurefreq
+pressure_virial_freq
 20
 trmaxdispfreq
 1000

@@ -24,7 +24,7 @@ backupfreq
 100000000
 runoutput
 'full'
-pressurefreq
+pressure_virial_freq
 100000
 trmaxdispfreq
 1000000

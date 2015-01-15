@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 08-11-2014 by M.G. Martin                        *
+c     * last modified 12-23-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -96,6 +96,7 @@ c     --- integer scalars
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
       integer aminonum,potentialstyle,numboxes,rng_code
       integer npair,inix,iniy,iniz,nvmove,ensemble,itbang,iobang
+      integer irange
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -114,6 +115,8 @@ c     --- double precision arrays
       dimension dboxarray(MAXBOX)
       double precision dimtemp
       dimension dimtemp(3)
+      double precision fatwo
+      dimension fatwo(2)
 
 c      write(6,*) 'starting WRITETOWHEE ',imolty
 c     --- retrieve constants
@@ -249,9 +252,17 @@ c        --- molecule information
                write(15,*) ivalue
             endif
          endif
-         write(15,'(a12)') 'pressurefreq'
-         call twh_pressurefreq(GLB_GET,ivalue)
+         write(15,'(a20)') 'pressure_virial_freq'
+         call twh_pressure_virial_freq(GLB_GET,ivalue)
          write(15,*) ivalue
+         write(15,'(a20)') 'pressure_thermo_freq'
+         call twh_pressure_thermo_freq(GLB_GET,ivalue)
+         write(15,*) ivalue
+         write(15,'(a21)') 'pressure_thermo_range'
+         do irange = 1,2
+            call twh_pressure_thermo_range(GLB_GET,irange,fatwo(irange))
+         enddo
+         write(15,*) (fatwo(irange),irange=1,2)
          write(15,'(a13)') 'trmaxdispfreq'
          call twh_trmaxdispfreq(GLB_GET,ivalue)
          write(15,*) ivalue

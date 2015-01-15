@@ -1,4 +1,6 @@
- MCCCS Towhee - Version 7.2.0   (October 22 2014)   
+ MCCCS Towhee - Version 7.2.0   (January 07 2015)   
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -69,7 +71,7 @@
  runoutput: full                
 Full output of updates and block averages
  pdb_output_freq:            1
- pressurefreq:           20
+ pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
  potentialstyle: internal                      
@@ -115,27 +117,27 @@ Box idim hmatrix:    2 2    0.00000   70.00000    0.00000
 Box idim hmatrix:    2 3    0.00000    0.00000   70.00000
 itest:  1 pairbox:  1   2
  pmvol: 0.500000E-02
- pmvlpr:  0.00000     1.00000    
+ pmvlpr:  0.00000      1.00000    
  rmvol: 0.100000    
  tavol: 0.500000    
  pm2boxcbswap: 0.500000E-01
- pm2cbswmt:  0.00000     0.00000     1.00000    
+ pm2cbswmt:  0.00000      0.00000      1.00000    
  pm2cbswpr:  1.00000    
  pm1boxcbswap: 0.100000    
- pm1cbswmt:  0.00000     0.00000     1.00000    
+ pm1cbswmt:  0.00000      0.00000      1.00000    
  pmcb: 0.330000    
- pmcbmt:  0.00000     0.00000     1.00000    
- pmall:  0.00000     0.00000     0.00000    
+ pmcbmt:  0.00000      0.00000      1.00000    
+ pmall:  0.00000      0.00000      0.00000    
  pmtraat: 0.335000    
- pmtamt:  1.00000     0.00000     0.00000    
+ pmtamt:  1.00000      0.00000      0.00000    
  rmtraa: 0.500000    
  tatraa: 0.500000    
  pmtracm: 0.670000    
- pmtcmt:  0.00000     0.00000     1.00000    
+ pmtcmt:  0.00000      0.00000      1.00000    
  rmtrac: 0.500000    
  tatrac: 0.500000    
  pmrotate:  1.00000    
- pmromt:  0.00000     0.00000     1.00000    
+ pmromt:  0.00000      0.00000      1.00000    
  rmrot: 0.500000E-01
  tarot: 0.500000    
 cbmc_analysis: normal                        

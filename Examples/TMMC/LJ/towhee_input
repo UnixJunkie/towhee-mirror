@@ -60,7 +60,7 @@ histcalcfreq
 1
 histdumpfreq
 10000
-pressurefreq
+pressure_virial_freq
 0
 trmaxdispfreq
 10000

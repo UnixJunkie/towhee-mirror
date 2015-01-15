@@ -26,7 +26,7 @@ runoutput
 'updates'
 pdb_output_freq
 5
-pressurefreq
+pressure_virial_freq
 20
 trmaxdispfreq
 1000

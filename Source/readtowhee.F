@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 12-23-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -79,6 +79,8 @@ c     --- character string scalars
 c     --- character string arrays
       character*20 satmp
       dimension satmp(NTMAX)
+c     --- integer 4 scalars
+      integer*4 luxvalue,iseed
 c     --- integer scalars
       integer imolty,jmolty,iunit,ivib,itor,imove,cpnumber,nchain,kmax
       integer ichain,ielement,npairs,ipair,nmolty,ivalue,jvalue
@@ -87,12 +89,12 @@ c     --- integer scalars
       integer nmcount,ibox,jbox,isuccess,numtypes,isolvtype,nmtype
       integer inix,iniy,iniz,initmol,nstep,printfreq,moviefreq
       integer trmaxdispfreq,blocksize,backupfreq,volmaxdispfreq
-      integer pressurefreq,pdb_output_freq,restartfreq,cperstep
+      integer pressure_virial_freq,pdb_output_freq,restartfreq,cperstep
+      integer pressure_thermo_freq
       integer backlist,numboxes,nvmove,ensemble,histcalcfreq,nener
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
-      integer maxnumtor,numtor,numblock,rng_code
-      integer*4 luxvalue,iseed
+      integer maxnumtor,numtor,numblock,rng_code,irange
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -112,6 +114,8 @@ c     --- double precision scalars
       double precision cm_jj_one,cm_jj_zero,cm_jj_negone
       double precision xtemp,ytemp,ztemp
 c     --- double precision arrays
+      double precision drange
+      dimension drange(2)
       double precision fatmp
       dimension fatmp(3)
       double precision dtarray
@@ -434,8 +438,10 @@ c        --- setting designed for production work
          call twh_loutdlpoly(GLB_SET,loutdlpoly)
          louthist = .false.
          call twh_louthist(GLB_SET,louthist)
-         pressurefreq = 10
-         call twh_pressurefreq(GLB_SET,pressurefreq)
+         pressure_virial_freq = 10
+         call twh_pressure_virial_freq(GLB_SET,pressure_virial_freq)
+         pressure_thermo_freq = 0
+         call twh_pressure_thermo_freq(GLB_SET,pressure_thermo_freq)
          trmaxdispfreq = nstep/10
          call twh_trmaxdispfreq(GLB_SET,trmaxdispfreq)
          volmaxdispfreq = nstep/10
@@ -463,8 +469,10 @@ c        --- setting designed to rapidly equilibrate the settings
          call twh_loutdlpoly(GLB_SET,loutdlpoly)
          louthist = .false.
          call twh_louthist(GLB_SET,louthist)
-         pressurefreq = 10
-         call twh_pressurefreq(GLB_SET,pressurefreq)
+         pressure_virial_freq = 10
+         call twh_pressure_virial_freq(GLB_SET,pressure_virial_freq)
+         pressure_thermo_freq = 0
+         call twh_pressure_thermo_freq(GLB_SET,pressure_thermo_freq)
          trmaxdispfreq = nstep/100
          if ( trmaxdispfreq .eq. 0 ) trmaxdispfreq = 1
          call twh_trmaxdispfreq(GLB_SET,trmaxdispfreq)
@@ -814,22 +822,54 @@ c                 --- histcalcfreq
             endif
          endif
 
-c        --- read in number of steps between pressure calculation
-         if (twh_check_label(lfailure,4,'pressurefreq')) then
-            pressurefreq = twh_read_labeled_integer(lfailure,4
-     &           ,'pressurefreq',.true.,idname)
+c        --- read in number of steps between pressure pair calculations
+         if (twh_check_label(lfailure,4,'pressure_virial_freq')) then
+            pressure_virial_freq = twh_read_labeled_integer(lfailure,4
+     &           ,'pressure_virial_freq',.true.,idname)
             if ( lfailure ) return
 c           --- error check
-            if ( pressurefreq .lt. 0 ) then
-               write(6,*) 'READTOWHEE: pressurefreq must be'
+            if ( pressure_virial_freq .lt. 0 ) then
+               write(6,*) 'READTOWHEE: pressure_virial_freq must be'
      &              ,' non-negative'
                lfailure = .true.
                return
             endif
          else
-            pressurefreq = 0
+            pressure_virial_freq = 0
          endif
-         call twh_pressurefreq(GLB_SET,pressurefreq)
+         call twh_pressure_virial_freq(GLB_SET,pressure_virial_freq)
+
+c        --- read in number of steps between pressure thermo calculation
+         if (twh_check_label(lfailure,4,'pressure_thermo_freq')) then
+            pressure_thermo_freq = twh_read_labeled_integer(lfailure,4
+     &           ,'pressure_thermo_freq',.true.,idname)
+            if ( lfailure ) return
+c           --- error check
+            if ( pressure_thermo_freq .lt. 0 ) then
+               write(6,*) 'READTOWHEE: pressure_thermo_freq must be'
+     &              ,' non-negative'
+               lfailure = .true.
+               return
+            endif
+         else
+            pressure_thermo_freq = 0
+         endif
+         call twh_pressure_thermo_freq(GLB_SET,pressure_thermo_freq)
+
+         if (twh_check_label(lfailure,4,'pressure_thermo_range')) then
+c          --- read in optional range for thermo pressure
+            call twh_read_labeled_float_array(lfailure,4
+     &           ,'pressure_thermo_range',2, .true. ,idname,drange)
+            if ( lfailure ) return
+         else
+            do irange = 1,2
+               drange(irange) = 1.0d0
+            enddo
+         endif
+         do irange = 1,2
+            call twh_pressure_thermo_range(GLB_SET,irange
+     &           ,drange(irange))
+         enddo
 
 c        --- read in number of steps between update of translational and
 c        --- rotational maximum displacements

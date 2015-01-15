@@ -30,7 +30,7 @@ pdb_output_freq
 10
 loutlammps
 .true.
-pressurefreq
+pressure_virial_freq
 1000
 trmaxdispfreq
 1

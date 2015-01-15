@@ -452,7 +452,7 @@ c     --- Confirm correct label
       subroutine twh_read_labeled_float_array(lfailure,io_unit,label,
      &    array_length, print_values, idname, array_values)
 c     ******************************************************************
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 12-23-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -472,7 +472,7 @@ c     --- Confirm correct label
       if ( lfailure ) return
 
       if (print_values) then
-         write(STDOUT,'(1x,a,a,1x,10(g12.6))') label,':',
+         write(STDOUT,'(1x,a,a,1x,10(g12.6,1x))') label,':',
      &      (array_values(i), i=1,array_length)
       endif
 

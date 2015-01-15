@@ -168,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 08-12-2011 by M.G. Martin                        *
+c     * last modified 12-24-2014 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -215,12 +215,13 @@ c     --- integer scalars
       integer itrial,ientry,incount,nmtype,nstep,printfreq
       integer total_nmols, i_tmp,nmolty,ivalue,jvalue,nunit,ncmt
       integer moviefreq,trmaxdispfreq,blocksize,backupfreq
-      integer volmaxdispfreq,pressurefreq,pdboutfreq,restartfreq
+      integer volmaxdispfreq,pressure_virial_freq,pdboutfreq,restartfreq
       integer scp_num_foreign_lambda,ipair,npair,numboxes,nvmove
       integer histcalcfreq,histdumpfreq,pressurestyle
       integer two_bond_bias_update_frequency,three_bond_bias_update_freq
       integer n_tmmc_min,n_tmmc_max,c_element,c_matrix_freq,jj
       integer macro_variable,frequency,keycode
+      integer pressure_thermo_freq
 #if DEBUG_MAINLOOP
       integer cp_number
 #endif
@@ -320,9 +321,9 @@ c     --- calculate initial energy and check for overlaps
          call scp_set_foreign_energies(ibox, vforeign)
       enddo
 
-      call twh_pressurefreq(GLB_GET,pressurefreq)
+      call twh_pressure_virial_freq(GLB_GET,pressure_virial_freq)
       call twh_pressurestyle(GLB_GET,pressurestyle)
-      if ( pressurefreq .ne. 0 ) then
+      if ( pressure_virial_freq .ne. 0 ) then
 c        --- calculate initial stress tensor
          if ( pressurestyle .eq. PRES_VIRIAL ) then
             do ibox = 1, numboxes
@@ -341,6 +342,9 @@ c        --- calculate initial stress tensor
             enddo
          endif
       endif
+
+c     --- additional thermodynamic pressure variables
+      call twh_pressure_thermo_freq(GLB_GET,pressure_thermo_freq)
 
       call twh_pdb_output_freq(GLB_GET,pdboutfreq)
       if ( pdboutfreq .ne. 0 ) then
@@ -683,9 +687,9 @@ c        --- test for output of conformation to pdb file
          endif
          
 c        --- test to see if we need to perform periodic operations 
-c        --- test for computation of pressure
-         if ( pressurefreq .ne. 0 ) then
-            if (  mod(nnn,pressurefreq) .eq. 0 .and.
+c        --- test for virial computation of pressure
+         if ( pressure_virial_freq .ne. 0 ) then
+            if (  mod(nnn,pressure_virial_freq) .eq. 0 .and.
      &           ( pressurestyle .eq. PRES_VIRIAL
      &           .or. pressurestyle .eq. PRES_RADIAL ) ) then
                call twh_evaluate_pressure(lfailure,speden
@@ -693,6 +697,13 @@ c        --- test for computation of pressure
                if ( lfailure ) return
             endif
          endif
+         if ( pressure_thermo_freq .ne. 0 ) then
+            if ( mod(nnn,pressure_thermo_freq) .eq. 0 ) then
+               write(6,*) 'need to call thermo pressure'
+               stop 'marcus was here'
+            endif
+         endif
+
 c        --- see if any periodic operations need to be performed
 c        --- note that for many of these, freq=0 (implying, never) is 
 c        --- permitted, and the mod operator treats these cases 
