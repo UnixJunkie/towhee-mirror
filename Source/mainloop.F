@@ -699,7 +699,8 @@ c        --- test for virial computation of pressure
          endif
          if ( pressure_thermo_freq .ne. 0 ) then
             if ( mod(nnn,pressure_thermo_freq) .eq. 0 ) then
-               write(6,*) 'need to call thermo pressure'
+               write(6,*) 'calling thermo pressure'
+               call twh_thermopressure(lfailure)
                stop 'marcus was here'
             endif
          endif

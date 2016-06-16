@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this file contains all of the globally accessed data structures*
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 07-19-2014 by M.G. Martin                        *
+c     * last modified 04-29-2016 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -3726,11 +3726,14 @@ c     ******************************************************************
 c     * the classical potential expressed as a text string             *
 c     *                                                                *
 c     * originally written 04-14-2006 by M.G. Martin                   *
-c     * last modified 04-26-2006 by M.G. Martin                        *
+c     * twh_set_classicalpotnum inserted here 04-29-2016 by M.G. Martin*
+c     * last modified 04-29-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       integer flag
+c     --- local variables
+      integer classical_pot_num
       character*(*) cvalue
 c     --- storage variable
       character*30 classical_potential
@@ -3741,7 +3744,76 @@ c     --- storage variable
       elseif ( flag .eq. GLB_SET ) then
          classical_potential = cvalue
 c        --- also set the classical potential number
-         call twh_set_classicalpotnum(cvalue)
+c        --- these definitions must match those in preproc.h
+c         --- note all tabular potentials are numbered > 100
+         if (cvalue .eq. '12-6 plus 12-10 H-bond') then
+            classical_pot_num = CP_12_6_PLUS_12_10_H_BOND
+         elseif (cvalue .eq. '12-6 plus solvation') then
+            classical_pot_num = CP_12_6_PLUS_SOLVATION
+         elseif (cvalue .eq. '12-9-6') then
+            classical_pot_num = CP_12_9_6
+         elseif ( cvalue .eq. 'Hard 2580 Multistep' ) then
+            classical_pot_num = CP_HARD_2580_MULTISTEP
+         elseif (cvalue .eq. '9-6') then
+            classical_pot_num = CP_9_6
+         elseif ( cvalue .eq. 'Buffered 14-7' ) then
+            classical_pot_num = CP_BUFFERED_14_7
+         elseif ( cvalue .eq. 'Double Exponential' ) then
+            classical_pot_num = CP_DOUBLE_EXPONENTIAL
+         elseif ( cvalue .eq. 'Drukker H-bond' ) then
+            classical_pot_num = CP_DRUKKER_H_BOND
+         elseif (cvalue .eq. 'EAM pair only' ) then
+            classical_pot_num = CP_EAM_PAIR_ONLY
+         elseif (cvalue .eq. 'Embedded Atom Method') then
+            classical_pot_num = CP_EMBEDDED_ATOM_METHOD
+         elseif (cvalue .eq. 'Exponential-12-6') then
+            classical_pot_num = CP_EXPONENTIAL_12_6
+         elseif (cvalue .eq. 'Exponential-6') then
+            classical_pot_num = CP_EXPONENTIAL_6
+         elseif (cvalue .eq. 'Gordon n-6') then
+            classical_pot_num = CP_GORDON_N_6
+         elseif (cvalue .eq. 'Hard Sphere') then
+            classical_pot_num = CP_HARD_SPHERE
+         elseif (cvalue .eq. 'Lennard-Jones') then
+            classical_pot_num = CP_LENNARD_JONES
+         elseif (cvalue .eq. 'Multiwell') then
+            classical_pot_num = CP_MULTIWELL
+         elseif ( cvalue .eq. 'Repulsive 2580 Multistep' 
+     &           ) then
+            classical_pot_num = CP_REPULSIVE_2580_MULTISTEP
+         elseif (cvalue .eq. 'Repulsive Multiwell') then
+            classical_pot_num = CP_REPULSIVE_MULTIWELL
+         elseif (cvalue .eq. 'Repulsive Sphere') then
+            classical_pot_num = CP_REPULSIVE_SPHERE
+         elseif (cvalue .eq. 'Repulsive Well') then
+            classical_pot_num = CP_REPULSIVE_WELL
+         elseif (cvalue .eq. 'Scaled Lennard-Jones') then
+            classical_pot_num = CP_SCALED_LENNARD_JONES
+         elseif (cvalue .eq. 'Square Well') then
+            classical_pot_num = CP_SQUARE_WELL
+         elseif (cvalue .eq. 'Stillinger-Weber') then
+            classical_pot_num = CP_STILLINGER_WEBER
+         elseif ( cvalue .eq. 'SW pair only' ) then
+            classical_pot_num = CP_SW_PAIR_ONLY
+         elseif (cvalue .eq. 'Tabulated Pair') then
+            classical_pot_num = CP_TABULATED_PAIR
+         elseif (cvalue .eq. 'UFF 12-6') then
+            classical_pot_num = CP_UFF_12_6
+         elseif (cvalue .eq. 'Weeks-Chandler-Anderson') then
+            classical_pot_num = CP_WEEKS_CHANDLER_ANDERSON
+         elseif ( cvalue .eq. 'init-error' .or. 
+     &           cvalue .eq. 'wild' ) then
+c           --- this value is set as the initial classical_potential to 
+c           --- detect errors
+            classical_pot_num = CP_INIT_ERROR
+         else 
+            write(6,*) 'CLASSICAL_POTENTIAL: invalid cvalue'
+            write(6,'(a)') cvalue
+            stop
+         endif
+
+c        --- set this integer value
+         call twh_cp_number(GLB_SET,classical_pot_num)
       else
          write(6,*) 'CLASSICAL_POTENTIAL unknown flag:',flag
          stop
@@ -13994,34 +14066,6 @@ c     --- information variables
       return
       end
 
-      subroutine twh_pressure_virial_freq(flag,ivalue)
-c     ******************************************************************
-c     * the frequency for computing the pressure using the virial or   *
-c     * radial pressures (both computed based upon pairs of molecules  *
-c     *                                                                *
-c     * originally written 12-09-2007 by M.G. Martin                   *
-c     * renamed from twh_pressurefreq 12-17-2014 by M.G. Martin        *
-c     * last modified 12-17-2014 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,ivalue
-c     --- information variables
-      integer pressure_virial_freq
-      save pressure_virial_freq
-
-      if ( flag .eq. GLB_GET ) then
-         ivalue = pressure_virial_freq
-      elseif ( flag .eq. GLB_SET ) then
-         pressure_virial_freq = ivalue
-      else
-         write(6,*) 'PRESSURE_PAIR_FREQ: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_pressure_thermo_freq(flag,ivalue)
 c     ******************************************************************
 c     * the frequency for computing the pressure using ghost volume    *
@@ -14043,6 +14087,33 @@ c     --- information variables
          pressure_thermo_freq = ivalue
       else
          write(6,*) 'PRESSURE_THERMO_FREQ: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_pressure_thermo_number(flag,ivalue)
+c     ******************************************************************
+c     * the integer code for the pressure thermo style used to compute *
+c     * a ghost volume change for the thermodynamic pressure           *
+c     *                                                                *
+c     * originally written 04-30-2016 by M.G. Martin                   *
+c     * last modified 04-30-2016 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,ivalue
+c     --- information variables
+      integer pressure_thermo_number
+      save pressure_thermo_number
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = pressure_thermo_number
+      elseif ( flag .eq. GLB_SET ) then
+         pressure_thermo_number = ivalue
+      else
+         write(6,*) 'PRESSURE_THERMO_NUMBER: invalid global flag',flag
          stop
       endif
 
@@ -14078,7 +14149,75 @@ c     --- information variables
             pressure_thermo_range(irange) = dvalue
          enddo
       else
-         write(6,*) 'PRESSURE_THERMO_RANGLE: invalid global flag',flag
+         write(6,*) 'PRESSURE_THERMO_RANGE: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_pressure_thermo_style(flag,cvalue)
+c     ******************************************************************
+c     * a character string containing the thermodynamic pressure style *
+c     *                                                                *
+c     * originally written 04-29-2016 by M.G. Martin                   *
+c     * last modified 05-01-2016 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag
+      character*(*) cvalue
+c     --- local variables
+      integer pt_number
+c     --- information variables
+      character*20 pressure_thermo_style
+      save pressure_thermo_style
+
+      if ( flag .eq. GLB_GET ) then
+         cvalue = pressure_thermo_style
+      elseif (flag .eq. GLB_SET ) then
+         pressure_thermo_style = cvalue
+c        --- set the integer flag
+         if ( pressure_thermo_style .eq. 'move data' ) then
+            pt_number = PTHERMO_MOVE_DATA
+         elseif ( pressure_thermo_style .eq. 'range' ) then
+            pt_number = PTHERMO_RANGE
+         else
+            write(6,*) 'PRESSURE_THERMO_STYLE: Unknown value:'
+            write(6,*) pressure_thermo_style
+            stop
+         endif
+         call twh_pressure_thermo_number(GLB_SET,pt_number)
+      else
+         write(6,*) 'PRESSURE_THERMO_STYLE: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_pressure_virial_freq(flag,ivalue)
+c     ******************************************************************
+c     * the frequency for computing the pressure using the virial or   *
+c     * radial pressures (both computed based upon pairs of molecules  *
+c     *                                                                *
+c     * originally written 12-09-2007 by M.G. Martin                   *
+c     * renamed from twh_pressurefreq 12-17-2014 by M.G. Martin        *
+c     * last modified 12-17-2014 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,ivalue
+c     --- information variables
+      integer pressure_virial_freq
+      save pressure_virial_freq
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = pressure_virial_freq
+      elseif ( flag .eq. GLB_SET ) then
+         pressure_virial_freq = ivalue
+      else
+         write(6,*) 'PRESSURE_PAIR_FREQ: invalid global flag',flag
          stop
       endif
 

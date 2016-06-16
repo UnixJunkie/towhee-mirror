@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * writes out the introductory information about Towhee           *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 01-07-2015 by M.G. Martin                        *
+c     * last modified 05-03-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
       character*7 version
@@ -32,10 +32,15 @@ c     ******************************************************************
 
       version = '7.2.0'
       call twh_version(GLB_SET,version)
-      date = '(January 07 2015)'
+      date = '(May 03 2016)'
 c     --- Output some information about the code
       write(6,'(1x,a22,1x,a,1x,a)') 'MCCCS Towhee - Version',version
      &     ,date
+c     --- 2016 copyright plus code contributors
+      write(6,'(1x,a)') 'Copyright (C) <2016> Marcus G. Martin'
+      write(6,'(3(1x,a))')
+     &     'Code Contributors for 2016:'
+     &     ,'Marcus G. Martin;'
 c     --- 2015 copyright plus code contributors
       write(6,'(1x,a)') 'Copyright (C) <2015> Marcus G. Martin'
       write(6,'(3(1x,a))')

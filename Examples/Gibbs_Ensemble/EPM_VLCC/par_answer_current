@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (December 17 2014)  
+ MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ Copyright (C) <2016> Marcus G. Martin
+ Code Contributors for 2016: Marcus G. Martin;
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -68,7 +72,7 @@
  runoutput: full                
 Full output of updates and block averages
  pdb_output_freq:           10
- pressure_pair_freq:           20
+ pressure_virial_freq:           20
  trmaxdispfreq:          100
  volmaxdispfreq:          100
  potentialstyle: internal                      
@@ -156,10 +160,10 @@ moltyp:  1 pmavb3ct: 1.000000
  pmcrback:  0.00000    
  pmcrbmt:  1.00000    
  pmplane:  0.00000    
- pmplanebox: 0.500000     1.00000    
+ pmplanebox: 0.500000      1.00000    
  planewidth:  3.00000    
  pmrow:  0.00000    
- pmrowbox: 0.500000     1.00000    
+ pmrowbox: 0.500000      1.00000    
  rowwidth:  3.00000    
  pmtraat:  0.00000    
  pmtamt:  1.00000    

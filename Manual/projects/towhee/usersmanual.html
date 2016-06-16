@@ -70,7 +70,8 @@
       <ul>
        This file contains the box lengths, maximum displacements, and coordinates for the system. It is used when you wish to restart a job from the final
        configuration of a previous run. The previous run output (either towhee_final or towhee_backup) is simply copied to towhee_initial and the next
-       simulation continues from this configuration. Note that you must set <b>linit</b> to .false. when you want to restart and that there is some error
+       simulation continues from this configuration. Please see the <a href="towhee_restart.html">Towhee Restart Manual</a> for more information about this file format.
+       Note that you must set <b>linit</b> to .false. when you want to restart and that there is some error
        checking to make sure the information in towhee_initial matches information in towhee_input.  The code can read in previous versions of the
        towhee_initial file without difficulty as the version number is at the top of the file. It is possible to directly edit this file, but if you are 
        clever enough to play around in towhee_initial then you are smart enough to look in the code (rwconf.F) to figure out how to do it.  Please note 

@@ -15,13 +15,13 @@ numboxes
 stepstyle
 'cycles'
 nstep
-1
+10
 printfreq
-100
+10
 blocksize
-100
+10
 moviefreq
-100
+10
 backupfreq
 100
 runoutput
@@ -32,6 +32,10 @@ loutlammps
 .true.
 pressure_virial_freq
 1000
+pressure_thermo_freq
+0
+pressure_thermo_style
+'move data'
 trmaxdispfreq
 1
 volmaxdispfreq

@@ -668,7 +668,7 @@ c                 --- version 0 included charges on each atom
 c                 --- this is no longer needed
                   read(8,*) xtemp,ytemp,ztemp,itest
                else
-c                 --- version 1 and 2 does not include charges
+c                 --- later versions do not include charges
                   read(8,*) xtemp,ytemp,ztemp
                endif
 c              --- assign the positions

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 12-23-2014 by M.G. Martin                        *
+c     * last modified 05-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -75,7 +75,7 @@ c     --- local variables
       character*11 fchar
       character*20 routput,cvalue,coulombstyle,fieldstring,initboxtype
       character*20 initstyle,initlattice,interpolatestyle
-      character*20 isarray
+      character*20 isarray,pressure_thermo_style
       dimension isarray(NTMAX)
       character*30 potentialstyle_str,ensemble_str
       character*50 eform
@@ -96,7 +96,7 @@ c     --- integer scalars
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
       integer aminonum,potentialstyle,numboxes,rng_code
       integer npair,inix,iniy,iniz,nvmove,ensemble,itbang,iobang
-      integer irange
+      integer irange,pt_number
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -258,11 +258,18 @@ c        --- molecule information
          write(15,'(a20)') 'pressure_thermo_freq'
          call twh_pressure_thermo_freq(GLB_GET,ivalue)
          write(15,*) ivalue
-         write(15,'(a21)') 'pressure_thermo_range'
-         do irange = 1,2
-            call twh_pressure_thermo_range(GLB_GET,irange,fatwo(irange))
-         enddo
-         write(15,*) (fatwo(irange),irange=1,2)
+         write(15,'(a21)') 'pressure_thermo_style'
+         call twh_pressure_thermo_style(GLB_GET,pressure_thermo_style)
+         write(15,'(a1,a20,a1)') char(39),pressure_thermo_style,char(39)
+         call twh_pressure_thermo_number(GLB_GET,pt_number)
+         if ( pt_number .eq. PTHERMO_RANGE ) then
+            write(15,'(a21)') 'pressure_thermo_range'
+            do irange = 1,2
+               call twh_pressure_thermo_range(GLB_GET,irange
+     &              ,fatwo(irange))
+            enddo
+            write(15,*) (fatwo(irange),irange=1,2)
+         endif
          write(15,'(a13)') 'trmaxdispfreq'
          call twh_trmaxdispfreq(GLB_GET,ivalue)
          write(15,*) ivalue

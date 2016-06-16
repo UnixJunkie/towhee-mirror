@@ -180,6 +180,7 @@ towhee_SOURCES =  \
 		swapmoves.F \
 		switch.F \
 		tail.F \
+		thermopressure.F \
 		tranatom.F \
 		trancom.F \
 		uniformbox.F \
@@ -566,6 +567,7 @@ stresstensor.o: preproc.h functions.h stresstensor.F
 swapmoves.o: preproc.h functions.h swapmoves.F
 switch.o: preproc.h switch.F
 tail.o: preproc.h functions.h tail.F
+thermopressure.o: preproc.h functions.h thermopressure.F
 tranatom.o: preproc.h dvpm.h functions.h tranatom.F
 trancom.o: preproc.h functions.h trancom.F
 uniformbox.o: functions.h uniformbox.F

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * this routine outputs a single frame of information to the      *
 c     * towhee_movie file for post-processing analysis                 *
 c     *                                                                *
 c     * rewritten 07-09-2003 by M.G. Martin from pupdate               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 05-03-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJTOR2
@@ -61,7 +61,7 @@ c     --- retrieve constants
       call twh_rcut(GLB_GET,rcut)
 
 c     --- set the movie file number
-      ifile = 2
+      ifile = FILE_MOVIE
 
       call twh_nchain(GLB_GET,nchain)
       if ( step .eq. 0 ) then

@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (December 17 2014)  
+ MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ Copyright (C) <2016> Marcus G. Martin
+ Code Contributors for 2016: Marcus G. Martin;
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -69,7 +73,7 @@
  runoutput: none                
 No output of updates or block averages
  pdb_output_freq:         1000
- pressure_pair_freq:            1
+ pressure_virial_freq:            1
  trmaxdispfreq:           10
  volmaxdispfreq:           10
  potentialstyle: internal                      
@@ -112,11 +116,11 @@ Box idim hmatrix:    2 2    0.00000   50.00000    0.00000
 Box idim hmatrix:    2 3    0.00000    0.00000   50.00000
 itest:  1 pairbox:  1   2
  pmvol: 0.500000E-01
- pmvlpr: 0.500000     1.00000    
+ pmvlpr: 0.500000      1.00000    
  rmvol: 0.100000    
  tavol: 0.500000    
  pmcell:  0.00000    
- pmcellpr: 0.500000     1.00000    
+ pmcellpr: 0.500000      1.00000    
  rmcell:  1.00000    
  tacell: 0.500000    
  pm2boxrbswap:  0.00000    
@@ -153,10 +157,10 @@ moltyp:  1 pmavb3ct: 1.000000
  pmcrback:  0.00000    
  pmcrbmt:  1.00000    
  pmplane:  0.00000    
- pmplanebox: 0.500000     1.00000    
+ pmplanebox: 0.500000      1.00000    
  planewidth:  3.00000    
  pmrow:  0.00000    
- pmrowbox: 0.500000     1.00000    
+ pmrowbox: 0.500000      1.00000    
  rowwidth:  3.00000    
  pmtraat:  0.00000    
  pmtamt:  1.00000    

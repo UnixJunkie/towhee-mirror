@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (December 17 2014)  
+ MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ Copyright (C) <2016> Marcus G. Martin
+ Code Contributors for 2016: Marcus G. Martin;
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -58,7 +62,7 @@
  temperature:  256.000    
  nmolty:            2
  nmolectyp:            1          200
- chempot:  0.00000     737.579    
+ chempot:  0.00000      737.579    
  numboxes:            1
  stepstyle: moves   
  nstep:          100
@@ -75,7 +79,7 @@ Full output of updates and block averages
  hist_nequil:           10
  histcalcfreq:            5
  histdumpfreq:           10
- pressure_pair_freq:           20
+ pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
  potentialstyle: internal                      
@@ -112,37 +116,37 @@ Box idim hmatrix:    1 1   25.00000    0.00000    0.00000
 Box idim hmatrix:    1 2    0.00000   25.00000    0.00000
 Box idim hmatrix:    1 3    0.00000    0.00000   25.00000
  pmuvtcbswap: 0.250000    
- pmuvtcbmt:  0.00000     1.00000    
+ pmuvtcbmt:  0.00000      1.00000    
  pm1boxcbswap:  0.00000    
- pm1cbswmt:  0.00000     1.00000    
+ pm1cbswmt:  0.00000      1.00000    
  pmavb1:  0.00000    
  pmavb1in: 0.500000    
- pmavb1mt:  1.00000     1.00000    
+ pmavb1mt:  1.00000      1.00000    
 moltyp:  1 pmavb1ct: 1.000000  1.000000
 moltyp:  2 pmavb1ct: 1.000000  1.000000
  avb1rad:  5.00000    
  pmavb2:  0.00000    
  pmavb2in: 0.500000    
- pmavb2mt:  1.00000     1.00000    
+ pmavb2mt:  1.00000      1.00000    
 moltyp:  1 pmavb2ct: 1.000000  1.000000
 moltyp:  2 pmavb2ct: 1.000000  1.000000
  avb2rad:  5.00000    
  pmavb3:  0.00000    
- pmavb3mt:  1.00000     1.00000    
+ pmavb3mt:  1.00000      1.00000    
 moltyp:  1 pmavb3ct: 1.000000  1.000000
 moltyp:  2 pmavb3ct: 1.000000  1.000000
  avb3rad:  5.00000    
  pmcb: 0.500000    
- pmcbmt:  0.00000     1.00000    
- pmall:  0.00000     0.00000    
+ pmcbmt:  0.00000      1.00000    
+ pmall:  0.00000      0.00000    
  pmback:  0.00000    
- pmbkmt:  0.00000     1.00000    
+ pmbkmt:  0.00000      1.00000    
  pmpivot:  0.00000    
- pmpivmt:  0.00000     1.00000    
+ pmpivmt:  0.00000      1.00000    
  pmconrot:  0.00000    
- pmcrmt:  0.00000     1.00000    
+ pmcrmt:  0.00000      1.00000    
  pmcrback:  0.00000    
- pmcrbmt:  0.00000     1.00000    
+ pmcrbmt:  0.00000      1.00000    
  pmplane:  0.00000    
  pmplanebox:  1.00000    
  planewidth:  3.00000    
@@ -150,15 +154,15 @@ moltyp:  2 pmavb3ct: 1.000000  1.000000
  pmrowbox:  1.00000    
  rowwidth:  3.00000    
  pmtraat:  0.00000    
- pmtamt:  1.00000     0.00000    
+ pmtamt:  1.00000      0.00000    
  rmtraa: 0.500000    
  tatraa: 0.500000    
  pmtracm: 0.750000    
- pmtcmt: 0.100000     1.00000    
+ pmtcmt: 0.100000      1.00000    
  rmtrac: 0.500000    
  tatrac: 0.500000    
  pmrotate:  1.00000    
- pmromt: 0.100000     1.00000    
+ pmromt: 0.100000      1.00000    
  rmrot: 0.500000E-01
  tarot: 0.500000    
 cbmc_analysis: normal                        

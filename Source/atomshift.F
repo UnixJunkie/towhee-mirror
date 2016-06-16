@@ -50,7 +50,7 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 12-30-2015 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -104,6 +104,11 @@ c     --- double precision arrays
 #endif
 c     --- retrieve constants
       call twh_lewald(GLB_GET,lewald)
+c     --- initialize
+      do icond = 1,2
+         tardim(icond) = 0
+         ncond(icond) = 0
+      enddo
 
 c     --- select a box
       rm = twh_random()

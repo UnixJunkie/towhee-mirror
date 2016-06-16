@@ -157,26 +157,27 @@ am_towhee_OBJECTS = accumulateaverages.$(OBJEXT) allocate.$(OBJEXT) \
 	setclassical.$(OBJEXT) setmixterms.$(OBJEXT) \
 	setpotentiallogic.$(OBJEXT) sphere.$(OBJEXT) spline.$(OBJEXT) \
 	stresstensor.$(OBJEXT) swapmoves.$(OBJEXT) switch.$(OBJEXT) \
-	tail.$(OBJEXT) tranatom.$(OBJEXT) trancom.$(OBJEXT) \
-	uniformbox.$(OBJEXT) updatethreebondbias.$(OBJEXT) \
-	updatetrmaxdisp.$(OBJEXT) updatetwobondbias.$(OBJEXT) \
-	updatevolmaxdisp.$(OBJEXT) vangang.$(OBJEXT) vangle.$(OBJEXT) \
-	vbonbon.$(OBJEXT) vbond.$(OBJEXT) vcoulomb.$(OBJEXT) \
-	veefone.$(OBJEXT) vfield.$(OBJEXT) vimproper.$(OBJEXT) \
-	volnpt.$(OBJEXT) volnvt.$(OBJEXT) vonefive.$(OBJEXT) \
-	vsasa.$(OBJEXT) vembed.$(OBJEXT) vthreebody.$(OBJEXT) \
-	vtorsion.$(OBJEXT) vtwobody.$(OBJEXT) wcoulomb.$(OBJEXT) \
-	writeangang.$(OBJEXT) writeangle.$(OBJEXT) \
-	writeaverages.$(OBJEXT) writebond.$(OBJEXT) \
-	writedlpoly.$(OBJEXT) writedynamo.$(OBJEXT) \
-	writeimproper.$(OBJEXT) writeintro.$(OBJEXT) \
-	writelammps.$(OBJEXT) writelcao.$(OBJEXT) writemovie.$(OBJEXT) \
-	writenonbond.$(OBJEXT) writeonefive.$(OBJEXT) \
-	writepdb.$(OBJEXT) writeruntime.$(OBJEXT) \
-	writetorsion.$(OBJEXT) writetowhee.$(OBJEXT) \
-	writetramonto.$(OBJEXT) wtwobody.$(OBJEXT) control.$(OBJEXT) \
-	dx-1597-2-7.$(OBJEXT) globalinfo.$(OBJEXT) jobfarm.$(OBJEXT) \
-	mrg32k3a.$(OBJEXT) rex.$(OBJEXT) rnginit.$(OBJEXT) \
+	tail.$(OBJEXT) thermopressure.$(OBJEXT) tranatom.$(OBJEXT) \
+	trancom.$(OBJEXT) uniformbox.$(OBJEXT) \
+	updatethreebondbias.$(OBJEXT) updatetrmaxdisp.$(OBJEXT) \
+	updatetwobondbias.$(OBJEXT) updatevolmaxdisp.$(OBJEXT) \
+	vangang.$(OBJEXT) vangle.$(OBJEXT) vbonbon.$(OBJEXT) \
+	vbond.$(OBJEXT) vcoulomb.$(OBJEXT) veefone.$(OBJEXT) \
+	vfield.$(OBJEXT) vimproper.$(OBJEXT) volnpt.$(OBJEXT) \
+	volnvt.$(OBJEXT) vonefive.$(OBJEXT) vsasa.$(OBJEXT) \
+	vembed.$(OBJEXT) vthreebody.$(OBJEXT) vtorsion.$(OBJEXT) \
+	vtwobody.$(OBJEXT) wcoulomb.$(OBJEXT) writeangang.$(OBJEXT) \
+	writeangle.$(OBJEXT) writeaverages.$(OBJEXT) \
+	writebond.$(OBJEXT) writedlpoly.$(OBJEXT) \
+	writedynamo.$(OBJEXT) writeimproper.$(OBJEXT) \
+	writeintro.$(OBJEXT) writelammps.$(OBJEXT) writelcao.$(OBJEXT) \
+	writemovie.$(OBJEXT) writenonbond.$(OBJEXT) \
+	writeonefive.$(OBJEXT) writepdb.$(OBJEXT) \
+	writeruntime.$(OBJEXT) writetorsion.$(OBJEXT) \
+	writetowhee.$(OBJEXT) writetramonto.$(OBJEXT) \
+	wtwobody.$(OBJEXT) control.$(OBJEXT) dx-1597-2-7.$(OBJEXT) \
+	globalinfo.$(OBJEXT) jobfarm.$(OBJEXT) mrg32k3a.$(OBJEXT) \
+	rex.$(OBJEXT) rnginit.$(OBJEXT) \
 	scaled_potential_data.$(OBJEXT) sturm.$(OBJEXT) \
 	towhee.$(OBJEXT)
 towhee_OBJECTS = $(am_towhee_OBJECTS)
@@ -458,6 +459,7 @@ towhee_SOURCES = \
 		swapmoves.F \
 		switch.F \
 		tail.F \
+		thermopressure.F \
 		tranatom.F \
 		trancom.F \
 		uniformbox.F \
@@ -1161,6 +1163,7 @@ stresstensor.o: preproc.h functions.h stresstensor.F
 swapmoves.o: preproc.h functions.h swapmoves.F
 switch.o: preproc.h switch.F
 tail.o: preproc.h functions.h tail.F
+thermopressure.o: preproc.h functions.h thermopressure.F
 tranatom.o: preproc.h dvpm.h functions.h tranatom.F
 trancom.o: preproc.h functions.h trancom.F
 uniformbox.o: functions.h uniformbox.F

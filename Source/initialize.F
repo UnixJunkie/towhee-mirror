@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 12-23-2014 by M.G. Martin                        *
+c     * last modified 05-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -165,6 +165,7 @@ c     --- initialize input parameters
       call twh_loutdlpoly(GLB_SET,.false.)
       call twh_pressure_virial_freq(GLB_SET,10)
       call twh_pressure_thermo_freq(GLB_SET,0)
+      call twh_pressure_thermo_style(GLB_SET,'move data')
       call twh_pressure_thermo_range(GLB_INIT,2,0.0d0)
       call twh_trmaxdispfreq(GLB_SET,100)
       call twh_volmaxdispfreq(GLB_SET,100)

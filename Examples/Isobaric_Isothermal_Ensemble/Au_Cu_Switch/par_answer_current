@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (December 17 2014)  
+ MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ Copyright (C) <2016> Marcus G. Martin
+ Code Contributors for 2016: Marcus G. Martin;
+ Copyright (C) <2015> Marcus G. Martin
+ Code Contributors for 2015: Marcus G. Martin;
  Copyright (C) <2014> Marcus G. Martin
  Code Contributors for 2014: Marcus G. Martin;
  Copyright (C) <2013> Marcus G. Martin
@@ -61,16 +65,18 @@
  nmolectyp:           13           76
  numboxes:            1
  stepstyle: cycles  
- nstep:            1
- printfreq:          100
- blocksize:          100
- moviefreq:          100
+ nstep:           10
+ printfreq:           10
+ blocksize:           10
+ moviefreq:           10
  backupfreq:          100
  runoutput: full                
 Full output of updates and block averages
  pdb_output_freq:           10
  loutlammps:  T
- pressure_pair_freq:         1000
+ pressure_virial_freq:         1000
+ pressure_thermo_freq:            0
+ pressure_thermo_style: move data           
  trmaxdispfreq:            1
  volmaxdispfreq:            1
  potentialstyle: internal                      
@@ -103,7 +109,7 @@ Box idim hmatrix:    1 1   14.00000    0.00000    0.00000
 Box idim hmatrix:    1 2    0.00000   14.00000    0.00000
 Box idim hmatrix:    1 3    0.00000    0.00000   14.00000
  pm1boxcbswap:  0.00000    
- pm1cbswmt: 0.500000     1.00000    
+ pm1cbswmt: 0.500000      1.00000    
  pm1boxcomswitch:  1.00000    
  pm1comswbox:  1.00000    
  pm1comswpair:  1.00000    
@@ -114,7 +120,7 @@ Box idim hmatrix:    1 3    0.00000    0.00000   14.00000
  pmrowbox:  1.00000    
  rowwidth:  1.00000    
  pmtracm:  0.00000    
- pmtcmt: 0.500000     1.00000    
+ pmtcmt: 0.500000      1.00000    
  rmtrac: 0.500000    
  tatrac: 0.500000    
 cbmc_analysis: normal                        
@@ -186,7 +192,7 @@ Box idim hinverse:    1 1    0.07143    0.00000    0.00000
 Box idim hinverse:    1 2    0.00000    0.07143    0.00000
 Box idim hinverse:    1 3    0.00000    0.00000    0.07143
 
-Number of MC cycles:                    1
+Number of MC cycles:                   10
 Number of molecules:                   89
 Temperature [K]:         1.00000
 External pressure [kPa]:         1.00000
@@ -230,6 +236,38 @@ Total classical                                          -1755365.291 [K]     -3
 
 Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
               Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+              Updating maximum translational/rotational displacements
+        10 B: 1 -0.1846E+07  0.2744E+04          0.0    13   76
+Block Averages (BA) for block     1
+BA Box: 1 Volume [A^3] 0.27440000E+04
+BA Box: 1 V^2 [A^6] 0.75295360E+07
+BA Box: 1 Specific density [g/ml] 0.95590657E+01
+BA Box: 1 Total Classical -.18401933E+07
+BA Box: 1 Inter vdw       -.18401933E+07
+BA Box: 1 Angle           0.00000000E+00
+BA Box: 1 Torsion         0.00000000E+00
+BA Box: 1 Intra vdw       0.00000000E+00
+BA Box: 1 External Field  0.00000000E+00
+BA Box: 1 Vibration       0.00000000E+00
+BA Box: 1 Coulomb         0.00000000E+00
+BA Box: 1 Tail vdw        0.00000000E+00
+BA Box: 1 Solvation       0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   2 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   1 0.47376093E+01
+BA Box: 1 Number density [nm-3] Type   2 0.27696793E+02
+BA Box: 1 Mol Fraction Type   1 0.14606742E+00
+BA Box: 1 Mol Fraction Type   2 0.85393258E+00
+BA Box: 1 Radius of Gyration Type:  1        0.00000
+BA Box: 1 Radius of Gyration Type:  2        0.00000
 
  +++++ end of markov chain +++++
 
@@ -240,7 +278,7 @@ Box:     1
   hmatrix(3,x)       0.00000       0.00000      14.00000
 
          * SWITCH Moves *
-  Molecule pair:  1 Box: 1 Attempts:             89. Accepted:              2. Accepted:   2.247 %
+  Molecule pair:  1 Box: 1 Attempts:            890. Accepted:              9. Accepted:   1.011 %
 
 Final Energies for Box     1
 Total molecules in this box         89
@@ -266,16 +304,16 @@ Molecules of type   2 :         76
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw             -1803940.394 [K]     -3584.81893 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw             -1846184.039 [K]     -3668.76617 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                                376431.453 [K]       748.05055 [kcal/mol]
-  3-body vdw intermolecular                              -2180371.847 [K]     -4332.86948 [kcal/mol]
+  2-body vdw intermolecular                                361731.481 [K]       718.83853 [kcal/mol]
+  3-body vdw intermolecular                              -2207915.519 [K]     -4387.60470 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                          -1803940.394 [K]     -3584.81893 [kcal/mol]
- Aggregate van der waals (bond and nonbond)              -1803940.394 [K]     -3584.81893 [kcal/mol]
+Total classical                                          -1846184.039 [K]     -3668.76617 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)              -1846184.039 [K]     -3668.76617 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
- Total energy [eV] -155.452    
+ Total energy [eV] -159.093    
 Averages               Units Type       Box  1
  Volume                 nm^3       0.27440E+01
  Volume^2               nm^6       0.75295E+01
@@ -292,8 +330,8 @@ Averages               Units Type       Box  1
  Ideal Pressure          kPa       0.44794E+03
  Ideal p_i <N/V>kT       kPa    1  0.65429E+02
  Ideal p_i <N/V>kT       kPa    2  0.38251E+03
- Total Classical           K       -0.1803E+07
- Inter vdw                 K       -0.1803E+07
+ Total Classical           K       -0.1840E+07
+ Inter vdw                 K       -0.1840E+07
  Angle                     K        0.0000E+00
  Torsion                   K        0.0000E+00
  Intra vdw                 K        0.0000E+00
@@ -303,5 +341,5 @@ Averages               Units Type       Box  1
  Tail vdw                  K        0.0000E+00
  Solvation                 K        0.0000E+00
  G: Sum{<u_i><N_i>}   kJ/mol        0.0000E+00
- U                    kJ/mol       -0.1499E+05
+ U                    kJ/mol       -0.1530E+05
 Please see towhee_citations for a list of suggested citations for this simulation

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * for accessing global data along with subroutines that bundle   *
 c     * the adjustment of multiple global data structures              *
 c     *                                                                *
 c     * originally written 03-24-2006 by M.G. Martin                   *
-c     * last modified 08-08-2014 by M.G. Martin                        *
+c     * last modified 04-29-2016 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_create_torsion(imolty,iunit,itor2,itor3,itor4
@@ -162,92 +162,6 @@ c           --- now reset the namearray for the next allocation
             namearray(isame,iatom) = '-'
          enddo
       enddo
-
-      return
-      end
-
-      subroutine twh_set_classicalpotnum(cplocal)
-c     ******************************************************************
-c     * translates the classical_potential string definition into a    *
-c     * defined integer to speed the inner loop in vtwobody            *
-c     *                                                                *
-c     * split from A.A. Chen implementation in readclassical 11-10-2005*
-c     * last modified 10-13-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      character*(*) cplocal
-c     --- local variables
-      integer classical_pot_num
-
-c     --- these definitions must match those in preproc.h
-c     --- note all tabular potentials are numbered > 100
-      if (cplocal .eq. '12-6 plus 12-10 H-bond') then
-         classical_pot_num = CP_12_6_PLUS_12_10_H_BOND
-      elseif (cplocal .eq. '12-6 plus solvation') then
-         classical_pot_num = CP_12_6_PLUS_SOLVATION
-      elseif (cplocal .eq. '12-9-6') then
-         classical_pot_num = CP_12_9_6
-      elseif ( cplocal .eq. 'Hard 2580 Multistep' ) then
-         classical_pot_num = CP_HARD_2580_MULTISTEP
-      elseif (cplocal .eq. '9-6') then
-         classical_pot_num = CP_9_6
-      elseif ( cplocal .eq. 'Buffered 14-7' ) then
-         classical_pot_num = CP_BUFFERED_14_7
-      elseif ( cplocal .eq. 'Double Exponential' ) then
-         classical_pot_num = CP_DOUBLE_EXPONENTIAL
-      elseif ( cplocal .eq. 'Drukker H-bond' ) then
-         classical_pot_num = CP_DRUKKER_H_BOND
-      elseif (cplocal .eq. 'EAM pair only' ) then
-         classical_pot_num = CP_EAM_PAIR_ONLY
-      elseif (cplocal .eq. 'Embedded Atom Method') then
-         classical_pot_num = CP_EMBEDDED_ATOM_METHOD
-      elseif (cplocal .eq. 'Exponential-12-6') then
-         classical_pot_num = CP_EXPONENTIAL_12_6
-      elseif (cplocal .eq. 'Exponential-6') then
-         classical_pot_num = CP_EXPONENTIAL_6
-      elseif (cplocal .eq. 'Gordon n-6') then
-         classical_pot_num = CP_GORDON_N_6
-      elseif (cplocal .eq. 'Hard Sphere') then
-         classical_pot_num = CP_HARD_SPHERE
-      elseif (cplocal .eq. 'Lennard-Jones') then
-         classical_pot_num = CP_LENNARD_JONES
-      elseif (cplocal .eq. 'Multiwell') then
-         classical_pot_num = CP_MULTIWELL
-      elseif ( cplocal .eq. 'Repulsive 2580 Multistep' 
-     &        ) then
-         classical_pot_num = CP_REPULSIVE_2580_MULTISTEP
-      elseif (cplocal .eq. 'Repulsive Multiwell') then
-         classical_pot_num = CP_REPULSIVE_MULTIWELL
-      elseif (cplocal .eq. 'Repulsive Sphere') then
-         classical_pot_num = CP_REPULSIVE_SPHERE
-      elseif (cplocal .eq. 'Repulsive Well') then
-         classical_pot_num = CP_REPULSIVE_WELL
-      elseif (cplocal .eq. 'Scaled Lennard-Jones') then
-         classical_pot_num = CP_SCALED_LENNARD_JONES
-      elseif (cplocal .eq. 'Square Well') then
-         classical_pot_num = CP_SQUARE_WELL
-      elseif (cplocal .eq. 'Stillinger-Weber') then
-         classical_pot_num = CP_STILLINGER_WEBER
-      elseif ( cplocal .eq. 'SW pair only' ) then
-         classical_pot_num = CP_SW_PAIR_ONLY
-      elseif (cplocal .eq. 'Tabulated Pair') then
-         classical_pot_num = CP_TABULATED_PAIR
-      elseif (cplocal .eq. 'UFF 12-6') then
-         classical_pot_num = CP_UFF_12_6
-      elseif (cplocal .eq. 'Weeks-Chandler-Anderson') then
-         classical_pot_num = CP_WEEKS_CHANDLER_ANDERSON
-      elseif ( cplocal .eq. 'init-error' .or. cplocal .eq. 'wild' ) then
-c        --- this value is set as the initial classical_potential to 
-c        --- detect errors
-         classical_pot_num = CP_INIT_ERROR
-      else 
-         write(6,*) 'SETCLASSICALPOTNUM: invalid classical_potential'
-         write(6,'(a)') cplocal
-         stop
-      endif
-
-      call twh_cp_number(GLB_SET,classical_pot_num)
 
       return
       end

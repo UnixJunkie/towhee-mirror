@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 08-27-2014 by M.G. Martin */
+/* last significant modification 04-30-2016 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -740,5 +740,13 @@
 #define EF_CODE_BUF 3
 #define EF_CODE_COUL_NOCUT 4
 #define EF_CODE_COUL_EWALD 5
+
+/* thermodyanmic pressure update integer code, values arbitrary */
+#define PTHERMO_MOVE_DATA 1
+#define PTHERMO_RANGE 2
+
+/* fortran file numbers for input and output */
+#define FILE_MOVIE 2
+
 
 /* the end */
