@@ -50,7 +50,7 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 12-30-2015 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -65,7 +65,7 @@ c     --- variables passed to/from the subroutine
       integer movetype,nchain
 c     --- local variables
 c     --- logical scalars
-      logical lovrlap,lfound,laccept,lovrold,lewald
+      logical lovrlap,lfound,laccept,lovrold
 c     --- logical arrays
       logical lfnd
       dimension lfnd(2)
@@ -102,8 +102,6 @@ c     --- double precision arrays
 #if DEBUG_ATOMSHIFT
       write(6,*) 'start ATOMSHIFT'
 #endif
-c     --- retrieve constants
-      call twh_lewald(GLB_GET,lewald)
 c     --- initialize
       do icond = 1,2
          tardim(icond) = 0
@@ -354,7 +352,7 @@ c        --- no atoms to move, nothing has happened, just return
       endif
 
 c     --- store the old values for the ewald sum
-      if ( lewald ) call twh_recip(ibox,3)
+      call twh_recip(ibox,3)
 
 c     --- compute the new energy 
       lovrlap = .false.
@@ -389,13 +387,13 @@ c           --- set the r*u variables to the old coordinates
       if ( lovrlap ) then
 c        --- we had an overlap in the new conformation, move rejected
 c        --- set the ewald stuff back to the old values and exit
-         if ( lewald ) call twh_recip(ibox,4)
+         call twh_recip(ibox,4)
          return
       else
 c        --- we are about to compute the old energy, this will recompute
 c        --- all of the ewald terms so now we want to store the new
 c        --- ewald terms in the same way we just stored the old above
-         if ( lewald ) call twh_recip(ibox,3)
+         call twh_recip(ibox,3)
       endif
 
 c     --- we need to compute the old energy to determine acceptance
@@ -460,7 +458,7 @@ c        --- they were back to the old values for the energy
 c        --- computation
 c        --- so even though it looks like we are setting these to the
 c        --- old values, we are really setting them to the new
-         if ( lewald ) call twh_recip(ibox,4)
+         call twh_recip(ibox,4)
          do imove = 1,ntomove
             ichain = movelist(imove)
 c           --- reset COM to the temp values

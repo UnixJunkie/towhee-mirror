@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ MCCCS Towhee - Version 7.2.0   (July 19 2016)      
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -260,13 +260,13 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
  Translate COM            238.       130.   0.095651
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            227.       124.   0.104500
+ Translate COM            227.       123.   0.103657
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            207.       108.   0.109043
+ Translate COM            218.       115.   0.109363
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            221.       105.   0.103616
+ Translate COM            227.       112.   0.107918
  Updating unit cell maximum displacements
  Box  1 H-matrix(1,1) Tries:           2. Accepted:       1. Max Disp.: 0.100E+01
  Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
@@ -275,120 +275,42 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
  Box  1 H-matrix(2,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
  Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
  Box  1 H-matrix(3,1) Tries:           2. Accepted:       1. Max Disp.: 0.100E+01
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
+ Box  1 H-matrix(3,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
  Box  1 H-matrix(3,3) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
-        10 B: 1 -0.1068E+04  0.2319E+03     240832.8   216
+        10 B: 1 -0.1067E+04  0.2319E+03     240832.8   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            215.       113.   0.108917
+ Translate COM            213.       108.   0.109438
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            177.        97.   0.119378
+ Translate COM            196.       114.   0.127305
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            222.       109.   0.117227
+ Translate COM            209.       110.   0.134005
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            220.       115.   0.122556
+ Translate COM            211.       103.   0.130830
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            211.       108.   0.125460
+ Translate COM            215.       117.   0.142392
  Updating unit cell maximum displacements
  Box  1 H-matrix(1,1) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(1,2) Tries:           3. Accepted:       1. Max Disp.: 0.667E+00
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
+ Box  1 H-matrix(1,2) Tries:           5. Accepted:       3. Max Disp.: 0.120E+01
+ Box  1 H-matrix(1,3) Tries:           2. Accepted:       1. Max Disp.: 0.100E+01
  Box  1 H-matrix(2,1) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
  Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
+ Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
  Box  1 H-matrix(3,1) Tries:           3. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.100E+00
-        20 B: 1 -0.1094E+04  0.2327E+03      67714.0   216
-Block Averages (BA) for block     1
-BA Box: 1 Volume [A^3] 0.22665123E+03
-BA Box: 1 V^2 [A^6] 0.51428076E+05
-BA Box: 1 Specific density [g/ml] 0.95409567E+00
-BA Box: 1 Virial Pressure      [kPa] 0.67714012E+05
-BA Box: 1 Total Classical -.10608673E+04
-BA Box: 1 Inter vdw       -.10608673E+04
-BA Box: 1 Angle           0.00000000E+00
-BA Box: 1 Torsion         0.00000000E+00
-BA Box: 1 Intra vdw       0.00000000E+00
-BA Box: 1 External Field  0.00000000E+00
-BA Box: 1 Vibration       0.00000000E+00
-BA Box: 1 Coulomb         0.00000000E+00
-BA Box: 1 Tail vdw        0.00000000E+00
-BA Box: 1 Solvation       0.00000000E+00
-BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 Number density [nm-3] Type   1 0.95409556E+03
-BA Box: 1 Mol Fraction Type   1 0.10000000E+01
-BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.85286796E+04
-BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.13829125E+06
-BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.73379465E+05
-BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.89635272E+04
-BA Box: 1 Stress Tensor Virial S_xz          [kPa] -.18224444E+04
-BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.10709017E+05
-BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1        0.00000
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            235.       118.   0.125994
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            209.       101.   0.121774
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            213.       107.   0.122346
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            232.       131.   0.138166
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            224.       119.   0.146802
- Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           2. Accepted:       0. Max Disp.: 0.100E-01
- Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.667E+00
- Box  1 H-matrix(1,3) Tries:           3. Accepted:       1. Max Disp.: 0.667E-01
- Box  1 H-matrix(2,1) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(2,2) Tries:           3. Accepted:       2. Max Disp.: 0.267E+00
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,3) Tries:           2. Accepted:       2. Max Disp.: 0.200E+00
-        30 B: 1 -0.1141E+04  0.2441E+03      67714.0   216
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            210.       104.   0.145403
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            231.       105.   0.132185
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            204.        84.   0.108858
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            224.       138.   0.134129
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            218.       118.   0.145204
- Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E-01
- Box  1 H-matrix(1,2) Tries:           2. Accepted:       0. Max Disp.: 0.667E-01
- Box  1 H-matrix(1,3) Tries:           2. Accepted:       2. Max Disp.: 0.133E+00
- Box  1 H-matrix(2,1) Tries:           2. Accepted:       2. Max Disp.: 0.200E+01
- Box  1 H-matrix(2,2) Tries:           0. Accepted:       0. Max Disp.: 0.267E+00
- Box  1 H-matrix(2,3) Tries:           4. Accepted:       2. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
  Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,3) Tries:           2. Accepted:       1. Max Disp.: 0.200E+00
-        40 B: 1 -0.1149E+04  0.2435E+03      25119.1   216
-Block Averages (BA) for block     2
-BA Box: 1 Volume [A^3] 0.24116273E+03
-BA Box: 1 V^2 [A^6] 0.58174053E+05
-BA Box: 1 Specific density [g/ml] 0.89588920E+00
-BA Box: 1 Virial Pressure      [kPa] 0.25119111E+05
-BA Box: 1 Total Classical -.11325139E+04
-BA Box: 1 Inter vdw       -.11325139E+04
+ Box  1 H-matrix(3,3) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
+        20 B: 1 -0.1081E+04  0.2328E+03      72487.7   216
+Block Averages (BA) for block     1
+BA Box: 1 Volume [A^3] 0.22670792E+03
+BA Box: 1 V^2 [A^6] 0.51454394E+05
+BA Box: 1 Specific density [g/ml] 0.95386840E+00
+BA Box: 1 Virial Pressure      [kPa] 0.72487705E+05
+BA Box: 1 Total Classical -.10599663E+04
+BA Box: 1 Inter vdw       -.10599663E+04
 BA Box: 1 Angle           0.00000000E+00
 BA Box: 1 Torsion         0.00000000E+00
 BA Box: 1 Intra vdw       0.00000000E+00
@@ -398,75 +320,153 @@ BA Box: 1 Coulomb         0.00000000E+00
 BA Box: 1 Tail vdw        0.00000000E+00
 BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 Number density [nm-3] Type   1 0.89588910E+03
+BA Box: 1 Number density [nm-3] Type   1 0.95386828E+03
 BA Box: 1 Mol Fraction Type   1 0.10000000E+01
-BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.15478819E+04
-BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.54298257E+05
-BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.22606958E+05
-BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.55915813E+04
-BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.72765148E+04
-BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.13585816E+05
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.60280305E+03
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.13850716E+06
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.79558755E+05
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.63486834E+04
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] -.35060186E+03
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.10605538E+05
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
 BA Box: 1 Radius of Gyration Type:  1        0.00000
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            216.       103.   0.138481
+ Translate COM            212.        91.   0.122242
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            226.       119.   0.145834
+ Translate COM            228.       121.   0.129748
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            228.       119.   0.152231
+ Translate COM            216.       118.   0.141762
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            210.        93.   0.134833
+ Translate COM            230.       102.   0.125736
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            220.       103.   0.126252
+ Translate COM            226.       134.   0.149103
+ Updating unit cell maximum displacements
+ Box  1 H-matrix(1,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
+ Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.120E+01
+ Box  1 H-matrix(1,3) Tries:           2. Accepted:       0. Max Disp.: 0.100E+00
+ Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
+ Box  1 H-matrix(2,2) Tries:           5. Accepted:       2. Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.200E+01
+ Box  1 H-matrix(3,1) Tries:           0. Accepted:       0. Max Disp.: 0.100E+00
+ Box  1 H-matrix(3,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
+        30 B: 1 -0.1141E+04  0.2421E+03      72487.7   216
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            206.        99.   0.143313
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            221.        95.   0.123210
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            210.       124.   0.145505
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            223.       115.   0.150073
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            192.       109.   0.170395
+ Updating unit cell maximum displacements
+ Box  1 H-matrix(1,1) Tries:           1. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(1,2) Tries:           2. Accepted:       0. Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,3) Tries:           2. Accepted:       2. Max Disp.: 0.200E+00
+ Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
+ Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.320E+00
+ Box  1 H-matrix(2,3) Tries:           3. Accepted:       0. Max Disp.: 0.200E+00
+ Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
+ Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:           3. Accepted:       1. Max Disp.: 0.267E+00
+        40 B: 1 -0.1140E+04  0.2553E+03       1001.9   216
+Block Averages (BA) for block     2
+BA Box: 1 Volume [A^3] 0.24306805E+03
+BA Box: 1 V^2 [A^6] 0.59168878E+05
+BA Box: 1 Specific density [g/ml] 0.88993320E+00
+BA Box: 1 Virial Pressure      [kPa] 0.10019062E+04
+BA Box: 1 Total Classical -.11266213E+04
+BA Box: 1 Inter vdw       -.11266213E+04
+BA Box: 1 Angle           0.00000000E+00
+BA Box: 1 Torsion         0.00000000E+00
+BA Box: 1 Intra vdw       0.00000000E+00
+BA Box: 1 External Field  0.00000000E+00
+BA Box: 1 Vibration       0.00000000E+00
+BA Box: 1 Coulomb         0.00000000E+00
+BA Box: 1 Tail vdw        0.00000000E+00
+BA Box: 1 Solvation       0.00000000E+00
+BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
+BA Box: 1 Number density [nm-3] Type   1 0.88993310E+03
+BA Box: 1 Mol Fraction Type   1 0.10000000E+01
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.92739241E+04
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.12282850E+05
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] -.32078749E+01
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.11220321E+05
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.23431897E+04
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.55727811E+04
+BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
+BA Box: 1 Radius of Gyration Type:  1        0.00000
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            221.       105.   0.161914
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            218.       104.   0.154487
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            208.       107.   0.158943
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            210.       101.   0.152888
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            217.       106.   0.149365
  Updating unit cell maximum displacements
  Box  1 H-matrix(1,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
- Box  1 H-matrix(1,2) Tries:           2. Accepted:       1. Max Disp.: 0.667E-01
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       1. Max Disp.: 0.267E+00
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.533E+00
- Box  1 H-matrix(2,3) Tries:           4. Accepted:       2. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,1) Tries:           2. Accepted:       0. Max Disp.: 0.400E-01
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E+00
-        50 B: 1 -0.1159E+04  0.2481E+03      25119.1   216
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            205.       120.   0.147808
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            210.       101.   0.142177
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            214.       124.   0.164766
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            210.        91.   0.142797
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            215.       107.   0.142133
- Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           2. Accepted:       2. Max Disp.: 0.800E-01
- Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.133E+00
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       1. Max Disp.: 0.533E+00
+ Box  1 H-matrix(1,2) Tries:           4. Accepted:       2. Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,3) Tries:           1. Accepted:       0. Max Disp.: 0.200E-01
  Box  1 H-matrix(2,1) Tries:           0. Accepted:       0. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,2) Tries:           0. Accepted:       0. Max Disp.: 0.533E+00
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
- Box  1 H-matrix(3,1) Tries:           0. Accepted:       0. Max Disp.: 0.400E-01
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,3) Tries:           2. Accepted:       2. Max Disp.: 0.400E+00
-        60 B: 1 -0.1163E+04  0.2448E+03      17590.6   216
+ Box  1 H-matrix(2,2) Tries:           1. Accepted:       0. Max Disp.: 0.320E-01
+ Box  1 H-matrix(2,3) Tries:           3. Accepted:       3. Max Disp.: 0.400E+00
+ Box  1 H-matrix(3,1) Tries:           1. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:           1. Accepted:       0. Max Disp.: 0.267E-01
+        50 B: 1 -0.1137E+04  0.2559E+03       1001.9   216
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            222.       115.   0.154748
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            223.       105.   0.145727
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            227.       122.   0.156640
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            218.        99.   0.142270
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            224.       117.   0.148621
+ Updating unit cell maximum displacements
+ Box  1 H-matrix(1,1) Tries:           3. Accepted:       3. Max Disp.: 0.800E-01
+ Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.240E+00
+ Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
+ Box  1 H-matrix(2,2) Tries:           2. Accepted:       0. Max Disp.: 0.320E-02
+ Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.400E+00
+ Box  1 H-matrix(3,1) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:           2. Accepted:       2. Max Disp.: 0.533E-01
+        60 B: 1 -0.1137E+04  0.2552E+03       5079.3   216
 Block Averages (BA) for block     3
-BA Box: 1 Volume [A^3] 0.24658556E+03
-BA Box: 1 V^2 [A^6] 0.60806902E+05
-BA Box: 1 Specific density [g/ml] 0.87599952E+00
-BA Box: 1 Virial Pressure      [kPa] 0.17590608E+05
-BA Box: 1 Total Classical -.11564031E+04
-BA Box: 1 Inter vdw       -.11564031E+04
+BA Box: 1 Volume [A^3] 0.25538540E+03
+BA Box: 1 V^2 [A^6] 0.65221784E+05
+BA Box: 1 Specific density [g/ml] 0.84578165E+00
+BA Box: 1 Virial Pressure      [kPa] 0.50793232E+04
+BA Box: 1 Total Classical -.11402603E+04
+BA Box: 1 Inter vdw       -.11402603E+04
 BA Box: 1 Angle           0.00000000E+00
 BA Box: 1 Torsion         0.00000000E+00
 BA Box: 1 Intra vdw       0.00000000E+00
@@ -476,75 +476,75 @@ BA Box: 1 Coulomb         0.00000000E+00
 BA Box: 1 Tail vdw        0.00000000E+00
 BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 Number density [nm-3] Type   1 0.87599942E+03
+BA Box: 1 Number density [nm-3] Type   1 0.84578156E+03
 BA Box: 1 Mol Fraction Type   1 0.10000000E+01
-BA Box: 1 Stress Tensor Virial S_xx          [kPa] 0.63467954E+04
-BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.33025375E+05
-BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.13399653E+05
-BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.51676667E+04
-BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.45375778E+04
-BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.11990815E+05
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.60398523E+04
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.17034500E+05
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.42433216E+04
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.63307707E+04
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.32305789E+04
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.76239776E+04
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
 BA Box: 1 Radius of Gyration Type:  1        0.00000
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            226.       129.   0.162258
+ Translate COM            214.       108.   0.150010
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            217.       100.   0.149546
+ Translate COM            232.       118.   0.152596
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            201.       104.   0.154755
+ Translate COM            204.       113.   0.169053
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            233.       112.   0.148777
+ Translate COM            209.       100.   0.161773
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            222.       127.   0.170222
+ Translate COM            230.       106.   0.149112
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           1. Accepted:       1. Max Disp.: 0.160E+00
- Box  1 H-matrix(1,2) Tries:           2. Accepted:       1. Max Disp.: 0.133E+00
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       0. Max Disp.: 0.533E-01
- Box  1 H-matrix(2,1) Tries:           6. Accepted:       5. Max Disp.: 0.333E+00
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       0. Max Disp.: 0.533E-01
- Box  1 H-matrix(2,3) Tries:           2. Accepted:       1. Max Disp.: 0.400E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.800E-01
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
- Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.400E+00
-        70 B: 1 -0.1156E+04  0.2473E+03      17590.6   216
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            220.        84.   0.129988
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            197.       103.   0.135926
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            210.       123.   0.159228
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            211.        96.   0.144890
-              Updating maximum translational/rotational displacements
- Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            231.       122.   0.153044
- Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           4. Accepted:       3. Max Disp.: 0.240E+00
- Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.267E+00
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.533E-01
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.333E-01
- Box  1 H-matrix(2,2) Tries:           0. Accepted:       0. Max Disp.: 0.533E-01
+ Box  1 H-matrix(1,1) Tries:           0. Accepted:       0. Max Disp.: 0.800E-01
+ Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.240E+00
+ Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:           2. Accepted:       2. Max Disp.: 0.800E+00
+ Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.640E-02
  Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.800E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.160E+00
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.400E+00
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       0. Max Disp.: 0.400E-01
-        80 B: 1 -0.1174E+04  0.2453E+03      13673.0   216
+ Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
+ Box  1 H-matrix(3,2) Tries:           2. Accepted:       2. Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.533E-01
+        70 B: 1 -0.1132E+04  0.2553E+03       5079.3   216
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            210.       117.   0.166154
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            215.       111.   0.171563
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            212.        95.   0.153760
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            212.       113.   0.163914
+              Updating maximum translational/rotational displacements
+ Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
+ Translate COM            201.        98.   0.159836
+ Updating unit cell maximum displacements
+ Box  1 H-matrix(1,1) Tries:           4. Accepted:       3. Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.480E+00
+ Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:           2. Accepted:       1. Max Disp.: 0.800E+00
+ Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.128E-01
+ Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.800E+00
+ Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.800E-01
+ Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,3) Tries:           2. Accepted:       2. Max Disp.: 0.107E+00
+        80 B: 1 -0.1128E+04  0.2517E+03      15498.4   216
 Block Averages (BA) for block     4
-BA Box: 1 Volume [A^3] 0.24635632E+03
-BA Box: 1 V^2 [A^6] 0.60692507E+05
-BA Box: 1 Specific density [g/ml] 0.87679438E+00
-BA Box: 1 Virial Pressure      [kPa] 0.13673034E+05
-BA Box: 1 Total Classical -.11618754E+04
-BA Box: 1 Inter vdw       -.11618754E+04
+BA Box: 1 Volume [A^3] 0.25490575E+03
+BA Box: 1 V^2 [A^6] 0.64977490E+05
+BA Box: 1 Specific density [g/ml] 0.84737933E+00
+BA Box: 1 Virial Pressure      [kPa] 0.15498368E+05
+BA Box: 1 Total Classical -.11331350E+04
+BA Box: 1 Inter vdw       -.11331350E+04
 BA Box: 1 Angle           0.00000000E+00
 BA Box: 1 Torsion         0.00000000E+00
 BA Box: 1 Intra vdw       0.00000000E+00
@@ -554,75 +554,75 @@ BA Box: 1 Coulomb         0.00000000E+00
 BA Box: 1 Tail vdw        0.00000000E+00
 BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 Number density [nm-3] Type   1 0.87679427E+03
+BA Box: 1 Number density [nm-3] Type   1 0.84737923E+03
 BA Box: 1 Mol Fraction Type   1 0.10000000E+01
-BA Box: 1 Stress Tensor Virial S_xx          [kPa] 0.57963088E+04
-BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.22616889E+05
-BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.12605906E+05
-BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.95254795E+04
-BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.26393537E+04
-BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.10762336E+05
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] 0.45069791E+04
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.28104314E+05
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.13883812E+05
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.33002843E+04
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.15597702E+04
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.54581842E+04
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
 BA Box: 1 Radius of Gyration Type:  1        0.00000
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            219.       112.   0.156538
+ Translate COM            207.        98.   0.151342
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            223.       100.   0.140393
+ Translate COM            224.        99.   0.133776
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            218.       106.   0.136529
+ Translate COM            212.       122.   0.153969
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            237.       115.   0.132496
+ Translate COM            243.       140.   0.177412
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            217.       121.   0.147761
+ Translate COM            209.        96.   0.162982
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           2. Accepted:       0. Max Disp.: 0.240E-01
- Box  1 H-matrix(1,2) Tries:           3. Accepted:       0. Max Disp.: 0.267E-01
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.533E-01
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.333E-02
- Box  1 H-matrix(2,2) Tries:           0. Accepted:       0. Max Disp.: 0.533E-01
+ Box  1 H-matrix(1,1) Tries:           2. Accepted:       1. Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:           1. Accepted:       0. Max Disp.: 0.480E-01
+ Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.160E+01
+ Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.256E-01
  Box  1 H-matrix(2,3) Tries:           1. Accepted:       0. Max Disp.: 0.800E-01
- Box  1 H-matrix(3,1) Tries:           2. Accepted:       2. Max Disp.: 0.320E+00
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       0. Max Disp.: 0.400E-01
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       1. Max Disp.: 0.800E-01
-        90 B: 1 -0.1170E+04  0.2439E+03      13673.0   216
+ Box  1 H-matrix(3,1) Tries:           3. Accepted:       3. Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.107E+00
+        90 B: 1 -0.1138E+04  0.2554E+03      15498.4   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            223.       108.   0.143123
+ Translate COM            236.       107.   0.147788
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            217.       105.   0.138506
+ Translate COM            216.       108.   0.147788
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            208.       118.   0.157151
+ Translate COM            218.       124.   0.168126
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            223.       109.   0.153627
+ Translate COM            209.       100.   0.160886
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM            218.       102.   0.143761
+ Translate COM            202.        98.   0.156108
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           0. Accepted:       0. Max Disp.: 0.240E-01
- Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.533E-01
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       1. Max Disp.: 0.107E+00
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.667E-02
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       0. Max Disp.: 0.533E-02
+ Box  1 H-matrix(1,1) Tries:           0. Accepted:       0. Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:           2. Accepted:       2. Max Disp.: 0.960E-01
+ Box  1 H-matrix(1,3) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
+ Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,2) Tries:           2. Accepted:       1. Max Disp.: 0.256E-01
  Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.160E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.640E+00
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.400E-01
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       0. Max Disp.: 0.800E-02
-       100 B: 1 -0.1180E+04  0.2442E+03      14212.4   216
+ Box  1 H-matrix(3,1) Tries:           2. Accepted:       1. Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,2) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
+ Box  1 H-matrix(3,3) Tries:           2. Accepted:       1. Max Disp.: 0.107E+00
+       100 B: 1 -0.1141E+04  0.2543E+03       4968.1   216
 Block Averages (BA) for block     5
-BA Box: 1 Volume [A^3] 0.24457238E+03
-BA Box: 1 V^2 [A^6] 0.59816007E+05
-BA Box: 1 Specific density [g/ml] 0.88317948E+00
-BA Box: 1 Virial Pressure      [kPa] 0.14212358E+05
-BA Box: 1 Total Classical -.11757404E+04
-BA Box: 1 Inter vdw       -.11757404E+04
+BA Box: 1 Volume [A^3] 0.25390986E+03
+BA Box: 1 V^2 [A^6] 0.64472082E+05
+BA Box: 1 Specific density [g/ml] 0.85072033E+00
+BA Box: 1 Virial Pressure      [kPa] 0.49680573E+04
+BA Box: 1 Total Classical -.11388722E+04
+BA Box: 1 Inter vdw       -.11388722E+04
 BA Box: 1 Angle           0.00000000E+00
 BA Box: 1 Torsion         0.00000000E+00
 BA Box: 1 Intra vdw       0.00000000E+00
@@ -632,14 +632,14 @@ BA Box: 1 Coulomb         0.00000000E+00
 BA Box: 1 Tail vdw        0.00000000E+00
 BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 Number density [nm-3] Type   1 0.88317938E+03
+BA Box: 1 Number density [nm-3] Type   1 0.85072023E+03
 BA Box: 1 Mol Fraction Type   1 0.10000000E+01
-BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.21786074E+03
-BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.31319431E+05
-BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.11535503E+05
-BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.97521701E+04
-BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.80767986E+04
-BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.96702550E+04
+BA Box: 1 Stress Tensor Virial S_xx          [kPa] -.76957472E+04
+BA Box: 1 Stress Tensor Virial S_yy          [kPa] 0.11972435E+05
+BA Box: 1 Stress Tensor Virial S_zz          [kPa] 0.10627484E+05
+BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.10235449E+05
+BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.32061574E+04
+BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.82037534E+04
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
 BA Box: 1 Radius of Gyration Type:  1        0.00000
 
@@ -647,33 +647,33 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
 
  Final hmatrix (general box dimensions) 
 Box:     1
-  hmatrix(1,x)       6.40763      -0.16188       0.03008
-  hmatrix(2,x)       0.16585       6.28550       0.45827
-  hmatrix(3,x)      -1.24149       0.04308       6.05459
+  hmatrix(1,x)       6.53848       0.10009      -0.07290
+  hmatrix(2,x)      -0.25665       6.32788      -0.11024
+  hmatrix(3,x)      -0.58923       0.00399       6.14958
 
 * Unit Cell Perturbation Moves *
- Box  1 H-matrix(1,1) Tries:          16. Acp. Ratio:  0.562 Max Disp.: 0.240E-01
- Box  1 H-matrix(1,2) Tries:          15. Acp. Ratio:  0.400 Max Disp.: 0.533E-01
- Box  1 H-matrix(1,3) Tries:          10. Acp. Ratio:  0.600 Max Disp.: 0.107E+00
- Box  1 H-matrix(2,1) Tries:          12. Acp. Ratio:  0.667 Max Disp.: 0.667E-02
- Box  1 H-matrix(2,2) Tries:           8. Acp. Ratio:  0.500 Max Disp.: 0.533E-02
- Box  1 H-matrix(2,3) Tries:          16. Acp. Ratio:  0.562 Max Disp.: 0.160E+00
- Box  1 H-matrix(3,1) Tries:          14. Acp. Ratio:  0.571 Max Disp.: 0.640E+00
- Box  1 H-matrix(3,2) Tries:           4. Acp. Ratio:  0.500 Max Disp.: 0.400E-01
- Box  1 H-matrix(3,3) Tries:          10. Acp. Ratio:  0.600 Max Disp.: 0.800E-02
+ Box  1 H-matrix(1,1) Tries:          15. Acp. Ratio:  0.667 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:          16. Acp. Ratio:  0.562 Max Disp.: 0.960E-01
+ Box  1 H-matrix(1,3) Tries:           8. Acp. Ratio:  0.500 Max Disp.: 0.400E-01
+ Box  1 H-matrix(2,1) Tries:           9. Acp. Ratio:  0.667 Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,2) Tries:          16. Acp. Ratio:  0.500 Max Disp.: 0.256E-01
+ Box  1 H-matrix(2,3) Tries:          10. Acp. Ratio:  0.600 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,1) Tries:          14. Acp. Ratio:  0.571 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,2) Tries:           5. Acp. Ratio:  0.600 Max Disp.: 0.400E-01
+ Box  1 H-matrix(3,3) Tries:          13. Acp. Ratio:  0.615 Max Disp.: 0.107E+00
 
 * Plane Shift Moves *
-Box  1 Perpendicular Dimension 1 Attempts       1324 Accepted          0
-Box  1 Perpendicular Dimension 2 Attempts       1373 Accepted          0
-Box  1 Perpendicular Dimension 3 Attempts       1420 Accepted          1
+Box  1 Perpendicular Dimension 1 Attempts       1353 Accepted          0
+Box  1 Perpendicular Dimension 2 Attempts       1380 Accepted          0
+Box  1 Perpendicular Dimension 3 Attempts       1426 Accepted          2
 
 * Row Shift Moves *
-Box  1 Row Dimension 1 Attempts       2210 Accepted         58
-Box  1 Row Dimension 2 Attempts       2129 Accepted         68
-Box  1 Row Dimension 3 Attempts       2159 Accepted         48
+Box  1 Row Dimension 1 Attempts       2155 Accepted         67
+Box  1 Row Dimension 2 Attempts       2161 Accepted         66
+Box  1 Row Dimension 3 Attempts       2181 Accepted         66
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:          10880. Accepted:           5429. Accepted:  49.899 %
+Molecule:  1 Box: 1 Attempts:          10838. Accepted:           5411. Accepted:  49.926 %
 
 Final Energies for Box     1
 Total molecules in this box        216
@@ -698,37 +698,37 @@ Molecules of type   1 :        216
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw                -1180.213 [K]        -2.34534 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw                -1141.336 [K]        -2.26808 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                                 -1180.213 [K]        -2.34534 [kcal/mol]
+  2-body vdw intermolecular                                 -1141.336 [K]        -2.26808 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                             -1180.213 [K]        -2.34534 [kcal/mol]
- Aggregate van der waals (bond and nonbond)                 -1180.213 [K]        -2.34534 [kcal/mol]
+Total classical                                             -1141.336 [K]        -2.26808 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)                 -1141.336 [K]        -2.26808 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
 Averages               Units Type       Box  1
- Volume                 nm^3       0.24107E+00
- Volume^2               nm^6       0.58184E-01
+ Volume                 nm^3       0.24680E+00
+ Volume^2               nm^6       0.61059E-01
  Molecule Number                1      216.000
- Molar Volume         ml/mol       0.67121E+00
- Specific Density       g/ml        0.89719165
- Number Density         nm-3    1    897.19155
+ Molar Volume         ml/mol       0.68624E+00
+ Specific Density       g/ml        0.87753658
+ Number Density         nm-3    1    877.53648
  Mole Fraction                  1    1.0000000
  Radius of Gyration        A    1    0.0000000
- Virial Pressure         kPa       0.27662E+05
- Virial S_xx             kPa       0.36974E+03
- Virial S_yy             kPa       0.55910E+05
- Virial S_zz             kPa       0.26705E+05
- Virial S_xy             kPa       0.78001E+04
- Virial S_xz             kPa       0.41416E+04
- Virial S_yz             kPa       0.11344E+05
+ Virial Pressure         kPa       0.19807E+05
+ Virial S_xx             kPa       -.38211E+04
+ Virial S_yy             kPa       0.41580E+05
+ Virial S_zz             kPa       0.21662E+05
+ Virial S_xy             kPa       0.74871E+04
+ Virial S_xz             kPa       0.19978E+04
+ Virial S_yz             kPa       0.74928E+04
  Virial P_tail           kPa       0.00000E+00
- Virial p_i <x_i><p_v>   kPa    1  0.27662E+05
- Ideal Pressure          kPa       0.74345E+04
- Ideal p_i <N/V>kT       kPa    1  0.74345E+04
- Total Classical           K       -0.1137E+04
- Inter vdw                 K       -0.1137E+04
+ Virial p_i <x_i><p_v>   kPa    1  0.19807E+05
+ Ideal Pressure          kPa       0.72716E+04
+ Ideal p_i <N/V>kT       kPa    1  0.72716E+04
+ Total Classical           K       -0.1120E+04
+ Inter vdw                 K       -0.1120E+04
  Angle                     K        0.0000E+00
  Torsion                   K        0.0000E+00
  Intra vdw                 K        0.0000E+00
@@ -738,26 +738,26 @@ Averages               Units Type       Box  1
  Tail vdw                  K        0.0000E+00
  Solvation                 K        0.0000E+00
  G: Sum{<u_i><N_i>}   kJ/mol        0.0000E+00
- U                    kJ/mol       -0.9457E+01
- pV: <p><V>           kJ/mol        0.4014E+01
- H: <U> + <p><V>      kJ/mol       -0.5443E+01
- H: <U + pV>          kJ/mol       -0.5605E+01
- S: (<H> - <G>)/T   kJ/K mol       -0.9071E+01
- Z: <p><V>/<N>RT                      3.725612
- C_p: T^2<H^2>-<H>^2 J/K mol        0.3158E+04
+ U                    kJ/mol       -0.9310E+01
+ pV: <p><V>           kJ/mol        0.2943E+01
+ H: <U> + <p><V>      kJ/mol       -0.6367E+01
+ H: <U + pV>          kJ/mol       -0.6517E+01
+ S: (<H> - <G>)/T   kJ/K mol       -0.1061E+02
+ Z: <p><V>/<N>RT                      2.731108
+ C_p: T^2<H^2>-<H>^2 J/K mol        0.5133E+04
 
 Block Averages (  5 blocks) Units Type Box Average      Standard Deviation
- Specific Density            g/ml        1  0.89719E+00  0.29330E-01
- Virial Pressure              kPa        1  0.27662E+05  0.20438E+05
- Virial S_xx                  kPa        1  0.36974E+03  0.54475E+04
- Virial S_yy                  kPa        1  0.55910E+05  0.42488E+05
- Virial S_zz                  kPa        1  0.26705E+05  0.23670E+05
- Virial S_xy                  kPa        1  0.78001E+04  0.19974E+04
- Virial S_xz                  kPa        1  0.41416E+04  0.35580E+04
- Virial S_yz                  kPa        1  0.11344E+05  0.13407E+04
+ Specific Density            g/ml        1  0.87754E+00  0.41514E-01
+ Virial Pressure              kPa        1  0.19807E+05  0.26775E+05
+ Virial S_xx                  kPa        1 -0.38211E+04  0.50869E+04
+ Virial S_yy                  kPa        1  0.41580E+05  0.48814E+05
+ Virial S_zz                  kPa        1  0.21662E+05  0.29350E+05
+ Virial S_xy                  kPa        1  0.74871E+04  0.28863E+04
+ Virial S_xz                  kPa        1  0.19978E+04  0.13271E+04
+ Virial S_yz                  kPa        1  0.74928E+04  0.18994E+04
  Virial P_tail                kPa        1  0.00000E+00  0.00000E+00
- Total Classical                K        1 -0.11375E+04  0.40771E+02
- Inter vdw                      K        1 -0.11375E+04  0.40771E+02
+ Total Classical                K        1 -0.11198E+04  0.30288E+02
+ Inter vdw                      K        1 -0.11198E+04  0.30288E+02
  Angle                          K        1  0.00000E+00  0.00000E+00
  Torsion                        K        1  0.00000E+00  0.00000E+00
  Intra vdw                      K        1  0.00000E+00  0.00000E+00
@@ -766,17 +766,17 @@ Block Averages (  5 blocks) Units Type Box Average      Standard Deviation
  Coulomb                        K        1  0.00000E+00  0.00000E+00
  Tail vdw                       K        1  0.00000E+00  0.00000E+00
  Solvation                      K        1  0.00000E+00  0.00000E+00
- Number Density              nm-3    1   1  0.89719E+03  0.29330E+02
+ Number Density              nm-3    1   1  0.87754E+03  0.41514E+02
  Mole Fraction                       1   1    1.0000000    0.0000000
- Molarity                       M    1   1  0.14904E+04  0.48721E+02
+ Molarity                       M    1   1  0.14577E+04  0.68961E+02
  Radius of Gyration             A    1   1      0.00000      0.00000
 
  -----block averages ------
 Box:    1
 Block Energy         Density        Virial Press.  Mol fracs
-    1 -.10608673E+04 0.95409567E+00 0.67714012E+05 1.00000000
-    2 -.11325139E+04 0.89588920E+00 0.25119111E+05 1.00000000
-    3 -.11564031E+04 0.87599952E+00 0.17590608E+05 1.00000000
-    4 -.11618754E+04 0.87679438E+00 0.13673034E+05 1.00000000
-    5 -.11757404E+04 0.88317948E+00 0.14212358E+05 1.00000000
+    1 -.10599663E+04 0.95386840E+00 0.72487705E+05 1.00000000
+    2 -.11266213E+04 0.88993320E+00 0.10019062E+04 1.00000000
+    3 -.11402603E+04 0.84578165E+00 0.50793232E+04 1.00000000
+    4 -.11331350E+04 0.84737933E+00 0.15498368E+05 1.00000000
+    5 -.11388722E+04 0.85072033E+00 0.49680573E+04 1.00000000
 Please see towhee_citations for a list of suggested citations for this simulation

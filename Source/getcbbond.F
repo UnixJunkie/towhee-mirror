@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -46,15 +46,13 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 07-10-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_EXPON
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_IJBNBN1
-#define FUNCTION_GET_IJBNBN2
 #define FUNCTION_GET_IJVIB
 #define FUNCTION_GET_INBNBN
 #define FUNCTION_GET_INVIB
@@ -73,14 +71,15 @@ c     --- variables passed to/from the subroutine
       double precision w_cbbond
 c     --- local variables
 c     --- logical scalars
-      logical lovrlap,lmin,lterm
+      logical lovrlap,lmin,lterm,lfound
 c     --- logical arrays
       logical lovrvib
       dimension lovrvib(nch_vib)
 c     --- integer scalars
       integer count,ntogrow,iugrow,iufrom,iv,juvib,jtvib,ib
-      integer ivib,iwinner,iut,ixtra,inum,ic,it,nchoice
+      integer ivib,iwinner,iutest,ixtra,inum,ic,it,nchoice
       integer vibnumber,growprev,xtracount,dist_code
+      integer testbnbnone,testbnbntwo
 c     --- integer arrays
       integer bblocl
       dimension bblocl(2,MAXBEND)
@@ -151,54 +150,60 @@ c     --- check for IJ-JK bond-bond and set up list
          do ib = 1,2
             bblocl(ib,ic) = 0
          enddo
+         call twh_ijbnbn1(GLB_GET,imolty,iufrom,ic,testbnbnone)
+         call twh_ijbnbn2(GLB_GET,imolty,iufrom,ic,testbnbntwo)
 c        --- determine which (if any) of the slots is growprev
          if ( growprev .ne. 0 ) then 
-            if (twh_get_ijbnbn1(imolty,iufrom,ic) .eq. growprev 
-     &           ) then
+            if (testbnbnone .eq. growprev ) then
                bblocl(1,ic) = -1
-            elseif (twh_get_ijbnbn2(imolty,iufrom,ic).eq. growprev
-     &              ) then
+            elseif ( testbnbntwo .eq. growprev ) then
                bblocl(2,ic) = -1 
             endif
          endif
 c        --- account for any growxtra atoms in the bond-bond
          call twh_growxtra(GLB_GET,iw,1,xtracount)
-         do count = 2,xtracount+1
-            if (twh_get_ijbnbn1(imolty,iufrom,ic) .eq. xtracount ) then
-               bblocl(1,ic) = -count
-            elseif (twh_get_ijbnbn2(imolty,iufrom,ic) 
-     &              .eq. xtracount ) then
-               bblocl(2,ic) = -count 
+         do ixtra = 2,xtracount+1
+            call twh_growxtra(GLB_GET,iw,ixtra,iutest)
+            if ( testbnbnone .eq. iutest ) then
+               bblocl(1,ic) = -ixtra
+            elseif ( testbnbntwo .eq. iutest ) then
+               bblocl(2,ic) = -ixtra
             endif
          enddo
 c        --- set up the logic for bond-bond
-         do count = 1,ntogrow
+         count = 1
+         lfound = .false.
+         do while ( count .le. ntogrow .and. .not. lfound ) 
+c         do count = 1,ntogrow
             call twh_growlist(GLB_GET,iw,count,iugrow)
-            if (twh_get_ijbnbn1(imolty,iufrom,ic) .eq. iugrow) then
+            if ( testbnbnone .eq. iugrow) then
                bblocl(1,ic) = count 
-            elseif (twh_get_ijbnbn2(imolty,iufrom,ic) .eq. iugrow) then 
+            elseif ( testbnbntwo .eq. iugrow) then 
                bblocl(2,ic) = count 
             endif
             if ( (bblocl(1,ic)*bblocl(2,ic)) .ne. 0 ) then
 c              --- we now have enough atoms to check the bond-bond
                bbtot(count) = bbtot(count) + 1
                bbtype(count,bbtot(count)) = ic
-c              --- get out of loop so we don't count this again
-               goto 14
+c              --- all atoms found
+               lfound = .true.
             endif
+c           --- increment
+            count = count + 1
          enddo
-         write(6,*) 'GETCBBOND: bond-bond logic messed up'
-         lfailure = .true.
-         return
- 14      continue
+         if ( .not. lfound ) then
+            write(6,*) 'GETCBBOND: bond-bond logic messed up'
+            lfailure = .true.
+            return
+         endif
       enddo
 
 c     --- set up xtra distances for use in bond-bond and in rosenbluth
       call twh_growxtra(GLB_GET,iw,1,xtracount)
       if ( xtracount .ne. 0 ) then
          do ixtra = 2,xtracount+1
-            call twh_growxtra(GLB_GET,iw,ixtra,iut)
-            call twh_coordinates(GLB_GET,testcord,ichain,iut
+            call twh_growxtra(GLB_GET,iw,ixtra,iutest)
+            call twh_coordinates(GLB_GET,testcord,ichain,iutest
      &           ,rxtry,rytry,rztry)
             call twh_mimage( ibox,rxtry,rytry,rztry
      &           ,rxfrom,ryfrom,rzfrom,rxuij,ryuij,rzuij)
@@ -359,8 +364,8 @@ c           --- calculate the IJ-JK bond-bond energy
                   if ( bblocl(inum,ic) .eq. count ) then
                      bblen(inum) = length
                   elseif ( bblocl(inum,ic) .lt. 0 ) then
-                     iut = -bblocl(inum,ic)
-                     call twh_distprev(GLB_GET,iut,distance)
+                     iutest = -bblocl(inum,ic)
+                     call twh_distprev(GLB_GET,iutest,distance)
                      bblen(inum) = distance
                   else
                      call twh_bondlen(GLB_GET,bblocl(inum,ic),distance)

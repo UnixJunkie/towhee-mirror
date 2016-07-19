@@ -748,5 +748,18 @@
 /* fortran file numbers for input and output */
 #define FILE_MOVIE 2
 
+/* distribution limit style code, values arbitrary */
+#define LIM_VALUE 0
+#define LIM_NEGINF 1
+#define LIM_POSINF 2
 
+/* volume move codes, values arbitrary */
+#define VMC_GHOST 0
+#define VMC_THREED 1
+#define VMC_ONED 2
+#define VMC_NVT_ISO 100
+#define VMC_NVT_ONED 101
+#define VMC_NPT_ISO 102
+#define VMC_NPT_ONED 103
+#define VMC_TPRESS 200
 /* the end */

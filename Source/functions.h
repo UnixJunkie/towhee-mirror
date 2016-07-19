@@ -3,7 +3,7 @@ c     * functions.h                                                    *
 c     * contains all of the function type declarations in towhee       *
 c     *                                                                *
 c     * originally written 11-12-2002 by M.G. Martin                   *
-c     * last modified 08-08-2014 by M.G. Martin                        *
+c     * last modified 07-11-2016 by M.G. Martin                        *
 c     ******************************************************************
 #ifdef FUNCTION_ARCCOS
       double precision twh_arccos
@@ -691,11 +691,6 @@ c
 #ifdef FUNCTION_IN_ATOMLIST
        logical twh_in_atomlist
 #undef FUNCTION_IN_ATOMLIST
-#endif
-c
-#ifdef FUNCTION_INTEGRATEDGAUSSPROB
-      double precision twh_integratedgaussprob 
-#undef FUNCTION_INTEGRATEDGAUSSPROB
 #endif
 c
 #ifdef FUNCTION_INVERSELAWOFCOSINE

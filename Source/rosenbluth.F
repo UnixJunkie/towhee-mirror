@@ -94,7 +94,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 11-06-2012 by M.G. Martin                        *
+c     * last modified 07-10-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -211,6 +211,9 @@ c     ******************************************************************
          call twh_growfrom(GLB_GET,iw,iufrom)
          call twh_grownum(GLB_GET,iw,ntogrow)
          call twh_growprev(GLB_GET,iw,iuprev)
+#if DEBUG_ROSENBLUTH
+         write(6,*) 'iw,isteps:',iw,isteps
+#endif
 c        --- set up the cone if we have a previous bead
          if ( iuprev .ne. 0 ) then
 c           --- if we have a previous bead that is already in place
@@ -278,9 +281,6 @@ c           --- perform the biased selection to get bond angles
                endif
                return
             endif
-#if DEBUG_ROSENBLUTH
-            write(6,*) 'gcba_weight:',gcba_weight
-#endif
 c           --- setup all of the information needed to do the dihedral
 c           --- selection
             call twh_setcbdihed(lfailure,ldihed_direct,ldihed_indirect
@@ -381,9 +381,6 @@ c                    --- angle selection is failed so this whole trial
 c                    --- is an overlap, kickout past dihedral selection
                      goto 100
                   endif
-#if DEBUG_ROSENBLUTH
-            write(6,*) 'gcba_weight:',gcba_weight
-#endif
 c                 --- setup all of the information needed to do the 
 c                 --- dihedral selection
                   call twh_setcbdihed(lfailure,ldihed_direct
@@ -473,8 +470,13 @@ c                    --- randomly select one of the trials
                         bs = bs + w_tout(iouter)
                      enddo
 c                    --- safety check
-                     if ( iouter .gt. nch_pre_nb ) then
+                     if ( iouter .lt. 1 
+     &                    .or. iouter .gt. nch_pre_nb ) then
                         write(6,*) 'ROSENBLUTH: problem in pre-nonbond'
+                        write(6,*) 'iouter,nch_pre_nb:',iouter
+     &                       ,nch_pre_nb
+                        write(6,*) 'rbf, final bs:',rbf,bs
+                        write(6,*) 'ip,w_tor(ip):',ip,w_tor(ip)
                         lfailure = .true.
                         return
                      endif

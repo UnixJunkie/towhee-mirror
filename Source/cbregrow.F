@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -53,7 +53,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lterm,laccept,lnew,lcorrect,lpartial,lintra,lbonded
-      logical lgetcom,scp_eval_derivative,lewald,lexschedule,ldualcutoff
+      logical lgetcom,scp_eval_derivative,lexschedule,ldualcutoff
 c     --- logical arrays
       logical loverlap
       dimension loverlap(2)
@@ -100,7 +100,6 @@ c     --- double precision arrays
       write(6,*) 'start CBREGROW'
 #endif
 c     --- retrieve constants
-      call twh_lewald(GLB_GET,lewald)
       call twh_scalecut(GLB_GET,scalecut)
 
 c     --- initialize cbmc growth variables
@@ -405,10 +404,8 @@ c        --- we can now accept
      &           ,xtemp,ytemp,ztemp)
          enddo
          
-         if ( lewald ) then
-c           --- update reciprocal-space sum
-            call twh_recip(ibox,2)
-         endif
+c        --- update reciprocal-space sum
+         call twh_recip(ibox,2)
          
 c        --- update center of mass
          call twh_ctrmas(lfailure,CRD_REAL,ibox,iname,CTR_CBREGROW)

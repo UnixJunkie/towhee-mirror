@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ MCCCS Towhee - Version 7.2.0   (July 19 2016)      
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -80,7 +80,8 @@ Full output of updates and block averages
  loutdlpoly:  F
  pressure_virial_freq:           10
  pressure_thermo_freq:            0
- pressure_thermo_style: move data           
+ pressure_thermo_style: range               
+ pressure_thermo_range: -.100000E-01 0.100000E-01
  trmaxdispfreq:          100
  volmaxdispfreq:          100
  chempotperstep:            0

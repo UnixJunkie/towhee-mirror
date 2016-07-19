@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * resets all of the coulomb parameters in the specified box      *
 c     *                                                                *
 c     * originally resetewald 08-13-2004 by M.G. Martin                *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_MAXBOXLENGTH
@@ -34,10 +34,13 @@ c     --- variables passed to/from the subroutine
       logical lfailure
       integer ibox
 c     --- local variables
-      logical lewald
+      logical lelect,lewald
       character*20 coulombstyle
       integer kmax
       double precision minlength,onepi,ewald_prec,kalp,calp,rcelect
+
+      call twh_lelect(GLB_GET,lelect)
+      if ( .not. lelect ) return
 
       call twh_coulombstyle(GLB_GET,coulombstyle)
       if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -83,7 +83,7 @@ c     --- parameters
       integer max_iter_secant
       parameter (max_iter_secant=20)
 c     --- logical scalars
-      logical lfound,lgetcom,lcompute,laccept,lbadstereo,ldone,lewald
+      logical lfound,lgetcom,lcompute,laccept,lbadstereo,ldone
       logical lpartial,lintra,lbonded,lvalid,scp_eval_derivative
 c     -- logical arrays
       logical loverlap
@@ -157,7 +157,6 @@ c     --- double precision arrays
 c     --- retrieve constants
       call twh_constant_twopi(GLB_GET,twopi)
       call twh_nmolty(GLB_GET,nmolty)
-      call twh_lewald(GLB_GET,lewald)
 
 c     --- select a molecule type at random 
       ranmolty  = twh_random()
@@ -877,10 +876,8 @@ c              --- assign new atom positions
                   call twh_coordinates(GLB_SET,CRD_REAL,ichain,iunit
      &                 ,xtemp,ytemp,ztemp)
                enddo
-               if ( lewald ) then
-c                 --- update the reciprical space sum
-                  call twh_recip(ibox,2)
-               endif
+c              --- update the reciprical space sum
+               call twh_recip(ibox,2)
 c              --- update the center of mass of chain
                call twh_ctrmas(lfailure,CRD_REAL,ibox,ichain,CTR_CONROT)
                if ( lfailure ) return

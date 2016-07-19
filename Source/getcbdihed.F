@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 07-11-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -648,6 +648,7 @@ c     --- initialize w_cbtor
          w_cbtor = w_cbtor + bf_tor(itor)
 #if DEBUG_GETCBDIHED
          write(6,*) 'itor,bf_tor,w_cbtor:',itor,bf_tor(itor),w_cbtor
+         write(6,*) 'bf_bias(itor):',bf_bias(itor)
 #endif
       enddo
 

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * number of successful trial moves is stored in acscomp          *
 c     *                                                                *
 c     * based closely on the code trancom.F and rotate.F               *
 c     * originally written 03-23-2005 by MAW                           *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -43,7 +43,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical laccept,lgetcom,lintra,lbonded,lpartial,lperiodic
-      logical scp_eval_derivative,lewald
+      logical scp_eval_derivative
 c     --- logical arrays
       logical loverlap
       dimension loverlap(2)
@@ -72,8 +72,6 @@ c     --- double precision arrays
 #if DEBUG_COMPOSITE
       write(6,*) 'start COMPOSITE'
 #endif
-c     --- retrieve constants
-      call twh_lewald(GLB_GET,lewald)
 c     --- get the potentialstyle
       call twh_potentialstyle(GLB_GET,potentialstyle)
 c     --- select a molecule type at random
@@ -303,10 +301,8 @@ c     --- store new coordinates
      &        ,xtemp,ytemp,ztemp)
       enddo
 
-      if ( lewald ) then
-c        --- update reciprocal-space sum
-         call twh_recip(ibox,2)
-      endif
+c     --- update reciprocal-space sum
+      call twh_recip(ibox,2)
 
 c     --- update chain center of mass
 c     --- no need to recompute as we simply shifted the center of mass

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +30,7 @@ c     * rotate chooses one of the three space-fixed axes at random     *
 c     * and rotates the molecule around this axis.                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed in 08-09-2011 by M.G. Martin                      *
+c     * last modifed in 07-15-2016 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -44,7 +44,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- local logical scalars
       logical laccept,lgetcom,lintra,lbonded,lpartial,lperiodic
-      logical scp_eval_derivative,lewald
+      logical scp_eval_derivative
 c     --- local logical arrays
       logical loverlap
       dimension loverlap(2)
@@ -72,9 +72,6 @@ c     to the composite move (composite.F)
 #if DEBUG_ROTATE
       write(6,*) 'start ROTATE'
 #endif
-c     --- retrieve constants
-      call twh_lewald(GLB_GET,lewald)
-
 c     --- select a chain type at random 
       rchain  = twh_random()
       call twh_nmolty(GLB_GET,nmolty)
@@ -256,7 +253,7 @@ c        --- the move was accepted so update the arrays
          enddo
 
 c        --- update the reciprical space sum
-         if ( lewald ) call twh_recip(ibox,2)
+         call twh_recip(ibox,2)
 c        --- update embedding density
          iboxa(1)=ibox
          call twh_reseteamrho(1,iboxa)

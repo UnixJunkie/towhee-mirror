@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ MCCCS Towhee - Version 7.2.0   (July 19 2016)      
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -305,141 +305,138 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
 
  Final hmatrix (general box dimensions) 
 Box:     1
-  hmatrix(1,x)      23.19361       0.00000       0.00000
-  hmatrix(2,x)       0.00000      23.19361       0.00000
-  hmatrix(3,x)       0.00000       0.00000      23.19361
+  hmatrix(1,x)      23.11376       0.00000       0.00000
+  hmatrix(2,x)       0.00000      23.11376       0.00000
+  hmatrix(3,x)       0.00000       0.00000      23.11376
 Box:     2
-  hmatrix(1,x)      50.61854       0.00000       0.00000
-  hmatrix(2,x)       0.00000      50.61854       0.00000
-  hmatrix(3,x)       0.00000       0.00000      50.61854
+  hmatrix(1,x)      50.63524       0.00000       0.00000
+  hmatrix(2,x)       0.00000      50.63524       0.00000
+  hmatrix(3,x)       0.00000       0.00000      50.63524
 
 * 3D Volume Change Moves *
- Box  1 and  2 Tries:        2 Accepted:        1 Acp. Ratio:  0.500 Max Disp.: 0.414E-01
+ Box  1 and  2 Tries:        5 Accepted:        2 Acp. Ratio:  0.400 Max Disp.: 0.414E-01
 
 * Configurational-Bias SWAP Moves *
 Molecule type:     1
-  From box  2 to box  1 Attempted:      51 Grown:      51 Accepted:       6
-  From box  1 to box  2 Attempted:      40 Grown:      40 Accepted:       0
-
-* Aggregation-Volume-Bias-1 Moves *
- Box Moved Around From To  Attempted  Accepted  Percent
-   2     1      1  out  in         1         0     0.00
+  From box  2 to box  1 Attempted:      41 Grown:      41 Accepted:       2
+  From box  1 to box  2 Attempted:      42 Grown:      42 Accepted:       0
 
 * Configurational-Bias REGROWTH Moves *
  Molecule type:    1 Box:    1
      Length  Attempts  Regrown  Accepted  %Regrown   %Accep.
-        3         3         3         3    100.00    100.00
-        7        15        15         0    100.00      0.00
+        3         3         3         2    100.00     66.67
+        6         1         1         0    100.00      0.00
+        7         9         9         1    100.00     11.11
  Molecule type:    1 Box:    2
      Length  Attempts  Regrown  Accepted  %Regrown   %Accep.
-        3         3         3         3    100.00    100.00
-        6         2         2         1    100.00     50.00
-        7        32        32         4    100.00     12.50
+        3         1         1         1    100.00    100.00
+        6         6         6         0    100.00      0.00
+        7        27        27         6    100.00     22.22
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:             18. Accepted:              5. Accepted:  27.778 %
-Molecule:  1 Box: 2 Attempts:             20. Accepted:             11. Accepted:  55.000 %
+Molecule:  1 Box: 1 Attempts:             22. Accepted:             11. Accepted:  50.000 %
+Molecule:  1 Box: 2 Attempts:             24. Accepted:             10. Accepted:  41.667 %
 
 * Rotation Moves *
-Molecule:  1 Box: 1 Attempts:             24. Accepted:             10. Accepted:  41.667 %
-Molecule:  1 Box: 2 Attempts:             29. Accepted:             25. Accepted:  86.207 %
+Molecule:  1 Box: 1 Attempts:             24. Accepted:             11. Accepted:  45.833 %
+Molecule:  1 Box: 2 Attempts:             35. Accepted:             27. Accepted:  77.143 %
 
 Final Energies for Box     1
-Total molecules in this box        108
-Molecules of type   1 :        108
- Total vibration (atoms ij bonded together)                155667.046 [K]       309.34402 [kcal/mol]
-  bond (ij) regular                                        155667.046 [K]       309.34402 [kcal/mol]
+Total molecules in this box        104
+Molecules of type   1 :        104
+ Total vibration (atoms ij bonded together)                151310.538 [K]       300.68670 [kcal/mol]
+  bond (ij) regular                                        151310.538 [K]       300.68670 [kcal/mol]
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
   bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
   bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
- Total angle (atoms ijk bonded in sequence)                   207.714 [K]         0.41277 [kcal/mol]
-  angle (ijk) regular                                         207.714 [K]         0.41277 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                   109.417 [K]         0.21743 [kcal/mol]
+  angle (ijk) regular                                         109.417 [K]         0.21743 [kcal/mol]
   bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
   angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
   angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
   angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
- Total torsion (ijkl bonded in sequence)                    38438.038 [K]        76.38468 [kcal/mol]
-  torsion (ijkl) regular                                    15503.307 [K]        30.80842 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                    36088.187 [K]        71.71502 [kcal/mol]
+  torsion (ijkl) regular                                    13351.593 [K]        26.53250 [kcal/mol]
   torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
   torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-jkl-ijkl) angle-angle-torsion                    0.000 [K]         0.00000 [kcal/mol]
-  torsion (i-l) one-four van der waals                      22934.731 [K]        45.57626 [kcal/mol]
+  torsion (i-l) one-four van der waals                      22736.593 [K]        45.18252 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw              -159928.747 [K]      -317.81294 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw              -149136.613 [K]      -296.36664 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                               -159928.747 [K]      -317.81294 [kcal/mol]
+  2-body vdw intermolecular                               -149136.613 [K]      -296.36664 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                             34384.051 [K]        68.32853 [kcal/mol]
- Aggregate van der waals (bond and nonbond)               -136994.016 [K]      -272.23668 [kcal/mol]
+Total classical                                             38371.528 [K]        76.25251 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)               -126400.020 [K]      -251.18412 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
 Final Energies for Box     2
-Total molecules in this box        132
-Molecules of type   1 :        132
- Total vibration (atoms ij bonded together)                193092.285 [K]       383.71605 [kcal/mol]
-  bond (ij) regular                                        193092.285 [K]       383.71605 [kcal/mol]
+Total molecules in this box        136
+Molecules of type   1 :        136
+ Total vibration (atoms ij bonded together)                198359.612 [K]       394.18336 [kcal/mol]
+  bond (ij) regular                                        198359.612 [K]       394.18336 [kcal/mol]
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
   bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
   bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
- Total angle (atoms ijk bonded in sequence)                   216.365 [K]         0.42996 [kcal/mol]
-  angle (ijk) regular                                         216.365 [K]         0.42996 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                   170.936 [K]         0.33969 [kcal/mol]
+  angle (ijk) regular                                         170.936 [K]         0.33969 [kcal/mol]
   bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
   angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
   angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
   angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
- Total torsion (ijkl bonded in sequence)                    47825.939 [K]        95.04046 [kcal/mol]
-  torsion (ijkl) regular                                    18918.645 [K]        37.59543 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                    47753.705 [K]        94.89692 [kcal/mol]
+  torsion (ijkl) regular                                    18508.749 [K]        36.78088 [kcal/mol]
   torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
   torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-jkl-ijkl) angle-angle-torsion                    0.000 [K]         0.00000 [kcal/mol]
-  torsion (i-l) one-four van der waals                      28907.294 [K]        57.44503 [kcal/mol]
+  torsion (i-l) one-four van der waals                      29244.956 [K]        58.11604 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw               -25044.915 [K]       -49.76965 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw               -27631.198 [K]       -54.90915 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                                -25044.915 [K]       -49.76965 [kcal/mol]
+  2-body vdw intermolecular                                -27631.198 [K]       -54.90915 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                            216089.675 [K]       429.41682 [kcal/mol]
- Aggregate van der waals (bond and nonbond)                  3862.379 [K]         7.67538 [kcal/mol]
+Total classical                                            218653.055 [K]       434.51082 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)                  1613.758 [K]         3.20689 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
 Averages               Units Type       Box  1      Box  2
- Volume                 nm^3       0.12390E+02 0.12978E+03
- Volume^2               nm^6       0.15354E+03 0.16844E+05
- Molecule Number                1      104.475     135.525
- Molar Volume         ml/mol       0.71413E+02 0.57670E+03
- Specific Density       g/ml        0.42106076  0.05214051
- Number Density         nm-3    1      8.43265     1.04423
+ Volume                 nm^3       0.12316E+02 0.12986E+03
+ Volume^2               nm^6       0.15170E+03 0.16863E+05
+ Molecule Number                1      102.963     137.037
+ Molar Volume         ml/mol       0.72025E+02 0.57065E+03
+ Specific Density       g/ml        0.41748643  0.05269293
+ Number Density         nm-3    1      8.36106     1.05529
  Mole Fraction                  1    1.0000000   1.0000000
- Radius of Gyration        A    1    0.9732489   0.9731823
- Ideal Pressure          kPa       0.29814E+05 0.36919E+04
- Ideal p_i <N/V>kT       kPa    1  0.29814E+05 0.36919E+04
- -<dU/dV>                kPa       -.15794E+05 0.59846E+03
- Thermodynamic Pressure  kPa       0.14019E+05 0.42903E+04
- Thermo p_i <x_1><p_t>   kPa    1  0.14019E+05 0.42903E+04
- Total Classical           K        0.3887E+05  0.2217E+06
- Inter vdw                 K       -0.1494E+06 -0.2635E+05
- Angle                     K        0.1158E+03  0.1210E+03
- Torsion                   K        0.3649E+05  0.4708E+05
+ Radius of Gyration        A    1    0.9736167   0.9736294
+ Ideal Pressure          kPa       0.29561E+05 0.37310E+04
+ Ideal p_i <N/V>kT       kPa    1  0.29561E+05 0.37310E+04
+ -<dU/dV>                kPa       -.38291E+05 0.38259E+03
+ Thermodynamic Pressure  kPa       -.87299E+04 0.41136E+04
+ Thermo p_i <x_1><p_t>   kPa    1  -.87299E+04 0.41136E+04
+ Total Classical           K        0.4074E+05  0.2240E+06
+ Inter vdw                 K       -0.1456E+06 -0.2741E+05
+ Angle                     K        0.5943E+02  0.1048E+03
+ Torsion                   K        0.3551E+05  0.4779E+05
  Intra vdw                 K        0.0000E+00  0.0000E+00
  External Field            K        0.0000E+00  0.0000E+00
- Vibration                 K        0.1517E+06  0.2009E+06
+ Vibration                 K        0.1507E+06  0.2035E+06
  Coulomb                   K        0.0000E+00  0.0000E+00
  Tail vdw                  K        0.0000E+00  0.0000E+00
  Solvation                 K        0.0000E+00  0.0000E+00
- u (Density)               K    1    -2462.543   -2997.274
- u (NVT Insertion)         K    1     8142.613    9126.139
- u (NpT Insertion)         K    1     8140.819    9126.234
- u (Den. + NVT Insert)     K    1     5680.069    6128.864
- u (Den. + NpT Insert)     K    1     5678.276    6128.960
- u (Gibbs Total)           K    1     5679.175    6126.284
- G: Sum{<u_i><N_i>}   kJ/mol        0.4933E+04  0.6903E+04
- U                    kJ/mol        0.3231E+03  0.1843E+04
- H_vap (pV/n=RT)      kJ/mol        0.1263E+02
- H_vap (thermo p)     kJ/mol        0.1268E+02
+ u (Density)               K    1    -2464.746   -2994.579
+ u (NVT Insertion)         K    1     8769.724    9217.360
+ u (NpT Insertion)         K    1     8767.609    9217.502
+ u (Den. + NVT Insert)     K    1     6304.977    6222.782
+ u (Den. + NpT Insert)     K    1     6302.863    6222.923
+ u (Gibbs Total)           K    1     6304.092    6225.615
+ G: Sum{<u_i><N_i>}   kJ/mol        0.5396E+04  0.7093E+04
+ U                    kJ/mol        0.3387E+03  0.1862E+04
+ H_vap (pV/n=RT)      kJ/mol        0.1243E+02
+ H_vap (thermo p)     kJ/mol        0.1235E+02
 Please see towhee_citations for a list of suggested citations for this simulation

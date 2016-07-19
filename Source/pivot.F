@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
 c     * originally written by M.G. Martin and C.D. Lorenz 10-16-2002   *
-c     * last modifed in 08-09-2011 by M.G. Martin                      *
+c     * last modifed in 07-15-2016 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -43,7 +43,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lfound,lgetcom,laccept,lpartial,lintra,lbonded
-      logical scp_eval_derivative,lewald
+      logical scp_eval_derivative
 c     --- logical arrays
       logical loverlap
       dimension loverlap(2)
@@ -84,7 +84,6 @@ c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
       call twh_constant_twopi(GLB_GET,twopi)
       call twh_nmolty(GLB_GET,nmolty)
-      call twh_lewald(GLB_GET,lewald)
 
 c     --- select a molecule type at random 
       ranmolty  = twh_random()
@@ -386,10 +385,8 @@ c        --- assign new atom positions
             call twh_coordinates(GLB_SET,CRD_REAL,ichain,iunit
      &           ,xtemp,ytemp,ztemp)
          enddo
-         if ( lewald ) then
-c           --- update the reciprical space sum
-            call twh_recip(activebox,2)
-         endif            
+c        --- update the reciprical space sum
+         call twh_recip(activebox,2)
 c        --- update the center of mass of chain
          call twh_ctrmas(lfailure,CRD_REAL,activebox,ichain,CTR_PIVOT)
          if ( lfailure ) return

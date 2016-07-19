@@ -14127,14 +14127,13 @@ c     * additional trial volume changes to measure the thermodynamic   *
 c     * pressure.  Expressed as a fraction change of the current volume*
 c     *                                                                *
 c     * originally written 12-23-2014 by M.G. Martin                   *
-c     * last modified 12-23-2014 by M.G. Martin                        *
+c     * last modified 07-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       integer flag,index
       double precision dvalue
 c     --- local variables
-      integer irange
 c     --- information variables
       double precision pressure_thermo_range
       dimension pressure_thermo_range(2)
@@ -14144,10 +14143,6 @@ c     --- information variables
          dvalue = pressure_thermo_range(index)
       elseif ( flag .eq. GLB_SET ) then
          pressure_thermo_range(index) = dvalue
-      elseif ( flag .eq. GLB_INIT ) then
-         do irange = 1,index
-            pressure_thermo_range(irange) = dvalue
-         enddo
       else
          write(6,*) 'PRESSURE_THERMO_RANGE: invalid global flag',flag
          stop

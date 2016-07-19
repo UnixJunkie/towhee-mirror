@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 05-01-2016 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -862,11 +862,9 @@ c           --- read in optional style for thermodynamic pressure
      &           ,'pressure_thermo_style',.true.,idname
      &           ,pressure_thermo_style)
             if ( lfailure ) return
-         else
-c           --- set default
-            pressure_thermo_style = 'move data'
+            call twh_pressure_thermo_style(GLB_SET
+     &           ,pressure_thermo_style)
          endif
-         call twh_pressure_thermo_style(GLB_SET,pressure_thermo_style)
 
 c        --- get the pressure_thermo integer code
          call twh_pressure_thermo_number(GLB_GET,pt_number)
@@ -3149,23 +3147,20 @@ c        --- generate a new initial configuration
 c        --- read the initial conformation from a file
          call twh_rwconf(lfailure,nchain,READ_FLAG,0,atomcount)
          if ( lfailure ) return
-         call twh_lelect(GLB_GET,lelect)
          call twh_lewald(GLB_GET,lewald)
-         if ( lelect ) then
-c           --- set ewald parameters: 
-            do ibox = 1, numboxes
-               call twh_resetcoulomb(lfailure,ibox)
-               if ( lfailure ) return
-               if ( lewald ) then
-                  call twh_ewald_calp(GLB_GET,ibox,calp)
-                  write(6,41) 'Box:',ibox,'Initial calp:',calp
- 41               format(a4,1x,i5,1x,a13,1x,f10.5)
-                  call twh_ewald_kmax(GLB_GET,ibox,kmax)
-                  write(6,'(a4,1x,i5,1x,a13,1x,i5)')
-     &                 'Box:',ibox,'Initial kmax:',kmax
-               endif
-            enddo
-         endif
+c        --- set ewald parameters: 
+         do ibox = 1, numboxes
+            call twh_resetcoulomb(lfailure,ibox)
+            if ( lfailure ) return
+            if ( lewald ) then
+               call twh_ewald_calp(GLB_GET,ibox,calp)
+               write(6,41) 'Box:',ibox,'Initial calp:',calp
+ 41            format(a4,1x,i5,1x,a13,1x,f10.5)
+               call twh_ewald_kmax(GLB_GET,ibox,kmax)
+               write(6,'(a4,1x,i5,1x,a13,1x,i5)')
+     &              'Box:',ibox,'Initial kmax:',kmax
+            endif
+         enddo
       endif
 
       if ( lhenry ) then

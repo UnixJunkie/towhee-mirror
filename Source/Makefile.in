@@ -157,14 +157,13 @@ am_towhee_OBJECTS = accumulateaverages.$(OBJEXT) allocate.$(OBJEXT) \
 	setclassical.$(OBJEXT) setmixterms.$(OBJEXT) \
 	setpotentiallogic.$(OBJEXT) sphere.$(OBJEXT) spline.$(OBJEXT) \
 	stresstensor.$(OBJEXT) swapmoves.$(OBJEXT) switch.$(OBJEXT) \
-	tail.$(OBJEXT) thermopressure.$(OBJEXT) tranatom.$(OBJEXT) \
-	trancom.$(OBJEXT) uniformbox.$(OBJEXT) \
-	updatethreebondbias.$(OBJEXT) updatetrmaxdisp.$(OBJEXT) \
-	updatetwobondbias.$(OBJEXT) updatevolmaxdisp.$(OBJEXT) \
-	vangang.$(OBJEXT) vangle.$(OBJEXT) vbonbon.$(OBJEXT) \
-	vbond.$(OBJEXT) vcoulomb.$(OBJEXT) veefone.$(OBJEXT) \
-	vfield.$(OBJEXT) vimproper.$(OBJEXT) volnpt.$(OBJEXT) \
-	volnvt.$(OBJEXT) vonefive.$(OBJEXT) vsasa.$(OBJEXT) \
+	tail.$(OBJEXT) tranatom.$(OBJEXT) trancom.$(OBJEXT) \
+	uniformbox.$(OBJEXT) updatethreebondbias.$(OBJEXT) \
+	updatetrmaxdisp.$(OBJEXT) updatetwobondbias.$(OBJEXT) \
+	updatevolmaxdisp.$(OBJEXT) vangang.$(OBJEXT) vangle.$(OBJEXT) \
+	vbonbon.$(OBJEXT) vbond.$(OBJEXT) vcoulomb.$(OBJEXT) \
+	veefone.$(OBJEXT) vfield.$(OBJEXT) vimproper.$(OBJEXT) \
+	volumemoves.$(OBJEXT) vonefive.$(OBJEXT) vsasa.$(OBJEXT) \
 	vembed.$(OBJEXT) vthreebody.$(OBJEXT) vtorsion.$(OBJEXT) \
 	vtwobody.$(OBJEXT) wcoulomb.$(OBJEXT) writeangang.$(OBJEXT) \
 	writeangle.$(OBJEXT) writeaverages.$(OBJEXT) \
@@ -459,7 +458,6 @@ towhee_SOURCES = \
 		swapmoves.F \
 		switch.F \
 		tail.F \
-		thermopressure.F \
 		tranatom.F \
 		trancom.F \
 		uniformbox.F \
@@ -475,8 +473,7 @@ towhee_SOURCES = \
 		veefone.F \
 		vfield.F \
 		vimproper.F \
-		volnpt.F \
-		volnvt.F \
+		volumemoves.F \
 		vonefive.F \
 		vsasa.F \
 		vembed.F \
@@ -1163,7 +1160,6 @@ stresstensor.o: preproc.h functions.h stresstensor.F
 swapmoves.o: preproc.h functions.h swapmoves.F
 switch.o: preproc.h switch.F
 tail.o: preproc.h functions.h tail.F
-thermopressure.o: preproc.h functions.h thermopressure.F
 tranatom.o: preproc.h dvpm.h functions.h tranatom.F
 trancom.o: preproc.h functions.h trancom.F
 uniformbox.o: functions.h uniformbox.F
@@ -1179,8 +1175,7 @@ vcoulomb.o: preproc.h functions.h vcoulomb.F
 veefone.o: preproc.h functions.h veefone.F
 vfield.o: preproc.h functions.h vfield.F
 vimproper.o: preproc.h functions.h vimproper.F
-volnpt.o: preproc.h functions.h volnpt.F
-volnvt.o: preproc.h functions.h volnvt.F
+volumemoves.o: preproc.h functions.h volumemoves.F
 vonefive.o: preproc.h functions.h vonefive.F
 vsasa.o: preproc.h functions.h vsasa.F
 vembed.o: preproc.h functions.h vembed.F

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -77,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -89,7 +89,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- logical scalars
       logical lnew,lempty,ldone,lfound,laccept,lgetcom,ltailc,lembed
-      logical scp_eval_derivative,lewald,ldualcutoff,tmmc_flag
+      logical scp_eval_derivative,ldualcutoff,tmmc_flag
       logical lintra,lbonded,lgetbox,lpartial,lcompute
 c     --- logical arrays
       logical ltermtest
@@ -186,7 +186,6 @@ c     --- retrieve constants
       write(6,*) 'START SWAPMOVES',swaptype
 #endif
 c     --- retrieve constants
-      call twh_lewald(GLB_GET,lewald)
       call twh_scalecut(GLB_GET,scalecut)
 
 c     --- set variables that depend only upon the swaptype
@@ -1317,16 +1316,14 @@ c        --- unless we inserted into the ideal gas box
             enddo
          endif
          
-         if ( lewald ) then
-c           --- update reciprocal-space sum
-            if ( swaptype .eq. SWAP_RB_INTER
-     &           .or. swaptype .eq. SWAP_CB_INTER
-     &           .or. swaptype .eq. SWAP_CB_GC ) then
-               call twh_recip(boxtest(2),2)
-               call twh_recip(boxtest(1),2)
-            else
-               call twh_recip(boxtest(2),2)
-            endif
+c        --- update reciprocal-space sum
+         if ( swaptype .eq. SWAP_RB_INTER
+     &        .or. swaptype .eq. SWAP_CB_INTER
+     &        .or. swaptype .eq. SWAP_CB_GC ) then
+            call twh_recip(boxtest(2),2)
+            call twh_recip(boxtest(1),2)
+         else
+            call twh_recip(boxtest(2),2)
          endif
 
 c        --- update center of mass

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ MCCCS Towhee - Version 7.2.0   (July 19 2016)      
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -324,7 +324,7 @@ Box:     2
 
 * Configurational-Bias SWAP Moves *
 Molecule type:     1
-  From box  2 to box  1 Attempted:       2 Grown:       2 Accepted:       0
+  From box  2 to box  1 Attempted:       1 Grown:       1 Accepted:       0
   From box  1 to box  2 Attempted:       3 Grown:       3 Accepted:       3
 
 * Aggregation-Volume-Bias-1 Moves *
@@ -332,12 +332,12 @@ Molecule type:     1
    1     1      1  out  in         1         0     0.00
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:            168. Accepted:            106. Accepted:  63.095 %
-Molecule:  1 Box: 2 Attempts:             20. Accepted:             20. Accepted: 100.000 %
+Molecule:  1 Box: 1 Attempts:            173. Accepted:            108. Accepted:  62.428 %
+Molecule:  1 Box: 2 Attempts:             22. Accepted:             22. Accepted: 100.000 %
 
 * Rotation Moves *
-Molecule:  1 Box: 1 Attempts:             89. Accepted:             89. Accepted: 100.000 %
-Molecule:  1 Box: 2 Attempts:             16. Accepted:             16. Accepted: 100.000 %
+Molecule:  1 Box: 1 Attempts:             86. Accepted:             86. Accepted: 100.000 %
+Molecule:  1 Box: 2 Attempts:             13. Accepted:             13. Accepted: 100.000 %
 
 Final Energies for Box     1
 Total molecules in this box        257
@@ -362,15 +362,15 @@ Molecules of type   1 :        257
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw              -149743.539 [K]      -297.57273 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw              -149197.227 [K]      -296.48709 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                               -146981.830 [K]      -292.08462 [kcal/mol]
+  2-body vdw intermolecular                               -146435.518 [K]      -290.99898 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   tail correction                                           -2761.708 [K]        -5.48811 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                           -149743.539 [K]      -297.57273 [kcal/mol]
- Aggregate van der waals (bond and nonbond)               -149743.539 [K]      -297.57273 [kcal/mol]
+Total classical                                           -149197.227 [K]      -296.48709 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)               -149197.227 [K]      -296.48709 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
 Final Energies for Box     2
 Total molecules in this box         43
@@ -395,15 +395,15 @@ Molecules of type   1 :         43
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw                  -30.250 [K]        -0.06011 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw                  -30.299 [K]        -0.06021 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                                   -19.732 [K]        -0.03921 [kcal/mol]
+  2-body vdw intermolecular                                   -19.782 [K]        -0.03931 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   tail correction                                             -10.518 [K]        -0.02090 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                               -30.250 [K]        -0.06011 [kcal/mol]
- Aggregate van der waals (bond and nonbond)                   -30.250 [K]        -0.06011 [kcal/mol]
+Total classical                                               -30.299 [K]        -0.06021 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)                   -30.299 [K]        -0.06021 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
 Averages               Units Type       Box  1      Box  2
  Volume                 nm^3       0.27420E+02 0.21558E+03
@@ -419,8 +419,8 @@ Averages               Units Type       Box  1      Box  2
  -<dU/dV>                kPa       0.13046E+06 -.31258E+01
  Thermodynamic Pressure  kPa       0.17427E+06 0.88752E+03
  Thermo p_i <x_1><p_t>   kPa    1  0.17427E+06 0.88752E+03
- Total Classical           K       -0.1403E+06 -0.1464E+02
- Inter vdw                 K       -0.1403E+06 -0.1464E+02
+ Total Classical           K       -0.1403E+06 -0.1465E+02
+ Inter vdw                 K       -0.1403E+06 -0.1465E+02
  Angle                     K        0.0000E+00  0.0000E+00
  Torsion                   K        0.0000E+00  0.0000E+00
  Intra vdw                 K        0.0000E+00  0.0000E+00
@@ -430,13 +430,13 @@ Averages               Units Type       Box  1      Box  2
  Tail vdw                  K       -0.2971E+04 -0.9671E+01
  Solvation                 K        0.0000E+00  0.0000E+00
  u (Density)               K    1    -3014.855   -4323.512
- u (NVT Insertion)         K    1      221.751     -16.266
- u (NpT Insertion)         K    1      210.944     -16.920
- u (Den. + NVT Insert)     K    1    -2793.104   -4339.778
- u (Den. + NpT Insert)     K    1    -2803.911   -4340.432
- u (Gibbs Total)           K    1    -2803.350   -4335.609
- G: Sum{<u_i><N_i>}   kJ/mol       -0.6028E+04 -0.1491E+04
- U                    kJ/mol       -0.1166E+04 -0.1217E+00
- H_vap (pV/n=RT)      kJ/mol        0.7300E+01
+ u (NVT Insertion)         K    1      320.123     -16.266
+ u (NpT Insertion)         K    1      325.308     -16.920
+ u (Den. + NVT Insert)     K    1    -2694.733   -4339.778
+ u (Den. + NpT Insert)     K    1    -2689.547   -4340.432
+ u (Gibbs Total)           K    1    -2686.478   -4335.609
+ G: Sum{<u_i><N_i>}   kJ/mol       -0.5777E+04 -0.1491E+04
+ U                    kJ/mol       -0.1166E+04 -0.1218E+00
+ H_vap (pV/n=RT)      kJ/mol        0.7301E+01
  H_vap (thermo p)     kJ/mol        0.7234E+01
 Please see towhee_citations for a list of suggested citations for this simulation

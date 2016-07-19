@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 01-27-2012 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -38,7 +38,7 @@ c     --- varibles passed to/from the subroutine
       logical lfailure
 c     --- local variables
 c     --- logical scalars
-      logical laccept,scp_eval_derivative,lewald
+      logical laccept,scp_eval_derivative
 c     --- logical arrays
       logical loverlap
       dimension loverlap(2)
@@ -66,7 +66,6 @@ c     --- double precision arrays
 c      write(6,*) 'start TRANATOM'
 c     --- retrieve constants
       call twh_potentialstyle(GLB_GET,potentialstyle)
-      call twh_lewald(GLB_GET,lewald)
 
 c     --- select a chain at random
       rchain  = twh_random()
@@ -282,10 +281,8 @@ c        --- assign new positions for the single atom that moved
      &        ,xtemp,ytemp,ztemp)
          call twh_coordinates(GLB_SET,CRD_REAL,ichain,atom
      &        ,xtemp,ytemp,ztemp)
-         if ( lewald ) then
-c           --- update reciprocal-space sum
-            call twh_recip(ibox,2)
-         endif
+c        --- update reciprocal-space sum
+         call twh_recip(ibox,2)
 
 c        --- update chain center of mass
          call twh_ctrmas(lfailure,CRD_REAL,ibox,ichain,CTR_TRANATOM)

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -58,7 +58,7 @@ c     --- character scalars
       character*20 initboxtype,initstyle,teststyle,initlattice
 c     --- logical scalars
       logical lopentemplate,lopencoords,lopenpartial,lallow
-      logical lterm,lgrowcbmc,lfound,lelect,lewald
+      logical lterm,lgrowcbmc,lfound,lewald
 c     --- integer scalars
       integer idim,jdim,istart,iend,iadjust,itest,nchain,kmax
       integer ic,jc,kc,intemp,idum,nchbox,jbox,ensemble
@@ -194,23 +194,20 @@ c     --- and below
          enddo
       enddo
 
-      call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
-      if ( lelect ) then
-c        --- set ewald parameters: 
-         do ibox = 1, numboxes
-            call twh_resetcoulomb(lfailure,ibox)
-            if ( lfailure ) return
-            if ( lewald ) then
-               call twh_ewald_calp(GLB_GET,ibox,calp)
-               write(6,41) 'Box:',ibox,'Initial calp:',calp
- 41            format(a4,1x,i5,1x,a13,1x,f10.5)
-               call twh_ewald_kmax(GLB_GET,ibox,kmax)
-               write(6,'(a4,1x,i5,1x,a13,1x,i5)') 
-     &              'Box:',ibox,'Initial kmax:',kmax
-            endif
-         enddo
-      endif
+c     --- set ewald parameters: 
+      do ibox = 1, numboxes
+         call twh_resetcoulomb(lfailure,ibox)
+         if ( lfailure ) return
+         if ( lewald ) then
+            call twh_ewald_calp(GLB_GET,ibox,calp)
+            write(6,41) 'Box:',ibox,'Initial calp:',calp
+ 41         format(a4,1x,i5,1x,a13,1x,f10.5)
+            call twh_ewald_kmax(GLB_GET,ibox,kmax)
+            write(6,'(a4,1x,i5,1x,a13,1x,i5)') 
+     &           'Box:',ibox,'Initial kmax:',kmax
+         endif
+      enddo
 
 c     --- initialize nboxi
       call twh_nchain(GLB_GET,nchain)

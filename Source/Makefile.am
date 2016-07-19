@@ -180,7 +180,6 @@ towhee_SOURCES =  \
 		swapmoves.F \
 		switch.F \
 		tail.F \
-		thermopressure.F \
 		tranatom.F \
 		trancom.F \
 		uniformbox.F \
@@ -196,8 +195,7 @@ towhee_SOURCES =  \
 		veefone.F \
 		vfield.F \
 		vimproper.F \
-		volnpt.F \
-		volnvt.F \
+		volumemoves.F \
 		vonefive.F \
 		vsasa.F \
 		vembed.F \
@@ -567,7 +565,6 @@ stresstensor.o: preproc.h functions.h stresstensor.F
 swapmoves.o: preproc.h functions.h swapmoves.F
 switch.o: preproc.h switch.F
 tail.o: preproc.h functions.h tail.F
-thermopressure.o: preproc.h functions.h thermopressure.F
 tranatom.o: preproc.h dvpm.h functions.h tranatom.F
 trancom.o: preproc.h functions.h trancom.F
 uniformbox.o: functions.h uniformbox.F
@@ -583,8 +580,7 @@ vcoulomb.o: preproc.h functions.h vcoulomb.F
 veefone.o: preproc.h functions.h veefone.F
 vfield.o: preproc.h functions.h vfield.F
 vimproper.o: preproc.h functions.h vimproper.F
-volnpt.o: preproc.h functions.h volnpt.F
-volnvt.o: preproc.h functions.h volnvt.F
+volumemoves.o: preproc.h functions.h volumemoves.F
 vonefive.o: preproc.h functions.h vonefive.F
 vsasa.o: preproc.h functions.h vsasa.F
 vembed.o: preproc.h functions.h vembed.F

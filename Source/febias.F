@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *         *cord(2) is iuother                                    *
 c     *         *cord(3) is iufrom                                     *
 c     *                                                                *
 c     * originally written 01-23-2001 by M.G. Martin                   *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 07-11-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -62,7 +62,6 @@ c     ******************************************************************
 #define FUNCTION_GET_ITBEN
 #define FUNCTION_GET_ITVIB
 #define FUNCTION_GET_VIBCOEFF
-#define FUNCTION_INTEGRATEDGAUSSPROB
 #define FUNCTION_VANGLE
 #define FUNCTION_VBOND
 #define FUNCTION_VTORSION
@@ -349,7 +348,7 @@ c           --- set the biasing mean and standard deviation
      &           ,dvalue)
             stddev = dvalue*two_bond_bias_sdev_multiplier
             lolimit = 0.0d0
-            hilimit = 0.5d0*minboxdim
+            hilimit = minboxdim
 c           --- get the gaussian probability
             twh_febias = twh_gaussprob(length,mean,stddev
      &           ,lolimit,hilimit)
@@ -527,11 +526,12 @@ c              --- assign the gaussian parameters
                call twh_three_bond_bias_sdev_multiplier(GLB_GET,mult)
                stddev = dvalue*mult
                lolimit = 0.0d0
-               hilimit = 0.5d0*minboxdim
 c              --- want the integrated probability distribution from 
-c              --- minlen to maxlen
-               twh_febias = twh_integratedgaussprob(minlen,maxlen
-     &              ,mean,stddev,lolimit,hilimit)
+c              --- minlen to maxlen on bounds [0,Inf)
+               call twh_integratedgaussprob(lfailure,LIM_VALUE
+     &              ,LIM_POSINF,minlen
+     &              ,maxlen,mean,stddev,lolimit,hilimit,twh_febias)
+               if ( lfailure ) return
             else
                write(6,*) 'FEBIAS: unknown three_bond_style'
                write(6,*) threebbias_style
@@ -548,7 +548,7 @@ c           --- assign the gaussian parameters
             call twh_three_bond_bias_sdev_multiplier(GLB_GET,mult)
             stddev = dvalue*mult
             lolimit = 0.0d0
-            hilimit = 0.5d0*minboxdim
+            hilimit = minboxdim
             call twh_mimage(ibox,xcord(2),ycord(2),zcord(2),xcord(1)
      &           ,ycord(1),zcord(1),rxuij,ryuij,rzuij)
             length = twh_distance(rxuij,ryuij,rzuij)
@@ -562,7 +562,7 @@ c           --- assign the gaussian parameters
             return
          endif
       else
-         write(6,*) 'biastype ',biastype,' not implemented in febias'
+         write(6,*) 'FEBIAS: biastype ',biastype,' not implemented'
          lfailure = .true.
       endif
 

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ MCCCS Towhee - Version 7.2.0   (July 19 2016)      
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -474,26 +474,26 @@ Total classical                                           -772854.213 [K]     -1
 
 Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
 Block Averages (BA) for block     1
-BA Box: 1 Volume [A^3] 0.23503441E+05
-BA Box: 1 V^2 [A^6] 0.55241457E+09
-BA Box: 1 Specific density [g/ml] 0.70304584E+00
+BA Box: 1 Volume [A^3] 0.23414166E+05
+BA Box: 1 V^2 [A^6] 0.54823223E+09
+BA Box: 1 Specific density [g/ml] 0.70573451E+00
 BA Box: 1 Virial Pressure      [kPa] 0.00000000E+00
-BA Box: 1 Total Classical -.77756944E+06
-BA Box: 1 Inter vdw       -.24916762E+06
-BA Box: 1 Angle           0.74673071E+05
-BA Box: 1 Torsion         0.54034423E+05
+BA Box: 1 Total Classical -.77433032E+06
+BA Box: 1 Inter vdw       -.24177368E+06
+BA Box: 1 Angle           0.73495507E+05
+BA Box: 1 Torsion         0.54780544E+05
 BA Box: 1 Intra vdw       0.00000000E+00
 BA Box: 1 External Field  0.00000000E+00
 BA Box: 1 Vibration       0.00000000E+00
-BA Box: 1 Coulomb         -.65710931E+06
-BA Box: 1 Tail vdw        -.14207608E+05
+BA Box: 1 Coulomb         -.66083269E+06
+BA Box: 1 Tail vdw        -.14261942E+05
 BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 u (Gibbs Total) [K] Type   2 -.29014055E+04
-BA Box: 1 u (Gibbs Total) [K] Type   3 -.44540815E+04
-BA Box: 1 u (Gibbs Total) [K] Type   4 0.54973994E+04
-BA Box: 1 u (Gibbs Total) [K] Type   5 -.74523399E+04
-BA Box: 1 Number density [nm-3] Type   1 0.91901904E+01
+BA Box: 1 u (Gibbs Total) [K] Type   2 -.27682176E+04
+BA Box: 1 u (Gibbs Total) [K] Type   3 -.54674817E+04
+BA Box: 1 u (Gibbs Total) [K] Type   4 0.23847869E+05
+BA Box: 1 u (Gibbs Total) [K] Type   5 -.13289810E+04
+BA Box: 1 Number density [nm-3] Type   1 0.92253366E+01
 BA Box: 1 Number density [nm-3] Type   2 0.00000000E+00
 BA Box: 1 Number density [nm-3] Type   3 0.00000000E+00
 BA Box: 1 Number density [nm-3] Type   4 0.00000000E+00
@@ -510,32 +510,32 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1        1.10147
+BA Box: 1 Radius of Gyration Type:  1        1.10203
 BA Box: 1 Radius of Gyration Type:  2        0.00000
 BA Box: 1 Radius of Gyration Type:  3        0.00000
 BA Box: 1 Radius of Gyration Type:  4        0.00000
 BA Box: 1 Radius of Gyration Type:  5        0.00000
 Block Averages (BA) for block     2
-BA Box: 1 Volume [A^3] 0.23382261E+05
-BA Box: 1 V^2 [A^6] 0.54673012E+09
-BA Box: 1 Specific density [g/ml] 0.70668583E+00
+BA Box: 1 Volume [A^3] 0.23402914E+05
+BA Box: 1 V^2 [A^6] 0.54769637E+09
+BA Box: 1 Specific density [g/ml] 0.70606218E+00
 BA Box: 1 Virial Pressure      [kPa] 0.00000000E+00
-BA Box: 1 Total Classical -.77751542E+06
-BA Box: 1 Inter vdw       -.24588876E+06
-BA Box: 1 Angle           0.75667335E+05
-BA Box: 1 Torsion         0.54803153E+05
+BA Box: 1 Total Classical -.77251090E+06
+BA Box: 1 Inter vdw       -.24362407E+06
+BA Box: 1 Angle           0.72632210E+05
+BA Box: 1 Torsion         0.55504453E+05
 BA Box: 1 Intra vdw       0.00000000E+00
 BA Box: 1 External Field  0.00000000E+00
 BA Box: 1 Vibration       0.00000000E+00
-BA Box: 1 Coulomb         -.66209715E+06
-BA Box: 1 Tail vdw        -.14281167E+05
+BA Box: 1 Coulomb         -.65702350E+06
+BA Box: 1 Tail vdw        -.14268564E+05
 BA Box: 1 Solvation       0.00000000E+00
 BA Box: 1 u (Gibbs Total) [K] Type   1 0.00000000E+00
-BA Box: 1 u (Gibbs Total) [K] Type   2 -.48086556E+04
-BA Box: 1 u (Gibbs Total) [K] Type   3 -.14516746E+04
-BA Box: 1 u (Gibbs Total) [K] Type   4 0.38523095E+04
-BA Box: 1 u (Gibbs Total) [K] Type   5 -.46125400E+04
-BA Box: 1 Number density [nm-3] Type   1 0.92377723E+01
+BA Box: 1 u (Gibbs Total) [K] Type   2 -.32341862E+04
+BA Box: 1 u (Gibbs Total) [K] Type   3 -.57775587E+04
+BA Box: 1 u (Gibbs Total) [K] Type   4 -.56088435E+04
+BA Box: 1 u (Gibbs Total) [K] Type   5 0.77891697E+03
+BA Box: 1 Number density [nm-3] Type   1 0.92296200E+01
 BA Box: 1 Number density [nm-3] Type   2 0.00000000E+00
 BA Box: 1 Number density [nm-3] Type   3 0.00000000E+00
 BA Box: 1 Number density [nm-3] Type   4 0.00000000E+00
@@ -552,7 +552,7 @@ BA Box: 1 Stress Tensor Virial S_xy          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_xz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial S_yz          [kPa] 0.00000000E+00
 BA Box: 1 Stress Tensor Virial P_tail        [kPa] 0.00000000E+00
-BA Box: 1 Radius of Gyration Type:  1        1.10129
+BA Box: 1 Radius of Gyration Type:  1        1.10160
 BA Box: 1 Radius of Gyration Type:  2        0.00000
 BA Box: 1 Radius of Gyration Type:  3        0.00000
 BA Box: 1 Radius of Gyration Type:  4        0.00000
@@ -562,25 +562,25 @@ BA Box: 1 Radius of Gyration Type:  5        0.00000
 
  Final hmatrix (general box dimensions) 
 Box:     1
-  hmatrix(1,x)      28.59536       0.00000       0.00000
-  hmatrix(2,x)       0.00000      28.59536       0.00000
-  hmatrix(3,x)       0.00000       0.00000      28.59536
+  hmatrix(1,x)      28.60377       0.00000       0.00000
+  hmatrix(2,x)       0.00000      28.60377       0.00000
+  hmatrix(3,x)       0.00000       0.00000      28.60377
 
 * 3D Volume Change Moves *
- Box  1 Tries:        4 Acp. Ratio:  0.500 Max Disp.: 0.468E+03
+ Box  1 Tries:        7 Acp. Ratio:  0.714 Max Disp.: 0.468E+03
 
 * Configurational-Bias REGROWTH Moves *
  Molecule type:    1 Box:    1
      Length  Attempts  Regrown  Accepted  %Regrown   %Accep.
-        1        39        39        25    100.00     64.10
-        2        37        37         9    100.00     24.32
-        3        64        64         4    100.00      6.25
+        1        28        28        21    100.00     75.00
+        2        24        24         6    100.00     25.00
+        3        68        68         3    100.00      4.41
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:            143. Accepted:             75. Accepted:  52.448 %
+Molecule:  1 Box: 1 Attempts:            155. Accepted:             71. Accepted:  45.806 %
 
 * Rotation Moves *
-Molecule:  1 Box: 1 Attempts:            145. Accepted:             68. Accepted:  46.897 %
+Molecule:  1 Box: 1 Attempts:            150. Accepted:             75. Accepted:  50.000 %
 
 Final Energies for Box     1
 Total molecules in this box        216
@@ -594,14 +594,14 @@ Molecules of type   5 :          0
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
   bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
   bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
- Total angle (atoms ijk bonded in sequence)                 75622.612 [K]       150.27845 [kcal/mol]
-  angle (ijk) regular                                       75622.612 [K]       150.27845 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                 72872.375 [K]       144.81314 [kcal/mol]
+  angle (ijk) regular                                       72872.375 [K]       144.81314 [kcal/mol]
   bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
   angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
   angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
   angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
- Total torsion (ijkl bonded in sequence)                    55297.178 [K]       109.88743 [kcal/mol]
-  torsion (ijkl) regular                                    55297.178 [K]       109.88743 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                    55764.483 [K]       110.81606 [kcal/mol]
+  torsion (ijkl) regular                                    55764.483 [K]       110.81606 [kcal/mol]
   torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
   torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
@@ -609,34 +609,34 @@ Molecules of type   5 :          0
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw              -244397.251 [K]      -485.67009 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw              -245476.194 [K]      -487.81418 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                               -230116.084 [K]      -457.29033 [kcal/mol]
+  2-body vdw intermolecular                               -231207.629 [K]      -459.45946 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
-  tail correction                                          -14281.167 [K]       -28.37976 [kcal/mol]
- Total nonbond (more than 3 bonds apart) Electric         -663742.868 [K]     -1319.00034 [kcal/mol]
-  total real space Electric                               -646999.153 [K]     -1285.72697 [kcal/mol]
+  tail correction                                          -14268.564 [K]       -28.35472 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) Electric         -654487.681 [K]     -1300.60829 [kcal/mol]
+  total real space Electric                               -637809.114 [K]     -1267.46438 [kcal/mol]
    intramolecular Electric                                      0.000 [K]         0.00000 [kcal/mol]
-   intermolecular Electric                                -646999.153 [K]     -1285.72697 [kcal/mol]
-  self                                                   -2988754.458 [K]     -5939.30021 [kcal/mol]
-  correction                                              2965814.914 [K]      5893.71438 [kcal/mol]
-  reciprocal sum                                             6195.830 [K]        12.31245 [kcal/mol]
+   intermolecular Electric                                -637809.114 [K]     -1267.46438 [kcal/mol]
+  self                                                   -2987875.012 [K]     -5937.55256 [kcal/mol]
+  correction                                              2964800.071 [K]      5891.69767 [kcal/mol]
+  reciprocal sum                                             6396.375 [K]        12.71098 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                           -777220.328 [K]     -1544.50455 [kcal/mol]
- Aggregate van der waals (bond and nonbond)               -244397.251 [K]      -485.67009 [kcal/mol]
- Aggregate Electric (bond and nonbond)                    -663742.868 [K]     -1319.00034 [kcal/mol]
+Total classical                                           -771327.017 [K]     -1532.79327 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)               -245476.194 [K]      -487.81418 [kcal/mol]
+ Aggregate Electric (bond and nonbond)                    -654487.681 [K]     -1300.60829 [kcal/mol]
 Averages               Units Type       Box  1
- Volume                 nm^3       0.23443E+02
- Volume^2               nm^6       0.54957E+03
+ Volume                 nm^3       0.23409E+02
+ Volume^2               nm^6       0.54796E+03
  Molecule Number                1      216.000
  Molecule Number                2        0.000
  Molecule Number                3        0.000
  Molecule Number                4        0.000
  Molecule Number                5        0.000
- Molar Volume         ml/mol       0.65358E+02
- Specific Density       g/ml        0.70486584
- Number Density         nm-3    1      9.21398
+ Molar Volume         ml/mol       0.65262E+02
+ Specific Density       g/ml        0.70589835
+ Number Density         nm-3    1      9.22748
  Number Density         nm-3    2      0.00000
  Number Density         nm-3    3      0.00000
  Number Density         nm-3    4      0.00000
@@ -646,118 +646,118 @@ Averages               Units Type       Box  1
  Mole Fraction                  3    0.0000000
  Mole Fraction                  4    0.0000000
  Mole Fraction                  5    0.0000000
- Radius of Gyration        A    1    1.1013812
+ Radius of Gyration        A    1    1.1018132
  Radius of Gyration        A    2    0.0000000
  Radius of Gyration        A    3    0.0000000
  Radius of Gyration        A    4    0.0000000
  Radius of Gyration        A    5    0.0000000
- Ideal Pressure          kPa       0.47465E+05
- Ideal p_i <N/V>kT       kPa    1  0.47465E+05
+ Ideal Pressure          kPa       0.47534E+05
+ Ideal p_i <N/V>kT       kPa    1  0.47534E+05
  Ideal p_i <N/V>kT       kPa    2  0.00000E+00
  Ideal p_i <N/V>kT       kPa    3  0.00000E+00
  Ideal p_i <N/V>kT       kPa    4  0.00000E+00
  Ideal p_i <N/V>kT       kPa    5  0.00000E+00
- -<dU/dV>                kPa       -.57581E+05
- Thermodynamic Pressure  kPa       -.10116E+05
- Thermo p_i <x_1><p_t>   kPa    1  -.10116E+05
- Thermo p_i <x_1><p_t>   kPa    2  -.00000E+00
- Thermo p_i <x_1><p_t>   kPa    3  -.00000E+00
- Thermo p_i <x_1><p_t>   kPa    4  -.00000E+00
- Thermo p_i <x_1><p_t>   kPa    5  -.00000E+00
- Total Classical           K       -0.7775E+06
- Inter vdw                 K       -0.2475E+06
- Angle                     K        0.7517E+05
- Torsion                   K        0.5442E+05
+ -<dU/dV>                kPa       -.36097E+05
+ Thermodynamic Pressure  kPa       0.11437E+05
+ Thermo p_i <x_1><p_t>   kPa    1  0.11437E+05
+ Thermo p_i <x_1><p_t>   kPa    2  0.00000E+00
+ Thermo p_i <x_1><p_t>   kPa    3  0.00000E+00
+ Thermo p_i <x_1><p_t>   kPa    4  0.00000E+00
+ Thermo p_i <x_1><p_t>   kPa    5  0.00000E+00
+ Total Classical           K       -0.7734E+06
+ Inter vdw                 K       -0.2427E+06
+ Angle                     K        0.7306E+05
+ Torsion                   K        0.5514E+05
  Intra vdw                 K        0.0000E+00
  External Field            K        0.0000E+00
  Vibration                 K        0.0000E+00
- Coulomb                   K       -0.6596E+06
- Tail vdw                  K       -0.1424E+05
+ Coulomb                   K       -0.6589E+06
+ Tail vdw                  K       -0.1427E+05
  Solvation                 K        0.0000E+00
  u (Density)               K    2        0.000
- u (NVT Insertion)         K    2      865.692
- u (NpT Insertion)         K    2      866.657
- u (Den. + NVT Insert)     K    2      865.692
- u (Den. + NpT Insert)     K    2      866.657
- u (Gibbs Total)           K    2    -4552.349
+ u (NVT Insertion)         K    2     2348.695
+ u (NpT Insertion)         K    2     2348.785
+ u (Den. + NVT Insert)     K    2     2348.695
+ u (Den. + NpT Insert)     K    2     2348.785
+ u (Gibbs Total)           K    2    -3069.675
  u (Density)               K    3        0.000
- u (NVT Insertion)         K    3     1608.677
- u (NpT Insertion)         K    3     1609.642
- u (Den. + NVT Insert)     K    3     1608.677
- u (Den. + NpT Insert)     K    3     1609.642
- u (Gibbs Total)           K    3    -4195.657
+ u (NVT Insertion)         K    3      150.809
+ u (NpT Insertion)         K    3      150.899
+ u (Den. + NVT Insert)     K    3      150.809
+ u (Den. + NpT Insert)     K    3      150.899
+ u (Gibbs Total)           K    3    -5653.854
  u (Density)               K    4        0.000
- u (NVT Insertion)         K    4     9836.286
- u (NpT Insertion)         K    4     9837.252
- u (Den. + NVT Insert)     K    4     9836.286
- u (Den. + NpT Insert)     K    4     9837.252
- u (Gibbs Total)           K    4     4106.349
+ u (NVT Insertion)         K    4      379.967
+ u (NpT Insertion)         K    4      380.057
+ u (Den. + NVT Insert)     K    4      379.967
+ u (Den. + NpT Insert)     K    4      380.057
+ u (Gibbs Total)           K    4    -5350.300
  u (Density)               K    5        0.000
- u (NVT Insertion)         K    5    -1211.322
- u (NpT Insertion)         K    5    -1210.357
- u (Den. + NVT Insert)     K    5    -1211.322
- u (Den. + NpT Insert)     K    5    -1210.357
- u (Gibbs Total)           K    5    -7193.980
+ u (NVT Insertion)         K    5     4911.242
+ u (NpT Insertion)         K    5     4911.332
+ u (Den. + NVT Insert)     K    5     4911.242
+ u (Den. + NpT Insert)     K    5     4911.332
+ u (Gibbs Total)           K    5    -1071.745
  G: Sum{<u_i><N_i>}   kJ/mol        0.0000E+00
- U                    kJ/mol       -0.6464E+04
+ U                    kJ/mol       -0.6430E+04
  u (Isolation)             K    2       -0.000
- u (Residual)              K    2      866.657
+ u (Residual)              K    2     2348.785
  u (Isolation)             K    3       -0.000
- u (Residual)              K    3     1609.642
+ u (Residual)              K    3      150.899
  u (Isolation)             K    4       -0.000
- u (Residual)              K    4     9837.252
+ u (Residual)              K    4      380.057
  u (Isolation)             K    5       -0.000
- u (Residual)              K    5    -1210.357
- Henry Law (Residual)    MPa    2  0.48452E+03
- Henry Law (Residual)    MPa    3  0.35514E+04
- Henry Law (Residual)    MPa    4  0.13491E+14
- Henry Law (Residual)    MPa    5  0.18492E+01
+ u (Residual)              K    5     4911.332
+ Henry Law (Residual)    MPa    2  0.25801E+05
+ Henry Law (Residual)    MPa    3  0.71215E+02
+ Henry Law (Residual)    MPa    4  0.13164E+03
+ Henry Law (Residual)    MPa    5  0.24847E+08
 
 Block Averages (  2 blocks) Units Type Box Average      Standard Deviation
- Specific Density            g/ml        1  0.70487E+00  0.18200E-02
- Thermodynamic Pressure       kPa        1  0.63223E+04  0.32999E+05
- Total Classical                K        1 -0.77754E+06  0.27013E+02
- Inter vdw                      K        1 -0.24753E+06  0.16394E+04
- Angle                          K        1  0.75170E+05  0.49713E+03
- Torsion                        K        1  0.54419E+05  0.38437E+03
+ Specific Density            g/ml        1  0.70590E+00  0.16384E-03
+ Thermodynamic Pressure       kPa        1  0.22280E+05  0.15192E+05
+ Total Classical                K        1 -0.77342E+06  0.90971E+03
+ Inter vdw                      K        1 -0.24270E+06  0.92519E+03
+ Angle                          K        1  0.73064E+05  0.43165E+03
+ Torsion                        K        1  0.55142E+05  0.36195E+03
  Intra vdw                      K        1  0.00000E+00  0.00000E+00
  External Field                 K        1  0.00000E+00  0.00000E+00
  Vibration                      K        1  0.00000E+00  0.00000E+00
- Coulomb                        K        1 -0.65960E+06  0.24939E+04
- Tail vdw                       K        1 -0.14244E+05  0.36780E+02
+ Coulomb                        K        1 -0.65893E+06  0.19046E+04
+ Tail vdw                       K        1 -0.14265E+05  0.33110E+01
  Solvation                      K        1  0.00000E+00  0.00000E+00
- u (Gibbs Total)                K    2   1    -3855.031      953.625
- u (Gibbs Total)                K    3   1    -2952.878     1501.203
- u (Gibbs Total)                K    4   1     4674.854      822.545
- u (Gibbs Total)                K    5   1    -6032.440     1419.900
- u (NpT Insertion)              K    2   1     1563.974      954.589
- u (NpT Insertion)              K    3   1     2852.420     1500.239
- u (NpT Insertion)              K    4   1    10405.756      823.509
- u (NpT Insertion)              K    5   1      -48.818     1418.936
- u (NVT Insertion)              K    2   1     1563.010      953.625
- u (NVT Insertion)              K    3   1     2851.456     1501.203
- u (NVT Insertion)              K    4   1    10404.792      822.545
- u (NVT Insertion)              K    5   1      -49.782     1419.900
- Number Density              nm-3    1   1  0.92140E+01  0.23791E-01
+ u (Gibbs Total)                K    2   1    -3001.202      232.984
+ u (Gibbs Total)                K    3   1    -5622.520      155.038
+ u (Gibbs Total)                K    4   1     9119.513    14728.356
+ u (Gibbs Total)                K    5   1     -275.032     1053.949
+ u (NpT Insertion)              K    2   1     2417.258      233.074
+ u (NpT Insertion)              K    3   1      182.233      155.128
+ u (NpT Insertion)              K    4   1    14849.869    14728.446
+ u (NpT Insertion)              K    5   1     5708.045     1053.859
+ u (NVT Insertion)              K    2   1     2417.168      232.984
+ u (NVT Insertion)              K    3   1      182.143      155.038
+ u (NVT Insertion)              K    4   1    14849.780    14728.356
+ u (NVT Insertion)              K    5   1     5707.955     1053.949
+ Number Density              nm-3    1   1  0.92275E+01  0.21417E-02
  Number Density              nm-3    2   1  0.00000E+00  0.00000E+00
  Number Density              nm-3    3   1  0.00000E+00  0.00000E+00
  Number Density              nm-3    4   1  0.00000E+00  0.00000E+00
  Number Density              nm-3    5   1  0.00000E+00  0.00000E+00
- Henry Coeff (Residual)       MPa    2   1  0.20377E+05  0.20133E+05
- Henry Coeff (Residual)       MPa    3   1  0.27822E+07  0.27805E+07
- Henry Coeff (Residual)       MPa    4   1  0.28437E+15  0.27754E+15
- Henry Coeff (Residual)       MPa    5   1  0.93716E+03  0.93624E+03
+ Henry Coeff (Residual)       MPa    2   1  0.37247E+05  0.20647E+05
+ Henry Coeff (Residual)       MPa    3   1  0.84245E+02  0.33131E+02
+ Henry Coeff (Residual)       MPa    4   1  0.65256E+36  0.65256E+36
+ Henry Coeff (Residual)       MPa    5   1  0.17805E+10  0.17681E+10
  Mole Fraction                       1   1    1.0000000    0.0000000
  Mole Fraction                       2   1    0.0000000    0.0000000
  Mole Fraction                       3   1    0.0000000    0.0000000
  Mole Fraction                       4   1    0.0000000    0.0000000
  Mole Fraction                       5   1    0.0000000    0.0000000
- Molarity                       M    1   1  0.15306E+02  0.39520E-01
+ Molarity                       M    1   1  0.15328E+02  0.35577E-02
  Molarity                       M    2   1  0.00000E+00  0.00000E+00
  Molarity                       M    3   1  0.00000E+00  0.00000E+00
  Molarity                       M    4   1  0.00000E+00  0.00000E+00
  Molarity                       M    5   1  0.00000E+00  0.00000E+00
- Radius of Gyration             A    1   1      1.10138      0.00009
+ Radius of Gyration             A    1   1      1.10181      0.00021
  Radius of Gyration             A    2   1      0.00000      0.00000
  Radius of Gyration             A    3   1      0.00000      0.00000
  Radius of Gyration             A    4   1      0.00000      0.00000
@@ -766,6 +766,6 @@ Block Averages (  2 blocks) Units Type Box Average      Standard Deviation
  -----block averages ------
 Box:    1
 Block Energy         Density        Virial Press.  Mol fracs
-    1 -.77756944E+06 0.70304584E+00 0.00000000E+00 1.00000000 0.00000000 0.00000000 0.00000000 0.00000000
-    2 -.77751542E+06 0.70668583E+00 0.00000000E+00 1.00000000 0.00000000 0.00000000 0.00000000 0.00000000
+    1 -.77433032E+06 0.70573451E+00 0.00000000E+00 1.00000000 0.00000000 0.00000000 0.00000000 0.00000000
+    2 -.77251090E+06 0.70606218E+00 0.00000000E+00 1.00000000 0.00000000 0.00000000 0.00000000 0.00000000
 Please see towhee_citations for a list of suggested citations for this simulation

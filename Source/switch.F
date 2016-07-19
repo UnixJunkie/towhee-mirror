@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 07-15-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -38,7 +38,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- local logical scalars
       logical lfound,laccept,lgetcom,lintra,lbonded,lpartial
-      logical scp_eval_derivative,lewald
+      logical scp_eval_derivative
 c     --- local logical arrays
       logical loverlap
       dimension loverlap(2)
@@ -68,7 +68,6 @@ c     --- local double precision arrays
 #endif
 c     --- retrieve constants
       call twh_potentialstyle(GLB_GET,potentialstyle)
-      call twh_lewald(GLB_GET,lewald)
       call twh_numboxes(GLB_GET,numboxes)
 
 c     --- select a box at random
@@ -296,10 +295,8 @@ c     --- store new coordinates
          call twh_coordinates(GLB_SET,CRD_REAL,jchain,junit,rjx,rjy,rjz)
       enddo
       
-      if ( lewald ) then
-c        --- update reciprocal-space sum
-         call twh_recip(ibox,2)
-      endif
+c     --- update reciprocal-space sum
+      call twh_recip(ibox,2)
 
 c     --- update embedding density
       iboxa(1)=ibox

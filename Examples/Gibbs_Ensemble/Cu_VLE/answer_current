@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 7.2.0   (May 03 2016)       
+ MCCCS Towhee - Version 7.2.0   (July 19 2016)      
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -288,126 +288,127 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
            B: 2 -0.6803E+05  0.1000E+07          0.0    99
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             85.        45.   0.601307
+ Translate COM             88.        45.   0.580808
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             43.        39.   1.777674
-         2 B: 1 -0.7079E+07  0.3088E+04          0.0   204
+ Translate COM             42.        38.   1.773333
+         2 B: 1 -0.7077E+07  0.3088E+04          0.0   204
            B: 2 -0.9938E+05  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             81.        47.   0.697813
+ Translate COM             89.        50.   0.652593
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             39.        35.   3.190698
-         3 B: 1 -0.7049E+07  0.3088E+04          0.0   204
-           B: 2 -0.2096E+06  0.1000E+07          0.0    96
+ Translate COM             36.        32.   3.152593
+         3 B: 1 -0.7050E+07  0.3088E+04          0.0   204
+           B: 2 -0.1858E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             76.        31.   0.569269
+ Translate COM             79.        31.   0.512162
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             30.        28.   5.955969
-         4 B: 1 -0.7029E+07  0.3088E+04          0.0   204
-           B: 2 -0.2285E+06  0.1000E+07          0.0    96
+ Translate COM             28.        26.   5.854815
+         4 B: 1 -0.7030E+07  0.3088E+04          0.0   204
+           B: 2 -0.1988E+06  0.1000E+07          0.0    96
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             84.        43.   0.582823
+ Translate COM             88.        48.   0.558722
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             29.        22.   9.036643
-         5 B: 1 -0.6997E+07  0.3088E+04          0.0   204
-           B: 2 -0.2973E+06  0.1000E+07          0.0    96
+ Translate COM             28.        22.   9.200423
+         5 B: 1 -0.7060E+07  0.3088E+04          0.0   205
+           B: 2 -0.2563E+06  0.1000E+07          0.0    95
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             79.        42.   0.619710
+ Translate COM             72.        40.   0.620802
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             29.        19.  11.531302
-         6 B: 1 -0.6962E+07  0.3088E+04          0.0   204
-           B: 2 -0.3849E+06  0.1000E+07          0.0    96
+ Translate COM             36.        29.  11.531302
+         6 B: 1 -0.7015E+07  0.3088E+04          0.0   205
+           B: 2 -0.3571E+06  0.1000E+07          0.0    95
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             95.        61.   0.795838
+ Translate COM             94.        52.   0.686845
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             33.        25.  11.531302
-         7 B: 1 -0.6926E+07  0.3088E+04          0.0   204
-           B: 2 -0.4138E+06  0.1000E+07          0.0    96
+ Translate COM             33.        28.  11.531302
+         7 B: 1 -0.7048E+07  0.3088E+04          0.0   207
+           B: 2 -0.3910E+06  0.1000E+07          0.0    93
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             79.        27.   0.543991
+ Translate COM             91.        36.   0.543438
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             35.        25.  11.531302
-         8 B: 1 -0.6900E+07  0.3153E+04          0.0   204
-           B: 2 -0.4685E+06  0.1000E+07          0.0    96
+ Translate COM             39.        31.  11.531302
+         8 B: 1 -0.7093E+07  0.3100E+04          0.0   209
+           B: 2 -0.4340E+06  0.1000E+07          0.0    91
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             86.        44.   0.556642
+ Translate COM             96.        49.   0.554759
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             39.        20.  11.531302
-         9 B: 1 -0.6884E+07  0.3193E+04          0.0   205
-           B: 2 -0.5182E+06  0.1000E+07          0.0    95
+ Translate COM             35.        19.  11.531302
+         9 B: 1 -0.7040E+07  0.3210E+04          0.0   209
+           B: 2 -0.4543E+06  0.1000E+07          0.0    91
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             69.        38.   0.613113
+ Translate COM             83.        46.   0.614914
  Box: 2 Molecule:  1  Attempts   Accepted   New Displacement
- Translate COM             32.        21.  11.531302
-        10 B: 1 -0.6899E+07  0.3193E+04          0.0   206
-           B: 2 -0.5536E+06  0.1000E+07          0.0    94
+ Translate COM             27.        19.  11.531302
+        10 B: 1 -0.7025E+07  0.3210E+04          0.0   209
+           B: 2 -0.4329E+06  0.1000E+07          0.0    91
 
  +++++ end of markov chain +++++
 
  Final hmatrix (general box dimensions) 
 Box:     1
-  hmatrix(1,x)      14.72605       0.00000       0.00000
-  hmatrix(2,x)       0.00000      14.72605       0.00000
-  hmatrix(3,x)       0.00000       0.00000      14.72605
+  hmatrix(1,x)      14.75180       0.00000       0.00000
+  hmatrix(2,x)       0.00000      14.75180       0.00000
+  hmatrix(3,x)       0.00000       0.00000      14.75180
 Box:     2
-  hmatrix(1,x)     100.00605       0.00000       0.00000
-  hmatrix(2,x)       0.00000     100.00605       0.00000
-  hmatrix(3,x)       0.00000       0.00000     100.00605
+  hmatrix(1,x)     100.00549       0.00000       0.00000
+  hmatrix(2,x)       0.00000     100.00549       0.00000
+  hmatrix(3,x)       0.00000       0.00000     100.00549
 
 * 3D Volume Change Moves *
  Box  1 and  2 Tries:       22 Accepted:        4 Acp. Ratio:  0.182 Max Disp.: 0.100E+00
 
 * Rotational-Bias SWAP Moves *
  Molecule type:           1
-  From box  2 to box  1 Attempted:     135 Accepted:       2
-  From box  1 to box  2 Attempted:     143 Accepted:       2
+  From box  2 to box  1 Attempted:     143 Accepted:       4
+  From box  1 to box  2 Attempted:     139 Accepted:       1
 
 * Configurational-Bias SWAP Moves *
 Molecule type:     1
   From box  1 to box  1 Attempted:     150 Grown:     150 Accepted:       1
-  From box  2 to box  1 Attempted:     159 Grown:     159 Accepted:       6
+  From box  2 to box  1 Attempted:     151 Grown:     151 Accepted:       6
   From box  1 to box  2 Attempted:     151 Grown:     151 Accepted:       0
-  From box  2 to box  2 Attempted:     155 Grown:     155 Accepted:     103
+  From box  2 to box  2 Attempted:     158 Grown:     158 Accepted:     116
 
 * Aggregation-Volume-Bias-1 Moves *
  Box Moved Around From To  Attempted  Accepted  Percent
-   1     1      1   in  in        10         0     0.00
-   1     1      1   in out        12         0     0.00
-   1     1      1  out  in        73         0     0.00
-   1     1      1  out out        81         1     1.23
+   1     1      1   in  in        11         0     0.00
+   1     1      1   in out         9         0     0.00
+   1     1      1  out  in        67         0     0.00
+   1     1      1  out out        72         1     1.39
  Box Moved Around From To  Attempted  Accepted  Percent
-   2     1      1  out  in        78         4     5.13
-   2     1      1  out out        59        49    83.05
+   2     1      1   in  in         1         0     0.00
+   2     1      1  out  in        80         5     6.25
+   2     1      1  out out        68        53    77.94
 
 * Aggregation-Volume-Bias-2 Moves 
  Box Moved Around From To  Attempted  Accepted  Percent
-   1     1      1   in out        71         0     0.00
-   1     1      1  out  in        74         0     0.00
+   1     1      1   in out        65         0     0.00
+   1     1      1  out  in        75         0     0.00
  Box Moved Around From To  Attempted  Accepted  Percent
-   2     1      1   in out        69         3     4.35
-   2     1      1  out  in        84        22    26.19
+   2     1      1   in out        67         5     7.46
+   2     1      1  out  in        78        19    24.36
 
 * Aggregation-Volume-Bias-3 Moves 
  Box Moved Around Attempted  Accepted  Percent
-   1     1     1       150         0     0.00
+   1     1     1       142         0     0.00
  Box Moved Around Attempted  Accepted  Percent
-   2     1     1       150        10     6.67
+   2     1     1       136         9     6.62
 
 * COM Translation Moves *
-Molecule:  1 Box: 1 Attempts:            815. Accepted:            424. Accepted:  52.025 %
-Molecule:  1 Box: 2 Attempts:            359. Accepted:            283. Accepted:  78.830 %
+Molecule:  1 Box: 1 Attempts:            861. Accepted:            443. Accepted:  51.452 %
+Molecule:  1 Box: 2 Attempts:            354. Accepted:            293. Accepted:  82.768 %
 
 Final Energies for Box     1
-Total molecules in this box        206
-Molecules of type   1 :        206
+Total molecules in this box        209
+Molecules of type   1 :        209
  Total vibration (atoms ij bonded together)                     0.000 [K]         0.00000 [kcal/mol]
   bond (ij) regular                                             0.000 [K]         0.00000 [kcal/mol]
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
@@ -428,19 +429,19 @@ Molecules of type   1 :        206
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw             -6898782.135 [K]    -13709.36916 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw             -7024941.702 [K]    -13960.07545 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                               4711171.715 [K]      9362.11507 [kcal/mol]
-  3-body vdw intermolecular                             -11609953.850 [K]    -23071.48423 [kcal/mol]
+  2-body vdw intermolecular                               4699281.539 [K]      9338.48673 [kcal/mol]
+  3-body vdw intermolecular                             -11724223.242 [K]    -23298.56217 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                          -6898782.135 [K]    -13709.36916 [kcal/mol]
- Aggregate van der waals (bond and nonbond)              -6898782.135 [K]    -13709.36916 [kcal/mol]
+Total classical                                          -7024941.702 [K]    -13960.07545 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)              -7024941.702 [K]    -13960.07545 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
- Total energy [eV] -594.495    
+ Total energy [eV] -605.366    
 Final Energies for Box     2
-Total molecules in this box         94
-Molecules of type   1 :         94
+Total molecules in this box         91
+Molecules of type   1 :         91
  Total vibration (atoms ij bonded together)                     0.000 [K]         0.00000 [kcal/mol]
   bond (ij) regular                                             0.000 [K]         0.00000 [kcal/mol]
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
@@ -461,32 +462,32 @@ Molecules of type   1 :         94
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw              -553595.944 [K]     -1100.11463 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw              -432869.017 [K]      -860.20417 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                                249866.734 [K]       496.53913 [kcal/mol]
-  3-body vdw intermolecular                               -803462.678 [K]     -1596.65376 [kcal/mol]
+  2-body vdw intermolecular                                316443.985 [K]       628.84250 [kcal/mol]
+  3-body vdw intermolecular                               -749313.002 [K]     -1489.04667 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                           -553595.944 [K]     -1100.11463 [kcal/mol]
- Aggregate van der waals (bond and nonbond)               -553595.944 [K]     -1100.11463 [kcal/mol]
+Total classical                                           -432869.017 [K]      -860.20417 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)               -432869.017 [K]      -860.20417 [kcal/mol]
  Aggregate Electric (bond and nonbond)                          0.000 [K]         0.00000 [kcal/mol]
- Total energy [eV] -47.7055    
+ Total energy [eV] -37.3020    
 Averages               Units Type       Box  1      Box  2
- Volume                 nm^3       0.31347E+01 0.10002E+04
- Volume^2               nm^6       0.98343E+01 0.10005E+07
- Molecule Number                1      203.741      96.259
- Molar Volume         ml/mol       0.92579E+01 0.62576E+04
- Specific Density       g/ml        6.86437927  0.01015571
- Number Density         nm-3    1     65.04737     0.09624
+ Volume                 nm^3       0.31330E+01 0.10002E+04
+ Volume^2               nm^6       0.98238E+01 0.10005E+07
+ Molecule Number                1      205.274      94.726
+ Molar Volume         ml/mol       0.91834E+01 0.63588E+04
+ Specific Density       g/ml        6.92012250  0.00999396
+ Number Density         nm-3    1     65.57559     0.09470
  Mole Fraction                  1    1.0000000   1.0000000
  Radius of Gyration        A    1    0.0000000   0.0000000
- Ideal Pressure          kPa       0.26950E+07 0.39873E+04
- Ideal p_i <N/V>kT       kPa    1  0.26950E+07 0.39873E+04
- -<dU/dV>                kPa       -.25578E+07 -.13757E+04
- Thermodynamic Pressure  kPa       0.13722E+06 0.26115E+04
- Thermo p_i <x_1><p_t>   kPa    1  0.13722E+06 0.26115E+04
- Total Classical           K       -0.6971E+07 -0.3016E+06
- Inter vdw                 K       -0.6971E+07 -0.3016E+06
+ Ideal Pressure          kPa       0.27169E+07 0.39237E+04
+ Ideal p_i <N/V>kT       kPa    1  0.27169E+07 0.39237E+04
+ -<dU/dV>                kPa       -.24015E+07 0.46867E+02
+ Thermodynamic Pressure  kPa       0.31537E+06 0.39706E+04
+ Thermo p_i <x_1><p_t>   kPa    1  0.31537E+06 0.39706E+04
+ Total Classical           K       -0.7035E+07 -0.2664E+06
+ Inter vdw                 K       -0.7035E+07 -0.2664E+06
  Angle                     K        0.0000E+00  0.0000E+00
  Torsion                   K        0.0000E+00  0.0000E+00
  Intra vdw                 K        0.0000E+00  0.0000E+00
@@ -495,14 +496,14 @@ Averages               Units Type       Box  1      Box  2
  Coulomb                   K        0.0000E+00  0.0000E+00
  Tail vdw                  K        0.0000E+00  0.0000E+00
  Solvation                 K        0.0000E+00  0.0000E+00
- u (Density)               K    1   -37174.056  -56719.808
- u (NVT Insertion)         K    1   -26388.016  -11849.674
- u (NpT Insertion)         K    1   -26356.977  -11849.812
- u (Den. + NVT Insert)     K    1   -63562.072  -68569.482
- u (Den. + NpT Insert)     K    1   -63531.033  -68569.620
- u (Gibbs Total)           K    1   -63545.691  -68546.607
- G: Sum{<u_i><N_i>}   kJ/mol       -0.1076E+06 -0.5486E+05
- U                    kJ/mol       -0.5795E+05 -0.2508E+04
- H_vap (pV/n=RT)      kJ/mol        0.2832E+03
- H_vap (thermo p)     kJ/mol        0.2747E+03
+ u (Density)               K    1   -37149.909  -56767.975
+ u (NVT Insertion)         K    1   -28129.305   -7625.985
+ u (NpT Insertion)         K    1   -28097.882   -7626.111
+ u (Den. + NVT Insert)     K    1   -65279.214  -64393.960
+ u (Den. + NpT Insert)     K    1   -65247.791  -64394.086
+ u (Gibbs Total)           K    1   -65244.082  -64414.755
+ G: Sum{<u_i><N_i>}   kJ/mol       -0.1113E+06 -0.5073E+05
+ U                    kJ/mol       -0.5848E+05 -0.2215E+04
+ H_vap (pV/n=RT)      kJ/mol        0.2862E+03
+ H_vap (thermo p)     kJ/mol        0.2867E+03
 Please see towhee_citations for a list of suggested citations for this simulation

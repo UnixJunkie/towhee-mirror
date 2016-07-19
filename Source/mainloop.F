@@ -388,7 +388,7 @@ c        --- we only want to do one move per step
          do ii = 1, inercycle 
 
 c           Perform one monte carlo move
-            call main_do_MC_move(lfailure)
+            call twh_main_do_MC_move(lfailure)
             if ( lfailure ) return
 
 c           --- accumulate averages
@@ -699,8 +699,8 @@ c        --- test for virial computation of pressure
          endif
          if ( pressure_thermo_freq .ne. 0 ) then
             if ( mod(nnn,pressure_thermo_freq) .eq. 0 ) then
-               write(6,*) 'calling thermo pressure'
-               call twh_thermopressure(lfailure)
+               write(6,*) 'calling volumemoves Ghost'
+               call twh_volumemoves(lfailure,VMC_TPRESS)
                stop 'marcus was here'
             endif
          endif
@@ -1904,13 +1904,13 @@ c           --- heat of vaporization (vapor p)
       return
       end
 
-      subroutine main_do_MC_move(lfailure)
+      subroutine twh_main_do_MC_move(lfailure)
 c     ******************************************************************
 c     * Perform one Monte Carlo move.                                  *
 c     *                                                                *
 c     * Variables:                                                     *
 c     *   lfailure -- set to true if problem                           *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 07-16-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -1949,11 +1949,11 @@ c     --- isotropic volume move
          if ( ensemble .eq. ENS_NPT ) then
 c           --- isobaric-isothermal volume move
             DEBUG_WRITE('MOVE: isobaric-isothermal volume move')
-            call twh_volnpt(lfailure,1)
+            call twh_volumemoves(lfailure,VMC_NPT_ISO)
          else
 c           --- canonical Gibbs ensemble volume exchange
             DEBUG_WRITE('MOVE: canonical Gibbs ens vol ex.')
-            call twh_volnvt(lfailure,1)
+            call twh_volumemoves(lfailure,VMC_NVT_ISO)
          endif
          return
       endif
@@ -1963,10 +1963,10 @@ c     --- unit cell perturbation move
       if ( rm .le. pmtest ) then
          if ( ensemble .eq. ENS_NPT ) then
             DEBUG_WRITE('MOVE: unit cell perturbation NPT')
-            call twh_volnpt(lfailure,2)
+            call twh_volumemoves(lfailure,VMC_NPT_ONED)
          else
             DEBUG_WRITE('MOVE: unit cell perturbation NVT')
-            call twh_volnvt(lfailure,2)
+            call twh_volumemoves(lfailure,VMC_NVT_ONED)
          endif
          return
       endif
