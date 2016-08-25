@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2008-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2008-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -186,7 +186,7 @@ c     ******************************************************************
 c     * allocates arrays based soley upon maxchain                     *
 c     *                                                                *
 c     * originally written 12-03-2008 M.G. Martin                      *
-c     * last modified 06-24-2009 by M.G. Martin                        *
+c     * last modified 07-19-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -217,7 +217,7 @@ c     --- initialize if required
       call twh_rcmu(GLB_INIT,maxchain,dvalue)
 c     --- allocate COM storage arrays for volume moves
       total = 3*maxchain-1
-      call twh_arbcmofield(GLB_ALLOC,total,vector)
+      call twh_arbcomfield(GLB_ALLOC,total,vector)
       call twh_comfield(GLB_ALLOC,total,vector)
       call twh_comtempfield(GLB_ALLOC,total,vector)
 

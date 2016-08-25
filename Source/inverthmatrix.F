@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,21 +19,20 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_inverthmatrix (ibox)
+      subroutine twh_inverthmatrix (bxdflag,ibox)
 c     ******************************************************************
 c     * inverts the hmatrix for a particular box                       *
 c     * also computes the boxvolume and stores it                      *
 c     *                                                                *
 c     * originally written 12-13-2001 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CROSSPRODUCT
 #define FUNCTION_DISTANCE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ibox
-
+      integer bxdflag,ibox
 c     --- local variables
       logical lrectbox
       integer idim,jdim
@@ -48,15 +47,15 @@ c     --- double precision arrays
       dimension wx(3),wy(3),wz(3)
 
 c     --- fetch the hmatrix
-      call twh_hmatrix(GLB_GET,ibox,1,1,hm11)
-      call twh_hmatrix(GLB_GET,ibox,1,2,hm12)
-      call twh_hmatrix(GLB_GET,ibox,1,3,hm13)
-      call twh_hmatrix(GLB_GET,ibox,2,1,hm21)
-      call twh_hmatrix(GLB_GET,ibox,2,2,hm22)
-      call twh_hmatrix(GLB_GET,ibox,2,3,hm23)
-      call twh_hmatrix(GLB_GET,ibox,3,1,hm31)
-      call twh_hmatrix(GLB_GET,ibox,3,2,hm32)
-      call twh_hmatrix(GLB_GET,ibox,3,3,hm33)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,1,1,hm11)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,1,2,hm12)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,1,3,hm13)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,2,1,hm21)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,2,2,hm22)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,2,3,hm23)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,3,1,hm31)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,3,2,hm32)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,3,3,hm33)
 
 c     --- invert the hmatrix
       hinvtemp(1,1) = hm22*hm33 - hm23*hm32
@@ -72,7 +71,7 @@ c     --- invert the hmatrix
 c     --- compute determinant (boxvolume) and make sure it is non-zero
       determ = hm11*hinvtemp(1,1) + hm12*hinvtemp(2,1)
      &     + hm13*hinvtemp(3,1)
-      call twh_boxvolume(GLB_SET,ibox,determ)
+      call twh_boxvolume(GLB_SET,bxdflag,ibox,determ)
       if ( dabs(determ) .lt. tolerance ) then
          write(6,*) 'INVERTHMATRIX: zero boxvolume ',determ
       else
@@ -86,7 +85,7 @@ c     --- set hinverse
       do idim = 1,3
          do jdim = 1,3
             dvalue = hinvtemp(idim,jdim)
-            call twh_hinverse(GLB_SET,ibox,idim,jdim,dvalue)
+            call twh_hinverse(GLB_SET,bxdflag,ibox,idim,jdim,dvalue)
          enddo
       enddo
 
@@ -97,7 +96,7 @@ c     --- aligned with global coordinate system (ie diagonal hmatrix)
       do idim = 1,3
          do jdim = 1,3
             if ( idim .ne. jdim ) then
-               call twh_hmatrix(GLB_GET,ibox,idim,jdim,dvalue)
+               call twh_hmatrix(GLB_GET,bxdflag,ibox,idim,jdim,dvalue)
                test = test + dvalue**2
             endif
          enddo
@@ -113,19 +112,19 @@ c     --- set halfbox and check rectbox
          call twh_crossproduct(hm11,hm12,hm13,hm21,hm22,hm23
      &        ,wx(3),wy(3),wz(3))
 c        --- retrieve the current boxvolume
-         call twh_boxvolume(GLB_GET,ibox,boxvolume)
+         call twh_boxvolume(GLB_GET,bxdflag,ibox,boxvolume)
          do jdim = 1,3
 c           --- e.g. width perpendicular to BC plane = (A.BxC)/|BxC|
             dvalue = 0.5d0 * boxvolume
      &           / twh_distance(wx(jdim),wy(jdim),wz(jdim))
-            call twh_halfbox(GLB_SET,ibox,jdim,dvalue)
+            call twh_halfbox(GLB_SET,bxdflag,ibox,jdim,dvalue)
          enddo
       else
          do idim = 1,3
             jdim = idim
-            call twh_hmatrix(GLB_GET,ibox,idim,jdim,dvalue)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,idim,jdim,dvalue)
             dvalue = 0.5d0*dvalue
-            call twh_halfbox(GLB_SET,ibox,idim,dvalue)
+            call twh_halfbox(GLB_SET,bxdflag,ibox,idim,dvalue)
          enddo
       endif
 

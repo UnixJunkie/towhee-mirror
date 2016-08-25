@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,9 +19,9 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_findtarget(lfailure,swaptype,box,imolty,ichain
-     &,iunit,jmolty,jchain,junit,regstart,regend,pointp,num_in,num_out
-     &,lfound,xtarget,ytarget,ztarget)
+      subroutine twh_findtarget(lfailure,swaptype,bxdflag,box,imolty
+     &     ,ichain,iunit,jmolty,jchain,junit,regstart,regend,pointp
+     &     ,num_in,num_out,lfound,xtarget,ytarget,ztarget)
 c     ******************************************************************
 c     * wrapper around the findtarget routine that determines some     *
 c     * constants required for array dimensions and then calls the     *
@@ -33,7 +33,8 @@ c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure,lfound
-      integer swaptype,box,imolty,ichain,iunit,jmolty,jchain,junit
+      integer swaptype,bxdflag,box
+      integer imolty,ichain,iunit,jmolty,jchain,junit
       integer regstart,regend,num_in,num_out
       integer pointp
       double precision xtarget,ytarget,ztarget
@@ -43,16 +44,17 @@ c     --- local variables
 
       call twh_nchain(GLB_GET,nchain)
 
-      call twh_findtarget_main(lfailure,swaptype,box,imolty,nchain
-     &     ,ichain,iunit,jmolty,jchain,junit,regstart,regend,pointp
-     &     ,num_in,num_out,lfound,xtarget,ytarget,ztarget)
+      call twh_findtarget_main(lfailure,swaptype,bxdflag,box,imolty
+     &     ,nchain,ichain,iunit,jmolty,jchain,junit,regstart,regend
+     &     ,pointp,num_in,num_out,lfound,xtarget,ytarget,ztarget)
 
       return
       end
 
-      subroutine twh_findtarget_main(lfailure,swaptype,box,imolty,nchain
-     &     ,ichain,iunit,jmolty,jchain,junit,regstart,regend,pointp
-     &     ,num_in,num_out,lfound,xtarget,ytarget,ztarget)
+      subroutine twh_findtarget_main(lfailure,swaptype,bxdflag,box
+     &     ,imolty,nchain,ichain,iunit,jmolty,jchain,junit
+     &     ,regstart,regend,pointp,num_in,num_out,lfound
+     &     ,xtarget,ytarget,ztarget)
 c     ******************************************************************
 c     * finds a target molecule for all of the swapmoves               *
 c     * in these moves you need to find another molecule that is in a  *
@@ -61,7 +63,7 @@ c     * it is returned, otherwise lfound is set to false and the move  *
 c     * will be rejected                                               *
 c     *                                                                *
 c     * originally written 09-13-2002 by M.G. Martin                   *
-c     * last modified 04-21-2011 by M.G. Martin                        *
+c     * last modified 08-02-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -72,9 +74,9 @@ c     --- debug toggle
 #define DEBUG_FINDTARGET 0
 c     --- variables passed to/from the subroutine
       logical lfailure,lfound
-      integer swaptype,box,imolty,nchain,ichain,iunit,jmolty,jchain
-      integer junit,regstart,regend,num_in,num_out
-      integer pointp
+      integer swaptype,bxdflag,box
+      integer imolty,nchain,ichain,iunit,jmolty,jchain,junit
+      integer regstart,regend,num_in,num_out,pointp
       double precision xtarget,ytarget,ztarget
       dimension xtarget(2),ytarget(2),ztarget(2)
 c     --- local variables
@@ -183,7 +185,7 @@ c        --- determine if iunit of molecule ichain is in the inner or
 c        --- outer volume determined by junit
          call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &        ,xtemp,ytemp,ztemp)
-         call twh_mimage(box,xtarget(1),ytarget(1),ztarget(1)
+         call twh_mimage(bxdflag,box,xtarget(1),ytarget(1),ztarget(1)
      &        ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
          dist = twh_distance(rxij,ryij,rzij)
          call twh_avb1rad(GLB_GET,testrad)
@@ -262,7 +264,8 @@ c        --- that are in the correct region
             if ( ichain .ne. jchain ) then
                call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &              ,xtemp,ytemp,ztemp)
-               call twh_mimage(box,xtarget(1),ytarget(1),ztarget(1)
+               call twh_mimage(bxdflag,box
+     &              ,xtarget(1),ytarget(1),ztarget(1)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
                call twh_avb2rad(GLB_GET,testrad)
@@ -340,7 +343,8 @@ c        --- does not have overlapping inner regions with jchain
             if ( kchain .ne. jchain ) then
                call twh_coordinates(GLB_GET,CRD_REAL,kchain,junit
      &              ,xtemp,ytemp,ztemp)
-               call twh_mimage(box,xtarget(1),ytarget(1),ztarget(1)
+               call twh_mimage(bxdflag,box
+     &              ,xtarget(1),ytarget(1),ztarget(1)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
                if ( dist .gt. 2.0d0*testrad ) then
@@ -367,7 +371,8 @@ c        --- jchain and kchain
 c              --- count the number in the inner region of jchain
                call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &              ,xtemp,ytemp,ztemp)
-               call twh_mimage(box,xtarget(1),ytarget(1),ztarget(1)
+               call twh_mimage(bxdflag,box
+     &              ,xtarget(1),ytarget(1),ztarget(1)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
                if ( dist .lt. testrad ) then
@@ -377,7 +382,8 @@ c              --- count the number in the inner region of jchain
                endif
 c              --- count the number in the inner region of kchain
 c              --- this is stored in num_out
-               call twh_mimage(box,xtarget(2),ytarget(2),ztarget(2)
+               call twh_mimage(bxdflag,box
+     &              ,xtarget(2),ytarget(2),ztarget(2)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
                if ( dist .lt. testrad ) then

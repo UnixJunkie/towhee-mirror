@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_checkhmatrix (ibox,lwarn,lbad)
+      subroutine twh_checkhmatrix (bxdflag,ibox,lwarn,lbad)
 c     ******************************************************************
 c     * checks the vectors of the hmatrix to make sure they are all    *
 c     * still between 45 and 135 degrees apart from each other         *
@@ -27,7 +27,7 @@ c     * this needs to be true for the assumptions used in mimage to be *
 c     * valid                                                          *
 c     *                                                                *
 c     * originally written 01-03-2002 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -36,8 +36,7 @@ c     ******************************************************************
 
 c     --- variables passed to/from the subroutine
       logical lwarn,lbad
-      integer ibox
-
+      integer bxdflag,ibox
 c     --- local variables
       double precision xone,xtwo,xthr,yone,ytwo,ythr,zone,ztwo,zthr
       double precision angle,anglec,dista,distb
@@ -54,15 +53,15 @@ c     --- pass if the angle is between loang and twopi-loang
       loang = 45.0d0*onepi/180.0d0 - 1.0d-10
 
 c     --- set the values
-      call twh_hmatrix(GLB_GET,ibox,1,1,xone)
-      call twh_hmatrix(GLB_GET,ibox,1,2,yone)
-      call twh_hmatrix(GLB_GET,ibox,1,3,zone)
-      call twh_hmatrix(GLB_GET,ibox,2,1,xtwo)
-      call twh_hmatrix(GLB_GET,ibox,2,2,ytwo)
-      call twh_hmatrix(GLB_GET,ibox,2,3,ztwo)
-      call twh_hmatrix(GLB_GET,ibox,3,1,xthr)
-      call twh_hmatrix(GLB_GET,ibox,3,2,ythr)
-      call twh_hmatrix(GLB_GET,ibox,3,3,zthr)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,1,1,xone)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,1,2,yone)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,1,3,zone)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,2,1,xtwo)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,2,2,ytwo)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,2,3,ztwo)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,3,1,xthr)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,3,2,ythr)
+      call twh_hmatrix(GLB_GET,bxdflag,ibox,3,3,zthr)
 
 c     --- initialize lbad
       lbad = .false.

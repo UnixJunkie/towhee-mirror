@@ -13,7 +13,6 @@ par_answer_current
 /towheebase/Examples/Canonical_Ensemble/Charmm27_Polyalanine
 /towheebase/Examples/Canonical_Ensemble/Compass_Methanol
 /towheebase/Examples/Canonical_Ensemble/DREIDING
-/towheebase/Examples/Canonical_Ensemble/FENE_Hexamer
 /towheebase/Examples/Canonical_Ensemble/Formamide_Scaled
 /towheebase/Examples/Canonical_Ensemble/Fris_Walls
 /towheebase/Examples/Canonical_Ensemble/Hard_Sphere
@@ -32,6 +31,7 @@ par_answer_current
 /towheebase/Examples/Gibbs_Ensemble/Cui2002_Hexane
 /towheebase/Examples/Gibbs_Ensemble/Dubb_Zeolite
 /towheebase/Examples/Gibbs_Ensemble/EPM_VLCC
+/towheebase/Examples/Gibbs_Ensemble/FENE_Hexamer
 /towheebase/Examples/Gibbs_Ensemble/Gordon
 /towheebase/Examples/Gibbs_Ensemble/Gromos_Isobutane
 /towheebase/Examples/Gibbs_Ensemble/MM2_Ethane

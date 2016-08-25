@@ -29,7 +29,7 @@ c     * number of successful trial moves is stored in acscomp          *
 c     *                                                                *
 c     * based closely on the code trancom.F and rotate.F               *
 c     * originally written 03-23-2005 by MAW                           *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -164,7 +164,7 @@ c     --- the central box
       ddx = rxorig + rx
       ddy = ryorig + ry
       ddz = rzorig + rz
-      call twh_putcartinbox(ibox,ddx,ddy,ddz)
+      call twh_putcartinbox(BXD_REAL,ibox,ddx,ddy,ddz)
 c     --- if the coordinates were shifted then compute the shift
       ddx = ddx - rxorig
       ddy = ddy - ryorig
@@ -183,7 +183,7 @@ c     --- by rotation
       enddo
 
       call twh_rcmu(GLB_GET,ichain,rcmu)
-      if ( rcmu .gt. twh_minboxlength(ibox)*0.25d0 ) then
+      if ( rcmu .gt. twh_minboxlength(BXD_REAL,ibox)*0.25d0 ) then
 c        --- molecule is large enough that it might be interacting with
 c        --- iself through the periodic images (occurs for some very 
 c        --- short range potentials like hard spheres).   Need to 
@@ -205,14 +205,15 @@ c        --- images.  don't bother computing intramolecular or bonded
 #endif
 
       nchainmove = 1
-      chaininfo(1,CRD_OLD) = CRD_REAL
-      chaininfo(1,CRD_NEW) = CRD_TEMP
+      chaininfo(1,TRL_OLD) = CRD_REAL
+      chaininfo(1,TRL_NEW) = CRD_TEMP
       chaininfo(1,3) = ichain
       lbonded = .false.
       lgetcom = .true.
       lpartial = .false.
 
-      call twh_energy_change(lfailure,ibox,nchainmove,chaininfo,loverlap
+      call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
+     &     ,chaininfo,loverlap
      &     ,lpartial,lgetcom,lintra,lbonded,dvclassical_trial
      &     ,dvintra_trial,dvinter_trial,dvext_trial,dvelect_trial
      &     ,dvsolv_trial,dvtor_trial,dvbend_trial
@@ -220,14 +221,14 @@ c        --- images.  don't bother computing intramolecular or bonded
       if ( lfailure ) return
 
 c     --- check new hard overlap, if overlap move rejected
-      if ( loverlap(CRD_NEW) ) then
+      if ( loverlap(TRL_NEW) ) then
 #if DEBUG_COMPOSITE
          write(6,*) "COMPOSITE: move rejected due to overlap"
 #endif
          return
       endif
 c     --- check old hard overlap, if overlap then big problems
-      if (loverlap(CRD_OLD)) then
+      if (loverlap(TRL_OLD)) then
          write(6,*) 'COMPOSITE: disaster loverlap in old conf'
          lfailure = .true.
          return

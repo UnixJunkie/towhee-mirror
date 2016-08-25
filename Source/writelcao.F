@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,7 +32,7 @@ c     *         if 0 then we are computing partial atoms from engmolec *
 c     *         if positive then we have partial atoms from engatom    *
 c     *                                                                *
 c     * originally written 11-05-2004 by M.G. Martin                   *
-c     * last modified 10-13-2008 M.G. Martin                           *
+c     * last modified 07-22-2016 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -97,12 +97,13 @@ c     --- output the header information
       write(72,'(a26)') 'primitive lattice vectors:'
       do idim = 1,3
          do jdim = 1,3
-            call twh_hmatrix(GLB_GET,ibox,idim,jdim,hmtemp(jdim))
+            call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &           ,hmtemp(jdim))
          enddo
          write(72,*) (hmtemp(jdim),jdim=1,3)
          vector(idim) = 0.0d0
          do jdim = 1,3
-            call twh_hmatrix(GLB_GET,ibox,idim,jdim,dvalue)
+            call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim,dvalue)
             vector(idim) = vector(idim) + dvalue**2
          enddo
          vector(idim) = dsqrt(vector(idim))

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -42,7 +42,7 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -80,7 +80,7 @@ c     --- retrieve constants
       call twh_rcelect(GLB_GET,ibox,rcelect)
       call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
-      call twh_boxvolume(GLB_GET,ibox,boxvolume)
+      call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
 
 c     --- initialize stress tensor
       do indx = 0,6
@@ -127,8 +127,8 @@ c              --- check for simulation box
                   call twh_nunit(GLB_GET,jmolty,numjunit)
 c                 --- need to compute the center of mass separations
                   call twh_com(GLB_GET,CRD_REAL,jchain,xcmj,ycmj,zcmj)
-                  call twh_mimage (ibox,xcmi,ycmi,zcmi,xcmj,ycmj,zcmj
-     &                 ,rx_ij,ry_ij,rz_ij )
+                  call twh_mimage(BXD_REAL,ibox,xcmi,ycmi,zcmi
+     &                 ,xcmj,ycmj,zcmj,rx_ij,ry_ij,rz_ij )
                   rijsq = rx_ij*rx_ij + ry_ij*ry_ij + rz_ij*rz_ij
 c                 --- set rcm to the nonbond cutoff
                   call twh_rcut(GLB_GET,rcm)
@@ -165,7 +165,7 @@ c                          --- check if nonzero interaction sites
                            call twh_coordinates(GLB_GET,CRD_REAL
      &                          ,jchain,jj,rxuj,ryuj,rzuj)
 c                          --- minimum image the pair separations
-                           call twh_mimage ( ibox,rxui,ryui,rzui
+                           call twh_mimage(BXD_REAL,ibox,rxui,ryui,rzui
      &                          ,rxuj,ryuj,rzuj,rx_ab,ry_ab,rz_ab )
                            rijsq = rx_ab*rx_ab + ry_ab*ry_ab 
      &                          + rz_ab*rz_ab

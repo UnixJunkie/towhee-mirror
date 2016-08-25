@@ -21,14 +21,14 @@ c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_getcbdihed(lfailure,ldihed_direct,ldihed_indirect
      &     ,luseoldone,lterm,ldelta_dist,testcord,iw,ichain,ichtor
-     &     ,iufrom,ibox,angstart,ntogrow,imolty,dpcbtor,phishift
+     &     ,iufrom,bxdflag,ibox,angstart,ntogrow,imolty,dpcbtor,phishift
      &     ,w_cbtor,vcbvib,vcbbend,vcbtor,bfcbbias
      &     ,xtorcord,ytorcord,ztorcord,torkey)
 c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 07-11-2016 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -55,8 +55,8 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       logical lfailure,ldihed_direct,ldihed_indirect,lterm,luseoldone
       logical ldelta_dist
-      integer iw,ichtor,iufrom,ibox,testcord,angstart,ntogrow,imolty
-      integer ichain,torkey
+      integer iw,ichtor,iufrom,bxdflag,ibox,testcord,angstart,ntogrow
+      integer ichain,torkey,imolty
       double precision w_cbtor,vcbvib,vcbbend,vcbtor,bfcbbias
       double precision dpcbtor,phishift
       double precision xtorcord,ytorcord,ztorcord
@@ -162,7 +162,7 @@ c              --- use old molecule position
 c              --- compute unit vector to be used in cone
                call twh_coordinates(GLB_GET,testcord,ichain,iu
      &              ,rxgrow,rygrow,rzgrow)
-               call twh_mimage(ibox,rxgrow,rygrow,rzgrow
+               call twh_mimage(bxdflag,ibox,rxgrow,rygrow,rzgrow
      &              ,rxfrom,ryfrom,rzfrom,x,y,z)
                x = x/length 
                y = y/length 
@@ -351,8 +351,8 @@ c              --- fetch the coords
                   call twh_growbond(GLB_GET,iw,count,ixtra,jut2)
                   call twh_coordinates(GLB_GET,testcord,ichain,jut2
      &                 ,rxjut,ryjut,rzjut)
-                  call twh_mimage(ibox,xpos,ypos,zpos,rxjut,ryjut,rzjut
-     &                 ,rxuij,ryuij,rzuij)
+                  call twh_mimage(bxdflag,ibox,xpos,ypos,zpos
+     &                 ,rxjut,ryjut,rzjut,rxuij,ryuij,rzuij)
                   length = twh_distance(rxuij,ryuij,rzuij)
 c                 --- find the vibration type
                   do ivib = 1,twh_get_invib(imolty,iu)
@@ -394,7 +394,8 @@ c           --- compute the xtra and growbond angle energies
                   enddo
                   call twh_txangle(GLB_GET,count,ibend,itype)
                   vxbend(itor) = vxbend(itor) + twh_vangle(lfailure
-     &                 ,.false.,lovrlap,ibox,imolty,iutmp(1),itype,1
+     &                 ,.false.,lovrlap,bxdflag,ibox,imolty
+     &                 ,iutmp(1),itype,1
      &                 ,anglec,dumb,dumc,xatmp,yatmp,zatmp)
                   if ( lfailure ) return
                   if ( lovrlap ) goto 90
@@ -423,8 +424,8 @@ c              --- extract positional information
 c              --- assign angle-angle index
                call twh_aaind(GLB_GET,iaa,it)
                vxaa(itor) = vxaa(itor) 
-     &              + twh_vangang(AA_COORD,ibox,imolty,ttype,it,dumangle
-     &              ,xttmp,yttmp,zttmp)
+     &              + twh_vangang(AA_COORD,bxdflag,ibox,imolty,ttype,it
+     &              ,dumangle,xttmp,yttmp,zttmp)
             enddo
 
 c           --- set energies of trial position to zero ---
@@ -533,8 +534,8 @@ c                       --- store unit numbers
                         ttype = torbead(1)
 c                       --- add torsion energy to vdha
                         vdha = vdha + twh_vtorsion(lfailure,.false.
-     &                       ,ibox,1,imolty,ttype,it,xttmp,yttmp,zttmp
-     &                       ,dum,lovrlap)
+     &                       ,bxdflag,ibox,1,imolty,ttype,it
+     &                       ,xttmp,yttmp,zttmp,dum,lovrlap)
                         if ( lfailure ) return
                         if ( lovrlap ) goto 90
                      endif
@@ -564,7 +565,7 @@ c              --- extract positional information
                enddo
 c              --- assign improper torsion type
                call twh_impropernum(GLB_GET,iimprop,it)
-               vimprop = vimprop + twh_vimproper(ibox,imolty
+               vimprop = vimprop + twh_vimproper(bxdflag,ibox,imolty
      &              ,ttype,it,xttmp,yttmp,zttmp,dum,lbadstereo)
             enddo
             
@@ -600,8 +601,8 @@ c                 --- iufrom in slot 3
      &                 ,xcord(3),ycord(3),zcord(3))
 c                 --- call bias function
                   bf_bias(itor) = bf_bias(itor)*
-     &                 twh_febias(lfailure,ibox,biastype,imolty,iunit
-     &                 ,index,iufrom,xcord,ycord,zcord)
+     &                 twh_febias(lfailure,bxdflag,ibox,biastype,imolty
+     &                 ,iunit,index,iufrom,xcord,ycord,zcord)
                   if ( lfailure ) return
                enddo
             enddo

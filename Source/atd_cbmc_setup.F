@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -616,7 +616,7 @@ c                       --- compute 3-mem ring bond energy
      &                       ,imolty,iunit,kunit,lovrlap)
                      else
                         energy = energy + twh_vangle(lfailure,lreport
-     &                       ,lovrlap,1
+     &                       ,lovrlap,BXD_REAL,1
      &                       ,imolty,iunit,ibend,0,angcos,distone
      &                       ,disttwo,xbacord,ybacord,zbacord)
                      endif
@@ -937,7 +937,7 @@ c                       --- initialize nminima
                            call twh_coneangle(thetaone,phione
      &                          ,thetatwo,phitwo,angcos)
                            energy = twh_vangle(lfailure,lreport
-     &                          ,lovrlap,1
+     &                          ,lovrlap,BXD_REAL,1
      &                          ,imolty,kunit,icrossbend,0,angcos
      &                          ,distone,disttwo,xbacord,ybacord
      &                          ,zbacord)
@@ -1005,7 +1005,7 @@ c                             --- the high limit is just the next min
                               call twh_coneangle(thetaone,phione
      &                             ,thetatwo,phitwo,angcos)
                               energy = twh_vangle(lfailure,lreport
-     &                             ,lovrlap,1
+     &                             ,lovrlap,BXD_REAL,1
      &                             ,imolty,kunit,icrossbend,0,angcos
      &                             ,distone,disttwo,xbacord,ybacord
      &                             ,zbacord)
@@ -1256,7 +1256,8 @@ c                 --- initialize prevweights
                      ytcord(4) = ytcord(3) + length*yub
                      ztcord(4) = ztcord(3) + length*zub
                      lovrlap = .false.
-                     energy = twh_vtorsion(lfailure,lreport,ibox,1
+                     energy = twh_vtorsion(lfailure,lreport
+     &                    ,BXD_REAL,ibox,1
      &                    ,imolty,iunit,itor,xtcord,ytcord,ztcord
      &                    ,phic,lovrlap)
                      if ( lfailure ) return
@@ -1363,7 +1364,8 @@ c                    --- get the lo and hi bounding values
                         ytcord(4) = ytcord(3) + length*yub
                         ztcord(4) = ztcord(3) + length*zub
                         lovrlap = .false.
-                        energy = twh_vtorsion(lfailure,lreport,ibox,1
+                        energy = twh_vtorsion(lfailure,lreport
+     &                       ,BXD_REAL,ibox,1
      &                       ,imolty,iunit,itor,xtcord,ytcord,ztcord
      &                       ,phic,lovrlap)
                         if ( lfailure ) return
@@ -1572,7 +1574,7 @@ c                          --- compute the bjk energy
                            if ( lfailure ) return
 c                          --- compute the aijk energy
                            aijk_energy = twh_vangle(lfailure,lreport
-     &                          ,lovrlap,1
+     &                          ,lovrlap,BXD_REAL,1
      &                          ,imolty,iunit,ibend,0,angcos,distone
      &                          ,disttwo,xbacord,ybacord,zbacord)
                            if ( lfailure ) return
@@ -1721,7 +1723,8 @@ c                    --- compute the 1-4 distance
      &                    + (ztcord(4)-ztcord(1))**2
                      rik = dsqrt(riksq)
                      lovrlap = .false.
-                     energy = twh_vtorsion(lfailure,lreport,ibox,1
+                     energy = twh_vtorsion(lfailure,lreport
+     &                    ,BXD_REAL,ibox,1
      &                    ,imolty,iunit,itor,xtcord,ytcord,ztcord
      &                    ,phic,lovrlap)
                      if ( lfailure ) return

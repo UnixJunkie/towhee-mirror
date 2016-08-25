@@ -19,8 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_febias(lfailure,ibox,biastype,imolty,iunit,index
-     &     ,iufrom,xcord,ycord,zcord)
+      function twh_febias(lfailure,bxdflag,ibox,biastype,imolty,iunit
+     &     ,index,iufrom,xcord,ycord,zcord)
 c     ******************************************************************
 c     * computes a biasing probability for use in fixed-endpoint cbmc  *
 c     * ibox: the box the molecule is in - used for angles             *
@@ -39,7 +39,7 @@ c     *         *cord(2) is iuother                                    *
 c     *         *cord(3) is iufrom                                     *
 c     *                                                                *
 c     * originally written 01-23-2001 by M.G. Martin                   *
-c     * last modified 07-11-2016 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -68,7 +68,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the function
       logical lfailure
-      integer biastype,index,iunit,imolty,ibox,iufrom
+      integer biastype,index,iunit,imolty,bxdflag,ibox,iufrom
       double precision mean,stddev,lolimit,hilimit
       double precision xcord,ycord,zcord
       dimension xcord(3),ycord(3),zcord(3)
@@ -141,7 +141,7 @@ c           --- get the atom types for the rest of the angle
             junit = twh_get_ijben2(imolty,iunit,index)
             kunit = twh_get_ijben3(imolty,iunit,index)
 c           --- compute the iunit-iuother length from the cords
-            call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
+            call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &           ,xcord(1),ycord(1),zcord(1),rxuij,ryuij,rzuij)
             length = twh_distance(rxuij,ryuij,rzuij)
 
@@ -167,8 +167,8 @@ c              --- their equilibrium values
             endif
 
 c           --- get bias energies from vangle
-            vbias = vbias + twh_vangle(lfailure,.false.,lovrlap,ibox
-     &           ,imolty
+            vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
+     &           ,bxdflag,ibox,imolty
      &           ,iunit,index,0,thetac,lenone,lentwo,ddum3,ddum3,ddum3)
             if ( lfailure ) return
 c           --- convert the vbias energy into a probability
@@ -312,14 +312,15 @@ c           --- compute the index for this torsion
                yatmp(2) = mvect(iphi,2)
                zatmp(2) = mvect(iphi,3)
                vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
-     &              ,ibox,imolty
+     &              ,bxdflag,ibox,imolty
      &              ,iunit,index,1,thetac,dumb,dumc,xatmp,yatmp,zatmp)
                if ( lfailure ) return
 c              --- compute the torsion energy
                xttmp(3) = mvect(iphi,1)
                yttmp(3) = mvect(iphi,2)
                zttmp(3) = mvect(iphi,3)
-               vbias = vbias + twh_vtorsion(lfailure,.false.,ibox,1
+               vbias = vbias + twh_vtorsion(lfailure,.false.
+     &              ,bxdflag,ibox,1
      &              ,imolty,iufrom,torind,xttmp,yttmp,zttmp,duma
      &              ,lovrlap)
                if ( lfailure ) return
@@ -336,7 +337,7 @@ c           --- convert the vbias energy into a probability
 c           --- bias is based on a gaussian distribution on the 
 c           --- iunit-iuother distance
 c           --- compute the iunit-iuother length from the cords
-            call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
+            call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &           ,xcord(1),ycord(1),zcord(1),rxuij,ryuij,rzuij)
             length = twh_distance(rxuij,ryuij,rzuij)
 c           --- set the biasing mean and standard deviation
@@ -375,15 +376,15 @@ c           --- find the rest of the atoms in the biasing torsion
             iuother = twh_get_ijtor4(imolty,iunit,index)
 c           --- get all the lengths we will need
 c           --- botlen is the iuother - iufrom distance
-            call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
+            call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &           ,xcord(3),ycord(3),zcord(3),rxuij,ryuij,rzuij)
             botlensq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
 c           --- midlen is the iuother - iunit distance
-            call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
+            call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &           ,xcord(1),ycord(1),zcord(1),rxuij,ryuij,rzuij)
             midlen = twh_distance(rxuij,ryuij,rzuij)
 c           --- prelen is the iunit - iufrom distance
-            call twh_mimage(ibox,xcord(3),ycord(3),zcord(3)
+            call twh_mimage(bxdflag,ibox,xcord(3),ycord(3),zcord(3)
      &           ,xcord(1),ycord(1),zcord(1),rxuij,ryuij,rzuij)
             prelen = twh_distance(rxuij,ryuij,rzuij)
 c           --- nexlen is the equilibrium bond length between 
@@ -489,7 +490,7 @@ c                    --- compute the scaled bond lengths
                   endif
 c                 --- compute biasing energy from the angle
                   vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
-     &                 ,ibox,imolty,iunext,goodind,0,thetac
+     &                 ,bxdflag,ibox,imolty,iunext,goodind,0,thetac
      &                 ,lenone,lentwo,ddum3,ddum3,ddum3)
                   if ( lfailure ) return
                elseif ( eqlength .le. maxlen ) then
@@ -507,7 +508,7 @@ c                 --- compute strained angle using law of cosine
      &                 - lentwo*lentwo) / (-2.0d0*lenone*lentwo)
 c                 --- compute biasing energy from the angle
                   vbias = vbias + twh_vangle(lfailure,.false.,lovrlap
-     &                 ,ibox,imolty,iunext,goodind,0,thetac
+     &                 ,bxdflag,ibox,imolty,iunext,goodind,0,thetac
      &                 ,lenone,lentwo,ddum3,ddum3,ddum3)
                   if ( lfailure ) return
                endif
@@ -549,8 +550,8 @@ c           --- assign the gaussian parameters
             stddev = dvalue*mult
             lolimit = 0.0d0
             hilimit = minboxdim
-            call twh_mimage(ibox,xcord(2),ycord(2),zcord(2),xcord(1)
-     &           ,ycord(1),zcord(1),rxuij,ryuij,rzuij)
+            call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
+     &           ,xcord(1),ycord(1),zcord(1),rxuij,ryuij,rzuij)
             length = twh_distance(rxuij,ryuij,rzuij)
             twh_febias = twh_gaussprob(length,mean,stddev,lolimit
      &           ,hilimit)

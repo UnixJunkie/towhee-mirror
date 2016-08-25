@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -22,8 +22,8 @@ c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_engatom(lfailure,testcord,globalcord,engastyle
-     &     ,lovrlap,ichain,imolty,ibox,ichoi,iufrom,ntogrow,maxlen
-     &     ,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp,vctry,vtrext
+     &     ,lovrlap,ichain,imolty,bxdflag,ibox,ichoi,iufrom,ntogrow
+     &     ,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp,vctry,vtrext
      &     ,vtrintra,vtrinter,vtrelect,vtrewald,vqtry)
 c     ******************************************************************
 c     * calculates the potential energy and the boltzmann factor for   *
@@ -41,6 +41,7 @@ c     *            3: inserting all of the atoms in an entire molecule *
 c     * lovrlap is true if this subroutine runs into a walk termination*
 c     * ichain is the molecule number - used if this is the old conf   *
 c     * imolty is the molecule type                                    *
+c     * bxdflag sets whether to use the real or trial box dimensions   *
 c     * ibox is the box to use when computing intermolecular energies  *
 c     * ichoi is the number of trial positions for each of the atoms   *
 c     * iufrom the the atom we are growing the new atoms from          *
@@ -58,17 +59,18 @@ c     * rxp(dimatoms,dimtrials), ryp and rzp are the coordinates for   *
 c     * each atom and trial                                            *
 c     *                                                                *
 c     * rewritten from old boltz and boltzu 09-23-1997 by M.G. Martin  *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      integer dimatoms,dimtrials
+      integer bxdflag,dimtrials
       logical lfailure,lovrlap,lnbterm
       dimension lnbterm(dimtrials)
       integer ichain,imolty,ibox,ichoi,iufrom,ntogrow,engastyle
       integer testcord,globalcord
       double precision maxlen
       double precision rxp,ryp,rzp
+      integer dimatoms
       dimension rxp(dimatoms,dimtrials)
       dimension ryp(dimatoms,dimtrials)
       dimension rzp(dimatoms,dimtrials)
@@ -94,7 +96,8 @@ c     --- retrieve constants
       if ( potentialstyle .eq. POT_INTERNAL ) then
          call twh_nchain(GLB_GET,nchain)
          call twh_classical_engatom(lfailure,testcord,globalcord
-     &        ,engastyle,lovrlap,nchain,ichain,imolty,ibox,ichoi,iufrom
+     &        ,engastyle,lovrlap,nchain,ichain,imolty,bxdflag,ibox
+     &        ,ichoi,iufrom
      &        ,ntogrow,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp
      &        ,vctry,vtrext,vtrintra,vtrinter,vtrelect,vtrewald)
          if ( lfailure ) return
@@ -150,7 +153,8 @@ c     &        ,itrial,vquantum)
 
 
       subroutine twh_classical_engatom(lfailure,testcord,globalcord
-     &     ,engastyle,lovrlap,nchain,ichain,imolty,ibox,ichoi,iufrom
+     &     ,engastyle,lovrlap,nchain,ichain,imolty,bxdflag,ibox,ichoi
+     &     ,iufrom
      &     ,ntogrow,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp,vctry
      &     ,vtrext,vtrintra,vtrinter,vtrelect,vtrewald)
 c     ******************************************************************
@@ -158,7 +162,7 @@ c     * computes the classical energy on an atom by atom basis for the *
 c     * configurational-bias class of moves                            *
 c     *                                                                *
 c     * split from engatom 10-24-2005 by M.G. Martin                   *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LEXIST
@@ -175,8 +179,8 @@ c     --- variables passed to/from the subroutine
       logical lfailure,lovrlap,lovrtest
       logical lnbterm
       dimension lnbterm(dimtrials)
-      integer nchain,ichain,imolty,ibox,ichoi,iufrom,ntogrow,engastyle
-      integer testcord,globalcord
+      integer nchain,ichain,imolty,bxdflag,ibox,ichoi,iufrom,ntogrow
+      integer engastyle,testcord,globalcord
       double precision maxlen
       double precision rxp,ryp,rzp
       dimension rxp(dimatoms,dimtrials)
@@ -243,8 +247,8 @@ c        --- box
                if ( ichain .ne. jchain ) then
 c                 --- minimum image the pseudo-ctrmas pair separation
                   call twh_com(GLB_GET,CRD_REAL,jchain,xcmj,ycmj,zcmj)
-                  call twh_mimage( ibox,rxui,ryui,rzui,xcmj,ycmj,zcmj
-     &                 ,rxuij,ryuij,rzuij )
+                  call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                 ,xcmj,ycmj,zcmj,rxuij,ryuij,rzuij )
                   rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
                   call twh_rcmu(GLB_GET,jchain,rcmj)
                   if ( ldualcutoff ) then
@@ -316,7 +320,7 @@ c                 --- assign bead type for ii,iu, and the cross term
 c                 --- determine distances
                   call twh_coordinates(GLB_GET,testcord,ichain,iu
      &                 ,rxui,ryui,rzui)
-                  call twh_mimage ( ibox,rxui,ryui,rzui
+                  call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
      &                 ,rxp(count,itrial),ryp(count,itrial)
      &                 ,rzp(count,itrial),rxuij,ryuij,rzuij )
                   rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
@@ -374,10 +378,10 @@ c                 --- assign bead type for ii,iu
                   call twh_ntype(GLB_GET,imolty,ii,ntii)
                   call twh_ntype(GLB_GET,imolty,iu,ntjj)
 c                 --- determine distances - use trial chain coordinates
-                  call twh_mimage ( ibox,rxp(cnt,itrial),ryp(cnt,itrial)
-     &                 ,rzp(cnt,itrial),rxp(count,itrial)
-     &                 ,ryp(count,itrial),rzp(count,itrial)
-     &                 ,rxuij,ryuij,rzuij )
+                  call twh_mimage(bxdflag,ibox
+     &                 ,rxp(cnt,itrial),ryp(cnt,itrial),rzp(cnt,itrial)
+     &                 ,rxp(count,itrial),ryp(count,itrial)
+     &                 ,rzp(count,itrial),rxuij,ryuij,rzuij )
                   rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
 
 c                 --- ewald sum correction term
@@ -403,8 +407,8 @@ C     **************************************************************
                cord(1) = rxp(count,itrial)
                cord(2) = ryp(count,itrial)
                cord(3) = rzp(count,itrial)
-               vext = vext + twh_vfield(lfailure,lovrtest,ibox,ntii
-     &              ,imolty,ichain,ii,cord)
+               vext = vext + twh_vfield(lfailure,lovrtest,bxdflag,ibox
+     &              ,ntii,imolty,ichain,ii,cord)
                if ( lfailure ) return
                if ( lovrtest ) goto 19
             enddo
@@ -444,7 +448,7 @@ c                      --- check if ctrmas within rcmsq
 c                      --- minimum image the ctrmas pair separations
                      call twh_com(GLB_GET,CRD_REAL,jchain
      &                    ,xcmj,ycmj,zcmj)
-                     call twh_mimage ( ibox,rxui,ryui,rzui,xcmj
+                     call twh_mimage(bxdflag,ibox,rxui,ryui,rzui,xcmj
      &                    ,ycmj,zcmj,rxuij,ryuij,rzuij)
                      rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
 c                    --- determine cutoff
@@ -473,7 +477,7 @@ c                 --- loop over all beads jj of chain j
                      call twh_coordinates(GLB_GET,globalcord,jchain,jj
      &                    ,rxuj,ryuj,rzuj)
 c                    --- minimum image the pair separations
-                     call twh_mimage ( ibox,rxui,ryui,rzui
+                     call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
      &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij )
                      rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
 c                    --- compute vinter (ex. lennard-jones)

@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -326,7 +326,8 @@ c              --- the next startunit
             endif
          enddo 
 
-         call twh_initialize_loop_closure(lfailure,ibox,initcoords,len0,
+         call twh_initialize_loop_closure(lfailure,BXD_REAL,ibox
+     &        ,initcoords,len0,
      &        b_ang0,t_ang0,aa13_min_sqr,aa13_max_sqr,delta,lcxi,len_aa
      &        ,eta)
          if ( lfailure ) return
@@ -337,7 +338,7 @@ c        --- rotation move
 c        --- first need to calculate the current angle 
 c        --- between the three atoms
          driver_alpha = (twh_vangle(lfailure,.false.,loverlap(1)
-     &        ,ibox,imolty,1,1
+     &        ,BXD_REAL,ibox,imolty,1,1
      &        ,-1,cosda,dist12,dist23,tempx,tempy,tempz))
          if ( lfailure ) return
          x_unitvec = (tempx(2) - tempx(1))/dist12
@@ -387,7 +388,8 @@ c        --- in the concerted rotation move (#1,#2,#8,#9)
          rootunit(4,2) = initcoords(9,2)
          rootunit(4,3) = initcoords(9,3)
          nsoln = 0
-         call twh_solv_3pep_poly(lfailure,max_soln,ibox,rootunit
+         call twh_solv_3pep_poly(lfailure,max_soln,BXD_REAL,ibox
+     &        ,rootunit
      &        ,len0,b_ang0,solncoords,nsoln,aa13_min_sqr,aa13_max_sqr
      &        ,delta,lcxi,len_aa,eta)
          if ( lfailure ) return
@@ -487,7 +489,8 @@ c           --- in order to determine the acceptance criteria
                initcoords(iunit-1,3) = ztemp
             enddo
 
-            call twh_initialize_loop_closure(lfailure,ibox,initcoords
+            call twh_initialize_loop_closure(lfailure,BXD_REAL,ibox
+     &           ,initcoords
      &           ,len0, b_ang0,t_ang0,aa13_min_sqr,aa13_max_sqr,delta
      &           ,lcxi,len_aa,eta)
             if ( lfailure ) return
@@ -505,7 +508,8 @@ c           --- in order to determine the acceptance criteria
             rootunit(4,3) = initcoords(9,3)
 
             nsoln2 = 0
-            call twh_solv_3pep_poly(lfailure,max_soln,ibox,rootunit
+            call twh_solv_3pep_poly(lfailure,max_soln,BXD_REAL,ibox
+     &           ,rootunit
      &           ,len0,b_ang0,solncoords,nsoln2,aa13_min_sqr
      &           ,aa13_max_sqr,delta,lcxi,len_aa,eta)
             if ( lfailure ) return
@@ -526,19 +530,19 @@ c           --- calculate the new and old non-bonded inter molecular
 c           --- energies
             dvimpr = 0.0d0
             nchainmove = 1
-            chaininfo(1,CRD_OLD) = CRD_REAL
-            chaininfo(1,CRD_NEW) = CRD_TEMP
+            chaininfo(1,TRL_OLD) = CRD_REAL
+            chaininfo(1,TRL_NEW) = CRD_TEMP
             chaininfo(1,3) = ichain
             lpartial = .false.
             lintra = .true.
             lbonded = .false.
-            call twh_energy_change(lfailure,ibox,nchainmove,chaininfo
-     &           ,loverlap,lpartial,lgetcom,lintra,lbonded
+            call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
+     &           ,chaininfo,loverlap,lpartial,lgetcom,lintra,lbonded
      &           ,dvtot,dvintra,dvinter,dvext,dvelect,dvsolv,dvtors
      &           ,dvbend,dvvib,dvquantum,dvf,dlinter,dlelect)
             if ( lfailure ) return
 
-            do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+            do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
                if ( loverlap(ioldnew) ) then
                   if (ioldnew .eq. 2) then
                      goto 500
@@ -579,17 +583,17 @@ c           --- include atoms that moved on the backbone
             do inum = 1,searchsize
                currentunit = crback(inum)
                natommove = natommove + 1
-               atomlist(natommove,CRD_OLD) = CRD_REAL
-               atomlist(natommove,CRD_NEW) = CRD_TEMP
+               atomlist(natommove,TRL_OLD) = CRD_REAL
+               atomlist(natommove,TRL_NEW) = CRD_TEMP
                atomlist(natommove,3) = currentunit
             enddo
 
-            globalcord(CRD_OLD) = CRD_REAL
-            globalcord(CRD_NEW) = CRD_TEMP
-            call twh_ec_atomlist_bond(lfailure,ichain,ibox
+            globalcord(TRL_OLD) = CRD_REAL
+            globalcord(TRL_NEW) = CRD_TEMP
+            call twh_ec_atomlist_bond(lfailure,ichain,BXD_REAL,ibox
      &           ,natommove,atomlist,globalcord,loverlap,dvvib)
             if ( lfailure ) return
-            if ( loverlap(CRD_OLD) .or. loverlap(CRD_NEW) ) then
+            if ( loverlap(TRL_OLD) .or. loverlap(TRL_NEW) ) then
                write(6,*) 'CONROT: Overlap vibration'
                lfailure = .true.
                return
@@ -612,7 +616,7 @@ c                 --- compute bond-bond interactions
      &                       .or. icompute .eq. iutwo
      &                       .or. icompute .eq. iuthree ) then
                            do ioldnew = 1,2
-                              if ( ioldnew .eq. CRD_OLD ) then
+                              if ( ioldnew .eq. TRL_OLD ) then
                                  testcord = CRD_REAL
                               else
                                  testcord = CRD_TEMP
@@ -622,13 +626,15 @@ c                             --- compute and store first bond length
      &                             ,ichain,iuone,rxui,ryui,rzui)
                               call twh_coordinates(GLB_GET,testcord
      &                             ,ichain,iutwo,rxuj,ryuj,rzuj)
-                              call twh_mimage(ibox,rxui,ryui,rzui
+                              call twh_mimage(BXD_REAL,ibox
+     &                             ,rxui,ryui,rzui
      &                             ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                               blength(1)=twh_distance(rxuij,ryuij,rzuij)
 c                             --- compute and store second bond length
                               call twh_coordinates(GLB_GET,testcord
      &                             ,ichain,iuthree,rxuj,ryuj,rzuj)
-                              call twh_mimage(ibox,rxui,ryui,rzui
+                              call twh_mimage(BXD_REAL,ibox
+     &                             ,rxui,ryui,rzui
      &                             ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                               blength(2)=twh_distance(rxuij,ryuij,rzuij)
                               dvvib = dvvib + dvpm(ioldnew)*
@@ -649,7 +655,7 @@ c                 --- compute bond bending interactions
      &                    ) then
 c                       --- compute this bond angle
                         do ioldnew = 1,2
-                           if ( ioldnew .eq. CRD_OLD ) then
+                           if ( ioldnew .eq. TRL_OLD ) then
                               testcord = CRD_REAL
                            else
                               testcord = CRD_TEMP
@@ -664,7 +670,7 @@ c                          --- store coordinates
      &                          ,iuthree,xtmp(3),ytmp(3),ztmp(3))
                            dvbend = dvbend + dvpm(ioldnew)*
      &                          twh_vangle(lfailure,.false.
-     &                          ,loverlap(ioldnew)
+     &                          ,loverlap(ioldnew),BXD_REAL
      &                          ,ibox,imolty,iuone,ibend,1
      &                          ,duma,dumb,dumc,xtmp,ytmp,ztmp)
                            if ( lfailure ) return
@@ -697,7 +703,7 @@ c                 --- compute the angle-angle energies
                         enddo
                         if ( lfound ) then
                            do ioldnew = 1,2
-                              if ( ioldnew .eq. CRD_OLD ) then
+                              if ( ioldnew .eq. TRL_OLD ) then
                                  testcord = CRD_REAL
                               else
                                  testcord = CRD_TEMP
@@ -711,8 +717,9 @@ c                             --- assign positions
                               enddo
 c                             --- compute angle-angle energy   
                               dvbend = dvbend + dvpm(ioldnew)*
-     &                             twh_vangang(AA_COORD,ibox,imolty
-     &                             ,iuone,iaa,ddum2,xtmp,ytmp,ztmp)
+     &                             twh_vangang(AA_COORD,BXD_REAL,ibox
+     &                             ,imolty,iuone,iaa
+     &                             ,ddum2,xtmp,ytmp,ztmp)
                            enddo
                         endif
                      enddo
@@ -741,7 +748,7 @@ c                    --- already been calculated
                      endif
                      if ( lcompute ) then
                         do ioldnew = 1,2
-                           if ( ioldnew .eq. CRD_OLD ) then
+                           if ( ioldnew .eq. TRL_OLD ) then
                               testcord = CRD_REAL
                            else
                               testcord = CRD_TEMP
@@ -755,7 +762,8 @@ c                          --- determine atom positions
                            enddo
 c                          --- compute torsion energy
                            dvtors = dvtors + dvpm(ioldnew)*
-     &                          twh_vtorsion(lfailure,.false.,ibox,1
+     &                          twh_vtorsion(lfailure,.false.
+     &                          ,BXD_REAL,ibox,1
      &                          ,imolty,icompute,itor,xtmp,ytmp,ztmp
      &                          ,ddum,loverlap(ioldnew))
                            if ( lfailure ) return
@@ -787,7 +795,7 @@ c                 --- previously found just rotated around the axis.
                      torbead(4) = twh_get_ijimprop4(imolty,icompute
      &                    ,itor)
                      do ioldnew = 1,2
-                        if ( ioldnew .eq. CRD_OLD ) then
+                        if ( ioldnew .eq. TRL_OLD ) then
                            testcord = CRD_REAL
                         else
                            testcord = CRD_TEMP
@@ -800,8 +808,9 @@ c                       --- assign atom positions
      &                          ,ztmp(ibead))
                         enddo
                         dvimpr = dvimpr + dvpm(ioldnew)*
-     &                       twh_vimproper(ibox,imolty,icompute,itor,
-     &                       xtmp,ytmp,ztmp,ddum,lbadstereo)
+     &                       twh_vimproper(BXD_REAL,ibox,imolty
+     &                       ,icompute,itor
+     &                       ,xtmp,ytmp,ztmp,ddum,lbadstereo)
                      enddo
                   enddo
                endif
@@ -879,7 +888,8 @@ c              --- assign new atom positions
 c              --- update the reciprical space sum
                call twh_recip(ibox,2)
 c              --- update the center of mass of chain
-               call twh_ctrmas(lfailure,CRD_REAL,ibox,ichain,CTR_CONROT)
+               call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,ibox,ichain
+     &              ,CTR_CONROT)
                if ( lfailure ) return
 c              --- update embedding density
                iboxa(1)=ibox
@@ -1148,7 +1158,7 @@ c              --- search
       subroutine cr_angle2cart(ichain,atom3,atom1,atom0,atom2)
 c     ******************************************************************
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1170,8 +1180,8 @@ c     --- double precision arrays
 
 c     --- determine the body frame coordinates at the 
 c     --- original position and the trial position
-      do ioldnew = CRD_OLD,CRD_NEW
-         if ( ioldnew .eq. CRD_OLD ) then
+      do ioldnew = TRL_OLD,TRL_NEW
+         if ( ioldnew .eq. TRL_OLD ) then
             testcord = CRD_REAL
          else
             testcord = CRD_TEMP
@@ -1263,7 +1273,7 @@ c     * matrix for the new and old configurations and returns them     *
 c     * (newdeter and olddeter)                                        *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1291,8 +1301,8 @@ c     --- initialize bmat
 
 c     --- first do the determinant for the old (1) and new (2) 
 c     --- configurations
-      do ioldnew = CRD_OLD,CRD_NEW
-         if ( ioldnew .eq. CRD_OLD ) then
+      do ioldnew = TRL_OLD,TRL_NEW
+         if ( ioldnew .eq. TRL_OLD ) then
             testcord = CRD_REAL
          else
             testcord = CRD_TEMP
@@ -1346,7 +1356,7 @@ c           --- calculate the terms of the fourth row
 
          deter = 0.0d0
          call calcdeter(bmat,deter)
-         if ( ioldnew .eq. CRD_OLD ) then
+         if ( ioldnew .eq. TRL_OLD ) then
             olddeter = 1.0d0/dabs(deter)
          elseif ( ioldnew .eq. 2) then
             newdeter = 1.0d0/dabs(deter)

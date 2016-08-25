@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this subroutine creates or reads a towhee_map file             *
 c     *                                                                *
 c     * originally created 02-2006 by O. Yazaydin                      *
-c     * last modified 09-18-2012 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -105,7 +105,7 @@ c                 --- over all possible first atoms in the molecule
                   arba = (dble(iaa-1)+0.5d0)*sizea
                   arbb = (dble(ibb-1)+0.5d0)*sizeb
                   arbc = (dble(icc-1)+0.5d0)*sizec
-                  call twh_arbtocart(ibox,arba,arbb,arbc
+                  call twh_arbtocart(BXD_REAL,ibox,arba,arbb,arbc
      &                 ,xcen,ycen,zcen)
 c                 --- store this in the r*p arrays
                   rxp(1,1) = xcen
@@ -119,7 +119,8 @@ c                    --- set the active atom to the current unit
 c                    --- compute the insertion energy into the box
                      call twh_engatom(lfailure,testcord,globalcord
      &                    ,engastyle,loverlap,testchain,mapmolty
-     &                    ,ibox,nchoi,iufrom,ntogrow,rdist,lnbterm
+     &                    ,BXD_REAL,ibox,nchoi,iufrom,ntogrow
+     &                    ,rdist,lnbterm
      &                    ,1,1,rxp,ryp,rzp,vctry,vtrext,vtrintra
      &                    ,vtrinter,vtrelect,vtrewald,vqtry)
                      if ( lfailure ) return

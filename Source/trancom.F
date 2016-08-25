@@ -29,7 +29,7 @@ c     * number of attempts stored in bntractemp                        *
 c     * number of successful trial moves is stored in bstractemp       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -137,7 +137,7 @@ c     --- the central box
       ddx = xcmi + rx
       ddy = ycmi + ry
       ddz = zcmi + rz
-      call twh_putcartinbox(ibox,ddx,ddy,ddz)
+      call twh_putcartinbox(BXD_REAL,ibox,ddx,ddy,ddz)
 c     --- set the new COM to the temp setting
       call twh_com(GLB_SET,CRD_TEMP,ichain,ddx,ddy,ddz)
 c     --- if the coordinates were shifted then compute the shift
@@ -168,7 +168,7 @@ c     --- if the coordinates were shifted then compute the shift
 #endif
 
       call twh_rcmu(GLB_GET,ichain,rcmu)
-      if ( rcmu .gt. twh_minboxlength(ibox)*0.25d0 ) then
+      if ( rcmu .gt. twh_minboxlength(BXD_REAL,ibox)*0.25d0 ) then
 c        --- molecule is large enough that it might be interacting with
 c        --- iself through the periodic images (occurs for some very 
 c        --- short range potentials like hard spheres).   Need to 
@@ -187,12 +187,13 @@ c        --- images.  don't bother computing intramolecular or bonded
       write(6,*) 'TRANCOM: proposed translation: ', ddx, ddy, ddz
 #endif
       nchainmove = 1
-      chaininfo(1,CRD_OLD) = CRD_REAL
-      chaininfo(1,CRD_NEW) = CRD_TEMP
+      chaininfo(1,TRL_OLD) = CRD_REAL
+      chaininfo(1,TRL_NEW) = CRD_TEMP
       chaininfo(1,3) = ichain
       lpartial = .false.
       lgetcom = .false.
-      call twh_energy_change(lfailure,ibox,nchainmove,chaininfo,loverlap
+      call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
+     &     ,chaininfo,loverlap
      &     ,lpartial,lgetcom,lintra,lbonded,dvclassical_trial
      &     ,dvintra_trial,dvinter_trial,dvext_trial,dvelect_trial
      &     ,dvsolv_trial,dvtor_trial,dvbend_trial

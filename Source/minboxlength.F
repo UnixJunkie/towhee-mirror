@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,19 +19,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_minboxlength(ibox)
+      function twh_minboxlength(bxdflag,ibox)
 c     ******************************************************************
 c     * finds the minimum dimension of a simulation box                *
 c     *                                                                *
 c     * originally written 12-14-2001 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_MINBOXLENGTH
 #include "functions.h"
 
 c     --- variables passed to/from the subroutine
-      integer ibox
+      integer bxdflag,ibox
 
 c     --- local variables
       integer jdim
@@ -41,10 +41,10 @@ c     --- local variables
 c        --- ideal gas box, infinite length, set to large value
          twh_minboxlength = 1.0d10
       else
-         call twh_halfbox(GLB_GET,ibox,1,hbx)
+         call twh_halfbox(GLB_GET,bxdflag,ibox,1,hbx)
          twh_minboxlength = 2.0d0 * hbx
          do jdim = 2,3
-            call twh_halfbox(GLB_GET,ibox,jdim,hbx)
+            call twh_halfbox(GLB_GET,bxdflag,ibox,jdim,hbx)
             boxlength = 2.0d0 * hbx
             if ( boxlength .lt. twh_minboxlength ) then
                twh_minboxlength = boxlength

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -35,7 +35,7 @@ c     *              does not get overwritten every time               *
 c     *           if rwflag is RW_READ then 'flag'is the atomcount     *
 c     *                                                                *
 c     * rewritten 04-13-2004 by M.G. Martin from writeconf & readtowhee*
-c     * last modified 08-17-2011 by M.G. Martin                        *
+c     * last modified 08-24-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -388,7 +388,8 @@ c        --- output box hmatrices
          do ibox = 1,numboxes
             do idim = 1,3
                do jdim = 1,3
-                  call twh_hmatrix(GLB_GET,ibox,idim,jdim,fatmp(jdim))
+                  call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &                 ,fatmp(jdim))
                enddo
                write(8,*) (fatmp(jdim),jdim=1,3)
             enddo
@@ -396,7 +397,7 @@ c        --- output box hmatrices
       else
          write(6,*)
 c        --- initialize hmatrix
-         call twh_hmatrix(GLB_INIT,numboxes,3,3,0.0d0)
+         call twh_hmatrix(GLB_INIT,MAXBXD,numboxes,3,3,0.0d0)
          do ibox = 1,numboxes
             if ( iversion .le. 1 ) then
 c              --- use the old boxlength notation
@@ -404,14 +405,15 @@ c              --- just read in the diagonal terms of hmatrix
                read(8,*) (fatmp(idim),idim=1,3)
                do idim = 1,3
                   jdim = idim
-                  call twh_hmatrix(GLB_SET,ibox,idim,jdim,fatmp(idim))
+                  call twh_hmatrix(GLB_SET,BXD_REAL,ibox,idim,jdim
+     &                 ,fatmp(idim))
                enddo
             else
 c              --- read in the hmatrix
                do idim = 1,3
                   read(8,*) (fatmp(jdim),jdim=1,3)
                   do jdim = 1,3
-                     call twh_hmatrix(GLB_SET,ibox,idim,jdim
+                     call twh_hmatrix(GLB_SET,BXD_REAL,ibox,idim,jdim
      &                    ,fatmp(jdim))
                   enddo
                enddo
@@ -421,17 +423,18 @@ c              --- read in the hmatrix
          do ibox = 1,numboxes
             do idim = 1,3
                do jdim = 1,3
-                  call twh_hmatrix(GLB_GET,ibox,idim,jdim,fatmp(jdim))
+                  call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &                 ,fatmp(jdim))
                enddo
                write (6,1104) ibox,idim,(fatmp(jdim),jdim=1,3)
             enddo
 c           --- error check box dimensions
-            call twh_checkhmatrix(ibox,.true.,lfailure)
+            call twh_checkhmatrix(BXD_REAL,ibox,.true.,lfailure)
             if ( lfailure ) return
 c           --- invert this matrix
-            call twh_inverthmatrix(ibox)
+            call twh_inverthmatrix(BXD_REAL,ibox)
 c           --- make sure the volumes are positive
-            call twh_boxvolume(GLB_GET,ibox,boxvolume)
+            call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
             if ( boxvolume .lt. 0.0d0 ) then
                write(6,*) 'RWCONF: Box ',ibox
      &              ,' has a negative volume of ',boxvolume
@@ -504,6 +507,7 @@ c     --- number of units per chain for each molecule type
                write(6,*) 'RWCONF: moltype,towhee_initial nunit '
      &              ,' towhee_input nunit'
      &              ,imolty,nu_temp(imolty),nunit
+               write(6,*) 'Error: these values do not match'
                lfailure = .true.
                return
             endif

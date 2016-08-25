@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,7 +50,7 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -72,7 +72,7 @@ c     --- logical arrays
 c     --- integer scalars
       integer arbindex,ibox,ichain,icond
       integer imolty,iunit,idim,imove,tempdim
-      integer ntomove,nunit
+      integer ntomove,nunit,bxdflag
 c     --- integer arrays
       integer ncond
       dimension ncond(2)
@@ -109,6 +109,7 @@ c     --- initialize
       enddo
 
 c     --- select a box
+      bxdflag = BXD_REAL
       rm = twh_random()
       lfound = .false.
       ibox = 0
@@ -158,9 +159,9 @@ c        --- the plane uniformly from the availble choices
 c        --- select a position at random
          rcenter = twh_random()
 c        --- get the boxlength of the target dimension
-         call twh_hmatrix(GLB_GET,ibox,arbindex,1,hm1)
-         call twh_hmatrix(GLB_GET,ibox,arbindex,2,hm2)
-         call twh_hmatrix(GLB_GET,ibox,arbindex,3,hm3)
+         call twh_hmatrix(GLB_GET,bxdflag,ibox,arbindex,1,hm1)
+         call twh_hmatrix(GLB_GET,bxdflag,ibox,arbindex,2,hm2)
+         call twh_hmatrix(GLB_GET,bxdflag,ibox,arbindex,3,hm3)
          blength = twh_distance(hm1,hm2,hm3)
 c        --- compute the range
          call twh_planewidth(GLB_GET,planewidth)
@@ -227,9 +228,9 @@ c           --- select a position at random
 c           --- store the target dimension
             tempdim = tardim(idim)
 c           --- get the boxlength of the target dimension
-            call twh_hmatrix(GLB_GET,ibox,tempdim,1,hm1)
-            call twh_hmatrix(GLB_GET,ibox,tempdim,2,hm2)
-            call twh_hmatrix(GLB_GET,ibox,tempdim,3,hm3)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,tempdim,1,hm1)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,tempdim,2,hm2)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,tempdim,3,hm3)
             blength = twh_distance(hm1,hm2,hm3)
 c           --- compute the range
             range = 0.5d0*rowwidth/blength
@@ -277,8 +278,8 @@ c        --- initialize lmoveme
          if ( twh_get_nboxi(ichain) .eq. ibox ) then
 c           --- transform the COM into arbitrary units
             call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
-            call twh_carttoarb(ibox,xcmi,ycmi,zcmi,arbcord(1),arbcord(2)
-     &           ,arbcord(3))
+            call twh_carttoarb(bxdflag,ibox,xcmi,ycmi,zcmi
+     &           ,arbcord(1),arbcord(2),arbcord(3))
 
 c           --- check the bounds
             if ( movetype .eq. 1 ) then 
@@ -316,7 +317,8 @@ c              --- apply the displacement to the COM
 c              --- put the new COM back into the central box
                call twh_putarbinbox(arbcord(1),arbcord(2),arbcord(3))
 c              --- get the new COM in cartesian coords
-               call twh_arbtocart(ibox,arbcord(1),arbcord(2),arbcord(3)
+               call twh_arbtocart(bxdflag,ibox
+     &              ,arbcord(1),arbcord(2),arbcord(3)
      &              ,xtemp,ytemp,ztemp)
 c              --- compute the displacement of the cart COM
                call twh_com(GLB_GET,CRD_TEMP,ichain,xcmi,ycmi,zcmi)
@@ -358,8 +360,8 @@ c     --- compute the new energy
       lovrlap = .false.
       call twh_engtotal(lfailure,lovrlap,vnewtotal,vnewinter,vdumz,vduma
      &     ,vnewintra,vdumb,vdumc,vdumd,vnewext,vnewelect,vnewsolv
-     &     ,vnewquantum,newvf,newdvl,newdvc,ibox,.true.,.true.,.false.
-     &     ,.false.)
+     &     ,vnewquantum,newvf,newdvl,newdvc,CRD_REAL,bxdflag,ibox
+     &     ,.true.,.true.,.false.,.false.)
       if ( lfailure ) return
 c     --- reset all of the coordinates to their old values and then
 c     --- set *cordtmp to the new values
@@ -400,8 +402,9 @@ c     --- we need to compute the old energy to determine acceptance
 c     --- compute the old energy
       call twh_engtotal(lfailure,lovrold,voldtotal,voldinter,vdumz,vduma
      &     ,voldintra,vdumb,vdumc,vdumd,voldext,voldelect,voldsolv
-     &     ,voldquantum,oldvf,olddvl,olddvc,ibox,.true.,.true.,.false.
-     &     ,.false.)
+     &     ,voldquantum,oldvf,olddvl,olddvc
+     &     ,CRD_REAL,bxdflag,ibox
+     &     ,.true.,.true.,.false.,.false.)
       if ( lfailure ) return
       if ( lovrold ) then
          write(6,*) 'ATOMSHIFT: disaster overlap in old conformation'

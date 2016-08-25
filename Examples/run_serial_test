@@ -39,10 +39,6 @@ cd Canonical_Ensemble/DREIDING
 ../../do_test
 cd ../../
 #
-cd Canonical_Ensemble/FENE_Hexamer
-../../do_test
-cd ../../
-#
 cd Canonical_Ensemble/Formamide_Scaled
 ../../do_test
 cd ../../
@@ -124,6 +120,10 @@ cd Gibbs_Ensemble/Dubb_Zeolite
 cd ../../
 #
 cd Gibbs_Ensemble/EPM_VLCC
+../../do_test
+cd ../../
+#
+cd Gibbs_Ensemble/FENE_Hexamer
 ../../do_test
 cd ../../
 #

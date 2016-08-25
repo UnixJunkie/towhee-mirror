@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -214,10 +214,11 @@ c     --- grow new chain conformation
       lnew = .true.
       testcord = CRD_TEMP
       call twh_rosenbluth (lfailure,lnew,lterm,testcord,globalcord,iname
-     &     ,imolty,islen,ibox,numunits,dpscalenew,wrosen(CRD_NEW)
-     &     ,vrostot(CRD_NEW),vrosvib(CRD_NEW),vrosang(CRD_NEW)
-     &     ,vrostor(CRD_NEW),vrosext(CRD_NEW),vrosintra(CRD_NEW)
-     &     ,vrosinter(CRD_NEW),vroselect(CRD_NEW),vrosewald(CRD_NEW))
+     &     ,imolty,islen,BXD_REAL,ibox,numunits,dpscalenew
+     &     ,wrosen(TRL_NEW)
+     &     ,vrostot(TRL_NEW),vrosvib(TRL_NEW),vrosang(TRL_NEW)
+     &     ,vrostor(TRL_NEW),vrosext(TRL_NEW),vrosintra(TRL_NEW)
+     &     ,vrosinter(TRL_NEW),vroselect(TRL_NEW),vrosewald(TRL_NEW))
       if ( lfailure ) return
 c     --- termination of cbmc attempt due to walk termination
       if ( lterm ) return
@@ -226,10 +227,11 @@ c     --- grow old chain conformation
       lnew = .false.
       testcord = CRD_REAL
       call twh_rosenbluth (lfailure,lnew,lterm,testcord,globalcord,iname
-     &     ,imolty,islen,ibox,numunits,dpscaleold,wrosen(CRD_OLD)
-     &     ,vrostot(CRD_OLD),vrosvib(CRD_OLD),vrosang(CRD_OLD)
-     &     ,vrostor(CRD_OLD),vrosext(CRD_OLD),vrosintra(CRD_OLD)
-     &     ,vrosinter(CRD_OLD),vroselect(CRD_OLD),vrosewald(CRD_OLD))
+     &     ,imolty,islen,BXD_REAL,ibox,numunits,dpscaleold
+     &     ,wrosen(TRL_OLD)
+     &     ,vrostot(TRL_OLD),vrosvib(TRL_OLD),vrosang(TRL_OLD)
+     &     ,vrostor(TRL_OLD),vrosext(TRL_OLD),vrosintra(TRL_OLD)
+     &     ,vrosinter(TRL_OLD),vroselect(TRL_OLD),vrosewald(TRL_OLD))
       if ( lfailure ) return
 
       if ( lterm ) then
@@ -257,14 +259,15 @@ c        --- were already computed properly in engatom.
 c        --- only the difference of intermolecular energies is computed
 c        --- in this energy call
          nchainmove = 1
-         chaininfo(1,CRD_OLD) = CRD_REAL
-         chaininfo(1,CRD_NEW) = CRD_TEMP
+         chaininfo(1,TRL_OLD) = CRD_REAL
+         chaininfo(1,TRL_NEW) = CRD_TEMP
          chaininfo(1,3) = iname
          lpartial = .true.
          lgetcom = .true.
          lintra = .false.
          lbonded = .false.
-         call twh_energy_change(lfailure,ibox,nchainmove,chaininfo
+         call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
+     &        ,chaininfo
      &        ,loverlap,lpartial,lgetcom,lintra,lbonded,dvtot,dvduma
      &        ,dvinter,dvdumb,dvelect,dvsolv,dvdumc,dvdumd,dvdume
      &        ,dvdumf,dvf,ddvdl_lj,ddvdl_c)
@@ -348,7 +351,7 @@ c        --- burn a random number
       write(6,*) 'wdlog ',wdlog
       write(6,*) 'accept',laccept
 c     --- DEBUG: force acceptance
-c      if ( .not. loverlap(CRD_NEW) ) laccept = .true.
+c      if ( .not. loverlap(TRL_NEW) ) laccept = .true.
 #endif
 
       if ( laccept ) then
@@ -408,7 +411,8 @@ c        --- update reciprocal-space sum
          call twh_recip(ibox,2)
          
 c        --- update center of mass
-         call twh_ctrmas(lfailure,CRD_REAL,ibox,iname,CTR_CBREGROW)
+         call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,ibox,iname
+     &        ,CTR_CBREGROW)
          if ( lfailure ) return
 c        --- update embedding density
          iboxa(1) = ibox

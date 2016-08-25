@@ -1,6 +1,6 @@
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program
-* Copyright (C) 2006-2009 Marcus G. Martin
+* Copyright (C) 2006-2016 Marcus G. Martin
 * see the file license.gpl for the full license information
 *
 * This program is free software; you can redistribute it and/or
@@ -439,7 +439,7 @@ int twh_3dreginteger(int ptr_index, int * flag, int mindex, int nindex, int oind
 #define twh_moltyp_ TWH_MOLTYP
 #define twh_nboxi_ TWH_NBOXI
 #define twh_rmvol_ TWH_RMVOL
-#define twh_arbcmofield_ TWH_ARBCMOFIELD
+#define twh_arbcomfield_ TWH_ARBCOMFIELD
 #define twh_comfield_ TWH_COMFIELD
 #define twh_comtempfield_ TWH_COMTEMPFIELD
 #endif
@@ -934,18 +934,18 @@ void twh_rmrot_(int * flag, int * imolty, int * ibox, double * value)
 }
 
 /* 1d double array storage */
-void twh_arbcmofield_(int * flag, int * index, double * value)
+void twh_arbcomfield_(int * flag, int * index, double * value)
 /* field molecule center of mass coordinate storage of triples
    originally written 06-23-2009 by M.G. Martin
-   last modified 06-23-2009 by M.G. Martin
+   last modified 07-19-2016 by M.G. Martin
 */
 {
   int errorcode,newindex;
   /* no shifting required */
   newindex = *index;
-  errorcode = twh_1ddouble(PNT_ARBCMOFIELD, flag, newindex, value);
+  errorcode = twh_1ddouble(PNT_ARBCOMFIELD, flag, newindex, value);
   if ( errorcode == EXIT_FAILURE ) {
-    printf("in twh_arbcmofield \n");
+    printf("in twh_arbcomfield \n");
     exit(errorcode);
   }
   return;

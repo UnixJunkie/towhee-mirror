@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * accumulates the averages taken at the end of each move         *
 c     *                                                                *
 c     * split from mainloop 10-20-2005 by M.G. Martin                  *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
@@ -170,7 +170,7 @@ c        --- total energy squared
          if ( lfailure ) return
 c        --- average volume (in cubic angstroms)
          keycode = AC_VOLUME
-         call twh_boxvolume(GLB_GET,ibox,boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
          value =  boxvolume
          call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
      &        ,value,incount)

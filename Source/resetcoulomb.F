@@ -19,12 +19,12 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_resetcoulomb(lfailure,ibox)
+      subroutine twh_resetcoulomb(lfailure,bxdflag,ibox)
 c     ******************************************************************
 c     * resets all of the coulomb parameters in the specified box      *
 c     *                                                                *
 c     * originally resetewald 08-13-2004 by M.G. Martin                *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_MAXBOXLENGTH
@@ -32,7 +32,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ibox
+      integer bxdflag,ibox
 c     --- local variables
       logical lelect,lewald
       character*20 coulombstyle
@@ -44,12 +44,12 @@ c     --- local variables
 
       call twh_coulombstyle(GLB_GET,coulombstyle)
       if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then
-c        --- set kmax to the value in box 1
+c        --- set kmax to the real value in box 1
          call twh_ewald_kmax(GLB_GET,1,kmax)
          call twh_ewald_kmax(GLB_SET,ibox,kmax)
 c        --- set calp based upon the minimum box lengths
 c        --- determine the minimum box length
-         minlength = twh_minboxlength(ibox)
+         minlength = twh_minboxlength(bxdflag,ibox)
          call twh_ewald_kalp(GLB_GET,kalp)
          calp = kalp/minlength
          call twh_ewald_calp(GLB_SET,ibox,calp)
@@ -61,12 +61,12 @@ c        --- determine the minimum box length
          call twh_rcelect(GLB_GET,ibox,rcelect)
          calp = (1.35D0 - 0.15D0*log(ewald_prec))/rcelect
          call twh_ewald_calp(GLB_SET,ibox,calp)
-         kmax = int( (calp*twh_maxboxlength(ibox)/onepi)
+         kmax = int( (calp*twh_maxboxlength(bxdflag,ibox)/onepi)
      &        *dsqrt(-dlog(ewald_prec)))
          call twh_ewald_kmax(GLB_SET,ibox,kmax)
       elseif ( coulombstyle .eq. 'minimum image' ) then
 c        --- we interact with the closest atom regardless of cutoff
-         rcelect = 10.0d0*twh_maxboxlength(ibox)
+         rcelect = 10.0d0*twh_maxboxlength(bxdflag,ibox)
          call twh_rcelect(GLB_SET,ibox,rcelect)
 c        --- disable the center of mass cutoff
          call twh_lusecom(GLB_SET,.false.)

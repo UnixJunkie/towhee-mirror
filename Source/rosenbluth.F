@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -22,7 +22,8 @@ c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_rosenbluth(lfailure,lnew,lterm,testcord,globalcord
-     &     ,ichain,imolty,isteps,ibox,igrow,dpscale,wrosen,vrostot
+     &     ,ichain,imolty,isteps,bxdflag,ibox,igrow
+     &     ,dpscale,wrosen,vrostot
      &     ,vrosvib,vrosang,vrostor,vrosext,vrosintra,vrosinter
      &     ,vroselect,vrosewald)
 c     ******************************************************************
@@ -31,12 +32,13 @@ c     * of the trial values for use dimensioning arrays in the main    *
 c     * routine                                                        *
 c     *                                                                *
 c     * written in current form 12-06-2008 by M.G. Martin              *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to and from the subroutine
       logical lnew,lterm,lfailure
-      integer ichain,imolty,isteps,ibox,igrow,testcord,globalcord
+      integer ichain,imolty,isteps,bxdflag,ibox,igrow,testcord
+      integer globalcord
       double precision dpscale,wrosen
       double precision vrostot,vrosvib,vrosang,vrostor,vrosext
       double precision vrosintra,vrosinter,vroselect,vrosewald
@@ -58,7 +60,7 @@ c     --- retrieve appropriate trial constants for this moltyp
       endif
       call twh_nch_vib(GLB_GET,imolty,nch_vib)
       call twh_rosenbluth_main (lfailure,lnew,lterm,testcord
-     &     ,globalcord,ichain,imolty,isteps,ibox,igrow
+     &     ,globalcord,ichain,imolty,isteps,bxdflag,ibox,igrow
      &     ,nch_nb,nch_pre_nb,nch_tor,nch_tor_connect
      &     ,nch_bend_a,nch_bend_b,max_nch_bend,nch_vib
      &     ,dpscale,wrosen
@@ -69,7 +71,7 @@ c     --- retrieve appropriate trial constants for this moltyp
       end
 
       subroutine twh_rosenbluth_main (lfailure,lnew,lterm,testcord
-     &     ,globalcord,ichain,imolty,isteps,ibox,igrow
+     &     ,globalcord,ichain,imolty,isteps,bxdflag,ibox,igrow
      &     ,nch_nb,nch_pre_nb,nch_tor,nch_tor_connect
      &     ,nch_bend_a,nch_bend_b,max_nch_bend,nch_vib
      &     ,dpscale,wrosen
@@ -94,7 +96,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 07-10-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -103,7 +105,8 @@ c     ******************************************************************
 #define DEBUG_ROSENBLUTH 0
 c     --- variables passed to and from the subroutine
       logical lnew,lterm,lfailure
-      integer ichain,imolty,isteps,ibox,igrow,testcord,globalcord
+      integer ichain,imolty,isteps,bxdflag,ibox,igrow,testcord
+      integer globalcord
       integer nch_nb,nch_pre_nb,nch_bend_a,nch_bend_b,max_nch_bend
       integer nch_tor,nch_tor_connect,nch_vib
       double precision dpscale,wrosen
@@ -226,8 +229,8 @@ c           --- set up the cone based on iuprev and iufrom
      &           ,rxfrom,ryfrom,rzfrom)
             call twh_coordinates(GLB_GET,testcord,ichain,iuprev
      &           ,rxprev,ryprev,rzprev)
-            call twh_mimage(ibox,rxfrom,ryfrom,rzfrom,rxprev,ryprev
-     &           ,rzprev,xxx,yyy,zzz)
+            call twh_mimage(bxdflag,ibox,rxfrom,ryfrom,rzfrom
+     &           ,rxprev,ryprev,rzprev,xxx,yyy,zzz)
 c           --- compute vector length
             length = twh_distance(xxx,yyy,zzz)
 c           --- turn vectors into unit vector
@@ -258,7 +261,7 @@ c              --- all selections generated from scratch
 c           --- perform the biased selection to get lengths
             call twh_getcbbond(lfailure,luseoldone,testcord,iw,ichain
      &           ,imolty,iuprev,nch_vib,vvibtr,maxlen,w_cbbond
-     &           ,dpscale_bond,ibox)
+     &           ,dpscale_bond,bxdflag,ibox)
             if ( lfailure ) return
 #if DEBUG_ROSENBLUTH
             write(6,*) 'w_cbbond:',w_cbbond
@@ -269,7 +272,7 @@ c           --- perform the biased selection to get bond angles
      &           ,imolty,angstart,iuprev,nch_bend_a,nch_bend_b
      &           ,max_nch_bend
      &           ,gcba_vvib,gcba_vbend,gcba_vtor,gcba_weight
-     &           ,dpscale_angle,ibox)
+     &           ,dpscale_angle,bxdflag,ibox)
             if ( lfailure ) return
             if ( lovrangle ) then
                lterm = .true.
@@ -285,8 +288,8 @@ c           --- setup all of the information needed to do the dihedral
 c           --- selection
             call twh_setcbdihed(lfailure,ldihed_direct,ldihed_indirect
      &           ,ldelta_dist,ntogrow,iw,ichain,imolty,iuprev,iufrom
-     &           ,nch_tor,nch_tor_connect,ichtor,testcord,ibox,torkey
-     &           ,angstart,phishift)
+     &           ,nch_tor,nch_tor_connect,ichtor,testcord,bxdflag,ibox
+     &           ,torkey,angstart,phishift)
             if ( lfailure ) return
          elseif ( cbmc_form_code .eq. CBMC_FORM_MF2006 ) then
 c           --- bond and angle and torsion_in are decoupled from each
@@ -315,10 +318,10 @@ c              --- torsion for this coupled-decoupled form
 c              --- perform the biased selection of the torsional angle
                call twh_getcbdihed(lfailure,ldihed_direct
      &              ,ldihed_indirect,luseoldone,ldihedterm,ldelta_dist
-     &              ,testcord,iw,ichain,ichtor,iufrom,ibox,angstart
-     &              ,ntogrow,imolty,dpscale_dihed,phishift,w_cbtor
-     &              ,vcbvib,vcbbend,vcbtor,bfcbbias,xtorcord,ytorcord
-     &              ,ztorcord,torkey)
+     &              ,testcord,iw,ichain,ichtor,iufrom,bxdflag,ibox
+     &              ,angstart,ntogrow,imolty,dpscale_dihed,phishift
+     &              ,w_cbtor,vcbvib,vcbbend,vcbtor,bfcbbias
+     &              ,xtorcord,ytorcord,ztorcord,torkey)
                if ( lfailure ) return
 #if DEBUG_ROSENBLUTH
       write(6,*) 'w_cbtor',w_cbtor
@@ -367,14 +370,14 @@ C                    --- all trial sites are newly generated
 c                 --- perform the biased selection to get lengths
                   call twh_getcbbond(lfailure,luseoldone,testcord,iw
      &                 ,ichain,imolty,iuprev,nch_vib,vvibtr,maxlen
-     &                 ,w_cbbond,dpscale_bond,ibox)
+     &                 ,w_cbbond,dpscale_bond,bxdflag,ibox)
                   if ( lfailure ) return
 c                 --- perform the biased selection to get bond angles
                   call twh_getcbangle(lfailure,luseoldone,lovrangle
-     &                 ,testcord,iw
-     &                 ,ichain,imolty,angstart,iuprev,nch_bend_a
-     &                 ,nch_bend_b,max_nch_bend,gcba_vvib,gcba_vbend
-     &                 ,gcba_vtor,gcba_weight,dpscale_angle,ibox)
+     &                 ,testcord,iw,ichain,imolty,angstart,iuprev
+     &                 ,nch_bend_a,nch_bend_b,max_nch_bend
+     &                 ,gcba_vvib,gcba_vbend,gcba_vtor,gcba_weight
+     &                 ,dpscale_angle,bxdflag,ibox)
                   if ( lfailure ) return
                   if ( lovrangle ) then
 c                    --- angle selection is failed so this whole trial
@@ -386,15 +389,16 @@ c                 --- dihedral selection
                   call twh_setcbdihed(lfailure,ldihed_direct
      &                 ,ldihed_indirect,ldelta_dist,ntogrow,iw,ichain
      &                 ,imolty,iuprev,iufrom,nch_tor,nch_tor_connect
-     &                 ,ichtor,testcord,ibox,torkey,angstart
+     &                 ,ichtor,testcord,bxdflag,ibox,torkey,angstart
      &                 ,phishift)
                   if ( lfailure ) return
 c                 --- perform the biased selection to get inner dihed
                   call twh_getcbdihed(lfailure,ldihed_direct
      &                 ,ldihed_indirect,luseoldone,ldihedterm
      &                 ,ldelta_dist,testcord,iw,ichain,ichtor,iufrom
-     &                 ,ibox,angstart,ntogrow,imolty,dpscale_dihed
-     &                 ,phishift,w_cbtor,vcbvib,vcbbend,vcbtor,bfcbbias
+     &                 ,bxdflag,ibox,angstart,ntogrow,imolty
+     &                 ,dpscale_dihed,phishift,w_cbtor
+     &                 ,vcbvib,vcbbend,vcbtor,bfcbbias
      &                 ,xtorcord,ytorcord,ztorcord,torkey)
                   if ( lfailure ) return
 c                 --- check for walk termination
@@ -507,8 +511,8 @@ c                 --- divide out the number of outer trials
 c        --- now that we have the trial sites, need to compute 
 c        --- non-bond energy
          call twh_engatom(lfailure,testcord,globalcord,engastyle,lovrlap
-     &        ,ichain,imolty,ibox,nch_nb,iufrom,ntogrow,maxlen,lnbterm
-     &        ,NNBOND,nch_nb,rxp,ryp,rzp,vctry,vtrext,vtrintra
+     &        ,ichain,imolty,BXD_REAL,ibox,nch_nb,iufrom,ntogrow,maxlen
+     &        ,lnbterm,NNBOND,nch_nb,rxp,ryp,rzp,vctry,vtrext,vtrintra
      &        ,vtrinter,vtrelect,vtrewald,vqtry)
          if ( lfailure ) return
          if ( lovrlap ) then
@@ -703,9 +707,9 @@ c        --- rescale the weight
 #endif
 c        --- update new trial energies
          if ( lnew ) then
-            istoreflag = CRD_NEW
+            istoreflag = TRL_NEW
          else
-            istoreflag = CRD_OLD
+            istoreflag = TRL_OLD
          endif
          if ( potentialstyle .eq. POT_INTERNAL ) then
             vrostot = vrostot + vctry(iwalk)  

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,8 +21,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vtorsion(lfailure,lreport,ibox,cordstyle,imolty
-     &     ,unit_1,torind,xcord,ycord,zcord,phic,loverlap)
+      function twh_vtorsion(lfailure,lreport,bxdflag,ibox,cordstyle
+     &     ,imolty,unit_1,torind,xcord,ycord,zcord,phic,loverlap)
 c     ******************************************************************
 c     * Computes the torsional energy plus cross terms and 1-4 nonbond *
 c     * for a particular torsion type.                                 *
@@ -48,7 +48,7 @@ c     *  the calling routine.  Do not initialize in any of the vxx     *
 c     *  functions                                                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-18-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -76,7 +76,7 @@ c     ******************************************************************
 #define DEBUG_VTORSION 0
 c     --- variables passed to and from function
       logical lfailure,lreport,loverlap
-      integer imolty,torind,unit_1,cordstyle,ibox
+      integer bxdflag,ibox,imolty,torind,unit_1,cordstyle
       double precision phic
       double precision xcord,ycord,zcord
       dimension xcord(4),ycord(4),zcord(4)
@@ -147,12 +147,12 @@ c        --- want the standard angle, but need it over the full range
 c        --- of -Pi to Pi so we can use this as an adjustment in the
 c        --- non-uniform selection of torsional angles.
          do ivec = 1,3
-            call twh_mimage(ibox,xcord(ivec+1),ycord(ivec+1)
+            call twh_mimage(bxdflag,ibox,xcord(ivec+1),ycord(ivec+1)
      &           ,zcord(ivec+1),xcord(ivec),ycord(ivec),zcord(ivec)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo
 c        --- we also need a fourth vector for the triple product
-         call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
+         call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &        ,xcord(3),ycord(3),zcord(3),xvec(4),yvec(4),zvec(4))
 c        --- calculate cross products 1-2 x 2-3 
          call twh_crossproduct(xvec(1),yvec(1),zvec(1),xvec(2),yvec(2)
@@ -177,7 +177,7 @@ c        --- not actually computing any energies in this case
 c        --- compute the dihedral angle
 c        --- defined so that a cis bond is at 0.0 phi
          do ivec = 1,3
-            call twh_mimage(ibox,xcord(ivec+1),ycord(ivec+1)
+            call twh_mimage(bxdflag,ibox,xcord(ivec+1),ycord(ivec+1)
      &           ,zcord(ivec+1),xcord(ivec),ycord(ivec),zcord(ivec)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo
@@ -555,7 +555,7 @@ c        U = c1[1 + cos(phi + f1)] + c2[1 - cos^2(phi)]
 c        --- square well torsions originally implemented for Elli2002
 c        --- can't just use nonbond below as has different parameters
 c        --- compute the 1-4 distance squared
-         call twh_mimage(ibox,xcord(4),ycord(4),zcord(4)
+         call twh_mimage(bxdflag,ibox,xcord(4),ycord(4),zcord(4)
      &        ,xcord(1),ycord(1),zcord(1),rxij,ryij,rzij)
          rijsq = rxij*rxij + ryij*ryij + rzij*rzij
          rij = dsqrt(rijsq)
@@ -656,7 +656,7 @@ c     --- compute the 1-4 nonbonded terms, if they are used
          endif
 c        --- compute 1-4 vdw interactions
 c        --- compute the 1-4 distance squared
-         call twh_mimage(ibox,xcord(4),ycord(4),zcord(4)
+         call twh_mimage(bxdflag,ibox,xcord(4),ycord(4),zcord(4)
      &        ,xcord(1),ycord(1),zcord(1),rxij,ryij,rzij)
          rijsq = rxij*rxij + ryij*ryij + rzij*rzij
 

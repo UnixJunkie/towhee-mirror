@@ -9,7 +9,6 @@ Charmm27_Nucleic_Acid \
 Charmm27_Polyalanine \
 Compass_Methanol \
 DREIDING \
-FENE_Hexamer \
 Formamide_Scaled \
 Fris_Walls \
 Hard_Sphere \

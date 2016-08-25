@@ -54,6 +54,8 @@
        Resolved a bug where regrowing cyclic molecules in a very small box would sometimes result in a failure in the biasing term due to the method used to set the range of the biasing interaction Gaussian for ring-closure.
        Combined the old volnvt.F and volnpt.F files into the new volumemoves.F and began streamlining those subroutines.  Removed an unneeded random number call from the volumes moves so this changed the random number
        sequence (and therefore results) of the examples.
+       Moved the <a href="../examples/example_manual.html#FENE_Hexamer">FENE_Hexamer</a> example from the Canonical Ensemble directory to the more appropriate Gibbs_Ensemble directory.
+       Added some of the variables required for an additional thermodyanmic pressure calculation, but that option is not yet fully functional is not suggested for use.
       </li>
      </ul>
    
@@ -65,7 +67,7 @@
       </li>
       <li>
        Added new features related to the computation of pressure during a simulation.  The old <b>pressurefreq</b> variable was split into <a href="#pressure_virial_freq"><b>pressure_virial_freq</b></a> 
-       and <a href="#pressure_thermo_freq"><b>pressure_thermo_freq</b></a>.
+       and <a href="#pressure_thermo_freq"><b>pressure_thermo_freq</b></a>.  This additional thermodynamic pressure calculation is not fully functional in version 7.2.0 and should be set to 0.
       </li>
      </ul>
    
@@ -2752,7 +2754,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->July 19, 2016<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->August 25, 2016<!-- #EndDate -->
   </font>
  </foot>
 </html>

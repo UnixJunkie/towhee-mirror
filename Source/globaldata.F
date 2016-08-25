@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this file contains all of the globally accessed data structures*
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 04-29-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -357,14 +357,14 @@ c     --- storage variable
       end
 
 
-      subroutine twh_arbcmo(flag,ichain,avalue,bvalue,cvalue)
+      subroutine twh_arbcom(flag,ichain,avalue,bvalue,cvalue)
 c     ******************************************************************
 c     * the center of mass coordinates stored in arbitrary units for   *
 c     * use during moves that scale all molecules by their center of   *
 c     * mass (e.g. volume moves)                                       *
 c     *                                                                *
 c     * originally written 09-24-2008 by M.G. Martin                   *
-c     * last modiied 06-23-2009 by M.G. Martin                         *
+c     * last modiied 07-19-2016 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -377,7 +377,7 @@ c     --- local variables
 
       newindex = 3*(ichain-1)
       if ( flag .eq. GLB_GET ) then
-         call twh_arbcmofield(GLB_GET_TRIPLE,newindex,vector)
+         call twh_arbcomfield(GLB_GET_TRIPLE,newindex,vector)
          avalue = vector(1)
          bvalue = vector(2)
          cvalue = vector(3)
@@ -385,9 +385,9 @@ c     --- local variables
          vector(1) = avalue
          vector(2) = bvalue
          vector(3) = cvalue
-         call twh_arbcmofield(GLB_SET_TRIPLE,newindex,vector)
+         call twh_arbcomfield(GLB_SET_TRIPLE,newindex,vector)
       else
-         write(6,*) 'ARBCMO: invalid global flag',flag
+         write(6,*) 'ARBCOM: invalid global flag',flag
          stop
       endif
 
@@ -2139,26 +2139,26 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_boxvolume(flag,ibox,dvalue)
+      subroutine twh_boxvolume(flag,bxdflag,ibox,dvalue)
 c     ******************************************************************
 c     * the current volume in each simulation box                      *
 c     *                                                                *
 c     * originally written 10-06-2008 by M.G. Martin                   *
-c     * last modified 10-06-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      integer flag,ibox
+      integer flag,bxdflag,ibox
       double precision dvalue
 c     --- storage variable
       double precision boxvolume
-      dimension boxvolume(MAXBOX)
+      dimension boxvolume(MAXBXD,MAXBOX)
       save boxvolume
 
       if ( flag .eq. GLB_GET ) then
-         dvalue = boxvolume(ibox)
+         dvalue = boxvolume(bxdflag,ibox)
       elseif ( flag .eq. GLB_SET ) then
-         boxvolume(ibox) = dvalue
+         boxvolume(bxdflag,ibox) = dvalue
       else
          write(6,*) 'BOXVOLUME: invalid global flag',flag
          stop
@@ -3828,7 +3828,7 @@ c     * get or sets the coordinates of the center of mass for each     *
 c     * chain in the system                                            *
 c     *                                                                *
 c     * originally written 11-02-2007 by M.G. Martin                   *
-c     * last modified 06-24-2009 by M.G. Martin                        *
+c     * last modified 08-08-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "functions.h"
@@ -3837,10 +3837,12 @@ c     --- variables passed to/from this subroutine
       integer ichain
       double precision xxx,yyy,zzz
 c     --- local variables
+      logical lproblem
       integer index
       double precision vector,backup
       dimension vector(3),backup(3)
 
+      lproblem = .false.
       index = 3*(ichain-1)
       if ( flag .eq. GLB_GET ) then
          if ( cordflag .eq. CRD_REAL ) then
@@ -3848,12 +3850,12 @@ c     --- local variables
          elseif ( cordflag .eq. CRD_TEMP ) then
             call twh_comtempfield(GLB_GET_TRIPLE,index,vector)
          else
-            goto 666
+            lproblem = .true.
          endif
          xxx = vector(1)
          yyy = vector(2)
          zzz = vector(3)
-         return
+         if ( .not. lproblem ) return
       elseif ( flag .eq. GLB_SET ) then
          vector(1) = xxx
          vector(2) = yyy
@@ -3899,7 +3901,7 @@ c           --- swap the coordinates
       endif
 
 c     --- if we got here there was an error
- 666  write(6,*) 'COM: invalid combination of flag and cordflag'
+      write(6,*) 'COM: invalid combination of flag and cordflag'
       write(6,*) 'flag:',flag
       write(6,*) 'cordflag:',cordflag
       stop
@@ -5643,7 +5645,7 @@ c     ******************************************************************
 c     * partial summations used to compute the Ewald sum               *
 c     *                                                                *
 c     * originally written 11-05-2007 by M.G. Martin                   *
-c     * last modified 11-05-2007 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -5664,10 +5666,10 @@ c     --- storage variable
          if ( cordflag .eq. CRD_REAL ) then
             dvalue = ssumi(ivector,ibox)
             return
-         elseif ( cordflag .eq. CRD_NEW ) then
+         elseif ( cordflag .eq. TRL_NEW ) then
             dvalue = ssuminew(ivector,ibox)
             return
-         elseif ( cordflag .eq. CRD_OLD ) then
+         elseif ( cordflag .eq. TRL_OLD ) then
             dvalue = ssumiold(ivector,ibox)
             return
          endif
@@ -5675,10 +5677,10 @@ c     --- storage variable
          if ( cordflag .eq. CRD_REAL ) then
             ssumi(ivector,ibox) = dvalue
             return
-         elseif ( cordflag .eq. CRD_NEW ) then
+         elseif ( cordflag .eq. TRL_NEW ) then
             ssuminew(ivector,ibox) = dvalue
             return
-         elseif ( cordflag .eq. CRD_OLD ) then
+         elseif ( cordflag .eq. TRL_OLD ) then
             ssumiold(ivector,ibox) = dvalue
             return
          endif
@@ -5719,7 +5721,7 @@ c     ******************************************************************
 c     * partial summations used to compute the Ewald sum               *
 c     *                                                                *
 c     * originally written 11-05-2007 by M.G. Martin                   *
-c     * last modified 11-05-2007 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -5740,10 +5742,10 @@ c     --- storage variable
          if ( cordflag .eq. CRD_REAL ) then
             dvalue = ssumr(ivector,ibox)
             return
-         elseif ( cordflag .eq. CRD_NEW ) then
+         elseif ( cordflag .eq. TRL_NEW ) then
             dvalue = ssumrnew(ivector,ibox)
             return
-         elseif ( cordflag .eq. CRD_OLD ) then
+         elseif ( cordflag .eq. TRL_OLD ) then
             dvalue = ssumrold(ivector,ibox)
             return
          endif
@@ -5751,10 +5753,10 @@ c     --- storage variable
          if ( cordflag .eq. CRD_REAL ) then
             ssumr(ivector,ibox) = dvalue
             return
-         elseif ( cordflag .eq. CRD_NEW ) then
+         elseif ( cordflag .eq. TRL_NEW ) then
             ssumrnew(ivector,ibox) = dvalue
             return
-         elseif ( cordflag .eq. CRD_OLD ) then
+         elseif ( cordflag .eq. TRL_OLD ) then
             ssumrold(ivector,ibox) = dvalue
             return
          endif
@@ -6569,26 +6571,26 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_halfbox(flag,ibox,idim,dvalue)
+      subroutine twh_halfbox(flag,bxdflag,ibox,idim,dvalue)
 c     ******************************************************************
 c     * half of the box length in each dimension.  Useful for mimage   *
 c     *                                                                *
 c     * originally written 09-25-2008 by M.G. Martin                   *
-c     * last modified 09-25-2008 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      integer flag,ibox,idim
+      integer flag,bxdflag,ibox,idim
       double precision dvalue
 c     --- storage variable
       double precision halfbox
-      dimension halfbox(MAXBOX,3)
+      dimension halfbox(MAXBXD,MAXBOX,3)
       save halfbox
 
       if ( flag .eq. GLB_GET ) then
-         dvalue = halfbox(ibox,idim)
+         dvalue = halfbox(bxdflag,ibox,idim)
       elseif ( flag .eq. GLB_SET ) then
-         halfbox(ibox,idim) = dvalue
+         halfbox(bxdflag,ibox,idim) = dvalue
       else
          write(6,*) 'HALFBOX unknown flag:',flag
          stop
@@ -6838,35 +6840,38 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_hinverse(flag,ibox,idim,jdim,dvalue)
+      subroutine twh_hinverse(flag,bxdflag,ibox,idim,jdim,dvalue)
 c     ******************************************************************
 c     * the inverse of the matrix that defines the box dimensions      *
 c     *                                                                *
 c     * originally written 09-24-2008 by M.G. Martin                   *
-c     * last modified 09-24-2008 by M.G. Martin                        *
+c     * last modified 07-25-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      integer flag,ibox,idim,jdim
+      integer flag,bxdflag,ibox,idim,jdim
       double precision dvalue
 c     --- local variables
-      integer ibtemp,iitemp,ijtemp
+      integer ibtemp,iitemp,ijtemp,ixtemp
 c     --- storage variable
       double precision hinverse
-      dimension hinverse(MAXBOX,3,3)
+      dimension hinverse(MAXBXD,MAXBOX,3,3)
       save hinverse
 
       if ( flag .eq. GLB_GET ) then
-         dvalue = hinverse(ibox,idim,jdim)
+         dvalue = hinverse(bxdflag,ibox,idim,jdim)
       elseif ( flag .eq. GLB_SET ) then
-         hinverse(ibox,idim,jdim) = dvalue
+         hinverse(bxdflag,ibox,idim,jdim) = dvalue
       elseif ( flag .eq. GLB_SCALE ) then
-         hinverse(ibox,idim,jdim) = hinverse(ibox,idim,jdim) * dvalue
+         hinverse(bxdflag,ibox,idim,jdim)
+     &        = hinverse(bxdflag,ibox,idim,jdim) * dvalue
       elseif ( flag .eq. GLB_INIT ) then 
-         do ibtemp = 1,ibox
-            do iitemp = 1,idim
-               do ijtemp = 1,jdim
-                  hinverse(ibtemp,iitemp,ijtemp) = dvalue
+         do ixtemp = 1,bxdflag
+            do ibtemp = 1,ibox
+               do iitemp = 1,idim
+                  do ijtemp = 1,jdim
+                     hinverse(ixtemp,ibtemp,iitemp,ijtemp) = dvalue
+                  enddo
                enddo
             enddo
          enddo
@@ -7011,35 +7016,58 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_hmatrix(flag,ibox,idim,jdim,dvalue)
+      subroutine twh_hmatrix(flag,bxdflag,ibox,idim,jdim,dvalue)
 c     ******************************************************************
 c     * the matrix that defines the box dimensions                     *
 c     *                                                                *
 c     * originally written 09-24-2008 by M.G. Martin                   *
-c     * last modified 09-24-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
-      integer flag,ibox,idim,jdim
+      integer flag,bxdflag,ibox,idim,jdim
       double precision dvalue
 c     --- local variables
-      integer ibtemp,iitemp,ijtemp
+      integer ibtemp,iitemp,ijtemp,ixtemp
 c     --- storage variable
       double precision hmatrix
-      dimension hmatrix(MAXBOX,3,3)
+      dimension hmatrix(MAXBXD,MAXBOX,3,3)
       save hmatrix
 
       if ( flag .eq. GLB_GET ) then
-         dvalue = hmatrix(ibox,idim,jdim)
+         dvalue = hmatrix(bxdflag,ibox,idim,jdim)
       elseif ( flag .eq. GLB_SET ) then
-         hmatrix(ibox,idim,jdim) = dvalue
+         if ( bxdflag .eq. BXD_R_TO_T ) then
+            hmatrix(BXD_TEMP,ibox,idim,jdim)
+     &           = hmatrix(BXD_REAL,ibox,idim,jdim)
+         elseif ( bxdflag .eq. BXD_T_TO_R ) then
+            hmatrix(BXD_REAL,ibox,idim,jdim)
+     &           = hmatrix(BXD_TEMP,ibox,idim,jdim)
+         else
+            hmatrix(bxdflag,ibox,idim,jdim) = dvalue
+         endif
       elseif ( flag .eq. GLB_SCALE ) then
-         hmatrix(ibox,idim,jdim) = hmatrix(ibox,idim,jdim) * dvalue
+         if ( bxdflag .eq. BXD_R_TO_T ) then
+c           --- scale the real and place that value into temp
+            hmatrix(BXD_TEMP,ibox,idim,jdim)
+     &           = hmatrix(BXD_REAL,ibox,idim,jdim) * dvalue
+            write(6,*) 'ibox,idim,jdim,hmatrix:',ibox,idim,jdim
+     &           ,hmatrix(BXD_TEMP,ibox,idim,jdim)
+         elseif ( bxdflag .eq. BXD_T_TO_R ) then
+c           --- scale the real and place that value into temp
+            hmatrix(BXD_REAL,ibox,idim,jdim)
+     &           = hmatrix(BXD_TEMP,ibox,idim,jdim) * dvalue
+         else
+            hmatrix(bxdflag,ibox,idim,jdim)
+     &           = hmatrix(bxdflag,ibox,idim,jdim) * dvalue
+         endif
       elseif ( flag .eq. GLB_INIT ) then 
-         do ibtemp = 1,ibox
-            do iitemp = 1,idim
-               do ijtemp = 1,jdim
-                  hmatrix(ibtemp,iitemp,ijtemp) = dvalue
+         do ixtemp = 1,bxdflag
+            do ibtemp = 1,ibox
+               do iitemp = 1,idim
+                  do ijtemp = 1,jdim
+                     hmatrix(ixtemp,ibtemp,iitemp,ijtemp) = dvalue
+                  enddo
                enddo
             enddo
          enddo

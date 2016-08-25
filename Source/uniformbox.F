@@ -1,6 +1,7 @@
+#include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -18,19 +19,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_uniformbox(ibox,rx,ry,rz)
+      subroutine twh_uniformbox(bxdflag,ibox,rx,ry,rz)
 c     ******************************************************************
 c     * selects an atom uniformly from the volume of a simulation box  *
 c     *                                                                *
 c     * originally written 12-13-2001 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 07-26-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
 #include "functions.h"
 
 c     --- variables passed to/from the subroutine
-      integer ibox
+      integer bxdflag,ibox
       double precision rx,ry,rz
 c     --- local variables
       double precision arba,arbb,arbc
@@ -46,7 +47,7 @@ c        --- select uniformly from the hmatrix cordinates
          arbb = twh_random()
          arbc = twh_random()
 c        --- transform the inverse coordinates into cartesian space
-         call twh_arbtocart(ibox,arba,arbb,arbc,rx,ry,rz)
+         call twh_arbtocart(bxdflag,ibox,arba,arbb,arbc,rx,ry,rz)
       endif
 
       return

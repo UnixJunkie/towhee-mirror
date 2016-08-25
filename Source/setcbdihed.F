@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -22,13 +22,13 @@ c     ******************************************************************
       subroutine twh_setcbdihed(lfailure,ldihed_direct,ldihed_indirect
      &     ,ldelta_dist,ntogrow,iw,ichain,imolty,iuprev,iufrom
      &     ,nch_tor,nch_tor_connect,ichtor
-     &     ,testcord,ibox,torkey,angstart,phishift)
+     &     ,testcord,bxdflag,ibox,torkey,angstart,phishift)
 c     ******************************************************************
 c     * sets up the logic arrays needed to do the dihedral selection   *
 c     * for configurational-bias                                       *
 c     *                                                                *
 c     * originally split from rosenbluth 08-07-2002 by M.G. Martin     *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_BONDPATT
@@ -53,7 +53,7 @@ c     --- variables passed to/from the subroutine
       logical lfailure,ldihed_direct,ldihed_indirect,ldelta_dist
       integer ntogrow,iw,imolty,iuprev,iufrom,nch_tor,nch_tor_connect
       integer ichtor
-      integer testcord,ichain,ibox,torkey,angstart
+      integer testcord,ichain,bxdflag,ibox,torkey,angstart
       double precision phishift
 c     --- local variables
 c     --- logical scalars
@@ -456,8 +456,8 @@ c                    --- use old/new unit coordinates
 c              --- store unit numbers
                ttype = torbead(1)
 c              --- compute the shift angle
-               phishift = twh_vtorsion(lfailure,.false.,ibox,0,imolty
-     &              ,ttype,it,xttmp,yttmp,zttmp,dum,lovrlap)
+               phishift = twh_vtorsion(lfailure,.false.,bxdflag,ibox
+     &              ,0,imolty,ttype,it,xttmp,yttmp,zttmp,dum,lovrlap)
                if ( lfailure ) return
 c              --- check to see if this is a multiple rigid angle
                call twh_ittor(GLB_GET,imolty,iu,it,tortype)

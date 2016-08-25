@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2008-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2008-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * frees all of the allocated memory                              *
 c     *                                                                *
 c     * originally written 12-03-2008 M.G. Martin                      *
-c     * last modified 01-30-2011 by M.G. Martin                        *
+c     * last modified 07-19-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- local variables
@@ -76,7 +76,7 @@ c     --- free arrays for coordinate storage
       call twh_coordfield(GLB_FREE,itemp,dvalue)
       call twh_coordstorage(GLB_FREE,itemp,dvalue)
       call twh_coordtemp(GLB_FREE,itemp,dvalue)
-      call twh_arbcmofield(GLB_FREE,itemp,dvalue)
+      call twh_arbcomfield(GLB_FREE,itemp,dvalue)
       call twh_comfield(GLB_FREE,itemp,dvalue)
       call twh_comtempfield(GLB_FREE,itemp,dvalue)
 c     --- free arrays based on numboxes and nmolty

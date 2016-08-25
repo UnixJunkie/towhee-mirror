@@ -25,7 +25,7 @@ c     * this routine outputs a single frame of information to the      *
 c     * towhee_movie file for post-processing analysis                 *
 c     *                                                                *
 c     * rewritten 07-09-2003 by M.G. Martin from pupdate               *
-c     * last modified 05-03-2016 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJTOR2
@@ -112,7 +112,8 @@ c        --- regular output of a movie frame
             write(ifile,*) (twh_get_ncmt(ibox,imolty),imolty=1,nmolty)
             do idim = 1,3
                do jdim = 1,3
-                  call twh_hmatrix(GLB_GET,ibox,idim,jdim,hmtemp(jdim))
+                  call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &                 ,hmtemp(jdim))
                enddo
                write(ifile,*) (hmtemp(jdim),jdim=1,3)
             enddo

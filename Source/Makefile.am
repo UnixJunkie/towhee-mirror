@@ -567,7 +567,7 @@ switch.o: preproc.h switch.F
 tail.o: preproc.h functions.h tail.F
 tranatom.o: preproc.h dvpm.h functions.h tranatom.F
 trancom.o: preproc.h functions.h trancom.F
-uniformbox.o: functions.h uniformbox.F
+uniformbox.o: preproc.h functions.h uniformbox.F
 updatemaxtrdisp.o: preproc.h updatemaxtrdisp.F
 updatethreebondbias.o: preproc.h functions.h updatethreebondbias.F
 updatetwobondbias.o: preproc.h functions.h updatetwobondbias.F

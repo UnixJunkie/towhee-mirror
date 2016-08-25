@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * updates the parameters used in the two bond fixed endpoint     *
 c     * biasing                                                        *
 c     *                                                                *
 c     * originally written 10-13-2005 by M.G. Martin                   *
-c     * last modified 10-12-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJBEN3
@@ -71,8 +71,8 @@ c        --- biasing
                         call twh_coordinates(GLB_GET,CRD_REAL,ichain
      &                       ,kunit,rxuk,ryuk,rzuk)
 c                       --- compute i-k distance
-                        call twh_mimage(ibox,rxui,ryui,rzui,rxuk,ryuk
-     &                       ,rzuk,rxuik,ryuik,rzuik)
+                        call twh_mimage(BXD_REAL,ibox,rxui,ryui,rzui
+     &                       ,rxuk,ryuk,rzuk,rxuik,ryuik,rzuik)
                         riksq = rxuik*rxuik + ryuik*ryuik 
      &                       + rzuik*rzuik
                         rik = dsqrt(riksq)

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_energy_change(lfailure,activebox,nchainmove
+      subroutine twh_energy_change(lfailure,bxdflag,activebox,nchainmove
      &     ,chaininfo,loverlap,lpartial,lgetcom,lintra,lbonded
      &     ,dv_classical,dv_intra,dv_inter,dv_ext,dv_elect,dv_solv
      &     ,dv_tor,dv_ben,dv_vib,dv_quantum,dv_foreign
@@ -31,6 +31,7 @@ c     * coordinates (either deleted, or the temporary coords) and the  *
 c     * rest use the default CRD_REAL coordinates                      *
 c     * Variable summary:                                              *
 c     * lfailure: global failure logical (output)                      *
+c     * bxdflag: whether to use the real box dimensions, or trial ones *
 c     * activebox: the box used to compute this energy change          *
 c     * nchainmove: the number of chains using special flags.  These   *
 c     *             are normally the chains that are being moved       *
@@ -59,7 +60,7 @@ c     * dl_inter: change of d[inter]/d[lambda_lj] (output)             *
 c     * dl_elect: change of d[elect]/d[lambda_lj] (output)             *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define DEBUG_ENERGY_CHANGE 0
@@ -67,7 +68,7 @@ c     --- variables passed to/from the subroutine
       logical lfailure,lintra,lpartial,lgetcom,lbonded
       logical loverlap
       dimension loverlap(2)
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       double precision dv_classical,dv_intra,dv_inter,dv_ext,dv_quantum
@@ -82,7 +83,6 @@ c     --- local variables
       double precision dv_three,dv_tmp
       double precision vquantum
       dimension vquantum(2)
-
 
 #if DEBUG_ENERGY_CHANGE
       write(6,*) 'start ENERGY_CHANGE'
@@ -111,43 +111,28 @@ c        --- Skip this if computing just the multibody terms that are
 c        --- currently missing from engatom
          call twh_ldualcutoff(GLB_GET,ldualcutoff)
          if ( .not.(lpartial .and. .not. ldualcutoff) ) then
-#if DEBUG_ENERGY_CHANGE
-            write(6,*) 'EC calling one-body-dv:'
-#endif
-            call twh_ec_one_body_dv(lfailure,activebox,nchainmove
-     &           ,chaininfo,lpartial,loverlap,dv_ext,dv_solv)
-            if ( lfailure .or. loverlap(CRD_NEW) 
-     &           .or. loverlap(CRD_OLD)) return
-#if DEBUG_ENERGY_CHANGE
-            write(6,*) 'EC calling two-body-dv:'
-#endif
-            call twh_ec_two_body_dv(lfailure,activebox,nchainmove
-     &           ,chaininfo,lpartial,lgetcom,loverlap
+            call twh_ec_one_body_dv(lfailure,bxdflag,activebox
+     &           ,nchainmove,chaininfo,lpartial,loverlap,dv_ext,dv_solv)
+            if ( lfailure .or. loverlap(TRL_NEW) 
+     &           .or. loverlap(TRL_OLD)) return
+            call twh_ec_two_body_dv(lfailure,bxdflag,activebox
+     &           ,nchainmove,chaininfo,lpartial,lgetcom,loverlap
      &           ,dv_inter,dv_elect,dl_inter,dl_elect,dv_foreign)
-            if ( lfailure .or. loverlap(CRD_NEW) 
-     &           .or. loverlap(CRD_OLD)) return
+            if ( lfailure .or. loverlap(TRL_NEW) 
+     &           .or. loverlap(TRL_OLD)) return
          endif
 
-#if DEBUG_ENERGY_CHANGE
-         write(6,*) 'EC calling multi-body-dv:'
-#endif
-         call twh_ec_multi_body_dv(lfailure,activebox,nchainmove
+         call twh_ec_multi_body_dv(lfailure,bxdflag,activebox,nchainmove
      &        ,chaininfo,dv_three)
          if ( lfailure ) return
 
-#if DEBUG_ENERGY_CHANGE
-         write(6,*) 'EC calling intra-dv:'
-#endif
-         call twh_ec_intra_dv(lfailure,activebox,nchainmove,chaininfo
+         call twh_ec_intra_dv(lfailure,bxdflag,activebox
+     &        ,nchainmove,chaininfo
      &        ,lintra,lbonded,loverlap,dv_intra,dv_elect,dv_vib
      &        ,dv_ben,dv_tor)
          if ( lfailure ) return
-         if (loverlap(CRD_NEW) .or. loverlap(CRD_OLD)) return
+         if (loverlap(TRL_NEW) .or. loverlap(TRL_OLD)) return
 
-#if DEBUG_ENERGY_CHANGE
-         write(6,*) '2-body dv_inter:',dv_inter
-         write(6,*) '3-body dv_inter:',dv_three
-#endif
 c        --- add dv_three to dv_inter(bindex)
          dv_inter = dv_inter + dv_three
 c        --- note that dv_intra is only computed when
@@ -160,9 +145,6 @@ c        --- the foreign energies.
             dv_foreign(lambda) = dv_foreign(lambda) + dv_tmp
          enddo
 
-#if DEBUG_ENERGY_CHANGE
-         write(6,*) 'EC calling long range elect'
-#endif
          call twh_ec_long_range_elect(activebox,nchainmove
      &        ,chaininfo,dv_elect)
 c        --- set the total change in classical energy
@@ -198,7 +180,7 @@ c              --- current energy of that box
          enddo
 
 c        --- compute the quantum energy change
-         dv_quantum = vquantum(CRD_NEW) - vquantum(CRD_OLD)
+         dv_quantum = vquantum(TRL_NEW) - vquantum(TRL_OLD)
 
       endif
 
@@ -225,19 +207,19 @@ c        --- compute the quantum energy change
       return
       end
 
-      subroutine twh_ec_one_body_dv(lfailure,activebox,nchainmove
-     &     ,chaininfo,lpartial,loverlap,dv_ext,dv_solv)
+      subroutine twh_ec_one_body_dv(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo,lpartial,loverlap,dv_ext,dv_solv)
 c     ******************************************************************
 c     * computes the energy change in box activebox for all one-body   *
 c     * interactions involving the molecules listed in chaininfo       *
 c     *                                                                *
 c     * originally written 08-04-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       logical lpartial,loverlap
@@ -259,40 +241,41 @@ c        --- lpartial as this was already done in engatom.  Otherwise
 c        --- we need to compute the external field energy (for 
 c        --- translate and rotate)
          do ioldnew = 1,2
-            call twh_eng_external_field(lfailure,ioldnew,activebox
-     &           ,nchainmove,chaininfo,loverlap(ioldnew),v_ext(ioldnew))
+            call twh_eng_external_field(lfailure,bxdflag,activebox
+     &           ,ioldnew,nchainmove,chaininfo,loverlap(ioldnew)
+     &           ,v_ext(ioldnew))
             if ( lfailure ) return
             if ( loverlap(ioldnew) ) return
          enddo
-         dv_ext = v_ext(CRD_NEW) - v_ext(CRD_OLD)
+         dv_ext = v_ext(TRL_NEW) - v_ext(TRL_OLD)
       endif
 
 c     --- Calculate the solvation energy
       do ioldnew = 1,2
          v_solv(ioldnew) = 0.0d0
-         call twh_eng_solvation(lfailure,ioldnew,activebox,nchainmove
-     &        ,chaininfo,v_solv(ioldnew))
+         call twh_eng_solvation(lfailure,ioldnew,bxdflag,activebox
+     &        ,nchainmove,chaininfo,v_solv(ioldnew))
          if ( lfailure ) return
       enddo
-      dv_solv = v_solv(CRD_NEW) - v_solv(CRD_OLD)
+      dv_solv = v_solv(TRL_NEW) - v_solv(TRL_OLD)
 
       return
       end
 
-      subroutine twh_ec_two_body_dv(lfailure,activebox,nchainmove
-     &     ,chaininfo,lpartial,lgetcom,loverlap
+      subroutine twh_ec_two_body_dv(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo,lpartial,lgetcom,loverlap
      &     ,dv_inter,dv_elect,dl_vinter,dl_velect,dv_foreign)
 c     ******************************************************************
 c     * compute the energy change for all of the two-body interactions *
 c     * involving the molecules in chaininfo                           *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       logical lpartial,lgetcom,loverlap
@@ -316,7 +299,7 @@ c     --- retrieve constants
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
 
 c     --- initialize
-      do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD - CRD_NEW)
+      do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD - TRL_NEW)
          v_inter(ioldnew) = 0.0d0
          v_elect(ioldnew) = 0.0d0
          l_vinter(ioldnew) = 0.0d0
@@ -326,12 +309,12 @@ c     --- initialize
          enddo
       enddo
 
-      do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD - CRD_NEW)
+      do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD - TRL_NEW)
          do lambda = 1,scp_num_foreign_lambda
             vf_temp(lambda) = 0.0d0
          enddo
-         call twh_eng_two_body(lfailure,ioldnew,activebox,nchainmove
-     &        ,chaininfo,lpartial,lgetcom,loverlap(ioldnew)
+         call twh_eng_two_body(lfailure,ioldnew,bxdflag,activebox
+     &        ,nchainmove,chaininfo,lpartial,lgetcom,loverlap(ioldnew)
      &        ,v_inter(ioldnew),v_elect(ioldnew),l_vinter(ioldnew)
      &        ,l_velect(ioldnew),vf_temp)
          if ( lfailure .or. loverlap(ioldnew) ) return
@@ -341,34 +324,34 @@ c     --- initialize
       enddo
 
 #if DEBUG_ENERGY_CHANGE
-      write(6,*) 'EC_TWO_BODY_DV v_inter(new):',v_inter(CRD_NEW)
-      write(6,*) 'EC_TWO_BODY_DV v_inter(old):',v_inter(CRD_OLD)
+      write(6,*) 'EC_TWO_BODY_DV v_inter(new):',v_inter(TRL_NEW)
+      write(6,*) 'EC_TWO_BODY_DV v_inter(old):',v_inter(TRL_OLD)
 #endif
-      dv_inter = v_inter(CRD_NEW) - v_inter(CRD_OLD)
-      dv_elect = v_elect(CRD_NEW) - v_elect(CRD_OLD)
-      dl_vinter = l_vinter(CRD_NEW) - l_vinter(CRD_OLD)
-      dl_velect = l_velect(CRD_NEW) - l_velect(CRD_OLD)
+      dv_inter = v_inter(TRL_NEW) - v_inter(TRL_OLD)
+      dv_elect = v_elect(TRL_NEW) - v_elect(TRL_OLD)
+      dl_vinter = l_vinter(TRL_NEW) - l_vinter(TRL_OLD)
+      dl_velect = l_velect(TRL_NEW) - l_velect(TRL_OLD)
       do lambda = 1,scp_num_foreign_lambda
-         dv_foreign(lambda) = v_foreign(CRD_NEW,lambda) 
-     &        - v_foreign(CRD_OLD,lambda)
+         dv_foreign(lambda) = v_foreign(TRL_NEW,lambda) 
+     &        - v_foreign(TRL_OLD,lambda)
       enddo
 
       return
       end
 
-      subroutine twh_ec_multi_body_dv(lfailure,activebox,nchainmove
-     &     ,chaininfo,dv_three)
+      subroutine twh_ec_multi_body_dv(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo,dv_three)
 c     ******************************************************************
 c     * computes the change in the multibody energy caused by the      *
 c     * molecules in chaininfo                                         *
 c     *                                                                *
 c     * originally written 08-05-2006 by M.G. Martin                   *
-c     * last modified 11-06-2006 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       double precision dv_three
@@ -380,11 +363,11 @@ c     --- no energy change in the ideal box
 
       call twh_cp_number(GLB_GET,classical_pot_num)
       if ( classical_pot_num .eq. CP_STILLINGER_WEBER ) then
-         call twh_ec_stillinger_webber(lfailure,activebox,nchainmove
-     &        ,chaininfo,dv_three)
+         call twh_ec_stillinger_webber(lfailure,bxdflag,activebox
+     &        ,nchainmove,chaininfo,dv_three)
          if ( lfailure ) return
       elseif ( classical_pot_num .eq. CP_EMBEDDED_ATOM_METHOD ) then
-         call twh_ec_embedded_atom(lfailure,activebox,nchainmove
+         call twh_ec_embedded_atom(lfailure,bxdflag,activebox,nchainmove
      &        ,chaininfo,dv_three)
          if ( lfailure ) return
       endif
@@ -392,7 +375,8 @@ c     --- no energy change in the ideal box
       return
       end
 
-      subroutine twh_ec_intra_dv(lfailure,activebox,nchainmove,chaininfo
+      subroutine twh_ec_intra_dv(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo
      &     ,lintra,lbonded,loverlap,dv_intra,dv_elect,dv_vib
      &     ,dv_ben,dv_tor)
 c     ******************************************************************
@@ -416,12 +400,12 @@ c     * Error conditions:                                              *
 c     *   returns early of loverlap is true                            *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       logical lintra,lbonded
@@ -440,7 +424,7 @@ c     --- local variables
 
       do imove = 1,nchainmove
          ichain = chaininfo(imove,3)
-         do iflag = CRD_NEW,CRD_OLD,-1
+         do iflag = TRL_NEW,TRL_OLD,-1
 c           --- initialize energies
             vintra(iflag) = 0.0d0
             velect(iflag) = 0.0d0
@@ -451,7 +435,8 @@ c           --- initialize energies
             if ( testcrd .ne. CRD_NONE ) then
                if ( lintra ) then
 c                 --- compute the nonbonded intramolecular energy
-                  call twh_eng_nonbonded_intra(lfailure,ichain,activebox
+                  call twh_eng_nonbonded_intra(lfailure,ichain
+     &                 ,bxdflag,activebox
      &                 ,testcrd,loverlap(iflag),vintra(iflag)
      &                 ,velect(iflag))
                   if ( lfailure ) return
@@ -461,43 +446,46 @@ c                 --- compute the nonbonded intramolecular energy
                if ( lbonded ) then
 c                 --- compute all of the bonded terms for this molecule
 c                 --- bond vibrations
-                  call twh_eng_bond_vibrations(lfailure,ichain,activebox
+                  call twh_eng_bond_vibrations(lfailure,ichain
+     &                 ,bxdflag,activebox
      &                 ,testcrd,loverlap(iflag),vvib(iflag))
                   if ( lfailure ) return
                   if (loverlap(iflag)) return
 
 c                 --- molecule with bending angles
-                  call twh_eng_bending(lfailure,ichain,activebox,testcrd
+                  call twh_eng_bending(lfailure,ichain
+     &                 ,bxdflag,activebox,testcrd
      &                 ,loverlap(iflag),vbend(iflag))
                   if ( lfailure ) return
                   if (loverlap(iflag)) return
       
 c                 --- bond bond cross terms
-                  call twh_eng_bond_bond(ichain,activebox,testcrd
-     &                 ,vvib(iflag))
+                  call twh_eng_bond_bond(ichain,bxdflag,activebox
+     &                 ,testcrd,vvib(iflag))
 
 c                 --- regular torsions 
                   call twh_eng_regular_torsions(lfailure,ichain
-     &                 ,activebox,testcrd,loverlap(iflag),vtor(iflag))
+     &                 ,bxdflag,activebox,testcrd
+     &                 ,loverlap(iflag),vtor(iflag))
                   if ( lfailure ) return
                   if (loverlap(iflag)) return
 
 c                 --- angle angle cross terms
-                  call twh_eng_angle_angle(ichain,activebox,testcrd
-     &                 ,vbend(iflag))
+                  call twh_eng_angle_angle(ichain,bxdflag,activebox
+     &                 ,testcrd,vbend(iflag))
 
 c                 --- improper torsions 
-                  call twh_eng_improper_torsions(ichain,activebox
-     &                 ,testcrd,vtor(iflag))
+                  call twh_eng_improper_torsions(ichain,bxdflag
+     &                 ,activebox,testcrd,vtor(iflag))
                endif
             endif
          enddo
 
-         dv_intra = dv_intra + vintra(CRD_NEW) - vintra(CRD_OLD)
-         dv_elect = dv_elect + velect(CRD_NEW)-velect(CRD_OLD)
-         dv_vib = dv_vib + vvib(CRD_NEW) - vvib(CRD_OLD)
-         dv_ben = dv_ben + vbend(CRD_NEW) - vbend(CRD_OLD)
-         dv_tor = dv_tor + vtor(CRD_NEW) - vtor(CRD_OLD)
+         dv_intra = dv_intra + vintra(TRL_NEW) - vintra(TRL_OLD)
+         dv_elect = dv_elect + velect(TRL_NEW)-velect(TRL_OLD)
+         dv_vib = dv_vib + vvib(TRL_NEW) - vvib(TRL_OLD)
+         dv_ben = dv_ben + vbend(TRL_NEW) - vbend(TRL_OLD)
+         dv_tor = dv_tor + vtor(TRL_NEW) - vtor(TRL_OLD)
 
       enddo
 
@@ -514,7 +502,7 @@ c     * computes the change in the long-range electrostatics in the    *
 c     * activebox for the molecules listed in chaininfo                *
 c     *                                                                *
 c     * originally written 10-06-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -538,7 +526,7 @@ c     --- retrieve constants
       if ( lewald ) then
 c        --- bail out if this is the ideal chain box
          if ( activebox .eq. 0 ) return
-         do icrd = CRD_OLD,CRD_NEW,( CRD_NEW - CRD_OLD )
+         do icrd = TRL_OLD,TRL_NEW,( TRL_NEW - TRL_OLD )
             vrecip(icrd) = 0.0d0
          enddo
 
@@ -548,7 +536,7 @@ c        --- bail out if this is the ideal chain box
 c           --- fetch the kx, ky, and kz into local memory
             call twh_ewald_kvector(GLB_GET,CRD_REAL,ic,activebox
      &           ,kxfetch,kyfetch,kzfetch)
-            do icrd = CRD_OLD,CRD_NEW,( CRD_NEW - CRD_OLD )
+            do icrd = TRL_OLD,TRL_NEW,( TRL_NEW - TRL_OLD )
                sumr(icrd) = 0.0d0
                sumi(icrd) = 0.0d0
                do imove = 1,nchainmove
@@ -571,23 +559,23 @@ c           --- fetch the kx, ky, and kz into local memory
                enddo
             enddo
             call twh_ewald_ssumr(GLB_GET,CRD_REAL,ic,activebox,ssumr)
-            ssumrn = ssumr - sumr(CRD_OLD) + sumr(CRD_NEW)
-            call twh_ewald_ssumr(GLB_SET,CRD_NEW,ic,activebox,ssumrn)
+            ssumrn = ssumr - sumr(TRL_OLD) + sumr(TRL_NEW)
+            call twh_ewald_ssumr(GLB_SET,TRL_NEW,ic,activebox,ssumrn)
             call twh_ewald_ssumi(GLB_GET,CRD_REAL,ic,activebox,ssumi)
-            ssumin = ssumi - sumi(CRD_OLD) + sumi(CRD_NEW)
-            call twh_ewald_ssumi(GLB_SET,CRD_NEW,ic,activebox,ssumin)
+            ssumin = ssumi - sumi(TRL_OLD) + sumi(TRL_NEW)
+            call twh_ewald_ssumi(GLB_SET,TRL_NEW,ic,activebox,ssumin)
          enddo
 
          call twh_ewald_sum(activebox,vrecip)
 
-         dv_elect = dv_elect + vrecip(CRD_NEW) - vrecip(CRD_OLD)
+         dv_elect = dv_elect + vrecip(TRL_NEW) - vrecip(TRL_OLD)
       endif
 
       return
       end
 
-      subroutine twh_ec_embedded_atom(lfailure,activebox,nchainmove
-     &        ,chaininfo,dv_three)
+      subroutine twh_ec_embedded_atom(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo,dv_three)
 c     ******************************************************************
 c     * calculates the change in EAM energies                          *
 c     *                                                                *
@@ -595,7 +583,7 @@ c     * Arguments set by subroutine:                                   *
 c     *  dv_three                                                      *
 c     *                                                                *
 c     * rewritten from engmolec 10-09-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -603,7 +591,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       double precision dv_three
@@ -646,7 +634,7 @@ c     --- set the old_eam_rho for the active molecules to 0.0
       enddo
 
 c     --- contributions of the chaininfo list with each other
-      do icrd = CRD_OLD,CRD_NEW,(CRD_NEW-CRD_OLD)
+      do icrd = TRL_OLD,TRL_NEW,(TRL_NEW-TRL_OLD)
          do imove = 1,nchainmove-1
             ichain = chaininfo(imove,3)
             call twh_moltyp(GLB_GET,ichain,imolty)
@@ -665,7 +653,7 @@ c                    --- compute the cross interaction
                      call twh_coordinates(GLB_GET,jtestcord,jchain,1
      &                    ,rxuj,ryuj,rzuj)
 c                    --- compute i-j bond distance
-                     call twh_mimage(activebox,rxuj,ryuj,rzuj
+                     call twh_mimage(bxdflag,activebox,rxuj,ryuj,rzuj
      &                    ,rxui,ryui,rzui,rxuij,ryuij,rzuij)
                      rij = twh_distance(rxuij,ryuij,rzuij)
 c                    --- compute i-j bond density
@@ -673,7 +661,7 @@ c                    --- compute i-j bond density
      &                    ,bij,bji,lzero)
                      if ( lfailure ) return
 c                    --- modify the temp densities appropriately
-                     if ( icrd .eq. CRD_NEW ) then
+                     if ( icrd .eq. TRL_NEW ) then
 c                       --- new densities so add to the jchain rho
                         call twh_eam_rho(GLB_INCR,CRD_TEMP,jchain,bji)
 c                       --- new densities added to the ichain rho
@@ -710,7 +698,7 @@ c              --- get the coordinates for the jchain
      &              ,rxuj,ryuj,rzuj)
 c              --- run through the chainlist and compute the change in 
 c              --- the embedding density of jchain
-               do icrd = CRD_OLD,CRD_NEW,(CRD_NEW-CRD_OLD)
+               do icrd = TRL_OLD,TRL_NEW,(TRL_NEW-TRL_OLD)
                   do imove = 1,nchainmove
                      itestcord = chaininfo(imove,icrd)
                      if (  itestcord .ne. CRD_NONE ) then
@@ -720,7 +708,7 @@ c              --- the embedding density of jchain
                         call twh_coordinates(GLB_GET,itestcord,ichain,1
      &                       ,rxui,ryui,rzui)
 c                       --- compute i-j bond distance
-                        call twh_mimage(activebox,rxuj,ryuj,rzuj
+                        call twh_mimage(bxdflag,activebox,rxuj,ryuj,rzuj
      &                       ,rxui,ryui,rzui,rxuij,ryuij,rzuij)
                         rij = twh_distance(rxuij,ryuij,rzuij)
 c                       --- compute i-j bond density
@@ -728,7 +716,7 @@ c                       --- compute i-j bond density
      &                       ,bij,bji,lzero)
                         if ( lfailure ) return
 c                       --- modify the temp densities appropriately
-                        if ( icrd .eq. CRD_NEW ) then
+                        if ( icrd .eq. TRL_NEW ) then
 c                          --- new densities so add to the jchain rho
                            call twh_eam_rho(GLB_INCR,CRD_TEMP,jchain
      &                          ,bji)
@@ -774,14 +762,14 @@ c     --- compute the change in the ebedding energy for chaininfo
          call twh_moltyp(GLB_GET,ichain,imolty)
          call twh_ntype(GLB_GET,imolty,1,ntii)
 c        --- add the new embedding energy
-         itestcord = chaininfo(imove,CRD_NEW)
+         itestcord = chaininfo(imove,TRL_NEW)
          if ( itestcord .ne. CRD_NONE ) then
             call twh_eam_rho(GLB_GET,CRD_TEMP,ichain,density)
             dv_three = dv_three + twh_vembed(lfailure,ntii,density)
             if ( lfailure ) return
          endif
 c        --- subtract the old embedding energy
-         itestcord = chaininfo(imove,CRD_OLD)
+         itestcord = chaininfo(imove,TRL_OLD)
          if ( itestcord .ne. CRD_NONE ) then
             density = old_eam_rho(imove)
             dv_three = dv_three - twh_vembed(lfailure,ntii,density)
@@ -792,19 +780,19 @@ c        --- subtract the old embedding energy
       return
       end
 
-      subroutine twh_ec_stillinger_webber(lfailure,activebox,nchainmove
-     &     ,chaininfo,dv_three)
+      subroutine twh_ec_stillinger_webber(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo,dv_three)
 c     ******************************************************************
 c     * computes the change in energy of the multibody portion of the  *
 c     * stillinger-weber potential                                     *
 c     *                                                                *
 c     * originally written 10-10-2006 by M.G. Martin                   *
-c     * last modified 10-10-2006 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,nchainmove
+      integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       double precision dv_three
@@ -813,18 +801,18 @@ c     --- local variables
       double precision vthree
       dimension vthree(2)
 
-      do icord = CRD_NEW,CRD_OLD,( CRD_OLD - CRD_NEW )
-         call twh_eng_stillinger_weber(lfailure,activebox,icord
+      do icord = TRL_NEW,TRL_OLD,( TRL_OLD - TRL_NEW )
+         call twh_eng_stillinger_weber(lfailure,bxdflag,activebox,icord
      &        ,nchainmove,chaininfo,vthree(icord))
          if ( lfailure ) return
       enddo
 
-      dv_three = vthree(CRD_NEW) - vthree(CRD_OLD)
+      dv_three = vthree(TRL_NEW) - vthree(TRL_OLD)
 
       return
       end
 
-      subroutine twh_ec_atomlist_bond(lfailure,ichain,activebox
+      subroutine twh_ec_atomlist_bond(lfailure,ichain,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,loverlap,dvatomlist)
 c     ******************************************************************
 c     * computes the change in the vibration energy for the molecule   *
@@ -832,7 +820,7 @@ c     * ichain in the activebox for all terms that involve any of the  *
 c     * atoms in the atomlist                                          *
 c     *                                                                *
 c     * originally written 10-18-2006 by M.G. Martin                   *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -841,7 +829,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -885,7 +873,7 @@ c              --- logic above
                   testatom = atomlist(jatom,3)
                   if ( otheratom .eq. testatom ) lglobal = .false.
                enddo
-               do icord = CRD_NEW,CRD_OLD,(CRD_OLD - CRD_NEW)
+               do icord = TRL_NEW,TRL_OLD,(TRL_OLD - TRL_NEW)
 c                 --- determine atom positions for the first atom
 c                 --- this atom is in the atomlist at position iatom
                   atomicord = atomlist(iatom,icord)
@@ -902,8 +890,8 @@ c                    --- at position jatom in the atomlist
                   call twh_coordinates(GLB_GET,atomjcord,ichain
      &                 ,otheratom,rxuj,ryuj,rzuj)
 c                 --- compute bond distance
-                  call twh_mimage(activebox,rxui,ryui,rzui,rxuj,ryuj
-     &                 ,rzuj,rxuij,ryuij,rzuij)
+                  call twh_mimage(bxdflag,activebox,rxui,ryui,rzui
+     &                 ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                   length = twh_distance(rxuij,ryuij,rzuij)
 c                 --- compute bond energy
                   call twh_itvib(GLB_GET,imolty,targetatom,ivib
@@ -922,7 +910,7 @@ c                 --- compute bond energy
       return
       end
 
-      subroutine twh_ec_atomlist_bond_bond(ichain,activebox
+      subroutine twh_ec_atomlist_bond_bond(ichain,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,dvatomlist)
 c     ******************************************************************
 c     * computes the change in the bond-bond energy for the molecule   *
@@ -930,7 +918,7 @@ c     * ichain in the activebox for terms that involve any of the atoms*
 c     * in the atomlist                                                *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -940,7 +928,7 @@ c     ******************************************************************
 #define FUNCTION_VBONBON
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -983,7 +971,7 @@ c           --- make sure the jatom was not previously a target atom
                if ( testunit .eq. jatom ) lcompute = .false.
             enddo
             if ( lcompute ) then
-               do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+               do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                 --- targetatom is always in the atomlist
                   targetcord = atomlist(iatomlist,ioldnew)
 c                 --- determine the coordinates to use for iatom
@@ -1006,12 +994,14 @@ c                    --- fetch the coordinates for jatom
      &                    ,xpos(3),ypos(3),zpos(3))
 c                    --- compute the first distance between targetatom
 c                    --- and iatom
-                     call twh_mimage(activebox,xpos(1),ypos(1),zpos(1)
+                     call twh_mimage(bxdflag,activebox
+     &                    ,xpos(1),ypos(1),zpos(1)
      &                    ,xpos(2),ypos(2),zpos(2),rx,ry,rz)
                      length(1) = twh_distance(rx,ry,rz)
 c                    --- compute the second distance between iatom and
 c                    --- jatom
-                     call twh_mimage(activebox,xpos(1),ypos(1),zpos(1)
+                     call twh_mimage(bxdflag,activebox
+     &                    ,xpos(1),ypos(1),zpos(1)
      &                    ,xpos(3),ypos(3),zpos(3),rx,ry,rz)
                      length(2) = twh_distance(rx,ry,rz)
 c                    --- compute bond-bond energy
@@ -1062,7 +1052,7 @@ c                    --- compute so long as tbbone is not in atomlist
 
                   if ( lcompute ) then
 c                    --- valid bond-bond to evalulate
-                     do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+                     do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                       --- keyatom cord is not in the atomlist
                         keyatomcord = globalcord(ioldnew)
                         if ( tbbone .eq. targetatom ) then
@@ -1095,14 +1085,16 @@ c                          --- fetch twoatom
      &                          ,ichain,tbbtwo,xpos(3),ypos(3),zpos(3))
 c                          --- compute the distance between keyatom
 c                          --- and targetatom
-                           call twh_mimage(activebox,xpos(1),ypos(1)
-     &                          ,zpos(1),xpos(2),ypos(2),zpos(2)
+                           call twh_mimage(bxdflag,activebox
+     &                          ,xpos(1),ypos(1),zpos(1)
+     &                          ,xpos(2),ypos(2),zpos(2)
      &                          ,rx,ry,rz)
                            length(1) = twh_distance(rx,ry,rz)
 c                          --- compute the distance between 
 c                          --- keyatom and jatom
-                           call twh_mimage(activebox,xpos(1),ypos(1)
-     &                          ,zpos(1),xpos(3),ypos(3),zpos(3)
+                           call twh_mimage(bxdflag,activebox
+     &                          ,xpos(1),ypos(1),zpos(1)
+     &                          ,xpos(3),ypos(3),zpos(3)
      &                          ,rx,ry,rz)
                            length(2) = twh_distance(rx,ry,rz)
 c                          --- compute energy change
@@ -1120,7 +1112,7 @@ c                          --- compute energy change
       return
       end
 
-      subroutine twh_ec_atomlist_angle(lfailure,ichain,activebox
+      subroutine twh_ec_atomlist_angle(lfailure,ichain,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,loverlap,dvatomlist)
 c     ******************************************************************
 c     * computes the change in the bending energy for the molecule     *
@@ -1128,7 +1120,7 @@ c     * ichain in the activebox for terms that involve any of the atoms*
 c     * in the atomlist                                                *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 08-08-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1138,7 +1130,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -1182,7 +1174,7 @@ c           --- make sure the jatom was not previously a target atom
                if ( testunit .eq. jatom ) lcompute = .false.
             enddo
             if ( lcompute ) then
-               do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+               do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                 --- targetatom is always in the atomlist
                   targetcord = atomlist(iatomlist,ioldnew)
 c                 --- determine the coordinates to use for iatom
@@ -1206,8 +1198,9 @@ c                    --- fetch the coordinates for jatom
 c                    --- compute angle energy
                      dvatomlist = dvatomlist + dvpm(ioldnew)
      &                    *twh_vangle(lfailure,.false.,loverlap(ioldnew)
-     &                    ,activebox,imolty,targetatom,ibend,styleflag
-     &                    ,angcos,distone,disttwo,xpos,ypos,zpos)
+     &                    ,bxdflag,activebox,imolty,targetatom,ibend
+     &                    ,styleflag,angcos,distone,disttwo
+     &                    ,xpos,ypos,zpos)
                      if ( lfailure ) return
                   endif
                enddo
@@ -1243,7 +1236,7 @@ c                    --- make sure jatom is not in the atomlist
      &                    ,atomlist) 
      &                    .and. iatom .lt. jatom ) then
 c                       --- valid angle to evalulate
-                        do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+                        do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                          --- targetatom cord is in the atomlist
                            targetcord = atomlist(iatomlist,ioldnew)
 c                          --- iatom is not in the atomlist
@@ -1263,7 +1256,7 @@ c                          --- fetch jatom
 c                          --- compute energy change
                            dvatomlist = dvatomlist + dvpm(ioldnew)
      &                          *twh_vangle(lfailure,.false.
-     &                          ,loverlap(ioldnew)
+     &                          ,loverlap(ioldnew),bxdflag
      &                          ,activebox,imolty,iatom,ibend,styleflag
      &                          ,angcos,distone,disttwo,xpos,ypos,zpos)
                            if ( lfailure ) return
@@ -1278,7 +1271,7 @@ c                          --- compute energy change
       return
       end
 
-      subroutine twh_ec_atomlist_angle_angle(ichain,activebox
+      subroutine twh_ec_atomlist_angle_angle(ichain,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,dvatomlist)
 c     ******************************************************************
 c     * computes the change in the angle-angle energy for the          *
@@ -1286,7 +1279,7 @@ c     * molecule ichain in the activebox for terms that involve any of *
 c     * the atoms in the atomlist                                      *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1295,7 +1288,7 @@ c     ******************************************************************
 #define FUNCTION_VANGANG
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -1327,7 +1320,7 @@ c     --- start from an atomlist atom
             call twh_ijaa0(GLB_GET,imolty,targetatom,iaa,iatom)
             call twh_ijaa1(GLB_GET,imolty,targetatom,iaa,jatom)
             call twh_ijaa2(GLB_GET,imolty,targetatom,iaa,katom)
-            do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+            do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c              --- targetatom is always in the atomlist
                targetcord = atomlist(iatomlist,ioldnew)
 c              --- determine the coordinates to use for iatom
@@ -1358,8 +1351,8 @@ c                 --- fetch the coordinates for katom
      &                 ,xpos(4),ypos(4),zpos(4))
 c                 --- compute angle-angle energy
                   dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                 *twh_vangang(aastyle,activebox,imolty,targetatom
-     &                 ,iaa,angle,xpos,ypos,zpos)
+     &                 *twh_vangang(aastyle,bxdflag,activebox,imolty
+     &                 ,targetatom,iaa,angle,xpos,ypos,zpos)
                endif
             enddo
          enddo
@@ -1410,7 +1403,7 @@ c                 --- previously in the atomlist
 
                   if ( lcompute ) then
 c                    --- valid angle-angle, compute energy
-                     do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+                     do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                       --- iatom is never in the atomlist
                         iatomcord = globalcord(ioldnew)
 c                       --- fetch jatomcord
@@ -1433,8 +1426,8 @@ c                       --- fetch all of the coordinates
      &                       ,latom,xpos(4),ypos(4),zpos(4))
 c                       --- compute angle-angle energy
                         dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                       *twh_vangang(aastyle,activebox,imolty
-     &                       ,iatom,iaa,angle,xpos,ypos,zpos)
+     &                       *twh_vangang(aastyle,bxdflag,activebox
+     &                       ,imolty,iatom,iaa,angle,xpos,ypos,zpos)
                      enddo
                   endif
                enddo   
@@ -1446,15 +1439,16 @@ c                       --- compute angle-angle energy
       end
 
 
-      subroutine twh_ec_atomlist_torsion(lfailure,ichain,activebox
-     &     ,natommove,atomlist,globalcord,loverlap,dvatomlist)
+      subroutine twh_ec_atomlist_torsion(lfailure,ichain
+     &     ,bxdflag,activebox,natommove,atomlist,globalcord
+     &     ,loverlap,dvatomlist)
 c     ******************************************************************
 c     * computes the change in the regular torsion energy for the      *
 c     * molecule ichain in the activebox for all regular torsions that *
 c     * involve any of the atoms in the atomlist                       *
 c     *                                                                *
 c     * originally written 10-13-2006 by M.G. Martin                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1469,7 +1463,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -1526,7 +1520,7 @@ c              --- is the lowest index of any atoms in the atomlist
                   enddo
                enddo
                if ( lcompute ) then
-                  do icord = CRD_NEW,CRD_OLD,(CRD_OLD - CRD_NEW)
+                  do icord = TRL_NEW,TRL_OLD,(TRL_OLD - TRL_NEW)
 c                     --- determine atom positions
                      do ibead = 1,4
 c                       --- see if this atom is in the atomlist
@@ -1539,8 +1533,8 @@ c                       --- see if this atom is in the atomlist
                      enddo
 c                    --- compute torsion energy
                      dvatomlist = dvatomlist + dvpm(icord)*
-     &                    twh_vtorsion(lfailure,.false.,activebox,1
-     &                    ,imolty,icompute,itor
+     &                    twh_vtorsion(lfailure,.false.
+     &                    ,bxdflag,activebox,1,imolty,icompute,itor
      &                    ,xtemp,ytemp,ztemp,ddum,loverlap(icord))   
                      if ( lfailure ) return
                      if ( loverlap(icord) ) return
@@ -1554,7 +1548,7 @@ c                    --- compute torsion energy
       end
 
 
-      subroutine twh_ec_atomlist_improper(ichain,activebox
+      subroutine twh_ec_atomlist_improper(ichain,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,dvatomlist)
 c     ******************************************************************
 c     * computes the change in the improper torsion energy for the     *
@@ -1562,7 +1556,7 @@ c     * molecule ichain in the activebox for terms that involve any of *
 c     * the atoms in the atomlist                                      *
 c     *                                                                *
 c     * originally written 10-25-2006 by M.G. Martin                   *
-c     * last modified 11-08-2006 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1571,7 +1565,7 @@ c     ******************************************************************
 #define FUNCTION_VIMPROPER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -1601,7 +1595,7 @@ c     --- start from an atomlist atom
             call twh_ijimprop2(GLB_GET,imolty,targetatom,itor,iatom)
             call twh_ijimprop3(GLB_GET,imolty,targetatom,itor,jatom)
             call twh_ijimprop4(GLB_GET,imolty,targetatom,itor,katom)
-            do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+            do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c              --- targetatom is always in the atomlist
                targetcord = atomlist(iatomlist,ioldnew)
 c              --- determine the coordinates to use for iatom
@@ -1632,8 +1626,8 @@ c                 --- fetch the coordinates for katom
      &                 ,xpos(4),ypos(4),zpos(4))
 c                 --- compute improper energy
                   dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                 *twh_vimproper(activebox,imolty,targetatom
-     &                 ,itor,xpos,ypos,zpos,phic,lbadstereo)
+     &                 *twh_vimproper(bxdflag,activebox,imolty
+     &                 ,targetatom,itor,xpos,ypos,zpos,phic,lbadstereo)
                endif
             enddo
          enddo
@@ -1683,7 +1677,7 @@ c                 --- previously in the atomlist
                   enddo
                   if ( lcompute ) then
 c                    --- valid improper, compute improper energy
-                     do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+                     do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                       --- iatom is never in the atomlist
                         iatomcord = globalcord(ioldnew)
 c                       --- fetch jatomcord
@@ -1706,8 +1700,8 @@ c                       --- fetch all of the coordinates
      &                       ,latom,xpos(4),ypos(4),zpos(4))
 c                       --- compute improper energy
                         dvatomlist = dvatomlist + dvpm(ioldnew)
-     &                       *twh_vimproper(activebox,imolty,iatom
-     &                       ,itor,xpos,ypos,zpos,phic,lbadstereo)
+     &                       *twh_vimproper(bxdflag,activebox,imolty
+     &                       ,iatom,itor,xpos,ypos,zpos,phic,lbadstereo)
                      enddo
                   endif
                enddo   
@@ -1718,7 +1712,8 @@ c                       --- compute improper energy
       return
       end
 
-      subroutine twh_ec_atomlist_nonbond(lfailure,ichain,activebox
+      subroutine twh_ec_atomlist_nonbond(lfailure,bxdflag,activebox
+     &     ,ichain
      &     ,natommove,atomlist,globalcord,loverlap,dvquantum
      &     ,dvclassical,dvinter,dvintra,dvelect,dvsolv,dvext
      &     ,dvforeign,ddvdl_vdw,ddvdl_c)
@@ -1728,12 +1723,12 @@ c     * energy change for a list of atoms on a single molecule ichain  *
 c     * in box activebox                                               *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer bxdflag,ichain,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -1776,24 +1771,24 @@ c        --- not yet implemented
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
 c        --- get the one-body energy change
-         call twh_ec_atomlist_one_body(lfailure,ichain,activebox
+         call twh_ec_atomlist_one_body(lfailure,bxdflag,activebox,ichain
      &        ,natommove,atomlist,globalcord,loverlap,dvsolv,dvext)
-         if ( lfailure .or. loverlap(CRD_NEW) .or. loverlap(CRD_OLD)
+         if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
      &        ) return
 c        --- get the two-body energy change
-         call twh_ec_atomlist_two_body(lfailure,ichain,activebox
+         call twh_ec_atomlist_two_body(lfailure,ichain,bxdflag,activebox
      &        ,natommove,atomlist,globalcord,loverlap,dvinter,dvelect
      &        ,dvforeign,ddvdl_vdw,ddvdl_c)
-         if ( lfailure .or. loverlap(CRD_NEW) .or. loverlap(CRD_OLD)
+         if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
      &        ) return
 c        --- get the multi-body energy change
-         call twh_ec_atomlist_multi_body(lfailure,ichain,activebox
-     &        ,natommove,atomlist,dvinter)
+         call twh_ec_atomlist_multi_body(lfailure,ichain,bxdflag
+     &        ,activebox,natommove,atomlist,dvinter)
          if ( lfailure ) return
 c        --- get the nonbonded intramolecular energy change
-         call twh_ec_atomlist_nb_intra(lfailure,ichain,activebox
+         call twh_ec_atomlist_nb_intra(lfailure,ichain,bxdflag,activebox
      &        ,natommove,atomlist,globalcord,loverlap,dvintra,dvelect)
-         if ( lfailure .or. loverlap(CRD_NEW) .or. loverlap(CRD_OLD)
+         if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
      &        ) return
 c        --- get the long-range electrostatic energy change
          call twh_ec_atomlist_lr_elect(ichain,activebox
@@ -1806,7 +1801,8 @@ c        --- get the long-range electrostatic energy change
       return
       end
 
-      subroutine twh_ec_atomlist_nb_intra(lfailure,ichain,activebox
+      subroutine twh_ec_atomlist_nb_intra(lfailure,ichain
+     &     ,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,loverlap,dvintra,dvelect)
 c     ******************************************************************
 c     * computes the change in the nonbonded intramolecular energies   *
@@ -1816,7 +1812,7 @@ c     * energy (dvintra) and an intramolecular and self-term electro   *
 c     * energy (dvelect)                                               *
 c     *                                                                *
 c     * originally written 10-23-2006 by M.G. Martin                   *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1829,7 +1825,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -1882,7 +1878,7 @@ c                 --- need to compute distance either for use in the
 c                 --- direct intramolecular interactions or ewald terms
                   ioftype = twh_onefivetype(imolty,testunit,iunit)
                   call twh_ntype(GLB_GET,imolty,iunit,ntii)
-                  do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+                  do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
                      icord = atomlist(iatomlist,ioldnew)
                      if ( icord .ne. CRD_NONE ) then
                         call twh_coordinates(GLB_GET,icord,ichain,iunit
@@ -1890,8 +1886,9 @@ c                 --- direct intramolecular interactions or ewald terms
                         gcord = globalcord(ioldnew)
                         call twh_coordinates(GLB_GET,gcord,ichain
      &                       ,testunit,rxuj,ryuj,rzuj)
-                        call twh_mimage(activebox,rxui,ryui,rzui,rxuj
-     &                       ,ryuj,rzuj,rxuij,ryuij,rzuij)
+                        call twh_mimage(bxdflag,activebox
+     &                       ,rxui,ryui,rzui,rxuj,ryuj,rzuj
+     &                       ,rxuij,ryuij,rzuij)
                         rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
                         if ( lvalidintra ) then
 c                          --- compute nonbonded intramolecular energy
@@ -1943,7 +1940,7 @@ c     --- atomlist self interactions
       if ( lewald .and. activebox .ne. 0 ) then
          do iatomlist = 1,natommove
             iunit = atomlist(iatomlist,3)
-            do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+            do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
                icord = atomlist(iatomlist,ioldnew)
                if ( icord .ne. CRD_NONE ) then
                   dvelect = dvelect + dvpm(ioldnew)
@@ -1956,14 +1953,14 @@ c     --- atomlist self interactions
       return
       end
 
-      subroutine twh_ec_atomlist_one_body(lfailure,ichain,activebox
-     &     ,natommove,atomlist,globalcord,loverlap,dvsolv,dvext)
+      subroutine twh_ec_atomlist_one_body(lfailure,bxdflag,activebox
+     &     ,ichain,natommove,atomlist,globalcord,loverlap,dvsolv,dvext)
 c     ******************************************************************
 c     * computes the change in the one-body energy for a list of atoms *
 c     * on molecule ichain in box activebox                            *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1971,7 +1968,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer bxdflag,activebox,ichain,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -2001,14 +1998,14 @@ c     --- interaction energy with external field
          do iatommove = 1,natommove
             iunit = atomlist(iatommove,3)
             call twh_ntype(GLB_GET,imolty,iunit,ntii)
-            do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD - CRD_NEW)
+            do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD - TRL_NEW)
                testcord = atomlist(iatommove,ioldnew)
                if ( testcord .ne. CRD_NONE ) then
                   call twh_coordinates(GLB_GET,testcord,ichain,iunit
      &                 ,cord(1),cord(2),cord(3))
                   dvext = dvext + dvpm(ioldnew)*twh_vfield(lfailure
-     &                 ,loverlap(ioldnew),activebox,ntii,imolty,ichain
-     &                 ,iunit,cord)
+     &                 ,loverlap(ioldnew),bxdflag,activebox
+     &                 ,ntii,imolty,ichain,iunit,cord)
                   if ( lfailure .or. loverlap(ioldnew) ) return
                endif
             enddo
@@ -2024,7 +2021,7 @@ c     --- the solvation potentials.
       if ( isolvtype .ne. SOLV_NONE ) then
          call twh_moltyp(GLB_GET,ichain,imolty)
          call twh_nunit(GLB_GET,imolty,nunit)
-         do ioldnew = CRD_OLD,CRD_NEW
+         do ioldnew = TRL_OLD,TRL_NEW
 c           --- need to store the entire coordinates of this chain
 c           --- this is only going to work if all of the atoms have the
 c           --- same coordinate key
@@ -2075,8 +2072,8 @@ c           --- compute solvation energy for this molecule
             nchainmove = 1
             chaininfo(1,ioldnew) = cordkey
             chaininfo(1,3) = ichain
-            call twh_eng_solvation(lfailure,ioldnew,activebox,nchainmove
-     &           ,chaininfo,vsolv)
+            call twh_eng_solvation(lfailure,ioldnew,bxdflag,activebox
+     &           ,nchainmove,chaininfo,vsolv)
             if ( lfailure ) return
             dvsolv = dvsolv + dvpm(ioldnew)*vsolv
          enddo
@@ -2085,7 +2082,8 @@ c           --- compute solvation energy for this molecule
       return
       end
 
-      subroutine twh_ec_atomlist_two_body(lfailure,ichain,activebox
+      subroutine twh_ec_atomlist_two_body(lfailure,ichain
+     &     ,bxdflag,activebox
      &     ,natommove,atomlist,globalcord,loverlap,dvinter,dvelect
      &     ,dvforeign,dvdl_vdw,dvdl_c)
 c     ******************************************************************
@@ -2093,7 +2091,7 @@ c     * computes the two-body energy change for a list of atoms on     *
 c     * molecule ichain in the activebox                               *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 08-18-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_VTWOBODY
@@ -2101,7 +2099,7 @@ c     ******************************************************************
 #include "dvpm.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       integer globalcord
@@ -2136,7 +2134,7 @@ c     --- set the molecule type for ichain
 c     --- retrieve nmolty
       call twh_nmolty(GLB_GET,nmolty)
 c     --- see if the globalcords are the same
-      if ( globalcord(CRD_NEW) .eq. globalcord(CRD_OLD) ) then
+      if ( globalcord(TRL_NEW) .eq. globalcord(TRL_OLD) ) then
          lsame = .true.
       else
          lsame = .false.
@@ -2154,17 +2152,17 @@ c     --- run through all atoms on other molecules
                   call twh_ntype(GLB_GET,testmolty,iunit,testtype)
                   call twh_luse_v(GLB_GET,testmolty,iunit,leval_v_j)
                   call twh_luse_c(GLB_GET,testmolty,iunit,leval_c_j)
-                  do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+                  do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
 c                    --- fetch the coordinates for the iunit
-                     if ( ioldnew .eq. CRD_NEW ) then
-                        testcord = globalcord(CRD_NEW)
+                     if ( ioldnew .eq. TRL_NEW ) then
+                        testcord = globalcord(TRL_NEW)
                         lfetch = .true.
                      else
                         if ( lsame ) then
 c                          --- we already fetched these coordinates
                            lfetch = .false.
                         else
-                           testcord = globalcord(CRD_OLD)
+                           testcord = globalcord(TRL_OLD)
                            lfetch = .true.
                         endif
                      endif
@@ -2190,7 +2188,8 @@ c                             --- fetch coordinates for list
                               call twh_coordinates(GLB_GET,icord,ichain
      &                             ,iatom,rxui,ryui,rzui)
 c                             --- minimum image the vector
-                              call twh_mimage(activebox,rxui,ryui,rzui
+                              call twh_mimage(bxdflag,activebox
+     &                             ,rxui,ryui,rzui
      &                             ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
 c                             --- compute distance squared for vdw
                               rijsq = rxuij*rxuij + ryuij*ryuij
@@ -2245,8 +2244,8 @@ c                                --- compute change in real coulomb
       return
       end
 
-      subroutine twh_ec_atomlist_multi_body(lfailure,ichain,activebox
-     &     ,natommove,atomlist,dvinter)
+      subroutine twh_ec_atomlist_multi_body(lfailure,ichain
+     &     ,bxdflag,activebox,natommove,atomlist,dvinter)
 c     ******************************************************************
 c     * computes the multi-body energy change in the activebox for the *
 c     * atoms in ichain                                                *
@@ -2255,12 +2254,12 @@ c     * version as the multibody potentials currently implmented all   *
 c     * are monatomic                                                  *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ichain,activebox,natommove
+      integer ichain,bxdflag,activebox,natommove
       integer atomlist
       dimension atomlist(natommove,3)
       double precision dvinter
@@ -2280,11 +2279,11 @@ c     --- integer arrays
             return
          endif
          nchainmove = 1
-         chaininfo(1,CRD_NEW) = atomlist(1,CRD_NEW)
-         chaininfo(1,CRD_OLD) = atomlist(1,CRD_OLD)
+         chaininfo(1,TRL_NEW) = atomlist(1,TRL_NEW)
+         chaininfo(1,TRL_OLD) = atomlist(1,TRL_OLD)
          chaininfo(1,3) = ichain
-         call twh_ec_stillinger_webber(lfailure,activebox,nchainmove
-     &        ,chaininfo,dvinter)
+         call twh_ec_stillinger_webber(lfailure,bxdflag,activebox
+     &        ,nchainmove,chaininfo,dvinter)
          if ( lfailure ) return
       elseif ( classical_pot_num .eq. CP_EMBEDDED_ATOM_METHOD ) then
          if ( natommove .ne. 1 .or. atomlist(1,3) .ne. 1 ) then
@@ -2294,10 +2293,10 @@ c     --- integer arrays
             return
          endif
          nchainmove = 1
-         chaininfo(1,CRD_NEW) = atomlist(1,CRD_NEW)
-         chaininfo(1,CRD_OLD) = atomlist(1,CRD_OLD)
+         chaininfo(1,TRL_NEW) = atomlist(1,TRL_NEW)
+         chaininfo(1,TRL_OLD) = atomlist(1,TRL_OLD)
          chaininfo(1,3) = ichain
-         call twh_ec_embedded_atom(lfailure,activebox,nchainmove
+         call twh_ec_embedded_atom(lfailure,bxdflag,activebox,nchainmove
      &        ,chaininfo,dvinter)
          if ( lfailure ) return
       endif
@@ -2312,7 +2311,7 @@ c     * long range electrostatic energy change for the atoms listed in *
 c     * atomlist on molecule ichain in box activebox                   *
 c     *                                                                *
 c     * originally written 10-24-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -2339,7 +2338,7 @@ c     --- retrieve constants
 c        --- bail out if this is the ideal chain box
          if ( activebox .eq. 0 ) return
 c        --- initialze vrecip
-         do icrd = CRD_OLD,CRD_NEW,( CRD_NEW - CRD_OLD )
+         do icrd = TRL_OLD,TRL_NEW,( TRL_NEW - TRL_OLD )
             vrecip(icrd) = 0.0d0
          enddo
 
@@ -2350,7 +2349,7 @@ c        --- get molecule type
 c           --- fetch the kx, ky, and kz
             call twh_ewald_kvector(GLB_GET,CRD_REAL,ic,activebox
      &           ,kxfetch,kyfetch,kzfetch)
-            do icrd = CRD_OLD,CRD_NEW,( CRD_NEW - CRD_OLD )
+            do icrd = TRL_OLD,TRL_NEW,( TRL_NEW - TRL_OLD )
                sumr(icrd) = 0.0d0
                sumi(icrd) = 0.0d0
                do iatomlist = 1,natommove
@@ -2369,16 +2368,16 @@ c           --- fetch the kx, ky, and kz
                enddo
             enddo
             call twh_ewald_ssumr(GLB_GET,CRD_REAL,ic,activebox,ssumr)
-            ssumrn = ssumr - sumr(CRD_OLD) + sumr(CRD_NEW)
-            call twh_ewald_ssumr(GLB_SET,CRD_NEW,ic,activebox,ssumrn)
+            ssumrn = ssumr - sumr(TRL_OLD) + sumr(TRL_NEW)
+            call twh_ewald_ssumr(GLB_SET,TRL_NEW,ic,activebox,ssumrn)
             call twh_ewald_ssumi(GLB_GET,CRD_REAL,ic,activebox,ssumi)
-            ssumin = ssumi - sumi(CRD_OLD) + sumi(CRD_NEW)
-            call twh_ewald_ssumi(GLB_SET,CRD_NEW,ic,activebox,ssumin)
+            ssumin = ssumi - sumi(TRL_OLD) + sumi(TRL_NEW)
+            call twh_ewald_ssumi(GLB_SET,TRL_NEW,ic,activebox,ssumin)
          enddo
 
          call twh_ewald_sum(activebox,vrecip)
 
-         dvelect = dvelect + vrecip(CRD_NEW) - vrecip(CRD_OLD)
+         dvelect = dvelect + vrecip(TRL_NEW) - vrecip(TRL_OLD)
       endif
 
       return

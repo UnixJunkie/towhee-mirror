@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * also creates part of the lammps_input file that has to do with *
 c     * the force field styles.  This is written to lammps_input.out   *
 c     *                                                                *
 c     * originally written 08-07-2001 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -671,19 +671,19 @@ c        --- just add all of the components together and mush this into
 c        --- that kind of box
          hmsum = 0.0d0
          do idim = 1,3
-            call twh_hmatrix(GLB_GET,ibox,idim,1,dvalue)
+            call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,1,dvalue)
             hmsum = hmsum + dabs(dvalue)
          enddo
          write(filenum,*) '0.0 ',hmsum,' xlo xhi'
          hmsum = 0.0d0
          do idim = 1,3
-            call twh_hmatrix(GLB_GET,ibox,idim,2,dvalue)
+            call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,2,dvalue)
             hmsum = hmsum + dabs(dvalue)
          enddo
          write(filenum,*) '0.0 ',hmsum,' ylo yhi'
          hmsum = 0.0d0
          do idim = 1,3
-            call twh_hmatrix(GLB_GET,ibox,idim,3,dvalue)
+            call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,3,dvalue)
             hmsum = hmsum + dabs(dvalue)
          enddo
          write(filenum,*) '0.0 ',hmsum,' zlo zhi'

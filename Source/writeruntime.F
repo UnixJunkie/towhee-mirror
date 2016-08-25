@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs some runtime information to the standard output        *
 c     *                                                                *
 c     * split from old pupdate 10-13-2005 by M.G. Martin               *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
@@ -56,7 +56,7 @@ c     --- write out runtime information
       if ( scp_eval_derivative ) then
 c        --- for du/d[lambda], do only first box.  
 c        --- This can be changed if need be.
-         call twh_boxvolume(GLB_GET,1,boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,1,boxvolume)
          write(6,110) nnn, 1,energy,boxvolume,press(1),
      &         scp_get_derivative(1,LAMBDA_LJ),
      &         scp_get_derivative(1,LAMBDA_C),
@@ -64,7 +64,7 @@ c        --- This can be changed if need be.
  110     format(i10,1x,'B:',i2,1x,e15.8,1x,e12.5,1x,f12.1,1x,
      &        e12.5,1x,e12.5,NTMAX(i5))
       else
-         call twh_boxvolume(GLB_GET,1,boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,1,boxvolume)
          write(6,111) nnn, 1,energy,boxvolume,press(1)
      &        ,(twh_get_ncmt(1,imolty),imolty=1,nmolty)
  111     format(i10,1x,'B:',i2,1x,e11.4,1x,e11.4,1x,f12.1,1x,
@@ -86,7 +86,7 @@ c     write the foreign energies on a separate line, box 1 only.  Ugly...
          elseif ( potentialstyle .eq. POT_EXTERNAL ) then
             call twh_boxvquantum(GLB_GET,ibox,energy)
          endif
-         call twh_boxvolume(GLB_GET,ibox,boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
          write(6,112) ibox,energy,boxvolume
      &        ,press(ibox),(twh_get_ncmt(ibox,imolty),imolty=1,nmolty)
       enddo

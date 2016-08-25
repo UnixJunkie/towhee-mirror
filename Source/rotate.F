@@ -30,7 +30,7 @@ c     * rotate chooses one of the three space-fixed axes at random     *
 c     * and rotates the molecule around this axis.                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed in 07-15-2016 by M.G. Martin                      *
+c     * last modifed in 08-12-2016 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -158,7 +158,7 @@ c     --- set the new coordinates
 
 c     --- get the energy difference
       call twh_rcmu(GLB_GET,ichain,rcmu)
-      if ( rcmu .gt. twh_minboxlength(ibox)*0.25d0 ) then
+      if ( rcmu .gt. twh_minboxlength(BXD_REAL,ibox)*0.25d0 ) then
 c        --- molecule is large enough that it might be interacting with
 c        --- iself through the periodic images (occurs for some very 
 c        --- short range potentials like hard spheres).   Need to 
@@ -177,13 +177,14 @@ c        --- images.  don't bother computing  bonded
 #endif
 c     --- get the energy difference
       nchainmove = 1
-      chaininfo(1,CRD_OLD) = CRD_REAL
-      chaininfo(1,CRD_NEW) = CRD_TEMP
+      chaininfo(1,TRL_OLD) = CRD_REAL
+      chaininfo(1,TRL_NEW) = CRD_TEMP
       chaininfo(1,3) = ichain
       lpartial = .false.
       lgetcom = .false.
       lintra = .true.
-      call twh_energy_change(lfailure,ibox,nchainmove,chaininfo,loverlap
+      call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
+     &     ,chaininfo,loverlap
      &     ,lpartial,lgetcom,lintra,lbonded,dvtot,dvintra
      &     ,dvinter,dvext,dvelect,dvsolv,dvtor,dvbend,dvvib
      &     ,dvquantum,dvf,ddvdl_lj,ddvdl_c)
@@ -192,9 +193,9 @@ c     --- get the energy difference
       write(6,*) 'ROTATE: energy_change dvelect:',dvelect
 #endif
 c     --- new conformation hard overlap check
-      if ( loverlap(CRD_NEW) ) return
+      if ( loverlap(TRL_NEW) ) return
 c     --- old conformation hard overlap check
-      if ( loverlap(CRD_OLD) ) 
+      if ( loverlap(TRL_OLD) ) 
      &      stop 'disaster- overlap for old conf in ROTATE'
 
 c     --- check for acceptance

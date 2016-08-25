@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -168,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 12-24-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -298,8 +298,8 @@ c     --- calculate initial energy and check for overlaps
          write(6,'(a24,1x,i5)') 'Initial Energies for Box',ibox
          call twh_engtotal(lfailure,lovrlap, v, vinter,vdum,vtail
      &        ,vintra,vvib,vbend,vtg,vext,velect,vsolvation,vquantum
-     &        ,vforeign,dvinter,dvelect,ibox, .false.,.false.,.true.
-     &        ,.true.)
+     &        ,vforeign,dvinter,dvelect
+     &        ,CRD_REAL,BXD_REAL,ibox, .false.,.false.,.true.,.true.)
          if ( lfailure ) return
          if( lovrlap ) then
             write(6,*) 'MAINLOOP: overlap in initial configuration '
@@ -411,8 +411,9 @@ c              --- compute the total energies
                call twh_engtotal(lfailure,lovrlap,v,vinter,vdum,vtail
      &              ,vintra
      &              ,vvib,vbend,vtg,vext,velect,vsolvation,vquantum
-     &              ,vforeign,dvinter,dvelect,ibox,.false.,.false.
-     &              ,lprint,.true.)
+     &              ,vforeign,dvinter,dvelect
+     &              ,CRD_REAL,BXD_REAL,ibox
+     &              ,.false.,.false.,lprint,.true.)
                if ( lfailure ) return
                call twh_boxvclassic(GLB_GET,ibox,vtest)
                if ( (v - vtest)**2 .gt. ENERGY_THRESH ) then
@@ -778,7 +779,8 @@ c     --- output hmatrix information
          write(6,'(a4,1x,i5)') 'Box:',ibox
          do idim = 1,3
             do jdim = 1,3
-               call twh_hmatrix(GLB_GET,ibox,idim,jdim,tempdim(jdim))
+               call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &              ,tempdim(jdim))
             enddo
             write(6,126) idim,(tempdim(jdim),jdim=1,3)
          enddo
@@ -1784,7 +1786,7 @@ c     *  speden -- specific density for each box                       *
 c     *  currentpressure -- eponymous, per box                         *
 c     *  stress -- the stress tensor                                   *
 c     * Split from mainloop 04-06-2006 by MAW                          *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1845,7 +1847,7 @@ c        --- transform potential energy into kJ/mol
          call twh_boxvclassic(GLB_GET,ibox,value)
          uterm(ibox) = value*8.314d0/1000.0d0
 c        --- pressure*volume
-         call twh_boxvolume(GLB_GET,ibox,boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
          pvterm(ibox) = 6.02d23*currentpressure(ibox)*boxvolume/1.0d30
          keycode = AC_PV
          value = pvterm(ibox)
@@ -1889,8 +1891,8 @@ c                    --- heat of vaporization (Direct)
             if ( lfailure ) return
 c           --- heat of vaporization (vapor p)
             keycode = AC_H_VAP_VAPOR_P
-            call twh_boxvolume(GLB_GET,ivap,volvap)
-            call twh_boxvolume(GLB_GET,iliq,volliq)
+            call twh_boxvolume(GLB_GET,BXD_REAL,ivap,volvap)
+            call twh_boxvolume(GLB_GET,BXD_REAL,iliq,volliq)
             value = (uterm(ivap)/dble(ncmt_vap))
      &           - (uterm(iliq)/dble(ncmt_liq)) 
      &           + (6.02d23/1.0d30)*currentpressure(ivap)
@@ -2207,7 +2209,7 @@ c     * calculation, and report if there are any problems.             *
 c     *                                                                *
 c     * Variables modified:                                            *
 c     * Split from mainloop 04-26-2006 by MAW                          *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -2242,7 +2244,8 @@ c     --- initialize lproblem
          write(6,'(a22,1x,i5)') 'Final Energies for Box',ibox
          call twh_engtotal(lfailure,lovrlap,v,vinter,vdum,vtail,vintra
      &        ,vvib,vbend,vtg,vext,velect,vsolvation,vquantum,vforeign
-     &        ,dvinter,dvelect,ibox, .false.,.false.,.true.,.true. )
+     &        ,dvinter,dvelect
+     &        ,CRD_REAL,BXD_REAL,ibox, .false.,.false.,.true.,.true. )
          if ( lfailure ) return
 c        ---  need to check each of the types of energy 
          call twh_boxvclassic(GLB_GET,ibox,vtest)

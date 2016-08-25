@@ -27,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -135,24 +135,25 @@ c     --- increment move attemp counter
 
 c     --- construct the atomlist
       natommove = 1
-      atomlist(1,CRD_OLD) = CRD_REAL
-      atomlist(1,CRD_NEW) = CRD_TEMP
+      atomlist(1,TRL_OLD) = CRD_REAL
+      atomlist(1,TRL_NEW) = CRD_TEMP
       atomlist(1,3) = atom
 c     --- use the real coordinates for the rest of the atoms for both
 c     --- old and new
-      globalcord(CRD_OLD) = CRD_REAL
-      globalcord(CRD_NEW) = CRD_REAL
+      globalcord(TRL_OLD) = CRD_REAL
+      globalcord(TRL_NEW) = CRD_REAL
 c     --- initialize loverlap
-      loverlap(CRD_NEW) = .false.
-      loverlap(CRD_OLD) = .false.
+      loverlap(TRL_NEW) = .false.
+      loverlap(TRL_OLD) = .false.
 
-      call twh_ec_atomlist_nonbond(lfailure,ichain,ibox,natommove
+      call twh_ec_atomlist_nonbond(lfailure,BXD_REAL,ibox,ichain
+     &     ,natommove
      &     ,atomlist,globalcord,loverlap,dvquantum,dvclassical,dvinter
      &     ,dvintra,dvelect,dvsolv,dvext,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
-      do ioldnew = CRD_NEW,CRD_OLD,(CRD_OLD-CRD_NEW)
+      do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
          if ( loverlap(ioldnew) ) then
-            if ( ioldnew .eq. CRD_NEW ) then
+            if ( ioldnew .eq. TRL_NEW ) then
 c              --- move rejected
                return
             else
@@ -170,47 +171,47 @@ c        --- initialize intramolecular bonded energies
          dvtors = 0.0d0
 
 c        --- vibration energy
-         call twh_ec_atomlist_bond(lfailure,ichain,ibox,natommove
-     &        ,atomlist,globalcord,loverlap,dvvib)
+         call twh_ec_atomlist_bond(lfailure,ichain,BXD_REAL,ibox
+     &        ,natommove,atomlist,globalcord,loverlap,dvvib)
          if ( lfailure ) return
-         if ( loverlap(CRD_NEW) ) then
+         if ( loverlap(TRL_NEW) ) then
 c           --- move rejected
             return
-         elseif ( loverlap(CRD_OLD) ) then
+         elseif ( loverlap(TRL_OLD) ) then
             write(6,*) 'TRANATOM: Overlap in old conformation for bond'
             lfailure = .true.
             return
          endif
 
 c        --- bond-bond energy
-         call twh_ec_atomlist_bond_bond(ichain,ibox,natommove
+         call twh_ec_atomlist_bond_bond(ichain,BXD_REAL,ibox,natommove
      &        ,atomlist,globalcord,dvvib)
 
 c        --- regular angle energy
-         call twh_ec_atomlist_angle(lfailure,ichain,ibox,natommove
-     &        ,atomlist,globalcord,loverlap,dvbend)
+         call twh_ec_atomlist_angle(lfailure,ichain,BXD_REAL,ibox
+     &        ,natommove,atomlist,globalcord,loverlap,dvbend)
          if ( lfailure ) return
-         if ( loverlap(CRD_NEW) ) then
+         if ( loverlap(TRL_NEW) ) then
 c           --- move rejected
             return
-         elseif ( loverlap(CRD_OLD) ) then
+         elseif ( loverlap(TRL_OLD) ) then
             write(6,*) 'TRANATOM: Overlap in old conformation for angle'
             lfailure = .true.
             return
          endif
 
 c        --- angle-angle energy
-         call twh_ec_atomlist_angle_angle(ichain,ibox,natommove
+         call twh_ec_atomlist_angle_angle(ichain,BXD_REAL,ibox,natommove
      &        ,atomlist,globalcord,dvbend)
 
 c        --- normal torsion energy
-         call twh_ec_atomlist_torsion(lfailure,ichain,ibox,natommove
-     &        ,atomlist,globalcord,loverlap,dvtors)
+         call twh_ec_atomlist_torsion(lfailure,ichain,BXD_REAL,ibox
+     &        ,natommove,atomlist,globalcord,loverlap,dvtors)
          if ( lfailure ) return
-         if ( loverlap(CRD_NEW) ) then
+         if ( loverlap(TRL_NEW) ) then
 c           --- move rejected
             return
-         elseif ( loverlap(CRD_OLD) ) then
+         elseif ( loverlap(TRL_OLD) ) then
             write(6,*) 'TRANATOM: Overlap in old conformation for'
      &           ,' regular torsions'
             lfailure = .true.
@@ -218,7 +219,7 @@ c           --- move rejected
          endif
 
 c        --- improper torsion energy
-         call twh_ec_atomlist_improper(ichain,ibox,natommove
+         call twh_ec_atomlist_improper(ichain,BXD_REAL,ibox,natommove
      &        ,atomlist,globalcord,dvtors)
 
          dvclassical = dvclassical + dvvib + dvbend + dvtors
@@ -285,7 +286,8 @@ c        --- update reciprocal-space sum
          call twh_recip(ibox,2)
 
 c        --- update chain center of mass
-         call twh_ctrmas(lfailure,CRD_REAL,ibox,ichain,CTR_TRANATOM)
+         call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,ibox
+     &        ,ichain,CTR_TRANATOM)
          if ( lfailure ) return
 c        --- update embedding densities
          iboxa(1) = ibox

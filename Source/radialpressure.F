@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -34,7 +34,7 @@ c     * implemented it as a curiosity for the discontinuous well       *
 c     * potentials (MGM 06-27-2005)                                    *
 c     *                                                                *
 c     * originally written 06-27-2005 by M.G. Martin                   *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -95,7 +95,7 @@ c     --- no pressure in the ideal box of grand canonical
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
       call twh_temperature(GLB_GET,temperature)
-      call twh_boxvolume(GLB_GET,ibox,boxvolume)
+      call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
 
 c     --- initialize the countwell array
       do ivalue = 1,2
@@ -234,7 +234,7 @@ c                       --- set cross term type
                         call twh_coordinates(GLB_GET,CRD_REAL,jchain,jj
      &                       ,rxuj,ryuj,rzuj)
 c                       --- minimum image the pair separations
-                        call twh_mimage ( ibox,rxui,ryui,rzui
+                        call twh_mimage(BXD_REAL,ibox,rxui,ryui,rzui
      &                       ,rxuj,ryuj,rzuj,rx_ab,ry_ab,rz_ab )
                         rijsq = rx_ab*rx_ab+ry_ab*ry_ab+rz_ab*rz_ab
                         do iwell = 1,nwells

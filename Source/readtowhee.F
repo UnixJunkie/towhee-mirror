@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 07-25-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -1307,14 +1307,15 @@ c              --- read box dimensions from a file
      &              ,.false.,fatmp)
                if ( lfailure ) return
                do jdim=1,3
-                  call twh_hmatrix(GLB_SET,ibox,idim,jdim,fatmp(jdim))
+                  call twh_hmatrix(GLB_SET,BXD_REAL,ibox,idim,jdim
+     &                 ,fatmp(jdim))
                enddo
                write(6,'(a17,i5,1x,i1,3(1x,f10.5))') 
      &              'Box idim hmatrix:',ibox,idim
      &              ,(fatmp(jdim),jdim=1,3)
             enddo
 c           --- error check box dimensions
-            call twh_checkhmatrix(ibox,.true.,lfailure)
+            call twh_checkhmatrix(BXD_REAL,ibox,.true.,lfailure)
             if ( lfailure ) return
          enddo
       elseif ( initboxtype .eq. 'number density' ) then
@@ -1344,7 +1345,7 @@ c           --- count the number of molecules in the box
             volume = 1000.0d0*(dble(count)/box_number_density)
             length = volume**(1.0d0/3.0d0)
             do idim = 1,3
-               call twh_hmatrix(GLB_SET,ibox,idim,idim,length)
+               call twh_hmatrix(GLB_SET,BXD_REAL,ibox,idim,idim,length)
             enddo
          enddo
       endif
@@ -2848,7 +2849,7 @@ c     --- fetch the minboxdim
 
 c     --- re-check box dimensions
       do ibox = 1,numboxes
-         call twh_checkhmatrix(ibox,.true.,lfailure)
+         call twh_checkhmatrix(BXD_REAL,ibox,.true.,lfailure)
          if ( lfailure ) then
             write(6,*) 'READTOWHEE: bad box dimensions in box',ibox
             write(6,*) 'all of the dimensions of hmatrix must be '
@@ -2856,7 +2857,8 @@ c     --- re-check box dimensions
             write(6,*) 'minboxdim ',minboxdim
             do idim = 1,3
                do jdim = 1,3
-                  call twh_hmatrix(GLB_GET,ibox,idim,jdim,fatmp(jdim))
+                  call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &                 ,fatmp(jdim))
                enddo
                write(6,*) 'idim hmatrix ',idim,(fatmp(jdim),jdim=1,3)
             enddo
@@ -3150,7 +3152,7 @@ c        --- read the initial conformation from a file
          call twh_lewald(GLB_GET,lewald)
 c        --- set ewald parameters: 
          do ibox = 1, numboxes
-            call twh_resetcoulomb(lfailure,ibox)
+            call twh_resetcoulomb(lfailure,BXD_REAL,ibox)
             if ( lfailure ) return
             if ( lewald ) then
                call twh_ewald_calp(GLB_GET,ibox,calp)
@@ -3170,13 +3172,13 @@ c        --- disable the ewald sum in MAXBOX
          call twh_ewald_calp(GLB_SET,ibox,0.0d0)
 c        --- set extremely large hmatrix for MAXBOX
          do idim = 1,3
-            call twh_hmatrix(GLB_SET,ibox,idim,idim,1.0d5)
+            call twh_hmatrix(GLB_SET,BXD_REAL,ibox,idim,idim,1.0d5)
          enddo
 c        --- error check box dimensions
-         call twh_checkhmatrix(ibox,.true.,lfailure)
+         call twh_checkhmatrix(BXD_REAL,ibox,.true.,lfailure)
          if ( lfailure ) return
 c        --- invert this matrix
-         call twh_inverthmatrix(ibox)
+         call twh_inverthmatrix(BXD_REAL,ibox)
       endif
 
 c     --- check to see if we need the fieldcoords
@@ -3259,7 +3261,7 @@ c     --- beginning of an MC move.
       enddo
 
       do ibox = 1,numboxes
-         call twh_ctrmas(lfailure,0,ibox,0,CTR_INITIAL)
+         call twh_ctrmas(lfailure,BXD_REAL,0,ibox,0,CTR_INITIAL)
          if ( lfailure ) return
       enddo
 
@@ -3285,8 +3287,6 @@ c     --- initialize movie file
          call twh_writemovie(lfailure,0)
          if ( lfailure ) return
       endif
-
-c     OLD LOCATION OF NONBOND OUTPUT
 
 c     --- write input data to stdout
       write(6,*)

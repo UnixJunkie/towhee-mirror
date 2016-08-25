@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 07-12-2016 by M.G. Martin                        *
+c     * last modified 07-25-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -206,18 +206,20 @@ c     --- initialize all ljfld parameters
       call twh_initstyle(GLB_INIT,MAXBOX,NTMAX,'coords')
       call twh_initlattice(GLB_INIT,MAXBOX,NTMAX,'none')
 c     --- initialize hmatrix
-      call twh_hmatrix(GLB_INIT,MAXBOX,3,3,0.0d0)
+      call twh_hmatrix(GLB_INIT,MAXBXD,MAXBOX,3,3,0.0d0)
 c     --- set diagonal elements to 100.0
-      do ibox = 1,MAXBOX
-         do idim = 1,3
-            jdim = idim
-            call twh_hmatrix(GLB_SET,ibox,idim,jdim,100.0d0)
+      do ivalue = 1,MAXBXD
+         do ibox = 1,MAXBOX
+            do idim = 1,3
+               jdim = idim
+               call twh_hmatrix(GLB_SET,ivalue,ibox,idim,jdim,100.0d0)
+            enddo
          enddo
       enddo
 c     --- initialize and then set hinverse
-      call twh_hinverse(GLB_INIT,MAXBOX,3,3,0.0d0)
+      call twh_hinverse(GLB_INIT,MAXBXD,MAXBOX,3,3,0.0d0)
       do ibox = 1,MAXBOX
-         call twh_inverthmatrix(ibox)
+         call twh_inverthmatrix(BXD_REAL,ibox)
       enddo
       ivalue = 100
       do ibox = 1,MAXBOX

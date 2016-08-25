@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,15 +19,22 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj,rzuj
-     &     ,rxuij,ryuij,rzuij )
+      subroutine twh_mimage (bxdflag,ibox,rxui,ryui,rzui,rxuj,ryuj,rzuj
+     &     ,rxuij,ryuij,rzuij)
 c     ******************************************************************
 c     * this subroutine determines the minimum distance between any two*
 c     * vectors of the coordinates through all of the periodic images  *
 c     * values of arguments rxuij,ryuij,rzuij are set here             *
+c     * Input variables                                                *
+c     * bxdflag: real or temporary box dimensions                      *
+c     * ibox: simulation box                                           *
+c     * rxui,ryui,rzui: xyz of atom i                                  *
+c     * rxuj,ryuj,rzuj: xyz of atom j                                  *
+c     * Output variables                                               *
+c     * rxuij,ryuij,rzuij: min image distances xyz                     *
 c     *                                                                *
 c     * completely rewritten 02-14-2001 by M.G. Martin                 *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -36,7 +43,7 @@ c     ******************************************************************
 #include "functions.h"
 
 c     --- variables passed to/from the subroutine
-      integer ibox
+      integer bxdflag,ibox
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj
       double precision rxuij,ryuij,rzuij
 c     --- local variables
@@ -63,8 +70,8 @@ c           --- box is a rectangular parallapiped, no need for fancy
 c           --- hmatrix operations
 c           --- find the minimum image
             idim = 1
-            call twh_hmatrix(GLB_GET,ibox,idim,idim,hmvalue)
-            call twh_halfbox(GLB_GET,ibox,idim,hbx)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,idim,idim,hmvalue)
+            call twh_halfbox(GLB_GET,bxdflag,ibox,idim,hbx)
             do while ( twh_cmp_gt(rxuij, hbx) )
                rxuij = rxuij - hmvalue
             enddo
@@ -72,8 +79,8 @@ c           --- find the minimum image
                rxuij = rxuij + hmvalue
             enddo
             idim = 2
-            call twh_hmatrix(GLB_GET,ibox,idim,idim,hmvalue)
-            call twh_halfbox(GLB_GET,ibox,idim,hbx)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,idim,idim,hmvalue)
+            call twh_halfbox(GLB_GET,bxdflag,ibox,idim,hbx)
             do while ( twh_cmp_gt(ryuij, hbx) )
                ryuij = ryuij - hmvalue
             enddo
@@ -81,8 +88,8 @@ c           --- find the minimum image
                ryuij = ryuij + hmvalue
             enddo
             idim = 3
-            call twh_hmatrix(GLB_GET,ibox,idim,idim,hmvalue)
-            call twh_halfbox(GLB_GET,ibox,idim,hbx)
+            call twh_hmatrix(GLB_GET,bxdflag,ibox,idim,idim,hmvalue)
+            call twh_halfbox(GLB_GET,bxdflag,ibox,idim,hbx)
             do while ( twh_cmp_gt(rzuij, hbx) )
                rzuij = rzuij - hmvalue
             enddo
@@ -92,7 +99,7 @@ c           --- find the minimum image
          else
 c           --- non-rectangular simulation cell
 c           --- shift the coordinate system
-            call twh_carttoarb(ibox,rxuij,ryuij,rzuij
+            call twh_carttoarb(bxdflag,ibox,rxuij,ryuij,rzuij
      &           ,arbcord(1),arbcord(2),arbcord(3))
 
 c     --- this method was used alone prior to version 5.3.0
@@ -109,13 +116,14 @@ c           --- put arbitrary coords in [-0.5,0.5]
                enddo
             enddo
 c           --- transform back to cartesian coordinates
-            call twh_arbtocart(ibox,arbcord(1),arbcord(2),arbcord(3)
+            call twh_arbtocart(bxdflag,ibox
+     &           ,arbcord(1),arbcord(2),arbcord(3)
      &           ,rxuij,ryuij,rzuij)
 
 c           --- if minimum image vector length is less than half the
 c           --- distance between closest walls of simulation cell
 c           --- we must have the correct minimum image
-            minhbxsq = twh_minboxlength(ibox) / 2.0d0
+            minhbxsq = twh_minboxlength(bxdflag,ibox) / 2.0d0
             minhbxsq = minhbxsq * minhbxsq
             rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
 
@@ -142,7 +150,7 @@ c           --- stopping if image within minhbx is found
                   ytemp = arbcord(2) - dble(jjj)
                   do kkk = 0,1
                      ztemp = arbcord(3) - dble(kkk)
-                     call twh_arbtocart(ibox,xtemp,ytemp,ztemp
+                     call twh_arbtocart(bxdflag,ibox,xtemp,ytemp,ztemp
      &                    ,rxuij_temp,ryuij_temp,rzuij_temp)
                      rijsq_temp = rxuij_temp*rxuij_temp +
      &                    ryuij_temp*ryuij_temp + rzuij_temp*rzuij_temp

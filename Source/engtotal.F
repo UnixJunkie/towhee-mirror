@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,10 +21,11 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_engtotal(lfailure,lovrlap,vclassical,vinter
-     &,vthrinter,vtail
-     &,vintra,vvib,vbend,vtg,vext,velect,vsolvation,vquantum,vforeign,
-     & dl_inter, dl_elect,ibox, lmolecmove, lmovelist, lreport,lbonded)
+      subroutine twh_engtotal(lfailure,lovrlap
+     &     ,vclassical,vinter,vthrinter,vtail,vintra,vvib,vbend,vtg
+     &     ,vext,velect,vsolvation,vquantum,vforeign,dl_inter, dl_elect
+     &     ,crdflag,bxdflag,ibox
+     &     ,lmolecmove,lmovelist,lreport,lbonded)
 c     ******************************************************************
 c     * calculates the total potential energy for a configuration.     *
 c     *                                                                *
@@ -55,6 +56,8 @@ c     * dl_elect -- derivative of inter-molecule coulomb potential     *
 c     *     with respect to lambda_c                                   *
 c     *                                                                *
 c     * The following are set by the caller                            *
+c     * crdflag is the coordinate set (real or temp) to use here       *
+c     * bxdflag is the box dimensions (real or temp) to use here       *
 c     * ibox is the box we are computing the energy in                 *
 c     * lmolecmove is true if this call is from a Monte Carlo move,    *
 c     *            otherwise this is the call at the start or end of   *
@@ -70,7 +73,7 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -80,12 +83,11 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lovrlap, lmolecmove,lmovelist,lreport,lbonded
-      integer ibox
+      integer crdflag,bxdflag,ibox
       double precision vclassical,vinter,vintra,vthrinter,vtail,vvib
       double precision vbend,vtg,velect,vsolvation,vext,vquantum
       double precision vforeign,dl_inter, dl_elect
       dimension vforeign(MAX_FOREIGN_LAMBDA)
-
 c     --- local variables
 c     --- logical scalars
       logical lmadelung,ltailc,lelect,lewald
@@ -179,60 +181,73 @@ c     ---  check the molecule count
       endif
  
       if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_engtotal_twobody(lfailure,velectinter,vtwointer
+         call twh_engtotal_twobody(lfailure,crdflag
+     &        ,velectinter,vtwointer
      &        ,vforeign,maddist,dl_inter,dl_elect,lovrlap,lmadelung
-     &        ,lmolecmove,lmovelist,cutstyle,ibox )
+     &        ,lmolecmove,lmovelist,cutstyle,bxdflag,ibox )
          if ( lfailure ) return
          if ( lovrlap ) then
             return
          endif
 
          if ( ltailc ) then
-            call twh_engtotal_tail(vtail, ibox)
+            call twh_engtotal_tail(vtail,bxdflag,ibox)
          endif
 
          call twh_cp_number(GLB_GET,classical_potnum)
          if ( classical_potnum .eq. CP_STILLINGER_WEBER ) then
-            call  twh_engtotal_tb_sw(lfailure,vthrinter, ibox)
+            call  twh_engtotal_tb_sw(lfailure,crdflag,vthrinter
+     &           ,bxdflag,ibox)
             if ( lfailure ) return
          elseif ( classical_potnum .eq. CP_EMBEDDED_ATOM_METHOD ) then
-            call twh_engtotal_tb_eam(lfailure,vthrinter, lovrlap, ibox)
+            call twh_engtotal_tb_eam(lfailure,crdflag
+     &           ,vthrinter, lovrlap,bxdflag,ibox)
             if ( lfailure ) return
          endif
 
          if ( lewald ) then
 c           --- TODO: add foreign energy terms here
-            call twh_engtotal_ewald(lfailure,vrecipsum,sself,correct
-     &           , ibox )
+            call twh_engtotal_ewald(lfailure,crdflag,bxdflag,ibox
+     &           ,vrecipsum,sself,correct)
             if ( lfailure ) return
          endif
 
-         call twh_engtotal_intrachain(lfailure,vintra, velectintra
-     &        , lovrlap,cutstyle, ibox, lmolecmove, lmovelist)
+         call twh_engtotal_intrachain(lfailure,crdflag
+     &        ,vintra, velectintra
+     &        , lovrlap,cutstyle,bxdflag,ibox, lmolecmove, lmovelist)
          if ( lfailure ) return
          if ( lovrlap ) then
             return
          endif   
     
          if ( lbonded ) then
-            call twh_engtotal_vibbendtors(lfailure,vvib,vbend,vtg
-     &           ,vangleangle,vimpr,vbondbond,lovrlap,lreport,ibox)
+            call twh_engtotal_vibbendtors(lfailure,crdflag
+     &           ,vvib,vbend,vtg,vangleangle,vimpr,vbondbond
+     &           ,lovrlap,lreport,bxdflag,ibox)
             if ( lfailure ) return
             if ( lovrlap ) then
                return
             endif
          endif 
-         call twh_engtotal_ext(lfailure,vext,lovrlap,ibox,lmolecmove
+         call twh_engtotal_ext(lfailure,bxdflag,crdflag
+     &        ,vext,lovrlap,ibox,lmolecmove
      &        ,lmovelist )
          if ( lfailure ) return
          if ( lovrlap ) return
          
-         call twh_engtotal_solv(lfailure, vsolvation, ibox )
+         call twh_engtotal_solv(lfailure,crdflag,bxdflag,ibox
+     &        ,vsolvation)
          if ( lfailure ) return
       
          if ( lelect ) then
             vrealelect = velectintra + velectinter
             velect = vrealelect + sself + correct + vrecipsum
+c            write(6,*) 'velectintra:',velectintra
+c            write(6,*) 'velectinter:',velectinter
+c            write(6,*) 'vrealelect:',vrealelect
+c            write(6,*) 'sself:',sself
+c            write(6,*) 'correct:',correct
+c            write(6,*) 'vrecipsum:',vrecipsum
          endif
 
          vinter = vtwointer + vthrinter + vtail
@@ -292,9 +307,10 @@ c      write(6,*) 'end ENGTOTAL'
       return
       end
 
-      subroutine twh_engtotal_twobody(lfailure,velectinter,vtwointer
+      subroutine twh_engtotal_twobody(lfailure,crdflag
+     &     ,velectinter,vtwointer
      &     ,vforeign,maddist,dl_twointer,dl_elect,lovrlap,lmadelung
-     &     ,lmolecmove,lmovelist,cutstyle,ibox)
+     &     ,lmolecmove,lmovelist,cutstyle,bxdflag,ibox)
 c     ******************************************************************
 c     * Evaluate two body non-bonded interactions                      *
 c     * Arguments set by subroutine:                                   *
@@ -327,7 +343,7 @@ c     *   May halt program                                             *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -338,8 +354,7 @@ c     --- variables passed to/from the subroutine
       double precision dl_twointer, dl_elect
       double precision vforeign(MAX_FOREIGN_LAMBDA)
       logical lfailure,lmadelung, lmolecmove, lmovelist, lovrlap
-      integer cutstyle, ibox
-
+      integer crdflag,cutstyle,bxdflag,ibox
 c     --- local variables
 c     --- logical scalars
       logical lcompute,leval_c,leval_v,lusecom,lmovemei,lmovemej
@@ -385,7 +400,7 @@ c        --- check if i is in relevant box
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_nunit(GLB_GET,imolty,numiunit)
             if ( lmolecmove ) then
-               call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
+               call twh_com(GLB_GET,crdflag,ichain,xcmi,ycmi,zcmi)
                call twh_rcmu(GLB_GET,ichain,rcmi)
             endif
 c           --- loop over all chains j with j>i 
@@ -409,9 +424,9 @@ c                       --- compute energy
                   if ( lmolecmove .and. lusecom ) then
 c                    --- check if ctrmas within rcmsq
 c                    --- minimum image the ctrmas pair separations
-                     call twh_com(GLB_GET,CRD_REAL,jchain
+                     call twh_com(GLB_GET,crdflag,jchain
      &                    ,xcmj,ycmj,zcmj)
-                     call twh_mimage ( ibox,xcmi,ycmi,zcmi,xcmj
+                     call twh_mimage(bxdflag,ibox,xcmi,ycmi,zcmi,xcmj
      &                    ,ycmj,zcmj,rxuij,ryuij,rzuij)
                      rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
                      call twh_rcmu(GLB_GET,jchain,rcmj)
@@ -429,14 +444,14 @@ c                    --- add in the com radii
                   if ( lcompute ) then
                      do ii = 1,numiunit
                         call twh_ntype(GLB_GET,imolty,ii,ntii)
-                        call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+                        call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                       ,rxui,ryui,rzui)
                         call twh_luse_c(GLB_GET,imolty,ii,luse_ci)
                         call twh_luse_v(GLB_GET,imolty,ii,luse_vi)
 c                       --- loop over all beads jj of chain j 
                         do jj = 1, numjunit
                            call twh_ntype(GLB_GET,jmolty,jj,ntjj)
-                           call twh_coordinates(GLB_GET,CRD_REAL,jchain
+                           call twh_coordinates(GLB_GET,crdflag,jchain
      &                          ,jj,rxuj,ryuj,rzuj)
                            call twh_luse_c(GLB_GET,jmolty,jj,luse_cj)
                            call twh_luse_v(GLB_GET,jmolty,jj,luse_vj)
@@ -444,9 +459,10 @@ c                          --- check if nonzero interaction sites
                            leval_v = luse_vi .and. luse_vj
                            leval_c = luse_ci .and. luse_cj
                            if ( leval_v .or. leval_c ) then
-c                          --- minimum image the pair separation
-                              call twh_mimage ( ibox,rxui,ryui,rzui,rxuj
-     &                          ,ryuj,rzuj,rxuij,ryuij,rzuij )
+c                             --- minimum image the pair separation
+                              call twh_mimage(bxdflag,ibox
+     &                             ,rxui,ryui,rzui,rxuj,ryuj,rzuj
+     &                             ,rxuij,ryuij,rzuij )
                               rijsq = (rxuij*rxuij)+(ryuij*ryuij)
      &                          + (rzuij*rzuij)
                               if (leval_v) then
@@ -508,7 +524,7 @@ c                    --- lcompute
       end
 
 
-      subroutine twh_engtotal_tail(vtail, ibox)
+      subroutine twh_engtotal_tail(vtail,bxdflag,ibox)
 c     ******************************************************************
 c     * Calculate tail corrections beyond the cutoff                   *
 c     * Arguments set by subroutine:                                   *
@@ -522,18 +538,18 @@ c     * Error conditions:                                              *
 c     *   None                                                         *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       double precision vtail
-      integer ibox
+      integer bxdflag,ibox
 c     --- local variables
       integer imolty,jmolty,nmolty,ncmt
       double precision rho,coru,boxvolume
 
 c     --- retrieve constants
-      call twh_boxvolume(GLB_GET,ibox,boxvolume)
+      call twh_boxvolume(GLB_GET,bxdflag,ibox,boxvolume)
       vtail = 0.0d0
 c     --- add tail corrections beyond the cutoff
       call twh_nmolty(GLB_GET,nmolty)
@@ -549,7 +565,8 @@ c     --- add tail corrections beyond the cutoff
       return
       end
 
-      subroutine twh_engtotal_tb_sw(lfailure,vthrinter,ibox)
+      subroutine twh_engtotal_tb_sw(lfailure,crdflag,vthrinter
+     &     ,bxdflag,ibox)
 c     ******************************************************************
 c     * calculates the three-body energy contribution                  *
 c     * Arguments set by subroutine:                                   *
@@ -563,7 +580,7 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 11-01-2007 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -573,7 +590,7 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       logical lfailure
       double precision vthrinter
-      integer ibox
+      integer crdflag,bxdflag,ibox
 c     --- local variables
       integer ichain,imolty,ntii,jchain,jmolty,ntjj,kchain,kmolty,ntkk
       integer nchain
@@ -591,18 +608,18 @@ c     --- this only works for chains that are monatomic
          if ( twh_get_nboxi(ichain) .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_ntype(GLB_GET,imolty,1,ntii)
-            call twh_coordinates(GLB_GET,CRD_REAL,ichain,1
+            call twh_coordinates(GLB_GET,crdflag,ichain,1
      &           ,rxui,ryui,rzui)
             do jchain = 1,nchain
                if ( twh_get_nboxi(jchain) .eq. ibox 
      &              .and. ichain .ne. jchain) then
                   call twh_moltyp(GLB_GET,jchain,jmolty)
                   call twh_ntype(GLB_GET,jmolty,1,ntjj)
-                  call twh_coordinates(GLB_GET,CRD_REAL,jchain,1
+                  call twh_coordinates(GLB_GET,crdflag,jchain,1
      &                 ,rxuj,ryuj,rzuj)
 c                    --- compute i-j bond order
-                  call twh_mimage(ibox,rxui,ryui,rzui,rxuj,ryuj,rzuj
-     &                 ,rxuij,ryuij,rzuij)
+                  call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                 ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                   rij = twh_distance(rxuij,ryuij,rzuij)
                   call twh_bondorder(lfailure,ntii,ntjj,rij,bij,duma
      &                 ,lzero)
@@ -614,11 +631,11 @@ c                    --- compute i-j bond order
      &                       .and. jchain .ne. kchain ) then
                            call twh_moltyp(GLB_GET,kchain,kmolty)
                            call twh_ntype(GLB_GET,kmolty,1,ntkk)
-                           call twh_coordinates(GLB_GET,CRD_REAL
+                           call twh_coordinates(GLB_GET,crdflag
      &                          ,kchain,1,rxuk,ryuk,rzuk)
 c                             --- compute j-k bondorder
-                           call twh_mimage(ibox,rxuk,ryuk,rzuk,rxuj
-     &                          ,ryuj,rzuj,rxujk,ryujk,rzujk)
+                           call twh_mimage(bxdflag,ibox,rxuk,ryuk,rzuk
+     &                          ,rxuj,ryuj,rzuj,rxujk,ryujk,rzujk)
                            rjk = twh_distance(rxujk,ryujk,rzujk)
                            call twh_bondorder(lfailure,ntjj,ntkk,rjk,bjk
      &                          ,duma,lzero)
@@ -643,7 +660,8 @@ c                                --- compute 3-body energy
       return
       end
 
-      subroutine twh_engtotal_tb_eam(lfailure,vthrinter, lovrlap, ibox)
+      subroutine twh_engtotal_tb_eam(lfailure,crdflag
+     &     ,vthrinter,lovrlap,bxdflag, ibox)
 c     ******************************************************************
 c     * calculates the three-body energy contribution for Embedded     *
 c     * Atom Method                                                    *
@@ -662,7 +680,7 @@ c     * Error conditions:                                              *
 c     *   May halt program                                             *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -672,7 +690,7 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       double precision vthrinter
       logical lfailure,lovrlap
-      integer ibox
+      integer crdflag,bxdflag,ibox
 c     --- local variables
       logical lzero
       integer ichain,imolty,ntii,jchain,jmolty,ntjj,nchain
@@ -686,7 +704,7 @@ c     --- reinitialize all the local densities to zero
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1,nchain
          if ( twh_get_nboxi(ichain) .eq. ibox ) then
-            call twh_eam_rho(GLB_SET,CRD_REAL,ichain,0.0d0)
+            call twh_eam_rho(GLB_SET,crdflag,ichain,0.0d0)
          endif
       enddo
 
@@ -696,24 +714,24 @@ c        --- use that information to compute the embedding energy
          if ( twh_get_nboxi(ichain) .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_ntype(GLB_GET,imolty,1,ntii)
-            call twh_coordinates(GLB_GET,CRD_REAL,ichain,1
+            call twh_coordinates(GLB_GET,crdflag,ichain,1
      &           ,rxui,ryui,rzui)
             do jchain = ichain+1,nchain
                if ( twh_get_nboxi(jchain) .eq. ibox 
      &              .and. ichain .ne. jchain) then
                   call twh_moltyp(GLB_GET,jchain,jmolty)
                   call twh_ntype(GLB_GET,jmolty,1,ntjj)
-                  call twh_coordinates(GLB_GET,CRD_REAL,jchain,1
+                  call twh_coordinates(GLB_GET,crdflag,jchain,1
      &                 ,rxuj,ryuj,rzuj)
 c                    --- compute i-j bond density
-                  call twh_mimage(ibox,rxui,ryui,rzui,rxuj,ryuj,rzuj
-     &                 ,rxuij,ryuij,rzuij)
+                  call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                 ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                   rij = twh_distance(rxuij,ryuij,rzuij)
                   call twh_bondorder(lfailure,ntii,ntjj,rij,bij,bji
      &                 ,lzero)
                   if ( lfailure ) return
-                  call twh_eam_rho(GLB_INCR,CRD_REAL,ichain,bij)
-                  call twh_eam_rho(GLB_INCR,CRD_REAL,jchain,bji)
+                  call twh_eam_rho(GLB_INCR,crdflag,ichain,bij)
+                  call twh_eam_rho(GLB_INCR,crdflag,jchain,bji)
                   if ( lovrlap ) then
                      write(6,*) 'ENGTOTAL: undershoot in density'
                      lfailure = .true.
@@ -728,7 +746,7 @@ c        --- add up the embedding energy
          if ( twh_get_nboxi(ichain) .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_ntype(GLB_GET,imolty,1,ntii)
-            call twh_eam_rho(GLB_GET,CRD_REAL,ichain,density)
+            call twh_eam_rho(GLB_GET,crdflag,ichain,density)
             vthrinter = vthrinter + twh_vembed(lfailure,ntii,density)
             if ( lfailure ) return
             if ( lovrlap ) then
@@ -743,8 +761,8 @@ c        --- add up the embedding energy
       end
 
 
-      subroutine twh_engtotal_ewald(lfailure,vrecipsum,sself,correct
-     &     , ibox )
+      subroutine twh_engtotal_ewald(lfailure,crdflag,bxdflag,ibox
+     &     ,vrecipsum,sself,correct)
 c     ******************************************************************
 c     * calculates the self and correction ewald terms.                *
 c     * Note that coulomb potential scaling (scp_scale_coulomb) is not *
@@ -760,12 +778,13 @@ c     *  correct -- Coulombic 'correction' in units [EE]               *
 c     *                                                                *
 c     * Arguments set by caller:                                       *
 c     *  ibox -- the box we are computing the energy in                *
+c     * bxdflag: which box dimensions to use                           *
 c     *                                                                *
 c     * Error conditions:                                              *
 c     *  none                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 10-22-2014 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -776,7 +795,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ibox
+      integer crdflag,bxdflag,ibox
       double precision vrecipsum, sself, correct
 c     --- local variables
       integer ichain,imolty,ii,jj,nchain,numiunit
@@ -786,7 +805,7 @@ c     --- local variables
       sself = 0.0d0
       correct = 0.0d0
 
-      call twh_recipsum(lfailure,ibox,vrecipsum)
+      call twh_recipsum(lfailure,bxdflag,ibox,crdflag,vrecipsum)
       if ( lfailure ) return
 c        --- update self terms and correction terms
       call twh_nchain(GLB_GET,nchain)
@@ -796,7 +815,7 @@ c        --- update self terms and correction terms
             call twh_nunit(GLB_GET,imolty,numiunit)
             do ii = 1,numiunit
                sself = sself + twh_ewald_self(ibox,imolty,ii)
-               call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+               call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &              ,rxui,ryui,rzui)
                do jj = ii+1,numiunit
                   if ( .not. twh_linclude(imolty,ii,jj) ) then
@@ -805,10 +824,10 @@ c                       --- these atoms have no coulombic interations
 c                       --- with each other.  For those with 1-4 
 c                       --- interactions this assumption is fixed in 
 c                       --- vtorsion
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,jj
+                     call twh_coordinates(GLB_GET,crdflag,ichain,jj
      &                    ,rxuj,ryuj,rzuj)
-                     call twh_mimage(ibox,rxui,ryui,rzui,rxuj,ryuj
-     &                       ,rzuj,rxuij,ryuij,rzuij)
+                     call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                      rij = twh_distance(rxuij,ryuij,rzuij)
                      correct = correct
      &                    + twh_ewald_correct(ibox,imolty,ii,jj,rij)
@@ -822,8 +841,9 @@ c                       --- vtorsion
       end
 
 
-      subroutine twh_engtotal_intrachain(lfailure,vintra, velectintra
-     &     ,lovrlap,cutstyle, ibox, lmolecmove, lmovelist)
+      subroutine twh_engtotal_intrachain(lfailure,crdflag
+     &     ,vintra, velectintra
+     &     ,lovrlap,cutstyle,bxdflag,ibox, lmolecmove, lmovelist)
 c     ******************************************************************
 c     * calculates the intrachain interactions.                        *
 c     * Arguments set by subroutine:                                   *
@@ -845,7 +865,7 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -857,8 +877,7 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       double precision vintra, velectintra
       logical lfailure,lovrlap,lmolecmove,lmovelist
-      integer cutstyle,ibox
-
+      integer crdflag,cutstyle,bxdflag,ibox
 c     --- local variables
       logical lcompute,lmoveme,lelect
       integer ichain,imolty,ii,ntii,jj,ntjj,ioftype,nchain,nunit
@@ -895,15 +914,15 @@ c        --- check if i is in relevant box
                call twh_nunit(GLB_GET,imolty,nunit)
                do ii = 1, nunit-1
                   call twh_ntype(GLB_GET,imolty,ii,ntii)
-                  call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+                  call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                 ,rxui,ryui,rzui)
                   do jj = ii+1, nunit
                      if ( twh_linclude(imolty,ii,jj) ) then
                         call twh_ntype(GLB_GET,imolty,jj,ntjj)
-                        call twh_coordinates(GLB_GET,CRD_REAL,ichain,jj
+                        call twh_coordinates(GLB_GET,crdflag,ichain,jj
      &                       ,rxuj,ryuj,rzuj)
-                        call twh_mimage(ibox,rxui,ryui,rzui,rxuj,ryuj
-     &                       ,rzuj,rxuij,ryuij,rzuij)
+                        call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                       ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                         rijsq = rxuij*rxuij + ryuij*ryuij 
      &                       + rzuij*rzuij
 c                       --- get one-five type
@@ -962,8 +981,9 @@ c                          --- coulomb
       end
 
 
-      subroutine twh_engtotal_vibbendtors(lfailure,vvib,vbend,vtg
-     &     ,vangleangle,vimpr,vbondbond,lovrlap,lreport,ibox)
+      subroutine twh_engtotal_vibbendtors(lfailure,crdflag
+     &     ,vvib,vbend,vtg,vangleangle,vimpr,vbondbond
+     &     ,lovrlap,lreport,bxdflag,ibox)
 c     ******************************************************************
 c     * Calculate vibrational, bending and torsional energies          *
 c     * Arguments set by subroutine:                                   *
@@ -985,7 +1005,7 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1019,8 +1039,7 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       double precision vvib, vbend, vtg, vangleangle, vimpr, vbondbond
       logical lfailure,lovrlap, lreport
-      integer ibox
-
+      integer crdflag,bxdflag,ibox
 c     --- local variables
       logical lbadstereo
       integer ichain,imolty,ii,jjvib,ip1,ip2,it,jjben,ttype,ibead,iitor
@@ -1049,21 +1068,21 @@ c              --- potentials that have an end-bead with an index less
 c              --- than the current bead
 c              --- bond vibrations
             do ii = 2, nunit
-               call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+               call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &              ,rxui,ryui,rzui)
                do jjvib = 1, twh_get_invib(imolty,ii)
                   call twh_ijvib(GLB_GET,imolty,ii,jjvib,ip1)
                   call twh_itvib(GLB_GET,imolty,ii,jjvib,it)
 c                    --- increment vibrational energy
                   if ( ip1 .lt. ii ) then
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip1
+                     call twh_coordinates(GLB_GET,crdflag,ichain,ip1
      &                    ,rxuj,ryuj,rzuj)
 c                       --- compute distance
 c                       --- minimum image the bond vectors. this is 
 c                       --- required in case the molecule network wraps
 c                       --- completely through the periodic box
-                     call twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj
-     &                       ,rzuj,rxuij,ryuij,rzuij )
+                     call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij )
                      dist = twh_distance(rxuij,ryuij,rzuij)
                      vvib = vvib + twh_vbond(lfailure,lreport,ibox
      &                    ,it,dist,imolty,ii,ip1,lovrlap)
@@ -1082,19 +1101,19 @@ c                       --- completely through the periodic box
 
 c           --- molecule with bending angles
             do ii = 2, nunit
-               call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+               call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                 ,xtmp(1),ytmp(1),ztmp(1))
                do jjben = 1, twh_get_inben(imolty,ii)
                   ip2 = twh_get_ijben3(imolty,ii,jjben)
                   if ( ip2 .lt. ii ) then
                      ip1 = twh_get_ijben2(imolty,ii,jjben)
 c                       --- store the coordinates
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip1
+                     call twh_coordinates(GLB_GET,crdflag,ichain,ip1
      &                       ,xtmp(2),ytmp(2),ztmp(2))
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip2
+                     call twh_coordinates(GLB_GET,crdflag,ichain,ip2
      &                       ,xtmp(3),ytmp(3),ztmp(3))
                      vbend = vbend + twh_vangle(lfailure,lreport
-     &                    ,lovrlap,ibox
+     &                    ,lovrlap,bxdflag,ibox
      &                    ,imolty,ii,jjben,1,duma,dumb,dumc,xtmp,ytmp
      &                    ,ztmp)
                      if ( lfailure ) return
@@ -1111,22 +1130,22 @@ c                       --- store the coordinates
 c           --- bond bond cross terms
             do ii = 1,nunit
                if ( twh_get_inbnbn(imolty,ii) .ne. 0 ) then
-                  call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+                  call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                 ,rxui,ryui,rzui)
                   do jjben = 1,twh_get_inbnbn(imolty,ii)
                      ip1 = twh_get_ijbnbn1(imolty,ii,jjben)
                      ip2 = twh_get_ijbnbn2(imolty,ii,jjben)
 c                    --- compute and store first bond length
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip1
+                     call twh_coordinates(GLB_GET,crdflag,ichain,ip1
      &                    ,rxuj,ryuj,rzuj)
-                     call twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj
-     &                       ,rzuj,rxuij,ryuij,rzuij )
+                     call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij )
                      length(1) = twh_distance(rxuij,ryuij,rzuij)
 c                    --- compute and store second bond length
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,ip2
+                     call twh_coordinates(GLB_GET,crdflag,ichain,ip2
      &                    ,rxuj,ryuj,rzuj)
-                     call twh_mimage ( ibox,rxui,ryui,rzui,rxuj,ryuj
-     &                       ,rzuj,rxuij,ryuij,rzuij )
+                     call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
+     &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij )
                      length(2) = twh_distance(rxuij,ryuij,rzuij)
 c                    --- compute energy as a bond vibration term
                      vbondbond = vbondbond+twh_vbonbon(imolty,ii
@@ -1147,13 +1166,14 @@ c                    --- store unit numbers
                      ttype(3) = twh_get_ijtor3(imolty,ii,iitor)
 c                    --- store atom positions
                      do ibead = 1,4
-                        call twh_coordinates(GLB_GET,CRD_REAL,ichain
+                        call twh_coordinates(GLB_GET,crdflag,ichain
      &                       ,ttype(ibead)
      &                       ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
                      enddo
 c                    --- add in the torsional energy
-                     vtg = vtg + twh_vtorsion(lfailure,lreport,ibox,1
-     &                    ,imolty,ii,iitor,xtmp,ytmp,ztmp,duma,lovrlap)
+                     vtg = vtg + twh_vtorsion(lfailure,lreport
+     &                    ,bxdflag,ibox,1,imolty,ii,iitor
+     &                    ,xtmp,ytmp,ztmp,duma,lovrlap)
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         write(6,*) 'overlap torsion'
@@ -1172,14 +1192,14 @@ c           --- angle angle cross terms
                   ttype(3) = twh_get_ijaa1(imolty,ii,iitor)
                   ttype(4) = twh_get_ijaa2(imolty,ii,iitor)
                   do ibead = 1,4
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain
+                     call twh_coordinates(GLB_GET,crdflag,ichain
      &                    ,ttype(ibead)
      &                    ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
                   enddo
 c                    --- compute the angle-angle energy
                   vangleangle = vangleangle 
-     &                 + twh_vangang(AA_COORD,ibox,imolty,ii,iitor
-     &                 ,angle,xtmp,ytmp,ztmp)
+     &                 + twh_vangang(AA_COORD,bxdflag,ibox,imolty
+     &                 ,ii,iitor,angle,xtmp,ytmp,ztmp)
                enddo
             enddo                   
 
@@ -1194,12 +1214,12 @@ c           --- not symmetrically defined
                   ttype(4) = twh_get_ijimprop4(imolty,ii,iitor)
 c                    --- store the coordinates
                   do ibead = 1,4
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain
+                     call twh_coordinates(GLB_GET,crdflag,ichain
      &                    ,ttype(ibead)
      &                       ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
                   enddo
-                  vimpr = vimpr + twh_vimproper(ibox,imolty,ii,iitor
-     &                    ,xtmp,ytmp,ztmp,duma,lbadstereo)
+                  vimpr = vimpr + twh_vimproper(bxdflag,ibox,imolty
+     &                 ,ii,iitor,xtmp,ytmp,ztmp,duma,lbadstereo)
                   if ( lbadstereo .and. lreport ) then
                      write(6,*) 'ENGTOTAL: Bad stereochemistry '
                      write(6,*) 'moltyp chain unit imptor'
@@ -1212,7 +1232,8 @@ c                    --- store the coordinates
       return
       end
 
-      subroutine twh_engtotal_ext(lfailure,vext,lovrlap,ibox,lmolecmove
+      subroutine twh_engtotal_ext(lfailure,bxdflag,crdflag
+     &     ,vext,lovrlap,ibox,lmolecmove
      &     ,lmovelist)
 c     ******************************************************************
 c     * calculates the interaction energy with external surface        *
@@ -1232,18 +1253,16 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 10-29-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
 #define FUNCTION_VFIELD
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
       double precision vext
       logical lfailure,lovrlap, lmolecmove, lmovelist
-      integer ibox
-
+      integer bxdflag,crdflag,ibox
 c     --- local variables
       logical lcompute,lmoveme
       integer ichain,imolty,ii,ntii,nchain,nunit,nfield
@@ -1272,11 +1291,11 @@ c     --- local variables
                   call twh_moltyp(GLB_GET,ichain,imolty)
                   call twh_nunit(GLB_GET,imolty,nunit)
                   do ii = 1, nunit
-                     call twh_coordinates(GLB_GET,CRD_REAL,ichain,ii
+                     call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                    ,cord(1),cord(2),cord(3))
                      call twh_ntype(GLB_GET,imolty,ii,ntii)
-                     vext = vext + twh_vfield(lfailure,lovrlap,ibox
-     &                    ,ntii,imolty,ichain,ii,cord)
+                     vext = vext + twh_vfield(lfailure,lovrlap
+     &                    ,bxdflag,ibox,ntii,imolty,ichain,ii,cord)
                      if ( lfailure ) return
                      if (lovrlap) then
                         if ( .not. lmolecmove ) then
@@ -1295,7 +1314,8 @@ c     --- local variables
       end
 
 
-      subroutine twh_engtotal_solv(lfailure,vsolvation,ibox )
+      subroutine twh_engtotal_solv(lfailure,crdflag,bxdflag,ibox
+     &     ,vsolvation)
 c     ******************************************************************
 c     * calculates the solvation energy for a configuration.           *
 c     * Arguments set by subroutine:                                   *
@@ -1308,7 +1328,7 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 11-01-2007 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -1318,12 +1338,11 @@ c     ******************************************************************
 c     --- variables passed to/from the subroutine
       logical lfailure 
       double precision vsolvation
-      integer ibox
-
+      integer bxdflag,ibox
 c     --- local variables
       integer ichain,imolty,totunit,isolvtype,nchain
       double precision vnt
-      integer chaininfo
+      integer crdflag,chaininfo
       dimension chaininfo(1,3)
 
       vsolvation = 0.0d0
@@ -1335,8 +1354,8 @@ c     --- local variables
             if ( twh_get_nboxi(ichain) .eq. ibox ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,totunit)
-               vsolvation = vsolvation + twh_vsasa(ichain,ibox
-     &              ,CRD_REAL)
+               vsolvation = vsolvation + twh_vsasa(ichain,bxdflag,ibox
+     &              ,crdflag)
             endif
          enddo
       elseif( isolvtype .eq. SOLV_EEF1 ) then
@@ -1345,8 +1364,8 @@ c     --- local variables
             if ( twh_get_nboxi(ichain) .eq. ibox ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,totunit)
-               vsolvation = vsolvation + twh_veefone(ichain,ibox
-     &              ,CRD_REAL)
+               vsolvation = vsolvation + twh_veefone(ichain,bxdflag,ibox
+     &              ,crdflag)
             endif
          enddo
       elseif ( isolvtype .eq. SOLV_TRAMONTO ) then

@@ -5,6 +5,7 @@ Cu_VLE \
 Cui2002_Hexane \
 Dubb_Zeolite \
 EPM_VLCC \
+FENE_Hexamer \
 Gordon \
 Gromos_Isobutane \
 MM2_Ethane \

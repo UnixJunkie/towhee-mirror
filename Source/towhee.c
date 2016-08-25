@@ -158,6 +158,7 @@ void do_jobfarm(user_args *args, int myproc) {
     initialize_clocks();
     open_towhee_parallel("towhee_parallel", &fp);
   }
+  else { fp = NULL;}
 
   jobfarm(fp, args->quiet_mode, myproc);
   MPI_Barrier(MPI_COMM_WORLD);

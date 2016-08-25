@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,14 +19,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vsasa(ichain,ibox,cordtype)
+      function twh_vsasa(ichain,bxdflag,ibox,cordtype)
 c     ******************************************************************
 c     * Computes the colvation energy using the solvent accessible     *
 c     * surface area (SASA) implicit water model as defined in         *
 c     * Ferrara, Apostolakis, and Caflisch, Proteins 46, 24-33 (2002)  *
 c     *                                                                *
 c     * originally written 10-31-2002 by M.G. Martin                   *
-c     * last update 08-09-2011 by M.G. Martin                          *
+c     * last update 08-04-2016 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -36,7 +36,7 @@ c     ******************************************************************
 #define FUNCTION_VSASA
 #include "functions.h"
 c     --- variables passed to/from the function
-      integer ichain,cordtype,ibox
+      integer ichain,bxdflag,ibox,cordtype
 c     --- local variables
       integer j,typej,inn,iunit,typei,imolty,nunit
       double precision rprobe,sasaprod,xi,yi,zi,risasa
@@ -79,7 +79,7 @@ c        --- calculate the solvent assessible surface area of particle i
                else 
                   pijsasa = 0.3516
                endif
-               call twh_mimage(ibox,xj,yj,zj,xi,yi,zi
+               call twh_mimage(bxdflag,ibox,xj,yj,zj,xi,yi,zi
      &              ,deltax,deltay,deltaz)
                dist = twh_distance(deltax,deltay,deltaz)
                compare = risasa + rjsasa + (2*rprobe)

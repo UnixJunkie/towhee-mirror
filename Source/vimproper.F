@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2010 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vimproper(ibox,imolty,unit_1,impind,xcord
+      function twh_vimproper(bxdflag,ibox,imolty,unit_1,impind,xcord
      &     ,ycord,zcord,phic,lbadstereo)
 c     ******************************************************************
 c     * Computes the improper torsional energy for a particular        *
@@ -33,7 +33,7 @@ c     * phic: cosine of the torsional angle (oop impropers)            *
 c     * phic: is instead the angle from -pi to +pi for stereo impropers*
 c     *                                                                *
 c     * rewritten from vtorsion 03-21-2002 by M.G. Martin              *
-c     * last modified 11-16-2010 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -46,7 +46,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to and from function
       logical lbadstereo
-      integer imolty,impind,unit_1,ibox
+      integer bxdflag,imolty,impind,unit_1,ibox
       double precision phic
       double precision xcord,ycord,zcord
       dimension xcord(4),ycord(4),zcord(4)
@@ -89,13 +89,13 @@ c     --- determine the improper style
       if ( improperform .eq. 1 ) then
 c        --- amber/stereo improper angle
          do ivec = 1,3
-            call twh_mimage(ibox,xcord(ivec+1),ycord(ivec+1)
+            call twh_mimage(bxdflag,ibox,xcord(ivec+1),ycord(ivec+1)
      &           ,zcord(ivec+1),xcord(1),ycord(1),zcord(1)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo
 c        --- we need a fourth vector for the scalar triple product
-         call twh_mimage(ibox,xcord(1),ycord(1),zcord(1),xcord(2)
-     &        ,ycord(2),zcord(2),xvec(4),yvec(4),zvec(4))
+         call twh_mimage(bxdflag,ibox,xcord(1),ycord(1),zcord(1)
+     &        ,xcord(2),ycord(2),zcord(2),xvec(4),yvec(4),zvec(4))
 c        --- cross product i-k x k-l (3-1 x 1-2)
          call twh_crossproduct(xvec(1),yvec(1),zvec(1),xvec(2),yvec(2)
      &        ,zvec(2),xaa1,yaa1,zaa1)
@@ -116,7 +116,7 @@ c        --- compute the angle over a range -pi to +pi
 c        --- compute the standard oop improper
 c        --- defined so that a cis bond is at 0.0 phi
          do ivec = 1,3
-            call twh_mimage(ibox,xcord(ivec+1),ycord(ivec+1)
+            call twh_mimage(bxdflag,ibox,xcord(ivec+1),ycord(ivec+1)
      &           ,zcord(ivec+1),xcord(ivec),ycord(ivec),zcord(ivec)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo
@@ -133,7 +133,7 @@ c        --- wilson oop, average of the three possible oop terms
 c        --- defined so that a cis bond is at 0.0 phi
 c        --- compute the vectors to the center
          do ivec = 1,3
-            call twh_mimage(ibox,xcord(ivec+1),ycord(ivec+1)
+            call twh_mimage(bxdflag,ibox,xcord(ivec+1),ycord(ivec+1)
      &           ,zcord(ivec+1),xcord(1),ycord(1),zcord(1)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo
@@ -181,7 +181,8 @@ c        --- where y is the angle between IL and the normal of the plane
 
 c        --- defined so that all atoms in the same plane is zero angle
          do ivec = 2,4
-            call twh_mimage(ibox,xcord(ivec),ycord(ivec),zcord(ivec)
+            call twh_mimage(bxdflag,ibox
+     &           ,xcord(ivec),ycord(ivec),zcord(ivec)
      &           ,xcord(1),ycord(1),zcord(1)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo
@@ -201,7 +202,7 @@ c        --- wilson oop, vector of angles
 c        --- defined so that a cis bond is at 0.0 phi
 c        --- compute the vectors to the center
          do ivec = 1,3
-            call twh_mimage(ibox,xcord(ivec+1),ycord(ivec+1)
+            call twh_mimage(bxdflag,ibox,xcord(ivec+1),ycord(ivec+1)
      &           ,zcord(ivec+1),xcord(1),ycord(1),zcord(1)
      &           ,xvec(ivec),yvec(ivec),zvec(ivec))
          enddo

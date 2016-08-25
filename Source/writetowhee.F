@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 05-01-2016 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -740,7 +740,7 @@ c                 --- output the helix_* varibles
             do ibox = 1,numboxes
                do idim = 1,3
                   do jdim = 1,3
-                     call twh_hmatrix(GLB_GET,ibox,idim,jdim
+                     call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
      &                    ,dimtemp(jdim))
                   enddo
                   write(15,*) (dimtemp(jdim),jdim=1,3)

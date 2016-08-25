@@ -2,7 +2,7 @@
 #define SOLVTYPE 17
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -20,14 +20,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_veefone(ichain,ibox,cordtype)
+      function twh_veefone(ichain,bxdflag,ibox,cordtype)
 c     ******************************************************************
 c     * Computes the solvation energy using the effective energy       *
 c     * function (EEF1) as descriped in Lazaridis and Karplus,         *
 c     * Proteins 35, 133-152 (1999)                                    *
 c     *                                                                *
 c     * originally written 11-04-2002 by M.G. Martin and C.D. Lorenz   *
-c     * last update 08-09-2011 by M.G. Martin                          *
+c     * last update 08-03-2016 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -38,18 +38,14 @@ c     ******************************************************************
 #define FUNCTION_VEEFONE
 #include "functions.h"
 #define DEBUG_VEEFONE 0
-
 c     --- variables passed to/from the function
-      integer ichain,cordtype,ibox
-
+      integer ichain,cordtype,bxdflag,ibox
 c     --- local variables
       integer j,eeftypej,iunit,typei,iexclude,no_exclude,imolty
       integer jexclude,nni_exclude,nnj_exclude,findexclude
       integer iitype,jjtype,nunit
-
       integer eef_exclude
       dimension eef_exclude(20)
-
       double precision veef1i,solvent_cutoff,dgisum
       double precision piterm,eefxi,eefyi,eefzi,eefdgi_ref
       double precision eefdgi_free,eefvi,eeflambdai,eefri,eefsum
@@ -121,8 +117,8 @@ c           --- determine the coordinates of atom j
                      call twh_coordinates(GLB_GET,cordtype,ichain,j
      &                    ,eefxj,eefyj,eefzj)
 c                    --- determine the distance between atoms i and j
-                     call twh_mimage(ibox,eefxi,eefyi,eefzi,eefxj,eefyj
-     &                    ,eefzj,eefdx,eefdy,eefdz)
+                     call twh_mimage(bxdflag,ibox,eefxi,eefyi,eefzi
+     &                    ,eefxj,eefyj,eefzj,eefdx,eefdy,eefdz)
                      eefrij = twh_distance(eefdx,eefdy,eefdz)
                      if (eefrij .lt. solvent_cutoff) then
                         jjtype = twh_getnbtype(eeftypej,eeftypej)

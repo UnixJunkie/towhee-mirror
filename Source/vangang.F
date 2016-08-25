@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,14 +19,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vangang(cordstyle,ibox,imolty,iunit,index,angle
-     &     ,xcord,ycord,zcord)
+      function twh_vangang(cordstyle,bxdflag,ibox,imolty,iunit,index
+     &     ,angle,xcord,ycord,zcord)
 c     ******************************************************************
 c     * computes the angle-angle cross term for a given angle-angle    *
 c     * type and the single angle types plus the two angles            *
 c     *                                                                *
 c     * originally written 02-24-2000 by M.G. Martin                   *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 08-02-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -38,7 +38,7 @@ c     ******************************************************************
 #define FUNCTION_VANGANG
 #include "functions.h"
 c     --- variables passed to/from the function
-      integer ibox,imolty,iunit,index,cordstyle
+      integer cordstyle,bxdflag,ibox,imolty,iunit,index
       double precision angle,xcord,ycord,zcord
       dimension angle(2)
       dimension xcord(4),ycord(4),zcord(4)
@@ -51,16 +51,16 @@ c     --- get the angles
       if ( cordstyle .eq. AA_COORD ) then
 c        --- compute angles from the cords
 c        --- compute the aa1 - aa0 - aa2 angle
-         call twh_mimage(ibox,xcord(2),ycord(2),zcord(2)
+         call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &        ,xcord(1),ycord(1),zcord(1),xone,yone,zone )
          distone = twh_distance(xone,yone,zone)
-         call twh_mimage(ibox,xcord(3),ycord(3),zcord(3)
+         call twh_mimage(bxdflag,ibox,xcord(3),ycord(3),zcord(3)
      &        ,xcord(1),ycord(1),zcord(1),xtwo,ytwo,ztwo )
          disttwo = twh_distance(xtwo,ytwo,ztwo)
          angone = twh_arccos( (xone*xtwo + yone*ytwo + zone*ztwo)
      &        /(distone*disttwo) )
 c        --- compute the aa1 - aa0 - aa3 angle (xone is the same)
-         call twh_mimage(ibox,xcord(4),ycord(4),zcord(4)
+         call twh_mimage(bxdflag,ibox,xcord(4),ycord(4),zcord(4)
      &        ,xcord(1),ycord(1),zcord(1),xtwo,ytwo,ztwo )
          disttwo = twh_distance(xtwo,ytwo,ztwo)
          angtwo = twh_arccos( (xone*xtwo + yone*ytwo + zone*ztwo)

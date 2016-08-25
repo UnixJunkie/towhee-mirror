@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_solv_3pep_poly(lfailure,max_soln,ibox,rootunit
+      subroutine twh_solv_3pep_poly(lfailure,max_soln,bxdflag,ibox
+     &     ,rootunit
      &     ,len0,b_ang0,solncoords,nsoln,aa13_min_sqr,aa13_max_sqr
      &     ,delta,lcxi,len_aa,eta)
 c     ******************************************************************
@@ -31,7 +32,7 @@ c     * (nsoln) and the cartesian coordinates of the "nsoln" possible  *
 c     * loop closure solutions (solncoords)                            *
 c     *                                                                *
 c     * originally rewritten from E. Coutsias 05-01-2003 by C.D. Lorenz*
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- functions
@@ -47,7 +48,7 @@ c     --- variables passed to/from the subroutine
       logical lfailure
       double precision rootunit,solncoords,len0,b_ang0
       dimension rootunit(4,3),solncoords(9,3,max_soln),len0(6),b_ang0(7)
-      integer nsoln,ibox
+      integer nsoln,bxdflag,ibox
       double precision aa13_min_sqr,aa13_max_sqr
       double precision delta
       dimension delta(0:3)
@@ -200,8 +201,8 @@ c     ---! delta(3): dih of N(1)CA(1)CA(3)C(3)
       torz(3) = rootunit(3,3)
       torz(4) = rootunit(4,3)
 
-      delta(3) = -1.0d0 *twh_vtorsion(lfailure,.false.,ibox,0,0,0,0
-     &     ,torx,tory,torz,dumang,.false.)
+      delta(3) = -1.0d0 *twh_vtorsion(lfailure,.false.
+     &     ,bxdflag,ibox,0,0,0,0,torx,tory,torz,dumang,.false.)
       if ( lfailure ) return
 
       delta(0) = delta(3)
@@ -219,7 +220,7 @@ c     ---! lcxi(1)
       zcord(2) = rootunit(2,3)
       zcord(3) = rootunit(1,3)
       lcxi(1) = onepi - twh_vangle(lfailure,.false.,lovrlap
-     &     ,ibox,0,0,0,-1
+     &     ,bxdflag,ibox,0,0,0,-1
      &     ,dumang,dist1,dist2,xcord,ycord,zcord)
       if ( lovrlap ) then
          write(6,*) 'LOOPCLOSURE: unexpect overlap'
@@ -240,7 +241,7 @@ c     ---! eta(3)
       zcord(2) = rootunit(3,3)
       zcord(3) = rootunit(4,3)
       eta(3) = onepi - twh_vangle(lfailure,.false.,lovrlap
-     &     ,ibox,0,0,0,-1,dumang
+     &     ,bxdflag,ibox,0,0,0,-1,dumang
      &     ,dist1,dist2,xcord,ycord,zcord)
       if ( lovrlap ) then
          write(6,*) 'LOOPCLOSURE: unexpect overlap'

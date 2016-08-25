@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,7 +21,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_ctrmas (lfailure, iall, ibox, ichain, mtype)
+      subroutine twh_ctrmas (lfailure,bxdflag,iall,ibox,ichain,mtype)
 c     ******************************************************************
 c     * finds the center of mass of a chain and returns it to the      *
 c     * periodic box if it has left the box.                           *
@@ -32,7 +32,7 @@ c     *   CRD_SINGLE compute ctrmas for one molecule using single crds *
 c     * ibox is the box of the chain                                   *
 c     * ichain is the chain number.                                    *
 c     * originally written in 1996 by M.G. Martin                      *
-c     * last modified 07-15-2013 by M.G. Martin                        *
+c     * last modified 07-25-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -42,14 +42,13 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer iall,ibox,ichain,mtype
-
+      integer bxdflag,iall,ibox,ichain,mtype
 c     --- local variables
 c     --- logical scalars
       logical lrescale,lwarn,lnewrcmu,ladjust,lfound,lperiodic
       logical lxx,lyy,lzz,lreset,lbondgraph
 c     --- integer scalars
-      integer iunit,imolty,nunit,stt,edd,flagon,itype,iflag,nchain
+      integer iunit,imolty,nunit,stt,edd,flagon,itype,crdflag,nchain
       integer testchain,cenunit,itogo,itest,junit,ivib,nvib,endunit
       integer testunit,testring,istorage
 c     --- double precision parameters
@@ -63,19 +62,17 @@ c     --- double precision scalars
       double precision boxcenx,boxceny,boxcenz,arba,arbb,arbc
       double precision shortest,altdist,dist,masstotal
 
-c      write(6,*) 'start CTRMAS',ibox
-
       flagon = 0
       if ( iall .eq. 0 ) then
          stt = 1
          call twh_nchain(GLB_GET,nchain)
          edd = nchain
-         iflag = CRD_REAL
+         crdflag = CRD_REAL
       elseif ( iall .eq. CRD_REAL .or. iall .eq. CRD_TEMP 
      &        .or. iall .eq. CRD_SINGLE ) then
          stt = ichain
          edd = ichain
-         iflag = iall
+         crdflag = iall
       else
          write(6,*) 'CTRMAS: invalid iall'
          write(6,*) 'iall',iall
@@ -83,7 +80,7 @@ c      write(6,*) 'start CTRMAS',ibox
          return
       endif
 c     --- store in either real or temp
-      if ( iflag .eq. CRD_REAL ) then
+      if ( crdflag .eq. CRD_REAL ) then
          istorage = CRD_REAL
       else
          istorage = CRD_TEMP
@@ -125,17 +122,17 @@ c              --- find the center of the box
                arba = 0.5d0
                arbb = 0.5d0
                arbc = 0.5d0
-               call twh_arbtocart(ibox,arba,arbb,arbc
+               call twh_arbtocart(bxdflag,ibox,arba,arbb,arbc
      &              ,boxcenx,boxceny,boxcenz)
 c              --- find the atom that is the closest to the center of 
 c              --- the box, initialize shortest
                shortest = 1.0d10
                do iunit = 1,nunit
 c                 --- get the coordinates for this atom
-                  call twh_coordinates(GLB_GET,iflag,testchain,iunit
+                  call twh_coordinates(GLB_GET,crdflag,testchain,iunit
      &                 ,xtemp,ytemp,ztemp)
 c                 --- compute the distance to the center of the box
-                  call twh_mimage ( ibox,xtemp,ytemp,ztemp
+                  call twh_mimage (bxdflag,ibox,xtemp,ytemp,ztemp
      &                 ,boxcenx,boxceny,boxcenz ,rxuij,ryuij,rzuij )
                   dist = twh_distance(rxuij,ryuij,rzuij)
                   if ( iunit .eq. 1 .or. dist .lt. shortest ) then
@@ -156,7 +153,7 @@ c              --- for cenunit
                   endif
                enddo
 c              --- fetch the center atom coordinates
-               call twh_coordinates(GLB_GET,iflag,testchain,cenunit
+               call twh_coordinates(GLB_GET,crdflag,testchain,cenunit
      &              ,xtemp,ytemp,ztemp)
 c              --- this atom exists in the proper reference frame
                call twh_lexist(GLB_SET,cenunit,.true.)
@@ -190,9 +187,9 @@ c                    --- the same reference as cenunit
                   if ( lfound ) then
 c                    --- junit is a neighbor that exists, put this atom
 c                    --- into the same reference frame
-                     call twh_coordinates(GLB_GET,iflag,testchain
+                     call twh_coordinates(GLB_GET,crdflag,testchain
      &                    ,testunit,xtemp,ytemp,ztemp)
-                     call twh_coordinates(GLB_GET,iflag,testchain
+                     call twh_coordinates(GLB_GET,crdflag,testchain
      &                    ,junit,rxui,ryui,rzui)
 c                    --- compute the non minimum imaged distance
                      xold = xtemp - rxui
@@ -200,24 +197,17 @@ c                    --- compute the non minimum imaged distance
                      zold = ztemp - rzui
                      altdist = twh_distance(xold,yold,zold)
 c                    --- compute the minimum imaged distance
-                     call twh_mimage(ibox,xtemp,ytemp,ztemp
+                     call twh_mimage(bxdflag,ibox,xtemp,ytemp,ztemp
      &                    ,rxui,ryui,rzui,rxuij,ryuij,rzuij)
                      shortest = twh_distance(rxuij,ryuij,rzuij)
 c                    --- compare the two distances
                      if ( (altdist - shortest) .gt. tolerance ) then
-c                        write(6,*) 'CTRMAS: adjusting initial'
-c     &                       ,' coordinates as molecule spans the'
-c     &                       ,' periodic boundaries in an odd manner'
-c                        write(6,*) 'Chain number: ',testchain
-c                        write(6,*) 'Unit number: ',testunit
-c                        write(6,*) 'pre-coords:',xtemp,ytemp,ztemp
 c                       --- set back into the junit frame
                         xtemp = rxui + rxuij
                         ytemp = ryui + ryuij
                         ztemp = rzui + rzuij
-                        call twh_coordinates(GLB_SET,iflag,testchain
+                        call twh_coordinates(GLB_SET,crdflag,testchain
      &                       ,testunit,xtemp,ytemp,ztemp)
-c                        write(6,*) 'post-coords:',xtemp,ytemp,ztemp
                      endif
 c                    --- this atom now exists in the proper frame
                      call twh_lexist(GLB_SET,testunit,.true.)
@@ -258,20 +248,20 @@ c              --- only need to test ring atoms
                call twh_inring(GLB_GET,imolty,iunit,testring)
                if ( testring .ne. 0 ) then
 c                 --- fetch the coordinates for iunit
-                  call twh_coordinates(GLB_GET,iflag,testchain,iunit
+                  call twh_coordinates(GLB_GET,crdflag,testchain,iunit
      &                 ,rxui,ryui,rzui)
                   call twh_invib(GLB_GET,imolty,iunit,nvib)
                   do ivib = 1,nvib
                      call twh_ijvib(GLB_GET,imolty,iunit,ivib,junit)
-                     call twh_coordinates(GLB_GET,iflag,testchain,junit
-     &                    ,xtemp,ytemp,ztemp)
+                     call twh_coordinates(GLB_GET,crdflag,testchain
+     &                    ,junit,xtemp,ytemp,ztemp)
 c                    --- compute the direct bond length
                      xold = xtemp - rxui
                      yold = ytemp - ryui
                      zold = ztemp - rzui
                      altdist = twh_distance(xold,yold,zold)
 c                    --- compute the minimum imaged distance
-                     call twh_mimage(ibox,xtemp,ytemp,ztemp
+                     call twh_mimage(bxdflag,ibox,xtemp,ytemp,ztemp
      &                    ,rxui,ryui,rzui,rxuij,ryuij,rzuij)
                      shortest = twh_distance(rxuij,ryuij,rzuij)
 c                    --- compare the two distances
@@ -293,11 +283,12 @@ c              --- for some of the energy calcaultions to save time)
                arba = 0.50d0
                arbb = 0.50d0
                arbc = 0.50d0
-               call twh_arbtocart(ibox,arba,arbb,arbc,nxcm,nycm,nzcm)
+               call twh_arbtocart(bxdflag,ibox,arba,arbb,arbc
+     &              ,nxcm,nycm,nzcm)
             else
                do iunit = 1, nunit
                   call twh_ntype(GLB_GET,imolty,iunit,itype)
-                  call twh_coordinates(GLB_GET,iflag,testchain,iunit
+                  call twh_coordinates(GLB_GET,crdflag,testchain,iunit
      &                 ,xtemp,ytemp,ztemp)
                   if ( masstotal .gt. 0.0d0 ) then
 c                    --- mass weighting
@@ -326,12 +317,12 @@ c              --- initialize ladjust to false
                if ( lperiodic ) then
 c                 --- place each atom individually into the central box
                   do iunit = 1,nunit
-                     call twh_coordinates(GLB_GET,iflag,testchain
+                     call twh_coordinates(GLB_GET,crdflag,testchain
      &                    ,iunit,xtemp,ytemp,ztemp)
                      rxui = xtemp
                      ryui = ytemp
                      rzui = ztemp
-                     call twh_putcartinbox(ibox,rxui,ryui,rzui)
+                     call twh_putcartinbox(bxdflag,ibox,rxui,ryui,rzui)
                      dx = rxui - xtemp
                      dy = ryui - ytemp
                      dz = rzui - ztemp
@@ -353,22 +344,13 @@ c                 --- place each atom individually into the central box
                      endif
 
                      if ( lxx .or. lyy .or. lzz ) then
-                        if ( lwarn ) then
-c                           write(6,*) 'CTRMAS: testchain,iunit:'
-c     &                          ,testchain,iunit
-c                           write(6,*) 'Initial coords:',xtemp,ytemp
-c     &                          ,ztemp
-                        endif
                         ladjust = .true.
                         xtemp = rxui
                         ytemp = ryui
                         ztemp = rzui
 c                       --- set the new coordinates
-                        call twh_coordinates(GLB_SET,iflag,testchain
+                        call twh_coordinates(GLB_SET,crdflag,testchain
      &                       ,iunit,xtemp,ytemp,ztemp)
-                        if ( lwarn ) then
-c                           write(6,*) 'New coords:',xtemp,ytemp,ztemp
-                        endif
                      endif
                   enddo
                else
@@ -377,7 +359,7 @@ c                 --- move the entire molecule based upon the COM
                   yold = nycm
                   zold = nzcm
 c                 --- find the coordinates inside the central box
-                  call twh_putcartinbox(ibox,nxcm,nycm,nzcm)
+                  call twh_putcartinbox(bxdflag,ibox,nxcm,nycm,nzcm)
 c                 --- find the difference of the inside and old coords
                   dx = nxcm - xold
                   dy = nycm - yold
@@ -387,7 +369,7 @@ c                 --- find the difference of the inside and old coords
                   if ( dx*dx + dy*dy + dz*dz .gt. tolerance ) then
                      ladjust = .true.
                      do iunit = 1,nunit
-                        call twh_coordinates(GLB_GET,iflag,testchain
+                        call twh_coordinates(GLB_GET,crdflag,testchain
      &                       ,iunit,xtemp,ytemp,ztemp)
                         xtemp = xtemp + dx
                         ytemp = ytemp + dy
@@ -449,14 +431,14 @@ c                 --- these values are not well defined for a periodic
 c                 --- molecule
 c                 --- default to a large value of rcmu for the energy
 c                 --- routines
-                  rcmu = 10.0d0*twh_maxboxlength(ibox)
+                  rcmu = 10.0d0*twh_maxboxlength(bxdflag,ibox)
 c                 --- leave radius of gyration as zero
                else
                   do iunit=1,nunit
 c                    --- minimum image the ctrmas pair separations
-                     call twh_coordinates(GLB_GET,iflag,testchain,iunit
-     &                    ,rxui,ryui,rzui)
-                     call twh_mimage ( ibox,rxui,ryui,rzui
+                     call twh_coordinates(GLB_GET,crdflag,testchain
+     &                    ,iunit,rxui,ryui,rzui)
+                     call twh_mimage (bxdflag,ibox,rxui,ryui,rzui
      &                    ,nxcm,nycm,nzcm,rxuij,ryuij,rzuij )
                      rijsq = rxuij*rxuij + ryuij*ryuij  + rzuij*rzuij
 c                    --- test if this is the largest distance
@@ -483,8 +465,6 @@ c              --- store the new radius of gyration
          endif
       enddo
 
-c      write(6,*) 'end CTRMAS',ibox
-      
       return
       end
 

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,13 +21,13 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_recipsum(lfailure,ibox,vrecip)
+      subroutine twh_recipsum(lfailure,bxdflag,ibox,crdflag,vrecip)
 c     ******************************************************************
 c     * calculates the total reciprocal space ewald-sum term for volume*
 c     * moves                                                          *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen.                        *
-c     * Last modified 08-04-2011 M.G. Martin                           *
+c     * Last modified 08-09-2016 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -35,7 +35,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from subroutine
       logical lfailure
-      integer ibox
+      integer bxdflag,ibox,crdflag
       double precision vrecip
 c     --- local variables
 c     --- integer scalars
@@ -46,6 +46,7 @@ c     --- double precision scalars
       double precision n_one,n_two,n_thr,rxui,ryui,rzui,twopi,qqfact
       double precision charge,kx,ky,kz,prefact,calp
       double precision hinv1,hinv2,hinv3,boxvolume
+
 c     --- retrieve constants
       call twh_constant_twopi(GLB_GET,twopi)
       call twh_constant_qqfact(GLB_GET,qqfact)
@@ -65,7 +66,7 @@ c        --- no vectors
 c     --- set up some ewald constants
       invalpsq4 = 1.0d0/(4.0d0*calp*calp)
 c     --- set up the inverse volume along with the charge factor
-      call twh_boxvolume(GLB_GET,ibox,boxvolume)
+      call twh_boxvolume(GLB_GET,bxdflag,ibox,boxvolume)
       invvol = qqfact*2.0d0*twopi/boxvolume
 
       do nkx = 0, kmax
@@ -103,25 +104,25 @@ c              --- set up the k vectors, these are written as variable
 c              --- h in the Dean Wheeler primer
 c              --- note that we are taking the dot products of n with
 c              --- hinverse-transpose
-               call twh_hinverse(GLB_GET,ibox,1,1,hinv1)
-               call twh_hinverse(GLB_GET,ibox,1,2,hinv2)
-               call twh_hinverse(GLB_GET,ibox,1,3,hinv3)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,1,1,hinv1)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,1,2,hinv2)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,1,3,hinv3)
                kx = twopi*(n_one*hinv1 + n_two*hinv2 + n_thr*hinv3)
-               call twh_hinverse(GLB_GET,ibox,2,1,hinv1)
-               call twh_hinverse(GLB_GET,ibox,2,2,hinv2)
-               call twh_hinverse(GLB_GET,ibox,2,3,hinv3)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,2,1,hinv1)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,2,2,hinv2)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,2,3,hinv3)
                ky = twopi*(n_one*hinv1 + n_two*hinv2 + n_thr*hinv3)
-               call twh_hinverse(GLB_GET,ibox,3,1,hinv1)
-               call twh_hinverse(GLB_GET,ibox,3,2,hinv2)
-               call twh_hinverse(GLB_GET,ibox,3,3,hinv3)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,3,1,hinv1)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,3,2,hinv2)
+               call twh_hinverse(GLB_GET,bxdflag,ibox,3,3,hinv3)
                kz = twopi*(n_one*hinv1 + n_two*hinv2 + n_thr*hinv3)
-               call twh_ewald_kvector(GLB_SET,CRD_REAL,ncount,ibox
+               call twh_ewald_kvector(GLB_SET,crdflag,ncount,ibox
      &              ,kx,ky,kz)
 c              --- take the dot product of k with itself
                ksqr = kx*kx + ky*ky + kz*kz
 c              --- compute the B(h) prefactor 
                prefact = invvol*twh_expon(-ksqr*invalpsq4)/ksqr
-               call twh_ewald_prefact(GLB_SET,CRD_REAL,ncount,ibox
+               call twh_ewald_prefact(GLB_SET,crdflag,ncount,ibox
      &              ,prefact)
 c              --- sum up q*cos and q*sin 
                sumr = 0.0d0
@@ -131,7 +132,7 @@ c              --- sum up q*cos and q*sin
                   call twh_nunit(GLB_GET,imolty,nunit)
                   if ( twh_get_nboxi(ichain) .eq. ibox) then
                      do iunit = 1,nunit
-                        call twh_coordinates(GLB_GET,CRD_REAL,ichain
+                        call twh_coordinates(GLB_GET,crdflag,ichain
      &                       ,iunit,rxui,ryui,rzui)
                         call twh_qqatom(GLB_GET,imolty,iunit,charge)
                         arg = kx*rxui + ky*ryui + kz*rzui
@@ -140,8 +141,8 @@ c              --- sum up q*cos and q*sin
                      enddo
                   endif
                enddo
-               call twh_ewald_ssumr(GLB_SET,CRD_REAL,ncount,ibox,sumr)
-               call twh_ewald_ssumi(GLB_SET,CRD_REAL,ncount,ibox,sumi)
+               call twh_ewald_ssumr(GLB_SET,crdflag,ncount,ibox,sumr)
+               call twh_ewald_ssumi(GLB_SET,crdflag,ncount,ibox,sumi)
 c              --- Potential energy
                vrecip = vrecip + (sumr*sumr + sumi*sumi) * prefact
             enddo

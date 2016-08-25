@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,7 +32,7 @@ c     * set up this file, and for allowing me to take some code from   *
 c     * Lammps 2001                                                    *
 c     *                                                                *
 c     * originally written 02-27-2002 by M.G. Martin                   *
-c     * last modified 01-31-2011 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_MASS
@@ -176,14 +176,14 @@ c     --- read in the box dimensions
          stop 'Illegal box dimensions'
       endif
 c     --- initialize hmatrix
-      call twh_hmatrix(GLB_INIT,1,3,3,0.0d0)
+      call twh_hmatrix(GLB_INIT,MAXBXD,1,3,3,0.0d0)
 c     --- set hmatrix
       dvalue = box(2,1)-box(1,1)
-      call twh_hmatrix(GLB_SET,1,1,1,dvalue)
+      call twh_hmatrix(GLB_SET,BXD_REAL,1,1,1,dvalue)
       dvalue = box(2,2)-box(1,2)
-      call twh_hmatrix(GLB_SET,1,2,2,dvalue)
+      call twh_hmatrix(GLB_SET,BXD_REAL,1,2,2,dvalue)
       dvalue = box(2,3)-box(1,3)
-      call twh_hmatrix(GLB_SET,1,3,3,dvalue)
+      call twh_hmatrix(GLB_SET,BXD_REAL,1,3,3,dvalue)
 
 c     --- read remainder of data file - free format
 c     --- initialize variables

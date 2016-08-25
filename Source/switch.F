@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -174,7 +174,7 @@ c  --- update chain coordinates temporarilly
       enddo
 
       call twh_rcmu(GLB_GET,ichain,rcmu)
-      if ( rcmu .gt. twh_minboxlength(ibox)*0.25d0 ) then
+      if ( rcmu .gt. twh_minboxlength(BXD_REAL,ibox)*0.25d0 ) then
 c        --- molecule is large enough that it might be interacting with
 c        --- iself through the periodic images (occurs for some very 
 c        --- short range potentials like hard spheres).   Need to 
@@ -190,15 +190,16 @@ c        --- images.  don't bother computing intramolecular or bonded
       endif
 
       nchainmove = 2
-      chaininfo(1,CRD_OLD) = CRD_REAL
-      chaininfo(1,CRD_NEW) = CRD_TEMP
+      chaininfo(1,TRL_OLD) = CRD_REAL
+      chaininfo(1,TRL_NEW) = CRD_TEMP
       chaininfo(1,3) = ichain
-      chaininfo(2,CRD_OLD) = CRD_REAL
-      chaininfo(2,CRD_NEW) = CRD_TEMP
+      chaininfo(2,TRL_OLD) = CRD_REAL
+      chaininfo(2,TRL_NEW) = CRD_TEMP
       chaininfo(2,3) = jchain
       lpartial = .false.
       lgetcom  = .false.
-      call twh_energy_change(lfailure,ibox,nchainmove,chaininfo,loverlap
+      call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
+     &     ,chaininfo,loverlap
      &     ,lpartial,lgetcom,lintra,lbonded,dvclassical_trial
      &     ,dvintra_trial,dvinter_trial,dvext_trial,dvelect_trial
      &     ,dvsolv_trial,dvtor_trial,dvbend_trial

@@ -28,7 +28,7 @@ c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
 c     * originally written by M.G. Martin and C.D. Lorenz 10-16-2002   *
-c     * last modifed in 07-15-2016 by M.G. Martin                      *
+c     * last modifed in 08-12-2016 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -247,7 +247,7 @@ c     --- determine the vector formed by the unit1-unit2 bond
 c     --- this vector will be used to define the rotation axis
       call twh_coordinates(GLB_GET,CRD_REAL,ichain,unit1,rxui,ryui,rzui)
       call twh_coordinates(GLB_GET,CRD_REAL,ichain,unit2,rxuj,ryuj,rzuj)
-      call twh_mimage(activebox,rxuj,ryuj,rzuj,rxui,ryui,rzui
+      call twh_mimage(BXD_REAL,activebox,rxuj,ryuj,rzuj,rxui,ryui,rzui
      &     ,distx,disty,distz)
       dist = twh_distance(distx,disty,distz)
       vecx = distx/dist
@@ -269,8 +269,8 @@ c           --- around the desired unit vector (vecx,vecy,vecz)
 c     --- calculate the new and old non-bonded inter molecular 
 c     --- energies 
       nchainmove = 1
-      chaininfo(1,CRD_OLD) = CRD_REAL
-      chaininfo(1,CRD_NEW) = CRD_TEMP
+      chaininfo(1,TRL_OLD) = CRD_REAL
+      chaininfo(1,TRL_NEW) = CRD_TEMP
       chaininfo(1,3) = ichain
       lpartial = .false.
       lintra = .true.
@@ -279,8 +279,8 @@ c     --- energies
 #if DEBUG_PIVOT
       write(6,*) 'PIVOT: calling energy change',lfailure,loverlap
 #endif
-      call twh_energy_change(lfailure,activebox,nchainmove,chaininfo
-     &     ,loverlap,lpartial,lgetcom,lintra,lbonded,dvtot
+      call twh_energy_change(lfailure,BXD_REAL,activebox,nchainmove
+     &     ,chaininfo,loverlap,lpartial,lgetcom,lintra,lbonded,dvtot
      &     ,dvintra,dvinter,dvext,dvelect,dvsolv,dvtors,dvdumb,dvdumc
      &     ,dvquantum,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
@@ -306,17 +306,17 @@ c     --- safety checks for hard overlap
 
 c     --- compute normal torsion energies that include unit1 or unit2
       natommove = 2
-      atomlist(1,CRD_OLD) = CRD_REAL
-      atomlist(1,CRD_NEW) = CRD_TEMP
+      atomlist(1,TRL_OLD) = CRD_REAL
+      atomlist(1,TRL_NEW) = CRD_TEMP
       atomlist(1,3) = unit1
-      atomlist(2,CRD_OLD) = CRD_REAL
-      atomlist(2,CRD_NEW) = CRD_TEMP
+      atomlist(2,TRL_OLD) = CRD_REAL
+      atomlist(2,TRL_NEW) = CRD_TEMP
       atomlist(2,3) = unit2
-      globalcord(CRD_OLD) = CRD_REAL
-      globalcord(CRD_NEW) = CRD_TEMP
+      globalcord(TRL_OLD) = CRD_REAL
+      globalcord(TRL_NEW) = CRD_TEMP
       dvatomlist = 0.0d0
-      call twh_ec_atomlist_torsion(lfailure,ichain,activebox,natommove
-     &     ,atomlist,globalcord,loverlap,dvatomlist)
+      call twh_ec_atomlist_torsion(lfailure,ichain,BXD_REAL,activebox
+     &     ,natommove,atomlist,globalcord,loverlap,dvatomlist)
       if ( lfailure ) return
 c     --- check for hard overlap
       if ( loverlap(2) ) return
@@ -388,7 +388,8 @@ c        --- assign new atom positions
 c        --- update the reciprical space sum
          call twh_recip(activebox,2)
 c        --- update the center of mass of chain
-         call twh_ctrmas(lfailure,CRD_REAL,activebox,ichain,CTR_PIVOT)
+         call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,activebox
+     &        ,ichain,CTR_PIVOT)
          if ( lfailure ) return
 c        --- update embedding density
          iboxa(1) = activebox

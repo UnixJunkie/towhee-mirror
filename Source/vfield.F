@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,14 +19,14 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vfield(lfailure,lovrlap,ibox,ntii,imolty,ichain
-     &,iunit,coord)
+      function twh_vfield(lfailure,lovrlap,bxdflag,ibox,ntii
+     &     ,imolty,ichain,iunit,coord)
 c     ******************************************************************
 c     * computes the energy from all of the external fields with the   *
 c     * atom in box ibox                                               *
 c     *                                                                *
 c     * originally written 11-17-2004 by M.G. Martin                   *
-c     * last update 09-03-2014 by M.G. Martin                          *
+c     * last update 08-01-2016 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -37,7 +37,7 @@ c     ******************************************************************
 
 c     --- variables passed to/from the function
       logical lfailure,lovrlap
-      integer ibox,ntii,imolty,ichain,iunit,nbii
+      integer bxdflag,ibox,ntii,imolty,ichain,iunit,nbii
       double precision coord
       dimension coord(3)
 c     --- local variables
@@ -67,8 +67,8 @@ c           --- make sure the local coordinate is in the box
             localcoord(1) = coord(1)
             localcoord(2) = coord(2)
             localcoord(3) = coord(3)
-            call twh_putcartinbox(ibox,localcoord(1),localcoord(2)
-     &           ,localcoord(3))
+            call twh_putcartinbox(bxdflag,ibox
+     &           ,localcoord(1),localcoord(2),localcoord(3))
             call twh_fieldtype(GLB_GET,ifield,fieldtype)
 c           --- harmonic attractor field
             if ( fieldtype .eq. FLD_HARMONIC_ATTRACTOR ) then
@@ -95,8 +95,8 @@ c              --- atom type
                      lfailure = .true.
                      return
                   endif
-                  call twh_mimage(ibox,localcoord(1),localcoord(2)
-     &                 ,localcoord(3)
+                  call twh_mimage(bxdflag,ibox
+     &                 ,localcoord(1),localcoord(2),localcoord(3)
      &                 ,xinit,yinit,zinit,distx,disty,distz)
                   dist = twh_distance(distx,disty,distz)
                   call twh_fielddp(GLB_GET,ifield,1,fconstant)
@@ -112,7 +112,7 @@ c              --- get field parameters.
                call twh_fielddp(GLB_GET,ifield,FLD_HRBENERGY,energy)
 c              --- hard ball is placed inside the simulation box.
 c              --- calculate the distance
-               call twh_mimage(ibox
+               call twh_mimage(bxdflag,ibox
      &           ,localcoord(1),localcoord(2),localcoord(3)
      &           ,xinit,yinit,zinit
      &           ,distx,disty,distz)
@@ -157,15 +157,18 @@ c              --- determine the type of the field
                   call twh_fielddp(GLB_GET,ifield,1,dpfieldone)
                   if ( ixyz .eq. 1 ) then
 c                    --- xcoord field
-                     call twh_mimage(ibox,localcoord(ixyz),dum,dum
+                     call twh_mimage(bxdflag,ibox
+     &                    ,localcoord(ixyz),dum,dum
      &                    ,dpfieldone,dum,dum,dist,dumyy,dumzz)
                   elseif ( ixyz .eq. 2 ) then
 c                    --- ycoord field
-                     call twh_mimage(ibox,dum,localcoord(ixyz),dum
+                     call twh_mimage(bxdflag,ibox
+     &                    ,dum,localcoord(ixyz),dum
      &                    ,dum,dpfieldone,dum,dumxx,dist,dumzz)
                   elseif ( ixyz .eq. 3 ) then
 c                    --- zcoord field
-                     call twh_mimage(ibox,dum,dum,localcoord(ixyz)
+                     call twh_mimage(bxdflag,ibox
+     &                    ,dum,dum,localcoord(ixyz)
      &                    ,dum,dum,dpfieldone,dumxx,dumyy,dist)
                   endif
                   linfield = .false.

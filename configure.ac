@@ -245,7 +245,6 @@ Examples/Canonical_Ensemble/Charmm27_Nucleic_Acid/Makefile \
 Examples/Canonical_Ensemble/Charmm27_Polyalanine/Makefile \
 Examples/Canonical_Ensemble/Compass_Methanol/Makefile \
 Examples/Canonical_Ensemble/DREIDING/Makefile \
-Examples/Canonical_Ensemble/FENE_Hexamer/Makefile \
 Examples/Canonical_Ensemble/Formamide_Scaled/Makefile \
 Examples/Canonical_Ensemble/Fris_Walls/Makefile \
 Examples/Canonical_Ensemble/Hard_Sphere/Makefile \
@@ -286,6 +285,7 @@ Examples/Gibbs_Ensemble/Cu_VLE/Makefile \
 Examples/Gibbs_Ensemble/Cui2002_Hexane/Makefile \
 Examples/Gibbs_Ensemble/Dubb_Zeolite/Makefile \
 Examples/Gibbs_Ensemble/EPM_VLCC/Makefile \
+Examples/Gibbs_Ensemble/FENE_Hexamer/Makefile \
 Examples/Gibbs_Ensemble/Gordon/Makefile \
 Examples/Gibbs_Ensemble/Gromos_Isobutane/Makefile \
 Examples/Gibbs_Ensemble/MM2_Ethane/Makefile \

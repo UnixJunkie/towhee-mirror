@@ -1,7 +1,7 @@
 /*     $Id: globalc.h,v 1.19 2010/09/04 14:16:49 lperi Exp $ */
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-* Copyright (C) 2003-2005 Marcus G. Martin                       *
+* Copyright (C) 2003-2016 Marcus G. Martin                       *
 * see the file license.gpl for the full license information      *
 *                                                                *
 * This program is free software; you can redistribute it and/or  *
@@ -164,7 +164,7 @@ extern dftmain(double *);
 #define twh_rmtraa_ TWH_RMTRAA
 #define twh_rmtrac_ TWH_RMTRAC
 #define twh_rmrot_ TWH_RMROT
-#define twh_arbcmofield_ TWH_ARBCMOFIELD
+#define twh_arbcmofield_ TWH_ARBCOMFIELD
 #define twh_comfield_ TWH_COMFIELD
 #define twh_comtempfield_ TWH_COMTEMPFIELD
 #define twh_coordfield_ TWH_COORDFIELD

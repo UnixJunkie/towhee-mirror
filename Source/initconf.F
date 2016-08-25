@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -118,24 +118,25 @@ c        --- initialize the random number generator on a singe integer
 c     --- invert and safetycheck the hmatrix
       do ibox = 1,numboxes
 c        --- check this hmatrix
-         call twh_checkhmatrix(ibox,.true.,lfailure)
+         call twh_checkhmatrix(BXD_REAL,ibox,.true.,lfailure)
          if ( lfailure ) then
             write(6,*) 'INITCONF: problem with unit cell hmatrix'
             return
          endif
 
 c        --- invert this matrix
-         call twh_inverthmatrix(ibox)
+         call twh_inverthmatrix(BXD_REAL,ibox)
          do idim = 1,3
             do jdim = 1,3
-               call twh_hinverse(GLB_GET,ibox,idim,jdim,dimtemp(jdim))
+               call twh_hinverse(GLB_GET,BXD_REAL,ibox,idim,jdim
+     &              ,dimtemp(jdim))
             enddo
             write(6,'(a18,i5,1x,i1,3(1x,f10.5))') 
      &           'Box idim hinverse:'
      &           ,ibox,idim,(dimtemp(jdim),jdim=1,3)
          enddo
 c        --- make sure the volumes are positive
-         call twh_boxvolume(GLB_GET,ibox,boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
          if ( boxvolume .lt. 0.0d0 ) then
             write(6,*) 'INITCONF: Box ',ibox
      &           ,' has a negative volume of ',boxvolume
@@ -197,7 +198,7 @@ c     --- and below
       call twh_lewald(GLB_GET,lewald)
 c     --- set ewald parameters: 
       do ibox = 1, numboxes
-         call twh_resetcoulomb(lfailure,ibox)
+         call twh_resetcoulomb(lfailure,BXD_REAL,ibox)
          if ( lfailure ) return
          if ( lewald ) then
             call twh_ewald_calp(GLB_GET,ibox,calp)
@@ -359,7 +360,8 @@ c                  do while ( lterm .and. isafety .lt. 50 )
      &                    ,vrostor,vrosext,vrosintra,vrosinter
      &                    ,vroselect,vrosewald)
                      call twh_rosenbluth(lfailure,.true.,lterm,testcord
-     &                    ,CRD_REAL,1,imolty,isteps,ibox,iunit,dpscale
+     &                    ,CRD_REAL,1,imolty,isteps,BXD_REAL,ibox
+     &                    ,iunit,dpscale
      &                    ,wrosen(1),vrostot(1),vrosvib(1),vrosang(1)
      &                    ,vrostor(1),vrosext(1),vrosintra(1)
      &                    ,vrosinter(1),vroselect(1),vrosewald(1))
@@ -516,15 +518,15 @@ c                    --- initlattice
      &                    ,initlattice)
                      if ( initlattice .eq. 'center' ) then
 c                       --- compute the COM of molecule template
-                        call twh_ctrmas(lfailure,testcord,ibox,ichain
-     &                       ,CTR_INITCONF)
+                        call twh_ctrmas(lfailure,BXD_REAL,testcord
+     &                       ,ibox,ichain,CTR_INITCONF)
                         if ( lfailure ) return
 c                       --- compute the center of the simulation box
                         arba = 0.5d0
                         arbb = 0.5d0
                         arbc = 0.5d0
-                        call twh_arbtocart(ibox,arba,arbb,arbc,xcen,ycen
-     &                       ,zcen)
+                        call twh_arbtocart(BXD_REAL,ibox,arba,arbb,arbc
+     &                       ,xcen,ycen,zcen)
 c                       --- compute the offset between the center of the
 c                       --- box and the center of mass of the template
                         call twh_com(GLB_GET,CRD_REAL,ichain
@@ -550,7 +552,7 @@ c                       --- atom coordinates evenly spaced in box
                         arbb = dble(jc)*uy(ibox) - 0.5d0*uy(ibox)
                         arbc = dble(kc)*uz(ibox) - 0.5d0*uz(ibox)
 c                       --- transform to cartesian coordinates
-                        call twh_arbtocart(ibox,arba,arbb,arbc
+                        call twh_arbtocart(BXD_REAL,ibox,arba,arbb,arbc
      &                       ,xoffset,yoffset,zoffset)
 c                       --- displace all of the atoms
                         do iunit = 1,nunit
@@ -656,7 +658,7 @@ c     * Error conditions:                                              *
 c     *   failure to open file                                         *
 c     *                                                                *
 c     * split from original engmolec 02-14-2006 by MAW                 *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 07-2-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -722,11 +724,11 @@ c        --- set all of the true arrays as multiples of the cells
          enddo
          do jdim = 1,3
             dvalue = inix*cell_hmatrix(1,jdim)
-            call twh_hmatrix(GLB_SET,ibox,1,jdim,dvalue)
+            call twh_hmatrix(GLB_SET,BXD_REAL,ibox,1,jdim,dvalue)
             dvalue = iniy*cell_hmatrix(2,jdim)
-            call twh_hmatrix(GLB_SET,ibox,2,jdim,dvalue)
+            call twh_hmatrix(GLB_SET,BXD_REAL,ibox,2,jdim,dvalue)
             dvalue = iniz*cell_hmatrix(3,jdim)
-            call twh_hmatrix(GLB_SET,ibox,3,jdim,dvalue)
+            call twh_hmatrix(GLB_SET,BXD_REAL,ibox,3,jdim,dvalue)
          enddo
       enddo
 c        --- close this file

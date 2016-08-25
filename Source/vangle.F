@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,8 +19,9 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vangle(lfailure,lreport,lovrlap,ibox,imolty,iunit
-     &     ,ibend,iflag,angcos,distone,disttwo,xcord,ycord,zcord)
+      function twh_vangle(lfailure,lreport,lovrlap,bxdflag,ibox
+     &     ,imolty,iunit,ibend,iflag,angcos,distone,disttwo
+     &     ,xcord,ycord,zcord)
 c     ******************************************************************
 c     * computes the bond bending energy given an angle type and the   *
 c     * angle.                                                         *
@@ -45,7 +46,7 @@ c     *          Note: we are a bit tricky as lovrlap is not intialized*
 c     *          in this routine, should be intialized by the caller   *
 c     *                                                                *
 c     * rewritten from old sumup subroutines 01-21-2000 by M.G. Martin *
-c     * last modified 08-18-2014 M.G. Martin                           *
+c     * last modified 08-02-2016 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -69,7 +70,7 @@ c     ******************************************************************
 #define DEBUG_VANGLE 0
 c     --- variables passed to and from the function
       logical lfailure,lovrlap,lreport
-      integer ibox,imolty,iunit,ibend,iflag
+      integer bxdflag,ibox,imolty,iunit,ibend,iflag
       double precision distone,disttwo,angcos
       double precision xcord,ycord,zcord
       dimension xcord(3),ycord(3),zcord(3)
@@ -99,9 +100,9 @@ c     --- double precision arrays
       lbondang = .false.
       if ( abs(iflag) .eq. 1 ) then
 c        --- compute the bond lengths and angles from the coordinates
-         call twh_mimage(ibox,xcord(1),ycord(1),zcord(1)
+         call twh_mimage(bxdflag,ibox,xcord(1),ycord(1),zcord(1)
      &        ,xcord(2),ycord(2),zcord(2),xone,yone,zone )
-         call twh_mimage(ibox,xcord(3),ycord(3),zcord(3)
+         call twh_mimage(bxdflag,ibox,xcord(3),ycord(3),zcord(3)
      &        ,xcord(2),ycord(2),zcord(2),xtwo,ytwo,ztwo )
          angcos = twh_dotproduct(xone,yone,zone,xtwo,ytwo,ztwo,distone
      &        ,disttwo)

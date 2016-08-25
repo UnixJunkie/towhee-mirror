@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * makes a pdb file of the system                                 *
 c     * the pdb file is written to boxone.pdb and boxtwo.pdb  etc      *
 c     *                                                                *
 c     * subroutine originally written in 2000 by M.G. Martin           *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -87,16 +87,16 @@ c     --- output CRYST1 records to pdb files for non-rectangular boxes
          call twh_lrectbox(GLB_GET,ibox,lrectbox)
         if ( .not. lrectbox ) then
           do ii = 1,3
-             call twh_hmatrix(GLB_GET,ibox,ii,1,hm1)
-             call twh_hmatrix(GLB_GET,ibox,ii,2,hm2)
-             call twh_hmatrix(GLB_GET,ibox,ii,3,hm3)
+             call twh_hmatrix(GLB_GET,BXD_REAL,ibox,ii,1,hm1)
+             call twh_hmatrix(GLB_GET,BXD_REAL,ibox,ii,2,hm2)
+             call twh_hmatrix(GLB_GET,BXD_REAL,ibox,ii,3,hm3)
             vector_len(ii) = twh_distance(hm1,hm2,hm3)
             vector_ang(ii) = 0.0d0
           enddo
           do ii = 1,3
-             call twh_hmatrix(GLB_GET,ibox,1,ii,hm1)
-             call twh_hmatrix(GLB_GET,ibox,2,ii,hm2)
-             call twh_hmatrix(GLB_GET,ibox,3,ii,hm3)
+             call twh_hmatrix(GLB_GET,BXD_REAL,ibox,1,ii,hm1)
+             call twh_hmatrix(GLB_GET,BXD_REAL,ibox,2,ii,hm2)
+             call twh_hmatrix(GLB_GET,BXD_REAL,ibox,3,ii,hm3)
             vector_ang(1) = vector_ang(1) + hm2*hm3
             vector_ang(2) = vector_ang(2) + hm1*hm3
             vector_ang(3) = vector_ang(3) + hm1*hm2

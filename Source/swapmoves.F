@@ -77,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 07-15-2016 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -231,7 +231,7 @@ c        --- intramolecular taken care of in engatom
       lgetbox = .false.
       vtest = 0.0d0
       d_tmmc_weight = 0.0d0
-      do icordflag = CRD_OLD,CRD_NEW,(CRD_NEW-CRD_OLD)
+      do icordflag = TRL_OLD,TRL_NEW,(TRL_NEW-TRL_OLD)
 c        --- initialize boxtest to 0
          boxtest(icordflag) = 0
 c        --- initialize scaling factor
@@ -330,8 +330,8 @@ c        --- isolated molecule, set boxes to zero
          lfound = .true.
          nboxmove = 2
 c        --- set the boxvolume in this box to the one in the first box
-         call twh_boxvolume(GLB_GET,1,boxvolume)
-         call twh_boxvolume(GLB_SET,boxtest(2),boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,1,boxvolume)
+         call twh_boxvolume(GLB_SET,BXD_REAL,boxtest(2),boxvolume)
       else
          write(6,*) 'SWAPMOVES: swaptype',swaptype
          write(6,*) 'invalid swaptype in swapmoves'
@@ -366,13 +366,13 @@ c        --- initialize energy changes
 
 c     --- compute the volumes of the boxes
       if ( boxtest(1) .ne. 0 ) then
-         call twh_boxvolume(GLB_GET,boxtest(1),boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,boxtest(1),boxvolume)
          voltest(1) = boxvolume
       else
          voltest(1) = 0.0d0
       endif
       if ( boxtest(2) .ne. 0 ) then
-         call twh_boxvolume(GLB_GET,boxtest(2),boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,boxtest(2),boxvolume)
          voltest(2) = boxvolume
       else
          voltest(2) = 0.0d0
@@ -520,8 +520,9 @@ c           --- ideal gas
             END IF
             endif
          else
-            call twh_findtarget(lfailure,swaptype,boxtest(1),imolty
-     &           ,chaintest(CRD_OLD),iutry,jmolty,jrem,junit,regstart
+            call twh_findtarget(lfailure,swaptype,BXD_REAL,boxtest(1)
+     &           ,imolty
+     &           ,chaintest(TRL_OLD),iutry,jmolty,jrem,junit,regstart
      &           ,regend,pointp,num_in,num_out,lfound,xtarget,ytarget
      &           ,ztarget)
             if ( lfailure ) return
@@ -531,7 +532,7 @@ c           --- ideal gas
 c        --- set iutry at random
          iutry = idint( twh_random()*totunits ) + 1
 c        --- set the chain number to a warning flag of 0
-         chaintest(CRD_OLD) = 0
+         chaintest(TRL_OLD) = 0
       endif
 
       if ( swaptype .eq. SWAP_CB_INTER
@@ -567,14 +568,14 @@ c        --- increment the number of attempted rb moves
      &     .and. swaptype .ne. SWAP_CHEMPOT_BOX
      &     .and. swaptype .ne. SWAP_CHEMPOT_ISO ) return
 
-c     --- assign a molecule number for chaintest(CRD_NEW)
+c     --- assign a molecule number for chaintest(TRL_NEW)
       call twh_nchain(GLB_GET,nchain)
       if ( swaptype .eq. SWAP_RB_INTER ) then
-         chaintest(CRD_NEW) = nchain + 1
+         chaintest(TRL_NEW) = nchain + 1
       elseif ( swaptype .eq. SWAP_CB_INTER
      &        .or. swaptype .eq. SWAP_CB_GC 
      &        .or. swaptype .eq. SWAP_CHEMPOT_BOX ) then
-         chaintest(CRD_NEW) = nchain + 1
+         chaintest(TRL_NEW) = nchain + 1
 c        --- increment the count of chemical potential computations
 c        --- only if we are inserting into a non-ideal box
 c        --- this is a bit of trickery as if we automatically reject 
@@ -597,7 +598,7 @@ c        --- to the average
          endif
       elseif ( swaptype .eq. SWAP_CHEMPOT_ISO ) then
 c        --- computing isolated molecule chemical potential
-         chaintest(CRD_NEW) = nchain + 1
+         chaintest(TRL_NEW) = nchain + 1
          arg = 0.0d0
          keycode = AC_ISOLATION_CHEMPOT
          call twh_averages(lfailure,AVG_INCREMENT,keycode,boxtest(2)
@@ -608,15 +609,15 @@ c        --- computing isolated molecule chemical potential
      &        .or. swaptype .eq. SWAP_AVB_TWO
      &        .or. swaptype .eq. SWAP_AVB_THREE ) then
 c        --- single box move, same chain for new and old
-         chaintest(CRD_NEW) = chaintest(CRD_OLD)
+         chaintest(TRL_NEW) = chaintest(TRL_OLD)
       endif
 
 c     --- assign the old coordinates
       if ( .not. lempty ) then
          do iunit = 1,totunits
-            call twh_coordinates(GLB_GET,CRD_REAL,chaintest(CRD_OLD)
+            call twh_coordinates(GLB_GET,CRD_REAL,chaintest(TRL_OLD)
      &           ,iunit,xtemp,ytemp,ztemp)
-            call twh_coordinates(GLB_SET,CRD_TEMP,chaintest(CRD_OLD)
+            call twh_coordinates(GLB_SET,CRD_TEMP,chaintest(TRL_OLD)
      &           ,iunit,xtemp,ytemp,ztemp)
          enddo
       endif
@@ -626,29 +627,29 @@ c     --- assign the old coordinates
 #endif
 
 c     --- set some information for the new chain
-      call twh_moltyp(GLB_SET,chaintest(CRD_NEW),imolty)
-      call twh_nboxi(GLB_SET,chaintest(CRD_NEW),boxtest(2))
+      call twh_moltyp(GLB_SET,chaintest(TRL_NEW),imolty)
+      call twh_nboxi(GLB_SET,chaintest(TRL_NEW),boxtest(2))
 
 c     --- set some common values for new and old
       call twh_nch_nb_one(GLB_GET,imolty,nch_nb_one)
 
       if ( lempty ) then
 c        --- only need to do new if lempty
-         cordstop = CRD_NEW
+         cordstop = TRL_NEW
       else
 c        --- do old and new
-         cordstop = CRD_OLD
+         cordstop = TRL_OLD
       endif
 
 c     --- always use the real coordinates for all other molecules
       globalcord = CRD_REAL
 
-      do icordflag = CRD_NEW,cordstop,-1
+      do icordflag = TRL_NEW,cordstop,-1
 c        --- initialize lexist
          call twh_lexist(GLB_INIT,totunits,.false.)
          
 c        --- determine testcord and lnew
-         if ( icordflag .eq. CRD_NEW ) then 
+         if ( icordflag .eq. TRL_NEW ) then 
 c           --- use the new coordinates to compute the energy
             lnew = .true.
             testcord = CRD_TEMP
@@ -700,7 +701,8 @@ c        --- perform the molecule growth for the inserted molecule
 c           --- grow the rest of the molecule using configurational-bias
             call twh_rosenbluth(lfailure,lnew,ltermtest(icordflag)
      &           ,testcord,globalcord,chaintest(icordflag),imolty,isteps
-     &           ,boxtest(icordflag),totunits,dpscaletest(icordflag)
+     &           ,BXD_REAL,boxtest(icordflag)
+     &           ,totunits,dpscaletest(icordflag)
      &           ,wrosen(icordflag),vrostot(icordflag)
      &           ,vrosvib(icordflag),vrosang(icordflag)
      &           ,vrostor(icordflag),vrosext(icordflag)
@@ -762,22 +764,22 @@ c                    --- measure the chemical potential
                   else
 c                    --- the old slot includes the molecule and the new
 c                    --- does not
-                     chaininfo(1,CRD_OLD) = CRD_REAL
-                     chaininfo(1,CRD_NEW) = CRD_NONE
+                     chaininfo(1,TRL_OLD) = CRD_REAL
+                     chaininfo(1,TRL_NEW) = CRD_NONE
                   endif
                else
 c                 --- this is the insertion box so the old slot has
 c                 --- nothing and the new slot has the molecule
-                  chaininfo(1,CRD_OLD) = CRD_NONE
-                  chaininfo(1,CRD_NEW) = CRD_TEMP
+                  chaininfo(1,TRL_OLD) = CRD_NONE
+                  chaininfo(1,TRL_NEW) = CRD_TEMP
                endif
             elseif ( swaptype .eq. SWAP_CB_INTRA
      &              .or. swaptype .eq. SWAP_AVB_ONE
      &              .or. swaptype .eq. SWAP_AVB_TWO
      &              .or. swaptype .eq. SWAP_AVB_THREE ) then
 c              --- this is a variation of the single box reinsertion
-               chaininfo(1,CRD_OLD) = CRD_REAL
-               chaininfo(1,CRD_NEW) = CRD_TEMP
+               chaininfo(1,TRL_OLD) = CRD_REAL
+               chaininfo(1,TRL_NEW) = CRD_TEMP
             elseif ( swaptype .eq. SWAP_CHEMPOT_BOX
      &              .or. swaptype .eq. SWAP_CHEMPOT_ISO ) then
 c              --- just measuring the chemical potential, there is
@@ -785,12 +787,13 @@ c              --- nothing to do in the old box
                if ( ibox .eq. 1 ) then
                   nchainmove = 0
                else
-                  chaininfo(1,CRD_NEW) = CRD_TEMP
-                  chaininfo(1,CRD_OLD) = CRD_NONE
+                  chaininfo(1,TRL_NEW) = CRD_TEMP
+                  chaininfo(1,TRL_OLD) = CRD_NONE
                endif
             endif
             if ( lcompute ) then
-               call twh_energy_change(lfailure,activebox,nchainmove
+               call twh_energy_change(lfailure,BXD_REAL,activebox
+     &              ,nchainmove
      &              ,chaininfo,ltermtest,lpartial,lgetcom,lintra,lbonded
      &              ,dvctot(ibox),dvintra(ibox),dvinter(ibox)
      &              ,dvext(ibox),dvelect(ibox),dvsolv(ibox),dvtor(ibox)
@@ -832,8 +835,8 @@ c              --- foreign energies
 c              --- safety check
                do icordflag = 2,cordstop,-1
                   if ( ltermtest(icordflag) ) then
-                     write(6,*) 'chaintest(CRD_NEW)',chaintest(CRD_NEW)
-     &                    ,'chaintest(CRD_OLD)',chaintest(CRD_OLD)
+                     write(6,*) 'chaintest(TRL_NEW)',chaintest(TRL_NEW)
+     &                    ,'chaintest(TRL_OLD)',chaintest(TRL_OLD)
                      write(6,*) 'SWAPMOVES: strange screwup in DC-CBMC'
                      lfailure = .true.
                      return
@@ -1028,7 +1031,7 @@ c        --- add in the aggregation volume bias 1 terms
          call twh_pmavb1in(GLB_GET,pin)
          pout = 1.0d0-pin
          voltest(2) = onepi*(4.0/3.0)*(testrad**3)
-         call twh_boxvolume(GLB_GET,boxtest(2),boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,boxtest(2),boxvolume)
          voltest(1) = boxvolume - voltest(2)
          if ( regstart .eq. 0 ) then
 c           --- old conformation was in the inner region
@@ -1047,7 +1050,7 @@ c           --- new conformation is in the outer region
       elseif ( swaptype .eq. SWAP_AVB_TWO ) then
 c        --- add in the volume bias 2 terms
          vol_in = onepi*(4.0/3.0)*(testrad**3)
-         call twh_boxvolume(GLB_GET,boxtest(2),boxvolume)
+         call twh_boxvolume(GLB_GET,BXD_REAL,boxtest(2),boxvolume)
          vol_out = boxvolume - vol_in
          call twh_pmavb2in(GLB_GET,pin)
          pout = 1.0d0-pin
@@ -1280,13 +1283,13 @@ c        --- update book keeping
          if ( swaptype .eq. SWAP_RB_INTER
      &        .or. swaptype .eq. SWAP_CB_INTER
      &        .or. swaptype .eq. SWAP_CB_GC ) then
-            call twh_nboxi(GLB_SET,chaintest(CRD_OLD),boxtest(2))
+            call twh_nboxi(GLB_SET,chaintest(TRL_OLD),boxtest(2))
 c           --- set the pointer for the inserted chain in the new box 
 c           --- to its original value in the deletion box
             call twh_ncmt(GLB_GET,boxtest(2),imolty,ncmt)
             ipoint = ncmt+1
             call twh_chainlist(GLB_SET,ipoint,boxtest(2),imolty
-     &           ,chaintest(CRD_OLD))
+     &           ,chaintest(TRL_OLD))
 c           --- switch out the pointer for the deleted molecule with the
 c           --- last pointer in the list and then reset that final 
 c           --- pointer to the null value of 0
@@ -1305,13 +1308,13 @@ c        --- set the new coordinates for the accepted move
 c        --- unless we inserted into the ideal gas box
          if ( boxtest(2) .ne. 0 ) then
             do iunit = 1,totunits
-               call twh_coordinates(GLB_GET,CRD_TEMP,chaintest(CRD_NEW)
+               call twh_coordinates(GLB_GET,CRD_TEMP,chaintest(TRL_NEW)
      &              ,iunit,xtemp,ytemp,ztemp)
 #if DEBUG_SWAPMOVES
                write(6,*) 'accepted coord iunit:',iunit,xtemp,ytemp
      &              ,ztemp
 #endif
-               call twh_coordinates(GLB_SET,CRD_REAL,chaintest(CRD_OLD)
+               call twh_coordinates(GLB_SET,CRD_REAL,chaintest(TRL_OLD)
      &              ,iunit,xtemp,ytemp,ztemp)
             enddo
          endif
@@ -1328,16 +1331,16 @@ c        --- update reciprocal-space sum
 
 c        --- update center of mass
          if ( boxtest(2) .ne. 0 ) then
-            call twh_ctrmas(lfailure,CRD_REAL,boxtest(2)
-     &           ,chaintest(CRD_OLD),CTR_SWAP)
+            call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,boxtest(2)
+     &           ,chaintest(TRL_OLD),CTR_SWAP)
             if ( lfailure ) return
          endif
 
          if ( lembed ) then
 c           --- put the insertion density into the removed chain number
-            call twh_eam_rho(GLB_GET,CRD_TEMP,chaintest(CRD_NEW)
+            call twh_eam_rho(GLB_GET,CRD_TEMP,chaintest(TRL_NEW)
      &           ,density)
-            call twh_eam_rho(GLB_SET,CRD_TEMP,chaintest(CRD_OLD)
+            call twh_eam_rho(GLB_SET,CRD_TEMP,chaintest(TRL_OLD)
      &           ,density)
 c           --- update embedding density
             call twh_reseteamrho(nboxmove,boxtest)
@@ -1363,7 +1366,7 @@ c     ******************************************************************
 c     * performs the initial atom insertion for swap moves             *
 c     *                                                                *
 c     * split from swapmoves.F 12-07-2008 by M.G. Martin               *
-c     * last modified 09-03-2014 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -1433,7 +1436,7 @@ c        --- set the first trial coordinates to the old coords
 c           --- inserting multiple atoms
             do iunit = 1,totunits
                call twh_coordinates(GLB_GET,CRD_REAL
-     &              ,chaintest(CRD_OLD),iunit,xtemp,ytemp,ztemp)
+     &              ,chaintest(TRL_OLD),iunit,xtemp,ytemp,ztemp)
                rxp(iunit,1) = xtemp
                ryp(iunit,1) = ytemp
                rzp(iunit,1) = ztemp
@@ -1441,7 +1444,7 @@ c           --- inserting multiple atoms
          else
 c           --- inserting just a single atom
             call twh_coordinates(GLB_GET,CRD_REAL
-     &           ,chaintest(CRD_OLD),iutry,xtemp,ytemp,ztemp)
+     &           ,chaintest(TRL_OLD),iutry,xtemp,ytemp,ztemp)
             rxp(1,1) = xtemp
             ryp(1,1) = ytemp
             rzp(1,1) = ztemp
@@ -1486,39 +1489,39 @@ c           --- set glist
             enddo
 c           --- use the COM maximum distance of the old chain (as 
 c           --- the new chain has the same conformation)
-            call twh_rcmu(GLB_GET,chaintest(CRD_OLD),rdist)
+            call twh_rcmu(GLB_GET,chaintest(TRL_OLD),rdist)
             if ( lgenerate ) then
 c              --- select a position for the center of mass uniformly
 c              --- from the entire insertion box
-               call twh_uniformbox(boxtest(icordflag),xcmnew,ycmnew
-     &              ,zcmnew)
+               call twh_uniformbox(BXD_REAL,boxtest(icordflag)
+     &              ,xcmnew,ycmnew,zcmnew)
 c               --- translate the old conformation so that it has this
 c               --- new center of mass
-               call twh_com(GLB_GET,CRD_REAL,chaintest(CRD_OLD)
+               call twh_com(GLB_GET,CRD_REAL,chaintest(TRL_OLD)
      &              ,xcmi,ycmi,zcmi)
                xdiff = xcmnew - xcmi
                ydiff = ycmnew - ycmi
                zdiff = zcmnew - zcmi
                do iunit = 1,totunits
-                  if ( icordflag .eq. CRD_NEW ) then
+                  if ( icordflag .eq. TRL_NEW ) then
                      call twh_coordinates(GLB_GET,CRD_REAL
-     &                    ,chaintest(CRD_OLD),iunit
+     &                    ,chaintest(TRL_OLD),iunit
      &                    ,xtemp,ytemp,ztemp)
                      xtemp = xtemp + xdiff
                      ytemp = ytemp + ydiff
                      ztemp = ztemp + zdiff
                      call twh_coordinates(GLB_SET,CRD_SINGLE
-     &                    ,chaintest(CRD_NEW),iunit
+     &                    ,chaintest(TRL_NEW),iunit
      &                    ,xtemp,ytemp,ztemp)
                   else
                      call twh_coordinates(GLB_GET,CRD_REAL
-     &                    ,chaintest(CRD_OLD),iunit
+     &                    ,chaintest(TRL_OLD),iunit
      &                    ,xtemp,ytemp,ztemp)
                      xtemp = xtemp + xdiff
                      ytemp = ytemp + ydiff
                      ztemp = ztemp + zdiff
                      call twh_coordinates(GLB_SET,CRD_SINGLE
-     &                    ,chaintest(CRD_OLD),iunit
+     &                    ,chaintest(TRL_OLD),iunit
      &                    ,xtemp,ytemp,ztemp)
                   endif
                enddo
@@ -1527,7 +1530,7 @@ c              --- compute random rotational displacements on -Pi,Pi
                ydiff = twopi*twh_random()-onepi
                zdiff = twopi*twh_random()-onepi
 c              --- rotate the molecule
-               call twh_rotationmatrix(CRD_SINGLE,chaintest(CRD_OLD)
+               call twh_rotationmatrix(CRD_SINGLE,chaintest(TRL_OLD)
      &              ,xcmnew,ycmnew,zcmnew,xdiff,ydiff,zdiff)
             endif
 c           --- transfer the coordinates to r*p arrays
@@ -1561,8 +1564,8 @@ c           --- put the atom number into the first position of glist
             if ( nb_one_gencode .eq. DIST_UNIFORM ) then
 c              --- select a position uniformly from the entire box
                if ( lgenerate ) then
-                  call twh_uniformbox(boxtest(icordflag),xtemp,ytemp
-     &                 ,ztemp)
+                  call twh_uniformbox(BXD_REAL,boxtest(icordflag)
+     &                 ,xtemp,ytemp,ztemp)
                   rxp(1,icbu) = xtemp
                   ryp(1,icbu) = ytemp
                   rzp(1,icbu) = ztemp
@@ -1578,7 +1581,7 @@ c                 --- need to send the first atom postions
                   ztemp = rzp(1,icbu)
                endif
                ibox = boxtest(icordflag)
-               call twh_energybiasbox(lfailure,lgenerate,ibox
+               call twh_energybiasbox(lfailure,lgenerate,BXD_REAL,ibox
      &              ,xtemp,ytemp,ztemp,nbbias)
                if ( lfailure ) return
                bfactor(icbu) = nbbias
@@ -1624,7 +1627,7 @@ c                 --- compute the trial positions
                   ryij = ytarget(1) + dist*ryij
                   rzij = ztarget(1) + dist*rzij
 c                 --- make sure this site is inside the central box
-                  call twh_putcartinbox(boxtest(icordflag)
+                  call twh_putcartinbox(BXD_REAL,boxtest(icordflag)
      &                 ,rxij,ryij,rzij)
 c                 --- store the trial position
                   rxp(1,icbu) = rxij
@@ -1640,12 +1643,13 @@ c                 --- that are too close to the target
                   do while ( .not. lfound 
      &                 .and. isafety .lt. isafemax)
                      isafety = isafety + 1
-                     call twh_uniformbox(boxtest(icordflag)
+                     call twh_uniformbox(BXD_REAL,boxtest(icordflag)
      &                    ,rxp(1,icbu),ryp(1,icbu),rzp(1,icbu))
 c                    --- compute distance to the target
-                     call twh_mimage(boxtest(icordflag),rxp(1,icbu)
-     &                    ,ryp(1,icbu),rzp(1,icbu),xtarget(1)
-     &                    ,ytarget(1),ztarget(1),rxij,ryij,rzij)
+                     call twh_mimage(BXD_REAL,boxtest(icordflag)
+     &                    ,rxp(1,icbu),ryp(1,icbu),rzp(1,icbu)
+     &                    ,xtarget(1),ytarget(1),ztarget(1)
+     &                    ,rxij,ryij,rzij)
                      dist = dsqrt(rxij*rxij + ryij*ryij + rzij*rzij)
                      if ( swaptype .eq. SWAP_AVB_ONE
      &                    .or. swaptype .eq. SWAP_AVB_TWO ) then
@@ -1687,8 +1691,8 @@ c              --- compute the trial positions
                ryij = ytarget(icordflag) + dist*ryij
                rzij = ztarget(icordflag) + dist*rzij
 c              --- make sure site is inside the central image box
-               call twh_putcartinbox(boxtest(icordflag),rxij,ryij
-     &              ,rzij)
+               call twh_putcartinbox(BXD_REAL,boxtest(icordflag)
+     &              ,rxij,ryij,rzij)
 c              --- store the trial position
                rxp(1,icbu) = rxij
                ryp(1,icbu) = ryij
@@ -1704,14 +1708,14 @@ c              --- store the trial position
 
 c     ---  insert the first atoms
       call twh_engatom(lfailure,testcord,globalcord,engastyle
-     &     ,ltermtest(icordflag),chaintest(icordflag),imolty
+     &     ,ltermtest(icordflag),chaintest(icordflag),imolty,BXD_REAL
      &     ,boxtest(icordflag),nch_nb_one,idum,ntogrow,rdist,lnbterm
      &     ,NUMAX,nch_nb_one,rxp,ryp,rzp,vctry,vtrext
      &     ,vtrintra,vtrinter,vtrelect,vtrewald,vqtry)
       if ( lfailure ) return
 
       if ( ltermtest(icordflag) ) then
-         if ( icordflag .eq. CRD_NEW ) then
+         if ( icordflag .eq. TRL_NEW ) then
 c           --- bail out if all sites are hard overlap
             return
          else
@@ -1831,14 +1835,14 @@ c           --- multiple atoms
                ytemp = ryp(iunit,iwalk)
                ztemp = rzp(iunit,iwalk)
                call twh_coordinates(GLB_SET,testcord
-     &              ,chaintest(CRD_NEW),iunit,xtemp,ytemp,ztemp)
+     &              ,chaintest(TRL_NEW),iunit,xtemp,ytemp,ztemp)
             enddo
          else
 c           --- single atom to assign
             xtemp = rxp(1,iwalk)
             ytemp = ryp(1,iwalk)
             ztemp = rzp(1,iwalk)
-            call twh_coordinates(GLB_SET,testcord,chaintest(CRD_NEW)
+            call twh_coordinates(GLB_SET,testcord,chaintest(TRL_NEW)
      &           ,iutry,xtemp,ytemp,ztemp)
          endif
       endif

@@ -1,6 +1,6 @@
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program           *
-* Copyright (C) 2003-2014 Marcus G. Martin                             *
+* Copyright (C) 2003-2016 Marcus G. Martin                             *
 * see the file license.gpl for the full license information            *
 *                                                                      *
 * This program is free software; you can redistribute it and/or        *
@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 04-30-2016 by M.G. Martin */
+/* last significant modification 08-12-2016 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -391,10 +391,19 @@
 #define CRD_N_TO_R 3008
 #define CRD_R_TO_O 3009
 #define CRD_O_TO_R 3010
-/* Indices specifying new or old coordinates.  Used extensively for
+
+/* Indices specifying new or old trials.  Used extensively for
    proposed moves and energy calculations.  Values NOT arbitrary */
-#define CRD_OLD 1
-#define CRD_NEW 2
+#define TRL_OLD 1
+#define TRL_NEW 2
+
+/* Indices specifying real or trial box dimensions.  Used for volume
+   changing moves.  Values NOT arbitrary */
+#define BXD_T_TO_R -1
+#define BXD_R_TO_T 0
+#define BXD_REAL 1
+#define BXD_TEMP 2
+#define MAXBXD 2
 
 /* Flags for rwconf */
 /* First three are for the 'flag' argument to twh_rwconf */
@@ -702,7 +711,7 @@
 #define PNT_RMCOMTRA 31
 #define PNT_RMROT 32
 #define PNT_RMVOL 33
-#define PNT_ARBCMOFIELD 34
+#define PNT_ARBCOMFIELD 34
 #define PNT_BAROT 35
 #define PNT_BNROT 36
 #define PNT_CMATRIX 37

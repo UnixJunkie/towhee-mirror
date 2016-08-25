@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2012 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,8 +19,8 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_eng_external_field(lfailure,iflag,activebox
-     &     ,nchainmove,chaininfo,loverlap,v_ext)
+      subroutine twh_eng_external_field(lfailure,bxdflag,activebox
+     &     ,crdflag,nchainmove,chaininfo,loverlap,v_ext)
 c     ******************************************************************
 c     * calculates the external field energy for all of the molecules  *
 c     * listed in chaininfo                                            *
@@ -33,14 +33,14 @@ c     * Error conditions:                                              *
 c     *   returns early if loverlap or lfailure                        *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_VFIELD
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer iflag,activebox,nchainmove
+      integer bxdflag,activebox,crdflag,nchainmove
       integer chaininfo,nunit
       dimension chaininfo(nchainmove,3)
       logical loverlap
@@ -55,7 +55,7 @@ c     --- no external fields in the ideal box
       if ( activebox .eq. 0 ) return
 
       do ichainmove = 1,nchainmove
-         testcrd = chaininfo(ichainmove,iflag)
+         testcrd = chaininfo(ichainmove,crdflag)
          if ( testcrd .ne. CRD_NONE ) then
             testchain = chaininfo(ichainmove,3)
             call twh_moltyp(GLB_GET,testchain,imolty)
@@ -64,8 +64,8 @@ c     --- no external fields in the ideal box
                call twh_coordinates(GLB_GET,testcrd,testchain,iunit
      &              ,cord(1),cord(2),cord(3))
                call twh_ntype(GLB_GET,imolty,iunit,ntii)
-               v_ext = v_ext + twh_vfield(lfailure,loverlap,activebox
-     &              ,ntii,imolty,testchain,iunit,cord)
+               v_ext = v_ext + twh_vfield(lfailure,loverlap
+     &              ,bxdflag,activebox,ntii,imolty,testchain,iunit,cord)
                if ( lfailure .or. loverlap ) return
             enddo
          endif
@@ -74,8 +74,8 @@ c     --- no external fields in the ideal box
       return
       end
 
-      subroutine twh_eng_solvation(lfailure,iflag,activebox,nchainmove
-     &     ,chaininfo,v_solv)
+      subroutine twh_eng_solvation(lfailure,crdflag,bxdflag,activebox
+     &     ,nchainmove,chaininfo,v_solv)
 c     ******************************************************************
 c     * calculates the solvation energy for the box with the changes   *
 c     * made for the molecules in chaininfo                            *
@@ -87,7 +87,7 @@ c     * Error conditions:                                              *
 c     *   lfailure                                                     *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_VSASA
@@ -95,7 +95,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer iflag,activebox,nchainmove
+      integer crdflag,bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       double precision v_solv
@@ -116,20 +116,20 @@ c        --- no solvation energy
       elseif (isolvtype .eq. SOLV_SASA ) then
 c           --- SASA implicit water model
          do ichainmove = 1,nchainmove
-            testcrd = chaininfo(ichainmove,iflag)
+            testcrd = chaininfo(ichainmove,crdflag)
             if ( testcrd .ne. CRD_NONE ) then
                testchain = chaininfo(ichainmove,3)
-               v_solv = v_solv + twh_vsasa(testchain,activebox
+               v_solv = v_solv + twh_vsasa(testchain,bxdflag,activebox
      &              ,testcrd)
             endif
          enddo
       elseif (isolvtype .eq. SOLV_EEF1 ) then
 c        --- EEF1 implicit water model
          do ichainmove = 1,nchainmove
-            testcrd = chaininfo(ichainmove,iflag)
+            testcrd = chaininfo(ichainmove,crdflag)
             if ( testcrd .ne. CRD_NONE ) then
                testchain = chaininfo(ichainmove,3)
-               v_solv = v_solv + twh_veefone(testchain,activebox
+               v_solv = v_solv + twh_veefone(testchain,bxdflag,activebox
      &              ,testcrd)
             endif
          enddo
@@ -141,12 +141,12 @@ c        --- energy calculation
          ichainmove = 0
          do while ( ichainmove .lt. nchainmove .and. (.not. lcompute) )
             ichainmove = ichainmove + 1
-            if ( chaininfo(ichainmove,iflag) .ne. CRD_REAL ) then
+            if ( chaininfo(ichainmove,crdflag) .ne. CRD_REAL ) then
                lcompute = .true.
             endif
          enddo
          if ( lcompute ) then
-            call twh_fielddft(lfailure,iflag,activebox,nchainmove
+            call twh_fielddft(lfailure,crdflag,activebox,nchainmove
      &           ,chaininfo,vnt)
             if ( lfailure ) return
             v_solv = v_solv + vnt
@@ -161,15 +161,15 @@ c           --- use the old solvation energy
       end
 
 
-      subroutine twh_eng_two_body(lfailure,iflag,activebox,nchainmove
-     &     ,chaininfo,lpartial,lgetcom,loverlap
+      subroutine twh_eng_two_body(lfailure,crdflag,bxdflag,activebox
+     &     ,nchainmove,chaininfo,lpartial,lgetcom,loverlap
      &     ,v_inter,v_elect,l_vinter,l_velect,v_foreign)
 c     ******************************************************************
 c     * compute the two-body energy in the active box for all molecules*
 c     * interacting with those in the chaininfo                        *
 c     *                                                                *
 c     * rewritten from engmolec 08-05-2006 by M.G. Martin              *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -179,7 +179,7 @@ c     --- debug toggle
 #define DEBUG_ENG_TWO_BODY 0
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer iflag,activebox,nchainmove
+      integer crdflag,bxdflag,activebox,nchainmove
       integer chaininfo,numiunit,numjunit
       dimension chaininfo(nchainmove,3)
       logical lpartial,lgetcom,loverlap
@@ -221,7 +221,7 @@ c     --- this subroutine uses cutstyle 0
       cutstyle = 0
 
       do ichainmove = 1,nchainmove
-         testcrd = chaininfo(ichainmove,iflag)
+         testcrd = chaininfo(ichainmove,crdflag)
          if ( testcrd .ne. CRD_NONE ) then
 c           --- calculate the center of mass and give it a dummy
 c           --- chain identifier
@@ -241,8 +241,8 @@ c                 --- store the real coordinate center of mass radius
 c                 --- compute the center of mass of this molecule in
 c                 --- the activebox
                   call twh_nboxi(GLB_SET,testchain,activebox)
-                  call twh_ctrmas(lfailure,testcrd,activebox,testchain
-     &                 ,CTR_ENERGY)
+                  call twh_ctrmas(lfailure,bxdflag,testcrd,activebox
+     &                 ,testchain,CTR_ENERGY)
                   if ( lfailure ) return
 c                 --- retrieve the center of mass of the test molecule
                   call twh_com(GLB_GET,testcrd,testchain,xcmi,ycmi,zcmi)
@@ -273,7 +273,7 @@ c                 --- compute against the list of molecules in this box
                do jlist = liststart,listend
                   if ( testmolty .eq. 0 ) then
 c                    --- check the chaininfo
-                     jcrd = chaininfo(jlist,iflag)
+                     jcrd = chaininfo(jlist,crdflag)
                      if ( jcrd .eq. CRD_NONE ) then
                         lcompute = .false.
                      else
@@ -304,7 +304,8 @@ c                          --- use additional com cut-off
 c                           --- minimum image the ctrmas pair distance
                            call twh_com(GLB_GET,jcrd,jchain
      &                          ,xcmj,ycmj,zcmj)
-                           call twh_mimage (activebox,xcmi,ycmi,zcmi
+                           call twh_mimage (bxdflag,activebox
+     &                          ,xcmi,ycmi,zcmi
      &                          ,xcmj,ycmj,zcmj,rxij,ryij,rzij)
                            rijsq = rxij*rxij + ryij*ryij + rzij*rzij
                            call twh_rcmu(GLB_GET,jchain,rcmj)
@@ -345,7 +346,8 @@ c                          --- set evaulation logicals
                               call twh_coordinates(GLB_GET,testcrd
      &                             ,testchain,iunit,rxi,ryi,rzi)
 c                             --- minimum image the pair separation
-                              call twh_mimage (activebox,rxi,ryi,rzi
+                              call twh_mimage (bxdflag,activebox
+     &                             ,rxi,ryi,rzi
      &                             ,rxj,ryj,rzj,rxij,ryij,rzij )
                               rijsq = rxij*rxij + ryij*ryij 
      &                             + rzij*rzij
@@ -404,7 +406,7 @@ c                                   --- derivatives in units of [K]
       return
       end
 
-      subroutine twh_eng_angle_angle(ichain,ibox,icf,v_ben)
+      subroutine twh_eng_angle_angle(ichain,bxdflag,ibox,icf,v_ben)
 c     ******************************************************************
 c     * calculates the angle-angle energy                              *
 c     *                                                                *
@@ -415,7 +417,7 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-30-2012 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJAA0
@@ -425,7 +427,7 @@ c     ******************************************************************
 #define FUNCTION_VANGANG
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,icf,ibox
+      integer ichain,icf,bxdflag,ibox
       double precision v_ben
 c     --- local variables
 c     --- integer scalars
@@ -454,15 +456,16 @@ c     --- double precision arrays
             enddo
 c           --- compute the angle-angle energy
             v_ben = v_ben + 
-     &            twh_vangang(AA_COORD,ibox,imolty,iunit,itor,dumangle
-     &            ,xtmp,ytmp,ztmp)
+     &            twh_vangang(AA_COORD,bxdflag,ibox,imolty,iunit,itor
+     &           ,dumangle,xtmp,ytmp,ztmp)
          enddo
       enddo                   
 
       return
       end
 
-      subroutine twh_eng_bending(lfailure,ichain,ibox,icf,lovrlap,v_ben)
+      subroutine twh_eng_bending(lfailure,ichain,bxdflag,ibox,icf
+     &     ,lovrlap,v_ben)
 c     ******************************************************************
 c     * calculates the bending energy                                  *
 c     *                                                                *
@@ -474,7 +477,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-08-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJBEN2
@@ -483,7 +486,7 @@ c     ******************************************************************
 #define FUNCTION_VANGLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,icf,ibox
+      integer ichain,icf,bxdflag,ibox
       logical lfailure,lovrlap
       double precision v_ben
 c     --- local variables
@@ -511,8 +514,8 @@ c              --- fetch the coordinates
                call twh_coordinates(GLB_GET,icf,ichain,ip2
      &              ,xtmp(3),ytmp(3),ztmp(3))
                v_ben = v_ben + 
-     &               twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
-     &              ,iunit,iben,1,duma,dumb,dumc,xtmp,ytmp,ztmp)
+     &               twh_vangle(lfailure,.false.,lovrlap,bxdflag,ibox
+     &              ,imolty,iunit,iben,1,duma,dumb,dumc,xtmp,ytmp,ztmp)
                if ( lfailure ) return
                if ( lovrlap ) return
             endif
@@ -522,7 +525,7 @@ c              --- fetch the coordinates
       return
       end
 
-      subroutine twh_eng_bond_bond(ichain,ibox,icf,v_vib)
+      subroutine twh_eng_bond_bond(ichain,bxdflag,ibox,icf,v_vib)
 c     ******************************************************************
 c     * calculates the bond bond energy                                *
 c     * Arguments set by subroutine:                                   *
@@ -532,7 +535,7 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -542,7 +545,7 @@ c     ******************************************************************
 #define FUNCTION_VBONBON
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,icf,ibox
+      integer ichain,icf,bxdflag,ibox
       double precision v_vib
 c     --- local variables
 c     --- integer scalars
@@ -569,11 +572,11 @@ c     --- double precision arrays
             call twh_coordinates(GLB_GET,icf,ichain,ip2
      &           ,rxiptwo,ryiptwo,rziptwo)
 c           --- compute and store first bond length
-            call twh_mimage(ibox,rxunit,ryunit,rzunit
+            call twh_mimage(bxdflag,ibox,rxunit,ryunit,rzunit
      &           ,rxipone,ryipone,rzipone,rxuij,ryuij,rzuij)
             length(1) = twh_distance(rxuij,ryuij,rzuij)
 c           --- compute and store second bond length
-            call twh_mimage(ibox,rxunit,ryunit,rzunit
+            call twh_mimage(bxdflag,ibox,rxunit,ryunit,rzunit
      &           ,rxiptwo,ryiptwo,rziptwo,rxuij,ryuij,rzuij)
             length(2) = twh_distance(rxuij,ryuij,rzuij)
 c           --- compute energy as a bond vibration term
@@ -587,8 +590,8 @@ c           --- compute energy as a bond vibration term
       return
       end
 
-      subroutine twh_eng_bond_vibrations(lfailure,ichain,ibox,icf
-     &     ,lovrlap,v_vib )
+      subroutine twh_eng_bond_vibrations(lfailure,ichain,bxdflag,ibox
+     &     ,icf,lovrlap,v_vib )
 c     ******************************************************************
 c     * calculates the vibration bond energy                           *
 c     *                                                                *
@@ -600,7 +603,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -608,10 +611,9 @@ c     ******************************************************************
 #define FUNCTION_VBOND
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer icf,ichain,ibox
+      integer icf,ichain,bxdflag,ibox
       logical lfailure,lovrlap
       double precision v_vib
-
 c     --- local variables
 c     --- integer scalars
       integer iunit,ivib,ip1,it,imolty,nunit
@@ -636,7 +638,7 @@ c              --- completely through the periodic box
      &              ,rxunit,ryunit,rzunit)
                call twh_coordinates(GLB_GET,icf,ichain,ip1
      &              ,rxipone,ryipone,rzipone)
-               call twh_mimage (ibox,rxunit,ryunit,rzunit
+               call twh_mimage (bxdflag,ibox,rxunit,ryunit,rzunit
      &              ,rxipone,ryipone,rzipone,rxuij,ryuij,rzuij)
                dist = twh_distance(rxuij,ryuij,rzuij)
                v_vib = v_vib + twh_vbond(lfailure,.false.,ibox,it,dist
@@ -650,7 +652,8 @@ c              --- completely through the periodic box
       return
       end
 
-      subroutine twh_eng_improper_torsions(ichain,ibox,icf,v_tor)
+      subroutine twh_eng_improper_torsions(ichain,bxdflag,ibox,icf
+     &     ,v_tor)
 c     ******************************************************************
 c     * calculates the improper torsions energy                        *
 c     *                                                                *
@@ -661,7 +664,7 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJIMPROP2
@@ -670,7 +673,8 @@ c     ******************************************************************
 #define FUNCTION_GET_INIMPROP
 #define FUNCTION_VIMPROPER
 #include "functions.h"
-      integer ichain,icf,ibox
+c     --- variables passed to/from the subroutine
+      integer ichain,bxdflag,ibox,icf
       double precision v_tor
 c     --- local variables
 c     --- logical scalars
@@ -703,7 +707,7 @@ c           --- fetch the coordinates
      &              ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
             enddo
             v_tor = v_tor + 
-     &            twh_vimproper(ibox,imolty,iunit,itor
+     &            twh_vimproper(bxdflag,ibox,imolty,iunit,itor
      &            ,xtmp,ytmp,ztmp,duma,lbadstereo)
          enddo
       enddo
@@ -711,8 +715,8 @@ c           --- fetch the coordinates
       return
       end
 
-      subroutine twh_eng_nonbonded_intra(lfailure,ichain,ibox,icf
-     &     ,lovrlap,v_intra,v_elect )
+      subroutine twh_eng_nonbonded_intra(lfailure,ichain,bxdflag,ibox
+     &     ,icf,lovrlap,v_intra,v_elect )
 c     ******************************************************************
 c     * calculates the nonbonded intramolecular energy                 *
 c     *                                                                *
@@ -725,7 +729,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EWALD_CORRECT
@@ -737,7 +741,7 @@ c     ******************************************************************
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer icf,ibox,ichain
+      integer icf,bxdflag,ibox,ichain
       logical lfailure,lovrlap
       double precision v_intra, v_elect
 c     --- local variables
@@ -770,7 +774,7 @@ c     --- get molecule type
             call twh_ntype(GLB_GET,imolty,jj,ntjj)
             call twh_coordinates(GLB_GET,icf,ichain,jj
      &           ,rxuj,ryuj,rzuj)
-            call twh_mimage(ibox,rxui,ryui,rzui
+            call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
      &           ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
             rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
             if ( twh_linclude(imolty,iunit,jj) ) then
@@ -816,8 +820,8 @@ c              --- correction term
       return
       end
 
-      subroutine twh_eng_regular_torsions(lfailure,ichain,ibox,icf
-     &     ,lovrlap,v_tor)
+      subroutine twh_eng_regular_torsions(lfailure,ichain,bxdflag,ibox
+     &     ,icf,lovrlap,v_tor)
 c     ******************************************************************
 c     * calculates the regular torsions energy                         *
 c     * Arguments set by subroutine:                                   *
@@ -828,7 +832,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 10-09-2006 by M.G. Martin              *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_IJTOR2
@@ -838,7 +842,7 @@ c     ******************************************************************
 #define FUNCTION_VTORSION
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ichain,icf,ibox
+      integer ichain,icf,bxdflag,ibox
       logical lfailure,lovrlap
       double precision v_tor
 c     --- local variables
@@ -872,8 +876,8 @@ c                    --- store atom positions
                enddo
 c                    --- add in the torsional energy
                v_tor = v_tor + 
-     &               twh_vtorsion(lfailure,.false.,ibox,1,imolty,iunit
-     &              ,itor,xtmp,ytmp,ztmp,duma,lovrlap)
+     &               twh_vtorsion(lfailure,.false.,bxdflag,ibox,1
+     &              ,imolty,iunit,itor,xtmp,ytmp,ztmp,duma,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) return
             endif
@@ -884,15 +888,15 @@ c                    --- add in the torsional energy
       end
 
 
-      subroutine twh_eng_stillinger_weber(lfailure,activebox,testcord
-     &     ,nchainmove,chaininfo,vthree)
+      subroutine twh_eng_stillinger_weber(lfailure,bxdflag,activebox
+     &     ,testcord,nchainmove,chaininfo,vthree)
 c     ******************************************************************
 c     * computes the three-body stillinger-weber energy of the         *
 c     * chaininfo atoms with each other and with the other existing    *
 c     * atoms in the activebox                                         *
 c     *                                                                *
 c     * originally written 10-10-2006 by M.G. Martin                   *
-c     * last modified 10-14-2008 by M.G. Martin                        *
+c     * last modified 08-01-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -900,7 +904,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer activebox,testcord,nchainmove
+      integer bxdflag,activebox,testcord,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
       double precision vthree
@@ -966,7 +970,7 @@ c                    --- get jchain coordinates
                      call twh_coordinates(GLB_GET,jcord,jchain,1
      &                    ,rxuj,ryuj,rzuj)
 c                    --- compute the distance
-                     call twh_mimage(activebox,rxui,ryui,rzui
+                     call twh_mimage(bxdflag,activebox,rxui,ryui,rzui
      &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                      rij = twh_distance(rxuij,ryuij,rzuij)
 c                    --- compute the bondorder
@@ -1016,9 +1020,9 @@ c                                --- see if i-j-k is valid by checking
 c                                --- the j-k bondorder
                                  call twh_coordinates(GLB_GET,kcord
      &                                ,kchain,1,rxuk,ryuk,rzuk)
-                                 call twh_mimage(activebox,rxuk,ryuk
-     &                                ,rzuk,rxuj,ryuj,rzuj,rxujk,ryujk
-     &                                ,rzujk)
+                                 call twh_mimage(bxdflag,activebox
+     &                                ,rxuk,ryuk,rzuk,rxuj,ryuj,rzuj
+     &                                ,rxujk,ryujk,rzujk)
                                  rjk = twh_distance(rxujk,ryujk,rzujk)
 
                                  call twh_bondorder(lfailure,ntjj,ntkk
@@ -1046,8 +1050,8 @@ c                                --- if k is later in the list than j
                                  if ( jcompute ) then
 c                                   --- see if k-i-j is valid by
 c                                   --- checking the k-i bondorder
-                                    call twh_mimage(activebox,rxuk,ryuk
-     &                                   ,rzuk,rxui,ryui,rzui
+                                    call twh_mimage(bxdflag,activebox
+     &                                   ,rxuk,ryuk,rzuk,rxui,ryui,rzui
      &                                   ,rxuki,ryuki,rzuki)
                                     rki = twh_distance(rxuki,ryuki
      &                                   ,rzuki)
@@ -1086,7 +1090,7 @@ c     * computes the new and old ewald sum using the currently stored  *
 c     * values                                                         *
 c     *                                                                *
 c     * originally written 10-24-2006 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 08-12-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1103,12 +1107,12 @@ c     --- double precision scalars
       do ic = 1,numvect
          call twh_ewald_prefact(GLB_GET,CRD_REAL,ic,activebox,prefact)
          call twh_ewald_ssumr(GLB_GET,CRD_REAL,ic,activebox,ssumr)
-         call twh_ewald_ssumr(GLB_GET,CRD_NEW,ic,activebox,ssumrn)
+         call twh_ewald_ssumr(GLB_GET,TRL_NEW,ic,activebox,ssumrn)
          call twh_ewald_ssumi(GLB_GET,CRD_REAL,ic,activebox,ssumi)
-         call twh_ewald_ssumi(GLB_GET,CRD_NEW,ic,activebox,ssumin)
-         vrecip(CRD_NEW) = vrecip(CRD_NEW)
+         call twh_ewald_ssumi(GLB_GET,TRL_NEW,ic,activebox,ssumin)
+         vrecip(TRL_NEW) = vrecip(TRL_NEW)
      &        + (ssumrn*ssumrn + ssumin*ssumin)*prefact
-         vrecip(CRD_OLD) = vrecip(CRD_OLD)
+         vrecip(TRL_OLD) = vrecip(TRL_OLD)
      &        + (ssumr*ssumr + ssumi*ssumi)*prefact
       enddo
       return

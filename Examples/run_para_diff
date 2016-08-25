@@ -39,10 +39,6 @@ cd Canonical_Ensemble/DREIDING
 ../../do_para_diff
 cd ../../
 #
-cd Canonical_Ensemble/FENE_Hexamer
-../../do_para_diff
-cd ../../
-#
 cd Canonical_Ensemble/Formamide_Scaled
 ../../do_para_diff
 cd ../../
@@ -112,6 +108,10 @@ cd Gibbs_Ensemble/Dubb_Zeolite
 cd ../../
 #
 cd Gibbs_Ensemble/EPM_VLCC
+../../do_para_diff
+cd ../../
+#
+cd Gibbs_Ensemble/FENE_Hexamer
 ../../do_para_diff
 cd ../../
 #

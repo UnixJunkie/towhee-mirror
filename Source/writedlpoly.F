@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *     angle types 2 (DREIDING) and 3 (harmonic cosine)           *
 c     *     dihedral types 15 (DREIDING) and (not) 8 (nonbond)         *
 c     *     improper form 4 type 7 (DREIDING 1-cos)                    *
 c     *     fixed unit cell vector output and changed to triclinic pbc *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 07-22-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -589,17 +589,17 @@ c        --- filename = 'CONFIG'
          write(inpnum,'(a37)') 'DL_POLY CONFIG file written by Towhee'
          write(inpnum,'(2a10)') '         0','         3'
 c        --- output box dimensions
-         call twh_hmatrix(GLB_GET,ibox,1,1,hm1)
-         call twh_hmatrix(GLB_GET,ibox,1,2,hm2)
-         call twh_hmatrix(GLB_GET,ibox,1,3,hm3)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,1,1,hm1)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,1,2,hm2)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,1,3,hm3)
          write(inpnum,'(3f20.12)') hm1,hm2,hm3
-         call twh_hmatrix(GLB_GET,ibox,2,1,hm1)
-         call twh_hmatrix(GLB_GET,ibox,2,2,hm2)
-         call twh_hmatrix(GLB_GET,ibox,2,3,hm3)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,2,1,hm1)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,2,2,hm2)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,2,3,hm3)
          write(inpnum,'(3f20.12)') hm1,hm2,hm3
-         call twh_hmatrix(GLB_GET,ibox,3,1,hm1)
-         call twh_hmatrix(GLB_GET,ibox,3,2,hm2)
-         call twh_hmatrix(GLB_GET,ibox,3,3,hm3)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,3,1,hm1)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,3,2,hm2)
+         call twh_hmatrix(GLB_GET,BXD_REAL,ibox,3,3,hm3)
          write(inpnum,'(3f20.12)') hm1,hm2,hm3
 c        --- output coordinates
          count_atom = 0

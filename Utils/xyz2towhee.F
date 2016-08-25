@@ -1,6 +1,6 @@
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004 Marcus G. Martin,                           *
+c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,72 +24,34 @@ c     * converts from xyz to towhee format                             *
 c     * this file is rewritten to convert various files into Towhee    *
 c     *                                                                *
 c     * originally written 03-27-2003 by M.G. Martin                   *
-c     * last modified 07-13-2005 by M.G. Martin                        *
+c     * last modified 08-25-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 
-      character*2 suffix
-      character*30 filename
-      integer maxtype
-      parameter (maxtype=10)
-      integer natoms,idim,iatom,idum,base,typecount,itype
-      dimension typecount(maxtype)
-      double precision boxdims,xxx,yyy,zzz,distmult
-      dimension boxdims(3,2)
+      character*2 atomname
+      character*30 fileinput,fileoutput
+      integer natoms,iatom
+      double precision xxx,yyy,zzz
 
 c     --- filename passed in when running the code
-      write(6,*) 'Please enter a filename'
-      read(5,*) filename
-      open(unit=10,file=filename,form="formatted")
-      write(6,*) 'Enter a distance multiplier (1.0 for no change)'
-      read(5,*) distmult
+      write(6,*) 'Please enter an input filename'
+      read(5,*) fileinput
+      open(unit=10,file=fileinput,form="formatted")
 
-      do itype = 1,maxtype
-         typecount(itype) = 0
-      enddo
+      write(6,*) 'Please enter an output filename'
+      read(5,*) fileoutput
+      open(unit=20,file=fileoutput,form="formatted")
 
 c     --- get the number of atoms
-      read(10,*)
       read(10,*) natoms
-c     --- get the box dimensions
-      read(10,*)
-      do idim = 1,3
-         read(10,*) boxdims(idim,1),boxdims(idim,2)
-      enddo
-      write(6,*) 'Total box lengths'
-      do idim = 1,3
-         write(6,*) 'dimension, length',idim,distmult*(boxdims(idim,2)
-     &        -boxdims(idim,1))
-      enddo
 
 c     --- get the atom positions and types
       read(10,*)
-      base = 40
       do iatom = 1,natoms
-         read(10,*) idum,itype,xxx,yyy,zzz
-         if ( itype .gt. maxtype ) then
-            write(6,*) 'itype exceeds maxtype'
-            write(6,*) 'itype,maxtype',itype,maxtype
-            stop
-         endif
-c        --- see if we need to open a file
-         if ( typecount(itype) .eq. 0 ) then
-            filename = 'output.'
-            write(suffix,'(i2.2)') itype
-            filename(8:9) = suffix
-            open(unit=base+itype,file=filename,form="formatted")
-         endif
-         typecount(itype) = typecount(itype) + 1
-         write(base+itype,*) distmult*(xxx-boxdims(1,1))
-     &        ,distmult*(yyy-boxdims(2,1))
-     &        ,distmult*(zzz-boxdims(3,1))
+         read(10,*) atomname,xxx,yyy,zzz
+         write(20,*) xxx,yyy,zzz,atomname
       enddo
       close(10)
-      do itype = 1,maxtype
-         if ( typecount(itype) .ne. 0 ) then
-            write(6,*)'type, typecount',itype,typecount(itype)
-            close(base+itype)
-         endif
-      enddo
+      close(20)
 
       end

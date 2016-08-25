@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
       subroutine twh_getcbangle(lfailure,luseoldone,lovrangle,testcord
      &     ,iw,ichain,imolty,angstart,iuprev,nch_bend_a,nch_bend_b
      &     ,max_nch_bend,gcba_vvib,gcba_vbend,gcba_vtor,gcba_weight
-     &     ,dpcbangle,ibox)
+     &     ,dpcbangle,bxdflag,ibox)
 c     ******************************************************************
 c     * determines the new geometry of the angles in a cbmc growth     *
 c     *                                                                *
@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 08-17-2014 by M.G. Martin                        *
+c     * last modified 08-04-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -91,7 +91,7 @@ c     --- local defines
 
 c     --- variables passed to/from the subroutine
       logical luseoldone,lfailure,lovrangle
-      integer iw,ichain,imolty,angstart,iuprev,testcord,ibox
+      integer iw,ichain,imolty,angstart,iuprev,testcord,bxdflag,ibox
       integer nch_bend_a,nch_bend_b,max_nch_bend
       double precision gcba_weight,gcba_vvib,gcba_vbend,gcba_vtor
       double precision dpcbangle
@@ -229,7 +229,7 @@ c        --- need to choose one bead to grow on unit sphere
 c           --- compute the vector from iufrom to iuprev
             call twh_coordinates(GLB_GET,testcord,ichain,iuprev
      &           ,rxprev,ryprev,rzprev)
-            call twh_mimage( ibox,rxprev,ryprev,rzprev
+            call twh_mimage(bxdflag,ibox,rxprev,ryprev,rzprev
      &           ,rxfrom,ryfrom,rzfrom,xvecprev,yvecprev,zvecprev)
             distp = twh_distance(xvecprev,yvecprev,zvecprev)
             call twh_distprev(GLB_SET,1,distp)
@@ -517,7 +517,7 @@ c              --- first itrial is the old conformation
 c              --- compute vector from iufrom to iugrow
                call twh_coordinates(GLB_GET,testcord,ichain,iugrow
      &              ,rxgrow,rygrow,rzgrow)
-               call twh_mimage(ibox,rxgrow,rygrow,rzgrow
+               call twh_mimage(bxdflag,ibox,rxgrow,rygrow,rzgrow
      &              ,rxfrom,ryfrom,rzfrom,xvecgrow,yvecgrow,zvecgrow)
 c              --- dot product divided by lengths gives cos(angle)
                anglec = twh_dotproduct(xvecprev,yvecprev,zvecprev
@@ -632,8 +632,8 @@ c              --- get the angle for the from-grow-prev
                fgp_anglec = twh_inverselawofcosine(distg,testlen
      &              ,distp)
                vang(itrial) = vang(itrial)
-     &              + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
-     &              ,iufrom,fgp_index,0,fgp_anglec,distg,testlen
+     &              + twh_vangle(lfailure,.false.,lovrlap,bxdflag,ibox
+     &              ,imolty,iufrom,fgp_index,0,fgp_anglec,distg,testlen
      &              ,ddum3,ddum3,ddum3)
                if ( lfailure ) return
 
@@ -641,8 +641,8 @@ c              --- get the angle for the grow-prev-from
                gpf_anglec = twh_inverselawofcosine(testlen,distp
      &              ,distg)
                vang(itrial) = vang(itrial)
-     &              + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
-     &              ,iugrow,gpf_index,0,gpf_anglec,testlen,distp
+     &              + twh_vangle(lfailure,.false.,lovrlap,bxdflag,ibox
+     &              ,imolty,iugrow,gpf_index,0,gpf_anglec,testlen,distp
      &              ,ddum3,ddum3,ddum3)
                if ( lfailure ) return
             else
@@ -651,8 +651,9 @@ c              --- no bond energy
             endif
 c           --- calculate the bond angle energy
             vang(itrial) = vang(itrial)
-     &           + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
-     &           ,iugrow,index,0,anglec,distg,distp,ddum3,ddum3,ddum3)
+     &           + twh_vangle(lfailure,.false.,lovrlap,bxdflag,ibox
+     &           ,imolty,iugrow,index,0
+     &           ,anglec,distg,distp,ddum3,ddum3,ddum3)
             if ( lfailure ) return
 c           --- no need to compute any more interactions if we 
 c           -- have an infinite energy overlap: otherwise compute angang
@@ -678,7 +679,7 @@ c                    --- reverse order
                      cosang(1) = dcos(bendang)
                   endif
                   vang(itrial) = vang(itrial)
-     &                 + twh_vangang(AA_ANGLE,ibox,imolty
+     &                 + twh_vangang(AA_ANGLE,bxdflag,ibox,imolty
      &                 ,iufrom,ic,cosang,ddum4,ddum4,ddum4)
                enddo
             endif
@@ -896,7 +897,7 @@ c           --- set up the cone using iuprev
 c           --- compute vector from iufrom to iugrow
             call twh_coordinates(GLB_GET,testcord,ichain,iugrow
      &           ,rxgrow,rygrow,rzgrow)
-            call twh_mimage(ibox,rxgrow,rygrow,rzgrow
+            call twh_mimage(bxdflag,ibox,rxgrow,rygrow,rzgrow
      &           ,rxfrom,ryfrom,rzfrom,xvecgrow,yvecgrow,zvecgrow)
             call twh_bondlen(GLB_GET,angstart,distg)
 c           --- turn this into a unit vector
@@ -1192,7 +1193,7 @@ c        --- compute trial energies and weights
 c              --- compute vector from iufrom to iugrow
                call twh_coordinates(GLB_GET,testcord,ichain,iugrow
      &              ,rxgrow,rygrow,rzgrow)
-               call twh_mimage(ibox,rxgrow,rygrow,rzgrow
+               call twh_mimage(bxdflag,ibox,rxgrow,rygrow,rzgrow
      &              ,rxfrom,ryfrom,rzfrom,xvecgrow,yvecgrow,zvecgrow)
                call twh_bondlen(GLB_GET,count,distg)
 c              --- turn this into a unit vector
@@ -1403,7 +1404,7 @@ c              --- find the angle type for iugrow-iufrom-iuaaa
 c                       --- calculate the bond angle energy
                         vphi(itrial) = vphi(itrial) 
      &                       + twh_vangle(lfailure,.false.,lovrlap
-     &                       ,ibox,imolty,iugrow,ibend,0,anglec
+     &                       ,bxdflag,ibox,imolty,iugrow,ibend,0,anglec
      &                       ,distg,distaaa,ddum3,ddum3,ddum3)
                         if ( lfailure ) return
                         if ( lovrlap ) goto 13
@@ -1436,8 +1437,8 @@ c                 --- this is iuprev
                cosang(1) = crossang(iczero,icone)
                cosang(2) = crossang(iczero,ictwo)
                vphi(itrial) = vphi(itrial) 
-     &              + twh_vangang(AA_ANGLE,ibox,imolty,iufrom,ic,cosang
-     &              ,ddum4,ddum4,ddum4)
+     &              + twh_vangang(AA_ANGLE,bxdflag,ibox,imolty,iufrom
+     &              ,ic,cosang,ddum4,ddum4,ddum4)
             enddo
 
 c           --- three mem bonds
@@ -1469,9 +1470,9 @@ c                 --- iufrom - iuother - iugrow (jkl)
                   call twh_bondlen(GLB_GET,count,distjl)
                   anglec = twh_inverselawofcosine(distjk,distkl,distjl)
                   vphi(itrial) = vphi(itrial)
-     &                 + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
-     &                 ,iufrom,ibend,0,anglec,distjk,distkl
-     &                 ,ddum3,ddum3,ddum3)
+     &                 + twh_vangle(lfailure,.false.,lovrlap
+     &                 ,bxdflag,ibox,imolty,iufrom,ibend,0
+     &                 ,anglec,distjk,distkl,ddum3,ddum3,ddum3)
                elseif ( tmcode .eq. TM_TWO ) then
 c                 --- iufrom - iugrow - iuother (jkl)
                   call twh_bondlen(GLB_GET,count,distjk)
@@ -1479,9 +1480,9 @@ c                 --- iufrom - iugrow - iuother (jkl)
                   call twh_bondlen(GLB_GET,icode,distjl)
                   anglec = twh_inverselawofcosine(distjk,distkl,distjl)
                   vphi(itrial) = vphi(itrial)
-     &                 + twh_vangle(lfailure,.false.,lovrlap,ibox,imolty
-     &                 ,iufrom,ibend,0,anglec,distjk,distkl
-     &                 ,ddum3,ddum3,ddum3)
+     &                 + twh_vangle(lfailure,.false.,lovrlap
+     &                 ,bxdflag,ibox,imolty,iufrom,ibend,0
+     &                 ,anglec,distjk,distkl,ddum3,ddum3,ddum3)
                else
                   write(6,*) 'GETCBANGLE: unknown tmcode in 3mem angle'
      &                 ,tmcode
@@ -1559,9 +1560,9 @@ c                 --- m: count/iugrow
                call twh_three_ring_torsion(distjk,distjl
      &              ,distkl,distlm,angc_jlm,angc_klm,phic)
                cordstyle = -1
-               vtest = twh_vtorsion(lfailure,.false.,ibox,cordstyle
-     &              ,imolty,torunit,itor,xcord,ycord,zcord
-     &              ,phic,lovrlap)
+               vtest = twh_vtorsion(lfailure,.false.,bxdflag,ibox
+     &              ,cordstyle,imolty,torunit,itor
+     &              ,xcord,ycord,zcord,phic,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) goto 13
                vtg(itrial) = vtg(itrial) + vtest
@@ -1594,8 +1595,9 @@ c                 --- transform from spherical to cartesian coords
                   ycord(ibend) = icr*dsin(ictheta)*dsin(icphi)
                   zcord(ibend) = icr*dcos(ictheta)
                enddo
-               vtg(itrial) = vtg(itrial) + twh_vimproper(ibox,imolty
-     &              ,iufrom,ic,xcord,ycord,zcord,theta,lbadstereo)
+               vtg(itrial) = vtg(itrial) + twh_vimproper(bxdflag,ibox
+     &              ,imolty,iufrom,ic
+     &              ,xcord,ycord,zcord,theta,lbadstereo)
             enddo
 
 c           --- store the boltzmann factors and phi

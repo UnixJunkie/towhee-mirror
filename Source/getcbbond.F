@@ -20,7 +20,8 @@ c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_getcbbond(lfailure,luseoldone,testcord,iw,ichain
-     &     ,imolty,iuprev,nch_vib,vvibtr,maxlen,w_cbbond,dpcbbond,ibox)
+     &     ,imolty,iuprev,nch_vib,vvibtr,maxlen,w_cbbond,dpcbbond
+     &     ,bxdflag,ibox)
 c     ******************************************************************
 c     * determines the bond lengths in a biased fashion                *
 c     *                                                                *
@@ -46,7 +47,7 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 07-10-2016 by M.G. Martin                        *
+c     * last modified 08-09-2016 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -66,7 +67,7 @@ c     ******************************************************************
 #define DEBUG_GETCBBOND 0
 c     --- variables passed to/from the subroutine
       logical lfailure,luseoldone
-      integer iw,imolty,iuprev,testcord,ibox,ichain,nch_vib
+      integer iw,imolty,iuprev,testcord,bxdflag,ibox,ichain,nch_vib
       double precision vvibtr,maxlen,dpcbbond
       double precision w_cbbond
 c     --- local variables
@@ -132,7 +133,7 @@ c     --- store r*ui positions for unit iufrom
 c        --- compute the vector from iufrom to iuprev
          call twh_coordinates(GLB_GET,testcord,ichain,iuprev
      &        ,rxprev,ryprev,rzprev)
-         call twh_mimage ( ibox,rxprev,ryprev,rzprev
+         call twh_mimage(bxdflag,ibox,rxprev,ryprev,rzprev
      &        ,rxfrom,ryfrom,rzfrom,xvecprev,yvecprev,zvecprev)
 c        --- store the vecprev for use in getcbangle
          call twh_vecprev(GLB_SET,xvecprev,yvecprev,zvecprev)
@@ -205,7 +206,7 @@ c     --- set up xtra distances for use in bond-bond and in rosenbluth
             call twh_growxtra(GLB_GET,iw,ixtra,iutest)
             call twh_coordinates(GLB_GET,testcord,ichain,iutest
      &           ,rxtry,rytry,rztry)
-            call twh_mimage( ibox,rxtry,rytry,rztry
+            call twh_mimage(bxdflag,ibox,rxtry,rytry,rztry
      &           ,rxfrom,ryfrom,rzfrom,rxuij,ryuij,rzuij)
             distance = twh_distance(rxuij,ryuij,rzuij)
             call twh_distprev(GLB_SET,ixtra,distance)
@@ -269,10 +270,11 @@ c           --- initialize lovrlap
 c              --- first ivib is old bond length
                call twh_coordinates(GLB_GET,testcord,ichain,iugrow
      &              ,rxgrow,rygrow,rzgrow)
-               call twh_mimage(ibox,rxgrow,rygrow,rzgrow
+               call twh_mimage(bxdflag,ibox,rxgrow,rygrow,rzgrow
      &              ,rxfrom,ryfrom,rzfrom,rxuij,ryuij,rzuij)
                length = twh_distance(rxuij,ryuij,rzuij)
-               if ( length .gt. 0.5d0*twh_minboxlength(ibox) ) then
+               if ( length .gt. 0.5d0*twh_minboxlength(bxdflag,ibox)
+     &              ) then
                   write(6,*) 'GETCBBOND: old bond length '
                   write(6,*) 'exceeds 0.5*minboxlength'
                   write(6,*) 'ichain:',ichain
