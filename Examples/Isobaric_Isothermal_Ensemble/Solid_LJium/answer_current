@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (August 25 2016)    
+ MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ Copyright (C) <2018> Marcus G. Martin
+ Code Contributors for 2018: Marcus G. Martin;
+ Copyright (C) <2017> Marcus G. Martin
+ Code Contributors for 2017: Marcus G. Martin;
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -268,15 +272,15 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            227.       112.   0.107918
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           2. Accepted:       1. Max Disp.: 0.100E+01
- Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(2,1) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(3,1) Tries:           2. Accepted:       1. Max Disp.: 0.100E+01
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
+ Box  1 H-matrix(1,1) Tries:            2 Accepted:        1 Max Disp.: 0.100E+01
+ Box  1 H-matrix(1,2) Tries:            0 Accepted:        0 Max Disp.: 0.100E+01
+ Box  1 H-matrix(1,3) Tries:            0 Accepted:        0 Max Disp.: 0.100E+01
+ Box  1 H-matrix(2,1) Tries:            0 Accepted:        0 Max Disp.: 0.100E+01
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(2,3) Tries:            0 Accepted:        0 Max Disp.: 0.100E+01
+ Box  1 H-matrix(3,1) Tries:            2 Accepted:        1 Max Disp.: 0.100E+01
+ Box  1 H-matrix(3,2) Tries:            1 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(3,3) Tries:            1 Accepted:        0 Max Disp.: 0.100E+00
         10 B: 1 -0.1067E+04  0.2319E+03     240832.8   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
@@ -294,15 +298,15 @@ Cycle      Box   Energy [K]  Volume [A^3] Press. [kPa] Molecules
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            215.       117.   0.142392
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(1,2) Tries:           5. Accepted:       3. Max Disp.: 0.120E+01
- Box  1 H-matrix(1,3) Tries:           2. Accepted:       1. Max Disp.: 0.100E+01
- Box  1 H-matrix(2,1) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.100E+01
- Box  1 H-matrix(3,1) Tries:           3. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
+ Box  1 H-matrix(1,1) Tries:            1 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(1,2) Tries:            5 Accepted:        3 Max Disp.: 0.120E+01
+ Box  1 H-matrix(1,3) Tries:            2 Accepted:        1 Max Disp.: 0.100E+01
+ Box  1 H-matrix(2,1) Tries:            0 Accepted:        0 Max Disp.: 0.100E+01
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        1 Max Disp.: 0.200E+00
+ Box  1 H-matrix(2,3) Tries:            0 Accepted:        0 Max Disp.: 0.100E+01
+ Box  1 H-matrix(3,1) Tries:            3 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(3,2) Tries:            0 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(3,3) Tries:            1 Accepted:        1 Max Disp.: 0.200E+00
         20 B: 1 -0.1081E+04  0.2328E+03      72487.7   216
 Block Averages (BA) for block     1
 BA Box: 1 Volume [A^3] 0.22670792E+03
@@ -346,15 +350,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            226.       134.   0.149103
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.120E+01
- Box  1 H-matrix(1,3) Tries:           2. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(2,2) Tries:           5. Accepted:       2. Max Disp.: 0.160E+00
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.200E+01
- Box  1 H-matrix(3,1) Tries:           0. Accepted:       0. Max Disp.: 0.100E+00
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       0. Max Disp.: 0.100E-01
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
+ Box  1 H-matrix(1,1) Tries:            1 Accepted:        1 Max Disp.: 0.200E+00
+ Box  1 H-matrix(1,2) Tries:            0 Accepted:        0 Max Disp.: 0.120E+01
+ Box  1 H-matrix(1,3) Tries:            2 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(2,1) Tries:            1 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(2,2) Tries:            5 Accepted:        2 Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,3) Tries:            1 Accepted:        1 Max Disp.: 0.200E+01
+ Box  1 H-matrix(3,1) Tries:            0 Accepted:        0 Max Disp.: 0.100E+00
+ Box  1 H-matrix(3,2) Tries:            1 Accepted:        0 Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:            1 Accepted:        1 Max Disp.: 0.400E+00
         30 B: 1 -0.1141E+04  0.2421E+03      72487.7   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
@@ -372,15 +376,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            192.       109.   0.170395
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           1. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(1,2) Tries:           2. Accepted:       0. Max Disp.: 0.120E+00
- Box  1 H-matrix(1,3) Tries:           2. Accepted:       2. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.320E+00
- Box  1 H-matrix(2,3) Tries:           3. Accepted:       0. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.200E+00
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E-01
- Box  1 H-matrix(3,3) Tries:           3. Accepted:       1. Max Disp.: 0.267E+00
+ Box  1 H-matrix(1,1) Tries:            1 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(1,2) Tries:            2 Accepted:        0 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,3) Tries:            2 Accepted:        2 Max Disp.: 0.200E+00
+ Box  1 H-matrix(2,1) Tries:            1 Accepted:        1 Max Disp.: 0.200E+00
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        1 Max Disp.: 0.320E+00
+ Box  1 H-matrix(2,3) Tries:            3 Accepted:        0 Max Disp.: 0.200E+00
+ Box  1 H-matrix(3,1) Tries:            1 Accepted:        1 Max Disp.: 0.200E+00
+ Box  1 H-matrix(3,2) Tries:            0 Accepted:        0 Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:            3 Accepted:        1 Max Disp.: 0.267E+00
         40 B: 1 -0.1140E+04  0.2553E+03       1001.9   216
 Block Averages (BA) for block     2
 BA Box: 1 Volume [A^3] 0.24306805E+03
@@ -424,15 +428,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            217.       106.   0.149365
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
- Box  1 H-matrix(1,2) Tries:           4. Accepted:       2. Max Disp.: 0.120E+00
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(2,1) Tries:           0. Accepted:       0. Max Disp.: 0.200E+00
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       0. Max Disp.: 0.320E-01
- Box  1 H-matrix(2,3) Tries:           3. Accepted:       3. Max Disp.: 0.400E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E-01
- Box  1 H-matrix(3,3) Tries:           1. Accepted:       0. Max Disp.: 0.267E-01
+ Box  1 H-matrix(1,1) Tries:            1 Accepted:        1 Max Disp.: 0.400E-01
+ Box  1 H-matrix(1,2) Tries:            4 Accepted:        2 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,3) Tries:            1 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:            0 Accepted:        0 Max Disp.: 0.200E+00
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        0 Max Disp.: 0.320E-01
+ Box  1 H-matrix(2,3) Tries:            3 Accepted:        3 Max Disp.: 0.400E+00
+ Box  1 H-matrix(3,1) Tries:            1 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,2) Tries:            0 Accepted:        0 Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:            1 Accepted:        0 Max Disp.: 0.267E-01
         50 B: 1 -0.1137E+04  0.2559E+03       1001.9   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
@@ -450,15 +454,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            224.       117.   0.148621
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           3. Accepted:       3. Max Disp.: 0.800E-01
- Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.240E+00
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E+00
- Box  1 H-matrix(2,2) Tries:           2. Accepted:       0. Max Disp.: 0.320E-02
- Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.400E+00
- Box  1 H-matrix(3,1) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.100E-01
- Box  1 H-matrix(3,3) Tries:           2. Accepted:       2. Max Disp.: 0.533E-01
+ Box  1 H-matrix(1,1) Tries:            3 Accepted:        3 Max Disp.: 0.800E-01
+ Box  1 H-matrix(1,2) Tries:            1 Accepted:        1 Max Disp.: 0.240E+00
+ Box  1 H-matrix(1,3) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:            1 Accepted:        1 Max Disp.: 0.400E+00
+ Box  1 H-matrix(2,2) Tries:            2 Accepted:        0 Max Disp.: 0.320E-02
+ Box  1 H-matrix(2,3) Tries:            0 Accepted:        0 Max Disp.: 0.400E+00
+ Box  1 H-matrix(3,1) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,2) Tries:            0 Accepted:        0 Max Disp.: 0.100E-01
+ Box  1 H-matrix(3,3) Tries:            2 Accepted:        2 Max Disp.: 0.533E-01
         60 B: 1 -0.1137E+04  0.2552E+03       5079.3   216
 Block Averages (BA) for block     3
 BA Box: 1 Volume [A^3] 0.25538540E+03
@@ -502,15 +506,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            230.       106.   0.149112
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           0. Accepted:       0. Max Disp.: 0.800E-01
- Box  1 H-matrix(1,2) Tries:           0. Accepted:       0. Max Disp.: 0.240E+00
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(2,1) Tries:           2. Accepted:       2. Max Disp.: 0.800E+00
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.640E-02
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.800E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
- Box  1 H-matrix(3,2) Tries:           2. Accepted:       2. Max Disp.: 0.200E-01
- Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.533E-01
+ Box  1 H-matrix(1,1) Tries:            0 Accepted:        0 Max Disp.: 0.800E-01
+ Box  1 H-matrix(1,2) Tries:            0 Accepted:        0 Max Disp.: 0.240E+00
+ Box  1 H-matrix(1,3) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:            2 Accepted:        2 Max Disp.: 0.800E+00
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        1 Max Disp.: 0.640E-02
+ Box  1 H-matrix(2,3) Tries:            1 Accepted:        1 Max Disp.: 0.800E+00
+ Box  1 H-matrix(3,1) Tries:            1 Accepted:        1 Max Disp.: 0.400E-01
+ Box  1 H-matrix(3,2) Tries:            2 Accepted:        2 Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,3) Tries:            0 Accepted:        0 Max Disp.: 0.533E-01
         70 B: 1 -0.1132E+04  0.2553E+03       5079.3   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
@@ -528,15 +532,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            201.        98.   0.159836
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           4. Accepted:       3. Max Disp.: 0.120E+00
- Box  1 H-matrix(1,2) Tries:           1. Accepted:       1. Max Disp.: 0.480E+00
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(2,1) Tries:           2. Accepted:       1. Max Disp.: 0.800E+00
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.128E-01
- Box  1 H-matrix(2,3) Tries:           0. Accepted:       0. Max Disp.: 0.800E+00
- Box  1 H-matrix(3,1) Tries:           1. Accepted:       1. Max Disp.: 0.800E-01
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(3,3) Tries:           2. Accepted:       2. Max Disp.: 0.107E+00
+ Box  1 H-matrix(1,1) Tries:            4 Accepted:        3 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:            1 Accepted:        1 Max Disp.: 0.480E+00
+ Box  1 H-matrix(1,3) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:            2 Accepted:        1 Max Disp.: 0.800E+00
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        1 Max Disp.: 0.128E-01
+ Box  1 H-matrix(2,3) Tries:            0 Accepted:        0 Max Disp.: 0.800E+00
+ Box  1 H-matrix(3,1) Tries:            1 Accepted:        1 Max Disp.: 0.800E-01
+ Box  1 H-matrix(3,2) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,3) Tries:            2 Accepted:        2 Max Disp.: 0.107E+00
         80 B: 1 -0.1128E+04  0.2517E+03      15498.4   216
 Block Averages (BA) for block     4
 BA Box: 1 Volume [A^3] 0.25490575E+03
@@ -580,15 +584,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            209.        96.   0.162982
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           2. Accepted:       1. Max Disp.: 0.120E+00
- Box  1 H-matrix(1,2) Tries:           1. Accepted:       0. Max Disp.: 0.480E-01
- Box  1 H-matrix(1,3) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       1. Max Disp.: 0.160E+01
- Box  1 H-matrix(2,2) Tries:           1. Accepted:       1. Max Disp.: 0.256E-01
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       0. Max Disp.: 0.800E-01
- Box  1 H-matrix(3,1) Tries:           3. Accepted:       3. Max Disp.: 0.160E+00
- Box  1 H-matrix(3,2) Tries:           0. Accepted:       0. Max Disp.: 0.200E-01
- Box  1 H-matrix(3,3) Tries:           0. Accepted:       0. Max Disp.: 0.107E+00
+ Box  1 H-matrix(1,1) Tries:            2 Accepted:        1 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:            1 Accepted:        0 Max Disp.: 0.480E-01
+ Box  1 H-matrix(1,3) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(2,1) Tries:            1 Accepted:        1 Max Disp.: 0.160E+01
+ Box  1 H-matrix(2,2) Tries:            1 Accepted:        1 Max Disp.: 0.256E-01
+ Box  1 H-matrix(2,3) Tries:            1 Accepted:        0 Max Disp.: 0.800E-01
+ Box  1 H-matrix(3,1) Tries:            3 Accepted:        3 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,2) Tries:            0 Accepted:        0 Max Disp.: 0.200E-01
+ Box  1 H-matrix(3,3) Tries:            0 Accepted:        0 Max Disp.: 0.107E+00
         90 B: 1 -0.1138E+04  0.2554E+03      15498.4   216
               Updating maximum translational/rotational displacements
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
@@ -606,15 +610,15 @@ BA Box: 1 Radius of Gyration Type:  1        0.00000
  Box: 1 Molecule:  1  Attempts   Accepted   New Displacement
  Translate COM            202.        98.   0.156108
  Updating unit cell maximum displacements
- Box  1 H-matrix(1,1) Tries:           0. Accepted:       0. Max Disp.: 0.120E+00
- Box  1 H-matrix(1,2) Tries:           2. Accepted:       2. Max Disp.: 0.960E-01
- Box  1 H-matrix(1,3) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
- Box  1 H-matrix(2,1) Tries:           1. Accepted:       0. Max Disp.: 0.160E+00
- Box  1 H-matrix(2,2) Tries:           2. Accepted:       1. Max Disp.: 0.256E-01
- Box  1 H-matrix(2,3) Tries:           1. Accepted:       1. Max Disp.: 0.160E+00
- Box  1 H-matrix(3,1) Tries:           2. Accepted:       1. Max Disp.: 0.160E+00
- Box  1 H-matrix(3,2) Tries:           1. Accepted:       1. Max Disp.: 0.400E-01
- Box  1 H-matrix(3,3) Tries:           2. Accepted:       1. Max Disp.: 0.107E+00
+ Box  1 H-matrix(1,1) Tries:            0 Accepted:        0 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:            2 Accepted:        2 Max Disp.: 0.960E-01
+ Box  1 H-matrix(1,3) Tries:            1 Accepted:        1 Max Disp.: 0.400E-01
+ Box  1 H-matrix(2,1) Tries:            1 Accepted:        0 Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,2) Tries:            2 Accepted:        1 Max Disp.: 0.256E-01
+ Box  1 H-matrix(2,3) Tries:            1 Accepted:        1 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,1) Tries:            2 Accepted:        1 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,2) Tries:            1 Accepted:        1 Max Disp.: 0.400E-01
+ Box  1 H-matrix(3,3) Tries:            2 Accepted:        1 Max Disp.: 0.107E+00
        100 B: 1 -0.1141E+04  0.2543E+03       4968.1   216
 Block Averages (BA) for block     5
 BA Box: 1 Volume [A^3] 0.25390986E+03
@@ -652,15 +656,15 @@ Box:     1
   hmatrix(3,x)      -0.58923       0.00399       6.14958
 
 * Unit Cell Perturbation Moves *
- Box  1 H-matrix(1,1) Tries:          15. Acp. Ratio:  0.667 Max Disp.: 0.120E+00
- Box  1 H-matrix(1,2) Tries:          16. Acp. Ratio:  0.562 Max Disp.: 0.960E-01
- Box  1 H-matrix(1,3) Tries:           8. Acp. Ratio:  0.500 Max Disp.: 0.400E-01
- Box  1 H-matrix(2,1) Tries:           9. Acp. Ratio:  0.667 Max Disp.: 0.160E+00
- Box  1 H-matrix(2,2) Tries:          16. Acp. Ratio:  0.500 Max Disp.: 0.256E-01
- Box  1 H-matrix(2,3) Tries:          10. Acp. Ratio:  0.600 Max Disp.: 0.160E+00
- Box  1 H-matrix(3,1) Tries:          14. Acp. Ratio:  0.571 Max Disp.: 0.160E+00
- Box  1 H-matrix(3,2) Tries:           5. Acp. Ratio:  0.600 Max Disp.: 0.400E-01
- Box  1 H-matrix(3,3) Tries:          13. Acp. Ratio:  0.615 Max Disp.: 0.107E+00
+ Box  1 H-matrix(1,1) Tries:           15 Acp. Ratio:  0.667 Max Disp.: 0.120E+00
+ Box  1 H-matrix(1,2) Tries:           16 Acp. Ratio:  0.562 Max Disp.: 0.960E-01
+ Box  1 H-matrix(1,3) Tries:            8 Acp. Ratio:  0.500 Max Disp.: 0.400E-01
+ Box  1 H-matrix(2,1) Tries:            9 Acp. Ratio:  0.667 Max Disp.: 0.160E+00
+ Box  1 H-matrix(2,2) Tries:           16 Acp. Ratio:  0.500 Max Disp.: 0.256E-01
+ Box  1 H-matrix(2,3) Tries:           10 Acp. Ratio:  0.600 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,1) Tries:           14 Acp. Ratio:  0.571 Max Disp.: 0.160E+00
+ Box  1 H-matrix(3,2) Tries:            5 Acp. Ratio:  0.600 Max Disp.: 0.400E-01
+ Box  1 H-matrix(3,3) Tries:           13 Acp. Ratio:  0.615 Max Disp.: 0.107E+00
 
 * Plane Shift Moves *
 Box  1 Perpendicular Dimension 1 Attempts       1353 Accepted          0

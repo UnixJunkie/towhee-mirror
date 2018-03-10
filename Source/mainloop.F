@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -72,7 +72,7 @@ c     *     towhee_parallel.                                           *
 c     * outputmode -- if .ne. 0, loutput = false -> quiet mode         *
 c     *                                                                *
 c     * split from the original twh_mainloop 06-25-2009 by M.G. Martin *
-c     * last modified 03-03-2014 by M.G. Martin                        *
+c     * last modified 11-16-2017 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug toggle
@@ -168,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 01-17-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -216,7 +216,7 @@ c     --- integer scalars
       integer total_nmols, i_tmp,nmolty,ivalue,jvalue,nunit,ncmt
       integer moviefreq,trmaxdispfreq,blocksize,backupfreq
       integer volmaxdispfreq,pressure_virial_freq,pdboutfreq,restartfreq
-      integer scp_num_foreign_lambda,ipair,npair,numboxes,nvmove
+      integer scp_num_foreign_lambda,ipair,npair,numboxes,nvmmax
       integer histcalcfreq,histdumpfreq,pressurestyle
       integer two_bond_bias_update_frequency,three_bond_bias_update_freq
       integer n_tmmc_min,n_tmmc_max,c_element,c_matrix_freq,jj
@@ -241,7 +241,7 @@ c     --- double precision scalars
       double precision dvinter,dvelect,datemp,dntemp
       double precision pscb1,pscb2,ratvol,ratcell,dvalue
       double precision pspiv2,pscr,pscrb,binsize,pspiv
-      double precision vhist,value,rmcell,p_acc
+      double precision vhist,value,rmcell,rmcellone,rmcelltwo,p_acc
       double precision cm_ii_one,cm_ii_zero,cm_ii_negone
       double precision cm_jj_one,cm_jj_zero,cm_jj_negone
 #if DEBUG_MAINLOOP
@@ -265,7 +265,7 @@ c     --- double precision arrays
 c     --- retrieve constants now that they have been set by the 
 c     --- input files
       call twh_numboxes(GLB_GET,numboxes)
-      call twh_nvmove(GLB_GET,nvmove)
+      call twh_nvmmax(GLB_GET,nvmmax)
       call twh_ensemble(GLB_GET,ensemble)
       call twh_two_bond_bias_update_frequency(GLB_GET
      &     ,two_bond_bias_update_frequency)
@@ -789,7 +789,7 @@ c     --- output hmatrix information
 
 c     --- determine whether any 3D volume moves were performed
       lnone = .true.
-      do imove = 1, nvmove
+      do imove = 1, nvmmax
 c        --- add the last batch of volume attempts into the total
          call twh_bnvol(GLB_GET,imove,ntemp)
          call twh_acnvol(GLB_INCR,imove,ntemp)
@@ -805,22 +805,21 @@ c        --- check to see if we have any attempted moves
 c        --- output information on volume move 
          write(6,*)
          write(6,'(a26)') '* 3D Volume Change Moves *'
-         do imove = 1, nvmove
+         do imove = 1, nvmmax
             call twh_acnvol(GLB_GET,imove,ncount)
             if ( ncount .ne. 0 ) then
                call twh_acsvol(GLB_GET,imove,scount)
                ratvol = dble(scount) / dble(ncount)
-            else
-               ratvol = 0.0d0
-            endif
-            if ( ensemble .eq. ENS_NPT ) then
-               write(6,40) imove,ncount,ratvol,twh_get_rmvol(imove)
-            else
-               call twh_acsvol(GLB_GET,imove,scount)
-               call twh_pairbox(GLB_GET,imove,1,ivalue)
-               call twh_pairbox(GLB_GET,imove,2,jvalue)
-               write(6,41) ivalue,jvalue,ncount,scount,ratvol
-     &              ,twh_get_rmvol(imove)
+               if ( imove .le. numboxes ) then
+                  write(6,40) imove,ncount,ratvol,twh_get_rmvol(imove)
+               else
+                  call twh_acsvol(GLB_GET,imove,scount)
+                  ipair = imove - numboxes
+                  call twh_pairbox(GLB_GET,ipair,1,ivalue)
+                  call twh_pairbox(GLB_GET,ipair,2,jvalue)
+                  write(6,41) ivalue,jvalue,ncount,scount,ratvol
+     &                 ,twh_get_rmvol(imove)
+               endif
             endif
          enddo
       endif
@@ -831,17 +830,19 @@ c        --- output information on volume move
 
 c     --- determine whether any unit cell perturbation moves were tried
       lnone = .true.
-      do imove = 1,nvmove
+      do imove = 1,nvmmax
          do movevector = 1,9
 c           --- add the last batch of attempted moves into the total
-            call twh_bncell(GLB_GET,imove,movevector,dntemp)
-            call twh_acncell(GLB_INCR,imove,movevector,dntemp)
+            call twh_bncell(GLB_GET,imove,movevector,ntemp)
+            call twh_acncell(GLB_INCR,imove,movevector,ntemp)
 c           --- add the last batch of accepted moves into the total
-            call twh_bacell(GLB_GET,imove,movevector,datemp)
-            call twh_acscell(GLB_INCR,imove,movevector,datemp)
+            call twh_bacell(GLB_GET,imove,movevector,atemp)
+            call twh_acscell(GLB_INCR,imove,movevector,atemp)
 c           --- see if we have any attempts
-            call twh_acncell(GLB_GET,imove,movevector,dntemp)
-            if ( dntemp .gt. 0.5d0 ) lnone = .false.
+            call twh_acncell(GLB_GET,imove,movevector,ntemp)
+            if ( ntemp .ne. 0 ) then
+               lnone = .false.
+            endif
          enddo
       enddo
 
@@ -849,36 +850,41 @@ c           --- see if we have any attempts
 c        --- output information on unit cell perturbation move 
          write(6,*)
          write(6,'(a32)') '* Unit Cell Perturbation Moves *'
-         do imove = 1, nvmove
+         do imove = 1, nvmmax
             do idim = 1,3
                do jdim = 1,3
                   movevector = 3*(idim-1) + jdim
-                  call twh_acncell(GLB_GET,imove,movevector,dntemp)
-                  if ( dntemp .gt. 0.5d0 ) then
-                     call twh_acscell(GLB_GET,imove,movevector,datemp)
-                     ratcell = datemp / dntemp
-                  else
-                     ratcell = 0.0d0
-                  endif
-                  if ( ensemble .eq. ENS_NPT ) then
-                     call twh_rmcell(GLB_GET,imove,idim,jdim,rmcell)
-                     write(6,44) imove,idim,jdim,dntemp,ratcell
-     &                    ,rmcell
-                  else
-                     call twh_pairbox(GLB_GET,imove,1,ivalue)
-                     call twh_pairbox(GLB_GET,imove,2,jvalue)
-                     call twh_rmcell(GLB_GET,imove,idim,jdim,rmcell)
-                     write(6,45) ivalue,jvalue,idim,jdim,dntemp
-     &                    ,ratcell,rmcell
+                  call twh_acncell(GLB_GET,imove,movevector,ntemp)
+                  if ( ntemp .ne. 0 ) then
+                     call twh_acscell(GLB_GET,imove,movevector
+     &                    ,atemp)
+                     ratcell = dble(atemp) / dble(ntemp)
+                     if ( imove .le. numboxes ) then
+c                       --- single box move
+                        call twh_rmcell(GLB_GET,imove,idim,jdim,rmcell)
+                        write(6,44) imove,idim,jdim,ntemp,ratcell
+     &                       ,rmcell
+                     else
+c                       --- pair of boxes
+                        ipair = imove - numboxes
+                        call twh_pairbox(GLB_GET,ipair,1,ivalue)
+                        call twh_pairbox(GLB_GET,ipair,2,jvalue)
+                        call twh_rmcell(GLB_GET,ivalue,idim,jdim
+     &                       ,rmcellone)
+                        call twh_rmcell(GLB_GET,ivalue,idim,jdim
+     &                       ,rmcelltwo)
+                        write(6,45) ivalue,jvalue,idim,jdim,ntemp
+     &                       ,ratcell,rmcellone,rmcelltwo
+                     endif
                   endif
                enddo
             enddo
          enddo
       endif
- 44   format(' Box ',i2,' H-matrix(',i1,',',i1,') Tries: ',f12.0
+ 44   format(' Box ',i2,' H-matrix(',i1,',',i1,') Tries: ',i12
      &     ,' Acp. Ratio: ',f6.3,' Max Disp.: ',e9.3)
  45   format(' Box',i2,' and ',i2,' H-matrix(',i1,',',i1,') Tries: '
-     &     ,f12.0,' Acp. Ratio: ',f6.3,' Max Disp.: ',e9.3)
+     &     ,i12,' Acp. Ratio: ',f6.3,' Max Disps.: ',e9.3,1x,e9.3)
 
 c     --- determine if any rbswaps were attempted
       lnone = .true.

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 07-25-2016 by M.G. Martin                        *
+c     * last modified 01-16-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -232,21 +232,15 @@ c     --- initialize and then set hinverse
 
 c     --- Give initial values to move probabilities.
       call twh_pmvol(GLB_SET,0.0d0)
-      call twh_pmvlpr(GLB_INIT,MAXPBOX,1.0d0)
       call twh_tavol(GLB_SET,0.5d0)
       call twh_pmcell(GLB_SET,0.0d0)
-      call twh_pmcellpr(GLB_INIT,MAXPBOX,1.0d0)
-      call twh_pmcellpt(GLB_INIT,MAXPBOX,0.5d0)
-      call twh_rmcell(GLB_INIT,MAXPBOX,3,3,1.0d0)
       call twh_tacell(GLB_SET,0.5d0)
       
       call twh_pm2boxrbswap(GLB_SET,0.0d0)
       call twh_pm2rbswmt(GLB_INIT,NTMAX,1.0d0)
-      call twh_pm2rbswpr(GLB_INIT,MAXPBOX,1.0d0)
 
       call twh_pm2boxcbswap(GLB_SET,0.0d0)
       call twh_pm2cbswmt(GLB_INIT,NTMAX,1.0d0)
-      call twh_pm2cbswpr(GLB_INIT,MAXPBOX,1.0d0)
 
       call twh_pm1boxcbswap(GLB_SET,0.0d0)
       call twh_pm1cbswmt(GLB_INIT,NTMAX,1.0d0)
@@ -503,8 +497,6 @@ c     --- initialize temporary accumulators
       call twh_bnrbswap(GLB_INIT,NTMAX,MAXBOX,MAXBOX,0)
       call twh_bashift(GLB_INIT,2,MAXBOX,3,0)
       call twh_bnshift(GLB_INIT,2,MAXBOX,3,0)
-      call twh_bavol(GLB_INIT,MAXPBOX,0)
-      call twh_bnvol(GLB_INIT,MAXPBOX,0)
 
 c     --- initialize use coulomb & VdW logical arrays
       call twh_luse_c(GLB_INIT,NTMAX,NUMAX,.true.)

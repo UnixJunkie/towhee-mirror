@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (August 25 2016)    
+ MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ Copyright (C) <2018> Marcus G. Martin
+ Code Contributors for 2018: Marcus G. Martin;
+ Copyright (C) <2017> Marcus G. Martin
+ Code Contributors for 2017: Marcus G. Martin;
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -1594,7 +1598,6 @@ Box:     2
   hmatrix(3,x)       0.00000       0.00000      70.00000
 
 * 3D Volume Change Moves *
- Box  1 Tries:        0 Acp. Ratio:  0.000 Max Disp.: 0.100E+00
  Box  2 Tries:        3 Acp. Ratio:  1.000 Max Disp.: 0.100E+00
 
 * Configurational-Bias SWAP Moves *

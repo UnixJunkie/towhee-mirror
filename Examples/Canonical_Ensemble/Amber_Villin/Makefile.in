@@ -164,7 +164,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = \
-par_answer_current answer_current towhee_initial towhee_input header
+par_answer_current answer_current towhee_input header
 
 all: all-am
 

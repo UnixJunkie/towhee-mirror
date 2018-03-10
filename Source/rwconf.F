@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,6 +21,33 @@ c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_rwconf(lfailure, nchain, rwflag, ncycle, flag)
 c     ******************************************************************
+c     * wrapper around twh_rwconf_main that gets a few constants used  *
+c     * to dimension arrays and then call the main routine             *
+c     *                                                                *
+c     * split into a wrapper 01-16-2018 by M.G. Martin                 *
+c     * last modified 01-16-2018 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      logical lfailure
+      integer nchain,rwflag,ncycle,flag
+c     --- local variables
+      integer nmolty,numboxes,nboxpair,nvmmax
+
+      call twh_nmolty(GLB_GET,nmolty)
+      call twh_numboxes(GLB_GET,numboxes)
+      call twh_nboxpair(GLB_GET,nboxpair)
+      call twh_nvmmax(GLB_GET,nvmmax)
+
+      call twh_rwconf_main(lfailure,nchain,rwflag,ncycle,flag
+     &     ,nmolty,numboxes,nboxpair,nvmmax)
+
+      return
+      end
+
+      subroutine twh_rwconf_main(lfailure, nchain, rwflag, ncycle, flag
+     &     ,nmolty,numboxes,nboxpair,nvmmax)
+c     ******************************************************************
 c     * this program reads from or writes to a files that contains all *
 c     * of the information needed to use as an initial conformation    *
 c     * nchain is the number of molecules to read or write             *
@@ -35,7 +62,7 @@ c     *              does not get overwritten every time               *
 c     *           if rwflag is RW_READ then 'flag'is the atomcount     *
 c     *                                                                *
 c     * rewritten 04-13-2004 by M.G. Martin from writeconf & readtowhee*
-c     * last modified 08-24-2016 by M.G. Martin                        *
+c     * last modified 01-16-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -44,23 +71,24 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer nchain,rwflag,ncycle,flag
+      integer nchain,rwflag,ncycle,flag,nmolty,numboxes,nboxpair,nvmmax
 c     --- local variables
 c     --- character string scalars
       character*14 stepchar
       character*30 filename
 c     --- logical scalars
-      logical lvalue,lsaverng,lnegative
+      logical lvalue,lsaverng,lnegative,lduplicate
 c     --- integer scalars
-      integer ibox,imolty,iunit,ichain,iversion,idim,jdim,ilarge
+      integer ibox,imolty,iunit,ichain,iversion,idim,jdim
       integer nnstep,itest,ncount,istart,iend,ntest,ipart,nboxi,jtest
       integer activechain,iadjust,currentversion,nmtype
-      integer nmolty,nboxpair,ivalue,jvalue,nunit,nchbox,ncmt
-      integer globalpos,itemp,numboxes,nvmove,ensemble,rng_code
-      integer input_code
+      integer ivalue,jvalue,nunit,nchbox,ncmt
+      integer globalpos,itemp,ensemble,rng_code
+      integer input_code,ivolmove,ipair
+      integer ivolstart,ivolend
 c     --- integer arrays
       integer nu_temp
-      dimension nu_temp(NTMAX)
+      dimension nu_temp(nmolty)
       integer tempstore
       dimension tempstore(nchain)
 c     --- 32-bit integer arrays
@@ -70,15 +98,11 @@ c     --- double precision scalars
       double precision xtemp,ytemp,ztemp,rmtraa,rmtrac,rmrot,boxvolume
 c     --- double precision arrays
       double precision dtemp
-      dimension dtemp(MAXPBOX)
+      dimension dtemp(nvmmax)
       double precision fatmp
       dimension fatmp(3)
 
 c     --- retrieve constants
-      call twh_nboxpair(GLB_GET,nboxpair)
-      call twh_nmolty(GLB_GET,nmolty)
-      call twh_numboxes(GLB_GET,numboxes)
-      call twh_nvmove(GLB_GET,nvmove)
       call twh_ensemble(GLB_GET,ensemble)
 
       if ( rwflag .eq. WRITE_FLAG ) then
@@ -111,7 +135,7 @@ c        --- open the file
       endif
 
 c     --- set the currentversion
-      currentversion = 7
+      currentversion = 8
 
       lnegative = .false.
       if ( rwflag .eq. WRITE_FLAG ) then
@@ -298,87 +322,165 @@ c              --- first one
 
 c     --- volume moves maximum displacements
       if ( rwflag .eq. WRITE_FLAG ) then
-c        --- determine whether numboxes or nboxpair is larger
-         if ( numboxes .gt. nboxpair ) then
-            ilarge = numboxes
-         else
-            ilarge = nboxpair
-         endif
-c        --- output volume move maximum displacements
-         do ibox = 1,nvmove
-            dtemp(ibox) = twh_get_rmvol(ibox)
+c        --- output isotropic volume move maximum displacements
+         do ivolmove = 1,nvmmax
+            dtemp(ivolmove) = twh_get_rmvol(ivolmove)
          enddo
-         write(8,*) (dtemp(ibox),ibox=1,nvmove)
+         write(8,*) (dtemp(ivolmove),ivolmove=1,nvmmax)
+      else
+c        --- read in the standard volume move max displacements
+         if ( iversion .lt. 8 ) then
+c           --- older versions used either the number of boxes or
+c           --- the number of pairs of boxes depending on the ensemble
+            if ( ensemble .eq. ENS_NPT ) then
+               ivolstart = 1
+               ivolend = numboxes
+            else
+               ivolstart = numboxes + 1
+               ivolend = numboxes + nboxpair
+            endif
+            lduplicate = .true.
+         else
+c           --- version 8 and later uses the sum of boxes and pairs
+            ivolstart = 1
+            ivolend = nvmmax
+            lduplicate = .false.
+         endif
+
+         read(8,*) ( dtemp(ivolmove),ivolmove=ivolstart,ivolend)
+         do ivolmove = ivolstart,ivolend
+            call twh_rmvol(GLB_SET,ivolmove,dtemp(ivolmove))
+            if ( lduplicate ) then
+               if ( ivolmove .le. numboxes ) then
+c                 --- also store in the pair portion if room
+                  if ( ivolmove .le. nboxpair ) then
+                     iadjust = ivolmove + numboxes
+                     call twh_rmvol(GLB_SET,iadjust,dtemp(ivolmove))
+                  endif
+               else
+c                 --- also store in the numboxes portion, if room
+                  if ( ivolmove - numboxes .le. numboxes ) then
+                     iadjust = ivolmove - numboxes
+                     call twh_rmvol(GLB_SET,iadjust,dtemp(ivolmove))
+                  endif
+               endif
+            endif
+         enddo
+
+c        --- output new maximum displacements
+         write(6,'(a54)') 
+     &        'Max displacement for single box isotropic volume moves'
+         do ivolmove = 1,numboxes
+            write(6,'(1x,a4,1x,i2,1x,a11,1x,e12.4)')
+     &           'Box:',ivolmove,'rmvol(box):',twh_get_rmvol(ivolmove)
+         enddo
+         write(6,'(a53)') 
+     &        'Max displacement for box pairs isotropic volume moves'
+         do ivolmove = numboxes+1,numboxes+nboxpair
+            write(6,'(1x,a5,1x,i2,1x,a11,1x,e12.4)')
+     &           'Pair:',ivolmove-numboxes
+     &           ,'rmvol(box):',twh_get_rmvol(ivolmove)
+         enddo
+      endif
+
+      if ( rwflag .eq. WRITE_FLAG ) then
 c        --- output unit cell move maximum displacements
-         do ibox = 1,ilarge
+         do ivolmove = 1,nvmmax
             do idim = 1,3
-               call twh_rmcell(GLB_GET,ibox,idim,1,xtemp)
-               call twh_rmcell(GLB_GET,ibox,idim,2,ytemp)
-               call twh_rmcell(GLB_GET,ibox,idim,3,ztemp)
+               call twh_rmcell(GLB_GET,ivolmove,idim,1,xtemp)
+               call twh_rmcell(GLB_GET,ivolmove,idim,2,ytemp)
+               call twh_rmcell(GLB_GET,ivolmove,idim,3,ztemp)
                write(8,*) xtemp,ytemp,ztemp
             enddo
          enddo
       else
-c        --- read in the standard volume move max displacements
-         read(8,*) ( dtemp(ibox),ibox=1,nvmove)
-         do ibox = 1,nvmove
-            call twh_rmvol(GLB_SET,ibox,dtemp(ibox))
-         enddo
-         if ( nvmove .gt. 0 ) then
-            write(6,1103) (twh_get_rmvol(ibox),ibox=1,nvmove)
-         endif
- 1103    format(' Max disp. for 3D Volume:           ',MAXBOX e12.4)
-c        --- read in the unit cell maximum displacements
+         lduplicate = .false.
+c        --- account for previous differences in the rmcell
          if ( iversion .le. 1 ) then
 c           --- these displacments did not exist until version 2
 c           --- skip reading them, and leave them set to the defaults
 c           --- which were set up in the pmcell section
+            ivolstart = 1
+            ivolend = 0
          elseif ( iversion .eq. 2 ) then
-c           --- version 2 outputted these for each nvmove, this led 
-c           --- to problems when switching between nvt and npt
-            do ibox = 1,nvmove
-               do idim = 1,3
-                  read(8,*) xtemp,ytemp,ztemp
-                  call twh_rmcell(GLB_SET,ibox,idim,1,xtemp)
-                  call twh_rmcell(GLB_SET,ibox,idim,2,ytemp)
-                  call twh_rmcell(GLB_SET,ibox,idim,3,ztemp)
-               enddo
-            enddo
-         else
-c           --- version 3+ uses the larger of numboxes or nboxpair so
+c           --- version 2 outputted these for either the number of
+c           --- pairs of boxes (NVT) or the number of boxes (other).
+c           --- this led to problems when switching between nvt and npt
+            if ( ensemble .eq. ENS_NVT ) then
+c              --- only pairs of boxes were stored
+               ivolstart = numboxes + 1
+               ivolend = numboxes + nboxpair
+            else
+c              --- only single box information was stored
+               ivolstart = 1
+               ivolend = numboxes
+            endif
+            lduplicate = .true.
+         elseif ( iversion .le. 7 ) then
+c           --- version 3-7 uses the larger of numboxes or nboxpair so
 c           --- it is possible to switch between nvt and npt
             if ( numboxes .gt. nboxpair ) then
-               ilarge = numboxes
+               ivolstart = 1
+               ivolend = numboxes
             else
-               ilarge = nboxpair
+               ivolstart = numboxes + 1
+               ivolend = numboxes + nboxpair
             endif
-            do ibox = 1,ilarge
-               do idim = 1,3
-                  read(8,*) xtemp,ytemp,ztemp
-                  call twh_rmcell(GLB_SET,ibox,idim,1,xtemp)
-                  call twh_rmcell(GLB_SET,ibox,idim,2,ytemp)
-                  call twh_rmcell(GLB_SET,ibox,idim,3,ztemp)
-               enddo
-            enddo
+            lduplicate = .true.
+         else
+c           --- version 8 introduced a complete set of volume
+c           --- displacements for each box and each box pair
+c           --- and changed the definition of nvmmax to be the sum
+c           --- of the number of boxes plus the number of box pairs
+            ivolstart = 1
+            ivolend = nvmmax
+            lduplicate = .false.
          endif
-c        --- output the new (or at least the current) max unit cell disp
-         write(6,*) 'Max disp. for unit cell perturbation'
-         do ibox=1,nvmove
+
+c        --- read in the unit cell maximum displacements
+         do ivolmove = ivolstart,ivolend
             do idim = 1,3
-               call twh_rmcell(GLB_GET,ibox,idim,1,xtemp)
-               call twh_rmcell(GLB_GET,ibox,idim,2,ytemp)
-               call twh_rmcell(GLB_GET,ibox,idim,3,ztemp)
-               if ( ensemble .eq. ENS_NPT ) then
+               read(8,*) xtemp,ytemp,ztemp
+               call twh_rmcell(GLB_SET,ivolmove,idim,1,xtemp)
+               call twh_rmcell(GLB_SET,ivolmove,idim,2,ytemp)
+               call twh_rmcell(GLB_SET,ivolmove,idim,3,ztemp)
+               if ( lduplicate ) then
+                  if ( ivolmove .le. numboxes ) then
+                     iadjust = ivolmove + numboxes
+                  else
+                     iadjust = ivolmove - numboxes
+                  endif
+                  if ( iadjust .gt. 0 .and. iadjust .lt. nvmmax ) then
+                     call twh_rmcell(GLB_SET,ivolmove,idim,1,xtemp)
+                     call twh_rmcell(GLB_SET,ivolmove,idim,2,ytemp)
+                     call twh_rmcell(GLB_SET,ivolmove,idim,3,ztemp)
+                  endif
+               endif
+            enddo
+         enddo
+
+c        --- standard output the new (or current) max unit cell disp
+         write(6,'(a36)') 'Max disp. for unit cell perturbation'
+         do ivolmove = 1,nvmmax
+            do idim = 1,3
+               call twh_rmcell(GLB_GET,ivolmove,idim,1,xtemp)
+               call twh_rmcell(GLB_GET,ivolmove,idim,2,ytemp)
+               call twh_rmcell(GLB_GET,ivolmove,idim,3,ztemp)
+               if ( ivolmove .le. numboxes ) then
+c                 --- individual box values
+                  ibox = ivolmove
                   write(6,1001) ibox,idim,xtemp,ytemp,ztemp
                else
-                  call twh_pairbox(GLB_GET,ibox,1,ivalue)
-                  call twh_pairbox(GLB_GET,ibox,2,jvalue)
+c                 --- pair box values
+                  ipair = ivolmove - numboxes
+                  call twh_pairbox(GLB_GET,ipair,1,ivalue)
+                  call twh_pairbox(GLB_GET,ipair,2,jvalue)
                   write(6,1002) ivalue,jvalue,idim,xtemp,ytemp,ztemp
                endif
             enddo
          enddo
- 1001    format(3x,' Box ',i3,' idim ',i1,' rmcell: ',3e12.4)
- 1002    format(3x,' Boxes ',i3,' and ',i3,' idim ',i1
+ 1001    format(1x,' Box ',i3,' idim ',i1,' rmcell: ',3e12.4)
+ 1002    format(1x,' Boxes ',i3,' and ',i3,' idim ',i1
      &        ,' rmcell: ',3e12.4)
       endif
 

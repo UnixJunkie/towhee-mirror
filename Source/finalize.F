@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2008-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2008-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,14 +24,18 @@ c     ******************************************************************
 c     * frees all of the allocated memory                              *
 c     *                                                                *
 c     * originally written 12-03-2008 M.G. Martin                      *
-c     * last modified 07-19-2016 by M.G. Martin                        *
+c     * last modified 01-17-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- local variables
       logical lvalue
-      integer itemp,jtemp,ktemp,ivalue
+      integer itemp,jtemp,ktemp,ivalue,nboxpair,nvmmax,nvmsim
       double precision dvalue
 
+c     --- constants
+      call twh_nboxpair(GLB_GET,nboxpair)
+      call twh_nvmmax(GLB_GET,nvmmax)
+      call twh_nvmsim(GLB_GET,nvmsim)
 c     --- set temp variables to null values
       lvalue = .false.
       itemp = 0
@@ -62,14 +66,31 @@ c     --- free arrays based only on maxchain
       call twh_logical_periodic(GLB_FREE,itemp,lvalue)
       call twh_moltyp(GLB_FREE,itemp,jtemp)
       call twh_nboxi(GLB_FREE,itemp,jtemp)
-c     --- free arrays based only on nvmove
-      call twh_acnvol(GLB_FREE,itemp,jtemp)
-      call twh_acsvol(GLB_FREE,itemp,jtemp)
-      call twh_rmvol(GLB_FREE,itemp,dvalue)
-      call twh_acncell(GLB_FREE,itemp,9,dvalue)
-      call twh_acscell(GLB_FREE,itemp,9,dvalue)
-      call twh_bacell(GLB_FREE,itemp,9,dvalue)
-      call twh_bncell(GLB_FREE,itemp,9,dvalue)
+c     --- free arrays based only on nboxpair
+      if ( nboxpair .ne. 0 ) then
+         call twh_pairbox(GLB_FREE,itemp,jtemp,ivalue)
+         call twh_pm2cbswpr(GLB_FREE,itemp,dvalue)
+         call twh_pm2rbswpr(GLB_FREE,itemp,dvalue)
+      endif
+c     --- free arrays based only on nvmmax
+      if ( nvmmax .ne. 0 ) then
+         call twh_acnvol(GLB_FREE,itemp,jtemp)
+         call twh_acsvol(GLB_FREE,itemp,jtemp)
+         call twh_rmvol(GLB_FREE,itemp,dvalue)
+         call twh_bavol(GLB_FREE,itemp,ivalue)
+         call twh_bnvol(GLB_FREE,itemp,ivalue)
+         call twh_acncell(GLB_FREE,itemp,9,ivalue)
+         call twh_acscell(GLB_FREE,itemp,9,ivalue)
+         call twh_bacell(GLB_FREE,itemp,9,ivalue)
+         call twh_bncell(GLB_FREE,itemp,9,ivalue)
+         call twh_rmcell(GLB_FREE,itemp,3,3,dvalue)
+      endif
+c     --- free arrays based only on nvmsim
+      if ( nvmsim .ne. 0 ) then
+         call twh_pmcellpr(GLB_FREE,itemp,dvalue)
+         call twh_pmcellpt(GLB_FREE,itemp,dvalue)
+         call twh_pmvlpr(GLB_FREE,itemp,dvalue)
+      endif
 c     --- free arrays based on cubes
       call twh_cubeletweight(GLB_FREE,itemp,dvalue)
 c     --- free arrays for coordinate storage

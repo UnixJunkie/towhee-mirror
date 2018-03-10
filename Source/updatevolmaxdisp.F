@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2008 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,33 +24,35 @@ c     ******************************************************************
 c     * updated the maximum volume and cell displacements              *
 c     *                                                                *
 c     * split from old pupdate 10-13-2005 by M.G. Martin               *
-c     * last modified 06-22-2009 by M.G. Martin                        *
+c     * last modified 01-17-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_PMVOL
 #define FUNCTION_GET_RMVOL
 #define FUNCTION_GET_TAVOL
 #include "functions.h"
 c     --- local variables
       character*20 routput
       integer idim,jdim,imove,movevector,atemp,ntemp,ivalue,jvalue
-      integer nvmove,ensemble
-      double precision ratvol,ratcell,dtemp,pmcell,tacell,dntemp,datemp
+      integer nvmmax,ensemble,ipair,numboxes
+      double precision ratvol,ratcell,dtemp,pmcell,tacell
+      double precision pmvol
 
 c     --- retrieve constants
       call twh_runoutput(GLB_GET,routput)
-      call twh_nvmove(GLB_GET,nvmove)
+      call twh_nvmmax(GLB_GET,nvmmax)
       call twh_ensemble(GLB_GET,ensemble)
+      call twh_numboxes(GLB_GET,numboxes)
 
 c     --- perform periodic operations 
-      if ( twh_get_pmvol() .gt. 0.0d0 ) then
+      call twh_pmvol(GLB_GET,pmvol)
+      if ( pmvol .gt. 0.0d0 ) then
 c        --- adjust 3D maximum volume displacements 
          if ( routput .eq. 'full' .or. routput .eq. 'updates' 
      &        ) then
             write(6,*) 'Updating 3D volume maximum displacements'
          endif
 c        --- get the target acceptance rate
-         do imove = 1,nvmove
+         do imove = 1,nvmmax
             call twh_bavol(GLB_GET,imove,atemp)
             call twh_bnvol(GLB_GET,imove,ntemp)
             if ( ntemp .ne. 0 ) then
@@ -64,11 +66,12 @@ c        --- get the target acceptance rate
             endif
             if ( routput .eq. 'full' .or. routput .eq. 'updates'
      &           ) then
-               if ( ensemble .eq. ENS_NPT ) then
+               if ( imove .le. numboxes ) then
                   write(6,60) imove,ntemp,atemp,twh_get_rmvol(imove)
                else
-                  call twh_pairbox(GLB_GET,imove,1,ivalue)
-                  call twh_pairbox(GLB_GET,imove,2,jvalue)
+                  ipair = imove - numboxes
+                  call twh_pairbox(GLB_GET,ipair,1,ivalue)
+                  call twh_pairbox(GLB_GET,ipair,2,jvalue)
                   write(6,61) ivalue,jvalue,ntemp,atemp
      &                 ,twh_get_rmvol(imove)
                endif
@@ -77,8 +80,8 @@ c        --- get the target acceptance rate
             call twh_acsvol(GLB_INCR,imove,atemp)
          enddo
 c        --- reset volume accumulators
-         call twh_bnvol(GLB_INIT,nvmove,0)
-         call twh_bavol(GLB_INIT,nvmove,0)
+         call twh_bnvol(GLB_INIT,nvmmax,0)
+         call twh_bavol(GLB_INIT,nvmmax,0)
 
  60      format(' Box ',i2,' Tries: ',i8,' Accepted: ',i8
      &        ,' Max Disp.: ',e9.3)
@@ -90,14 +93,14 @@ c        --- reset volume accumulators
 c        --- adjust unit cell maximum displacements
          if ( routput .eq. 'full' .or. routput .eq. 'updates' )
      &        write(6,*) 'Updating unit cell maximum displacements'
-         do imove = 1,nvmove
+         do imove = 1,nvmmax
             do idim = 1,3
                do jdim = 1,3
                   movevector = 3*(idim-1)+jdim
-                  call twh_bncell(GLB_GET,imove,movevector,dntemp)
-                  call twh_bacell(GLB_GET,imove,movevector,datemp)
-                  if ( dntemp .gt. 0.5d0 ) then
-                     ratcell = datemp / dntemp
+                  call twh_bncell(GLB_GET,imove,movevector,ntemp)
+                  call twh_bacell(GLB_GET,imove,movevector,atemp)
+                  if ( ntemp .ne. 0 ) then
+                     ratcell = dble(atemp) / dble(ntemp)
                      if ( ratcell .eq. 0.0d0 ) then
                         call twh_rmcell(GLB_SCALE,imove,idim,jdim,0.1d0)
                      else
@@ -110,28 +113,29 @@ c        --- adjust unit cell maximum displacements
      &                 .or. routput .eq. 'updates' ) then
 c                    --- output the new displacements
                      call twh_rmcell(GLB_GET,imove,idim,jdim,dtemp)
-                     if ( ensemble .eq. ENS_NPT ) then
-                        write(6,70) imove,idim,jdim,dntemp,datemp,dtemp
+                     if ( imove .le. numboxes ) then
+                        write(6,70) imove,idim,jdim,ntemp,atemp,dtemp
                      else
-                        call twh_pairbox(GLB_GET,imove,1,ivalue)
-                        call twh_pairbox(GLB_GET,imove,2,jvalue)
-                        write(6,71) ivalue,jvalue,idim,jdim,dntemp
-     &                       ,datemp,dtemp
+                        ipair = imove - numboxes
+                        call twh_pairbox(GLB_GET,ipair,1,ivalue)
+                        call twh_pairbox(GLB_GET,ipair,2,jvalue)
+                        write(6,71) ivalue,jvalue,idim,jdim,ntemp
+     &                       ,atemp,dtemp
                      endif
                   endif
-                  call twh_acncell(GLB_INCR,imove,movevector,dntemp)
-                  call twh_acscell(GLB_INCR,imove,movevector,datemp)
+                  call twh_acncell(GLB_INCR,imove,movevector,ntemp)
+                  call twh_acscell(GLB_INCR,imove,movevector,atemp)
                enddo
             enddo
          enddo
 c        --- reinitialize cell accumulators
-         call twh_bncell(GLB_INIT,nvmove,9,0.0d0)
-         call twh_bacell(GLB_INIT,nvmove,9,0.0d0)
- 70      format(' Box ',i2,' H-matrix(',i1,',',i1,') Tries: ',f12.0
-     &        ,' Accepted: ',f8.0,' Max Disp.: ',e9.3)
+         call twh_bncell(GLB_INIT,nvmmax,9,0)
+         call twh_bacell(GLB_INIT,nvmmax,9,0)
+ 70      format(' Box ',i2,' H-matrix(',i1,',',i1,') Tries: ',i12
+     &        ,' Accepted: ',i8,' Max Disp.: ',e9.3)
  71      format(' Boxes ',i2,' and ',i2,' H-matrix(',i1,','
-     &           ,i1,') Tries: ',f12.0
-     &        ,' Accepted: ',f12.0,' Max Disp.: ',e9.3)
+     &           ,i1,') Tries: ',i12
+     &        ,' Accepted: ',i12,' Max Disp.: ',e9.3)
       endif
 
       return

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2011-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2011-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * writes out the suggested citations for a Towhee simulation     *
 c     *                                                                *
 c     * originally written 08-09-2011 by M.G. Martin                   *
-c     * last modified 03-28-2013 by M.G. Martin                        *
+c     * last modified 01-17-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -36,9 +36,8 @@ c     --- local variables
       character*20 filename
       logical lnone
       integer citefile,citecount,numboxes,ensemble,rng_code,luxlevel
-      integer icount,imove,ncount,nvmove,ibox,jbox,imolty,nmolty
+      integer icount,imove,ncount,nvmmax,ibox,jbox,imolty,nmolty
       integer ivector
-      double precision dcount,dncount
 
 c     --- output message to the standard out (or redirect)
       write(6,'(a,1x,a)')
@@ -240,9 +239,9 @@ c        --- second Gibbs ensemble reference
       write(citefile,*)
 
 c     --- isotropic volume move
-      call twh_nvmove(GLB_GET,nvmove)
+      call twh_nvmmax(GLB_GET,nvmmax)
       ncount = 0
-      do imove = 1,nvmove
+      do imove = 1,nvmmax
          call twh_acnvol(GLB_GET,imove,icount)
          ncount = ncount + icount
       enddo
@@ -280,15 +279,15 @@ c           --- first Gibbs ensemble reference
       endif
 
 c     --- anisotropic volume move
-      call twh_nvmove(GLB_GET,nvmove)
-      dncount = 0.0d0
-      do imove = 1,nvmove
+      call twh_nvmmax(GLB_GET,nvmmax)
+      ncount = 0
+      do imove = 1,nvmmax
          do ivector = 1,9
-            call twh_acncell(GLB_GET,imove,ivector,dcount)
-            dncount = dncount + dcount
+            call twh_acncell(GLB_GET,imove,ivector,icount)
+            ncount = ncount + icount
          enddo
       enddo
-      if ( dcount .gt. 0.5d0 ) then
+      if ( ncount .ne. 0 ) then
 c        --- update citecount for the extra citation
          citecount = citecount + 1
             write(citefile,'(a,i2,a1)')

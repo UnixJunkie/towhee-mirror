@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,20 +27,18 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 07-25-2016 by M.G. Martin                        *
+c     * last modified 01-21-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
 #define FUNCTION_LEN_TRIM
 #define FUNCTION_CHECK_LABEL
-#define FUNCTION_GET_ELEMENTNAME
 #define FUNCTION_GET_GROWVALIDCOUNT
+#define FUNCTION_GET_ELEMENTNAME
 #define FUNCTION_GET_INVIB
 #define FUNCTION_GET_MASS
 #define FUNCTION_GET_NBOXI
 #define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_PMVLPR
-#define FUNCTION_GET_PMVOL
 #define FUNCTION_READ_FLOAT
 #define FUNCTION_READ_LABELED_FLOAT
 #define FUNCTION_READ_LABELED_INTEGER
@@ -50,7 +48,8 @@ c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
 c     --- logical scalars
-      logical lpdbnames,lfound,lvalid,lreadnunit,lreadnmaxcbmc,louthist
+      logical lpdbnames
+      logical lfound,lvalid,lreadnunit,lreadnmaxcbmc,louthist
       logical lhenry,lgetinitstyle,linit,lusecom,lvalue
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
@@ -82,8 +81,8 @@ c     --- character string arrays
 c     --- integer 4 scalars
       integer*4 luxvalue,iseed
 c     --- integer scalars
-      integer imolty,jmolty,iunit,ivib,itor,imove,cpnumber,nchain,kmax
-      integer ichain,ielement,npairs,ipair,nmolty,ivalue,jvalue
+      integer imolty,jmolty,iunit,ivib,itor,cpnumber,nchain,kmax
+      integer ichain,ielement,nmolty,ivalue
       integer itest,count,idim,jdim,nboxpair,nchbox,nfield
       integer icount,itmp,crtype,iutemp,idum, numunits,potentialstyle
       integer nmcount,ibox,jbox,isuccess,numtypes,isolvtype,nmtype
@@ -91,10 +90,11 @@ c     --- integer scalars
       integer trmaxdispfreq,blocksize,backupfreq,volmaxdispfreq
       integer pressure_virial_freq,pdb_output_freq,restartfreq,cperstep
       integer pressure_thermo_freq
-      integer backlist,numboxes,nvmove,ensemble,histcalcfreq,nener
+      integer backlist,numboxes,nvmmax,ensemble,histcalcfreq,nener
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
       integer maxnumtor,numtor,numblock,rng_code,irange,pt_number
+      integer nvmsim
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -105,10 +105,10 @@ c     --- integer arrays
       integer iatmp
       dimension iatmp(NTMAX+MAXBOX)
 c     --- double precision scalars
-      double precision pressure,pmax,pmmin,volume,length,localmass
-      double precision dvalue,pmcb,pmtest,vequiv,scalecut,scalehilog
-      double precision moveprob,eefreftemp,temperature,beta,kalp,calp
-      double precision box_number_density,pmcell,masstotal,scalelolog
+      double precision pressure,volume,length,localmass
+      double precision dvalue,pmtest,vequiv,scalecut,scalehilog
+      double precision eefreftemp,temperature,beta,kalp,calp
+      double precision box_number_density,masstotal,scalelolog
       double precision minboxdim,chempot,uvtfactor,pmtype
       double precision cm_ii_one,cm_ii_zero,cm_ii_negone
       double precision cm_jj_one,cm_jj_zero,cm_jj_negone
@@ -118,16 +118,10 @@ c     --- double precision arrays
       dimension drange(2)
       double precision fatmp
       dimension fatmp(3)
-      double precision dtarray
-      dimension dtarray(MAXPBOX)
       double precision dmarray
       dimension dmarray(NTMAX)
       double precision dmaltarray
       dimension dmaltarray(NTMAX)
-      double precision dboxarray
-      dimension dboxarray(MAXBOX)
-      double precision prob_pair_array
-      dimension prob_pair_array((NTMAX*(NTMAX-1))/2)
 
 c     --- set subroutine idname
       idname = 'readtowhee'
@@ -319,7 +313,7 @@ c     --- allocate arrays based on maxchain
       maxchain = nchain + 1
       call twh_allocate_maxchain(maxchain)
 c     --- allocate based on maxchain and nmolty
-      call twh_allocate_maxmolty_maxchain(nmolty,maxchain)
+      call twh_allocate_maxchain_maxmolty(maxchain,nmolty)
 
 c     --- error check nmolectyp
       lhenry = .false.
@@ -1353,15 +1347,28 @@ c           --- count the number of molecules in the box
 c     --- determine the number of possible box pairs
       nboxpair = numboxes*(numboxes-1)/2
       call twh_nboxpair(GLB_SET,nboxpair)
-      if ( ensemble .eq. ENS_NPT ) then
-         call twh_nvmove(GLB_SET,numboxes)
+c     --- allocate arrays based on nboxpair
+      call twh_allocate_nboxpair(nboxpair)
+c     --- compute and store the maximum number of possible volume moves
+      nvmmax = numboxes + nboxpair
+      call twh_nvmmax(GLB_SET,nvmmax)
+c     --- allocate arrays based upon nvmmax
+      call twh_allocate_nvmmax(nvmmax)
+c     --- compute and store the actual maximum sim volume moves
+c     --- volume move parameters
+      if ( ensemble .eq. ENS_NVT ) then
+c         --- number of volume moves is pairs of boxes
+         nvmsim = nboxpair
+      elseif ( ensemble .eq. ENS_NPT ) then
+c         --- number of volume moves is the number of boxes
+         nvmsim = numboxes
       else
-         call twh_nvmove(GLB_SET,nboxpair)
+         nvmsim = 0
       endif
-c     --- fetch the nvmove for later use in this routine
-      call twh_nvmove(GLB_GET,nvmove)
-c     --- allocate arrays based upon nvmove
-      call twh_allocate_nvmove(nvmove)
+
+      call twh_nvmsim(GLB_SET,nvmsim)
+c     --- allocate arrays based upon nvmsim
+      call twh_allocate_nvmsim(nvmsim)
 
 c     --- set up pairbox array (used for volume and swap moves)
       itest = 0
@@ -1380,1086 +1387,9 @@ c     --- set up pairbox array (used for volume and swap moves)
          return
       endif
 
-c     --- initialize pmmin
-      pmmin = 0.0d0
-
-c     A note about default values: all move probabilities (pm*) are now
-c     optional, implying that they will take on the default values if
-c     not specified in towhee_input.  The default values are specified
-c     in initialize.F, and should give zero probailites to moves not
-c     otherwise defined.  When adding new moves, please add them to
-c     initialize.F
-
-c     --- isotropic volume move
-      if ( ( ensemble .eq. ENS_NVT .and. numboxes .gt. 1 ) 
-     &     .or. ensemble .eq. ENS_NPT ) then
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c        --- read in probabilities for the 3d volume move
-         if (twh_check_label(lfailure,4,'pmvol')) then
-            dvalue = twh_read_labeled_float(lfailure,4,'pmvol',.true.
-     &           ,idname)
-            if ( lfailure ) return
-            call twh_pmvol(GLB_SET,dvalue)
-            if ( twh_get_pmvol() .gt. pmmin ) pmmin = twh_get_pmvol()
-
-            call twh_read_labeled_float_array(lfailure,4,'pmvlpr'
-     &           ,nvmove, .true. , idname, dtarray)
-            if ( lfailure ) return
-            do imove = 1,nvmove
-               call twh_pmvlpr(GLB_SET,imove,dtarray(imove))
-            enddo
-c           --- error check pmvlpr
-            pmax = 0.0d0
-            do ibox = 1,nvmove
-               if ( twh_get_pmvlpr(ibox) .gt. pmax ) then
-                  pmax = twh_get_pmvlpr(ibox)
-               endif
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of pmvlpr'
-     &              ,' must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-
-c           --- read in the initial 3d volume move maximum displacements
-            dvalue = twh_read_labeled_float(lfailure,4,'rmvol',.true.
-     &           ,idname)
-            if ( lfailure ) return
-c           --- safety check
-            if ( dvalue .le. 0.0d0 ) then
-               write(6,*) 'READTOWHEE: rmvol must be positive'
-               lfailure = .true.
-               return
-            endif
-c           --- set all to the initial value
-            call twh_rmvol(GLB_INIT,nvmove,dvalue)
-            
-c           --- read in the target acceptance rate for 3d volume
-            dvalue = twh_read_labeled_float(lfailure,4,'tavol',.true.
-     &           ,idname)
-            if ( lfailure ) return
-c           --- error check
-            if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: tavol must be between 0.0 ',
-     &               'and 1.0'
-               lfailure = .true.
-               return
-            endif
-            call twh_tavol(GLB_SET,dvalue)
-         endif
-      else
-c     user-friendly sanity check.  If pmvol is accidentally in
-c     towhee_input, the optional-label logic will skip all other pm*,
-c     not what we expect.
-c     Catch this condition and complain.
-         if (twh_check_label(lfailure,4,'pmvol')) then
-            write(6,*) 'READTOWHEE: pmvol is permitted only for NPT; ',
-     &         'or, NVT and > 1 numboxes'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c     --- anisotropic volume move
-      if ( ( ensemble .eq. ENS_NVT .and. numboxes .gt. 1 ) 
-     &     .or. ensemble .eq. ENS_NPT ) then
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c        --- read in probabilities for the unit cell adjust move
-         if (twh_check_label(lfailure,4,'pmcell')) then
-            pmcell = twh_read_labeled_float(lfailure,4,'pmcell',.true.
-     &           ,idname)
-            if ( lfailure ) return
-            call twh_pmcell(GLB_SET,pmcell)
-            if ( pmcell .gt. pmmin ) pmmin = pmcell
-
-            call twh_read_labeled_float_array(lfailure,4,'pmcellpr',
-     &         nvmove, .true., idname, dtarray)
-            if ( lfailure ) return
-c           --- error check pmcellpr
-            pmax = 0.0d0
-            do ibox = 1,nvmove
-               dvalue = dtarray(ibox)
-               call twh_pmcellpr(GLB_SET,ibox,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of pmcellpr'
-     &              ,' must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-            if ( ensemble .eq. ENS_NPT ) then
-c              --- ignore pmcellpt
-               call twh_skip_lines(lfailure,4,2)
-               if ( lfailure ) return
-            else
-c              --- read in pmcellpt
-               call twh_read_label(lfailure,4,'pmcellpt',.false.,idname)
-               if ( lfailure ) return
-               do ibox = 1,nboxpair
-                  dvalue = twh_read_float(lfailure,4,'pmcellpt',.false.)
-                  if ( lfailure ) return
-                  call twh_pmcellpt(GLB_SET,ibox,dvalue)
-                  call twh_pairbox(GLB_GET,ibox,1,ivalue)
-                  call twh_pairbox(GLB_GET,ibox,2,jvalue)
-                  write(6,9) 'pairbox:',ivalue,jvalue
-     &                 ,'pmcellpt:',dvalue
- 9                format(a8,i2,1x,i2,1x,a9,f9.6)
-                  if ( dvalue .lt. 0.0d0 ) then
-                     write(6,*) 'READTOWHEE: pmcellpt must be'
-     &                    ,' non-negative'
-                     lfailure = .true.
-                     return
-                  endif
-               enddo
-            endif
-
-c           --- read in the initial unit cell adjustment max
-c           --- displacements
-            dvalue = twh_read_labeled_float(lfailure,4,'rmcell',.true.
-     &           ,idname)
-            if ( lfailure ) return
-            if ( dvalue .le. 0.0d0 ) then
-               write(6,*) 'READTOWHEE: rmcell must be positive'
-               lfailure = .true.
-               return
-            endif
-c           --- set all to the initial value
-            call twh_rmcell(GLB_INIT,nvmove,3,3,dvalue)
-
-c           --- read in the target acceptance rate for unit cell move
-            dvalue = twh_read_labeled_float(lfailure,4,'tacell',.true.
-     &           ,idname)
-            if ( lfailure ) return
-            call twh_tacell(GLB_SET,dvalue)
-c           --- error check
-            if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: tacell must be between 0.0 ',
-     &               'and 1.0'
-               lfailure = .true.
-               return
-            endif
-         endif
-      endif
-
-c     --- 2 box rotational-bias swap
-      if ( numboxes .gt. 1 ) then 
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c        --- read 2-box rotational-bias swap move
-         if (twh_check_label(lfailure,4,'pm2boxrbswap')) then
-            dvalue = twh_read_labeled_float(lfailure,4,'pm2boxrbswap'
-     &           ,.true. ,idname)
-            if ( lfailure ) return
-            call twh_pm2boxrbswap(GLB_SET,dvalue)
-            if ( dvalue .gt. pmmin ) pmmin = dvalue
-            call twh_read_labeled_float_array(lfailure,4,'pm2rbswmt',
-     &            nmolty, .true., idname, dmarray)
-            if ( lfailure ) return
-            do imolty = 1,nmolty
-               dvalue = dmarray(imolty)
-               call twh_pm2rbswmt(GLB_SET,imolty,dvalue)
-            enddo
-c           --- error check pm2rbswmt
-            pmax = 0.0d0
-            do imolty = 1,nmolty
-               call twh_pm2rbswmt(GLB_GET,imolty,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of pm2rbswmt'
-     &              ,' must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-
-            call twh_read_labeled_float_array(lfailure,4,'pm2rbswpr',
-     &            nboxpair, .true., idname, dtarray)
-            if ( lfailure ) return
-            do imove = 1,nboxpair
-               dvalue = dtarray(imove)
-               call twh_pm2rbswpr(GLB_SET,imove,dvalue)
-            enddo
-c           --- error check pm2rbswpr
-            call twh_pm2rbswpr(GLB_GET,nboxpair,dvalue)
-            if ( dvalue .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: the final value of pm2rbswpr'
-     &              ,' must be 1.0'
-               lfailure = .true.
-               return
-            endif
-         endif
-      endif
-
-c     --- 2 box configurational-bias swap
-      if ( numboxes .gt. 1 ) then
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c        --- read 2boxcbswap info
-         if (twh_check_label(lfailure,4,'pm2boxcbswap')) then
-            dvalue = twh_read_labeled_float(lfailure,4,'pm2boxcbswap',
-     &         .true., idname)
-            if ( lfailure ) return
-            call twh_pm2boxcbswap(GLB_SET,dvalue)
-
-            if ( dvalue .gt. pmmin ) pmmin = dvalue
-            call twh_read_labeled_float_array(lfailure,4,'pm2cbswmt',
-     &            nmolty, .true., idname, dmarray)
-            if ( lfailure ) return
-c           --- error check and set pm2cbswmt
-            pmax = 0.0d0
-            do imolty = 1,nmolty
-               dvalue = dmarray(imolty)
-               call twh_pm2cbswmt(GLB_SET,imolty,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of pm2cbswmt'
-     &              ,' must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-
-            call twh_read_labeled_float_array(lfailure,4,'pm2cbswpr',
-     &            nboxpair, .true., idname, dtarray)
-            if ( lfailure ) return
-            do imove = 1,nboxpair
-               dvalue = dtarray(imove)
-               call twh_pm2cbswpr(GLB_SET,imove,dvalue)
-            enddo
-c           --- error check pm2cbswpr
-            call twh_pm2cbswpr(GLB_GET,nboxpair,dvalue)
-            if ( dvalue .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: the final value of pm2cbswpr'
-     &              ,' must be 1.0'
-               lfailure = .true.
-               return
-            endif
-         endif
-      endif
-
-c     --- grand canonical insertion/deletion
-      if ( ensemble .eq. ENS_muVT ) then
-c        --- read in grand canonical swap move info
-         if (twh_check_label(lfailure,4,'pmuvtcbswap')) then
-            dvalue = twh_read_labeled_float(lfailure,4,'pmuvtcbswap'
-     &           ,.true., idname)
-            if ( lfailure ) return
-            call twh_pmuvtcbswap(GLB_SET,dvalue)
-
-            if ( dvalue .gt. pmmin ) pmmin = dvalue
-            call twh_read_labeled_float_array(lfailure,4,'pmuvtcbmt'
-     &           ,nmolty ,.true.,idname,dmarray)
-            if ( lfailure ) return
-c           --- set and error check pmuvtcbmt
-            pmax = 0.0d0
-            do imolty = 1,nmolty
-               dvalue = dmarray(imolty)
-               call twh_pmuvtcbmt(GLB_SET,imolty,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of pmuvtcbmt'
-     &              ,' must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read intra-box cbswap (single box) info
-      if (twh_check_label(lfailure,4,'pm1boxcbswap')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pm1boxcbswap'
-     &        ,.true.,idname)
-         if ( lfailure ) return
-         call twh_pm1boxcbswap(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pm1cbswmt',
-     &       nmolty, .true., idname,dmarray)
-         if ( lfailure ) return
-
-c        --- save and error check pm1cbswmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pm1cbswmt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pm1cbswmt'
-     &           ,' must be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      npairs = nmolty*(nmolty-1)/2
-      if ( npairs .gt. 0 ) then
-c        --- read intra-box center-of-mass switch (single box) info
-         if (twh_check_label(lfailure,4,'pm1boxcomswitch')) then
-            moveprob = twh_read_labeled_float(lfailure,4
-     &           ,'pm1boxcomswitch',.true. ,idname)
-            if ( lfailure ) return
-            call twh_pm1boxcomswitch(GLB_SET,moveprob)
-            if ( moveprob .gt. pmmin ) pmmin = moveprob
-            
-            call twh_read_labeled_float_array(lfailure,4,'pm1comswbox',
-     &           numboxes, .true., idname,dboxarray)
-            if ( lfailure ) return
-c           --- error check box probabilities
-            pmax = 0.0d0
-            do ibox = 1,numboxes
-               if ( dboxarray(ibox) .gt. pmax ) then
-                  pmax = dboxarray(ibox)
-               endif
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of'
-     &              ,' pm1comswbox '
-     &              ,'must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-c           --- store the values in pm1comswbox
-            do ibox = 1,numboxes
-               call twh_pm1comswbox(GLB_SET,ibox,dboxarray(ibox))
-            enddo
-            
-            call twh_read_labeled_float_array(lfailure,4,'pm1comswpair',
-     &           npairs, .true., idname,prob_pair_array)
-            if ( lfailure ) return
-c           --- error check box probabilities
-            pmax = 0.0d0
-            do ipair = 1,npairs
-               if ( prob_pair_array(ipair) .gt. pmax ) then
-                  pmax = prob_pair_array(ipair)
-               endif
-            enddo
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: at least one value of'
-     &              ,' pm1comswpair '
-     &              ,'must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-c           --- store the values in pm1comswpair
-            do ipair = 1,npairs
-               call twh_pm1comswpair(GLB_SET,ipair
-     &              ,prob_pair_array(ipair))
-            enddo
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read aggregation volume bias move (AVB-1) info
-      if (twh_check_label(lfailure,4,'pmavb1')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmavb1',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmavb1(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         dvalue = twh_read_labeled_float(lfailure,4,'pmavb1in',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmavb1in(GLB_SET,dvalue)
-c        --- error check pmavb1in
-         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: pmavb1in must be strictly between'
-     &           ,' 0.0 and 1.0'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_labeled_float_array(lfailure,4, 'pmavb1mt',
-     &        nmolty, .true., idname, dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmavb1mt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmavb1mt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmavb1mt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_label(lfailure,4,'pmavb1ct',.false.,idname)
-         if ( lfailure ) return
-         do imolty = 1,nmolty
-c        look at pmavbXct
-            call twh_read_float_array(lfailure,4, 'pmavb1ct',nmolty
-     &           ,.false.,dmarray)
-            if ( lfailure ) return
-c           --- error check pmavb1ct
-            pmax = 0.0d0
-            do jmolty = 1,nmolty
-               dvalue = dmarray(jmolty)
-               call twh_pmavb1ct(GLB_SET,imolty,jmolty,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            write(6,14) 'moltyp:',imolty
-     &           ,'pmavb1ct:',(dmarray(jmolty),jmolty=1,nmolty)
- 14         format(a7,i3,1x,a9,NTMAX(f9.6,1x))
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: for each moltyp at least one'
-     &              ,' value of pmavb1ct must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-         enddo
-
-         dvalue = twh_read_labeled_float(lfailure,4,'avb1rad',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_avb1rad(GLB_SET,dvalue)
-c        --- error check avb1rad
-         if ( dvalue .le. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: avb1rad must be greater than 0.0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read aggregation volume bias move (AVB-2) info
-      if (twh_check_label(lfailure,4,'pmavb2')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmavb2',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmavb2(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         dvalue = twh_read_labeled_float(lfailure,4,'pmavb2in',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmavb2in(GLB_SET,dvalue)
-c        --- error check pmavb2in
-         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: pmavb2in must be between 0.0 ',
-     &            'and 1.0'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_labeled_float_array(lfailure,4, 'pmavb2mt',
-     &         nmolty, .true., idname, dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmavb2mt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmavb2mt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmavb2mt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_label(lfailure,4,'pmavb2ct',.false.,idname)
-         if ( lfailure ) return
-         do imolty = 1,nmolty
-            call twh_read_float_array(lfailure,4, 'pmavb2ct',nmolty
-     &           ,.false.,dmarray)
-            if ( lfailure ) return
-c           --- set and error check pmavb2ct
-            pmax = 0.0d0
-            do jmolty = 1,nmolty
-               dvalue = dmarray(jmolty)
-               call twh_pmavb2ct(GLB_SET,imolty,jmolty,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            write(6,16) 'moltyp:',imolty
-     &           ,'pmavb2ct:',(dmarray(jmolty),jmolty=1,nmolty)
- 16         format(a7,i3,1x,a9,NTMAX(f9.6,1x))
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: for each moltyp at least one'
-     &              ,' value of pmavb2ct must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-         enddo
-
-         dvalue = twh_read_labeled_float(lfailure,4,'avb2rad',.true.
-     &        , idname)
-         if ( lfailure ) return
-         call twh_avb2rad(GLB_SET,dvalue)
-c        --- error check avb2rad
-         if ( dvalue .le. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: avb2rad must be greater than 0.0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read aggregation volume bias move (AVB-3) info
-      if (twh_check_label(lfailure,4,'pmavb3')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmavb3',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmavb3(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-
-         call twh_read_labeled_float_array(lfailure,4, 'pmavb3mt',
-     &         nmolty, .true., idname, dmarray)
-         if ( lfailure ) return
-c        --- store and error check pmavb3mt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmavb3mt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmavb3mt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_label(lfailure,4,'pmavb3ct',.false.,idname)
-         if ( lfailure ) return
-         do imolty = 1,nmolty
-            call twh_read_float_array(lfailure,4, 'pmavb3ct',
-     &         nmolty, .false., dmarray)
-            if ( lfailure ) return
-c           --- fill in and error check pmavb3ct
-            pmax = 0.0d0
-            do jmolty = 1,nmolty
-               dvalue =  dmarray(jmolty)
-               call twh_pmavb3ct(GLB_SET,imolty,jmolty,dvalue)
-               if ( dvalue .gt. pmax ) pmax = dvalue
-            enddo
-            write(6,18) 'moltyp:',imolty
-     &           ,'pmavb3ct:',(dmarray(jmolty),jmolty=1,nmolty)
- 18         format(a7,i3,1x,a9,NTMAX(f9.6,1x))
-            if ( pmax .lt. 1.0d0 ) then
-               write(6,*) 'READTOWHEE: for each moltyp at least one'
-     &              ,' value of pmavb3ct must be 1.0d0'
-               lfailure = .true.
-               return
-            endif
-         enddo
-
-         dvalue = twh_read_labeled_float(lfailure,4,'avb3rad',.true.
-     &        , idname)
-         if ( lfailure ) return
-         call twh_avb3rad(GLB_SET,dvalue)
-c        --- error check avb3rad
-         if ( dvalue .le. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: avb3rad must be greater than 0.0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read regular cbmc info
-      if (twh_check_label(lfailure,4,'pmcb')) then
-         pmcb = twh_read_labeled_float(lfailure,4,'pmcb',.true.,idname)
-         if ( lfailure ) return
-         call twh_pmcb(GLB_SET,pmcb)
-         if ( pmcb .gt. pmmin ) pmmin = pmcb
-
-         call twh_read_labeled_float_array(lfailure,4,'pmcbmt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmcbmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            pmtest = dmarray(imolty)
-            call twh_pmcbmt(GLB_SET,imolty,pmtest)
-            if ( pmtest .gt. pmax ) pmax = pmtest
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmcbmt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_labeled_float_array(lfailure,4,'pmall',nmolty
-     &        ,.true., idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmall
-         do imolty = 1,nmolty
-            pmtest = dmarray(imolty)
-            call twh_pmall(GLB_SET,imolty,pmtest)
-            if ( pmtest .lt. 0.0d0 .or. pmtest .gt. 1.0d0)
-     &           then
-               write(6,*) 'READTOWHEE: all values of pmall must be'
-     &              ,' between 0.0 and 1.0 (inclusive)'
-               lfailure = .true.
-               return
-            endif
-         enddo
-      endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read backbone regrowth cbmc info
-      if (twh_check_label(lfailure,4,'pmback')) then
-         pmtest = twh_read_labeled_float(lfailure,4,'pmback',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmback(GLB_SET,pmtest)
-         if ( pmtest .gt. pmmin ) pmmin = pmtest
-         call twh_read_labeled_float_array(lfailure,4,'pmbkmt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmbkmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            pmtest = dmarray(imolty)
-            call twh_pmbkmt(GLB_SET,imolty,pmtest)
-            if ( pmtest .gt. pmax ) pmax = pmtest
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmbkmt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-      
-c     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read cbmc sidechain regrowth information
-      if (twh_check_label(lfailure,4,'pmcbside')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmcbside',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmcbside(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-
-         call twh_read_labeled_float_array(lfailure,4,'pmcbsidemt'
-     &        ,nmolty,.true.,idname,dmarray)
-         if ( lfailure ) return
-         do imolty = 1,nmolty
-            call twh_pmcbsidemt(GLB_SET,imolty,dmarray(imolty))
-         enddo
-c        --- error check pmcbsidemt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            call twh_pmcbsidemt(GLB_GET,imolty,pmtest)
-            if ( pmtest .gt. pmax ) pmax = pmtest
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmcbsidemt'
-     &           ,' must be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read pivot move info
-      if (twh_check_label(lfailure,4,'pmpivot')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmpivot',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmpivot(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmpivmt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmpivmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmpivmt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmpivmt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read concerted rotation move info
-      if (twh_check_label(lfailure,4,'pmconrot')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmconrot',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmconrot(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmcrmt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmcrmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmcrmt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmcrmt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read backbone concerted rotation move info
-      if (twh_check_label(lfailure,4,'pmcrback')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmcrback',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmcrback(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmcrbmt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmcrbmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmcrbmt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmcrbmt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read in plane shift info
-      if (twh_check_label(lfailure,4,'pmplane')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmplane',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmplane(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmplanebox'
-     &        ,numboxes, .true., idname,dboxarray)
-         if ( lfailure ) return
-c        --- set and error check pmplanebox
-         pmax = 0.0d0
-         do ibox = 1,numboxes
-            dvalue = dboxarray(ibox)
-            call twh_pmplanebox(GLB_SET,ibox,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmplanebox'
-     &           ,' must be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-         dvalue = twh_read_labeled_float(lfailure,4,'planewidth',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_planewidth(GLB_SET,dvalue)
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: planewidth must be greater than',
-     &            ' zero'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read in row shift info
-      if (twh_check_label(lfailure,4,'pmrow')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmrow',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmrow(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmrowbox'
-     &        ,numboxes,.true.,idname,dboxarray)
-         if ( lfailure ) return
-c        --- set and error check pmrowbox
-         pmax = 0.0d0
-         do ibox = 1,numboxes
-            dvalue = dboxarray(ibox)
-            call twh_pmrowbox(GLB_SET,ibox,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmrowbox must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-         dvalue = twh_read_labeled_float(lfailure,4,'rowwidth',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_rowwidth(GLB_SET,dvalue)
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: rowwidth must be greater than zero'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read translation of single atom info
-      if (twh_check_label(lfailure,4,'pmtraat')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmtraat',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmtraat(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmtamt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmtamt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmtamt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmtamt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-c        --- read in the initial atom translation maximum displacements
-         dvalue = twh_read_labeled_float(lfailure,4,'rmtraa',.true.
-     &        ,idname)
-         if ( lfailure ) return
-c        --- error check
-         if ( dvalue .le. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: rmtraax must be positive'
-            lfailure = .true.
-            return
-         endif
-c        --- set all of the values for the moltyps to the same input
-c        --- value.  For a restart this will be overwritten later
-         call twh_rmtraa(GLB_INIT,nmolty,numboxes,dvalue)
-
-c        --- read in the target acceptance rate for atom translate
-         dvalue = twh_read_labeled_float(lfailure,4,'tatraa',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_tatraa(GLB_SET,dvalue)
-c        --- error check
-         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: tatraa must be between 0.0 and 1.0'
-     &           ,' exclusive'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- composite move info here
-      if (twh_check_label(lfailure,4,'pmcomposite')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmcomposite'
-     &        ,.true.,idname)
-         if ( lfailure ) return
-         call twh_pmcomposite(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-c        --- error check pmcomposite
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: pmcomposite must be non-negative'
-            lfailure = .true.
-            return
-         endif
-
-         call twh_read_labeled_float_array(lfailure,4,'pmcomt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmcomt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmcomt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmcomt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-c        --- read in the initial translation maximum displacements
-         dvalue = twh_read_labeled_float(lfailure,4,'rmcomtra',.true.
-     &        ,idname)
-         if ( lfailure ) return
-c        --- error check
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: rmcomtra must be positive'
-            lfailure = .true.
-            return
-         endif
-c        --- set all of the values for the moltyps to the same value
-         do ibox = 1,numboxes
-            do imolty = 1,nmolty
-               call twh_rmcomtra(GLB_SET,imolty,ibox,dvalue)
-            enddo
-         enddo
-
-c        --- read in the initial rotation maximum displacements
-         dvalue = twh_read_labeled_float(lfailure,4,'rmcomrot',.true.
-     &        ,idname)
-         if ( lfailure ) return
-c        --- error check
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: rmcomrot must be positive'
-            lfailure = .true.
-            return
-         endif
-c        --- set all of the values for the moltyps to the same value
-         do ibox = 1,numboxes
-            do imolty = 1,nmolty
-               call twh_rmcomrot(GLB_SET,imolty,ibox,dvalue)
-            enddo
-         enddo
-
-      endif
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-c     --- read translation of center-of-mass info
-      if (twh_check_label(lfailure,4,'pmtracm')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmtracm',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmtracm(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-         call twh_read_labeled_float_array(lfailure,4,'pmtcmt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmtcmt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmtcmt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmtcmt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-
-c        --- read in the initial COM translation maximum displacements
-         dvalue = twh_read_labeled_float(lfailure,4,'rmtrac',.true.
-     &        ,idname)
-         if ( lfailure ) return
-c        --- error check
-         if ( dvalue .le. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: rmtrac must be positive'
-            lfailure = .true.
-            return
-         endif
-c        --- set all of the values for the moltyps to the same input 
-c        --- value
-         call twh_rmtrac(GLB_INIT,nmolty,numboxes,dvalue)
-
-c        --- read in the target acceptance rate for COM translate
-         dvalue = twh_read_labeled_float(lfailure,4,'tatrac',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_tatrac(GLB_SET,dvalue)
-c        --- error check
-         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: tatrac must be between 0.0 and 1.0'
-     &           ,' exclusive'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c     --- read rotation info
-      if (twh_check_label(lfailure,4,'pmrotate')) then
-         dvalue = twh_read_labeled_float(lfailure,4,'pmrotate',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_pmrotate(GLB_SET,dvalue)
-         if ( dvalue .gt. pmmin ) pmmin = dvalue
-c        --- error check pmrotate
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: pmrotate must be non-negative'
-            lfailure = .true.
-            return
-         endif
-         call twh_read_labeled_float_array(lfailure,4,'pmromt',nmolty
-     &        ,.true.,idname,dmarray)
-         if ( lfailure ) return
-c        --- set and error check pmromt
-         pmax = 0.0d0
-         do imolty = 1,nmolty
-            dvalue = dmarray(imolty)
-            call twh_pmromt(GLB_SET,imolty,dvalue)
-            if ( dvalue .gt. pmax ) pmax = dvalue
-         enddo
-         if ( pmax .lt. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: at least one value of pmromt must'
-     &           ,' be 1.0d0'
-            lfailure = .true.
-            return
-         endif
-c        --- read in the initial rotation maximum displacements
-         dvalue = twh_read_labeled_float(lfailure,4,'rmrot',.true.
-     &        ,idname)
-         if ( lfailure ) return
-c        --- error check
-         if ( dvalue .le. 0.0d0 ) then
-            write(6,*) 'READTOWHEE: rmrot must be positive'
-            lfailure = .true.
-            return
-         endif
-c        --- set all of the values for the moltyps to the same value
-         do ibox = 1,numboxes
-            do imolty = 1,nmolty
-               call twh_rmrot(GLB_SET,imolty,ibox,dvalue)
-            enddo
-         enddo
-
-c        --- read in the target acceptance rate for rotate
-         dvalue = twh_read_labeled_float(lfailure,4,'tarot',.true.
-     &        ,idname)
-         if ( lfailure ) return
-         call twh_tarot(GLB_SET,dvalue)
-c        --- error check
-         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
-            write(6,*) 'READTOWHEE: tarot must be between 0.0 and 1.0'
-     &           ,' exclusive'
-            lfailure = .true.
-            return
-         endif
-      endif
-
-c     --- move error checking
-c     --- make sure at least one move has a probability >= 1.0d0
-      if ( pmmin .lt. 1.0d0 ) then
-         write(6,*) 'READTOWHEE: at least one move must have a'
-     &        ,' probability of 1.0'
-         lfailure = .true.
-         return
-      endif
+c     --- read in all the move probabilities
+      call twh_readtowhee_moveprobs(lfailure
+     &     ,ensemble,numboxes,nvmmax,nvmsim,nboxpair,nmolty)
 
 c     --- get all of the variables associated with the details of the 
 c     --- configurational-bias monte carlo moves
@@ -2931,7 +1861,7 @@ c     --- set up the inclusion table
       call twh_setinclude
 
 c     --- setup all of the trial distributions for CBMC
-      call twh_atd_cbmc_setup(lfailure)
+      call twh_atd_cbmc_setup(lfailure,nmolty)
       if ( lfailure ) return
 
 c     --- Begin outputting information about the simulation
@@ -3420,6 +2350,1126 @@ c     --- set the thermal debroglie wavelength and uvtfactor
       endif
       return
       end
+
+      subroutine twh_readtowhee_moveprobs(lfailure
+     &     ,ensemble,numboxes,nvmmax,nvmsim,nboxpair,nmolty)
+c     ******************************************************************
+c     * read in the move probabilty section of towhee_input            *
+c     *                                                                *
+c     * split out of readtowhee 01-16-2018 by M.G. Martin              *
+c     * last modified 01-16-2018 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+#define FUNCTION_CHECK_LABEL
+#define FUNCTION_GET_PMVOL
+#define FUNCTION_READ_FLOAT
+#define FUNCTION_READ_LABELED_FLOAT
+#include "functions.h"
+c     --- variables passed to/from the subroutine
+      logical lfailure
+      integer ensemble,numboxes,nvmmax,nvmsim,nboxpair,nmolty
+c     --- local variables
+c     --- character strings
+      character*15 idname
+c     --- integer scalars
+      integer ibox,imolty,jmolty,imove,ipair,ivalue,jvalue,npairs
+c     --- double scalars
+      double precision pmmin,dvalue,moveprob,pmax,pmtest
+c     --- double arrays
+      double precision dboxarray
+      dimension dboxarray(numboxes)
+      double precision dtarray
+      dimension dtarray(nvmmax)
+      double precision dmarray
+      dimension dmarray(nmolty)
+      double precision prob_pair_array
+      dimension prob_pair_array(1+(nmolty*(nmolty-1))/2)
+
+c     --- initialize pmmin
+      pmmin = 0.0d0
+
+c     A note about default values: all move probabilities (pm*) are now
+c     optional, implying that they will take on the default values if
+c     not specified in towhee_input.  The default values are specified
+c     in initialize.F, and should give zero probabilities to moves not
+c     otherwise defined.  When adding new moves, please add them to
+c     initialize.F
+
+
+c     --- isotropic volume move
+      if ( ( ensemble .eq. ENS_NVT .and. numboxes .gt. 1 ) 
+     &     .or. ensemble .eq. ENS_NPT ) then
+
+c        --- read in probabilities for the 3d volume move
+         if (twh_check_label(lfailure,4,'pmvol')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pmvol',.true.
+     &           ,idname)
+            if ( lfailure ) return
+            call twh_pmvol(GLB_SET,dvalue)
+            if ( twh_get_pmvol() .gt. pmmin ) pmmin = twh_get_pmvol()
+
+            call twh_read_labeled_float_array(lfailure,4,'pmvlpr'
+     &           ,nvmsim, .true. , idname, dtarray)
+            if ( lfailure ) return
+            do imove = 1,nvmsim
+               call twh_pmvlpr(GLB_SET,imove,dtarray(imove))
+            enddo
+c           --- error check pmvlpr
+            pmax = 0.0d0
+            do ibox = 1,nvmsim
+               call twh_pmvlpr(GLB_GET,ibox,pmtest)
+               if ( pmtest .gt. pmax ) then
+                  pmax = pmtest
+               endif
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of pmvlpr'
+     &              ,' must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+
+c           --- read in the initial 3d volume move maximum displacements
+            dvalue = twh_read_labeled_float(lfailure,4,'rmvol',.true.
+     &           ,idname)
+            if ( lfailure ) return
+c           --- safety check
+            if ( dvalue .le. 0.0d0 ) then
+               write(6,*) 'READTOWHEE: rmvol must be positive'
+               lfailure = .true.
+               return
+            endif
+c           --- set all to the initial value
+            call twh_rmvol(GLB_INIT,nvmmax,dvalue)
+            
+c           --- read in the target acceptance rate for 3d volume
+            dvalue = twh_read_labeled_float(lfailure,4,'tavol',.true.
+     &           ,idname)
+            if ( lfailure ) return
+c           --- error check
+            if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: tavol must be between 0.0 ',
+     &               'and 1.0'
+               lfailure = .true.
+               return
+            endif
+            call twh_tavol(GLB_SET,dvalue)
+         endif
+      else
+c     user-friendly sanity check.  If pmvol is accidentally in
+c     towhee_input, the optional-label logic will skip all other pm*,
+c     not what we expect.
+c     Catch this condition and complain.
+         if (twh_check_label(lfailure,4,'pmvol')) then
+            write(6,*) 'READTOWHEE: pmvol is permitted only for NPT; ',
+     &         'or, NVT and > 1 numboxes'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c     --- anisotropic volume move
+      if ( ( ensemble .eq. ENS_NVT .and. numboxes .gt. 1 ) 
+     &     .or. ensemble .eq. ENS_NPT ) then
+
+c        --- read in probabilities for the unit cell adjust move
+         if (twh_check_label(lfailure,4,'pmcell')) then
+            pmtest = twh_read_labeled_float(lfailure,4,'pmcell',.true.
+     &           ,idname)
+            if ( lfailure ) return
+            call twh_pmcell(GLB_SET,pmtest)
+            if ( pmtest .gt. pmmin ) pmmin = pmtest
+
+            call twh_read_labeled_float_array(lfailure,4,'pmcellpr',
+     &         nvmsim, .true., idname, dtarray)
+            if ( lfailure ) return
+c           --- error check pmcellpr
+            pmax = 0.0d0
+            do ibox = 1,nvmsim
+               dvalue = dtarray(ibox)
+               call twh_pmcellpr(GLB_SET,ibox,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of pmcellpr'
+     &              ,' must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+            if ( ensemble .eq. ENS_NPT ) then
+c              --- ignore pmcellpt
+               call twh_skip_lines(lfailure,4,2)
+               if ( lfailure ) return
+            else
+c              --- read in pmcellpt
+               call twh_read_label(lfailure,4,'pmcellpt',.false.,idname)
+               if ( lfailure ) return
+               do ipair = 1,nboxpair
+                  dvalue = twh_read_float(lfailure,4,'pmcellpt',.false.)
+                  if ( lfailure ) return
+                  call twh_pmcellpt(GLB_SET,ipair,dvalue)
+                  call twh_pairbox(GLB_GET,ipair,1,ivalue)
+                  call twh_pairbox(GLB_GET,ipair,2,jvalue)
+                  write(6,9) 'pairbox:',ivalue,jvalue
+     &                 ,'pmcellpt:',dvalue
+ 9                format(a8,i2,1x,i2,1x,a9,f9.6)
+                  if ( dvalue .lt. 0.0d0 ) then
+                     write(6,*) 'READTOWHEE: pmcellpt must be'
+     &                    ,' non-negative'
+                     lfailure = .true.
+                     return
+                  endif
+               enddo
+            endif
+
+c           --- read in the initial unit cell adjustment max
+c           --- displacements
+            dvalue = twh_read_labeled_float(lfailure,4,'rmcell',.true.
+     &           ,idname)
+            if ( lfailure ) return
+            if ( dvalue .le. 0.0d0 ) then
+               write(6,*) 'READTOWHEE: rmcell must be positive'
+               lfailure = .true.
+               return
+            endif
+c           --- set all to the initial value
+            call twh_rmcell(GLB_INIT,nvmmax,3,3,dvalue)
+
+c           --- read in the target acceptance rate for unit cell move
+            dvalue = twh_read_labeled_float(lfailure,4,'tacell',.true.
+     &           ,idname)
+            if ( lfailure ) return
+            call twh_tacell(GLB_SET,dvalue)
+c           --- error check
+            if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: tacell must be between 0.0 ',
+     &               'and 1.0'
+               lfailure = .true.
+               return
+            endif
+         endif
+      endif
+
+c     --- 2 box rotational-bias swap
+      if ( numboxes .gt. 1 ) then 
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c        --- read 2-box rotational-bias swap move
+         if (twh_check_label(lfailure,4,'pm2boxrbswap')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pm2boxrbswap'
+     &           ,.true. ,idname)
+            if ( lfailure ) return
+            call twh_pm2boxrbswap(GLB_SET,dvalue)
+            if ( dvalue .gt. pmmin ) pmmin = dvalue
+            call twh_read_labeled_float_array(lfailure,4,'pm2rbswmt',
+     &            nmolty, .true., idname, dmarray)
+            if ( lfailure ) return
+            do imolty = 1,nmolty
+               dvalue = dmarray(imolty)
+               call twh_pm2rbswmt(GLB_SET,imolty,dvalue)
+            enddo
+c           --- error check pm2rbswmt
+            pmax = 0.0d0
+            do imolty = 1,nmolty
+               call twh_pm2rbswmt(GLB_GET,imolty,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of pm2rbswmt'
+     &              ,' must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+
+            call twh_read_labeled_float_array(lfailure,4,'pm2rbswpr',
+     &            nboxpair, .true., idname, dtarray)
+            if ( lfailure ) return
+            do imove = 1,nboxpair
+               dvalue = dtarray(imove)
+               call twh_pm2rbswpr(GLB_SET,imove,dvalue)
+            enddo
+c           --- error check pm2rbswpr
+            call twh_pm2rbswpr(GLB_GET,nboxpair,dvalue)
+            if ( dvalue .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: the final value of pm2rbswpr'
+     &              ,' must be 1.0'
+               lfailure = .true.
+               return
+            endif
+         endif
+      endif
+
+c     --- 2 box configurational-bias swap
+      if ( numboxes .gt. 1 ) then
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c        --- read 2boxcbswap info
+         if (twh_check_label(lfailure,4,'pm2boxcbswap')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pm2boxcbswap',
+     &         .true., idname)
+            if ( lfailure ) return
+            call twh_pm2boxcbswap(GLB_SET,dvalue)
+
+            if ( dvalue .gt. pmmin ) pmmin = dvalue
+            call twh_read_labeled_float_array(lfailure,4,'pm2cbswmt',
+     &            nmolty, .true., idname, dmarray)
+            if ( lfailure ) return
+c           --- error check and set pm2cbswmt
+            pmax = 0.0d0
+            do imolty = 1,nmolty
+               dvalue = dmarray(imolty)
+               call twh_pm2cbswmt(GLB_SET,imolty,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of pm2cbswmt'
+     &              ,' must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+
+            call twh_read_labeled_float_array(lfailure,4,'pm2cbswpr',
+     &            nboxpair, .true., idname, dtarray)
+            if ( lfailure ) return
+            do imove = 1,nboxpair
+               dvalue = dtarray(imove)
+               call twh_pm2cbswpr(GLB_SET,imove,dvalue)
+            enddo
+c           --- error check pm2cbswpr
+            call twh_pm2cbswpr(GLB_GET,nboxpair,dvalue)
+            if ( dvalue .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: the final value of pm2cbswpr'
+     &              ,' must be 1.0'
+               lfailure = .true.
+               return
+            endif
+         endif
+      endif
+
+c     --- grand canonical insertion/deletion
+      if ( ensemble .eq. ENS_muVT ) then
+c        --- read in grand canonical swap move info
+         if (twh_check_label(lfailure,4,'pmuvtcbswap')) then
+            dvalue = twh_read_labeled_float(lfailure,4,'pmuvtcbswap'
+     &           ,.true., idname)
+            if ( lfailure ) return
+            call twh_pmuvtcbswap(GLB_SET,dvalue)
+
+            if ( dvalue .gt. pmmin ) pmmin = dvalue
+            call twh_read_labeled_float_array(lfailure,4,'pmuvtcbmt'
+     &           ,nmolty ,.true.,idname,dmarray)
+            if ( lfailure ) return
+c           --- set and error check pmuvtcbmt
+            pmax = 0.0d0
+            do imolty = 1,nmolty
+               dvalue = dmarray(imolty)
+               call twh_pmuvtcbmt(GLB_SET,imolty,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of pmuvtcbmt'
+     &              ,' must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read intra-box cbswap (single box) info
+      if (twh_check_label(lfailure,4,'pm1boxcbswap')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pm1boxcbswap'
+     &        ,.true.,idname)
+         if ( lfailure ) return
+         call twh_pm1boxcbswap(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pm1cbswmt',
+     &       nmolty, .true., idname,dmarray)
+         if ( lfailure ) return
+
+c        --- save and error check pm1cbswmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pm1cbswmt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pm1cbswmt'
+     &           ,' must be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      npairs = nmolty*(nmolty-1)/2
+      if ( npairs .gt. 0 ) then
+c        --- read intra-box center-of-mass switch (single box) info
+         if (twh_check_label(lfailure,4,'pm1boxcomswitch')) then
+            moveprob = twh_read_labeled_float(lfailure,4
+     &           ,'pm1boxcomswitch',.true. ,idname)
+            if ( lfailure ) return
+            call twh_pm1boxcomswitch(GLB_SET,moveprob)
+            if ( moveprob .gt. pmmin ) pmmin = moveprob
+            
+            call twh_read_labeled_float_array(lfailure,4,'pm1comswbox',
+     &           numboxes, .true., idname,dboxarray)
+            if ( lfailure ) return
+c           --- error check box probabilities
+            pmax = 0.0d0
+            do ibox = 1,numboxes
+               if ( dboxarray(ibox) .gt. pmax ) then
+                  pmax = dboxarray(ibox)
+               endif
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of'
+     &              ,' pm1comswbox '
+     &              ,'must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+c           --- store the values in pm1comswbox
+            do ibox = 1,numboxes
+               call twh_pm1comswbox(GLB_SET,ibox,dboxarray(ibox))
+            enddo
+            
+            call twh_read_labeled_float_array(lfailure,4,'pm1comswpair',
+     &           npairs, .true., idname,prob_pair_array)
+            if ( lfailure ) return
+c           --- error check box probabilities
+            pmax = 0.0d0
+            do ipair = 1,npairs
+               if ( prob_pair_array(ipair) .gt. pmax ) then
+                  pmax = prob_pair_array(ipair)
+               endif
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of'
+     &              ,' pm1comswpair '
+     &              ,'must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+c           --- store the values in pm1comswpair
+            do ipair = 1,npairs
+               call twh_pm1comswpair(GLB_SET,ipair
+     &              ,prob_pair_array(ipair))
+            enddo
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read aggregation volume bias move (AVB-1) info
+      if (twh_check_label(lfailure,4,'pmavb1')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb1',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmavb1(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb1in',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmavb1in(GLB_SET,dvalue)
+c        --- error check pmavb1in
+         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: pmavb1in must be strictly between'
+     &           ,' 0.0 and 1.0'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_labeled_float_array(lfailure,4, 'pmavb1mt',
+     &        nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmavb1mt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmavb1mt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmavb1mt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_label(lfailure,4,'pmavb1ct',.false.,idname)
+         if ( lfailure ) return
+         do imolty = 1,nmolty
+c        look at pmavbXct
+            call twh_read_float_array(lfailure,4, 'pmavb1ct',nmolty
+     &           ,.false.,dmarray)
+            if ( lfailure ) return
+c           --- error check pmavb1ct
+            pmax = 0.0d0
+            do jmolty = 1,nmolty
+               dvalue = dmarray(jmolty)
+               call twh_pmavb1ct(GLB_SET,imolty,jmolty,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            write(6,14) 'moltyp:',imolty
+     &           ,'pmavb1ct:',(dmarray(jmolty),jmolty=1,nmolty)
+ 14         format(a7,i3,1x,a9,NTMAX(f9.6,1x))
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: for each moltyp at least one'
+     &              ,' value of pmavb1ct must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+         enddo
+
+         dvalue = twh_read_labeled_float(lfailure,4,'avb1rad',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_avb1rad(GLB_SET,dvalue)
+c        --- error check avb1rad
+         if ( dvalue .le. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: avb1rad must be greater than 0.0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read aggregation volume bias move (AVB-2) info
+      if (twh_check_label(lfailure,4,'pmavb2')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb2',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmavb2(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb2in',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmavb2in(GLB_SET,dvalue)
+c        --- error check pmavb2in
+         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: pmavb2in must be between 0.0 ',
+     &            'and 1.0'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_labeled_float_array(lfailure,4, 'pmavb2mt',
+     &         nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmavb2mt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmavb2mt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmavb2mt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_label(lfailure,4,'pmavb2ct',.false.,idname)
+         if ( lfailure ) return
+         do imolty = 1,nmolty
+            call twh_read_float_array(lfailure,4, 'pmavb2ct',nmolty
+     &           ,.false.,dmarray)
+            if ( lfailure ) return
+c           --- set and error check pmavb2ct
+            pmax = 0.0d0
+            do jmolty = 1,nmolty
+               dvalue = dmarray(jmolty)
+               call twh_pmavb2ct(GLB_SET,imolty,jmolty,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            write(6,16) 'moltyp:',imolty
+     &           ,'pmavb2ct:',(dmarray(jmolty),jmolty=1,nmolty)
+ 16         format(a7,i3,1x,a9,NTMAX(f9.6,1x))
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: for each moltyp at least one'
+     &              ,' value of pmavb2ct must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+         enddo
+
+         dvalue = twh_read_labeled_float(lfailure,4,'avb2rad',.true.
+     &        , idname)
+         if ( lfailure ) return
+         call twh_avb2rad(GLB_SET,dvalue)
+c        --- error check avb2rad
+         if ( dvalue .le. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: avb2rad must be greater than 0.0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read aggregation volume bias move (AVB-3) info
+      if (twh_check_label(lfailure,4,'pmavb3')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmavb3',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmavb3(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+
+         call twh_read_labeled_float_array(lfailure,4, 'pmavb3mt',
+     &         nmolty, .true., idname, dmarray)
+         if ( lfailure ) return
+c        --- store and error check pmavb3mt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmavb3mt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmavb3mt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_label(lfailure,4,'pmavb3ct',.false.,idname)
+         if ( lfailure ) return
+         do imolty = 1,nmolty
+            call twh_read_float_array(lfailure,4, 'pmavb3ct',
+     &         nmolty, .false., dmarray)
+            if ( lfailure ) return
+c           --- fill in and error check pmavb3ct
+            pmax = 0.0d0
+            do jmolty = 1,nmolty
+               dvalue =  dmarray(jmolty)
+               call twh_pmavb3ct(GLB_SET,imolty,jmolty,dvalue)
+               if ( dvalue .gt. pmax ) pmax = dvalue
+            enddo
+            write(6,18) 'moltyp:',imolty
+     &           ,'pmavb3ct:',(dmarray(jmolty),jmolty=1,nmolty)
+ 18         format(a7,i3,1x,a9,NTMAX(f9.6,1x))
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: for each moltyp at least one'
+     &              ,' value of pmavb3ct must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+         enddo
+
+         dvalue = twh_read_labeled_float(lfailure,4,'avb3rad',.true.
+     &        , idname)
+         if ( lfailure ) return
+         call twh_avb3rad(GLB_SET,dvalue)
+c        --- error check avb3rad
+         if ( dvalue .le. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: avb3rad must be greater than 0.0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read regular cbmc info
+      if (twh_check_label(lfailure,4,'pmcb')) then
+         pmtest = twh_read_labeled_float(lfailure,4,'pmcb',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmcb(GLB_SET,pmtest)
+         if ( pmtest .gt. pmmin ) pmmin = pmtest
+
+         call twh_read_labeled_float_array(lfailure,4,'pmcbmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmcbmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            pmtest = dmarray(imolty)
+            call twh_pmcbmt(GLB_SET,imolty,pmtest)
+            if ( pmtest .gt. pmax ) pmax = pmtest
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmcbmt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_labeled_float_array(lfailure,4,'pmall',nmolty
+     &        ,.true., idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmall
+         do imolty = 1,nmolty
+            pmtest = dmarray(imolty)
+            call twh_pmall(GLB_SET,imolty,pmtest)
+            if ( pmtest .lt. 0.0d0 .or. pmtest .gt. 1.0d0)
+     &           then
+               write(6,*) 'READTOWHEE: all values of pmall must be'
+     &              ,' between 0.0 and 1.0 (inclusive)'
+               lfailure = .true.
+               return
+            endif
+         enddo
+      endif
+
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read backbone regrowth cbmc info
+      if (twh_check_label(lfailure,4,'pmback')) then
+         pmtest = twh_read_labeled_float(lfailure,4,'pmback',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmback(GLB_SET,pmtest)
+         if ( pmtest .gt. pmmin ) pmmin = pmtest
+         call twh_read_labeled_float_array(lfailure,4,'pmbkmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmbkmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            pmtest = dmarray(imolty)
+            call twh_pmbkmt(GLB_SET,imolty,pmtest)
+            if ( pmtest .gt. pmax ) pmax = pmtest
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmbkmt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+      
+c     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read cbmc sidechain regrowth information
+      if (twh_check_label(lfailure,4,'pmcbside')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmcbside',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmcbside(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+
+         call twh_read_labeled_float_array(lfailure,4,'pmcbsidemt'
+     &        ,nmolty,.true.,idname,dmarray)
+         if ( lfailure ) return
+         do imolty = 1,nmolty
+            call twh_pmcbsidemt(GLB_SET,imolty,dmarray(imolty))
+         enddo
+c        --- error check pmcbsidemt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            call twh_pmcbsidemt(GLB_GET,imolty,pmtest)
+            if ( pmtest .gt. pmax ) pmax = pmtest
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmcbsidemt'
+     &           ,' must be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read pivot move info
+      if (twh_check_label(lfailure,4,'pmpivot')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmpivot',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmpivot(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmpivmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmpivmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmpivmt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmpivmt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read concerted rotation move info
+      if (twh_check_label(lfailure,4,'pmconrot')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmconrot',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmconrot(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmcrmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmcrmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmcrmt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmcrmt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read backbone concerted rotation move info
+      if (twh_check_label(lfailure,4,'pmcrback')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmcrback',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmcrback(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmcrbmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmcrbmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmcrbmt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmcrbmt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read in plane shift info
+      if (twh_check_label(lfailure,4,'pmplane')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmplane',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmplane(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmplanebox'
+     &        ,numboxes, .true., idname,dboxarray)
+         if ( lfailure ) return
+c        --- set and error check pmplanebox
+         pmax = 0.0d0
+         do ibox = 1,numboxes
+            dvalue = dboxarray(ibox)
+            call twh_pmplanebox(GLB_SET,ibox,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmplanebox'
+     &           ,' must be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+         dvalue = twh_read_labeled_float(lfailure,4,'planewidth',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_planewidth(GLB_SET,dvalue)
+         if ( dvalue .lt. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: planewidth must be greater than',
+     &            ' zero'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read in row shift info
+      if (twh_check_label(lfailure,4,'pmrow')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmrow',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmrow(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmrowbox'
+     &        ,numboxes,.true.,idname,dboxarray)
+         if ( lfailure ) return
+c        --- set and error check pmrowbox
+         pmax = 0.0d0
+         do ibox = 1,numboxes
+            dvalue = dboxarray(ibox)
+            call twh_pmrowbox(GLB_SET,ibox,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmrowbox must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+         dvalue = twh_read_labeled_float(lfailure,4,'rowwidth',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_rowwidth(GLB_SET,dvalue)
+         if ( dvalue .lt. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: rowwidth must be greater than zero'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read translation of single atom info
+      if (twh_check_label(lfailure,4,'pmtraat')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmtraat',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmtraat(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmtamt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmtamt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmtamt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmtamt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+c        --- read in the initial atom translation maximum displacements
+         dvalue = twh_read_labeled_float(lfailure,4,'rmtraa',.true.
+     &        ,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( dvalue .le. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: rmtraax must be positive'
+            lfailure = .true.
+            return
+         endif
+c        --- set all of the values for the moltyps to the same input
+c        --- value.  For a restart this will be overwritten later
+         call twh_rmtraa(GLB_INIT,nmolty,numboxes,dvalue)
+
+c        --- read in the target acceptance rate for atom translate
+         dvalue = twh_read_labeled_float(lfailure,4,'tatraa',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_tatraa(GLB_SET,dvalue)
+c        --- error check
+         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: tatraa must be between 0.0 and 1.0'
+     &           ,' exclusive'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- composite move info here
+      if (twh_check_label(lfailure,4,'pmcomposite')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmcomposite'
+     &        ,.true.,idname)
+         if ( lfailure ) return
+         call twh_pmcomposite(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+c        --- error check pmcomposite
+         if ( dvalue .lt. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: pmcomposite must be non-negative'
+            lfailure = .true.
+            return
+         endif
+
+         call twh_read_labeled_float_array(lfailure,4,'pmcomt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmcomt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmcomt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmcomt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+c        --- read in the initial translation maximum displacements
+         dvalue = twh_read_labeled_float(lfailure,4,'rmcomtra',.true.
+     &        ,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( dvalue .lt. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: rmcomtra must be positive'
+            lfailure = .true.
+            return
+         endif
+c        --- set all of the values for the moltyps to the same value
+         do ibox = 1,numboxes
+            do imolty = 1,nmolty
+               call twh_rmcomtra(GLB_SET,imolty,ibox,dvalue)
+            enddo
+         enddo
+
+c        --- read in the initial rotation maximum displacements
+         dvalue = twh_read_labeled_float(lfailure,4,'rmcomrot',.true.
+     &        ,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( dvalue .lt. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: rmcomrot must be positive'
+            lfailure = .true.
+            return
+         endif
+c        --- set all of the values for the moltyps to the same value
+         do ibox = 1,numboxes
+            do imolty = 1,nmolty
+               call twh_rmcomrot(GLB_SET,imolty,ibox,dvalue)
+            enddo
+         enddo
+
+      endif
+
+c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+c     --- read translation of center-of-mass info
+      if (twh_check_label(lfailure,4,'pmtracm')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmtracm',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmtracm(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+         call twh_read_labeled_float_array(lfailure,4,'pmtcmt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmtcmt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmtcmt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmtcmt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+
+c        --- read in the initial COM translation maximum displacements
+         dvalue = twh_read_labeled_float(lfailure,4,'rmtrac',.true.
+     &        ,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( dvalue .le. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: rmtrac must be positive'
+            lfailure = .true.
+            return
+         endif
+c        --- set all of the values for the moltyps to the same input 
+c        --- value
+         call twh_rmtrac(GLB_INIT,nmolty,numboxes,dvalue)
+
+c        --- read in the target acceptance rate for COM translate
+         dvalue = twh_read_labeled_float(lfailure,4,'tatrac',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_tatrac(GLB_SET,dvalue)
+c        --- error check
+         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: tatrac must be between 0.0 and 1.0'
+     &           ,' exclusive'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c     --- read rotation info
+      if (twh_check_label(lfailure,4,'pmrotate')) then
+         dvalue = twh_read_labeled_float(lfailure,4,'pmrotate',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_pmrotate(GLB_SET,dvalue)
+         if ( dvalue .gt. pmmin ) pmmin = dvalue
+c        --- error check pmrotate
+         if ( dvalue .lt. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: pmrotate must be non-negative'
+            lfailure = .true.
+            return
+         endif
+         call twh_read_labeled_float_array(lfailure,4,'pmromt',nmolty
+     &        ,.true.,idname,dmarray)
+         if ( lfailure ) return
+c        --- set and error check pmromt
+         pmax = 0.0d0
+         do imolty = 1,nmolty
+            dvalue = dmarray(imolty)
+            call twh_pmromt(GLB_SET,imolty,dvalue)
+            if ( dvalue .gt. pmax ) pmax = dvalue
+         enddo
+         if ( pmax .lt. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: at least one value of pmromt must'
+     &           ,' be 1.0d0'
+            lfailure = .true.
+            return
+         endif
+c        --- read in the initial rotation maximum displacements
+         dvalue = twh_read_labeled_float(lfailure,4,'rmrot',.true.
+     &        ,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( dvalue .le. 0.0d0 ) then
+            write(6,*) 'READTOWHEE: rmrot must be positive'
+            lfailure = .true.
+            return
+         endif
+c        --- set all of the values for the moltyps to the same value
+         do ibox = 1,numboxes
+            do imolty = 1,nmolty
+               call twh_rmrot(GLB_SET,imolty,ibox,dvalue)
+            enddo
+         enddo
+
+c        --- read in the target acceptance rate for rotate
+         dvalue = twh_read_labeled_float(lfailure,4,'tarot',.true.
+     &        ,idname)
+         if ( lfailure ) return
+         call twh_tarot(GLB_SET,dvalue)
+c        --- error check
+         if ( dvalue .le. 0.0d0 .or. dvalue .ge. 1.0d0 ) then
+            write(6,*) 'READTOWHEE: tarot must be between 0.0 and 1.0'
+     &           ,' exclusive'
+            lfailure = .true.
+            return
+         endif
+      endif
+
+c     --- move error checking
+c     --- make sure at least one move has a probability >= 1.0d0
+      if ( pmmin .lt. 1.0d0 ) then
+         write(6,*) 'READTOWHEE: at least one move must have a'
+     &        ,' probability of 1.0'
+         lfailure = .true.
+         return
+      endif
+
+      return
+      end
+
 
 
 

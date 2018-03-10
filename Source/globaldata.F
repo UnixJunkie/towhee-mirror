@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -22,9 +22,10 @@ c     ******************************************************************
 
 c     ******************************************************************
 c     * this file contains all of the globally accessed data structures*
+c     * that are stored in Fortran: see globalinfo.c for the C version *
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-12-2018 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -1034,39 +1035,6 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_bavol(flag,imove,icount)
-c     ******************************************************************
-c     * running count of accepted volume moves since the last update   *
-c     *                                                                *
-c     * originally written 03-21-2006 by M.G. Martin                   *
-c     * last modified 03-21-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      integer flag,imove,icount
-c     --- local variables
-      integer itemp
-c     --- storage variable
-      integer bavol
-      dimension bavol(MAXPBOX)
-      save bavol
-
-      if ( flag .eq. GLB_INCR ) then
-         bavol(imove) = bavol(imove) + icount
-      elseif ( flag .eq. GLB_GET ) then
-         icount = bavol(imove)
-      elseif ( flag .eq. GLB_INIT ) then
-         do itemp = 1,imove
-            bavol(itemp) = icount
-         enddo
-      else
-         write(6,*) 'BAVOL: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_bencoeff(flag,itype,icoeff,dvalue)
 c     ******************************************************************
 c     * the coefficients that determine the equilibrium angle and the  *
@@ -1949,39 +1917,6 @@ c     --- storage variable
          enddo
       else
          write(6,*) 'BNSHIFT: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_bnvol(flag,imove,icount)
-c     ******************************************************************
-c     * running count of attempted volume moves since the last update  *
-c     *                                                                *
-c     * originally written 03-21-2006 by M.G. Martin                   *
-c     * last modified 03-21-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      integer flag,imove,icount
-c     --- local variables
-      integer itemp
-c     --- storage variable
-      integer bnvol
-      dimension bnvol(MAXPBOX)
-      save bnvol
-
-      if ( flag .eq. GLB_INCR ) then
-         bnvol(imove) = bnvol(imove) + icount
-      elseif ( flag .eq. GLB_GET ) then
-         icount = bnvol(imove)
-      elseif ( flag .eq. GLB_INIT ) then
-         do itemp = 1,imove
-            bnvol(itemp) = icount
-         enddo
-      else
-         write(6,*) 'BNVOL: invalid global flag',flag
          stop
       endif
 
@@ -7051,8 +6986,6 @@ c     --- storage variable
 c           --- scale the real and place that value into temp
             hmatrix(BXD_TEMP,ibox,idim,jdim)
      &           = hmatrix(BXD_REAL,ibox,idim,jdim) * dvalue
-            write(6,*) 'ibox,idim,jdim,hmatrix:',ibox,idim,jdim
-     &           ,hmatrix(BXD_TEMP,ibox,idim,jdim)
          elseif ( bxdflag .eq. BXD_T_TO_R ) then
 c           --- scale the real and place that value into temp
             hmatrix(BXD_REAL,ibox,idim,jdim)
@@ -7069,6 +7002,33 @@ c           --- scale the real and place that value into temp
                      hmatrix(ixtemp,ibtemp,iitemp,ijtemp) = dvalue
                   enddo
                enddo
+            enddo
+         enddo
+      elseif ( flag .eq. GLB_SCALE_ALL ) then
+         do idim = 1,3
+            do jdim = 1,3
+               if ( bxdflag .eq. BXD_R_TO_T ) then
+                  hmatrix(BXD_TEMP,ibox,idim,jdim) = 
+     &                 dvalue*hmatrix(BXD_REAL,ibox,idim,jdim)
+               elseif ( bxdflag .eq. BXD_T_TO_R ) then
+                  hmatrix(BXD_REAL,ibox,idim,jdim) =
+     &                 dvalue*hmatrix(BXD_TEMP,ibox,idim,jdim)
+               else
+                  hmatrix(bxdflag,ibox,idim,jdim) =
+     &                 dvalue*hmatrix(bxdflag,ibox,idim,jdim)
+               endif
+            enddo
+         enddo
+      elseif ( flag .eq. GLB_STORE_ALL ) then
+         do idim = 1,3
+            do jdim= 1,3
+               if ( bxdflag .eq. BXD_R_TO_T ) then
+                  hmatrix(BXD_TEMP,ibox,idim,jdim) =
+     &                 hmatrix(BXD_REAL,ibox,idim,jdim)
+               elseif ( bxdflag .eq. BXD_T_TO_R ) then
+                  hmatrix(BXD_REAL,ibox,idim,jdim) = 
+     &                 hmatrix(BXD_TEMP,ibox,idim,jdim)
+               endif
             enddo
          enddo
       else
@@ -11734,28 +11694,55 @@ c     --- information variables
 
       return
       end
-
-      subroutine twh_nvmove(flag,ivalue)
+ 
+      subroutine twh_nvmmax(flag,ivalue)
 c     ******************************************************************
-c     * number of possible boxes or pairs of boxes (depending on the   *
-c     * ensemble) for the volume moves                                 *
+c     * number of possible boxes plus the number of pairs of boxes     *
+c     * for the volume moves                                           *
 c     *                                                                *
 c     * originally written 10-06-2008 by M.G. Martin                   *
-c     * last modified 10-06-2008 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
       integer flag,ivalue
 c     --- information variables
-      integer nvmove
-      save nvmove
+      integer nvmmax
+      save nvmmax
 
       if ( flag .eq. GLB_GET ) then
-         ivalue = nvmove
+         ivalue = nvmmax
       elseif ( flag .eq. GLB_SET ) then
-         nvmove = ivalue
+         nvmmax = ivalue
       else
-         write(6,*) 'NVMOVE: invalid global flag',flag
+         write(6,*) 'NVMMAX: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_nvmsim(flag,ivalue)
+c     ******************************************************************
+c     * number of actual volume move possibilities in the simulation   *
+c     * based on the ensemble and the number of boxes                  *
+c     *                                                                *
+c     * originally written 01-15-2018 by M.G. Martin                   *
+c     * last modified 01-15-2018 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag,ivalue
+c     --- information variables
+      integer nvmsim
+      save nvmsim
+
+      if ( flag .eq. GLB_GET ) then
+         ivalue = nvmsim
+      elseif ( flag .eq. GLB_SET ) then
+         nvmsim = ivalue
+      else
+         write(6,*) 'NVMSIM: invalid global flag',flag
          stop
       endif
 
@@ -12110,33 +12097,6 @@ c     --- information variables
          p_acc = dvalue
       else
          write(6,*) 'P_ACC: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_pairbox(flag,pbox,index,ivalue)
-c     ******************************************************************
-c     * the list of box pairs in the simulation                        *
-c     *                                                                *
-c     * originally written 10-31-2007 by M.G. Martin                   *
-c     * last modified 10-31-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,pbox,index,ivalue
-c     --- information variables
-      integer pairbox
-      dimension pairbox(MAXPBOX,2)
-      save pairbox
-
-      if ( flag .eq. GLB_GET ) then
-         ivalue = pairbox(pbox,index)
-      elseif ( flag .eq. GLB_SET ) then
-         pairbox(pbox,index) = ivalue
-      else
-         write(6,*) 'PAIRBOX: invalid global flag',flag
          stop
       endif
 
@@ -12504,41 +12464,6 @@ c     --- information variables
       return
       end
 
-      subroutine twh_pm2cbswpr(flag,iboxpair,dvalue)
-c     ******************************************************************
-c     * the probability sum for selecting each pair of boxes for the   *
-c     * 2-box configurational-bias molecule transfer move              *
-c     *                                                                *
-c     * originally written 12-24-2007 by M.G. Martin                   *
-c     * last modified 12-24-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,iboxpair
-      double precision dvalue
-c     --- local variables
-      integer ibtemp
-c     --- information variables
-      double precision pm2cbswpr
-      dimension pm2cbswpr(MAXPBOX)
-      save pm2cbswpr
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = pm2cbswpr(iboxpair)
-      elseif ( flag .eq. GLB_SET ) then
-         pm2cbswpr(iboxpair) = dvalue
-      elseif ( flag .eq. GLB_INIT ) then
-         do ibtemp = 1,iboxpair
-            pm2cbswpr(ibtemp) = dvalue
-         enddo
-      else
-         write(6,*) 'PM2CBSWPR: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_pm2boxrbswap(flag,dvalue)
 c     ******************************************************************
 c     * the probability sum for selecting the 2-box rotational-bias    *
@@ -12596,41 +12521,6 @@ c     --- information variables
          enddo
       else
          write(6,*) 'PM2RBSWMT: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_pm2rbswpr(flag,iboxpair,dvalue)
-c     ******************************************************************
-c     * the probability sum for selecting each pair of boxes for the   *
-c     * 2-box rotational-bias molecule transfer move                   *
-c     *                                                                *
-c     * originally written 12-24-2007 by M.G. Martin                   *
-c     * last modified 12-24-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,iboxpair
-      double precision dvalue
-c     --- local variables
-      integer ibtemp
-c     --- information variables
-      double precision pm2rbswpr
-      dimension pm2rbswpr(MAXPBOX)
-      save pm2rbswpr
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = pm2rbswpr(iboxpair)
-      elseif ( flag .eq. GLB_SET ) then
-         pm2rbswpr(iboxpair) = dvalue
-      elseif ( flag .eq. GLB_INIT ) then
-         do ibtemp = 1,iboxpair
-            pm2rbswpr(ibtemp) = dvalue
-         enddo
-      else
-         write(6,*) 'PM2RBSWpr: invalid global flag',flag
          stop
       endif
 
@@ -13239,77 +13129,6 @@ c     --- information variables
          pmcell = dvalue
       else
          write(6,*) 'PMCELL: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_pmcellpr(flag,iboxpair,dvalue)
-c     ******************************************************************
-c     * the probability sum for performing the volume cell move on each*
-c     * box (or box pair)                                              *
-c     *                                                                *
-c     * originally written 12-23-2007 by M.G. Martin                   *
-c     * last modified 12-23-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,iboxpair
-      double precision dvalue
-c     --- local variables
-      integer ibtemp
-c     --- information variables
-      double precision pmcellpr
-      dimension pmcellpr(MAXPBOX)
-      save pmcellpr
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = pmcellpr(iboxpair)
-      elseif ( flag .eq. GLB_SET ) then
-         pmcellpr(iboxpair) = dvalue
-      elseif ( flag .eq. GLB_INIT ) then
-         do ibtemp = 1,iboxpair
-            pmcellpr(ibtemp) = dvalue
-         enddo
-      else
-         write(6,*) 'PMCELLPR: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_pmcellpt(flag,iboxpair,dvalue)
-c     ******************************************************************
-c     * the probability sum for performing the volume cell move        *
-c     * on each box of the pair, while performing an isotropic move on *
-c     * the other box                                                  *
-c     *                                                                *
-c     * originally written 12-23-2007 by M.G. Martin                   *
-c     * last modified 12-23-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,iboxpair
-      double precision dvalue
-c     --- local variables
-      integer ibtemp
-c     --- information variables
-      double precision pmcellpt
-      dimension pmcellpt(MAXPBOX)
-      save pmcellpt
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = pmcellpt(iboxpair)
-      elseif ( flag .eq. GLB_SET ) then
-         pmcellpt(iboxpair) = dvalue
-      elseif ( flag .eq. GLB_INIT ) then
-         do ibtemp = 1,iboxpair
-            pmcellpt(ibtemp) = dvalue
-         enddo
-      else
-         write(6,*) 'PMCELLPT: invalid global flag',flag
          stop
       endif
 
@@ -13935,41 +13754,6 @@ c     --- information variables
          pmuvtcbswap = dvalue
       else
          write(6,*) 'PMUVTCBSWAP: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_pmvlpr(flag,iboxpair,dvalue)
-c     ******************************************************************
-c     * the probability sum for performing the volume move on each box *
-c     * or box pair                                                    *
-c     *                                                                *
-c     * originally written 06-12-2006 by M.G. Martin                   *
-c     * last modified 06-12-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,iboxpair
-      double precision dvalue
-c     --- local variables
-      integer iptemp
-c     --- information variables
-      double precision pmvlpr
-      dimension pmvlpr(MAXPBOX)
-      save pmvlpr
-
-      if ( flag .eq. GLB_SET ) then
-         pmvlpr(iboxpair) = dvalue
-      elseif ( flag .eq. GLB_GET ) then
-         dvalue = pmvlpr(iboxpair)
-      elseif ( flag .eq. GLB_INIT ) then
-         do iptemp = 1,iboxpair
-            pmvlpr(iptemp) = dvalue
-         enddo
-      else
-         write(6,*) 'PMVLPR: invalid global flag',flag
          stop
       endif
 
@@ -14959,46 +14743,6 @@ c     --- information variables
          cvalue = runoutput
       else
          write(6,*) 'RUNOUTPUT: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_rmcell(flag,ipairbox,idim,jdim,dvalue)
-c     ******************************************************************
-c     * the maximum volume displacement for hmatrix value in each box  *
-c     *                                                                *
-c     * originally written 12-23-2007 by M.G. Martin                   *
-c     * last modified 12-23-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,ipairbox,idim,jdim
-      double precision dvalue
-c     --- local variables
-      integer iptemp,iditemp,idjtemp
-c     --- information variables
-      double precision rmcell
-      dimension rmcell(MAXPBOX,3,3)
-      save rmcell
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = rmcell(ipairbox,idim,jdim)
-      elseif ( flag .eq. GLB_SET ) then
-         rmcell(ipairbox,idim,jdim) = dvalue
-      elseif ( flag .eq. GLB_INIT ) then
-         do iptemp = 1,ipairbox
-            do iditemp = 1,idim
-               do idjtemp = 1,jdim
-                  rmcell(iptemp,iditemp,idjtemp) = dvalue
-               enddo
-            enddo
-         enddo
-      elseif ( flag .eq. GLB_SCALE ) then
-         rmcell(ipairbox,idim,jdim) = rmcell(ipairbox,idim,jdim)*dvalue
-      else
-         write(6,*) 'RMCELL: invalid global flag',flag
          stop
       endif
 

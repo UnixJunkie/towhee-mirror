@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -77,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -1323,10 +1323,12 @@ c        --- update reciprocal-space sum
          if ( swaptype .eq. SWAP_RB_INTER
      &        .or. swaptype .eq. SWAP_CB_INTER
      &        .or. swaptype .eq. SWAP_CB_GC ) then
-            call twh_recip(boxtest(2),2)
-            call twh_recip(boxtest(1),2)
+            call twh_recip(lfailure,boxtest(2),RCP_ACCEPT_NEW)
+            call twh_recip(lfailure,boxtest(1),RCP_ACCEPT_NEW)
+            if ( lfailure ) return
          else
-            call twh_recip(boxtest(2),2)
+            call twh_recip(lfailure,boxtest(2),RCP_ACCEPT_NEW)
+            if ( lfailure ) return
          endif
 
 c        --- update center of mass

@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (August 25 2016)    
+ MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ Copyright (C) <2018> Marcus G. Martin
+ Code Contributors for 2018: Marcus G. Martin;
+ Copyright (C) <2017> Marcus G. Martin
+ Code Contributors for 2017: Marcus G. Martin;
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -255,14 +259,21 @@ molecule type:     1
  Max displacement for Atom translate:   0.500000
  Max displacement for COM translate:  18.000000
  Max displacement for rotation:   3.141593
- Max disp. for 3D Volume:             0.5267E+03  0.5995E+06
- Max disp. for unit cell perturbation
-    Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   2 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   2 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   2 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+Max displacement for single box isotropic volume moves
+ Box:  1 rmvol(box):   0.5267E+03
+ Box:  2 rmvol(box):   0.5995E+06
+Max displacement for box pairs isotropic volume moves
+ Pair:  1 rmvol(box):   0.5267E+03
+Max disp. for unit cell perturbation
+  Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   2 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   2 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   2 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Boxes   1 and   2 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Boxes   1 and   2 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Boxes   1 and   2 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
 
  new box dimensions read from towhee_initial
  Box  1 hmatrix(1,x):       20.52352       0.00000       0.00000

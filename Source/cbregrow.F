@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -408,7 +408,8 @@ c        --- we can now accept
          enddo
          
 c        --- update reciprocal-space sum
-         call twh_recip(ibox,2)
+         call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+         if ( lfailure ) return
          
 c        --- update center of mass
          call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,ibox,iname

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,12 +19,41 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_writetowhee(lfailure,lprotein,imolty)
+      subroutine twh_writetowhee(lfailure,lprotein,imoltyflag)
+c     ******************************************************************
+c     * wrapper that determines a few constants needed to dimension    *
+c     * arrays and then call the main writetowhee                      *
+c     *                                                                *
+c     * originally written 01-16-2018 by M.G. Martin                   *
+c     * last modified 01-16-2018 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      logical lfailure,lprotein
+      integer imoltyflag
+c     --- local variables
+      integer numboxes,nvmmax,nvmsim,nmolty
+
+c     --- retrieve some constants
+      call twh_numboxes(GLB_GET,numboxes)
+      call twh_nvmmax(GLB_GET,nvmmax)
+      call twh_nvmsim(GLB_GET,nvmsim)
+      call twh_nmolty(GLB_GET,nmolty)
+
+      call twh_writetowhee_main(lfailure,lprotein,imoltyflag,numboxes
+     &     ,nvmmax,nvmsim,nmolty)
+
+      return
+      end
+
+      subroutine twh_writetowhee_main(lfailure,lprotein,imoltyflag
+     &     ,numboxes,nvmmax,nvmsim,nmolty)
 c     ******************************************************************
 c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
-c     * last modified 07-22-2016 by M.G. Martin                        *
+c     * split from the original writetowhee 01-16-2018 by M.G. Martin  *
+c     * last modified 01-16-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -55,7 +84,6 @@ c     ******************************************************************
 #define FUNCTION_GET_NATIVE_LAMBDA
 #define FUNCTION_GET_NBNAME
 #define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_PMVLPR
 #define FUNCTION_GET_PMVOL
 #define FUNCTION_GET_RMVOL
 #define FUNCTION_GET_SCALING_STYLE
@@ -65,7 +93,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lprotein
-      integer imolty
+      integer imoltyflag,numboxes,nvmmax,nvmsim,nmolty
 c     --- local variables
       character*1 hist_suffix
       character*3 aminoshort
@@ -76,7 +104,7 @@ c     --- local variables
       character*20 routput,cvalue,coulombstyle,fieldstring,initboxtype
       character*20 initstyle,initlattice,interpolatestyle
       character*20 isarray,pressure_thermo_style
-      dimension isarray(NTMAX)
+      dimension isarray(nmolty)
       character*30 potentialstyle_str,ensemble_str
       character*50 eform
       character*(MAXDIRLENGTH) ffname
@@ -92,40 +120,38 @@ c     --- small integer scalars
       integer*4 random_seed,luxlevel
 c     --- integer scalars
       integer iatom,ivib,ibend,itor,iaa,ibox,jmolty,idim,jdim,iorder
-      integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile,nmolty
+      integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
-      integer aminonum,potentialstyle,numboxes,rng_code
-      integer npair,inix,iniy,iniz,nvmove,ensemble,itbang,iobang
-      integer irange,pt_number
+      integer aminonum,potentialstyle,rng_code
+      integer npair,inix,iniy,iniz,ensemble,itbang,iobang
+      integer irange,pt_number,ivolmove
 c     --- integer arrays
       integer idummy
-      dimension idummy(NTMAX)
+      dimension idummy(nmolty)
 c     --- double precision scalars
       double precision dvalue,qqfact,temperature,ewald_prec,kalp,rcut
       double precision fieldtwo,fieldthree,fieldfour,fnbparam,pmcb,rmin
       double precision rcutin
 c     --- double precision arrays
       double precision dpboxarray
-      dimension dpboxarray(MAXPBOX)
+      dimension dpboxarray(numboxes+nvmsim)
       double precision dmarray
-      dimension dmarray(NTMAX)
+      dimension dmarray(nmolty)
       double precision dpairarray
-      dimension dpairarray(NTPAIRMAX)
+      dimension dpairarray(1+(nmolty*(nmolty-1))/2)
       double precision dboxarray
-      dimension dboxarray(MAXBOX)
+      dimension dboxarray(numboxes)
       double precision dimtemp
       dimension dimtemp(3)
       double precision fatwo
       dimension fatwo(2)
 
-c      write(6,*) 'starting WRITETOWHEE ',imolty
+c      write(6,*) 'starting WRITETOWHEE ',imoltyflag
 c     --- retrieve constants
       call twh_potentialstyle(GLB_GET,potentialstyle)
-      call twh_numboxes(GLB_GET,numboxes)
-      call twh_nvmove(GLB_GET,nvmove)
       call twh_ensemble(GLB_GET,ensemble)
 
-      if ( imolty .eq. 0 ) then
+      if ( imoltyflag .eq. 0 ) then
 c        --- output all of the towhee_input file except for the 
 c        --- molecule information
          write(15,'(a11)') 'inputformat'
@@ -174,7 +200,6 @@ c        --- molecule information
             write(15,*) dvalue
          endif
          write(15,'(a6)') 'nmolty'
-         call twh_nmolty(GLB_GET,nmolty)
          write(15,*) nmolty
          write(15,'(a9)') 'nmolectyp'
          do jmolty = 1,nmolty
@@ -756,15 +781,21 @@ c                 --- output the helix_* varibles
          endif
 
          call twh_nboxpair(GLB_GET,nboxpair)
+
          if ( ( ensemble .eq. ENS_NVT .and. numboxes .gt. 1 ) 
      &        .or. ensemble .eq. ENS_NPT ) then
+               
             write(15,'(a5)') 'pmvol'
             write(15,44) twh_get_pmvol()
             write(15,'(10x,a6)') 'pmvlpr'
-            if ( nvmove .eq. 0 ) then
+            if ( nvmmax .eq. 0 ) then
                write(15,100) 1.0d0
             else
-               write(15,100) (twh_get_pmvlpr(ibox),ibox=1,nvmove)
+               do ivolmove = 1,nvmsim
+                  call twh_pmvlpr(GLB_GET,ivolmove,dvalue)
+                  dpboxarray(ivolmove) = dvalue
+               enddo
+               write(15,100) (dpboxarray(ivolmove),ivolmove=1,nvmsim)
             endif
             write(15,'(10x,a5)') 'rmvol'
             write(15,100) twh_get_rmvol(1)
@@ -774,14 +805,14 @@ c                 --- output the helix_* varibles
             call twh_pmcell(GLB_GET,dvalue)
             write(15,44) dvalue
             write(15,'(10x,a8)') 'pmcellpr'
-            if ( nvmove .eq. 0 ) then
+            if ( nvmsim .eq. 0 ) then
                write(15,100) 1.0d0
             else
-               do ibox=1,nvmove
-                  call twh_pmcellpr(GLB_GET,ibox,dvalue)
-                  dpboxarray(ibox) = dvalue
+               do ivolmove=1,nvmsim
+                  call twh_pmcellpr(GLB_GET,ivolmove,dvalue)
+                  dpboxarray(ivolmove) = dvalue
                enddo
-               write(15,100) (dpboxarray(ibox),ibox=1,nvmove)
+               write(15,100) (dpboxarray(ivolmove),ivolmove=1,nvmsim)
             endif
             write(15,'(10x,a8)') 'pmcellpt'
             if ( nboxpair .eq. 0 ) then
@@ -1108,67 +1139,67 @@ c        --- output the molecule information for towhee_input
          write(15,'(a11)') 'input_style'
          write(15,'(a8)') 'explicit'
          write(15,'(a5)') 'nunit'
-         call twh_nunit(GLB_GET,imolty,nunit)
+         call twh_nunit(GLB_GET,imoltyflag,nunit)
          write(15,*) nunit
          write(15,'(a8)') 'nmaxcbmc'
-         call twh_nmaxcbmc(GLB_GET,imolty,ivalue)
+         call twh_nmaxcbmc(GLB_GET,imoltyflag,ivalue)
          write(15,*) ivalue
          write(15,'(a9)') 'lpdbnames'
          write(15,*) lprotein
          
          do iatom = 1,nunit
             write(15,'(a17)') 'unit ntype qqatom'
-            write(15,*) iatom,twh_get_ntype(imolty,iatom)
-     &           ,twh_get_qqatom(imolty,iatom)
+            write(15,*) iatom,twh_get_ntype(imoltyflag,iatom)
+     &           ,twh_get_qqatom(imoltyflag,iatom)
             if ( lprotein ) then
 c              --- include pdb stuff
                write(15,'(a27)') 'pdbname aminonum aminoshort'
-               call twh_aminoshort(GLB_GET,imolty,iatom,aminoshort)
-               call twh_aminonum(GLB_GET,imolty,iatom,aminonum)
-               call twh_pdbname(GLB_GET,imolty,iatom,pdbname)
+               call twh_aminoshort(GLB_GET,imoltyflag,iatom,aminoshort)
+               call twh_aminonum(GLB_GET,imoltyflag,iatom,aminonum)
+               call twh_pdbname(GLB_GET,imoltyflag,iatom,pdbname)
                write(15,*) char(39),pdbname,char(39),' '
      &              ,aminonum,' ',char(39),aminoshort,char(39)
             endif
             write(15,'(a9)') 'vibration'
-            write(15,*) twh_get_invib(imolty,iatom)
-            do ivib = 1,twh_get_invib(imolty,iatom)
-               write(15,*) twh_get_ijvib(imolty,iatom,ivib)
-     &              ,twh_get_itvib(imolty,iatom,ivib)
+            write(15,*) twh_get_invib(imoltyflag,iatom)
+            do ivib = 1,twh_get_invib(imoltyflag,iatom)
+               write(15,*) twh_get_ijvib(imoltyflag,iatom,ivib)
+     &              ,twh_get_itvib(imoltyflag,iatom,ivib)
             enddo
             write(15,'(a7)') 'bending'
-            write(15,*) twh_get_inben(imolty,iatom)
-            do ibend = 1,twh_get_inben(imolty,iatom)
-               call twh_orderben(GLB_GET,imolty,iatom,ibend,iorder)
-               call twh_itbang(GLB_GET,imolty,iatom,ibend,itbang)
-               call twh_orderbang(GLB_GET,imolty,iatom,ibend,iobang)
-               write(15,*) twh_get_ijben2(imolty,iatom,ibend)
-     &              ,twh_get_ijben3(imolty,iatom,ibend)
-     &              ,twh_get_itben(imolty,iatom,ibend),iorder
+            write(15,*) twh_get_inben(imoltyflag,iatom)
+            do ibend = 1,twh_get_inben(imoltyflag,iatom)
+               call twh_orderben(GLB_GET,imoltyflag,iatom,ibend,iorder)
+               call twh_itbang(GLB_GET,imoltyflag,iatom,ibend,itbang)
+               call twh_orderbang(GLB_GET,imoltyflag,iatom,ibend,iobang)
+               write(15,*) twh_get_ijben2(imoltyflag,iatom,ibend)
+     &              ,twh_get_ijben3(imoltyflag,iatom,ibend)
+     &              ,twh_get_itben(imoltyflag,iatom,ibend),iorder
      &              ,itbang,iobang
             enddo
             write(15,'(a7)') 'torsion'
-            write(15,*) twh_get_intor(imolty,iatom)
-            do itor = 1,twh_get_intor(imolty,iatom)
-               write(15,*) twh_get_ijtor2(imolty,iatom,itor)
-     &              ,twh_get_ijtor3(imolty,iatom,itor)
-     &              ,twh_get_ijtor4(imolty,iatom,itor)
-     &              ,twh_get_ittor(imolty,iatom,itor)
+            write(15,*) twh_get_intor(imoltyflag,iatom)
+            do itor = 1,twh_get_intor(imoltyflag,iatom)
+               write(15,*) twh_get_ijtor2(imoltyflag,iatom,itor)
+     &              ,twh_get_ijtor3(imoltyflag,iatom,itor)
+     &              ,twh_get_ijtor4(imoltyflag,iatom,itor)
+     &              ,twh_get_ittor(imoltyflag,iatom,itor)
             enddo
             write(15,'(a11)') 'angle-angle'
-            write(15,*) twh_get_inaa(imolty,iatom)
-            do iaa = 1,twh_get_inaa(imolty,iatom)
-               write(15,*) twh_get_ijaa0(imolty,iatom,iaa)
-     &              ,twh_get_ijaa1(imolty,iatom,iaa)
-     &              ,twh_get_ijaa2(imolty,iatom,iaa)
-     &              ,twh_get_itaa(imolty,iatom,iaa)
+            write(15,*) twh_get_inaa(imoltyflag,iatom)
+            do iaa = 1,twh_get_inaa(imoltyflag,iatom)
+               write(15,*) twh_get_ijaa0(imoltyflag,iatom,iaa)
+     &              ,twh_get_ijaa1(imoltyflag,iatom,iaa)
+     &              ,twh_get_ijaa2(imoltyflag,iatom,iaa)
+     &              ,twh_get_itaa(imoltyflag,iatom,iaa)
             enddo
             write(15,'(a16)') 'improper torsion'
-            write(15,*) twh_get_inimprop(imolty,iatom)
-            do itor = 1,twh_get_inimprop(imolty,iatom)
-               write(15,*) twh_get_ijimprop2(imolty,iatom,itor)
-     &              ,twh_get_ijimprop3(imolty,iatom,itor)
-     &              ,twh_get_ijimprop4(imolty,iatom,itor)
-     &              ,twh_get_itimprop(imolty,iatom,itor)
+            write(15,*) twh_get_inimprop(imoltyflag,iatom)
+            do itor = 1,twh_get_inimprop(imoltyflag,iatom)
+               write(15,*) twh_get_ijimprop2(imoltyflag,iatom,itor)
+     &              ,twh_get_ijimprop3(imoltyflag,iatom,itor)
+     &              ,twh_get_ijimprop4(imoltyflag,iatom,itor)
+     &              ,twh_get_itimprop(imoltyflag,iatom,itor)
             enddo
          enddo
       endif

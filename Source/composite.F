@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * number of successful trial moves is stored in acscomp          *
 c     *                                                                *
 c     * based closely on the code trancom.F and rotate.F               *
 c     * originally written 03-23-2005 by MAW                           *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -303,7 +303,8 @@ c     --- store new coordinates
       enddo
 
 c     --- update reciprocal-space sum
-      call twh_recip(ibox,2)
+      call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+      if ( lfailure ) return
 
 c     --- update chain center of mass
 c     --- no need to recompute as we simply shifted the center of mass

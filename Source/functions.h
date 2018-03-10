@@ -3,7 +3,7 @@ c     * functions.h                                                    *
 c     * contains all of the function type declarations in towhee       *
 c     *                                                                *
 c     * originally written 11-12-2002 by M.G. Martin                   *
-c     * last modified 07-11-2016 by M.G. Martin                        *
+c     * last modified 01-14-2018 by M.G. Martin                        *
 c     ******************************************************************
 #ifdef FUNCTION_ARCCOS
       double precision twh_arccos
@@ -585,11 +585,6 @@ c
 #ifdef FUNCTION_GET_PM1BOXCOMSWITCH
       double precision twh_get_pm1boxcomswitch
 #undef FUNCTION_GET_PM1BOXCOMSWITCH
-#endif
-c
-#ifdef FUNCTION_GET_PMVLPR
-      double precision twh_get_pmvlpr
-#undef FUNCTION_GET_PMVLPR
 #endif
 c
 #ifdef FUNCTION_GET_PMVOL

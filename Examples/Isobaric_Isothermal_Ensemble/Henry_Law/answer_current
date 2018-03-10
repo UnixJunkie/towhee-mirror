@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (August 25 2016)    
+ MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ Copyright (C) <2018> Marcus G. Martin
+ Code Contributors for 2018: Marcus G. Martin;
+ Copyright (C) <2017> Marcus G. Martin
+ Code Contributors for 2017: Marcus G. Martin;
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -405,11 +409,13 @@ molecule type:     5
  Max displacement for Atom translate:   0.500000
  Max displacement for COM translate:   0.500000
  Max displacement for rotation:   0.050000
- Max disp. for 3D Volume:             0.4677E+03
- Max disp. for unit cell perturbation
-    Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+Max displacement for single box isotropic volume moves
+ Box:  1 rmvol(box):   0.4677E+03
+Max displacement for box pairs isotropic volume moves
+Max disp. for unit cell perturbation
+  Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
 
  new box dimensions read from towhee_initial
  Box  1 hmatrix(1,x):       28.68608       0.00000       0.00000

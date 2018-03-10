@@ -1,4 +1,8 @@
- MCCCS Towhee - Version 7.2.0   (August 25 2016)    
+ MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ Copyright (C) <2018> Marcus G. Martin
+ Code Contributors for 2018: Marcus G. Martin;
+ Copyright (C) <2017> Marcus G. Martin
+ Code Contributors for 2017: Marcus G. Martin;
  Copyright (C) <2016> Marcus G. Martin
  Code Contributors for 2016: Marcus G. Martin;
  Copyright (C) <2015> Marcus G. Martin
@@ -865,14 +869,21 @@ molecule type:     3
  Max displacement for Atom translate:   0.100000
  Max displacement for COM translate:  24.000000
  Max displacement for rotation:   3.141500
- Max disp. for 3D Volume:             0.1000E+01  0.5013E+04
- Max disp. for unit cell perturbation
-    Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   2 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   2 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
-    Box   2 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+Max displacement for single box isotropic volume moves
+ Box:  1 rmvol(box):   0.1000E+01
+ Box:  2 rmvol(box):   0.5013E+04
+Max displacement for box pairs isotropic volume moves
+ Pair:  1 rmvol(box):   0.1000E+01
+Max disp. for unit cell perturbation
+  Box   1 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   1 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   1 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   2 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   2 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Box   2 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Boxes   1 and   2 idim 1 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Boxes   1 and   2 idim 2 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
+  Boxes   1 and   2 idim 3 rmcell:   0.1000E+01  0.1000E+01  0.1000E+01
 
  new box dimensions read from towhee_initial
  Box  1 hmatrix(1,x):       24.55500       0.00000       0.00000
@@ -1058,7 +1069,6 @@ Box:     2
   hmatrix(3,x)       0.00000       0.00000     104.78699
 
 * 3D Volume Change Moves *
- Box  1 Tries:        0 Acp. Ratio:  0.000 Max Disp.: 0.100E+01
  Box  2 Tries:        1 Acp. Ratio:  1.000 Max Disp.: 0.501E+04
 
 * Configurational-Bias SWAP Moves *

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +30,7 @@ c     * rotate chooses one of the three space-fixed axes at random     *
 c     * and rotates the molecule around this axis.                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed in 08-12-2016 by M.G. Martin                      *
+c     * last modifed in 01-15-2018 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -254,7 +254,8 @@ c        --- the move was accepted so update the arrays
          enddo
 
 c        --- update the reciprical space sum
-         call twh_recip(ibox,2)
+         call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+         if ( lfailure ) return
 c        --- update embedding density
          iboxa(1)=ibox
          call twh_reseteamrho(1,iboxa)

@@ -50,7 +50,7 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 01-05-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -354,7 +354,8 @@ c        --- no atoms to move, nothing has happened, just return
       endif
 
 c     --- store the old values for the ewald sum
-      call twh_recip(ibox,3)
+      call twh_recip(lfailure,ibox,RCP_STORE)
+      if ( lfailure ) return
 
 c     --- compute the new energy 
       lovrlap = .false.
@@ -389,13 +390,15 @@ c           --- set the r*u variables to the old coordinates
       if ( lovrlap ) then
 c        --- we had an overlap in the new conformation, move rejected
 c        --- set the ewald stuff back to the old values and exit
-         call twh_recip(ibox,4)
+         call twh_recip(lfailure,ibox,RCP_RESTORE)
+         if ( lfailure ) return
          return
       else
 c        --- we are about to compute the old energy, this will recompute
 c        --- all of the ewald terms so now we want to store the new
 c        --- ewald terms in the same way we just stored the old above
-         call twh_recip(ibox,3)
+         call twh_recip(lfailure,ibox,RCP_STORE)
+         if ( lfailure ) return
       endif
 
 c     --- we need to compute the old energy to determine acceptance
@@ -461,7 +464,8 @@ c        --- they were back to the old values for the energy
 c        --- computation
 c        --- so even though it looks like we are setting these to the
 c        --- old values, we are really setting them to the new
-         call twh_recip(ibox,4)
+         call twh_recip(lfailure,ibox,RCP_RESTORE)
+         if ( lfailure ) return
          do imove = 1,ntomove
             ichain = movelist(imove)
 c           --- reset COM to the temp values

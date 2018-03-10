@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
 c     * originally written by M.G. Martin and C.D. Lorenz 10-16-2002   *
-c     * last modifed in 08-12-2016 by M.G. Martin                      *
+c     * last modifed in 01-15-2018 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -386,7 +386,8 @@ c        --- assign new atom positions
      &           ,xtemp,ytemp,ztemp)
          enddo
 c        --- update the reciprical space sum
-         call twh_recip(activebox,2)
+         call twh_recip(lfailure,activebox,RCP_ACCEPT_NEW)
+         if ( lfailure ) return
 c        --- update the center of mass of chain
          call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,activebox
      &        ,ichain,CTR_PIVOT)

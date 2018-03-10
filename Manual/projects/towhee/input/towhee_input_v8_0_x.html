@@ -1,6 +1,6 @@
 <html>
  <head>
-  <title>MCCCS Towhee (towhee_input Version 7.2.x)</title>
+  <title>MCCCS Towhee (towhee_input Version 8.0.x)</title>
  </head>
   
  <body bgcolor="#FFFFFF" text="#000000">
@@ -8,7 +8,7 @@
    <tr> 
     <td colspan="2" height="29"> 
      <div align="center"> <font size="5"> <b><font face="Arial, Helvetica,sans-serif">
-      <a name="top"></a>MCCCS Towhee (towhee_input Version 7.2.x)</font></b></font>
+      <a name="top"></a>MCCCS Towhee (towhee_input Version 8.0.x)</font></b></font>
      </div>
     </td>
    </tr>
@@ -23,7 +23,7 @@
     <td width="700" valign="top">
      <b>Overview</b>
      <ul>
-      This section covers the variables that are set in the towhee_input file Version 7.2.x. Each variable is listed along with its type 
+      This section covers the variables that are set in the towhee_input file Version 8.0.x. Each variable is listed along with its type 
       (logical, character, integer, or double precision). towhee_input is the main input file for Towhee and is generally the only file 
       that needs to be edited on a regular basis. It has a regimented style to the input. The variables are described here in the order 
       they appear in this file. Please look at one of the example files (available with the code package) for the precise file format. 
@@ -37,38 +37,19 @@
       Some variables are optional.  If the variable name is not included in towhee_input it will be set to the specified default value.
       Optional input file values are marked as <em>optional parameter</em>.
      </ul>
-     <b>Bug reports and feature enhancements for 7.2.x versions</b>
+     <b>Bug reports and feature enhancements for 8.0.x versions</b>
      <ul>
-      <li>7.2.0:
-       Rebuilt the Arbitrary Trial Distribution setup for Angle B terms.  This resolved a bug related to Angle B distributions that had flat portions of the distribution (typically, a range of zero probability
-       for angle potentials that contain a nonbonded term).
-       Arbitrary trial distributions for the angle B term that use a Gaussian distribution now only use a random number to select a peak from the distribution if there is more than one peak to choose from.
-       Previously, a random number was generated no matter the number of peaks.  This means the new code will not follow the exact same random number path as previously, but otherwise this is simply a time saving
-       improvement.
-       Rebuilt configurational-bias to properly handle flexible all-atom three membered rings.  Previous versions were not properly accounting for all of the bending angles and torsional interactions related to
-       the three membered ring generation.  Added the <a href="../examples/example_manual.html#MMFF94_Ethyleneoxide">MMFF94 Ethyleneoxide</a> example to test flexible three membered all-atom rings and the
-       buffered 14-7 potential.
-       Revisited the <a href="../forcefields/mmff94.html">MMFF94</a> force field implementation and discovered several mistakes in the previous implementation of that force field.  This implementation has not
-       yet been validated for the entire test suite provided in the original papers, but has now at least passed a few of those test cases.
-       Resolved a bug that occured when peforming CBMC growth of ring structures with a forcefield that includes bond-bond terms.
-       Resolved a bug where regrowing cyclic molecules in a very small box would sometimes result in a failure in the biasing term due to the method used to set the range of the biasing interaction Gaussian for ring-closure.
-       Combined the old volnvt.F and volnpt.F files into the new volumemoves.F and began streamlining those subroutines.  Removed an unneeded random number call from the volumes moves so this changed the random number
-       sequence (and therefore results) of the examples.
-       Moved the <a href="../examples/example_manual.html#FENE_Hexamer">FENE_Hexamer</a> example from the Canonical Ensemble directory to the more appropriate Gibbs_Ensemble directory.
-       Added some of the variables required for an additional thermodyanmic pressure calculation, but that option is not yet fully functional is not suggested for use.
+      <li>8.0.0:
+	Updates to the storage of the volume move maximum displacements were the cause of changes to the restart files, and therefore the primary version number.
+        This time the rmvol and rmcell values are now output for each simulation box and for each simulation box pair so that no matter the restart ensemble the values will be properly transferred.
+        Updated the <a href="../towhee_restart.html">Towhee Restart Manual</a> to properly reflect the information in the towhee_initial and towhee_final files for the current release version and it is
+	clear that old versions of that manual did not proplerly represent the data in the restart files.
       </li>
      </ul>
    
-     <b>towhee_input file differences from version 7.2.x</b> 
+     <b>towhee_input file differences from version 8.0.x</b> 
      <ul>
-      <li>
-       Added two new variables to control configurational-bias Monte Carlo move options: <a href="../inpstyle/inpstyle_0.html#itbang"><b>itbang</b></a>
-       and <a href="../inpstyle/inpstyle_0.html#orderbang"><b>orderbang</b></a>.
-      </li>
-      <li>
-       Added new features related to the computation of pressure during a simulation.  The old <b>pressurefreq</b> variable was split into <a href="#pressure_virial_freq"><b>pressure_virial_freq</b></a> 
-       and <a href="#pressure_thermo_freq"><b>pressure_thermo_freq</b></a>.  This additional thermodynamic pressure calculation is not fully functional in version 7.2.0 and should be set to 0.
-      </li>
+      <li>None yet</li>
      </ul>
    
      <b>Quick links</b>

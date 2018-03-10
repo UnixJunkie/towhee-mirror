@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,13 +19,13 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_atd_cbmc_setup(lfailure)
+      subroutine twh_atd_cbmc_setup(lfailure,nmolty)
 c     ******************************************************************
 c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 01-21-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -53,6 +53,7 @@ c     --- function declarations
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
+      integer nmolty
 c     --- local variables
       character*5 hybrid
       character*20 atest
@@ -64,7 +65,7 @@ c     --- local logical scalars
       logical lovrlap,lfound,linit,lthreemem,lperiodic,lrigid,lreport
 c     --- local logical arrays
       logical lyescbmc
-      dimension lyescbmc(NTMAX)
+      dimension lyescbmc(nmolty)
 c     --- local integer parameters
       integer maxextrema
       parameter (maxextrema = 2*(CBMC_MAXTORPEAKS+CBMC_MAXBENDPEAKS))
@@ -76,7 +77,7 @@ c     --- local integer scalars
       integer nminima
       integer imax,junitb,kunitb,icrossbend,jbend,kbend,ibondmax
       integer bij_type,bjk_type,iscan_bij,iscan_bjk
-      integer nmolty,nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
+      integer nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
       integer cbmc_dihedgen_code,bonddist,vibtype,ivalue,ncompute
       integer icompute,numboxes,nummol,invib
       integer bendtype,bendstyle,vibstyle
@@ -88,7 +89,7 @@ c     --- local integer scalars
 #endif
 c     --- local integer arrays
       integer computelist
-      dimension computelist(NTMAX)
+      dimension computelist(nmolty)
       integer minimalist
       dimension minimalist(maxscan)
 c     --- local dp scalars
@@ -134,7 +135,6 @@ c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
       call twh_constant_twopi(GLB_GET,twopi)
       call twh_constant_onethird(GLB_GET,onethird)
-      call twh_nmolty(GLB_GET,nmolty)
       call twh_beta(GLB_GET,beta)
       call twh_constant_radtodeg(GLB_GET,radtodeg)
       call twh_cbmc_analysis(GLB_GET,cbmc_analysis)

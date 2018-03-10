@@ -29,7 +29,7 @@ c     * number of attempts stored in bntractemp                        *
 c     * number of successful trial moves is stored in bstractemp       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -274,8 +274,8 @@ c     --- store new coordinates
       enddo
 
 c     --- update reciprocal-space sum
-      call twh_recip(ibox,2)
-
+      call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+      if ( lfailure ) return
 c     --- update chain center of mass
 c     --- no need to recompute as we simply shifted the center of mass
       call twh_com(GLB_INCR,CRD_REAL,ichain,ddx,ddy,ddz)

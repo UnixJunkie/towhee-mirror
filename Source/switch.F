@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -297,7 +297,8 @@ c     --- store new coordinates
       enddo
       
 c     --- update reciprocal-space sum
-      call twh_recip(ibox,2)
+      call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+      if ( lfailure ) return
 
 c     --- update embedding density
       iboxa(1)=ibox

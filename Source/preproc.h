@@ -1,6 +1,6 @@
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program           *
-* Copyright (C) 2003-2016 Marcus G. Martin                             *
+* Copyright (C) 2003-2018 Marcus G. Martin                             *
 * see the file license.gpl for the full license information            *
 *                                                                      *
 * This program is free software; you can redistribute it and/or        *
@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 08-12-2016 by M.G. Martin */
+/* last significant modification 01-16-2018 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -121,9 +121,6 @@
 
 /* values that are simple consequenses of the values up above */
 /* there is no reason to modify these values */
-
-/* maxpbox: max number of pairs of boxes plus 1, computed from maxbox */
-#define MAXPBOX 1+(MAXBOX*(MAXBOX-1))/2
 
 /* nnbond = maximum number of bonds from any bead. */
 #define NNBOND 6
@@ -378,6 +375,9 @@
 #define GLB_GET_TRIPLE 2015
 #define GLB_SET_TRIPLE 2016
 #define GLB_INCR_TRIPLE 2017
+#define GLB_ALLOC_INIT 2018
+#define GLB_STORE_ALL 2019
+#define GLB_SCALE_ALL 2020
 
 /* coordinate integer flags */
 /* values are arbitrary, but must be nonzero and different */
@@ -673,8 +673,15 @@
 #define PNT_PARALL 15
 #define PNT_CHAINLIST 16
 #define PNT_TOROFCODE 17
-
-#define MAX_INT_POINTERS 20
+#define PNT_BAVOL 18
+#define PNT_BNVOL 19
+#define PNT_PAIRBOX 20
+#define PNT_BNCELL 21
+#define PNT_BACELL 22
+#define PNT_ACNCELL 23
+#define PNT_ACSCELL 24
+/* max is one more than the final value */
+#define MAX_INT_POINTERS 30
 
 /* double pointers */
 #define PNT_GYRATION 0
@@ -701,10 +708,10 @@
 #define PNT_BNTRAC 21
 #define PNT_RMTRAA 22
 #define PNT_RMTRAC 23
-#define PNT_ACNCELL 24
-#define PNT_ACSCELL 25
-#define PNT_BACELL 26
-#define PNT_BNCELL 27
+/* open spot */
+/* open spot */
+/* open spot */
+/* open spot */
 #define PNT_ACSROT 28
 #define PNT_ACSCOMP 29
 #define PNT_RMCOMROT 30
@@ -721,7 +728,13 @@
 #define PNT_WRAP_FOREIGN_LAMBDA_LJ 41
 #define PNT_WRAP_FOREIGN_LAMBDA_C 42
 #define PNT_BLOCKVALUE 43
-
+#define PNT_RMCELL 44
+#define PNT_PM2CBSWPR 45
+#define PNT_PM2RBSWPR 46
+#define PNT_PMCELLPR 47
+#define PNT_PMCELLPT 48
+#define PNT_PMVLPR 49
+/* max must be at least one more than the final pointer */
 #define MAX_DOUBLE_POINTERS 50
 
 /* report integer, values arbitrary, but should be nonzero */
@@ -771,4 +784,15 @@
 #define VMC_NPT_ISO 102
 #define VMC_NPT_ONED 103
 #define VMC_TPRESS 200
+
+/* recip sum codes, values arbitrary */
+#define RCP_ACCEPT_NEW 2
+#define RCP_STORE 3
+#define RCP_RESTORE 4
+
+/* volumemove codes */
+#define BCODE_SINGLE 1
+#define BCODE_EXCHANGE 2
+#define BCODE_GHOST 3
+
 /* the end */

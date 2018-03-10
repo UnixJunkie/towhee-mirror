@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -886,7 +886,8 @@ c              --- assign new atom positions
      &                 ,xtemp,ytemp,ztemp)
                enddo
 c              --- update the reciprical space sum
-               call twh_recip(ibox,2)
+               call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+               if ( lfailure ) return
 c              --- update the center of mass of chain
                call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,ibox,ichain
      &              ,CTR_CONROT)

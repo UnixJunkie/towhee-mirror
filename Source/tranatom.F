@@ -27,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 01-15-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -283,8 +283,8 @@ c        --- assign new positions for the single atom that moved
          call twh_coordinates(GLB_SET,CRD_REAL,ichain,atom
      &        ,xtemp,ytemp,ztemp)
 c        --- update reciprocal-space sum
-         call twh_recip(ibox,2)
-
+         call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
+         if ( lfailure ) return
 c        --- update chain center of mass
          call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,ibox
      &        ,ichain,CTR_TRANATOM)

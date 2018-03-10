@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * for accessing global data along with subroutines that bundle   *
 c     * the adjustment of multiple global data structures              *
 c     *                                                                *
 c     * originally written 03-24-2006 by M.G. Martin                   *
-c     * last modified 04-29-2016 by M.G. Martin                        *
+c     * last modified 01-14-2018 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_create_torsion(imolty,iunit,itor2,itor3,itor4
@@ -2343,24 +2343,6 @@ c     ******************************************************************
 #include "functions.h"
 
       call twh_pm1boxcomswitch(GLB_GET,twh_get_pm1boxcomswitch)
-  
-      return
-      end
-
-      function twh_get_pmvlpr(ipairbox)
-c     ******************************************************************
-c     * gets the pmvlpr data                                           *
-c     *                                                                *
-c     * originally written 06-12-2006 by M.G. Martin                   *
-c     * last modified 06-12-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-#define FUNCTION_GET_PMVLPR
-#include "functions.h"
-c     --- variables passed to/from the function
-      integer ipairbox
-
-      call twh_pmvlpr(GLB_GET,ipairbox,twh_get_pmvlpr)
   
       return
       end
