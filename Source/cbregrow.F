@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -71,7 +71,7 @@ c     --- double precision scalars
       double precision dchain,rchain,wnlog,wolog,wdlog,wratio
       double precision burn,xtemp,ytemp,ztemp,pmtest,scalecut
       double precision dvtot,dvduma,dvinter,dvdumb,dvelect,dvsolv,dv
-      double precision dvdumc,dvdumd,dvdume,dvdumf,ddvdl_lj,ddvdl_c
+      double precision dvdumc,dvdumd,dvdume,ddvdl_lj,ddvdl_c
 c     --- double precision arrays
       double precision wrosen
       dimension wrosen(2)
@@ -270,7 +270,7 @@ c        --- in this energy call
      &        ,chaininfo
      &        ,loverlap,lpartial,lgetcom,lintra,lbonded,dvtot,dvduma
      &        ,dvinter,dvdumb,dvelect,dvsolv,dvdumc,dvdumd,dvdume
-     &        ,dvdumf,dvf,ddvdl_lj,ddvdl_c)
+     &        ,dvf,ddvdl_lj,ddvdl_c)
          if ( lfailure ) return
 c        --- add all of the energy change into the new array
          call twh_beta(GLB_GET,beta)

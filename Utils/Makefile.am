@@ -35,8 +35,7 @@ analyse_movie_SOURCES = analyse_movie.F
 car2towhee_SOURCES = car2towhee.c
 charmm2pdb_SOURCES = charmm2pdb.F
 faux2towhee_SOURCES = faux2towhee.F
-fitcoex_SOURCES = fitvlcc.F \
-		../Source/leastsquares.F
+fitcoex_SOURCES = fitvlcc.F leastsquares.F
 jre_to_towhee_SOURCES = jre_to_towhee.F
 maftodensity_SOURCES = maftodensity.F
 pdb2towhee_SOURCES = pdb2towhee.F
@@ -52,8 +51,9 @@ analyse_movie.o: analyse_movie.F
 car2towhee.o: car2towhee.c
 charmm2pdb.o: charmm2pdb.F
 faux2towhee.o: faux2towhee.F
-fitvlcc.o: fitvlcc.F ../Source/leastsquares.F
+fitvlcc.o: fitvlcc.F leastsquares.F
 jre_to_towhee.o: jre_to_towhee.F
+leastsquares.o: leastsquares.F
 maftodensity.o: maftodensity.F
 pdb2towhee.o: pdb2towhee.F
 rdf2pmfpair.o: rdf2pmfpair.F

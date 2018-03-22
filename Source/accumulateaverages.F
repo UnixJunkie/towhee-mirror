@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * accumulates the averages taken at the end of each move         *
 c     *                                                                *
 c     * split from mainloop 10-20-2005 by M.G. Martin                  *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
@@ -147,22 +147,10 @@ c              --- dU/d[lambda_c]
                if ( lfailure ) return
             endif
          endif
-         if ( potentialstyle .eq. POT_EXTERNAL ) then
-c           --- external
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvquantum(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         endif
 c        --- total energy squared
          keycode = AC_TOT_ENERGY_SQ
          if ( potentialstyle .eq. POT_INTERNAL ) then
             call twh_boxvclassic(GLB_GET,ibox,value)
-            value = value**2
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_boxvquantum(GLB_GET,ibox,value)
             value = value**2
          endif
          call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
@@ -249,9 +237,6 @@ c           --- determine the vapor and liquid boxes
             if ( potentialstyle .eq. POT_INTERNAL ) then
                call twh_boxvclassic(GLB_GET,ivap,energy(ivap))
                call twh_boxvclassic(GLB_GET,iliq,energy(iliq))
-            elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-               call twh_boxvquantum(GLB_GET,ivap,energy(ivap))
-               call twh_boxvquantum(GLB_GET,iliq,energy(iliq))
             else
                write(6,*) 'ACCUMULATEAVERAGES: unknown potentialstyle'
                write(6,*) potentialstyle

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * this subroutine creates or reads a towhee_map file             *
 c     *                                                                *
 c     * originally created 02-2006 by O. Yazaydin                      *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -54,8 +54,6 @@ c     --- double precision arrays
       double precision vctry,vtrext,vtrintra,vtrinter,vtrelect,vtrewald
       dimension  vctry(1),vtrext(1),vtrintra(1),vtrinter(1),vtrelect(1)
      &          ,vtrewald(1)
-      double precision vqtry
-      dimension vqtry(1)
 
 c     --- retrieve constants
       call twh_nmolty(GLB_GET,nmolty)
@@ -122,7 +120,7 @@ c                    --- compute the insertion energy into the box
      &                    ,BXD_REAL,ibox,nchoi,iufrom,ntogrow
      &                    ,rdist,lnbterm
      &                    ,1,1,rxp,ryp,rzp,vctry,vtrext,vtrintra
-     &                    ,vtrinter,vtrelect,vtrewald,vqtry)
+     &                    ,vtrinter,vtrelect,vtrewald)
                      if ( lfailure ) return
 c                    --- compute the energy for each cube
                      if ( loverlap ) then

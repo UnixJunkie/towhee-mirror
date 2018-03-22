@@ -28,7 +28,7 @@ c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
 c     * originally written by M.G. Martin and C.D. Lorenz 10-16-2002   *
-c     * last modifed in 01-15-2018 by M.G. Martin                      *
+c     * last modifed in 03-19-2018 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -73,7 +73,7 @@ c     --- double precision scalars
       double precision ddvdl_lj,ddvdl_c,onepi,pmtest
 c     --- double precision arrays
       double precision dvtot,dvintra,dvinter,dvext,dvelect,dvsolv
-      double precision dvtors,dvquantum,dvatomlist,twopi
+      double precision dvtors,dvatomlist,twopi
       double precision dvf
       dimension dvf(MAX_FOREIGN_LAMBDA)
 
@@ -282,7 +282,7 @@ c     --- energies
       call twh_energy_change(lfailure,BXD_REAL,activebox,nchainmove
      &     ,chaininfo,loverlap,lpartial,lgetcom,lintra,lbonded,dvtot
      &     ,dvintra,dvinter,dvext,dvelect,dvsolv,dvtors,dvdumb,dvdumc
-     &     ,dvquantum,dvf,ddvdl_lj,ddvdl_c)
+     &     ,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
 #if DEBUG_PIVOT
       write(6,*) 'PIVOT: back from energy change',loverlap
@@ -300,8 +300,8 @@ c     --- safety checks for hard overlap
       write(6,*) 'twh_pivot() energy terms: dvtot: ',dvtot
       write(6,*) 'dvintra, dvinter, dvext: ', dvintra, dvinter, dvext
       write(6,*) 'idvelect, dvsolv: ', dvelect, dvsolv
-      write(6,*) 'dvtors, dvdumb, dvdumc, dvquantum: ', dvtors, dvdumb, 
-     &    dvdumc,dvquantum
+      write(6,*) 'dvtors, dvdumb, dvdumc: ', dvtors, dvdumb, 
+     &    dvdumc
 #endif
 
 c     --- compute normal torsion energies that include unit1 or unit2

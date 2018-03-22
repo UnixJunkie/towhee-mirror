@@ -30,7 +30,7 @@ c     * rotate chooses one of the three space-fixed axes at random     *
 c     * and rotates the molecule around this axis.                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed in 01-15-2018 by M.G. Martin                      *
+c     * last modifed in 03-19-2018 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -59,7 +59,7 @@ c     --- local integer arrays
 c     --- local double precision scalars
       double precision dchain,rchain,burn,rxtemp,rytemp,rztemp
       double precision dgammax,dgammay,dgammaz,rxorig,ryorig,rzorig
-      double precision dvtor,dvbend,dvvib,dvquantum
+      double precision dvtor,dvbend,dvvib
       double precision dvtot,dvintra,dvinter,dvext,dvsolv,dvelect
       double precision ddvdl_lj,ddvdl_c,beta,rcmu,pmtest,rmrot
 c     --- local double precision arrays
@@ -187,7 +187,7 @@ c     --- get the energy difference
      &     ,chaininfo,loverlap
      &     ,lpartial,lgetcom,lintra,lbonded,dvtot,dvintra
      &     ,dvinter,dvext,dvelect,dvsolv,dvtor,dvbend,dvvib
-     &     ,dvquantum,dvf,ddvdl_lj,ddvdl_c)
+     &     ,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
 #if DEBUG_ROTATE
       write(6,*) 'ROTATE: energy_change dvelect:',dvelect

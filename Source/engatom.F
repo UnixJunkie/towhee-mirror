@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
       subroutine twh_engatom(lfailure,testcord,globalcord,engastyle
      &     ,lovrlap,ichain,imolty,bxdflag,ibox,ichoi,iufrom,ntogrow
      &     ,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp,vctry,vtrext
-     &     ,vtrintra,vtrinter,vtrelect,vtrewald,vqtry)
+     &     ,vtrintra,vtrinter,vtrelect,vtrewald)
 c     ******************************************************************
 c     * calculates the potential energy and the boltzmann factor for   *
 c     * atoms that are being inserted in a configurational-bias move   *
@@ -59,7 +59,7 @@ c     * rxp(dimatoms,dimtrials), ryp and rzp are the coordinates for   *
 c     * each atom and trial                                            *
 c     *                                                                *
 c     * rewritten from old boltz and boltzu 09-23-1997 by M.G. Martin  *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -86,8 +86,6 @@ c     --- variables passed to/from the subroutine
       dimension vtrelect(dimtrials)
       double precision vtrewald
       dimension vtrewald(dimtrials)
-      double precision vqtry
-      dimension vqtry(dimtrials)
 c     --- local variables
       integer nchain,potentialstyle
 
@@ -101,11 +99,6 @@ c     --- retrieve constants
      &        ,ntogrow,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp
      &        ,vctry,vtrext,vtrintra,vtrinter,vtrelect,vtrewald)
          if ( lfailure ) return
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-c        --- do external stuff
-         call twh_external_engatom(lfailure,testcord,ichain,ibox,ichoi
-     &        ,ntogrow,dimtrials,vqtry)
-         if ( lfailure ) return
       else
          write(6,*) 'ENGATOM: unknown potentialstyle'
          write(6,*) potentialstyle
@@ -114,43 +107,6 @@ c        --- do external stuff
       endif
       return
       end
-
-      subroutine twh_external_engatom(lfailure,testcord,ichain,ibox
-     &     ,ichoi,ntogrow,dimtrials,vqtry)
-c     ******************************************************************
-c     * computes the external energy for each trial in a               *
-c     * configurational bias style of move                             *
-c     * this does not appear to be currently functional so beware if   *
-c     * you are using this routine                                     *
-c     *                                                                *
-c     * originally written 10-24-2005 by M.G. Martin                   *
-c     * last modified 12-02-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      logical lfailure
-      integer testcord,ichain,ibox,ichoi,ntogrow,dimtrials
-      double precision vqtry
-      dimension vqtry(dimtrials)
-#define DEBUG_EXTERNAL_ENGATOM 0
-c     --- local variables
-      integer itrial
-      double precision vquantum
-
-      do itrial = 1,ichoi
-         write(6,*) 'engatom ibox,ichain,testcord,ntogrow,itrial'
-     &      ,ibox,ichain,testcord,ntogrow,itrial
-c     --- not currently functional, need to rewrite call
-c         call twh_quantumenergy(lfailure,ibox,ichain,testcord,ntogrow
-c     &        ,itrial,vquantum)
-         vquantum = 0.0d0
-         if ( lfailure ) return
-         vqtry(itrial) = vquantum
-      enddo
-
-      return
-      end
-
 
       subroutine twh_classical_engatom(lfailure,testcord,globalcord
      &     ,engastyle,lovrlap,nchain,ichain,imolty,bxdflag,ibox,ichoi

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 22 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -60,7 +60,7 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
  Reading from towhee_input file: towhee_input                                                                                                            
- in directory: /towheebase/Examples/Canonical_Ensemble/Charmm27_benzene/                                                               
+ in directory: /towheebase/Examples/Canonical_Ensemble/Charmm27_Benzene/                                                               
  inputformat: Towhee         
  ensemble: nvt                           
  temperature:  300.000    
@@ -341,7 +341,7 @@ Averages               Units Type       Box  1
  Solvation                 K        0.0000E+00
  G: Sum{<u_i><N_i>}   kJ/mol        0.0000E+00
  U                    kJ/mol        0.9748E+02
- C_v: T^2<H^2>-<H>^2 J/K mol       -0.7433E-10
+ C_v: T^2<H^2>-<H>^2 J/K mol       -0.6607E-10
 
 Block Averages (  5 blocks) Units Type Box Average      Standard Deviation
  Specific Density            g/ml        1  0.48001E-02  0.00000E+00

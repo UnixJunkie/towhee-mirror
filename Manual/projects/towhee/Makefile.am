@@ -1,7 +1,6 @@
 SUBDIRS = \
 algorithm \
 code \
-database \
 examples \
 forcefields \
 inpstyle \
@@ -21,4 +20,5 @@ towhee_ff.html \
 towhee_parallel.html \
 towhee_presentations.html \
 towhee_pubs.html \
+towhee_restart.html \
 usersmanual.html

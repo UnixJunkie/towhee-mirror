@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -22,8 +22,7 @@ c     ******************************************************************
       subroutine twh_energy_change(lfailure,bxdflag,activebox,nchainmove
      &     ,chaininfo,loverlap,lpartial,lgetcom,lintra,lbonded
      &     ,dv_classical,dv_intra,dv_inter,dv_ext,dv_elect,dv_solv
-     &     ,dv_tor,dv_ben,dv_vib,dv_quantum,dv_foreign
-     &     ,dl_inter,dl_elect)
+     &     ,dv_tor,dv_ben,dv_vib,dv_foreign,dl_inter,dl_elect)
 c     ******************************************************************
 c     * calculates the change in energy in a single box where an       *
 c     * arbitrary number of molecules are listed to have special       *
@@ -53,14 +52,13 @@ c     * dv_solv: change in solvation free energy (output)              *
 c     * dv_tor: change in dihedral energy (output)                     *
 c     * dv_ben: change in angle energy (output)                        *
 c     * dv_vib: change in bond energy (output)                         *
-c     * dv_quantum: change in the quantum energy (output)              *
 c     * dv_foreign: change in classical energy for different           *
 c     *           foreign lambdas (see scaled_potential.F; output)     *
 c     * dl_inter: change of d[inter]/d[lambda_lj] (output)             *
 c     * dl_elect: change of d[elect]/d[lambda_lj] (output)             *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define DEBUG_ENERGY_CHANGE 0
@@ -71,18 +69,16 @@ c     --- variables passed to/from the subroutine
       integer bxdflag,activebox,nchainmove
       integer chaininfo
       dimension chaininfo(nchainmove,3)
-      double precision dv_classical,dv_intra,dv_inter,dv_ext,dv_quantum
+      double precision dv_classical,dv_intra,dv_inter,dv_ext
       double precision dv_elect,dv_solv,dv_vib
       double precision dv_ben,dv_tor,dl_inter,dl_elect
       double precision dv_foreign
       dimension dv_foreign(MAX_FOREIGN_LAMBDA)
 c     --- local variables
-      logical lcompute,ldualcutoff
-      integer ioldnew,ichainmove,lambda,scp_num_foreign_lambda
+      logical ldualcutoff
+      integer lambda,scp_num_foreign_lambda
       integer potentialstyle
       double precision dv_three,dv_tmp
-      double precision vquantum
-      dimension vquantum(2)
 
 #if DEBUG_ENERGY_CHANGE
       write(6,*) 'start ENERGY_CHANGE'
@@ -102,7 +98,6 @@ c     --- initialize variables
       dv_tor = 0.0d0
       dv_ben = 0.0d0
       dv_vib = 0.0d0
-      dv_quantum = 0.0d0
       dv_three = 0.0d0
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
@@ -149,38 +144,6 @@ c        --- the foreign energies.
      &        ,chaininfo,dv_elect)
 c        --- set the total change in classical energy
          dv_classical = dv_inter + dv_elect + dv_tmp
-
-      endif
-
-      if ( potentialstyle .eq. POT_EXTERNAL ) then
-c        --- compute the new and old external energies
-         do ioldnew = 1,2
-            vquantum(ioldnew) = 0.0d0
-            lcompute = .false.
-c           --- check to see that at least one of the chains is in a new
-c           --- location, if not then we can just use the old total
-c           --- quantum energy for this portion
-            do ichainmove = 1,nchainmove
-               if ( chaininfo(ichainmove,ioldnew) .ne. CRD_REAL ) then
-                  lcompute = .true.
-               endif
-            enddo
-            if ( lcompute ) then
-c              --- we need to compute the total quantum energy for the 
-c              --- activebox using the real coordinates for everything 
-c              --- except those chains listed in chaininfo
-               call twh_quantumenergy(lfailure,activebox,ioldnew
-     &              ,nchainmove,chaininfo,vquantum(ioldnew))
-               if ( lfailure ) return
-            else
-c              --- if none of the chains are listed then just use the 
-c              --- current energy of that box
-               call twh_boxvquantum(GLB_GET,activebox,vquantum(ioldnew))
-            endif
-         enddo
-
-c        --- compute the quantum energy change
-         dv_quantum = vquantum(TRL_NEW) - vquantum(TRL_OLD)
 
       endif
 
@@ -1714,16 +1677,16 @@ c                       --- compute improper energy
 
       subroutine twh_ec_atomlist_nonbond(lfailure,bxdflag,activebox
      &     ,ichain
-     &     ,natommove,atomlist,globalcord,loverlap,dvquantum
+     &     ,natommove,atomlist,globalcord,loverlap
      &     ,dvclassical,dvinter,dvintra,dvelect,dvsolv,dvext
      &     ,dvforeign,ddvdl_vdw,ddvdl_c)
 c     ******************************************************************
-c     * computes the nonbonded (quantum or classical plus coulomb)     *
+c     * computes the nonbonded (classical plus coulomb)                *
 c     * energy change for a list of atoms on a single molecule ichain  *
 c     * in box activebox                                               *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1735,7 +1698,7 @@ c     --- variables passed to/from the subroutine
       dimension globalcord(2)
       logical loverlap
       dimension loverlap(2)
-      double precision dvquantum,dvclassical,dvinter,dvintra,dvelect
+      double precision dvclassical,dvinter,dvintra,dvelect
       double precision dvsolv,dvext
       double precision dvforeign
       dimension dvforeign(MAX_FOREIGN_LAMBDA)
@@ -1748,7 +1711,6 @@ c     --- retrive constant
       call twh_potentialstyle(GLB_GET,potentialstyle)
 
 c     --- initialize energy changes
-      dvquantum = 0.0d0
       dvclassical = 0.0d0
       dvinter = 0.0d0
       dvintra = 0.0d0
@@ -1760,14 +1722,6 @@ c     --- initialize energy changes
       do lambda = 1,scp_num_foreign_lambda
          dvforeign(lambda) = 0.0d0
       enddo
-
-      if ( potentialstyle .eq. POT_EXTERNAL ) then
-c        --- not yet implemented
-         write(6,*) 'EC_ATOMLIST_NONBOND: not yet implemented for'
-     &        ,' quantum potentialstyles'
-         lfailure = .true.
-         return
-      endif
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
 c        --- get the one-body energy change

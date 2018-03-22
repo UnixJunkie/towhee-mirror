@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -96,7 +96,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -175,8 +175,6 @@ c     --- double precision arrays
       dimension vtrelect(nch_nb)
       double precision vtrewald
       dimension vtrewald(nch_nb)
-      double precision vqtry
-      dimension vqtry(nch_nb)
 
 #if DEBUG_ROSENBLUTH
       write(6,*) 'start ROSENBLUTH',lnew,testcord
@@ -513,7 +511,7 @@ c        --- non-bond energy
          call twh_engatom(lfailure,testcord,globalcord,engastyle,lovrlap
      &        ,ichain,imolty,BXD_REAL,ibox,nch_nb,iufrom,ntogrow,maxlen
      &        ,lnbterm,NNBOND,nch_nb,rxp,ryp,rzp,vctry,vtrext,vtrintra
-     &        ,vtrinter,vtrelect,vtrewald,vqtry)
+     &        ,vtrinter,vtrelect,vtrewald)
          if ( lfailure ) return
          if ( lovrlap ) then
 #if DEBUG_ROSENBLUTH
@@ -722,8 +720,6 @@ c        --- update new trial energies
             vrosinter = vrosinter + vtrinter(iwalk)
             vroselect = vroselect + vtrelect(iwalk)
             vrosewald = vrosewald + vtrewald(iwalk)
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            vrostot = vrostot + vqtry(iwalk)
          else
             write(6,*) 'ROSENBLUTH: unknown potentialstyle'
             write(6,*) potentialstyle

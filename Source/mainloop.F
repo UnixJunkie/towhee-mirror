@@ -168,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 01-17-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -237,7 +237,7 @@ c     --- integer arrays
       dimension chaininfo(1,3)
 c     --- double precision scalars
       double precision v,vinter,vtail,vintra,vvib,vbend,vtg
-      double precision vext,velect,vsolvation,vdum,vquantum
+      double precision vext,velect,vsolvation,vdum
       double precision dvinter,dvelect,datemp,dntemp
       double precision pscb1,pscb2,ratvol,ratcell,dvalue
       double precision pspiv2,pscr,pscrb,binsize,pspiv
@@ -297,7 +297,7 @@ c     --- calculate initial energy and check for overlaps
       do ibox = 1, numboxes
          write(6,'(a24,1x,i5)') 'Initial Energies for Box',ibox
          call twh_engtotal(lfailure,lovrlap, v, vinter,vdum,vtail
-     &        ,vintra,vvib,vbend,vtg,vext,velect,vsolvation,vquantum
+     &        ,vintra,vvib,vbend,vtg,vext,velect,vsolvation
      &        ,vforeign,dvinter,dvelect
      &        ,CRD_REAL,BXD_REAL,ibox, .false.,.false.,.true.,.true.)
          if ( lfailure ) return
@@ -315,7 +315,6 @@ c     --- calculate initial energy and check for overlaps
          call twh_boxvfield(GLB_SET,ibox,vext)
          call twh_boxvelect(GLB_SET,ibox,velect)
          call twh_boxvsolvation(GLB_SET,ibox,vsolvation)
-         call twh_boxvquantum(GLB_SET,ibox,vquantum)
          call scp_set_derivative(ibox, LAMBDA_LJ, dvinter)
          call scp_set_derivative(ibox, LAMBDA_C, dvelect)
          call scp_set_foreign_energies(ibox, vforeign)
@@ -410,7 +409,7 @@ c              --- toggle lprint for engtotal output
 c              --- compute the total energies
                call twh_engtotal(lfailure,lovrlap,v,vinter,vdum,vtail
      &              ,vintra
-     &              ,vvib,vbend,vtg,vext,velect,vsolvation,vquantum
+     &              ,vvib,vbend,vtg,vext,velect,vsolvation
      &              ,vforeign,dvinter,dvelect
      &              ,CRD_REAL,BXD_REAL,ibox
      &              ,.false.,.false.,lprint,.true.)
@@ -2215,7 +2214,7 @@ c     * calculation, and report if there are any problems.             *
 c     *                                                                *
 c     * Variables modified:                                            *
 c     * Split from mainloop 04-26-2006 by MAW                          *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -2230,7 +2229,7 @@ c     --- integer scalars
       integer ibox,l,scp_num_foreign_lambda,numboxes
 c     --- double precision scalars
       double precision v,vinter,vtail,vintra,vvib,vbend,vtg
-      double precision vext,velect,vsolvation,vdum,vquantum,vtest
+      double precision vext,velect,vsolvation,vdum,vtest
       double precision dvinter,dvelect
 c     --- double precision arrays
       double precision vforeign
@@ -2249,7 +2248,7 @@ c     --- initialize lproblem
       do ibox = 1, numboxes
          write(6,'(a22,1x,i5)') 'Final Energies for Box',ibox
          call twh_engtotal(lfailure,lovrlap,v,vinter,vdum,vtail,vintra
-     &        ,vvib,vbend,vtg,vext,velect,vsolvation,vquantum,vforeign
+     &        ,vvib,vbend,vtg,vext,velect,vsolvation,vforeign
      &        ,dvinter,dvelect
      &        ,CRD_REAL,BXD_REAL,ibox, .false.,.false.,.true.,.true. )
          if ( lfailure ) return
@@ -2326,14 +2325,6 @@ c        ---  need to check each of the types of energy
             write(6,*) '### problem with Solvation Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',vsolvation,vtest
-         endif
-         call twh_boxvquantum(GLB_GET,ibox,vtest)
-         if ( (vquantum - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
-            write(6,*) '### problem with Quantum Energy ###',
-     &            '  box ',ibox
-            write(6,*) ' current, running: ',vquantum,vtest
-            write(6,*) 'difference:',vquantum-vtest
          endif
          if ( (dvinter - scp_get_derivative(ibox, LAMBDA_LJ))**2 
      &         .gt. ENERGY_THRESH) then

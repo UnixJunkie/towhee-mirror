@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -54,7 +54,7 @@ c     --- integer arrays
       dimension iboxa(1)
 c     --- double precision scalars
       double precision dchain,rchain,burn,dvtot,dvintra,dvinter,dvext
-      double precision dvelect,dvvib,dvbend,dvtors,dvsolv,dvquantum
+      double precision dvelect,dvvib,dvbend,dvtors,dvsolv
       double precision dvclassical
       double precision xtemp,ytemp,ztemp,rxdisp,rydisp,rzdisp
       double precision scaledist,beta
@@ -148,7 +148,7 @@ c     --- initialize loverlap
 
       call twh_ec_atomlist_nonbond(lfailure,BXD_REAL,ibox,ichain
      &     ,natommove
-     &     ,atomlist,globalcord,loverlap,dvquantum,dvclassical,dvinter
+     &     ,atomlist,globalcord,loverlap,dvclassical,dvinter
      &     ,dvintra,dvelect,dvsolv,dvext,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
       do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
@@ -228,8 +228,6 @@ c        --- improper torsion energy
 c     --- set the total energy to use for acceptance
       if ( potentialstyle .eq. POT_INTERNAL ) then
          dvtot = dvclassical
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         dvtot = dvquantum
       else
          write(6,*) 'TRANATOM: unknown potentialstyle'
          lfailure = .true.

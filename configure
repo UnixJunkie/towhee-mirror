@@ -660,20 +660,19 @@ UseFixGNU_FALSE
 UseFixGNU_TRUE
 UseSafeCompare_FALSE
 UseSafeCompare_TRUE
-UseLCAO_FALSE
-UseLCAO_TRUE
 UseTramonto_FALSE
 UseTramonto_TRUE
-UseOpenkim_FALSE
-UseOpenkim_TRUE
 UseInternal_FALSE
 UseInternal_TRUE
 UseMPI_FALSE
 UseMPI_TRUE
-UseLINKSQUALL_FALSE
-UseLINKSQUALL_TRUE
-UseLINKSPIRIT_FALSE
-UseLINKSPIRIT_TRUE
+MAINT
+MAINTAINER_MODE_FALSE
+MAINTAINER_MODE_TRUE
+AM_BACKSLASH
+AM_DEFAULT_VERBOSITY
+AM_DEFAULT_V
+AM_V
 am__untar
 am__tar
 AMTAR
@@ -697,9 +696,6 @@ am__isrc
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
-MAINT
-MAINTAINER_MODE_FALSE
-MAINTAINER_MODE_TRUE
 target_alias
 host_alias
 build_alias
@@ -719,6 +715,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -741,12 +738,9 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_silent_rules
 enable_maintainer_mode
-enable_link_spirit
-enable_link_srnsquall
-enable_lcao
 enable_internal
-enable_openkim
 enable_tramonto
 enable_safe_compare
 enable_fix_GNU
@@ -803,6 +797,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1055,6 +1050,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1192,7 +1196,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1345,6 +1349,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1379,14 +1384,12 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-silent-rules   less verbose build output (undo: "make V=1")
+  --disable-silent-rules  verbose build output (undo: "make V=0")
   --enable-maintainer-mode
                           enable make rules and dependencies not useful (and
                           sometimes confusing) to the casual installer
-  --enable-link-spirit   Compile version using the library link line for spirit
-  --enable-link-srnsquall   Compile version using the library link line for srnsquall
-  --enable-lcao   Compile version using lcao libraries
   --enable-interal   Compile version using internal erfs
-  --enable-openkim   Compile version linking openkim
   --enable-tramonto   Compile version using tramonto libraries
   --enable-safe-compare    Emphasize cross-platform consistency
            over performance.
@@ -2307,36 +2310,7 @@ ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
 ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
-
-# Do not require the Makefiles to be rebuilt using the autotools
-# so the end user will not have to have the same version of autoconf
-# and automake.
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
-$as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
-    # Check whether --enable-maintainer-mode was given.
-if test "${enable_maintainer_mode+set}" = set; then :
-  enableval=$enable_maintainer_mode; USE_MAINTAINER_MODE=$enableval
-else
-  USE_MAINTAINER_MODE=no
-fi
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $USE_MAINTAINER_MODE" >&5
-$as_echo "$USE_MAINTAINER_MODE" >&6; }
-   if test $USE_MAINTAINER_MODE = yes; then
-  MAINTAINER_MODE_TRUE=
-  MAINTAINER_MODE_FALSE='#'
-else
-  MAINTAINER_MODE_TRUE='#'
-  MAINTAINER_MODE_FALSE=
-fi
-
-  MAINT=$MAINTAINER_MODE_TRUE
-
-
-
-# Initialize stuff for automake
-am__api_version='1.12'
+am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -2508,8 +2482,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -2520,15 +2494,15 @@ if test x"${MISSING+set}" != xset; then
   esac
 fi
 # Use eval to expand $SHELL
-if eval "$MISSING --run true"; then
-  am_missing_run="$MISSING --run "
+if eval "$MISSING --is-lightweight"; then
+  am_missing_run="$MISSING "
 else
   am_missing_run=
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: 'missing' script is too old or missing" >&5
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh}" != xset; then
+if test x"${install_sh+set}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -2761,6 +2735,45 @@ else
 fi
 rmdir .tst 2>/dev/null
 
+# Check whether --enable-silent-rules was given.
+if test "${enable_silent_rules+set}" = set; then :
+  enableval=$enable_silent_rules;
+fi
+
+case $enable_silent_rules in # (((
+  yes) AM_DEFAULT_VERBOSITY=0;;
+   no) AM_DEFAULT_VERBOSITY=1;;
+    *) AM_DEFAULT_VERBOSITY=1;;
+esac
+am_make=${MAKE-make}
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $am_make supports nested variables" >&5
+$as_echo_n "checking whether $am_make supports nested variables... " >&6; }
+if ${am_cv_make_support_nested_variables+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if $as_echo 'TRUE=$(BAR$(V))
+BAR0=false
+BAR1=true
+V=1
+am__doit:
+	@$(TRUE)
+.PHONY: am__doit' | $am_make -f - >/dev/null 2>&1; then
+  am_cv_make_support_nested_variables=yes
+else
+  am_cv_make_support_nested_variables=no
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_make_support_nested_variables" >&5
+$as_echo "$am_cv_make_support_nested_variables" >&6; }
+if test $am_cv_make_support_nested_variables = yes; then
+    AM_V='$(V)'
+  AM_DEFAULT_V='$(AM_DEFAULT_VERBOSITY)'
+else
+  AM_V=$AM_DEFAULT_VERBOSITY
+  AM_DEFAULT_V=$AM_DEFAULT_VERBOSITY
+fi
+AM_BACKSLASH='\'
+
 if test "`cd $srcdir && pwd`" != "`pwd`"; then
   # Use -I$(srcdir) only when $(srcdir) != ., so that make's output
   # is not polluted with repeated "-I."
@@ -2817,11 +2830,15 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target.  The system "awk" is bad on
-# some platforms.
+# We need awk for the "check" target (and possibly the TAP driver).  The
+# system "awk" is bad on some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
+
+
+# We'll loop over all known methods to create a tar archive until one works.
+_am_tools='gnutar  pax cpio none'
 
 am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
@@ -2830,42 +2847,190 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
-# Define the argument to configure script to set the linkline for spirit
-# Check whether --enable-link_spirit was given.
-if test "${enable_link_spirit+set}" = set; then :
-  enableval=$enable_link_spirit; case "${enableval}" in
-       yes) UseLINKSPIRIT=true ;;
-       no)  UseLINKSPIRIT=false ;;
-       *) as_fn_error $? "bad value ${enableval} for --enable-link-spirit" "$LINENO" 5 ;;
-     esac;echo "UseLINKSPIRIT is $UseLINKSPIRIT"
-else
-  UseLINKSPIRIT=false
+# POSIX will say in a future version that running "rm -f" with no argument
+# is OK; and we want to be able to make that assumption in our Makefile
+# recipes.  So use an aggressive probe to check that the usage we want is
+# actually supported "in the wild" to an acceptable degree.
+# See automake bug#10828.
+# To make any issue more visible, cause the running configure to be aborted
+# by default if the 'rm' program in use doesn't match our expectations; the
+# user can still override this though.
+if rm -f && rm -fr && rm -rf; then : OK; else
+  cat >&2 <<'END'
+Oops!
+
+Your 'rm' program seems unable to run without file operands specified
+on the command line, even when the '-f' option is present.  This is contrary
+to the behaviour of most rm programs out there, and not conforming with
+the upcoming POSIX standard: <http://austingroupbugs.net/view.php?id=542>
+
+Please tell bug-automake@gnu.org about your system, including the value
+of your $PATH and any error possibly output before this message.  This
+can help us improve future automake versions.
+
+END
+  if test x"$ACCEPT_INFERIOR_RM_PROGRAM" = x"yes"; then
+    echo 'Configuration will proceed anyway, since you have set the' >&2
+    echo 'ACCEPT_INFERIOR_RM_PROGRAM variable to "yes"' >&2
+    echo >&2
+  else
+    cat >&2 <<'END'
+Aborting the configuration process, to ensure you take notice of the issue.
+
+You can download and install GNU coreutils to get an 'rm' implementation
+that behaves properly: <http://www.gnu.org/software/coreutils/>.
+
+If you want to complete the configuration process using your problematic
+'rm' anyway, export the environment variable ACCEPT_INFERIOR_RM_PROGRAM
+to "yes", and re-run configure.
+
+END
+    as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
+  fi
 fi
 
 
-# Define the argument to configure script to set the linkline for srnsquall
-# Check whether --enable-link_srnsquall was given.
-if test "${enable_link_srnsquall+set}" = set; then :
-  enableval=$enable_link_srnsquall; case "${enableval}" in
-       yes) UseLINKSQUALL=true ;;
-       no)  UseLINKSQUALL=false ;;
-       *) as_fn_error $? "bad value ${enableval} for --enable-link-srnsquall" "$LINENO" 5 ;;
-     esac;echo "UseLINKSQUALL is $UseLINKSQUALL"
+# Do not require the Makefiles to be rebuilt using the autotools
+# so the end user will not have to have the same version of autoconf
+# and automake.
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
+$as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
+    # Check whether --enable-maintainer-mode was given.
+if test "${enable_maintainer_mode+set}" = set; then :
+  enableval=$enable_maintainer_mode; USE_MAINTAINER_MODE=$enableval
 else
-  UseLINKSQUALL=false
+  USE_MAINTAINER_MODE=no
+fi
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $USE_MAINTAINER_MODE" >&5
+$as_echo "$USE_MAINTAINER_MODE" >&6; }
+   if test $USE_MAINTAINER_MODE = yes; then
+  MAINTAINER_MODE_TRUE=
+  MAINTAINER_MODE_FALSE='#'
+else
+  MAINTAINER_MODE_TRUE='#'
+  MAINTAINER_MODE_FALSE=
+fi
+
+  MAINT=$MAINTAINER_MODE_TRUE
+
+
+
+# Initialize stuff for automake
+if test "`cd $srcdir && pwd`" != "`pwd`"; then
+  # Use -I$(srcdir) only when $(srcdir) != ., so that make's output
+  # is not polluted with repeated "-I."
+  am__isrc=' -I$(srcdir)'
+  # test to see if srcdir already configured
+  if test -f $srcdir/config.status; then
+    as_fn_error $? "source directory already configured; run \"make distclean\" there first" "$LINENO" 5
+  fi
+fi
+
+# test whether we have cygpath
+if test -z "$CYGPATH_W"; then
+  if (cygpath --version) >/dev/null 2>/dev/null; then
+    CYGPATH_W='cygpath -w'
+  else
+    CYGPATH_W=echo
+  fi
 fi
 
 
-# Define the argument to configure script to enable lcao
-# Check whether --enable-lcao was given.
-if test "${enable_lcao+set}" = set; then :
-  enableval=$enable_lcao; case "${enableval}" in
-       yes) UseLCAO=true ;;
-       no)  UseLCAO=false ;;
-       *) as_fn_error $? "bad value ${enableval} for --enable-lcao" "$LINENO" 5 ;;
-     esac;echo "UseLCAO is $UseLCAO"
-else
-  UseLCAO=false
+# Define the identity of the package.
+ PACKAGE='towhee'
+ VERSION='8.0.0'
+
+
+cat >>confdefs.h <<_ACEOF
+#define PACKAGE "$PACKAGE"
+_ACEOF
+
+
+cat >>confdefs.h <<_ACEOF
+#define VERSION "$VERSION"
+_ACEOF
+
+# Some tools Automake needs.
+
+ACLOCAL=${ACLOCAL-"${am_missing_run}aclocal-${am__api_version}"}
+
+
+AUTOCONF=${AUTOCONF-"${am_missing_run}autoconf"}
+
+
+AUTOMAKE=${AUTOMAKE-"${am_missing_run}automake-${am__api_version}"}
+
+
+AUTOHEADER=${AUTOHEADER-"${am_missing_run}autoheader"}
+
+
+MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
+
+# For better backward compatibility.  To be removed once Automake 1.9.x
+# dies out for good.  For more background, see:
+# <http://lists.gnu.org/archive/html/automake/2012-07/msg00001.html>
+# <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
+mkdir_p='$(MKDIR_P)'
+
+# We need awk for the "check" target (and possibly the TAP driver).  The
+# system "awk" is bad on some platforms.
+# Always define AMTAR for backward compatibility.  Yes, it's still used
+# in the wild :-(  We should find a proper way to deprecate it ...
+AMTAR='$${TAR-tar}'
+
+
+# We'll loop over all known methods to create a tar archive until one works.
+_am_tools='gnutar  pax cpio none'
+
+am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
+
+
+
+
+
+
+# POSIX will say in a future version that running "rm -f" with no argument
+# is OK; and we want to be able to make that assumption in our Makefile
+# recipes.  So use an aggressive probe to check that the usage we want is
+# actually supported "in the wild" to an acceptable degree.
+# See automake bug#10828.
+# To make any issue more visible, cause the running configure to be aborted
+# by default if the 'rm' program in use doesn't match our expectations; the
+# user can still override this though.
+if rm -f && rm -fr && rm -rf; then : OK; else
+  cat >&2 <<'END'
+Oops!
+
+Your 'rm' program seems unable to run without file operands specified
+on the command line, even when the '-f' option is present.  This is contrary
+to the behaviour of most rm programs out there, and not conforming with
+the upcoming POSIX standard: <http://austingroupbugs.net/view.php?id=542>
+
+Please tell bug-automake@gnu.org about your system, including the value
+of your $PATH and any error possibly output before this message.  This
+can help us improve future automake versions.
+
+END
+  if test x"$ACCEPT_INFERIOR_RM_PROGRAM" = x"yes"; then
+    echo 'Configuration will proceed anyway, since you have set the' >&2
+    echo 'ACCEPT_INFERIOR_RM_PROGRAM variable to "yes"' >&2
+    echo >&2
+  else
+    cat >&2 <<'END'
+Aborting the configuration process, to ensure you take notice of the issue.
+
+You can download and install GNU coreutils to get an 'rm' implementation
+that behaves properly: <http://www.gnu.org/software/coreutils/>.
+
+If you want to complete the configuration process using your problematic
+'rm' anyway, export the environment variable ACCEPT_INFERIOR_RM_PROGRAM
+to "yes", and re-run configure.
+
+END
+    as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
+  fi
 fi
 
 
@@ -2879,19 +3044,6 @@ if test "${enable_internal+set}" = set; then :
      esac;echo "UseInternal is $UseInternal"
 else
   UseInternal=false
-fi
-
-
-# Define the argument to configure script to enable openkim
-# Check whether --enable-openkim was given.
-if test "${enable_openkim+set}" = set; then :
-  enableval=$enable_openkim; case "${enableval}" in
-       yes) UseOpenkim=true ;;
-       no)  UseOpenkim=false ;;
-       *) as_fn_error $? "bad value ${enableval} for --enable-openkim" "$LINENO" 5 ;;
-     esac;echo "UseOpenkim is $UseOpenkim"
-else
-  UseOpenkim=false
 fi
 
 
@@ -2961,22 +3113,6 @@ fi
 
 
 # Tell automake about the conditionals we just defined
- if test x$UseLINKSPIRIT = xtrue; then
-  UseLINKSPIRIT_TRUE=
-  UseLINKSPIRIT_FALSE='#'
-else
-  UseLINKSPIRIT_TRUE='#'
-  UseLINKSPIRIT_FALSE=
-fi
-
- if test x$UseLINKSQUALL = xtrue; then
-  UseLINKSQUALL_TRUE=
-  UseLINKSQUALL_FALSE='#'
-else
-  UseLINKSQUALL_TRUE='#'
-  UseLINKSQUALL_FALSE=
-fi
-
  if test x$UseMPI = xtrue; then
   UseMPI_TRUE=
   UseMPI_FALSE='#'
@@ -2993,28 +3129,12 @@ else
   UseInternal_FALSE=
 fi
 
- if test x$UseOpenkim = xtrue; then
-  UseOpenkim_TRUE=
-  UseOpenkim_FALSE='#'
-else
-  UseOpenkim_TRUE='#'
-  UseOpenkim_FALSE=
-fi
-
  if test x$UseTramonto = xtrue; then
   UseTramonto_TRUE=
   UseTramonto_FALSE='#'
 else
   UseTramonto_TRUE='#'
   UseTramonto_FALSE=
-fi
-
- if test x$UseLCAO = xtrue; then
-  UseLCAO_TRUE=
-  UseLCAO_FALSE='#'
-else
-  UseLCAO_TRUE='#'
-  UseLCAO_FALSE=
 fi
 
  if test x$UseSafeCompare = xtrue; then
@@ -3835,6 +3955,65 @@ ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC understands -c and -o together" >&5
+$as_echo_n "checking whether $CC understands -c and -o together... " >&6; }
+if ${am_cv_prog_cc_c_o+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+  # Make sure it works both with $CC and with simple cc.
+  # Following AC_PROG_CC_C_O, we do the test twice because some
+  # compilers refuse to overwrite an existing .o file with -o,
+  # though they will create one.
+  am_cv_prog_cc_c_o=yes
+  for am_i in 1 2; do
+    if { echo "$as_me:$LINENO: $CC -c conftest.$ac_ext -o conftest2.$ac_objext" >&5
+   ($CC -c conftest.$ac_ext -o conftest2.$ac_objext) >&5 2>&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } \
+         && test -f conftest2.$ac_objext; then
+      : OK
+    else
+      am_cv_prog_cc_c_o=no
+      break
+    fi
+  done
+  rm -f core conftest*
+  unset am_i
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_prog_cc_c_o" >&5
+$as_echo "$am_cv_prog_cc_c_o" >&6; }
+if test "$am_cv_prog_cc_c_o" != yes; then
+   # Losing compiler, so override with the script.
+   # FIXME: It is wrong to rewrite CC.
+   # But if we don't then we get into trouble of one sort or another.
+   # A longer-term fix would be to have automake use am__CC in this case,
+   # and then we could set am__CC="\$(top_srcdir)/compile \$(CC)"
+   CC="$am_aux_dir/compile $CC"
+fi
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
 DEPDIR="${am__leading_dot}deps"
 
 ac_config_commands="$ac_config_commands depfiles"
@@ -3897,6 +4076,134 @@ else
   AMDEP_FALSE=
 fi
 
+
+
+depcc="$CC"   am_compiler_list=
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking dependency style of $depcc" >&5
+$as_echo_n "checking dependency style of $depcc... " >&6; }
+if ${am_cv_CC_dependencies_compiler_type+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
+  # We make a subdir and do the tests there.  Otherwise we can end up
+  # making bogus files that we don't know about and never remove.  For
+  # instance it was reported that on HP-UX the gcc test will end up
+  # making a dummy file named 'D' -- because '-MD' means "put the output
+  # in D".
+  rm -rf conftest.dir
+  mkdir conftest.dir
+  # Copy depcomp to subdir because otherwise we won't find it if we're
+  # using a relative directory.
+  cp "$am_depcomp" conftest.dir
+  cd conftest.dir
+  # We will build objects and dependencies in a subdirectory because
+  # it helps to detect inapplicable dependency modes.  For instance
+  # both Tru64's cc and ICC support -MD to output dependencies as a
+  # side effect of compilation, but ICC will put the dependencies in
+  # the current directory while Tru64 will put them in the object
+  # directory.
+  mkdir sub
+
+  am_cv_CC_dependencies_compiler_type=none
+  if test "$am_compiler_list" = ""; then
+     am_compiler_list=`sed -n 's/^#*\([a-zA-Z0-9]*\))$/\1/p' < ./depcomp`
+  fi
+  am__universal=false
+  case " $depcc " in #(
+     *\ -arch\ *\ -arch\ *) am__universal=true ;;
+     esac
+
+  for depmode in $am_compiler_list; do
+    # Setup a source with many dependencies, because some compilers
+    # like to wrap large dependency lists on column 80 (with \), and
+    # we should not choose a depcomp mode which is confused by this.
+    #
+    # We need to recreate these files for each test, as the compiler may
+    # overwrite some of them when testing with obscure command lines.
+    # This happens at least with the AIX C compiler.
+    : > sub/conftest.c
+    for i in 1 2 3 4 5 6; do
+      echo '#include "conftst'$i'.h"' >> sub/conftest.c
+      # Using ": > sub/conftst$i.h" creates only sub/conftst1.h with
+      # Solaris 10 /bin/sh.
+      echo '/* dummy */' > sub/conftst$i.h
+    done
+    echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+
+    # We check with '-c' and '-o' for the sake of the "dashmstdout"
+    # mode.  It turns out that the SunPro C++ compiler does not properly
+    # handle '-M -o', and we need to detect this.  Also, some Intel
+    # versions had trouble with output in subdirs.
+    am__obj=sub/conftest.${OBJEXT-o}
+    am__minus_obj="-o $am__obj"
+    case $depmode in
+    gcc)
+      # This depmode causes a compiler race in universal mode.
+      test "$am__universal" = false || continue
+      ;;
+    nosideeffect)
+      # After this tag, mechanisms are not by side-effect, so they'll
+      # only be used when explicitly requested.
+      if test "x$enable_dependency_tracking" = xyes; then
+	continue
+      else
+	break
+      fi
+      ;;
+    msvc7 | msvc7msys | msvisualcpp | msvcmsys)
+      # This compiler won't grok '-c -o', but also, the minuso test has
+      # not run yet.  These depmodes are late enough in the game, and
+      # so weak that their functioning should not be impacted.
+      am__obj=conftest.${OBJEXT-o}
+      am__minus_obj=
+      ;;
+    none) break ;;
+    esac
+    if depmode=$depmode \
+       source=sub/conftest.c object=$am__obj \
+       depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
+       $SHELL ./depcomp $depcc -c $am__minus_obj sub/conftest.c \
+         >/dev/null 2>conftest.err &&
+       grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep $am__obj sub/conftest.Po > /dev/null 2>&1 &&
+       ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
+      # icc doesn't choke on unknown options, it will just issue warnings
+      # or remarks (even with -Werror).  So we grep stderr for any message
+      # that says an option was ignored or not supported.
+      # When given -MP, icc 7.0 and 7.1 complain thusly:
+      #   icc: Command line warning: ignoring option '-M'; no argument required
+      # The diagnosis changed in icc 8.0:
+      #   icc: Command line remark: option '-MP' not supported
+      if (grep 'ignoring option' conftest.err ||
+          grep 'not supported' conftest.err) >/dev/null 2>&1; then :; else
+        am_cv_CC_dependencies_compiler_type=$depmode
+        break
+      fi
+    fi
+  done
+
+  cd ..
+  rm -rf conftest.dir
+else
+  am_cv_CC_dependencies_compiler_type=none
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_CC_dependencies_compiler_type" >&5
+$as_echo "$am_cv_CC_dependencies_compiler_type" >&6; }
+CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
+
+ if
+  test "x$enable_dependency_tracking" != xno \
+  && test "$am_cv_CC_dependencies_compiler_type" = gcc3; then
+  am__fastdepCC_TRUE=
+  am__fastdepCC_FALSE='#'
+else
+  am__fastdepCC_TRUE='#'
+  am__fastdepCC_FALSE=
+fi
 
 
 depcc="$CC"   am_compiler_list=
@@ -4249,40 +4556,16 @@ F77LD=${CC}
 #incorporate ADDLIB into our library
 LIBS="${LIBS} ${ADDLIB}"
 
-# extra items for UseLINKSPIRIT
-if test x$UseLINKSPIRIT = xtrue ; then
-  # Include the srnspirit link-line
-  LIBS="${LIBS} -L/apps/intel/mkl701/lib/em64t -L/apps/scalapack -L/apps/blacs"
-  LIBS="${LIBS} -llcao -lmkl -lguide -lmkl_lapack64 -lscalapack"
-  LIBS="${LIBS} -lblacsCinit_MPI-LINUX-0 -lblacsF77init_MPI-LINUX-0 -lblacs_MPI-LINUX-0"
-fi
-# extra items for UseLINKSQUALL
-if test x$UseLINKSQUALL = xtrue ; then
-  # Include the srnsquall link-line
-  LIBS="${LIBS} -L/opt/acml/pgi64/lib"
-  LIBS="${LIBS} -llcao -lscalapack -lblacsCinit -lblacsF77init -lblacs -lacml"
-fi
 # extra items for UseTramonto
 if test x$UseTramonto = xtrue ; then
   # Include the Tramonto libraries
   LIBS="${LIBS} -L../lib -ldft -laztecoo -ltriutils -lifpack \
   -lepetraext -lepetra -llapack -lblas"
 fi
-# extra items for UseLCAO
-if test x$UseLCAO = xtrue ; then
-  # Include the LCAO libraries
-  LIBS="${LIBS} -L../lib"
-fi
 # extra items for UseInternal
 if test x$UseInternal = xtrue ; then
   # Nothing happens here
   LIBS="${LIBS}"
-fi
-# extra items for UseOpenkim
-if test x$UseOpenkim = xtrue ; then
-  # Include the Openkim libraries
-   LIBS="${LIBS} -L${KIM_DIR}KIM_API"
-   LIBS="${LIBS} -lkim -lkimmodels -lstdc++"
 fi
 # extra items for UseSafeCompare
 if test x$UseSafeCompare = xtrue ; then
@@ -5428,7 +5711,7 @@ done
 
 # Generate the config
 # Have to list all the Makefiles
-ac_config_files="$ac_config_files Makefile Source/Makefile ForceFields/Makefile Manual/Makefile Manual/projects/Makefile Manual/projects/towhee/Makefile Manual/projects/towhee/algorithm/Makefile Manual/projects/towhee/code/Makefile Manual/projects/towhee/database/Makefile Manual/projects/towhee/examples/Makefile Manual/projects/towhee/forcefields/Makefile Manual/projects/towhee/inpstyle/Makefile Manual/projects/towhee/input/Makefile Manual/projects/towhee/potentype/Makefile Manual/projects/towhee/utils/Makefile Utils/Makefile Examples/Makefile Examples/DFT_Field/Makefile Examples/Canonical_Ensemble/Makefile Examples/Canonical_Ensemble/AVB1_Methane/Makefile Examples/Canonical_Ensemble/Amber_Villin/Makefile Examples/Canonical_Ensemble/Benzene_AA_autofit/Makefile Examples/Canonical_Ensemble/Charmm19_ubiquitin/Makefile Examples/Canonical_Ensemble/Charmm27_Benzene/Makefile Examples/Canonical_Ensemble/Charmm27_Heme/Makefile Examples/Canonical_Ensemble/Charmm27_Nucleic_Acid/Makefile Examples/Canonical_Ensemble/Charmm27_Polyalanine/Makefile Examples/Canonical_Ensemble/Compass_Methanol/Makefile Examples/Canonical_Ensemble/DREIDING/Makefile Examples/Canonical_Ensemble/Formamide_Scaled/Makefile Examples/Canonical_Ensemble/Fris_Walls/Makefile Examples/Canonical_Ensemble/Hard_Sphere/Makefile Examples/Canonical_Ensemble/NaCl_1x1x1/Makefile Examples/Canonical_Ensemble/Shukla_Gasses/Makefile Examples/Canonical_Ensemble/Small_Peptide/Makefile Examples/Canonical_Ensemble/Square_Well_Chain/Makefile Examples/Canonical_Ensemble/TraPPE_Isomers/Makefile Examples/Canonical_Ensemble/TraPPE_Molecules/Makefile Examples/Canonical_Ensemble/Triglycerol/Makefile Examples/Canonical_Ensemble/UFF/Makefile Examples/Canonical_Ensemble/Wall_Water/Makefile Examples/Convert/Makefile Examples/Convert/LAMMPS_class2/Makefile Examples/Convert/LAMMPS_decane/Makefile Examples/Convert/LAMMPS_lc/Makefile Examples/Histogram/Makefile Examples/Histogram/Phase/Makefile Examples/Histogram/PVT/Makefile Examples/Histogram/Weights/Makefile Examples/Isobaric_Isothermal_Ensemble/Makefile Examples/Isobaric_Isothermal_Ensemble/Au_Cu_Switch/Makefile Examples/Isobaric_Isothermal_Ensemble/Charmm22_Ethanethiol/Makefile Examples/Isobaric_Isothermal_Ensemble/Cu_Pb_EAM/Makefile Examples/Isobaric_Isothermal_Ensemble/Dick1994_PETN/Makefile Examples/Isobaric_Isothermal_Ensemble/Gromos_Methylpropylsulfide/Makefile Examples/Isobaric_Isothermal_Ensemble/Henry_Law/Makefile Examples/Isobaric_Isothermal_Ensemble/Ideal_Chain/Makefile Examples/Isobaric_Isothermal_Ensemble/MMFF94_Ethyleneoxide/Makefile Examples/Isobaric_Isothermal_Ensemble/OPLS_Propanamide/Makefile Examples/Isobaric_Isothermal_Ensemble/SMMKmain_2244688nonane/Makefile Examples/Isobaric_Isothermal_Ensemble/Solid_LJium/Makefile Examples/Isobaric_Isothermal_Ensemble/Wielop1985_Ethyleneoxide/Makefile Examples/Gibbs_Ensemble/Makefile Examples/Gibbs_Ensemble/Amber_IsoPropanol/Makefile Examples/Gibbs_Ensemble/Catlow_Zeolite_4a/Makefile Examples/Gibbs_Ensemble/Cu_VLE/Makefile Examples/Gibbs_Ensemble/Cui2002_Hexane/Makefile Examples/Gibbs_Ensemble/Dubb_Zeolite/Makefile Examples/Gibbs_Ensemble/EPM_VLCC/Makefile Examples/Gibbs_Ensemble/FENE_Hexamer/Makefile Examples/Gibbs_Ensemble/Gordon/Makefile Examples/Gibbs_Ensemble/Gromos_Isobutane/Makefile Examples/Gibbs_Ensemble/MM2_Ethane/Makefile Examples/Gibbs_Ensemble/Potter_CF2H2/Makefile Examples/Gibbs_Ensemble/SKS_Pentane/Makefile Examples/Gibbs_Ensemble/SMMKnaip_Ethylpentane/Makefile Examples/Gibbs_Ensemble/TraPPE_Pentane/Makefile Examples/Gibbs_Ensemble/Vink2001_Silicon/Makefile Examples/Gibbs_Ensemble/Weiner1984/Makefile Examples/Grand_Canonical_Ensemble/Makefile Examples/Grand_Canonical_Ensemble/Amber96_Ethane/Makefile Examples/Grand_Canonical_Ensemble/Energy_Biasing/Makefile Examples/Grand_Canonical_Ensemble/Steele_Wall/Makefile Examples/Grand_Canonical_Ensemble/Walt2001_Nanotube/Makefile Examples/Parallel_Test/Makefile Examples/TMMC/Makefile Examples/TMMC/LJ/Makefile Examples/TMMC/SPC_E_WATER/Makefile Examples/VLCC_Fit/Makefile"
+ac_config_files="$ac_config_files Makefile Source/Makefile ForceFields/Makefile Manual/Makefile Manual/projects/Makefile Manual/projects/towhee/Makefile Manual/projects/towhee/algorithm/Makefile Manual/projects/towhee/code/Makefile Manual/projects/towhee/examples/Makefile Manual/projects/towhee/forcefields/Makefile Manual/projects/towhee/inpstyle/Makefile Manual/projects/towhee/input/Makefile Manual/projects/towhee/potentype/Makefile Manual/projects/towhee/utils/Makefile Utils/Makefile Examples/Makefile Examples/DFT_Field/Makefile Examples/Canonical_Ensemble/Makefile Examples/Canonical_Ensemble/AVB1_Methane/Makefile Examples/Canonical_Ensemble/Amber_Villin/Makefile Examples/Canonical_Ensemble/Benzene_AA_autofit/Makefile Examples/Canonical_Ensemble/Charmm19_ubiquitin/Makefile Examples/Canonical_Ensemble/Charmm27_Benzene/Makefile Examples/Canonical_Ensemble/Charmm27_Heme/Makefile Examples/Canonical_Ensemble/Charmm27_Nucleic_Acid/Makefile Examples/Canonical_Ensemble/Charmm27_Polyalanine/Makefile Examples/Canonical_Ensemble/Compass_Methanol/Makefile Examples/Canonical_Ensemble/DREIDING/Makefile Examples/Canonical_Ensemble/Formamide_Scaled/Makefile Examples/Canonical_Ensemble/Fris_Walls/Makefile Examples/Canonical_Ensemble/Hard_Sphere/Makefile Examples/Canonical_Ensemble/NaCl_1x1x1/Makefile Examples/Canonical_Ensemble/Shukla_Gasses/Makefile Examples/Canonical_Ensemble/Small_Peptide/Makefile Examples/Canonical_Ensemble/Square_Well_Chain/Makefile Examples/Canonical_Ensemble/TraPPE_Isomers/Makefile Examples/Canonical_Ensemble/TraPPE_Molecules/Makefile Examples/Canonical_Ensemble/Triglycerol/Makefile Examples/Canonical_Ensemble/UFF/Makefile Examples/Canonical_Ensemble/Wall_Water/Makefile Examples/Convert/Makefile Examples/Convert/LAMMPS_class2/Makefile Examples/Convert/LAMMPS_decane/Makefile Examples/Convert/LAMMPS_lc/Makefile Examples/Histogram/Makefile Examples/Histogram/Phase/Makefile Examples/Histogram/PVT/Makefile Examples/Histogram/Weights/Makefile Examples/Isobaric_Isothermal_Ensemble/Makefile Examples/Isobaric_Isothermal_Ensemble/Au_Cu_Switch/Makefile Examples/Isobaric_Isothermal_Ensemble/Charmm22_Ethanethiol/Makefile Examples/Isobaric_Isothermal_Ensemble/Cu_Pb_EAM/Makefile Examples/Isobaric_Isothermal_Ensemble/Dick1994_PETN/Makefile Examples/Isobaric_Isothermal_Ensemble/Gromos_Methylpropylsulfide/Makefile Examples/Isobaric_Isothermal_Ensemble/Henry_Law/Makefile Examples/Isobaric_Isothermal_Ensemble/Ideal_Chain/Makefile Examples/Isobaric_Isothermal_Ensemble/MMFF94_Ethyleneoxide/Makefile Examples/Isobaric_Isothermal_Ensemble/OPLS_Propanamide/Makefile Examples/Isobaric_Isothermal_Ensemble/SMMKmain_2244688nonane/Makefile Examples/Isobaric_Isothermal_Ensemble/Solid_LJium/Makefile Examples/Isobaric_Isothermal_Ensemble/Wielop1985_Ethyleneoxide/Makefile Examples/Gibbs_Ensemble/Makefile Examples/Gibbs_Ensemble/Amber_IsoPropanol/Makefile Examples/Gibbs_Ensemble/Catlow_Zeolite_4a/Makefile Examples/Gibbs_Ensemble/Cu_VLE/Makefile Examples/Gibbs_Ensemble/Cui2002_Hexane/Makefile Examples/Gibbs_Ensemble/Dubb_Zeolite/Makefile Examples/Gibbs_Ensemble/EPM_VLCC/Makefile Examples/Gibbs_Ensemble/FENE_Hexamer/Makefile Examples/Gibbs_Ensemble/Gordon/Makefile Examples/Gibbs_Ensemble/Gromos_Isobutane/Makefile Examples/Gibbs_Ensemble/MM2_Ethane/Makefile Examples/Gibbs_Ensemble/Potter_CF2H2/Makefile Examples/Gibbs_Ensemble/SKS_Pentane/Makefile Examples/Gibbs_Ensemble/SMMKnaip_Ethylpentane/Makefile Examples/Gibbs_Ensemble/TraPPE_Pentane/Makefile Examples/Gibbs_Ensemble/Vink2001_Silicon/Makefile Examples/Gibbs_Ensemble/Weiner1984/Makefile Examples/Grand_Canonical_Ensemble/Makefile Examples/Grand_Canonical_Ensemble/Amber96_Ethane/Makefile Examples/Grand_Canonical_Ensemble/Energy_Biasing/Makefile Examples/Grand_Canonical_Ensemble/Steele_Wall/Makefile Examples/Grand_Canonical_Ensemble/Walt2001_Nanotube/Makefile Examples/Parallel_Test/Makefile Examples/TMMC/Makefile Examples/TMMC/LJ/Makefile Examples/TMMC/SPC_E_WATER/Makefile Examples/VLCC_Fit/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5575,10 +5858,6 @@ LIBOBJS=$ac_libobjs
 LTLIBOBJS=$ac_ltlibobjs
 
 
-if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
-  as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking that generated files are newer than configure" >&5
 $as_echo_n "checking that generated files are newer than configure... " >&6; }
    if test -n "$am_sleep_pid"; then
@@ -5595,14 +5874,18 @@ else
   am__EXEEXT_FALSE=
 fi
 
-if test -z "${UseLINKSPIRIT_TRUE}" && test -z "${UseLINKSPIRIT_FALSE}"; then
-  as_fn_error $? "conditional \"UseLINKSPIRIT\" was never defined.
+if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
+  as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${UseLINKSQUALL_TRUE}" && test -z "${UseLINKSQUALL_FALSE}"; then
-  as_fn_error $? "conditional \"UseLINKSQUALL\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ if test -n "$EXEEXT"; then
+  am__EXEEXT_TRUE=
+  am__EXEEXT_FALSE='#'
+else
+  am__EXEEXT_TRUE='#'
+  am__EXEEXT_FALSE=
 fi
+
 if test -z "${UseMPI_TRUE}" && test -z "${UseMPI_FALSE}"; then
   as_fn_error $? "conditional \"UseMPI\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -5611,16 +5894,8 @@ if test -z "${UseInternal_TRUE}" && test -z "${UseInternal_FALSE}"; then
   as_fn_error $? "conditional \"UseInternal\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${UseOpenkim_TRUE}" && test -z "${UseOpenkim_FALSE}"; then
-  as_fn_error $? "conditional \"UseOpenkim\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${UseTramonto_TRUE}" && test -z "${UseTramonto_FALSE}"; then
   as_fn_error $? "conditional \"UseTramonto\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${UseLCAO_TRUE}" && test -z "${UseLCAO_FALSE}"; then
-  as_fn_error $? "conditional \"UseLCAO\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${UseSafeCompare_TRUE}" && test -z "${UseSafeCompare_FALSE}"; then
@@ -5637,6 +5912,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
   as_fn_error $? "conditional \"AMDEP\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
+  as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
@@ -6224,7 +6503,6 @@ do
     "Manual/projects/towhee/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/Makefile" ;;
     "Manual/projects/towhee/algorithm/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/algorithm/Makefile" ;;
     "Manual/projects/towhee/code/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/code/Makefile" ;;
-    "Manual/projects/towhee/database/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/database/Makefile" ;;
     "Manual/projects/towhee/examples/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/examples/Makefile" ;;
     "Manual/projects/towhee/forcefields/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/forcefields/Makefile" ;;
     "Manual/projects/towhee/inpstyle/Makefile") CONFIG_FILES="$CONFIG_FILES Manual/projects/towhee/inpstyle/Makefile" ;;
@@ -6735,7 +7013,7 @@ $as_echo "$as_me: executing $ac_file commands" >&6;}
 
   case $ac_file$ac_mode in
     "depfiles":C) test x"$AMDEP_TRUE" != x"" || {
-  # Autoconf 2.62 quotes --file arguments for eval, but not when files
+  # Older Autoconf quotes --file arguments for eval, but not when files
   # are listed without --file.  Let's play safe and only enable the eval
   # if we detect the quoting.
   case $CONFIG_FILES in
@@ -6786,7 +7064,7 @@ $as_echo X"$mf" |
     DEPDIR=`sed -n 's/^DEPDIR = //p' < "$mf"`
     test -z "$DEPDIR" && continue
     am__include=`sed -n 's/^am__include = //p' < "$mf"`
-    test -z "am__include" && continue
+    test -z "$am__include" && continue
     am__quote=`sed -n 's/^am__quote = //p' < "$mf"`
     # Find all dependency output files, they are included files with
     # $(DEPDIR) in their names.  We invoke sed twice because it is the

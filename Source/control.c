@@ -57,32 +57,6 @@ void tramonto_control(int outputmode, int myproc)
   }
 #endif
 }
-void lcao_control(int outputmode, int myproc)
-/*
-  lcao_control is called by towhee.c and is in charge of assigning 
-  tasks to processors for an LCAO calculation.  the master enters 
-  the mainloop while the slaves wait in lcaoloop
-  originally writtin 02-15-2006 by M.G. Martin
-  last modified 06-25-2009 by M.G. Martin 
-*/
-{
-  int jobcount;
-  const int zero = LOG_FALSE;
-  const int pstyle = LCAO;
-  if ( myproc == 0 ) { 
-    /* set jobcount to 0 to signify an output to the screen */
-    jobcount = 0;
-    /* master enters towhee, does not return until everything is finished */
-    towheemainloop_(&jobcount,&outputmode,&zero,&pstyle); 
-    /* let the other nodes know we are done */
-    twhendquantum_();
-  }
-  else { 
-    /* worker node enters the quantumloop and remains there until the master 
-       tells him to stop working */
-    twhquantumloop_(); 
-  }
-}
 
 double tramonto_()
 /* 

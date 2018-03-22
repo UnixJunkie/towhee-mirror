@@ -8,18 +8,9 @@ if UseMPI
 MPI_CPPFLAGS = -DUSEMPI
 MPI_LIBS = $(MPILIBS)
 endif
-# If configured with --enable-openkim, set the flag
-if UseOpenkim
-OK_CPPFLAGS = -DUSEOPENKIM
-INCLUDES = -I${KIM_DIR}KIM_API
-endif
 # If configured with --enable-tramonto, set the flag
 if UseTramonto
 T_CPPFLAGS = -DUSETRAMONTO
-endif
-# If configure with --enable-lcao, set the flag
-if UseLCAO
-LCAO_CPPFLAGS = -DUSELCAO
 endif
 # If configure with --enable-internal, set the flag
 if UseInternal
@@ -42,7 +33,7 @@ endif
 #DM_CPPFLAGS = -DUSE_DYNAMIC_MEMORY
 #endif
 
-AM_CPPFLAGS = $(MPI_CPPFLAGS) $(OK_CPPFLAGS) $(T_CPPFLAGS) $(LCAO_CPPFLAGS) $(I_CPPFLAGS)
+AM_CPPFLAGS = $(MPI_CPPFLAGS) $(OK_CPPFLAGS) $(T_CPPFLAGS) $(I_CPPFLAGS)
 AM_CPPFLAGS += $(SC_CPPFLAGS) $(CLA_CPPFLAGS) $(DM_CPPFLAGS)
 AM_FFLAGS += $(SC_FFLAGS) $(FG_FFLAGS) $(DM_FFLAGS)
 LIBS = $(MPI_LIBS)
@@ -117,7 +108,6 @@ towhee_SOURCES =  \
 		inverthmatrix.F \
 		kiss.F \
 		lawofcosine.F \
-		leastsquares.F \
 		linclude.F \
 		loopclosure.F \
 		mainloop.F \
@@ -140,13 +130,11 @@ towhee_SOURCES =  \
 		putcartinbox.F \
 		pupdate.F \
 		qqassign.F \
-		quantumenergy.F \
 		radialpressure.F \
 		ranlux.F \
 		readclassical.F \
 		readinput.F \
 		readlammps.F \
-		readquantum.F \
 		readtowhee.F \
 		readutils.F \
 		recip.F \
@@ -160,16 +148,10 @@ towhee_SOURCES =  \
 		rotationmatrix.F \
 		rwcbmc.F \
 		rwconf.F \
-		rwexternal.F \
 		rwforcefield.F \
 		rwsafe.F \
 		scaled_potential.F \
 		schedule.F \
-		sdb_config.F \
-		sdb_rdstruct.F \
-		sdb_rdtoend.F \
-		sdb_strget.F \
-		sdb_strpars.F \
 		setcbdihed.F \
 		setclassical.F \
 		setmixterms.F \
@@ -212,7 +194,6 @@ towhee_SOURCES =  \
 		writeimproper.F \
 		writeintro.F \
 		writelammps.F \
-		writelcao.F \
 		writemovie.F \
 		writenonbond.F \
 		writeonefive.F \
@@ -524,13 +505,11 @@ putarbinbox.o: preproc.h putarbinbox.F
 putcartinbox.o: preproc.h putcartinbox.F
 pupdate.o: preproc.h pupdate.F
 qqassign.o: preproc.h functions.h qqassign.F
-quantumenergy.o: preproc.h quantumenergy.F
 radialpressure.o: preproc.h functions.h radialpressure.F
 ranlux.o: ranlux.F
 readclassical.o: preproc.h functions.h wrapperF.h readclassical.F
 readinput.o: preproc.h wrapperF.h functions.h readinput.F
 readlammps.o: preproc.h functions.h readlammps.F
-readquantum.o: preproc.h functions.h readquantum.F
 readtowhee.o: preproc.h wrapperF.h functions.h readtowhee.F
 readutils.o: functions.h readutils.F
 recip.o: preproc.h recip.F
@@ -545,16 +524,10 @@ rotate.o: preproc.h functions.h rotate.F
 rotationmatrix.o: preproc.h rotationmatrix.F
 rwcbmc.o: preproc.h functions.h rwcbmc.F
 rwconf.o: preproc.h functions.h rwconf.F
-rwexternal.o: preproc.h rwexternal.F
 rwforcefield.o: preproc.h functions.h rwforcefield.F
 rwsafe.o: preproc.h functions.h rwsafe.F
 scaled_potential.o: preproc.h scaled_potential.F
 schedule.o: preproc.h functions.h schedule.F
-sdb_config.o: sdb_config.F
-sdb_rdstruct.o: sdb_rdstruct.F
-sdb_rdtoend.o: sdb_rdtoend.F 
-sdb_strget.o: sdb_strget.F
-sdb_strpars.o: sdb_strpars.F
 setcbdihed.o: preproc.h functions.h setcbdihed.F
 setclassical.o: preproc.h functions.h setclassical.F
 setmixterms.o: preproc.h functions.h setmixterms.F
@@ -597,7 +570,6 @@ writedynamo.o: preproc.h functions.h writedynamo.F
 writeimproper.o: preproc.h functions.h writeimproper.F 
 writeintro.o: preproc.h writeintro.F 
 writelammps.o: preproc.h functions.h writelammps.F
-writelcao.o: preproc.h functions.h writelcao.F
 writemovie.o: preproc.h functions.h writemovie.F
 writenonbond.o: preproc.h functions.h writenonbond.F
 writeonefive.o: preproc.h functions.h writeonefive.F

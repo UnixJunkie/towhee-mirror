@@ -41,13 +41,25 @@
      <ul>
       <li>8.0.0:
 	Updates to the storage of the volume move maximum displacements were the cause of changes to the restart files, and therefore the primary version number.
-        This time the rmvol and rmcell values are now output for each simulation box and for each simulation box pair so that no matter the restart ensemble the values will be properly transferred.
-        Updated the <a href="../towhee_restart.html">Towhee Restart Manual</a> to properly reflect the information in the towhee_initial and towhee_final files for the current release version and it is
-	clear that old versions of that manual did not proplerly represent the data in the restart files.
+        The rmvol and rmcell values are now output for each simulation box and for each simulation box pair so that no matter the restart ensemble the values will
+	be properly transferred.
+        Updated the <a href="../towhee_restart.html">Towhee Restart Manual</a> to properly reflect the information in the towhee_initial and towhee_final files for
+	the current release version and it is clear that old versions of that manual did not proplerly represent the data in the restart files.
+	Minor changes to the scripts that run the <a href="../examples/example_manual.html">Examples</a> test suite as the B in
+	<a href="../examples/example_manual.html#Charmm27_Benzene">Charmm27_Benzene</a> was not
+	capitalized in the scripts and this caused problems on some Ubuntu platforms.  Discovered the <a href="../towhee_restart.html">Towhee Restart Manual</a> was
+	inadvertantly missing from version control and added it to the svn repository.  Discovered the towhee_input file for the
+	<a href="../examples/example_manual.html#Wielop1985_Ethyleneoxide">Wielop1985 Ethyleneoxde</a> example was inadvertantly missing from version control and added
+	it to the svn repository.
+	Removed nonfunctioning connections to external codes from Towhee and related configure options for those connections.
+	Removed the 'atomic' option from <a href="#input_style">input_style</a>.
+	Modified the root configure.ac script to incorporate subdir-objects to enable searching subdirectories for subroutines.
+	Removed all of the sdb_*.F files and manual pages associated with the deprecated 'database' <a href="#inputformat">inputformat</a> option.
+	Moved the leastsquares.F subroutine from Source to Utils.
       </li>
      </ul>
    
-     <b>towhee_input file differences from version 8.0.x</b> 
+     <b>towhee_input file differences from version 7.2.x</b> 
      <ul>
       <li>None yet</li>
      </ul>
@@ -1046,56 +1058,12 @@
          When using this option you need to include the following variable.
          <ul>
           <dt><a name="external_code"><b>external_code (character*20)</b></a>
-           <ul>
-            <li>'KIM' : uses the <a href="https://openkim.org">Knowledgebase of Interatomic Models</a> to compute the energy.  Use of this option
-             requires special compilation to include the KIM library.  Please see the <a href="../code/code_manual.html#enable_openkim">Code Manual</a> for 
-             detailed instructions on how to compile Towhee to include this KIM libraries.  When using this option you must also include the
-             following variables.
-             <ul>
-              <dt><a name="kim_model"><b>kim_model (character*50)</b></a>
-               <ul>
-                The name of the KIM model to use to compute the energy.  Please see the
-                <a href="https://openkim.org">Open Knowledgebase of Interatomic Models</a> site for more information about the available models.
-               </ul>
-              </dt>
-             </ul>
-            </li>
-            <li>'lcao' : uses the lcao code of Peter Schultz, also known as <a href="http://dft.sandia.gov/Quest/">Quest</a> or SeqQuest, to compute the
-             quantum mechanical energy.  Use of this option requires the placement of several libraries into the /towheebase/lib directory (use of symbolic
-             links is also acceptable in that directory).  The code must be compiled with the '--enable-lcao' option in order to link in these libraries.
-             When using this option you must also include the following variables.
-             <ul>
-              <dt><a name="lcao_functional"><b>lcao_functional</b> (character*20)</b></a>
-               <ul>
-                <li>'LDA' : uses the local density approximation to compute the energy.</li>
-               </ul>
-              </dt>
-              <dt><a name="lcao_atomtypes"><b>lcao_atomtypes (integer)</b></a>
-               <ul>
-                The number of different elements used in the quantum code.
-               </ul>
-              </dt>
-              <dt><a name="lcao_filename"><b>lcao_filename (character*50 array)</b></a>
-               <ul>
-                A list of the atom filenames used in Quest.  Listed one on a line for each atom type.
-               </ul>
-              </dt>
-              <dt><a name="lcao_gridmultiplier"><b>lcao_gridmultiplier (double precision)</b></a>
-               <ul>
-                Value that is multiplied by the box dimensions in order to compute the lcao grid dimensions.  Suggested value is 4.0.
-               </ul>
-              </dt>
-              <dt><a name="lcao_kgridproduct"><b>lcao_kgridproduct (double precision)</b></a>
-               <ul>
-                This value is divided by the box dimensions in order to compute the lcao kgrid.  Suggested value is 40.0.
-               </ul>
-              </dt>
-             </ul>
-            </li>
-           </ul>
-          </dt>
-         </ul>
-        </li>
+            <ul>
+	      <li>No Valid options currently for this variable</li>
+            </ul>
+	  </dt>
+	 </ul>
+	</li>
        </ul>
       </dt>
 
@@ -2717,9 +2685,6 @@
         <li>'basic connectivity map' : <a href="../inpstyle/inpstyle_2.html">Basic Atom-based connectivity map</a> (formerly <b>input_style</b> 2)</li>
         <li>'nucleic acid builder' : <a href="../inpstyle/inpstyle_3.html">Nucleic acid builder</a> (formerly <b>input_style</b> 3)</li>
         <li>'nanotube builder' : <a href="../inpstyle/inpstyle_4.html">Nanotube builder</a> (formerly <b>input_style</b> 4)</li>
-        <li>'atomic' <a href="../inpstyle/inpstyle_5.html">Atomic only: typically for use with external quantum energy calcaultions</a> 
-         (formerly <b>input_style</b> 5)
-        </li>
         <li>'advanced connectivity map' : <a href="../inpstyle/inpstyle_6.html">Advanced Atom-based connectivity map</a></li>
        </ul>
       </dt>
@@ -2735,7 +2700,7 @@
   <i><font size="2">Send comments to:</font></i>
   <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
    <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->January 17, 2018<!-- #EndDate -->
+   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->March 20, 2018<!-- #EndDate -->
   </font>
  </foot>
 </html>

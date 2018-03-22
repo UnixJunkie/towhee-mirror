@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -23,7 +23,7 @@ c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
       subroutine twh_engtotal(lfailure,lovrlap
      &     ,vclassical,vinter,vthrinter,vtail,vintra,vvib,vbend,vtg
-     &     ,vext,velect,vsolvation,vquantum,vforeign,dl_inter, dl_elect
+     &     ,vext,velect,vsolvation,vforeign,dl_inter, dl_elect
      &     ,crdflag,bxdflag,ibox
      &     ,lmolecmove,lmovelist,lreport,lbonded)
 c     ******************************************************************
@@ -45,7 +45,6 @@ c     * vext is the energy of external fields/walls                    *
 c     * velect is the total coulombic energy - execpt 1-4 coulombics   *
 c     *        which are included in the torsional potential           *
 c     * vsolvation is the solvation energy                             *
-c     * vquantum is the quantum mechanical energy                      *
 c     * vforeign is total classical energy evaluated at different      *
 c     *     values of lambda for 'Scaled Lennard-Jones' potential.     *
 c     *     See scaled_potential.F                                     *
@@ -73,7 +72,7 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -85,25 +84,20 @@ c     --- variables passed to/from the subroutine
       logical lfailure,lovrlap, lmolecmove,lmovelist,lreport,lbonded
       integer crdflag,bxdflag,ibox
       double precision vclassical,vinter,vintra,vthrinter,vtail,vvib
-      double precision vbend,vtg,velect,vsolvation,vext,vquantum
+      double precision vbend,vtg,velect,vsolvation,vext
       double precision vforeign,dl_inter, dl_elect
       dimension vforeign(MAX_FOREIGN_LAMBDA)
 c     --- local variables
 c     --- logical scalars
       logical lmadelung,ltailc,lelect,lewald
-c     --- character scalars
-      character*20 external_code
 c     --- integer scalars
-      integer ichain, nmcount, cutstyle,ispecial,flagon,l
+      integer ichain, nmcount, cutstyle,lambda
       integer classical_potnum,nchain,nmolty,nchbox
       integer scp_num_foreign_lambda,potentialstyle,numboxes
 c     --- double precision scalars
       double precision maddist,sself,correct,vtmp
       double precision velectinter,velectintra,vtwointer,vangleangle
       double precision vimpr,vrealelect,vrecipsum,vbondbond
-c     --- double precision arrays
-      integer chaininfo
-      dimension chaininfo(1,3)
 
 c      write(6,*) 'start ENGTOTAL'
 
@@ -143,11 +137,10 @@ c        --- initialize report variables
       vsolvation = 0.0d0
       velectinter = 0.0d0
       velectintra = 0.0d0
-      vquantum = 0.0d0
       dl_inter = 0.0d0
       dl_elect = 0.0d0
-      do l=1,MAX_FOREIGN_LAMBDA
-         vforeign(l) = 0.0d0
+      do lambda=1,MAX_FOREIGN_LAMBDA
+         vforeign(lambda) = 0.0d0
       enddo
 
 c     --- determine whether we want to compute the madelung constant
@@ -258,42 +251,18 @@ c            write(6,*) 'vrecipsum:',vrecipsum
 
 c        --- foreign energies add terms which do not change with lambda
          call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
-         do l = 1, scp_num_foreign_lambda
-            vforeign(l)=vforeign(l) + vtmp
+         do lambda = 1, scp_num_foreign_lambda
+            vforeign(lambda) = vforeign(lambda) + vtmp
          enddo
 
       endif
 
-c     --- compute external energies
-      if ( potentialstyle .eq. POT_EXTERNAL ) then
-         call twh_external_code(GLB_GET,external_code)
-         if ( external_code .eq. 'lcao' ) then
-            ispecial = 0
-            flagon = 0
-            chaininfo(1,1)=-1
-            chaininfo(1,2)=-1
-            chaininfo(1,3)=-1
-            call twh_quantumenergy(lfailure,ibox,flagon,1,chaininfo
-     &           ,vquantum)
-            if ( lfailure ) return
-         elseif ( external_code .eq. 'KIM' ) then
-            write(6,*) 'hey, should compute this'
-            lfailure = .true.
-            return
-         else
-            write(6,*) 'ENGTOTAL: unknown external_code'
-            write(6,*) external_code
-            lfailure = .true.
-            return
-         endif
-      endif
-         
       if ( lreport ) then
          call twh_eng_print(nmcount, vvib, vbondbond, vbend, 
      &       vangleangle, vtg, vimpr, vintra, vinter, vtwointer, 
      &       vthrinter, velect, vrealelect, sself, correct, vrecipsum, 
      &       vext, vsolvation, vclassical, vtail, velectinter, 
-     &       velectintra,vquantum,vforeign,dl_inter,dl_elect, lmadelung,
+     &       velectintra,vforeign,dl_inter,dl_elect, lmadelung,
      &       maddist, ibox)
       endif
 
@@ -1386,7 +1355,7 @@ c         call twh_fielddft(lfailure,0,0,chaininfo,ibox,vnt)
      &     vangleangle, vtg, vimpr, vintra, vinter, vtwointer, 
      &     vthrinter, velect, vrealelect, sself, correct, vrecipsum, 
      &     vext, vsolvation, vclassical, vtail, velectinter, 
-     &     velectintra, vquantum, vforeign, dl_inter, dl_elect, 
+     &     velectintra, vforeign, dl_inter, dl_elect, 
      &     lmadelung, maddist, ibox)
 c     ******************************************************************
 c     * print the output                                               *
@@ -1420,7 +1389,6 @@ c     *  velectinter -- the intermolecular component of real space     *
 c     *     coulombic potential                                        *
 c     *  velectintra -- the intramolecular component of real space     *
 c     *     coulombic potential                                        *
-c     *  vquantum -- quantum mechanical energy                         *
 c     *  vforeign -- classical potential at different values of lambda *
 c     *     for Scaled Lennard-Jones potential only; see               *
 c     *     scaled_potential.F                                         *
@@ -1440,7 +1408,7 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -1452,7 +1420,7 @@ c     --- variables passed to/from the subroutine
       double precision vintra, vinter, vtwointer, vthrinter, velect  
       double precision vrealelect, sself, correct, vrecipsum, vext 
       double precision vsolvation, vclassical, maddist, vtail
-     &     ,velectinter,velectintra,vquantum,dl_inter,dl_elect
+     &     ,velectinter,velectintra,dl_inter,dl_elect
       double precision vforeign(MAX_FOREIGN_LAMBDA)
       logical lmadelung
       integer nmcount, ibox, l
@@ -1657,11 +1625,6 @@ c     --- output classical energies
 902         format(i6,f11.3,f11.3,f20.4,f20.4)
          endif
 
-      endif
-c     --- output quantum energies
-      if ( potentialstyle .eq. POT_EXTERNAL ) then
-         write(6,100) vquantum,vquantum/CON_KCALTOK
- 100     format(' total quantum  ',f17.3,' [K] ',f15.5,' [kcal/mol]')
       endif
       
 c        --- hack to print out the madelung constant

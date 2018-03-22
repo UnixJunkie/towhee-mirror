@@ -23,7 +23,7 @@
   globalc.h
   this file contains all of the information that is at the top 
   of every C routine in Towhee
-  last modified 01-14-2018 by M.G. Martin
+  last modified 03-20-2018 by M.G. Martin
    generic c includes 
 */
 #include <stdio.h>
@@ -72,8 +72,6 @@ typedef struct {
 
 #ifdef INTEL_VISUAL_FORTRAN
 #define towheemainloop_ TOWHEEMAINLOOP
-#define twhquantumloop_ TWHQUANTUMLOOP
-#define twhendquantum_ TWHENDQUANTUM
 #define swrap_ SWRAP
 #endif
 
@@ -83,15 +81,12 @@ typedef struct {
 
 /* external function declarations */
 extern void towheemainloop_(const int *,const int *, const int *, const int *);
-extern void twhquantumloop_();
-extern void twhendquantum_();
 /* internal function declarations */
 void ** twh_allocate2dMatrix(size_t, int, int);
 void * twh_allocateVector(size_t, int);
 int attempt_exchange(float, int, int, double**, int*, rex_params*, FILE*);
 void clearline (FILE *);
 void do_jobfarm(user_args*, int);
-void do_lcao(user_args*, int);
 void do_none(user_args*);
 void do_rex(user_args*, int);
 void do_tramonto(user_args*, int);
@@ -101,7 +96,6 @@ void initialize_args( user_args*);
 int initialize_MPI(int, char**);
 void initialize_wrapper_strings();
 void jobfarm(FILE *, int, int);
-void lcao_control(int, int);
 void open_towhee_parallel(const char*, FILE **);
 void parse_args(int, char**, user_args*);
 int populate_directory_initial(char*, const char*, int);

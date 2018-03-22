@@ -5,6 +5,7 @@ AC_PREREQ(2.59)
 AC_INIT(towhee,8.0.0,towhee-bugs@lists.sourceforge.net)
 AC_CONFIG_SRCDIR(Source)
 AC_CONFIG_AUX_DIR(install)
+AM_INIT_AUTOMAKE([subdir-objects])
 
 # Do not require the Makefiles to be rebuilt using the autotools
 # so the end user will not have to have the same version of autoconf
@@ -14,33 +15,6 @@ AM_MAINTAINER_MODE
 # Initialize stuff for automake
 AM_INIT_AUTOMAKE
 
-# Define the argument to configure script to set the linkline for spirit
-AC_ARG_ENABLE(link_spirit,
-     [  --enable-link-spirit   Compile version using the library link line for spirit],
-     [case "${enableval}" in
-       yes) UseLINKSPIRIT=true ;;
-       no)  UseLINKSPIRIT=false ;;
-       *) AC_MSG_ERROR(bad value ${enableval} for --enable-link-spirit) ;;
-     esac;echo "UseLINKSPIRIT is $UseLINKSPIRIT"],[UseLINKSPIRIT=false])
-
-# Define the argument to configure script to set the linkline for srnsquall
-AC_ARG_ENABLE(link_srnsquall,
-     [  --enable-link-srnsquall   Compile version using the library link line for srnsquall],
-     [case "${enableval}" in
-       yes) UseLINKSQUALL=true ;;
-       no)  UseLINKSQUALL=false ;;
-       *) AC_MSG_ERROR(bad value ${enableval} for --enable-link-srnsquall) ;;
-     esac;echo "UseLINKSQUALL is $UseLINKSQUALL"],[UseLINKSQUALL=false])
-
-# Define the argument to configure script to enable lcao 
-AC_ARG_ENABLE(lcao,
-     [  --enable-lcao   Compile version using lcao libraries],
-     [case "${enableval}" in
-       yes) UseLCAO=true ;;
-       no)  UseLCAO=false ;;
-       *) AC_MSG_ERROR(bad value ${enableval} for --enable-lcao) ;;
-     esac;echo "UseLCAO is $UseLCAO"],[UseLCAO=false])
-
 # Define the argument to configure script to use internal erfs
 AC_ARG_ENABLE(internal,
      [  --enable-interal   Compile version using internal erfs],
@@ -49,15 +23,6 @@ AC_ARG_ENABLE(internal,
        no)  UseInternal=false ;;
        *) AC_MSG_ERROR(bad value ${enableval} for --enable-internal) ;;
      esac;echo "UseInternal is $UseInternal"],[UseInternal=false])
-
-# Define the argument to configure script to enable openkim
-AC_ARG_ENABLE(openkim,
-     [  --enable-openkim   Compile version linking openkim],
-     [case "${enableval}" in
-       yes) UseOpenkim=true ;;
-       no)  UseOpenkim=false ;;
-       *) AC_MSG_ERROR(bad value ${enableval} for --enable-openkim) ;;
-     esac;echo "UseOpenkim is $UseOpenkim"],[UseOpenkim=false])
 
 # Define the argument to configure script to enable tramonto
 AC_ARG_ENABLE(tramonto,
@@ -106,13 +71,9 @@ AC_ARG_ENABLE(command-line-args,
     esac;echo "DisableCLA is $DisableCLA"],[DisableCLA=false])
 
 # Tell automake about the conditionals we just defined
-AM_CONDITIONAL(UseLINKSPIRIT, test x$UseLINKSPIRIT = xtrue)
-AM_CONDITIONAL(UseLINKSQUALL, test x$UseLINKSQUALL = xtrue)
 AM_CONDITIONAL(UseMPI, test x$UseMPI = xtrue)
 AM_CONDITIONAL(UseInternal, test x$UseInternal = xtrue)
-AM_CONDITIONAL(UseOpenkim, test x$UseOpenkim = xtrue)
 AM_CONDITIONAL(UseTramonto, test x$UseTramonto = xtrue)
-AM_CONDITIONAL(UseLCAO, test x$UseLCAO = xtrue)
 AM_CONDITIONAL(UseSafeCompare, test x$UseSafeCompare = xtrue)
 AM_CONDITIONAL(UseFixGNU, test x$UseFixGNU = xtrue)
 AM_CONDITIONAL(DisableCLA, test x$DisableCLA = xtrue)
@@ -134,40 +95,16 @@ AC_SUBST(F77LD,${CC})
 #incorporate ADDLIB into our library
 LIBS="${LIBS} ${ADDLIB}"
 
-# extra items for UseLINKSPIRIT
-if test x$UseLINKSPIRIT = xtrue ; then
-  # Include the srnspirit link-line
-  LIBS="${LIBS} -L/apps/intel/mkl701/lib/em64t -L/apps/scalapack -L/apps/blacs"
-  LIBS="${LIBS} -llcao -lmkl -lguide -lmkl_lapack64 -lscalapack" 
-  LIBS="${LIBS} -lblacsCinit_MPI-LINUX-0 -lblacsF77init_MPI-LINUX-0 -lblacs_MPI-LINUX-0" 
-fi
-# extra items for UseLINKSQUALL
-if test x$UseLINKSQUALL = xtrue ; then
-  # Include the srnsquall link-line
-  LIBS="${LIBS} -L/opt/acml/pgi64/lib"
-  LIBS="${LIBS} -llcao -lscalapack -lblacsCinit -lblacsF77init -lblacs -lacml" 
-fi
 # extra items for UseTramonto
 if test x$UseTramonto = xtrue ; then
   # Include the Tramonto libraries
   LIBS="${LIBS} -L../lib -ldft -laztecoo -ltriutils -lifpack \
   -lepetraext -lepetra -llapack -lblas"
 fi
-# extra items for UseLCAO
-if test x$UseLCAO = xtrue ; then
-  # Include the LCAO libraries
-  LIBS="${LIBS} -L../lib"
-fi
 # extra items for UseInternal
 if test x$UseInternal = xtrue ; then
   # Nothing happens here
   LIBS="${LIBS}"
-fi
-# extra items for UseOpenkim
-if test x$UseOpenkim = xtrue ; then
-  # Include the Openkim libraries
-   LIBS="${LIBS} -L${KIM_DIR}KIM_API"
-   LIBS="${LIBS} -lkim -lkimmodels -lstdc++"
 fi
 # extra items for UseSafeCompare
 if test x$UseSafeCompare = xtrue ; then
@@ -224,7 +161,6 @@ Manual/projects/Makefile \
 Manual/projects/towhee/Makefile \
 Manual/projects/towhee/algorithm/Makefile \
 Manual/projects/towhee/code/Makefile \
-Manual/projects/towhee/database/Makefile \
 Manual/projects/towhee/examples/Makefile \
 Manual/projects/towhee/forcefields/Makefile \
 Manual/projects/towhee/inpstyle/Makefile \

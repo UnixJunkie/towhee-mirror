@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs some runtime information to the standard output        *
 c     *                                                                *
 c     * split from old pupdate 10-13-2005 by M.G. Martin               *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
@@ -49,8 +49,6 @@ c     --- retrieve constants
 c     --- write out runtime information
       if ( potentialstyle .eq. POT_INTERNAL ) then
          call twh_boxvclassic(GLB_GET,1,energy)
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         call twh_boxvquantum(GLB_GET,1,energy)
       endif
       call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
       if ( scp_eval_derivative ) then
@@ -83,8 +81,6 @@ c     write the foreign energies on a separate line, box 1 only.  Ugly...
       do ibox = 2,numboxes
          if ( potentialstyle .eq. POT_INTERNAL ) then
             call twh_boxvclassic(GLB_GET,ibox,energy)
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_boxvquantum(GLB_GET,ibox,energy)
          endif
          call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
          write(6,112) ibox,energy,boxvolume

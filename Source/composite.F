@@ -29,7 +29,7 @@ c     * number of successful trial moves is stored in acscomp          *
 c     *                                                                *
 c     * based closely on the code trancom.F and rotate.F               *
 c     * originally written 03-23-2005 by MAW                           *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -62,7 +62,7 @@ c     --- double precision scalars
       double precision dvclassical_trial,dvintra_trial,dvinter_trial
       double precision dvext_trial,dvelect_trial,dvsolv_trial
       double precision dvtor_trial,dvbend_trial,dvvib_trial
-      double precision scaledist,dvquantum_trial,dv_trial
+      double precision scaledist,dv_trial
       double precision ddvdl_lj,ddvdl_c,rmcomrot
       double precision rxorig,ryorig,rzorig,rcmu,pmtest,rmcomtra
 c     --- double precision arrays
@@ -217,7 +217,7 @@ c        --- images.  don't bother computing intramolecular or bonded
      &     ,lpartial,lgetcom,lintra,lbonded,dvclassical_trial
      &     ,dvintra_trial,dvinter_trial,dvext_trial,dvelect_trial
      &     ,dvsolv_trial,dvtor_trial,dvbend_trial
-     &     ,dvvib_trial,dvquantum_trial,dvf,ddvdl_lj,ddvdl_c)
+     &     ,dvvib_trial,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
 
 c     --- check new hard overlap, if overlap move rejected
@@ -236,8 +236,6 @@ c     --- check old hard overlap, if overlap then big problems
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
          dv_trial = dvclassical_trial
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         dv_trial = dvquantum_trial
       else
          write(6,*) 'COMPOSITE: unknown potentialstyle'
          write(6,*) potentialstyle
@@ -286,8 +284,6 @@ c     --- update energies
          endif
          call scp_increment_foreign_energies(ibox, dvf)
 
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         call twh_boxvquantum(GLB_INCR,ibox,dvquantum_trial)
       else
          write(6,*) 'COMPOSITE: unknown potentialstyle'
          write(6,*) potentialstyle

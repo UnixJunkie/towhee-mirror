@@ -25,7 +25,7 @@ c     * wrapper that determines a few constants needed to dimension    *
 c     * arrays and then call the main writetowhee                      *
 c     *                                                                *
 c     * originally written 01-16-2018 by M.G. Martin                   *
-c     * last modified 01-16-2018 by M.G. Martin                        *
+c     * last modified 03-18-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -653,12 +653,6 @@ c                 --- not an error, but nothing to output
                   stop
                endif
             enddo
-         endif
-
-c        --- quantum related output
-         if ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_rwexternal(lfailure,WRITE_FLAG,15)
-            if ( lfailure ) return
          endif
 
          write(15,'(a15)') 'solvation_style'

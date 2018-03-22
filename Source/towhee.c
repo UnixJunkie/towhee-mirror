@@ -1,7 +1,7 @@
 /*     $Id: towhee.c,v 1.27 2010/09/04 14:16:50 lperi Exp $ */
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program
-* Copyright (C) 2003-2005 Marcus G. Martin
+* Copyright (C) 2003-2018 Marcus G. Martin
 * see the file license.gpl for the full license information
 *
 * This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 * MA  02111-1307, USA.
 */
 /* rewritten from fortran 05-08-2003 by M.G. Martin 
-   last modified 07-02-2009 by M.G. Martin
+   last modified 03-18-2018 by M.G. Martin
 */
 
 /* globals  */
@@ -65,9 +65,6 @@ int main(int argc, char* argv[])
     break;
   case REX:
     do_rex(&args, myproc);
-    break;
-  case LCAO:
-    do_lcao(&args, myproc);
     break;
   default:
     printf("Bad mode, uncaught by parse_args.\n");
@@ -241,25 +238,6 @@ void do_rex(user_args *args, int mpi_rank) {
 #endif
 }
 
-void do_lcao(user_args *args, int myproc) {
-#ifdef USEMPI
-    /* this is the functionality for using LCAO in parallel
-       but nothing else in the code is parallel
-       only node 0 enters the towhee part of the code */
-  if ( myproc == 0 ) initialize_clocks();
-  lcao_control(args->quiet_mode,myproc);
-  MPI_Barrier(MPI_COMM_WORLD);
-  if ( myproc == 0 ) finalize_clocks();
-  MPI_Barrier(MPI_COMM_WORLD);
-  MPI_Finalize();
-#else
-  printf("Warning: MPI not supported, parstyle LCAO disabled.\n");
-  printf("Doing nothing.\n");
-  return;
-#endif
-}
-
-
 /*
  * parses the command line arguments and sets various global variables.
  */
@@ -313,7 +291,6 @@ void parse_args(int argc, char* argv[], user_args *args) {
         else if (!strcmp(optarg, "tramonto")) args->parstyle = TRAMONTO;
         else if (!strcmp(optarg, "jobfarm")) args->parstyle = JOBFARM;
         else if (!strcmp(optarg, "rex")) args->parstyle = REX;
-        else if (!strcmp(optarg, "lcao")) args->parstyle = LCAO;
         else {
             sprintf(errmsg, "Unknown parstyle %s", optarg);
             print_usage(errmsg);
@@ -370,14 +347,13 @@ towhee [-h] [-q] [-s seed] [-p mode] [-f rexfn] [filename]\n\
 Options:\n\
   -h -- print this message \n\
   -q -- quiet mode, supresses most output\n\
-  -p (none | tramonto | jobfarm | rex | lcao) -- parallel style\n\
+  -p (none | tramonto | jobfarm | rex ) -- parallel style\n\
      none: single processor run, output and input in current directory.\n\
      The following modes require compilation with MPI support\n\
      tramonto: tramonto parallel style\n\
      jobfarm: parallel execution in MPI universe of multiple jobs.\n\
             the file 'towhee_parallel' must be in the current directory.\n\
      rex: Replica Exchange run.\n\
-     lcao: LCAO parallel style.\n\
      default mode is none if no MPI, jobfarm if MPI\n\
   -f rexfn -- Replica Exchange parameter filename.  Defaults to towhee_rex\n\
   -s seed -- set random number seed to pass to main towhee code for REX \n\

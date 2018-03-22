@@ -33,7 +33,7 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -126,7 +126,7 @@ c     --- double precision arrays
       dimension initcoords(9,3),solncoords(9,3,max_soln)
       double precision dvtot,dvintra,dvinter,dvext,dvelect,dvsolv
       double precision xtmp,ytmp,ztmp,dvtors,dvimpr
-      double precision dvvib,blength,dvbend,dvquantum
+      double precision dvvib,blength,dvbend
       double precision dlinter,dlelect
       dimension xtmp(4),ytmp(4),ztmp(4),blength(2)
       double precision tempx,tempy,tempz,rootunit
@@ -539,7 +539,7 @@ c           --- energies
             call twh_energy_change(lfailure,BXD_REAL,ibox,nchainmove
      &           ,chaininfo,loverlap,lpartial,lgetcom,lintra,lbonded
      &           ,dvtot,dvintra,dvinter,dvext,dvelect,dvsolv,dvtors
-     &           ,dvbend,dvvib,dvquantum,dvf,dlinter,dlelect)
+     &           ,dvbend,dvvib,dvf,dlinter,dlelect)
             if ( lfailure ) return
 
             do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)

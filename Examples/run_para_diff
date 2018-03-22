@@ -15,7 +15,7 @@ cd Canonical_Ensemble/Charmm19_ubiquitin
 ../../do_para_diff
 cd ../../
 #
-cd Canonical_Ensemble/Charmm27_benzene
+cd Canonical_Ensemble/Charmm27_Benzene
 ../../do_para_diff
 cd ../../
 #

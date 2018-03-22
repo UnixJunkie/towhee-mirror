@@ -77,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -140,8 +140,6 @@ c     --- double precision arrays
       dimension dvsolv(2)
       double precision dvext
       dimension dvext(2)
-      double precision dvquantum
-      dimension dvquantum(2)
       double precision dpscaletest
       dimension dpscaletest(2)
       double precision vmintest,v1tottest,v1exttest,v1inttest
@@ -361,7 +359,6 @@ c        --- initialize energy changes
          dvben(ibox) = 0.0d0
          dvtor(ibox) = 0.0d0
          dvsolv(ibox) = 0.0d0
-         dvquantum(ibox) = 0.0d0
       enddo
 
 c     --- compute the volumes of the boxes
@@ -797,7 +794,7 @@ c              --- nothing to do in the old box
      &              ,chaininfo,ltermtest,lpartial,lgetcom,lintra,lbonded
      &              ,dvctot(ibox),dvintra(ibox),dvinter(ibox)
      &              ,dvext(ibox),dvelect(ibox),dvsolv(ibox),dvtor(ibox)
-     &              ,dvben(ibox),dvvib(ibox),dvquantum(ibox)
+     &              ,dvben(ibox),dvvib(ibox)
      &              ,dvf,ddvdl_lj,ddvdl_c)
                if ( lfailure ) return
 #if DEBUG_SWAPMOVES
@@ -851,8 +848,6 @@ c           --- correct.  only want the insertion energy change in the
 c           --- "new" portion
             if ( potentialstyle .eq. POT_INTERNAL ) then
                vtest = dvctot(ibox)
-            elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-               vtest = dvquantum(ibox)
             endif
 c           --- For the old box the energy change sign needs to be 
 c           --- reversed
@@ -1227,9 +1222,6 @@ c        --- update energies from the rosenbluth portion
                call twh_boxvangle(GLB_INCR,index,vtest)
                vtest = - vroselect(1) -vrosewald(1)
                call twh_boxvelect(GLB_INCR,index,vtest)
-            elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-               vtest = - vrostot(1)
-               call twh_boxvquantum(GLB_INCR,index,vtest)
             endif
          endif
 
@@ -1254,9 +1246,6 @@ c        --- update energies from the rosenbluth portion
                call twh_boxvangle(GLB_INCR,index,vtest)
                vtest = vroselect(2) + vrosewald(2)
                call twh_boxvelect(GLB_INCR,index,vtest)
-            elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-               vtest = vrostot(2)
-               call twh_boxvquantum(GLB_INCR,index,vtest)
             endif
          endif
 c        --- update energies from the engmolec correction
@@ -1273,8 +1262,6 @@ c        --- update energies from the engmolec correction
                   call twh_boxvtorsion(GLB_INCR,index,dvtor(ibox))
                   call twh_boxvangle(GLB_INCR,index,dvben(ibox))
                   call twh_boxvbond(GLB_INCR,index,dvvib(ibox))
-               elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-                  call twh_boxvquantum(GLB_INCR,index,dvquantum(ibox))
                endif
             endif
          enddo
@@ -1418,8 +1405,6 @@ c     --- double precision arrays
       dimension vtrelect(nch_nb_one)
       double precision vtrewald
       dimension vtrewald(nch_nb_one)
-      double precision vqtry
-      dimension vqtry(nch_nb_one)
       double precision rxp,ryp,rzp
       dimension rxp(NUMAX,nch_nb_one)
       dimension ryp(NUMAX,nch_nb_one)
@@ -1713,7 +1698,7 @@ c     ---  insert the first atoms
      &     ,ltermtest(icordflag),chaintest(icordflag),imolty,BXD_REAL
      &     ,boxtest(icordflag),nch_nb_one,idum,ntogrow,rdist,lnbterm
      &     ,NUMAX,nch_nb_one,rxp,ryp,rzp,vctry,vtrext
-     &     ,vtrintra,vtrinter,vtrelect,vtrewald,vqtry)
+     &     ,vtrintra,vtrinter,vtrelect,vtrewald)
       if ( lfailure ) return
 
       if ( ltermtest(icordflag) ) then
@@ -1734,8 +1719,6 @@ c     --- factor out a minimum energy to keep bfactors in line
       do ip = 1, nch_nb_one
          if ( potentialstyle .eq. POT_INTERNAL ) then
             vtest = vctry(ip)
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            vtest = vqtry(ip)
          else
             write(6,*) 'INITIAL_ATOM_INSERTION: unknown potentialstyle'
             write(6,*) potentialstyle
@@ -1759,8 +1742,6 @@ c     --- compute the rosenbluth weight for part 1 of the move
       do ip = 1, nch_nb_one
          if ( potentialstyle .eq. POT_INTERNAL ) then
             vtest = vctry(ip)
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            vtest = vqtry(ip)
          endif
          if ( .not. lnbterm(ip) ) then
             call twh_beta(GLB_GET,beta)
@@ -1812,8 +1793,6 @@ c     --- save the energies for the selected walk
          v1inttest(icordflag) = vtrinter(iwalk)
          v1elctest(icordflag) = vtrelect(iwalk)
          v1ewdtest(icordflag) = vtrewald(iwalk)
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         v1tottest(icordflag) = vqtry(iwalk)
       endif
 #if DEBUG_SWAPMOVES
       write(6,*) 'after initial atom insertion'

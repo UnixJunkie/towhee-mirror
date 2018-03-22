@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 01-16-2018 by M.G. Martin                        *
+c     * last modified 03-18-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -377,7 +377,6 @@ c     --- initialize nonbonded parameters for traditional potentials
       call twh_elementname(GLB_INIT,NNTYPE,'NA')
       call twh_donor_acceptor(GLB_INIT,NNTYPE,'-')
       call twh_bondpatt(GLB_INIT,NNTYPE,'null')
-      call twh_quantum_gsenergy(GLB_INIT,NTMAX,0.0d0)
       ctemp = 'init-error'
       call twh_nbff(GLB_INIT,NNTYPE,ctemp)
       call twh_nbname(GLB_INIT,NNTYPE,ctemp)

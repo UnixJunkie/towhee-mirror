@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 22 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -280,7 +280,7 @@ Molecules of type   1 :        200
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
  Total nonbond (more than 3 bonds apart) vdw           1526406062.453 [K]   3033298.31022 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                            1526415134.429 [K]   3033316.33819 [kcal/mol]
+  2-body vdw intermolecular                            1526415134.428 [K]   3033316.33819 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   tail correction                                           -9071.976 [K]       -18.02797 [kcal/mol]
  Total nonbond (more than 3 bonds apart) Electric           25989.831 [K]        51.64740 [kcal/mol]
@@ -411,7 +411,7 @@ Molecules of type   1 :        197
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
  Total nonbond (more than 3 bonds apart) vdw            512360783.774 [K]   1018171.46687 [kcal/mol]
   intramolecular                                                0.000 [K]         0.00000 [kcal/mol]
-  2-body vdw intermolecular                             512368584.536 [K]   1018186.96866 [kcal/mol]
+  2-body vdw intermolecular                             512368584.535 [K]   1018186.96866 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   tail correction                                           -7800.761 [K]       -15.50180 [kcal/mol]
  Total nonbond (more than 3 bonds apart) Electric           34295.810 [K]        68.15318 [kcal/mol]

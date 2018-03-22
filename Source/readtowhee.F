@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 01-21-2018 by M.G. Martin                        *
+c     * last modified 03-18-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -60,7 +60,6 @@ c     --- logical arrays
       dimension lpdbset(NTMAX)
 c     --- character string scalars
       character*1 hist_suffix
-      character*2 ename
       character*3 fname3,fname4
       character*4 pdbname
       character*8 stepstyle
@@ -69,8 +68,8 @@ c     --- character string scalars
       character*(FFNAMELEN) forcefield
       character*15 idname
       character*20 runoutput,solvation_style,solvation_type,initboxtype
-      character*20 initstyle,initlattice,controlstyle,keyname
-      character*20 external_code,pressure_thermo_style
+      character*20 initstyle,initlattice,controlstyle
+      character*20 pressure_thermo_style
       character*30 ftemp,filename,ctemp,ensemble_str,rng_str
       character*30 potentialstyle_str,charge_assignment
       character*30 imp_assign,match_style
@@ -82,7 +81,7 @@ c     --- integer 4 scalars
       integer*4 luxvalue,iseed
 c     --- integer scalars
       integer imolty,jmolty,iunit,ivib,itor,cpnumber,nchain,kmax
-      integer ichain,ielement,nmolty,ivalue
+      integer ichain,nmolty,ivalue
       integer itest,count,idim,jdim,nboxpair,nchbox,nfield
       integer icount,itmp,crtype,iutemp,idum, numunits,potentialstyle
       integer nmcount,ibox,jbox,isuccess,numtypes,isolvtype,nmtype
@@ -90,7 +89,7 @@ c     --- integer scalars
       integer trmaxdispfreq,blocksize,backupfreq,volmaxdispfreq
       integer pressure_virial_freq,pdb_output_freq,restartfreq,cperstep
       integer pressure_thermo_freq
-      integer backlist,numboxes,nvmmax,ensemble,histcalcfreq,nener
+      integer backlist,numboxes,nvmmax,ensemble,histcalcfreq
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
       integer maxnumtor,numtor,numblock,rng_code,irange,pt_number
@@ -105,7 +104,7 @@ c     --- integer arrays
       integer iatmp
       dimension iatmp(NTMAX+MAXBOX)
 c     --- double precision scalars
-      double precision pressure,volume,length,localmass
+      double precision pressure,volume,length
       double precision dvalue,pmtest,vequiv,scalecut,scalehilog
       double precision eefreftemp,temperature,beta,kalp,calp
       double precision box_number_density,masstotal,scalelolog
@@ -1008,12 +1007,6 @@ c     --- read the classical potential if required
          if ( lfailure ) return
       endif
 
-c     --- read the external potential if required
-      if ( potentialstyle .eq. POT_EXTERNAL ) then
-         call twh_rwexternal(lfailure,READ_FLAG,4)
-         if ( lfailure ) return
-      endif
-
       if ( twh_check_label(lfailure,4,'solvation_style') ) then
 c        --- read in the solvation_style
          call twh_read_labeled_string(lfailure,4,'solvation_style'
@@ -1609,28 +1602,6 @@ c           --- this will have setup pdbname
 c           --- input is the information needed to build a nanotube
             call twh_buildnanotube(lfailure,imolty)
             if ( lfailure ) return
-         elseif ( input_style .eq. 'atomic' ) then
-c           --- elemental input - only valid for pure quantum approach
-c           --- monatomic molecule
-            call twh_nunit(GLB_SET,imolty,1)
-            call twh_nmaxcbmc(GLB_SET,imolty,1)
-            call twh_ntype(GLB_SET,imolty,1,imolty)
-c           --- get the element name
-            call twh_read_labeled_string(lfailure,4,'element',.true.
-     &           ,idname,ename)
-            if ( lfailure ) return
-            call twh_elementname(GLB_SET,imolty,ename)
-c           --- assign mass
-            tenchar = 'getmass'
-            call twh_getelement(lfailure,tenchar,localmass,ename,
-     &           ielement)
-            if ( lfailure ) return
-            call twh_mass(GLB_SET,imolty,localmass)
-c           --- ground state quantum energy per atom
-            dvalue = twh_read_labeled_float(lfailure,4
-     &           ,'quantum_gsenergy' ,.true.,idname)
-            if ( lfailure ) return
-            call twh_quantum_gsenergy(GLB_SET,imolty,dvalue)
          else
             write(6,*) 'READTOWHEE: non-valid input style for moltyp'
      &           ,imolty
@@ -1735,39 +1706,10 @@ c        --- meant for proteins
          call twh_setclassical(lfailure,numtypes)
          if ( lfailure ) return
       endif
-      if ( potentialstyle .eq. POT_EXTERNAL ) then
-c        --- not much external stuff to set up so still doing it here
-c        --- if this gets larger then will split into a separate routine
-c        --- set the minimum box dimension to 1.0 just for use when
-c        --- updating the maximum translational displacements
-         call twh_minboxdim(GLB_SET,1.0d0)
-c        --- set the pressurestyle to thermodynamic
-         call twh_pressurestyle(GLB_SET,PRES_THERMO)
-         call twh_nener(GLB_GET,nener)
-         nener = nener + 1
-         call twh_external_code(GLB_GET,external_code)
-         if ( external_code .eq. 'lcao' ) then
-            keyname = 'Total Quantum'
-            call twh_vname(GLB_SET,nener,keyname)
-            call twh_nener(GLB_SET,nener)
-         elseif ( external_code .eq. 'KIM' ) then
-            keyname = 'Total KIM'
-            call twh_vname(GLB_SET,nener,keyname)
-            call twh_nener(GLB_SET,nener)
-         else
-            write(6,*) 'READTOWHEE: unknown external_code'
-            write(6,*) external_code
-            lfailure = .true.
-            return
-         endif
-
-      endif
 
 c     --- output potentialstyle
       if ( potentialstyle .eq. POT_INTERNAL ) then
          write(6,'(a)') 'Energies exclusively from internal potentials'
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         write(6,'(a)') 'Energies exclusively from external potentials'
       endif
 
 c     --- output information about nonbonded

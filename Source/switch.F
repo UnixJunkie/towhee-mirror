@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -55,7 +55,7 @@ c     --- local double precision scalars
       double precision dvclassical_trial,dvintra_trial
       double precision dvinter_trial,dvext_trial,dvelect_trial
       double precision dvsolv_trial,dvtor_trial,dvbend_trial
-      double precision dvvib_trial,dvquantum_trial,ddvdl_lj,ddvdl_c
+      double precision dvvib_trial,ddvdl_lj,ddvdl_c
       double precision dv_trial,beta,burn,dichain,djchain
 c     --- local double precision arrays
       double precision dvf
@@ -203,7 +203,7 @@ c        --- images.  don't bother computing intramolecular or bonded
      &     ,lpartial,lgetcom,lintra,lbonded,dvclassical_trial
      &     ,dvintra_trial,dvinter_trial,dvext_trial,dvelect_trial
      &     ,dvsolv_trial,dvtor_trial,dvbend_trial
-     &     ,dvvib_trial,dvquantum_trial,dvf,ddvdl_lj,ddvdl_c)
+     &     ,dvvib_trial,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
 #if DEBUG_SWITCH
       write(6,*) 'dvinter_trial:',dvinter_trial
@@ -220,8 +220,6 @@ c     --- check old hard overlap, if overlap then big problems
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
          dv_trial = dvclassical_trial
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         dv_trial = dvquantum_trial
       else
          write(6,*) 'SWITCH: unknown potentialstyle'
          write(6,*) potentialstyle
@@ -272,8 +270,6 @@ c     --- update energies
             call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
          endif
          call scp_increment_foreign_energies(ibox, dvf)
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         call twh_boxvquantum(GLB_INCR,ibox,dvquantum_trial)
       else
          write(6,*) 'SWITCH: unknown potentialstyle'
          write(6,*) potentialstyle

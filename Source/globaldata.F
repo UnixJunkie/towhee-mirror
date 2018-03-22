@@ -25,7 +25,7 @@ c     * this file contains all of the globally accessed data structures*
 c     * that are stored in Fortran: see globalinfo.c for the C version *
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 01-12-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -2278,36 +2278,6 @@ c     --- storage variable
          boxvintra(ibox) = boxvintra(ibox) + dvalue
       else
          write(6,*) 'BOXVINTRA: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_boxvquantum(flag,ibox,dvalue)
-c     ******************************************************************
-c     * the total quantum energy in each simulation box                *
-c     *                                                                *
-c     * originally written 11-08-2007 by M.G. Martin                   *
-c     * last modified 11-08-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      integer flag,ibox
-      double precision dvalue
-c     --- storage variable
-      double precision boxvquantum
-      dimension boxvquantum(MAXBOX)
-      save boxvquantum
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = boxvquantum(ibox)
-      elseif ( flag .eq. GLB_SET ) then
-         boxvquantum(ibox) = dvalue
-      elseif ( flag .eq. GLB_INCR ) then
-         boxvquantum(ibox) = boxvquantum(ibox) + dvalue
-      else
-         write(6,*) 'BOXVQUANTUM: invalid global flag',flag
          stop
       endif
 
@@ -9217,33 +9187,6 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_kim_model(flag,cvalue)
-c     ******************************************************************
-c     * character string for the kim model                             *
-c     *                                                                *
-c     * originally written 12-02-2011 by M.G. Martin                   *
-c     * last modified 12-02-2011 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag
-      character*(*) cvalue
-c     --- information variables
-      character*(50) kim_model
-      save kim_model
-
-      if ( flag .eq. GLB_SET ) then
-         kim_model = cvalue
-      elseif ( flag .eq. GLB_GET ) then
-         cvalue = kim_model
-      else
-         write(6,*) 'KIM_MODEL: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_lbackbone(flag,imolty,iunit,lvalue)
 c     ******************************************************************
 c     * logical that states whether an atom is along a protein backbone*
@@ -9368,142 +9311,6 @@ c     --- information variables
          enddo
       else
          write(6,*) 'LBONBON: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_lcao_atomtypes(flag,ivalue)
-c     ******************************************************************
-c     * number of LCAO atomtypes                                       *
-c     *                                                                *
-c     * originally written 10-10-2008 by M.G. Martin                   *
-c     * last modified 10-10-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,ivalue
-c     --- information variables
-      integer lcao_atomtypes
-      save lcao_atomtypes
-
-      if ( flag .eq. GLB_GET ) then
-         ivalue = lcao_atomtypes
-      elseif ( flag .eq. GLB_SET ) then
-         lcao_atomtypes = ivalue
-      else
-         write(6,*) 'LCAO_ATOMTYPES: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_lcao_filename(flag,itype,cvalue)
-c     ******************************************************************
-c     * character string used for files with the LCAO external         *
-c     * potential                                                      *
-c     *                                                                *
-c     * originally written 10-10-2008 by M.G. Martin                   *
-c     * last modified 10-10-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,itype
-      character*(*) cvalue
-c     --- information variables
-      character*50 lcao_filename
-      dimension lcao_filename(NNTYPE)
-      save lcao_filename
-
-      if ( flag .eq. GLB_GET ) then
-         cvalue = lcao_filename(itype)
-      elseif ( flag .eq. GLB_SET ) then
-         lcao_filename(itype) = cvalue
-      else
-         write(6,*) 'LCAO_FILENAME: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_lcao_functional(flag,cvalue)
-c     ******************************************************************
-c     * character string used with the LCAO external potential         *
-c     *                                                                *
-c     * originally written 10-10-2008 by M.G. Martin                   *
-c     * last modified 10-10-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag
-      character*(*) cvalue
-c     --- information variables
-      character*20 lcao_functional
-      save lcao_functional
-
-      if ( flag .eq. GLB_GET ) then
-         cvalue = lcao_functional
-      elseif ( flag .eq. GLB_SET ) then
-         lcao_functional = cvalue
-      else
-         write(6,*) 'LCAO_FUNCTIONAL: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_lcao_gridmultiplier(flag,dvalue)
-c     ******************************************************************
-c     * LCAO gridmultiplier variable for external potential            *
-c     *                                                                *
-c     * originally written 10-10-2008 by M.G. Martin                   *
-c     * last modified 10-10-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag
-      double precision dvalue
-c     --- information variables
-      double precision lcao_gridmultiplier
-      save lcao_gridmultiplier
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = lcao_gridmultiplier
-      elseif ( flag .eq. GLB_SET ) then
-         lcao_gridmultiplier = dvalue
-      else
-         write(6,*) 'LCAO_GRIDMULTIPLIER: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_lcao_kgridproduct(flag,dvalue)
-c     ******************************************************************
-c     * LCAO kgridproduct variable for external potential              *
-c     *                                                                *
-c     * originally written 10-10-2008 by M.G. Martin                   *
-c     * last modified 10-10-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag
-      double precision dvalue
-c     --- information variables
-      double precision lcao_kgridproduct
-      save lcao_kgridproduct
-
-      if ( flag .eq. GLB_GET ) then
-         dvalue = lcao_kgridproduct
-      elseif ( flag .eq. GLB_SET ) then
-         lcao_kgridproduct = dvalue
-      else
-         write(6,*) 'LCAO_KGRIDPRODUCT: invalid global flag',flag
          stop
       endif
 
@@ -13822,35 +13629,6 @@ c     --- information variables
       return
       end
 
-#ifdef USEOPENKIM
-      subroutine twh_pointerkim(flag,ivalue)
-c     ******************************************************************
-c     * special integer pointer for use with openkim                   *
-c     *                                                                *
-c     * originally written 01-10-2012 by M.G. Martin                   *
-c     * last modified 01-10-2012 by M.G. Martin                        *
-c     ******************************************************************
-      use KIMservice
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag
-      integer (kind=kim_intptr) ivalue
-c     --- local variables
-      integer (kind=kim_intptr) pointerkim
-      save pointerkim
-      if ( flag .eq. GLB_GET ) then
-         ivalue = pointerkim
-      elseif ( flag .eq. GLB_SET ) then
-         pointerkim = ivalue
-      else
-         write(6,*) 'POINTKIM: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-#endif
-
       subroutine twh_potentialstyle(flag,ivalue)
 c     ******************************************************************
 c     * the integer the specifies whether we are using an internal or  *
@@ -14290,40 +14068,6 @@ c     --- information variables
          enddo
       else
          write(6,*) 'QQSCALE: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_quantum_gsenergy(flag,itype,dvalue)
-c     ******************************************************************
-c     * the ground state energy of each molecule type                  *
-c     *                                                                *
-c     * originally written 05-12-2006 by M.G. Martin                   *
-c     * last modified 05-12-2006 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,itype
-      double precision dvalue
-c     --- local variables
-      integer ittemp
-c     --- information variables
-      double precision quantum_gsenergy
-      dimension quantum_gsenergy(NTMAX)
-      save quantum_gsenergy
-
-      if ( flag .eq. GLB_SET ) then
-         quantum_gsenergy(itype) = dvalue
-      elseif ( flag .eq. GLB_GET ) then
-         dvalue = quantum_gsenergy(itype)
-      elseif ( flag .eq. GLB_INIT ) then
-         do ittemp = 1,itype
-            quantum_gsenergy(ittemp) = dvalue
-         enddo
-      else
-         write(6,*) 'QUANTUM_GSENERGY: invalid global flag',flag
          stop
       endif
 

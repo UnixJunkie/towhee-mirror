@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * number of attempts stored in bntractemp                        *
 c     * number of successful trial moves is stored in bstractemp       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 01-15-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -59,7 +59,7 @@ c     --- local double precision scalars
       double precision dvclassical_trial,dvintra_trial,dvinter_trial
       double precision dvext_trial,dvelect_trial,dvsolv_trial
       double precision dvtor_trial,dvbend_trial,dvvib_trial
-      double precision scaledist,dvquantum_trial,dv_trial
+      double precision scaledist,dv_trial
       double precision ddvdl_lj,ddvdl_c,rcmu,rmtrac,pmtest
 c     --- local double precision arrays
       double precision dvf
@@ -197,7 +197,7 @@ c        --- images.  don't bother computing intramolecular or bonded
      &     ,lpartial,lgetcom,lintra,lbonded,dvclassical_trial
      &     ,dvintra_trial,dvinter_trial,dvext_trial,dvelect_trial
      &     ,dvsolv_trial,dvtor_trial,dvbend_trial
-     &     ,dvvib_trial,dvquantum_trial,dvf,ddvdl_lj,ddvdl_c)
+     &     ,dvvib_trial,dvf,ddvdl_lj,ddvdl_c)
       if ( lfailure ) return
 #if DEBUG_TRANCOM
       write(6,*) 'TRANCOM: dvinter_trial:',dvinter_trial
@@ -209,8 +209,6 @@ c     --- check old hard overlap, if overlap then big problems
 
       if ( potentialstyle .eq. POT_INTERNAL ) then
          dv_trial = dvclassical_trial
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         dv_trial = dvquantum_trial
       else
          write(6,*) 'TRANCOM: unknown potentialstyle'
          write(6,*) potentialstyle
@@ -258,8 +256,6 @@ c     --- update energies
             call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
          endif
          call scp_increment_foreign_energies(ibox, dvf)
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-         call twh_boxvquantum(GLB_INCR,ibox,dvquantum_trial)
       else
          write(6,*) 'TRANCOM: unknown potentialstyle'
          write(6,*) potentialstyle

@@ -214,7 +214,7 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * originally written in 1995                                     *
-c     * last modified 01-21-2018 by M.G.Martin                         *
+c     * last modified 03-19-2018 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 c     --- functions
@@ -237,8 +237,8 @@ c     --- integer scalars
 c     --- double precision scalars
       double precision volo,deltav,sfact,vinterb,vintrab
       double precision voln,vintern,vtailn,vextn,velectn,vintran
-      double precision vsolvn,vquantumn,vextb,velectb,vsolvb
-      double precision dx,dy,dz,v,dele,vduma,vqtotal
+      double precision vsolvn,vextb,velectb,vsolvb
+      double precision dx,dy,dz,v,dele,vduma
       double precision xtemp,ytemp,ztemp,external_pressure
       double precision vvibn,vbenddum,vtorn,value
       double precision dvl,dvc,beta,temperature,xcmi,ycmi,zcmi,rmcell
@@ -410,7 +410,7 @@ c     --- set new coulombic parameters for the new box length
       if ( lfailure ) return
 
       call twh_engtotal(lfailure,ovrlap,v,vintern,vduma,vtailn,vintran
-     &     ,vvibn,vbenddum,vtorn,vextn,velectn,vsolvn,vquantumn
+     &     ,vvibn,vbenddum,vtorn,vextn,velectn,vsolvn
      &     ,vf,dvl,dvc
      &     ,CRD_REAL,bxdflag,boxvch,lvol,.false.,.false.,.false.)
       if ( lfailure ) return
@@ -424,7 +424,6 @@ c     --- set new coulombic parameters for the new box length
       write(6,*) 'vextn:',vextn
       write(6,*) 'velectn:',velectn
       write(6,*) 'vsolvn:',vsolvn
-      write(6,*) 'vquantumn:',vquantumn
 #endif
 c     --- initialize laccept
       laccept = .false.
@@ -442,9 +441,6 @@ c        -- store the new total box energy
             deltav = (vintern - vinterb) + (vextn  - vextb)
      &           + (velectn - velectb) + (vintran - vintrab)
      &           + (vsolvn - vsolvb)
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_boxvquantum(GLB_GET,boxvch,vqtotal)
-            deltav = vquantumn - vqtotal
          else
             write(6,*) 'VOLNPT: unknown potentialstyle'
             write(6,*) potentialstyle
@@ -501,9 +497,6 @@ c        --- store the new energies
             call scp_set_derivative(boxvch, LAMBDA_C, dvc)
             call scp_set_derivative(boxvch, LAMBDA_LJ, dvl)
             call scp_set_foreign_energies(boxvch, vf)
-
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_boxvquantum(GLB_INCR,boxvch,deltav)
          else
             write(6,*) 'VOLNPT: unknown potentialstyle'
             write(6,*) potentialstyle
@@ -563,7 +556,7 @@ c     *   volume move in the other box.  The maximum change is         *
 c     *   controled by rmcell.                                         *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 01-21-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -588,8 +581,8 @@ c     --- integer scalars
 c     --- double precision scalars
       double precision volt,expdv,dx,dy,dz,vtotal,vvibb
       double precision dele,vinter,vtail,vext,velect,vintra,vvib,vbend
-      double precision vbendb,vtorb,vqtotal,boxvolume
-      double precision vtor,vquantum,delecurrent
+      double precision vbendb,vtorb,boxvolume
+      double precision vtor,delecurrent
       double precision vsolv,vduma
       double precision xtemp,ytemp,ztemp,value,dvl,dvc
       double precision beta,temperature,xcmi,ycmi,zcmi,pmtest,rmcell
@@ -601,9 +594,9 @@ c     --- double precision arrays
       double precision volo,voln,sfact
       dimension volo(2),voln(2),sfact(2)
       double precision vboxn,vintern,vtailn,vextn,velectn,vintran
-      double precision vsolvn,vquantumn
+      double precision vsolvn
       dimension vboxn(2),vintern(2),vtailn(2),vextn(2),velectn(2)
-      dimension vintran(2),vsolvn(2),vquantumn(2)
+      dimension vintran(2),vsolvn(2)
 
 c     --- hack
       integer bxdflag
@@ -850,7 +843,7 @@ c        --- note that the intramolecular nonbonded term could change
 c        --- if the molecule is large and changes from interacting 
 c        --- through real space to through an image
          call twh_engtotal(lfailure,lovrlap,vtotal,vinter,vduma,vtail
-     &        ,vintra,vvib,vbend,vtor,vext,velect,vsolv,vquantum,vf,dvl
+     &        ,vintra,vvib,vbend,vtor,vext,velect,vsolv,vf,dvl
      &        ,dvc
      &        ,CRD_REAL,bxdflag,ibox
      &        ,.true.,.false.,.false.,lbonded(ilabel))
@@ -878,11 +871,6 @@ c           --- did not recompute bonded energies
 c           --- compute current energy change for this box
             call twh_boxvclassic(GLB_GET,ibox,vtotal)
             delecurrent = vboxn(ilabel) - vtotal
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            vquantumn(ilabel) = vquantum
-c           --- compute current energy change for this box
-            call twh_boxvquantum(GLB_GET,ibox,vqtotal)
-            delecurrent = vquantumn(ilabel) - vqtotal
          else
             write(6,*) 'VOLNVT: unknown potentialstyle'
             write(6,*) potentialstyle
@@ -952,8 +940,6 @@ c           --- update the energies
                call twh_boxvfield(GLB_SET,ibox,vextn(ilabel))
                call twh_boxvelect(GLB_SET,ibox,velectn(ilabel))
                call twh_boxvsolvation(GLB_SET,ibox,vsolvn(ilabel))
-            elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-               call twh_boxvquantum(GLB_SET,ibox,vquantumn(ilabel))
             else
                write(6,*) 'VOLNVT: unknown potentialstyle'
                write(6,*) potentialstyle
@@ -1021,7 +1007,7 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * rewritten from volnpt 01-22-2018 by M.G. Martin                *
-c     * last modified 03-02-2018 by M.G.Martin                         *
+c     * last modified 03-19-2018 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 c     --- functions
@@ -1044,8 +1030,8 @@ c     --- integer scalars
 c     --- double precision scalars
       double precision volo,deltav,sfact,vinterb,vintrab
       double precision voln,vintern,vtailn,vextn,velectn,vintran
-      double precision vsolvn,vquantumn,vextb,velectb,vsolvb
-      double precision dx,dy,dz,v,dele,vduma,vqtotal
+      double precision vsolvn,vextb,velectb,vsolvb
+      double precision dx,dy,dz,v,dele,vduma
       double precision xtemp,ytemp,ztemp,external_pressure
       double precision vvibn,vbenddum,vtorn,value
       double precision dvl,dvc,beta,temperature,xcmi,ycmi,zcmi,rmcell
@@ -1164,7 +1150,7 @@ c     --- set new coulombic parameters for the new box length
       if ( lfailure ) return
 
       call twh_engtotal(lfailure,ovrlap,v,vintern,vduma,vtailn,vintran
-     &     ,vvibn,vbenddum,vtorn,vextn,velectn,vsolvn,vquantumn
+     &     ,vvibn,vbenddum,vtorn,vextn,velectn,vsolvn
      &     ,vf,dvl,dvc
      &     ,CRD_TEMP,bxdflag,boxvch,lvol,.false.,.false.,.false.)
       if ( lfailure ) return
@@ -1178,7 +1164,6 @@ c     --- set new coulombic parameters for the new box length
       write(6,*) 'vextn:',vextn
       write(6,*) 'velectn:',velectn
       write(6,*) 'vsolvn:',vsolvn
-      write(6,*) 'vquantumn:',vquantumn
 #endif
 c     --- initialize laccept
       laccept = .false.
@@ -1196,9 +1181,6 @@ c        -- store the new total box energy
             deltav = (vintern - vinterb) + (vextn  - vextb)
      &           + (velectn - velectb) + (vintran - vintrab)
      &           + (vsolvn - vsolvb)
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_boxvquantum(GLB_GET,boxvch,vqtotal)
-            deltav = vquantumn - vqtotal
          else
             write(6,*) 'VOLNPT: unknown potentialstyle'
             write(6,*) potentialstyle
@@ -1256,8 +1238,6 @@ c        --- store the new energies
             call scp_set_derivative(boxvch, LAMBDA_LJ, dvl)
             call scp_set_foreign_energies(boxvch, vf)
 
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            call twh_boxvquantum(GLB_INCR,boxvch,deltav)
          else
             write(6,*) 'VOLNPT: unknown potentialstyle'
             write(6,*) potentialstyle
@@ -1267,9 +1247,6 @@ c        --- store the new energies
 c        --- store new box dimensions
          call twh_hmatrix(GLB_STORE_ALL,BXD_T_TO_R,boxvch,idim,jdim
      &        ,hmold(idim,jdim))
-
-
-
 
       else
 c        --- move was rejected

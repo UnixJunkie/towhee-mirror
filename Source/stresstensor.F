@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -42,7 +42,7 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-18-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -75,7 +75,10 @@ c     --- double precision scalars
 c     --- double precision arrays
       double precision repress
       dimension repress(6)
-
+#if DEBUG_STRESSTENSOR
+      double precision debugcon
+#endif
+      
 c     --- retrieve constants
       call twh_rcelect(GLB_GET,ibox,rcelect)
       call twh_lelect(GLB_GET,lelect)
@@ -83,7 +86,7 @@ c     --- retrieve constants
       call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
 
 c     --- initialize stress tensor
-      do indx = 0,6
+      do indx = 0,7
          stress(indx) = 0.0d0
       enddo
 c     --- stress tensor meaningless in box 0 if grand canonical
@@ -238,17 +241,17 @@ c     --- get isotropic pressure from the trace
       stress(0) = (stress(1) + stress(2) + stress(3))/3.0d0
 
 #if DEBUG_STRESSTENSOR
-      c = CON_PRESSCONST / boxvolume
+      debugcon = CON_PRESSCONST / boxvolume
       write(6,*) "STRESSTENSOR: pressure components"
       call twh_nchbox(GLB_GET,ibox,nchbox)
-      write(6,*) "Ideal:      ", c*nchbox*temperature
-      write(6,*) "isotropic:  ", -c*stress(0)
-      write(6,*) "x-x stress: ", -c*stress(1)
-      write(6,*) "y-y stress: ", -c*stress(2)
-      write(6,*) "z-z stress: ", -c*stress(3)
-      write(6,*) "x-y stress: ", -c*stress(4)
-      write(6,*) "x-z stress: ", -c*stress(5)
-      write(6,*) "y-z stress: ", -c*stress(6)
+      write(6,*) "Ideal:      ", debugcon*nchbox*temperature
+      write(6,*) "isotropic:  ", -debugcon*stress(0)
+      write(6,*) "x-x stress: ", -debugcon*stress(1)
+      write(6,*) "y-y stress: ", -debugcon*stress(2)
+      write(6,*) "z-z stress: ", -debugcon*stress(3)
+      write(6,*) "x-y stress: ", -debugcon*stress(4)
+      write(6,*) "x-z stress: ", -debugcon*stress(5)
+      write(6,*) "y-z stress: ", -debugcon*stress(6)
 #endif
 c
 c     --- turn <W> into pressure

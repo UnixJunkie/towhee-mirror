@@ -50,7 +50,7 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 01-05-2018 by M.G. Martin                        *
+c     * last modified 03-19-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -84,7 +84,6 @@ c     --- double precision scalars
       double precision blength,rm,upper,lower,rcenter,range
       double precision xtemp,ytemp,ztemp,xdisp,ydisp,zdisp,burn
       double precision vnewtotal,vnewinter,vnewintra,vnewext,vnewelect
-      double precision vnewquantum,voldquantum
       double precision voldtotal,voldinter,voldintra,voldext,voldelect
       double precision vduma,vdumb,vdumc,vdumd,dele,ptest,vdumz
       double precision vnewsolv,voldsolv,xxx,yyy,zzz
@@ -361,7 +360,7 @@ c     --- compute the new energy
       lovrlap = .false.
       call twh_engtotal(lfailure,lovrlap,vnewtotal,vnewinter,vdumz,vduma
      &     ,vnewintra,vdumb,vdumc,vdumd,vnewext,vnewelect,vnewsolv
-     &     ,vnewquantum,newvf,newdvl,newdvc,CRD_REAL,bxdflag,ibox
+     &     ,newvf,newdvl,newdvc,CRD_REAL,bxdflag,ibox
      &     ,.true.,.true.,.false.,.false.)
       if ( lfailure ) return
 c     --- reset all of the coordinates to their old values and then
@@ -405,7 +404,7 @@ c     --- we need to compute the old energy to determine acceptance
 c     --- compute the old energy
       call twh_engtotal(lfailure,lovrold,voldtotal,voldinter,vdumz,vduma
      &     ,voldintra,vdumb,vdumc,vdumd,voldext,voldelect,voldsolv
-     &     ,voldquantum,oldvf,olddvl,olddvc
+     &     ,oldvf,olddvl,olddvc
      &     ,CRD_REAL,bxdflag,ibox
      &     ,.true.,.true.,.false.,.false.)
       if ( lfailure ) return

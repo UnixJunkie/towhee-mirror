@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 09 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 22 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -938,8 +938,8 @@ Molecules of type   2 :          1
   torsion (i-l) one-four van der waals                      88029.002 [K]       174.93263 [kcal/mol]
   torsion (i-l) one-four Electric                          842164.058 [K]      1673.56176 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                   10799.051 [K]        21.46005 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw            446291368.641 [K]    886877.27838 [kcal/mol]
-  intramolecular                                        446291368.641 [K]    886877.27838 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw            446291368.641 [K]    886877.27837 [kcal/mol]
+  intramolecular                                        446291368.641 [K]    886877.27837 [kcal/mol]
   2-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
  Total nonbond (more than 3 bonds apart) Electric        -1065882.296 [K]     -2118.13819 [kcal/mol]
