@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * reads in all input parameters from towhee_input that are       *
 c     * related to the classical potential style                       *
 c     *                                                                *
 c     * split out of readtowhee 11-01-2004 by M.G. Martin              *
-c     * last modified 08-27-2014 by M.G. Martin                        *
+c     * last modified 08-29-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -44,13 +44,13 @@ c     --- logical scalars
       logical lreadmixrule,lreadlshift,lreadltailc,lreadrmin
       logical lreadrcut,lreadrcutin,lreadinterpolatestyle,lreadrpd
       logical lreadscaling,scp_scale_coulomb,loutlammps,lshift
-      logical ltailc,lewald
+      logical ltailc,lewald,lcompute_madelung
 c     --- character strings
       character*(FFNAMELEN) cvalue,keynames
       dimension keynames(2)
       character*20 idname,coulombstyle,interpolatestyle
       character*30 cplocal,cmlocal
-      character*50 electrostatic_form
+      character*50 electrostatic_form,goodstring
       character*(MAXDIRLENGTH) ffname
       integer nbondtypes,nangletypes,ndihedtypes,nimprotypes,numboxes
       integer noftypes,ffnumber
@@ -274,8 +274,6 @@ c        --- no electrostatic interactions
          call twh_elect_form_code(GLB_SET,EF_CODE_NONE)
          call twh_lelect(GLB_SET,.false.)
          call twh_lewald(GLB_SET,.false.)
-         call twh_ewald_kalp(GLB_SET,0.0d0)
-         call twh_ewald_kmax(GLB_SET,1,0)
 c        --- reset qqfact to zero
          dvalue = 0.0d0
          call twh_constant_qqfact(GLB_SET,dvalue)
@@ -285,43 +283,52 @@ c        --- reset qqfact to zero
 
       elseif ( electrostatic_form .eq. 'coulomb' ) then
          call twh_lelect(GLB_SET,.true.)
-c        --- read in the coulombstyle
-         call twh_read_labeled_string(lfailure,4, 'coulombstyle'
-     &        ,.true.,idname,coulombstyle)
-         if ( lfailure ) return
-         call twh_coulombstyle(GLB_SET,coulombstyle)
+c        --- optional read in the coulombstyle
+         if ( twh_check_label(lfailure,4,'coulombstyle') ) then
+            call twh_read_labeled_string(lfailure,4, 'coulombstyle'
+     &           ,.true.,idname,coulombstyle)
+            if ( lfailure ) return
+            call twh_coulombstyle(GLB_SET,coulombstyle)
+         endif
+         call twh_coulombstyle(GLB_GET,coulombstyle)
          if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then
             call twh_elect_form_code(GLB_SET,EF_CODE_COUL_EWALD)
 c           --- coulombic interactions with fixed kmax values
             call twh_lewald(GLB_SET,.true.)
 c           --- read in ewald sum kalp and kmax parameters
-            kalp = twh_read_labeled_float(lfailure,4, 'kalp', .true.
-     &           , idname)
-            if ( lfailure ) return
-            call twh_ewald_kalp(GLB_SET,kalp)
+            if ( twh_check_label(lfailure,4,'kalp') ) then
+               kalp = twh_read_labeled_float(lfailure,4, 'kalp', .true.
+     &              , idname)
+               if ( lfailure ) return
+               call twh_ewald_kalp(GLB_SET,kalp)
+            endif
+            call twh_ewald_kalp(GLB_GET,kalp)
             if ( kalp .le. 0.0d0 ) then
                write(6,*) 'READCLASSICAL:kalp must be greater than 0.0'
                lfailure = .true.
                return
             endif
-            kmax = twh_read_labeled_integer(lfailure,4,'kmax',.true.
-     &           ,idname)
-            if ( lfailure ) return
-            if ( kmax .le. 0 ) then
-               write(6,*) 'READCLASSICAL: kmax must be greater than 0'
-               lfailure = .true.
-               return
-            elseif ( kmax .gt. MAXKMAX ) then
-               write(6,*) 'READCLASSICAL: kmax exceeds MAXKMAX'
-               write(6,*) 'either lower kmax or modify MAXKMAX'
-     &              , 'in preproc.h'
-               lfailure = .true.
-               return
+            if ( twh_check_label(lfailure,4,'kmax') ) then
+               kmax = twh_read_labeled_integer(lfailure,4,'kmax',.true.
+     &              ,idname)
+               if ( lfailure ) return
+               if ( kmax .le. 0 ) then
+                  write(6,*) 'READCLASSICAL: kmax must be greater'
+     &                 ,' than 0'
+                  lfailure = .true.
+                  return
+               elseif ( kmax .gt. MAXKMAX ) then
+                  write(6,*) 'READCLASSICAL: kmax exceeds MAXKMAX'
+                  write(6,*) 'either lower kmax or modify MAXKMAX'
+     &                 , 'in preproc.h'
+                  lfailure = .true.
+                  return
+               endif
+c              --- set all of the boxes to this initial kmax
+               do ibox = 1,numboxes
+                  call twh_ewald_kmax(GLB_SET,ibox,kmax)
+               enddo
             endif
-c           --- set all of the boxes to this initial kmax
-            do ibox = 1,numboxes
-               call twh_ewald_kmax(GLB_SET,ibox,kmax)
-            enddo
          elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
             call twh_elect_form_code(GLB_SET,EF_CODE_COUL_EWALD)
 c           --- coulombic interactions with fixed electrostatic cutoff
@@ -364,26 +371,38 @@ c           --- unknown coulombstyle
             lfailure = .true.
             return
          endif
-
-c        --- read in the dielectric constant
-         dielect = twh_read_labeled_float(lfailure,4, 'dielect', 
-     &        .true., idname)
-         if ( lfailure ) return
+c        --- optional read in the dielectric constant
+         if ( twh_check_label(lfailure,4,'dielect') ) then
+            dielect = twh_read_labeled_float(lfailure,4, 'dielect', 
+     &           .true., idname)
+            if ( lfailure ) return
 c        --- make sure dielectric constant is greater than zero
-         if ( dielect .le. 0.0d0 ) then
-            write(6,*) 'READCLASSICAL: dielect must be positive '
-            lfailure = .true.
-            return
+            if ( dielect .le. 0.0d0 ) then
+               write(6,*) 'READCLASSICAL: dielect must be positive '
+               lfailure = .true.
+               return
+            endif
+         else
+c           --- set to default value of 1.0
+            dielect = 1.0d0
          endif
 c        --- reset qqfact to account for the dielectric constant
          dvalue = CON_EETOKCAL*CON_KCALTOK/dielect
          call twh_constant_qqfact(GLB_SET,dvalue)
+c        --- optional read lcompute_madelung
+         goodstring = 'lcompute_madelung'
+         if ( twh_check_label(lfailure,4,goodstring) ) then
+            lcompute_madelung = twh_read_labeled_logical(lfailure,4
+     &           , goodstring, .true., idname)
+            call twh_lcompute_madelung(GLB_SET,lcompute_madelung)
+         endif
       else
          write(6,*) 'READCLASSICAL: unknown electrostatic_style'
          lfailure = .true.
          return
       endif
 
+      
 c     --- incomplete implementation issue.  How do self and correct
 c     --- terms
 c     --- scale with cmix_lambda_c?  At this point they don't, and so 
@@ -396,10 +415,6 @@ c     --- at some point.
      &      "for Ewald."
          write(6,*) "Self and correction energies may be incorrect. "
       endif
-      
-
-c ******************************************
-      
 c     --- read the forcefield from files
       write(6,*) 'Setting up force field parameters from files'
 c     --- initialize the parameters
@@ -426,23 +441,6 @@ c     --- set up the nonbonded mixing and convert bonded
       call twh_setmixterms(lfailure,numtypes)
       if ( lfailure ) return
 
-c     --- optional read max_bond_length(default value set in initialize)
-      if ( twh_check_label(lfailure,4,'max_bond_length') ) then
-         dvalue = twh_read_labeled_float(lfailure,4, 'max_bond_length'
-     &        ,.true., idname)
-         if ( lfailure ) return
-         call twh_max_bond_length(GLB_SET,dvalue)
-c        --- error check
-         if ( dvalue .lt. 0.0d0 ) then
-            write(6,*) 'READCLASSICAL: max_bond_length must be positive'
-            write(6,*) dvalue
-         endif
-      else
-c        --- retrieve the default and output it to std_output
-         call twh_max_bond_length(GLB_GET,dvalue)
-         write(6,'(a24,1x,f5.2)') 'default max_bond_length:',dvalue
-      endif
-      
 c     --- optional read in the number of external fields
       if ( twh_check_label(lfailure,4,'nfield') ) then
          call twh_read_field(lfailure,4)

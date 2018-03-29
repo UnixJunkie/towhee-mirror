@@ -96,7 +96,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -123,7 +123,7 @@ c     --- logical arrays
       dimension lnbterm(nch_nb)
 c     --- integer scalars
       integer engastyle,iouter,iuprev,iufrom,ntogrow,count,torkey
-      integer iu,iw,ip,ichtor,angstart,iwalk,istoreflag,potentialstyle
+      integer iu,iw,ip,ichtor,angstart,iwalk,istoreflag
       integer grownbon,nxangle,nxbias,cbmc_form_code
 c     --- double precision scalars
       double precision alpha,gamma,xub,yub,zub,xxx,yyy,zzz,length,dpmin
@@ -180,7 +180,6 @@ c     --- double precision arrays
       write(6,*) 'start ROSENBLUTH',lnew,testcord
 #endif
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_scalelolog(GLB_GET,scalelolog)
       call twh_cbmc_form_code(GLB_GET,cbmc_form_code)
 
@@ -709,23 +708,16 @@ c        --- update new trial energies
          else
             istoreflag = TRL_OLD
          endif
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            vrostot = vrostot + vctry(iwalk)  
-     &           +vtgtr(iwalk) + vxvibtr(iwalk) + vxbendtr(iwalk)
-            vrosvib = vrosvib + vxvibtr(iwalk)
-            vrosang = vrosang + vxbendtr(iwalk)
-            vrostor = vrostor + vtgtr(iwalk)
-            vrosext = vrosext + vtrext(iwalk)
-            vrosintra = vrosintra + vtrintra(iwalk)
-            vrosinter = vrosinter + vtrinter(iwalk)
-            vroselect = vroselect + vtrelect(iwalk)
-            vrosewald = vrosewald + vtrewald(iwalk)
-         else
-            write(6,*) 'ROSENBLUTH: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
+         vrostot = vrostot + vctry(iwalk)  
+     &        +vtgtr(iwalk) + vxvibtr(iwalk) + vxbendtr(iwalk)
+         vrosvib = vrosvib + vxvibtr(iwalk)
+         vrosang = vrosang + vxbendtr(iwalk)
+         vrostor = vrostor + vtgtr(iwalk)
+         vrosext = vrosext + vtrext(iwalk)
+         vrosintra = vrosintra + vtrintra(iwalk)
+         vrosinter = vrosinter + vtrinter(iwalk)
+         vroselect = vroselect + vtrelect(iwalk)
+         vrosewald = vrosewald + vtrewald(iwalk)
 
          do count = 1,ntogrow
             call twh_growlist(GLB_GET,iw,count,iu)

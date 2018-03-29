@@ -1,13 +1,12 @@
 <html>
  <head>
-  <title>MCCCS Towhee (forcefield)</title>
+  <title>MCCCS Towhee: forcefield</title>
  </head>
-
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="675" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
-     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee (forcefield)</font></b> </font> </div>
+     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee: forcefield</font></b> </font> </div>
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
@@ -18,7 +17,6 @@
      <p>&nbsp; </p>
      <p>&nbsp;</p>
     </td>
-
     <td width="697" valign="top"> 
      <dt><b>Overview</b> 
       <ul>
@@ -26,27 +24,24 @@
        into the Towhee units and then output a towhee_ff file with the current format.
       </ul>
      </dt>
-
      <dt><b>Compiling</b> 
       <ul>
        Unlike most of the other utility programs, forcefield is compiled in the Source directory instead of the Utils directory because it shares several
        subroutines with towhee.  Some of the subroutines in this utility program are very large and cause many common optimizers to overload memory.
-       Therefore I strongly suggest that you turn off the optimizers when compiling this utility.  The following direction work and assume you are starting
-       in the base directory of the distribution.
+       Therefore if you have limited RAM you should turn off the optimizers when compiling this utility.
        <ul>
-        <dt>cd /towheebase</dt>
-        <dt>./configure FFLAGS=''</dt>
-        <dt>cd Source</dt>
-        <dt>make clean</dt>
-        <dt>make forcefield</dt>
+        <dt><code>cd /towheebase</code></dt>
+        <dt><code>./configure FFLAGS=''</code></dt>
+        <dt><code>cd Source</code></dt>
+        <dt><code>make clean</code></dt>
+        <dt><code>make forcefield</code></dt>
        </ul>
-       This creates a forcefield executable that can then be run from the command line.
+       This creates a <code>forcefield</code> executable that is run from the command line.
       </ul>
      </dt>
-
      <dt><b>Features</b> 
       <ul>
-       When you run this program from the command line it will prompt you to choose from a list of force field names to generate.  Most of these commands
+       When you run this program from the command line it prompts you to choose from a list of force field names to generate.  Most of these commands
        simply translate the appropriate built in subroutine of data to output a force field file that should be identical to the one provided with 
        the distribution.  Here are some of the other options that do something other than just generate the specified force field file.
        <ul>
@@ -61,16 +56,16 @@
        </ul>
       </ul>
      </dt>
-
      <a href="utility_summary.html">Return to the Utility Summary page</a> 
-     <p>&nbsp;</p>
     </td>
    </tr>
   </table>
-
-  <hr width="715" align="left">
-  <i><font size="2">Send comments to:</font></i> <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a><br>
-  <i>Last updated:</i> <!-- #BeginDate format:Am1 -->June 11, 2009<!-- #EndDate -->
-  </font> <br>
  </body>
+ <foot>
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
+  </font>
+ </foot>
 </html>

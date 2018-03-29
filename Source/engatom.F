@@ -59,7 +59,7 @@ c     * rxp(dimatoms,dimtrials), ryp and rzp are the coordinates for   *
 c     * each atom and trial                                            *
 c     *                                                                *
 c     * rewritten from old boltz and boltzu 09-23-1997 by M.G. Martin  *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -87,24 +87,16 @@ c     --- variables passed to/from the subroutine
       double precision vtrewald
       dimension vtrewald(dimtrials)
 c     --- local variables
-      integer nchain,potentialstyle
+      integer nchain
 
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_nchain(GLB_GET,nchain)
-         call twh_classical_engatom(lfailure,testcord,globalcord
-     &        ,engastyle,lovrlap,nchain,ichain,imolty,bxdflag,ibox
-     &        ,ichoi,iufrom
-     &        ,ntogrow,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp
-     &        ,vctry,vtrext,vtrintra,vtrinter,vtrelect,vtrewald)
-         if ( lfailure ) return
-      else
-         write(6,*) 'ENGATOM: unknown potentialstyle'
-         write(6,*) potentialstyle
-         lfailure = .true.
-         return
-      endif
+      call twh_nchain(GLB_GET,nchain)
+      call twh_classical_engatom(lfailure,testcord,globalcord
+     &     ,engastyle,lovrlap,nchain,ichain,imolty,bxdflag,ibox
+     &     ,ichoi,iufrom
+     &     ,ntogrow,maxlen,lnbterm,dimatoms,dimtrials,rxp,ryp,rzp
+     &     ,vctry,vtrext,vtrintra,vtrinter,vtrelect,vtrewald)
+      if ( lfailure ) return
       return
       end
 

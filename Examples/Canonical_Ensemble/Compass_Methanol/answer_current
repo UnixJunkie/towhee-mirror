@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  300.000    
  nmolty:            1
@@ -79,28 +78,6 @@ Full output of updates and block averages
  pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_COMPASSv1                                                                             
- classical_potential: 9-6                           
- READCLASSICAL: pot_num:     6 potential name: 9-6                           
- classical_mixrule: Sixth Power                   
- lshift:  F
- ltailc:  F
- rmin:  1.00000    
- rcut:  20.0000    
- rcutin:  10.0000    
- electrostatic_form: coulomb                                           
- coulombstyle: minimum image       
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Sixth Power Mixing rules
- Sixth order combination of sigma
- Sixth order combination of epsilon
-default max_bond_length:  3.00
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -163,6 +140,27 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: default ideal                 
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_COMPASSv1                                                                             
+ classical_potential: 9-6                           
+ READCLASSICAL: pot_num:     6 potential name: 9-6                           
+ classical_mixrule: Sixth Power                   
+ lshift:  F
+ ltailc:  F
+ rmin:  1.00000    
+ rcut:  20.0000    
+ rcutin:  10.0000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: minimum image       
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Sixth Power Mixing rules
+ Sixth order combination of sigma
+ Sixth order combination of epsilon
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            6
  nmaxcbmc:            6
@@ -249,6 +247,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is    32.0416 g/mol
  Calling initconf

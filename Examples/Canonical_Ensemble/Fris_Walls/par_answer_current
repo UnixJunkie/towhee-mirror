@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Canonical_Ensemble/Fris_Walls/                                                                     
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  300.000    
  nmolty:            1
@@ -79,76 +78,6 @@ Full output of updates and block averages
  pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_Fris2003                                                                              
- classical_potential: 12-9-6                        
- READCLASSICAL: pot_num:     7 potential name: 12-9-6                        
- classical_mixrule: Explicit                      
- lshift:  T
- ltailc:  F
- rmin:  1.00000    
- rcut:  10.0000    
- rcutin:  10.0000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- nfield:            4
-Field:     1 fieldtype: Hard Wall           
- hrdbox:            1
- hrdxyz: z          
- hrdcen:  0.00000    
- hrdrad:  6.00000    
- hrd_repulsion_style: centers    
- Centers of all atoms are excluded from the hard wall
- hrd_energy_type: infinite   
- Infinitely high energy inside of wall
-Field:     2 fieldtype: LJ 9-3 Wall         
- ljfbox:            1
- ljfxyz: z          
- ljfcen:  6.00000    
- ljfdir:            1
- ljfcut:  12.0000    
- ljfshift:  T
- ljfrho: 0.278265E-01
- ljfntypes:            3
-type:   1 ljfname:Si        
-type:   1 ljfsig:   3.32700
-type:   1 ljfeps:  60.38599
-type:   2 ljfname:CH3       
-type:   2 ljfsig:   3.38000
-type:   2 ljfeps:  62.90208
-type:   3 ljfname:O         
-type:   3 ljfsig:   2.78700
-type:   3 ljfeps:  62.39886
-Field:     3 fieldtype: LJ 9-3 Wall         
- ljfbox:            1
- ljfxyz: z          
- ljfcen:  30.0000    
- ljfdir:           -1
- ljfcut:  12.0000    
- ljfshift:  T
- ljfrho: 0.278265E-01
- ljfntypes:            3
-type:   1 ljfname:Si        
-type:   1 ljfsig:   3.32700
-type:   1 ljfeps:  60.38599
-type:   2 ljfname:CH3       
-type:   2 ljfsig:   3.38000
-type:   2 ljfeps:  62.90208
-type:   3 ljfname:O         
-type:   3 ljfsig:   2.78700
-type:   3 ljfeps:  62.39886
-Field:     4 fieldtype: Hooper Umbrella     
- umbbox:            1
- umbxyz: z          
- umbcenter:  18.0000    
- umba: -176.126    
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -211,6 +140,75 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: default ideal                 
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Fris2003                                                                              
+ classical_potential: 12-9-6                        
+ READCLASSICAL: pot_num:     7 potential name: 12-9-6                        
+ classical_mixrule: Explicit                      
+ lshift:  T
+ ltailc:  F
+ rmin:  1.00000    
+ rcut:  10.0000    
+ rcutin:  10.0000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ nfield:            4
+Field:     1 fieldtype: Hard Wall           
+ hrdbox:            1
+ hrdxyz: z          
+ hrdcen:  0.00000    
+ hrdrad:  6.00000    
+ hrd_repulsion_style: centers    
+ Centers of all atoms are excluded from the hard wall
+ hrd_energy_type: infinite   
+ Infinitely high energy inside of wall
+Field:     2 fieldtype: LJ 9-3 Wall         
+ ljfbox:            1
+ ljfxyz: z          
+ ljfcen:  6.00000    
+ ljfdir:            1
+ ljfcut:  12.0000    
+ ljfshift:  T
+ ljfrho: 0.278265E-01
+ ljfntypes:            3
+type:   1 ljfname:Si        
+type:   1 ljfsig:   3.32700
+type:   1 ljfeps:  60.38599
+type:   2 ljfname:CH3       
+type:   2 ljfsig:   3.38000
+type:   2 ljfeps:  62.90208
+type:   3 ljfname:O         
+type:   3 ljfsig:   2.78700
+type:   3 ljfeps:  62.39886
+Field:     3 fieldtype: LJ 9-3 Wall         
+ ljfbox:            1
+ ljfxyz: z          
+ ljfcen:  30.0000    
+ ljfdir:           -1
+ ljfcut:  12.0000    
+ ljfshift:  T
+ ljfrho: 0.278265E-01
+ ljfntypes:            3
+type:   1 ljfname:Si        
+type:   1 ljfsig:   3.32700
+type:   1 ljfeps:  60.38599
+type:   2 ljfname:CH3       
+type:   2 ljfsig:   3.38000
+type:   2 ljfeps:  62.90208
+type:   3 ljfname:O         
+type:   3 ljfsig:   2.78700
+type:   3 ljfeps:  62.39886
+Field:     4 fieldtype: Hooper Umbrella     
+ umbbox:            1
+ umbxyz: z          
+ umbcenter:  18.0000    
+ umba: -176.126    
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:           13
  nmaxcbmc:           13
@@ -269,6 +267,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  External fields specified
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is   239.2216 g/mol
  Calling initconf

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,11 +25,12 @@ c     * opens towhee_input and reads in the inputformat                *
 c     * then it calls the appropriate input reading routine            *
 c     *                                                                *
 c     * rewritten 05-15-2002 by M.G. Martin                            *
-c     * last modified 08-12-2011 by M.G. Martin                        *
+c     * last modified 08-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "wrapperF.h"
-
+#define FUNCTION_CHECK_LABEL
+#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lfinish
 c     --- local variables
@@ -68,10 +69,15 @@ c     --- open towhee_altinp
      &     ,'DEFAULT')
       if ( lfinish ) return
 
-c     --- read in inputformat
-      call twh_read_labeled_string(lfailure,4,'inputformat',loutput
-     &     ,idname,inputformat)
-      if ( lfailure ) return
+c     --- optional read in inputformat
+      if ( twh_check_label(lfailure,4,'inputformat') ) then
+         call twh_read_labeled_string(lfailure,4,'inputformat',loutput
+     &        ,idname,inputformat)
+         if ( lfailure ) return
+      else
+c        --- default to Towhee
+         inputformat = 'Towhee'
+      endif
 
 c     --- head off to the various read routines
       if ( inputformat .eq. 'LAMMPS' ) then

@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 03-18-2018 by M.G. Martin                        *
+c     * last modified 03-29-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -50,7 +50,7 @@ c     --- local variables
 c     --- logical scalars
       logical lpdbnames
       logical lfound,lvalid,lreadnunit,lreadnmaxcbmc,louthist
-      logical lhenry,lgetinitstyle,linit,lusecom,lvalue
+      logical lhenry,lgetinitstyle,linit,lusecom,ltmmcflag
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
       logical loutlammps,lshift,ltailc,lelect,lewald,ldualcutoff
@@ -69,9 +69,9 @@ c     --- character string scalars
       character*15 idname
       character*20 runoutput,solvation_style,solvation_type,initboxtype
       character*20 initstyle,initlattice,controlstyle
-      character*20 pressure_thermo_style
+      character*20 pressure_thermo_style,coulombstyle
       character*30 ftemp,filename,ctemp,ensemble_str,rng_str
-      character*30 potentialstyle_str,charge_assignment
+      character*30 charge_assignment
       character*30 imp_assign,match_style
       character*50 tmpfile,input_style,run_name,in_cfile
 c     --- character string arrays
@@ -83,7 +83,7 @@ c     --- integer scalars
       integer imolty,jmolty,iunit,ivib,itor,cpnumber,nchain,kmax
       integer ichain,nmolty,ivalue
       integer itest,count,idim,jdim,nboxpair,nchbox,nfield
-      integer icount,itmp,crtype,iutemp,idum, numunits,potentialstyle
+      integer icount,itmp,crtype,iutemp,idum, numunits
       integer nmcount,ibox,jbox,isuccess,numtypes,isolvtype,nmtype
       integer inix,iniy,iniz,initmol,nstep,printfreq,moviefreq
       integer trmaxdispfreq,blocksize,backupfreq,volmaxdispfreq
@@ -124,7 +124,6 @@ c     --- double precision arrays
 
 c     --- set subroutine idname
       idname = 'readtowhee'
-
 c     --- optional read in the random number generator
       if ( twh_check_label(lfailure,4,'random_number_generator') ) then
          call twh_read_labeled_string(lfailure,4
@@ -164,7 +163,6 @@ c              --- error check
 c        --- store the random number generator code
          call twh_random_code(GLB_SET,rng_code)
       endif
-
 c     --- optional read in the random number seed
       if (twh_check_label(lfailure,4,'random_seed')) then
          call twh_get_random_seed(lfailure,4, iseed, .false., idname)
@@ -177,7 +175,6 @@ c     --- optional read in the random number seed
 c        --- set the global random_seed
          call twh_random_seed(GLB_SET,iseed)
       endif
-
 c      --- optional read random_allow_restart
       if ( twh_check_label(lfailure,4,'random_allow_restart') ) then
          lallow = twh_read_labeled_logical(lfailure,4
@@ -194,7 +191,6 @@ c        --- initialize random number generator now
          call twh_init_random_single(lfailure)
          if ( lfailure ) return
       endif
-
 c     --- read in ensemble string
       call twh_read_labeled_string(lfailure,4,'ensemble',.true.,idname
      &     ,ensemble_str)
@@ -215,7 +211,6 @@ c     --- error check ensemble
       endif
 c     --- set the ensemble
       call twh_ensemble(GLB_SET,ensemble)
-
 c     --- read in temperature 
       temperature = twh_read_labeled_float(lfailure,4,'temperature'
      &     ,.true., idname)
@@ -228,7 +223,6 @@ c     --- error check temperature
          lfailure = .true.
          return
       endif
-
       if ( ensemble .eq. ENS_NPT ) then
 c        --- read in external pressure
          pressure = twh_read_labeled_float(lfailure,4,'pressure',
@@ -244,24 +238,6 @@ c        --- convert pressure from kPa to simulation units
          dvalue = pressure*CON_KPATOSIM
          call twh_express(GLB_SET,dvalue)
       endif
-
-c     --- tmmc_flag = .true. if doing GC-TMMC
-      call twh_tmmc_flag(GLB_SET,.false.)
-      if ( ensemble .eq. ENS_muVT ) then
-         if (twh_check_label(lfailure,4,'tmmc_flag')) then
-            lvalue = twh_read_labeled_logical(lfailure,4, 'tmmc_flag'
-     &           ,.true., idname)
-            if ( lfailure ) return
-            call twh_tmmc_flag(GLB_SET,lvalue)
-         endif
-         call twh_tmmc_flag(GLB_GET,lvalue)
-         if ((ensemble.ne.ENS_muVT).and. lvalue ) then
-            write(6,*) 'READTOWHEE: can only do tmmc in uVT Ens.'
-            lfailure = .true.
-            return
-         endif
-      endif
-
 c     --- read in number of molecule types
       nmolty = twh_read_labeled_integer(lfailure,4,'nmolty',.true.,
      &    idname)
@@ -281,24 +257,10 @@ c     --- error check nmolty
       endif
 c     --- allocate arrays based on nmolty
       call twh_allocate_maxmolty(nmolty)
-
-c     --- Error check number of molecule types for currently
-c     --- implemented TMMC variant (for now, pure fluids only).
-      call twh_tmmc_flag(GLB_GET,lvalue)
-      if ( lvalue ) then
-         if (nmolty.GT.1) then
-            write(6,*) 'READTOWHEE: tmmc only works for '
-            write(6,*) 'pure fluids now '
-            lfailure = .true.
-            return
-         endif
-      endif
-
 c     --- read in number of each type of molecule
       call twh_read_labeled_integer_array(lfailure,4, 'nmolectyp',
      &    nmolty, .true., idname, idummy)
       if ( lfailure ) return
-
 c     --- set the total number of molecules
       nchain = 0
       do imolty = 1, nmolty
@@ -313,7 +275,6 @@ c     --- allocate arrays based on maxchain
       call twh_allocate_maxchain(maxchain)
 c     --- allocate based on maxchain and nmolty
       call twh_allocate_maxchain_maxmolty(maxchain,nmolty)
-
 c     --- error check nmolectyp
       lhenry = .false.
       do imolty = 1,nmolty
@@ -326,7 +287,6 @@ c     --- error check nmolectyp
          endif
          if ( nmtype .eq. 0 ) lhenry = .true.
       enddo
-
       if ( ensemble .eq. ENS_muVT ) then
 c        --- read in the chemical potential for each molecule
          call twh_read_labeled_float_array(lfailure,4, 'chempot',
@@ -338,7 +298,6 @@ c        --- set the values
             call twh_chempot(GLB_SET,jmolty,dvalue)
          enddo
       endif
-
 c     --- read in the number of simulation boxes
       numboxes = twh_read_labeled_integer(lfailure,4,'numboxes',
      &    .true.,idname)
@@ -367,20 +326,14 @@ c     --- allocate arrays based on nmolty and numboxes
       call twh_allocate_maxmolty_numboxes(nmolty,maxboxes)
 c     --- allocate arrays based on nmolty, numboxes, and nchain
       call twh_allocate_maxmolty_numboxes_nchain(nmolty,maxboxes,nchain)
-
-c     --- read the step style
-      call twh_read_labeled_string(lfailure,4,'stepstyle',.true.,idname
-     &     ,stepstyle)
-      if ( lfailure ) return
-      call twh_stepstyle(GLB_SET,stepstyle)
-c     --- error check
-      if ( ensemble .eq. ENS_muVT .and. stepstyle .ne. 'moves' ) then
-         write(6,*) 'READTOWHEE: stepstyle must be moves when using the'
-         write(6,*) 'grand canonical ensemble. cycles is ill defined'
-         lfailure = .true. 
-         return
+c     --- optional read the step style
+      if ( twh_check_label(lfailure,4,'stepstyle') ) then
+         call twh_read_labeled_string(lfailure,4,'stepstyle',.true.
+     &        ,idname,stepstyle)
+         if ( lfailure ) return
+         call twh_stepstyle(GLB_SET,stepstyle)
       endif
-         
+      call twh_stepstyle(GLB_GET,stepstyle)
       if ( stepstyle .eq. 'cycles' .or. stepstyle .eq. 'moves' ) then
 c        --- read in number of MC steps
          call twh_get_nstep(lfailure,4, nstep, .true., idname)
@@ -397,18 +350,14 @@ c        --- error check
          lfailure = .true.
          return
       endif
-
 c     --- determine the controlstyle
       if ( twh_check_label(lfailure,4,'controlstyle') ) then
          call twh_read_labeled_string(lfailure,4,'controlstyle'
      &        ,.true.,idname,controlstyle)
          if ( lfailure ) return
-      else
-c        --- if not specified then default to manual
-         controlstyle = 'manual'
+         call twh_controlstyle(GLB_SET,controlstyle)
       endif
-      call twh_controlstyle(GLB_SET,controlstyle)
-
+      call twh_controlstyle(GLB_GET,controlstyle)
       if ( controlstyle .eq. 'production' ) then
 c        --- setting designed for production work
          printfreq = nstep/10
@@ -439,7 +388,6 @@ c        --- setting designed for production work
          call twh_trmaxdispfreq(GLB_SET,trmaxdispfreq)
          volmaxdispfreq = nstep/10
          call twh_volmaxdispfreq(GLB_SET,volmaxdispfreq)
-
       elseif ( controlstyle .eq. 'equilibration' ) then
 c        --- setting designed to rapidly equilibrate the settings
          printfreq = nstep/10
@@ -472,198 +420,87 @@ c        --- setting designed to rapidly equilibrate the settings
          volmaxdispfreq = nstep/100
          if ( volmaxdispfreq .eq. 0 ) volmaxdispfreq = 1 
          call twh_volmaxdispfreq(GLB_SET,volmaxdispfreq)
-
       elseif ( controlstyle .eq. 'manual' ) then
-c        --- read steps between printing output to stdout
-         if (twh_check_label(lfailure,4,'printfreq')) then
-            printfreq = twh_read_labeled_integer(lfailure,4,'printfreq'
-     &           ,.true.,idname)
-            if ( lfailure ) return
-         else
-            printfreq = 0
-         endif
-         call twh_printfreq(GLB_SET,printfreq)
+c     --- all of those parameter remain at their default values
+c     --- nothing to be done here, left in for backwards compatability
+      else
+c        --- unknown controlstyle
+         write(6,*) 'READTOWHEE: unknown controlstyle'
+         write(6,*) controlstyle
+         lfailure = .true.
+         return
+      endif
+c     --- optional read steps between printing output to stdout
+      if (twh_check_label(lfailure,4,'printfreq')) then
+         printfreq = twh_read_labeled_integer(lfailure,4,'printfreq'
+     &        ,.true.,idname)
+         if ( lfailure ) return
 c        --- error check (if = 0, no output)
          if ( printfreq .lt. 0 ) then
-            write(6,*) 'READTOWHEE: printfreq must positive'
+            write(6,*) 'READTOWHEE: printfreq must be nonnegative'
             lfailure = .true.
             return
          endif
-c        --- weight_freq and c_matrix_freq are specified in input file
-c        --- run_name is also specified, otherwise it is set to noname
-c        --- n_tmmc_min is optionally specified here (for breaking
-c        ---- macrostate space into windows).
-         call twh_weight_freq(GLB_SET,0)
-         call twh_c_matrix_freq(GLB_SET,0)
-         call twh_tmmc_flag(GLB_GET,lvalue)
-         if ( lvalue ) then
-c           --- allocate TMMC variables
-            maxchain = nchain+1
-            call twh_allocate_tmmc(maxchain)
-c           --- initialize transition matrix Monte Carlo variables
-            call twh_n_tmmc_min(GLB_SET,0)
-            call twh_n_tmmc_max(GLB_SET,nchain)
-c           --- read in optional tmmc variabls
-            call twh_run_name(GLB_SET,'noname')
-            if ( twh_check_label(lfailure,4,'n_tmmc_min') ) then
-               n_tmmc_min = twh_read_labeled_integer(lfailure,4
-     &              ,'n_tmmc_min',.false.,idname)
-               if ( lfailure ) return
-               call twh_n_tmmc_min(GLB_SET,n_tmmc_min)
-            endif
-            call twh_n_tmmc_min(GLB_GET,n_tmmc_min)
-            call twh_n_tmmc_max(GLB_GET,n_tmmc_max)
-            write(6,*) 'N_TMMC_MAX: ', n_tmmc_max
-            write(6,*) 'N_TMMC_MIN: ', n_tmmc_min
-            if ( twh_check_label(lfailure,4,'weight_freq') ) then
-               ivalue = twh_read_labeled_integer(lfailure,4
-     &              ,'weight_freq',.true.,idname)
-               if ( lfailure ) return
-               call twh_weight_freq(GLB_SET,ivalue)
-            endif
-            if ( twh_check_label(lfailure,4,'c_matrix_freq') ) then
-               ivalue = twh_read_labeled_integer(lfailure,4
-     &              ,'c_matrix_freq',.true.,idname)
-               if ( lfailure ) return
-               call twh_c_matrix_freq(GLB_SET,ivalue)
-            endif
-            if ( twh_check_label(lfailure,4,'run_name') ) then
-               call twh_read_labeled_string(lfailure,4,'run_name',
-     &              .true.,idname,run_name)
-               if ( lfailure ) return
-               call twh_run_name(GLB_SET,run_name)
-            endif
-            in_c_flag = .false.
-            if (twh_check_label(lfailure,4,'in_c_flag')) then
-               in_c_flag = twh_read_labeled_logical(lfailure,4
-     &              , 'in_c_flag',.true., idname)
-               if ( lfailure ) return
-            endif
-            if ( in_c_flag ) then
-               if ( twh_check_label(lfailure,4,'in_cfile') ) then
-                  call twh_read_labeled_string(lfailure,4,'in_cfile',
-     &                 .true., idname,in_cfile)
-                  if ( lfailure ) return
-                  tmpfile  = in_cfile(1:twh_len_trim(in_cfile))
-                  call twh_openfile(lfailure,51,tmpfile,'DEFAULT'
-     &                 ,'UNKNOWN','DEFAULT')
-                  if ( lfailure ) return
-                  do icount = n_tmmc_min, n_tmmc_max
-                     read(51,*) itmp,cm_ii_negone,cm_ii_zero,cm_ii_one
-                     call twh_c_matrix(GLB_SET,icount,-1,cm_ii_negone)
-                     call twh_c_matrix(GLB_SET,icount,0,cm_ii_zero)
-                     call twh_c_matrix(GLB_SET,icount,1,cm_ii_one)
-                  enddo
-                  CLOSE(51)
-               endif
-            endif
-c           --- stuff that was in initialize and I think never used
-            call twh_n_tmmc_min(GLB_GET,n_tmmc_min)
-            if ( in_c_flag ) then
-               do itor = 0, n_tmmc_max
-                  call twh_v_semigrand(GLB_SET,itor,0.0D0)
-               enddo
-               call twh_tmmc_weight(GLB_SET,n_tmmc_min,0.0D0)
-               do ii = n_tmmc_min + 1, n_tmmc_max
-                  jj = ii-1
-                  call twh_c_matrix(GLB_GET,jj,1,cm_jj_one)
-                  call twh_c_matrix(GLB_GET,ii,-1,cm_ii_negone)
-                  if ( cm_jj_one .gt. 0.0 .and. 
-     &                 cm_ii_negone .gt. 0.0 ) then
-                     call twh_c_matrix(GLB_GET,jj,0,cm_jj_zero)
-                     call twh_c_matrix(GLB_GET,jj,-1,cm_jj_negone)
-                     call twh_c_matrix(GLB_GET,ii,1,cm_ii_one)
-                     call twh_c_matrix(GLB_GET,ii,0,cm_ii_zero)
-                     call twh_tmmc_weight(GLB_GET,jj,dvalue)
-                     dvalue = dvalue + dlog( cm_jj_one / ( cm_jj_one
-     &                    + cm_jj_zero + cm_jj_negone ) ) -
-     &                    dlog( cm_jj_negone / ( cm_ii_one
-     &                    + cm_ii_zero + cm_ii_negone ) )
-                     call twh_tmmc_weight(GLB_SET,ii,dvalue)
-                  else
-                     call twh_tmmc_weight(GLB_GET,jj,dvalue)
-                     call twh_tmmc_weight(GLB_SET,ii,dvalue)
-                  endif
-               enddo
-            else
-               do itor = n_tmmc_min, n_tmmc_max
-                  call twh_c_matrix(GLB_SET,itor,-1,0.0D0)
-                  call twh_c_matrix(GLB_SET,itor,0,0.0D0)
-                  call twh_c_matrix(GLB_SET,itor,+1,0.0D0)
-                  call twh_tmmc_weight(GLB_SET,itor,0.0D0)
-                  call twh_v_semigrand(GLB_SET,itor,0.0D0)
-               enddo
-            endif
-c           --- end of stuff that I think was never used
-         endif
+         call twh_printfreq(GLB_SET,printfreq)
+      endif
 
-c        --- read in size of blocks for block averages
-         if (twh_check_label(lfailure,4,'blocksize')) then
-            blocksize = twh_read_labeled_integer(lfailure,4,'blocksize'
-     &           ,.true.,idname)
-            if ( lfailure ) return
-c           --- error check (if = 0, no output)
-            if ( blocksize .lt. 0 ) then
-               write(6,*) 'READTOWHEE: blocksize must be postive'
-               lfailure = .true.
-               return
-            endif
-         else
-            blocksize = 0
+c     --- read in size of blocks for block averages
+      if (twh_check_label(lfailure,4,'blocksize')) then
+         blocksize = twh_read_labeled_integer(lfailure,4,'blocksize'
+     &        ,.true.,idname)
+         if ( lfailure ) return
+c        --- error check (if = 0, no output)
+         if ( blocksize .lt. 0 ) then
+            write(6,*) 'READTOWHEE: blocksize must be nonnegative'
+            lfailure = .true.
+            return
          endif
          call twh_blocksize(GLB_SET,blocksize)
+      endif
 
-c        --- read in steps between movie file output
-         if (twh_check_label(lfailure,4,'moviefreq')) then
-            moviefreq = twh_read_labeled_integer(lfailure,4,'moviefreq'
-     &           ,.true.,idname)
-            if ( lfailure ) return
-         else
-            moviefreq = 0
-         endif
-         call twh_moviefreq(GLB_SET,moviefreq)
+c     --- optional read in steps between movie file output
+      if (twh_check_label(lfailure,4,'moviefreq')) then
+         moviefreq = twh_read_labeled_integer(lfailure,4,'moviefreq'
+     &        ,.true.,idname)
+         if ( lfailure ) return
 c        --- error check (if = 0 => no movies written)
          if ( moviefreq .lt. 0 ) then
-            write(6,*) 'READTOWHEE: moviefreq must be positive'
+            write(6,*) 'READTOWHEE: moviefreq must be nonnegative'
             lfailure = .true.
             return
          endif
+         call twh_moviefreq(GLB_SET,moviefreq)
+      endif
 
-c        --- read in steps between backup of configuration
-c        --- this is an optional label
-         if (twh_check_label(lfailure,4,'backupfreq')) then
-            backupfreq = twh_read_labeled_integer(lfailure,4
-     &           ,'backupfreq',.true.,idname)
-            if ( lfailure ) return
-         else
-c           --- default value if not specified
-            backupfreq = 0
+c     --- optional read in steps between backup of configuration
+      if (twh_check_label(lfailure,4,'backupfreq')) then
+         backupfreq = twh_read_labeled_integer(lfailure,4
+     &        ,'backupfreq',.true.,idname)
+         if ( lfailure ) return
+c        --- error check (if = 0, no output)
+         if ( backupfreq .lt. 0 ) then
+            write(6,*) 'READTOWHEE: backupfreq must be nonnegative'
+            lfailure = .true.
+            return
          endif
          call twh_backupfreq(GLB_SET,backupfreq)
-c        --- error check (if = 0, no output)
-         if ( backupfreq .lt. 0 ) then
-            write(6,*) 'READTOWHEE: backupfreq must be positive'
+      endif
+         
+c     --- read in steps between restart save of configuration
+      if (twh_check_label(lfailure,4,'restartfreq')) then
+         restartfreq = twh_read_labeled_integer(lfailure,4
+     &        ,'restartfreq',.true.,idname)
+         if ( lfailure ) return
+         if ( restartfreq .lt. 0 ) then
+            write(6,*) 'READTOWHEE: restartfreq must be nonnegative'
             lfailure = .true.
             return
-         endif
-
-c         --- read in steps between restart save of configuration
-         if (twh_check_label(lfailure,4,'restartfreq')) then
-            restartfreq = twh_read_labeled_integer(lfailure,4
-     &           ,'restartfreq',.true.,idname)
-            if ( lfailure ) return
-         else
-            restartfreq = 0
          endif
          call twh_restartfreq(GLB_SET,restartfreq)
-c        --- error check (if = 0, no output)
-         if ( backupfreq .lt. 0 ) then
-            write(6,*) 'READTOWHEE: backupfreq must be positive'
-            lfailure = .true.
-            return
-         endif
+      endif
 
-c        --- read in the runoutput variable
+c     --- read in the runoutput variable
+      if ( twh_check_label(lfailure,4,'runoutput') ) then
          call twh_read_labeled_string(lfailure,4,'runoutput',
      &        .true.,idname,runoutput)
          if ( lfailure ) return
@@ -683,244 +520,361 @@ c        --- error check runoutput
             lfailure = .true.
             return
          endif
+      endif
 
-c        --- read pdb output style logical
-         if (twh_check_label(lfailure,4,'pdb_output_freq')) then
-            pdb_output_freq = twh_read_labeled_integer(lfailure,4
-     &           ,'pdb_output_freq',.true.,idname)
-            if ( lfailure ) return
-            call twh_pdb_output_freq(GLB_SET,pdb_output_freq)
-            if ( pdb_output_freq .lt. 0) then
-               write(6,*) 'READTOWHEE: pdb_output_freq must be positive'
-               write(6,*) 'to disable pdb output set this variable to 0'
-               lfailure = .true.
-               return
-            endif
-         else
-            call twh_pdb_output_freq(GLB_SET,0)
+c     --- read pdb output style logical
+      if (twh_check_label(lfailure,4,'pdb_output_freq')) then
+         pdb_output_freq = twh_read_labeled_integer(lfailure,4
+     &        ,'pdb_output_freq',.true.,idname)
+         if ( lfailure ) return
+         if ( pdb_output_freq .lt. 0) then
+            write(6,*) 'READTOWHEE: pdb_output_freq must be positive'
+            write(6,*) 'to disable pdb output set this variable to 0'
+            lfailure = .true.
+            return
+         endif
+         call twh_pdb_output_freq(GLB_SET,pdb_output_freq)
+      endif
+
+c     --- optional read in dft output style logical
+      if (twh_check_label(lfailure,4,'loutdft') ) then
+         loutdft = twh_read_labeled_logical(lfailure,4,'loutdft',
+     &        .true.,idname)
+         if ( lfailure ) return
+         call twh_loutdft(GLB_SET,loutdft)
+      endif
+
+c     --- optional read in lammps output style logical
+      if ( twh_check_label(lfailure,4,'loutlammps') ) then
+         loutlammps = twh_read_labeled_logical(lfailure,4
+     &        ,'loutlammps', .true.,idname)
+         if ( lfailure ) return
+         call twh_loutlammps(GLB_SET,loutlammps)
+      endif
+
+c     --- optional read in dlpoly output style logical
+      if (twh_check_label(lfailure,4,'loutdlpoly')) then
+         loutdlpoly = twh_read_labeled_logical(lfailure,4
+     &        ,'loutdlpoly', .true.,idname)
+         if ( lfailure ) return
+         call twh_loutdlpoly(GLB_SET,loutdlpoly)
+      endif
+
+c     --- tmmc
+      if (twh_check_label(lfailure,4,'tmmc_flag')) then
+         ltmmcflag = twh_read_labeled_logical(lfailure,4, 'tmmc_flag'
+     &        ,.true., idname)
+         if ( lfailure ) return
+         call twh_tmmc_flag(GLB_SET,ltmmcflag)
+      endif
+      call twh_tmmc_flag(GLB_GET,ltmmcflag)
+      if ( ltmmcflag ) then
+c     --- error check ensemble with tmmcflag
+         if ( (ensemble.ne.ENS_muVT) ) then
+            write(6,*) 'READTOWHEE: TMMC only works with uVT Ensemble'
+            lfailure = .true.
+            return
+         endif
+c        --- Error check number of molecule types for currently
+c         --- implemented TMMC variant (for now, pure fluids only).
+         if ( nmolty .GT. 1 ) then
+            write(6,*) 'READTOWHEE: TMMC currently only works for '
+            write(6,*) 'single component systems (nmmolty of 1)'
+            lfailure = .true.
+            return
          endif
 
-c        --- optional read in dft output style logical
-         if (twh_check_label(lfailure,4,'loutdft') ) then
-            loutdft = twh_read_labeled_logical(lfailure,4,'loutdft',
-     &           .true.,idname)
+c        --- weight_freq and c_matrix_freq are specified in input file
+c        --- run_name is also specified, otherwise it is set to noname
+c        --- n_tmmc_min is optionally specified here (for breaking
+c        ---- macrostate space into windows).
+c        --- allocate TMMC variables
+         maxchain = nchain+1
+         call twh_allocate_tmmc(maxchain)
+c        --- initialize transition matrix Monte Carlo variables
+         call twh_n_tmmc_min(GLB_SET,0)
+         call twh_n_tmmc_max(GLB_SET,nchain)
+c        --- read in optional n_tmmc_min
+         if ( twh_check_label(lfailure,4,'n_tmmc_min') ) then
+            n_tmmc_min = twh_read_labeled_integer(lfailure,4
+     &           ,'n_tmmc_min',.false.,idname)
             if ( lfailure ) return
-            call twh_loutdft(GLB_SET,loutdft)
+            call twh_n_tmmc_min(GLB_SET,n_tmmc_min)
          endif
-
-c        --- optional read in lammps output style logical
-         if ( twh_check_label(lfailure,4,'loutlammps') ) then
-            loutlammps = twh_read_labeled_logical(lfailure,4
-     &           ,'loutlammps', .true.,idname)
+         call twh_n_tmmc_min(GLB_GET,n_tmmc_min)
+         call twh_n_tmmc_max(GLB_GET,n_tmmc_max)
+         write(6,*) 'N_TMMC_MAX: ', n_tmmc_max
+         write(6,*) 'N_TMMC_MIN: ', n_tmmc_min
+c        --- optional weight_freq
+         call twh_weight_freq(GLB_SET,0)
+         if ( twh_check_label(lfailure,4,'weight_freq') ) then
+            ivalue = twh_read_labeled_integer(lfailure,4
+     &           ,'weight_freq',.true.,idname)
             if ( lfailure ) return
-            call twh_loutlammps(GLB_SET,loutlammps)
+            call twh_weight_freq(GLB_SET,ivalue)
          endif
-c        --- optional read in dlpoly output style logical
-         if (twh_check_label(lfailure,4,'loutdlpoly')) then
-            loutdlpoly = twh_read_labeled_logical(lfailure,4
-     &           ,'loutdlpoly', .true.,idname)
+c        --- optional c_matrix_freq
+         call twh_c_matrix_freq(GLB_SET,0)
+         if ( twh_check_label(lfailure,4,'c_matrix_freq') ) then
+            ivalue = twh_read_labeled_integer(lfailure,4
+     &           ,'c_matrix_freq',.true.,idname)
             if ( lfailure ) return
-            call twh_loutdlpoly(GLB_SET,loutdlpoly)
+            call twh_c_matrix_freq(GLB_SET,ivalue)
          endif
-
-         if ( ensemble .eq. ENS_muVT 
-     &        .and. twh_check_label(lfailure,4,'louthist') ) then
-c           --- read logical for computation of histogram
-            louthist = twh_read_labeled_logical(lfailure,4,'louthist',
-     &           .true.,idname)
+c        --- optional run_name
+         call twh_run_name(GLB_SET,'tmmc_runfile')
+         if ( twh_check_label(lfailure,4,'run_name') ) then
+            call twh_read_labeled_string(lfailure,4,'run_name',
+     &           .true.,idname,run_name)
             if ( lfailure ) return
-            call twh_louthist(GLB_SET,louthist)
-            if (louthist) then
-c              --- setup files for histogram reweighting
-               ivalue = twh_read_labeled_integer(lfailure,4
-     &              ,'hist_label',.true.,idname)
+            call twh_run_name(GLB_SET,run_name)
+         endif
+c        --- optional in_c_flag
+         in_c_flag = .false.
+         if (twh_check_label(lfailure,4,'in_c_flag')) then
+            in_c_flag = twh_read_labeled_logical(lfailure,4
+     &           , 'in_c_flag',.true., idname)
+            if ( lfailure ) return
+         endif
+         if ( in_c_flag ) then
+            if ( twh_check_label(lfailure,4,'in_cfile') ) then
+               call twh_read_labeled_string(lfailure,4,'in_cfile',
+     &              .true., idname,in_cfile)
                if ( lfailure ) return
-               call twh_hist_label(GLB_SET,ivalue)
-               write(ftemp,*) ivalue
-               call twh_read_labeled_string(lfailure,4,'hist_suffix',
-     &              .true.,idname,hist_suffix)
-               if ( lfailure ) return
-               call twh_hist_suffix(GLB_SET,hist_suffix)
-               read(ftemp,*) fname3
-               filename =
-     &              'towhee_his'
-     &              //fname3(1:twh_len_trim(fname3))
-     &              //hist_suffix//'.dat'
-               call twh_file_his(GLB_SET,filename)
-               filename = 
-     &              'towhee_nfl'//fname3(1:twh_len_trim(fname3))
-     &              //hist_suffix//'.dat'
-               call twh_file_flct(GLB_SET,filename)
-               ivalue = twh_read_labeled_integer(lfailure,4
-     &              ,'hist_nequil',.true.,idname)
-               if ( lfailure ) return
-               call twh_hist_nequil(GLB_SET,ivalue)
-               call twh_file_flct(GLB_GET,filename)
-               call twh_openfile(lfailure,50,filename,'DEFAULT'
+               tmpfile  = in_cfile(1:twh_len_trim(in_cfile))
+               call twh_openfile(lfailure,51,tmpfile,'DEFAULT'
      &              ,'UNKNOWN','DEFAULT')
                if ( lfailure ) return
-               close(50)
-c              --- build filenames for the P(N) distributions
-               do imolty = 1,nmolty
-                  write(ftemp,*) imolty
-                  read(ftemp,*) fname4
-c                 --- compute the length of this character string
-                  filename = 
-     &                 'towhee_n'//fname4(1:twh_len_trim(fname4))
-     &                 //'dis'//fname3(1:twh_len_trim(fname3))
-     &                 //hist_suffix//'.dat'
-                  call twh_file_ndis(GLB_SET,imolty,filename)
+               do icount = n_tmmc_min, n_tmmc_max
+                  read(51,*) itmp,cm_ii_negone,cm_ii_zero,cm_ii_one
+                  call twh_c_matrix(GLB_SET,icount,-1,cm_ii_negone)
+                  call twh_c_matrix(GLB_SET,icount,0,cm_ii_zero)
+                  call twh_c_matrix(GLB_SET,icount,1,cm_ii_one)
                enddo
+               CLOSE(51)
             endif
-            if ( louthist ) then
-c              --- read frequency which the histogram information is 
-c              --- calculated
-               histcalcfreq = twh_read_labeled_integer(lfailure,4
-     &              ,'histcalcfreq',.true.,idname)
-               if ( lfailure ) return
-               call twh_histcalcfreq(GLB_SET,histcalcfreq)
-c              --- error check histcalcfreq
-               if ( histcalcfreq .le. 0) then
-                  write(6,*) 'READTOWHEE: histcalcfreq must be positive'
-                  lfailure = .true.
-                  return
-               endif 
-
-c              --- read frequency which the histogram information is 
-c              --- output to a file
-               histdumpfreq = twh_read_labeled_integer(lfailure,4
-     &              ,'histdumpfreq',.true.,idname)
-               if ( lfailure ) return
-               call twh_histdumpfreq(GLB_SET,histdumpfreq)
-c              --- error check histdumpfreq
-               if (histdumpfreq .le. 0) then
-                  write(6,*) 'READTOWHEE: histdumpfreq must be positive'
-                  lfailure = .true.
-                  return
+         endif
+c        --- assign cmatrix weights or initialize the weights
+         call twh_n_tmmc_min(GLB_GET,n_tmmc_min)
+         if ( in_c_flag ) then
+            do itor = 0, n_tmmc_max
+               call twh_v_semigrand(GLB_SET,itor,0.0D0)
+            enddo
+            call twh_tmmc_weight(GLB_SET,n_tmmc_min,0.0D0)
+            do ii = n_tmmc_min + 1, n_tmmc_max
+               jj = ii-1
+               call twh_c_matrix(GLB_GET,jj,1,cm_jj_one)
+               call twh_c_matrix(GLB_GET,ii,-1,cm_ii_negone)
+               if ( cm_jj_one .gt. 0.0 .and. 
+     &              cm_ii_negone .gt. 0.0 ) then
+                  call twh_c_matrix(GLB_GET,jj,0,cm_jj_zero)
+                  call twh_c_matrix(GLB_GET,jj,-1,cm_jj_negone)
+                  call twh_c_matrix(GLB_GET,ii,1,cm_ii_one)
+                  call twh_c_matrix(GLB_GET,ii,0,cm_ii_zero)
+                  call twh_tmmc_weight(GLB_GET,jj,dvalue)
+                  dvalue = dvalue + dlog( cm_jj_one / ( cm_jj_one
+     &                 + cm_jj_zero + cm_jj_negone ) ) -
+     &                 dlog( cm_jj_negone / ( cm_ii_one
+     &                 + cm_ii_zero + cm_ii_negone ) )
+                  call twh_tmmc_weight(GLB_SET,ii,dvalue)
+               else
+                  call twh_tmmc_weight(GLB_GET,jj,dvalue)
+                  call twh_tmmc_weight(GLB_SET,ii,dvalue)
                endif
-               call twh_tmmc_flag(GLB_GET,lvalue)
-               if ( .NOT. lvalue ) then
-c                 --- error check combination of histdumpfreq and
-c                 --- histcalcfreq
-                  if (((histdumpfreq/histcalcfreq)+1) .gt. NDUMPHIST)
-     &                 then
-                     write(6,*) 'READTOWHEE: histdumpfreq > NDUMPHIST'
-                     write(6,*) 'either increase NDUMPHIST in preproc.h'
-                     write(6,*) 'or decrease histdumpfreq in'
-     &                    ,' towhee_input.'
-                     lfailure = .true.
-                     return
-                  endif
-               endif
-            endif
-         endif
-
-c        --- read in number of steps between pressure pair calculations
-         if (twh_check_label(lfailure,4,'pressure_virial_freq')) then
-            pressure_virial_freq = twh_read_labeled_integer(lfailure,4
-     &           ,'pressure_virial_freq',.true.,idname)
-            if ( lfailure ) return
-c           --- error check
-            if ( pressure_virial_freq .lt. 0 ) then
-               write(6,*) 'READTOWHEE: pressure_virial_freq must be'
-     &              ,' non-negative'
-               lfailure = .true.
-               return
-            endif
+            enddo
          else
-            pressure_virial_freq = 0
-         endif
-         call twh_pressure_virial_freq(GLB_SET,pressure_virial_freq)
-
-c        --- read in number of steps between pressure thermo calculation
-         if (twh_check_label(lfailure,4,'pressure_thermo_freq')) then
-            pressure_thermo_freq = twh_read_labeled_integer(lfailure,4
-     &           ,'pressure_thermo_freq',.true.,idname)
-            if ( lfailure ) return
-c           --- error check
-            if ( pressure_thermo_freq .lt. 0 ) then
-               write(6,*) 'READTOWHEE: pressure_thermo_freq must be'
-     &              ,' non-negative'
-               lfailure = .true.
-               return
-            endif
-         else
-            pressure_thermo_freq = 0
-         endif
-         call twh_pressure_thermo_freq(GLB_SET,pressure_thermo_freq)
-
-         if ( twh_check_label(lfailure,4,'pressure_thermo_style')) then
-c           --- read in optional style for thermodynamic pressure
-            call twh_read_labeled_string(lfailure,4
-     &           ,'pressure_thermo_style',.true.,idname
-     &           ,pressure_thermo_style)
-            if ( lfailure ) return
-            call twh_pressure_thermo_style(GLB_SET
-     &           ,pressure_thermo_style)
-         endif
-
-c        --- get the pressure_thermo integer code
-         call twh_pressure_thermo_number(GLB_GET,pt_number)
-
-         if ( pt_number .eq. PTHERMO_RANGE ) then
-            if (twh_check_label(lfailure,4,'pressure_thermo_range')
-     &           ) then
-c               --- read in optional range for thermo pressure
-               call twh_read_labeled_float_array(lfailure,4
-     &              ,'pressure_thermo_range',2, .true. ,idname,drange)
-               if ( lfailure ) return
-            else
-               do irange = 1,2
-                  drange(irange) = 1.0d0
-               enddo
-            endif
-            do irange = 1,2
-               call twh_pressure_thermo_range(GLB_SET,irange
-     &              ,drange(irange))
+            do itor = n_tmmc_min, n_tmmc_max
+               call twh_c_matrix(GLB_SET,itor,-1,0.0D0)
+               call twh_c_matrix(GLB_SET,itor,0,0.0D0)
+               call twh_c_matrix(GLB_SET,itor,+1,0.0D0)
+               call twh_tmmc_weight(GLB_SET,itor,0.0D0)
+               call twh_v_semigrand(GLB_SET,itor,0.0D0)
             enddo
          endif
+      endif
 
-c        --- read in number of steps between update of translational and
-c        --- rotational maximum displacements
-         if (twh_check_label(lfailure,4,'trmaxdispfreq')) then
-            trmaxdispfreq = twh_read_labeled_integer(lfailure,4
-     &           ,'trmaxdispfreq',.true.,idname)
+      if ( ensemble .eq. ENS_muVT 
+     &     .and. twh_check_label(lfailure,4,'louthist') ) then
+c        --- read logical for computation of histogram
+         louthist = twh_read_labeled_logical(lfailure,4,'louthist',
+     &        .true.,idname)
+         if ( lfailure ) return
+         call twh_louthist(GLB_SET,louthist)
+         if (louthist) then
+c           --- setup files for histogram reweighting
+            ivalue = twh_read_labeled_integer(lfailure,4
+     &           ,'hist_label',.true.,idname)
             if ( lfailure ) return
-c           --- error check (if zero, no updates)
-            if ( trmaxdispfreq .lt. 0 ) then
-               write(6,*) 'READTOWHEE: trmaxdispfreq must be positive'
+            call twh_hist_label(GLB_SET,ivalue)
+            write(ftemp,*) ivalue
+            call twh_read_labeled_string(lfailure,4,'hist_suffix',
+     &           .true.,idname,hist_suffix)
+            if ( lfailure ) return
+            call twh_hist_suffix(GLB_SET,hist_suffix)
+            read(ftemp,*) fname3
+            filename =
+     &           'towhee_his'
+     &           //fname3(1:twh_len_trim(fname3))
+     &           //hist_suffix//'.dat'
+            call twh_file_his(GLB_SET,filename)
+            filename = 
+     &           'towhee_nfl'//fname3(1:twh_len_trim(fname3))
+     &           //hist_suffix//'.dat'
+            call twh_file_flct(GLB_SET,filename)
+            ivalue = twh_read_labeled_integer(lfailure,4
+     &           ,'hist_nequil',.true.,idname)
+            if ( lfailure ) return
+            call twh_hist_nequil(GLB_SET,ivalue)
+            call twh_file_flct(GLB_GET,filename)
+            call twh_openfile(lfailure,50,filename,'DEFAULT'
+     &           ,'UNKNOWN','DEFAULT')
+            if ( lfailure ) return
+            close(50)
+c           --- build filenames for the P(N) distributions
+            do imolty = 1,nmolty
+               write(ftemp,*) imolty
+               read(ftemp,*) fname4
+c              --- compute the length of this character string
+               filename = 
+     &              'towhee_n'//fname4(1:twh_len_trim(fname4))
+     &              //'dis'//fname3(1:twh_len_trim(fname3))
+     &              //hist_suffix//'.dat'
+               call twh_file_ndis(GLB_SET,imolty,filename)
+            enddo
+         endif
+         if ( louthist ) then
+c           --- read frequency which the histogram information is 
+c           --- calculated
+            histcalcfreq = twh_read_labeled_integer(lfailure,4
+     &           ,'histcalcfreq',.true.,idname)
+            if ( lfailure ) return
+            call twh_histcalcfreq(GLB_SET,histcalcfreq)
+c           --- error check histcalcfreq
+            if ( histcalcfreq .le. 0) then
+               write(6,*) 'READTOWHEE: histcalcfreq must be positive'
+               lfailure = .true.
+               return
+            endif 
+
+c           --- read frequency which the histogram information is 
+c           --- output to a file
+            histdumpfreq = twh_read_labeled_integer(lfailure,4
+     &           ,'histdumpfreq',.true.,idname)
+            if ( lfailure ) return
+            call twh_histdumpfreq(GLB_SET,histdumpfreq)
+c           --- error check histdumpfreq
+            if (histdumpfreq .le. 0) then
+               write(6,*) 'READTOWHEE: histdumpfreq must be positive'
                lfailure = .true.
                return
             endif
+
+c           --- error check combination of histdumpfreq and
+c           --- histcalcfreq
+            if ( .not. ltmmcflag ) then
+               if (((histdumpfreq/histcalcfreq)+1) .gt. NDUMPHIST)
+     &              then
+                  write(6,*) 'READTOWHEE: histdumpfreq/histcalcfreq'
+     &                 ,' > NDUMPHIST'
+                  write(6,*) 'either increase NDUMPHIST in preproc.h'
+                  write(6,*) 'or adjust histdumpfreq/histcalcfreq in'
+     &                 ,' towhee_input.'
+                  lfailure = .true.
+                  return
+               endif
+            endif
+         endif
+      endif
+
+c     --- read in number of steps between pressure pair calculations
+      if (twh_check_label(lfailure,4,'pressure_virial_freq')) then
+         pressure_virial_freq = twh_read_labeled_integer(lfailure,4
+     &        ,'pressure_virial_freq',.true.,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( pressure_virial_freq .lt. 0 ) then
+            write(6,*) 'READTOWHEE: pressure_virial_freq must be'
+     &           ,' non-negative'
+            lfailure = .true.
+            return
+         endif
+         call twh_pressure_virial_freq(GLB_SET,pressure_virial_freq)
+      endif
+
+c     --- read in number of steps between pressure thermo calculation
+      if (twh_check_label(lfailure,4,'pressure_thermo_freq')) then
+         pressure_thermo_freq = twh_read_labeled_integer(lfailure,4
+     &        ,'pressure_thermo_freq',.true.,idname)
+         if ( lfailure ) return
+c        --- error check
+         if ( pressure_thermo_freq .lt. 0 ) then
+            write(6,*) 'READTOWHEE: pressure_thermo_freq must be'
+     &           ,' non-negative'
+            lfailure = .true.
+            return
+         endif
+         call twh_pressure_thermo_freq(GLB_SET,pressure_thermo_freq)
+      endif
+
+      if ( twh_check_label(lfailure,4,'pressure_thermo_style')) then
+c        --- read in optional style for thermodynamic pressure
+         call twh_read_labeled_string(lfailure,4
+     &        ,'pressure_thermo_style',.true.,idname
+     &        ,pressure_thermo_style)
+         if ( lfailure ) return
+         call twh_pressure_thermo_style(GLB_SET
+     &        ,pressure_thermo_style)
+      endif
+
+c     --- get the pressure_thermo integer code
+      call twh_pressure_thermo_number(GLB_GET,pt_number)
+
+      if ( pt_number .eq. PTHERMO_RANGE ) then
+         if (twh_check_label(lfailure,4,'pressure_thermo_range')
+     &        ) then
+c            --- read in optional range for thermo pressure
+            call twh_read_labeled_float_array(lfailure,4
+     &           ,'pressure_thermo_range',2, .true. ,idname,drange)
+            if ( lfailure ) return
          else
-c           --- default to a value of zero to turn off updates
-            trmaxdispfreq = 0
+            do irange = 1,2
+               drange(irange) = 1.0d0
+            enddo
+         endif
+         do irange = 1,2
+            call twh_pressure_thermo_range(GLB_SET,irange
+     &           ,drange(irange))
+         enddo
+      endif
+
+c     --- read in number of steps between update of translational and
+c     --- rotational maximum displacements
+      if (twh_check_label(lfailure,4,'trmaxdispfreq')) then
+         trmaxdispfreq = twh_read_labeled_integer(lfailure,4
+     &        ,'trmaxdispfreq',.true.,idname)
+         if ( lfailure ) return
+c        --- error check (if zero, no updates)
+         if ( trmaxdispfreq .lt. 0 ) then
+            write(6,*) 'READTOWHEE: trmaxdispfreq must be positive'
+            lfailure = .true.
+            return
          endif
          call twh_trmaxdispfreq(GLB_SET,trmaxdispfreq)
+      endif
 
-c        --- read in number of steps between update of volume move
-c        --- maximum displacements
-         if (twh_check_label(lfailure,4,'volmaxdispfreq')) then
-            volmaxdispfreq = twh_read_labeled_integer(lfailure,4
-     &           ,'volmaxdispfreq',.true.,idname)
-            if ( lfailure ) return
-c           --- error check (if zero, no updates)
-            if ( volmaxdispfreq .lt. 0 ) then
-               write(6,*) 'READTOWHEE: volmaxdispfreq must be positive'
-               lfailure = .true.
-               return
-            endif
-         else
-c           --- default to a value of zero to turn off updates
-            volmaxdispfreq = 0
+c     --- read in number of steps between update of volume move
+c     --- maximum displacements
+      if (twh_check_label(lfailure,4,'volmaxdispfreq')) then
+         volmaxdispfreq = twh_read_labeled_integer(lfailure,4
+     &        ,'volmaxdispfreq',.true.,idname)
+         if ( lfailure ) return
+c        --- error check (if zero, no updates)
+         if ( volmaxdispfreq .lt. 0 ) then
+            write(6,*) 'READTOWHEE: volmaxdispfreq must be positive'
+            lfailure = .true.
+            return
          endif
          call twh_volmaxdispfreq(GLB_SET,volmaxdispfreq)
-      else
-c        --- unknown controlstyle
-         write(6,*) 'READTOWHEE: unknown controlstyle'
-         write(6,*) controlstyle
-         lfailure = .true.
-         return
       endif
 
 c     --- optional read in the number of chemical potential
@@ -985,93 +939,6 @@ c     --- running some tests to find good values
 c     --- compute vequiv
       vequiv = -dlog(scalelolog)*temperature
       call twh_vequiv(GLB_SET,vequiv)
-
-c     --- read in the potential style
-      call twh_read_labeled_string(lfailure,4,'potentialstyle',.true.
-     &     ,idname,potentialstyle_str)
-      if ( lfailure ) return
-      if (potentialstyle_str .eq. 'internal') then
-         call twh_potentialstyle(GLB_SET,POT_INTERNAL)
-      elseif (potentialstyle_str .eq. 'external') then
-         call twh_potentialstyle(GLB_SET,POT_EXTERNAL)
-      else
-         write(6,*) 'unknown potentialstyle: ', potentialstyle_str
-         lfailure = .true.
-         return
-      endif
-
-      call twh_potentialstyle(GLB_GET,potentialstyle)
-c     --- read the classical potential if required
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_readclassical(lfailure,numtypes)
-         if ( lfailure ) return
-      endif
-
-      if ( twh_check_label(lfailure,4,'solvation_style') ) then
-c        --- read in the solvation_style
-         call twh_read_labeled_string(lfailure,4,'solvation_style'
-     &        ,.true.,idname,solvation_style)
-         if ( lfailure ) return
-         call twh_solvation_style(GLB_SET,solvation_style)
-         if ( solvation_style .eq. 'internal' .or.
-     &        solvation_style .eq. 'external' ) then
-c           --- get the solvation_type
-            call twh_read_labeled_string(lfailure,4,'solvation_type'
-     &           ,.true.,idname,solvation_type)
-            if ( lfailure ) return
-            call twh_solvation_type(GLB_SET,solvation_type)
-         endif
-      else
-c        --- retrieve the default value
-         call twh_solvation_style(GLB_GET,solvation_style)
-      endif
-c     --- convert solvation_style to an integer code
-      call twh_set_isolvtype(lfailure,solvation_style,solvation_type)
-      if ( lfailure ) return
-
-c     --- get the integer code for the solvation type
-      call twh_isolvtype(GLB_GET,isolvtype)
-      if ( isolvtype .eq. SOLV_NONE ) then
-         write(6,*) 'No solvation model used'
-      elseif ( isolvtype .eq. SOLV_SASA ) then
-c        --- solvent-assessible surface area implicit water model
-c        --- that has parameters for CHARMM 19 atom types 
-c        --- Ferrara, Aposolakis, Caflisch Proteins 46, 24-33 (2002)
-         write(6,*) 'Solvent assessible surface area (SASA) implicit '
-     &        ,'water applied'
-      elseif ( isolvtype .eq. SOLV_EEF1 ) then
-c        --- effective energy function (EEF1) implicit water model 
-c        --- that has parameters for CHARMM 19 atom types 
-c        --- Lazardis and Karplus, Proteins 35,133-152 (1999)
-         write(6,*) 'Effective energy function (EEF1) implicit water '
-     &        ,'applied'
-         eefreftemp = 298.15d0
-         call twh_temperature(GLB_GET,temperature)
-         if (temperature .ne. eefreftemp) then
-            call twh_thermocorrect(temperature,eefreftemp)
-         endif
-      elseif (isolvtype .eq. SOLV_TRAMONTO ) then
-c        --- classical density functional theory using TRAMANTO 
-         write(6,*) 'Tramonto solvation'
-#ifndef USETRAMONTO
-         write(6,*) 'READCLASSICAL: you must use the --enable-tramonto'
-         write(6,*) 'configuration variable to use Tramonto solvation'
-         lfailure = .true.
-         return
-#endif
-      endif    
-
-c     --- error check use of ewald sum with implicit solvent
-      if ( isolvtype .ne. SOLV_NONE ) then
-         call twh_ewald_kmax(GLB_GET,1,kmax)
-         call twh_ewald_kalp(GLB_GET,kalp)
-         if ((kalp .ne. 0.0d0) .or. (kmax .ne. 0)) then
-            write(6,*) 'READCLASSICAL: When using implicit water models'
-     &           ,' both kalp and kmax must be set to zero'
-            lfailure = .true.  
-            if ( lfailure ) return
-         endif
-      endif
 
 c     --- read initial setup information.  linit value may come from
 c     --- file or from wrapper data passed from C wrapper
@@ -1232,8 +1099,8 @@ c        --- error check initmol against nmolectyp
             endif
          enddo
       endif
-      call twh_tmmc_flag(GLB_GET,lvalue)
-      if ( lvalue ) then
+      call twh_tmmc_flag(GLB_GET,ltmmcflag)
+      if ( ltmmcflag ) then
 c        --- make sure initial number of molecules
 c        --- is in the range (n_tmmc_min, n_tmmc_max).
          if ( itest .lt. n_tmmc_min ) then
@@ -1389,6 +1256,76 @@ c     --- configurational-bias monte carlo moves
       call twh_rwcbmc(lfailure,READ_FLAG,4)
       if ( lfailure) return
 
+c     --- read the classical potential
+      call twh_readclassical(lfailure,numtypes)
+      if ( lfailure ) return
+
+      if ( twh_check_label(lfailure,4,'solvation_style') ) then
+c        --- read in the solvation_style
+         call twh_read_labeled_string(lfailure,4,'solvation_style'
+     &        ,.true.,idname,solvation_style)
+         if ( lfailure ) return
+         call twh_solvation_style(GLB_SET,solvation_style)
+         if ( solvation_style .eq. 'internal' .or.
+     &        solvation_style .eq. 'external' ) then
+c           --- get the solvation_type
+            call twh_read_labeled_string(lfailure,4,'solvation_type'
+     &           ,.true.,idname,solvation_type)
+            if ( lfailure ) return
+            call twh_solvation_type(GLB_SET,solvation_type)
+         endif
+      else
+c        --- retrieve the default value
+         call twh_solvation_style(GLB_GET,solvation_style)
+      endif
+c     --- convert solvation_style to an integer code
+      call twh_set_isolvtype(lfailure,solvation_style,solvation_type)
+      if ( lfailure ) return
+
+c     --- get the integer code for the solvation type
+      call twh_isolvtype(GLB_GET,isolvtype)
+      if ( isolvtype .eq. SOLV_NONE ) then
+         write(6,*) 'No solvation model used'
+      elseif ( isolvtype .eq. SOLV_SASA ) then
+c        --- solvent-assessible surface area implicit water model
+c        --- that has parameters for CHARMM 19 atom types 
+c        --- Ferrara, Aposolakis, Caflisch Proteins 46, 24-33 (2002)
+         write(6,*) 'Solvent assessible surface area (SASA) implicit '
+     &        ,'water applied'
+      elseif ( isolvtype .eq. SOLV_EEF1 ) then
+c        --- effective energy function (EEF1) implicit water model 
+c        --- that has parameters for CHARMM 19 atom types 
+c        --- Lazardis and Karplus, Proteins 35,133-152 (1999)
+         write(6,*) 'Effective energy function (EEF1) implicit water '
+     &        ,'applied'
+         eefreftemp = 298.15d0
+         call twh_temperature(GLB_GET,temperature)
+         if (temperature .ne. eefreftemp) then
+            call twh_thermocorrect(temperature,eefreftemp)
+         endif
+      elseif (isolvtype .eq. SOLV_TRAMONTO ) then
+c        --- classical density functional theory using TRAMANTO 
+         write(6,*) 'Tramonto solvation'
+#ifndef USETRAMONTO
+         write(6,*) 'READCLASSICAL: you must use the --enable-tramonto'
+         write(6,*) 'configuration variable to use Tramonto solvation'
+         lfailure = .true.
+         return
+#endif
+      endif    
+
+c     --- error check use of ewald sum with implicit solvent
+      if ( isolvtype .ne. SOLV_NONE ) then
+         call twh_ewald_kmax(GLB_GET,1,kmax)
+         call twh_ewald_kalp(GLB_GET,kalp)
+         if ((kalp .ne. 0.0d0) .or. (kmax .ne. 0)) then
+            write(6,*) 'READCLASSICAL: When using implicit water models'
+     &           ,' both kalp and kmax must be set to zero'
+            lfailure = .true.  
+            if ( lfailure ) return
+         endif
+      endif
+
 c     --- output the towhee_altinp header information
       call twh_writetowhee(lfailure,.false.,0)
       if ( lfailure ) return
@@ -1405,17 +1342,6 @@ c        --- read input style
          call twh_read_labeled_string(lfailure,4,'input_style'
      &        , .true.,idname,input_style)
          if ( lfailure ) return
-c        --- error check input_style with potentialstyle
-         if ( ( potentialstyle .eq. POT_EXTERNAL
-     &        .and. input_style .ne. 'atomic' ) .or.
-     &        ( potentialstyle .ne. POT_EXTERNAL
-     &        .and. input_style .eq. 'atomic' ) ) then
-            write(6,*)
-     &           'READTOWHEE: input_style atomic and potentialstyle'
-     &           ,' external must be used together'
-            lfailure = .true.
-            return
-         endif
 
 c        --- initialize
          lpdbnames = .false.
@@ -1702,15 +1628,11 @@ c        --- meant for proteins
          endif
       enddo
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_setclassical(lfailure,numtypes)
-         if ( lfailure ) return
-      endif
+      call twh_setclassical(lfailure,numtypes)
+      if ( lfailure ) return
 
-c     --- output potentialstyle
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         write(6,'(a)') 'Energies exclusively from internal potentials'
-      endif
+c     --- output potential information
+      write(6,'(a)') 'Energies exclusively from internal potentials'
 
 c     --- output information about nonbonded
       call twh_writenonbond(6,lfailure)
@@ -1738,31 +1660,29 @@ c     --- re-check box dimensions
          endif
       enddo
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-c        --- error check avb1rad
-         call twh_avb1rad(GLB_GET,dvalue)
-         if ( dvalue .gt. 0.5*minboxdim ) then
-            write(6,*) 'minboxdim ',minboxdim
-            write(6,*) 'avb1rad must be less than minboxdim/2'
-            lfailure = .true.
-c           --- failure return is down below after more error messages
-         endif
-c        --- error check avb2rad
-         call twh_avb2rad(GLB_GET,dvalue)
-         if ( dvalue .gt. 0.5*minboxdim ) then
-            write(6,*) 'minboxdim ',minboxdim
-            write(6,*) 'avb2rad must be less than minboxdim/2'
-            lfailure = .true.
-c           --- failure return is down below after more error messages
-         endif
-c        --- error check avb3rad
-         call twh_avb3rad(GLB_GET,dvalue)
-         if ( dvalue .gt. 0.5*minboxdim ) then
-            write(6,*) 'minboxdim ',minboxdim
-            write(6,*) 'avb3rad must be less than minboxdim/2'
-            lfailure = .true.
-c           --- failure return is down below after more error messages
-         endif
+c     --- error check avb1rad
+      call twh_avb1rad(GLB_GET,dvalue)
+      if ( dvalue .gt. 0.5*minboxdim ) then
+         write(6,*) 'minboxdim ',minboxdim
+         write(6,*) 'avb1rad must be less than minboxdim/2'
+         lfailure = .true.
+c        --- failure return is down below after more error messages
+      endif
+c     --- error check avb2rad
+      call twh_avb2rad(GLB_GET,dvalue)
+      if ( dvalue .gt. 0.5*minboxdim ) then
+         write(6,*) 'minboxdim ',minboxdim
+         write(6,*) 'avb2rad must be less than minboxdim/2'
+         lfailure = .true.
+c        --- failure return is down below after more error messages
+      endif
+c     --- error check avb3rad
+      call twh_avb3rad(GLB_GET,dvalue)
+      if ( dvalue .gt. 0.5*minboxdim ) then
+         write(6,*) 'minboxdim ',minboxdim
+         write(6,*) 'avb3rad must be less than minboxdim/2'
+         lfailure = .true.
+c        --- failure return is down below after more error messages
       endif
 
       if ( lfailure ) then
@@ -1850,13 +1770,29 @@ c     --- Begin outputting information about the simulation
          
       call twh_lelect(GLB_GET,lelect)
       if ( lelect ) then
-         write(6,*) 
+         write(6,'(1x,a49)') 
      &        'Coulombic inter- and intra-molecular interactions'
          call twh_lewald(GLB_GET,lewald)
-         if ( lewald ) write(6,*) '    with an Ewald sum '
+         if ( lewald ) then
+            call twh_coulombstyle(GLB_GET,coulombstyle)
+            if ( coulombstyle .eq. 'ewald_fixed_kmax') then
+               call twh_ewald_kmax(GLB_GET,1,kmax)
+               call twh_ewald_kalp(GLB_GET,kalp)
+               write(6,'(5x,a26,1x,i2,1x,a5,1x,f6.3)')
+     &              'Ewald Sum with fixed kmax:',kmax,'kalp:',kalp
+            else
+               write(6,'(5x,a29)') 'with a fixed-cutoff Ewald sum'
+            endif
+         endif
          write(6,*) '    including the real-space terms up to half '
      &        ,'the shortest box length'
+         call twh_constant_qqfact(GLB_GET,dvalue)
+         dvalue = dvalue/( CON_EETOKCAL * CON_KCALTOK )
+         write(6,'(5x,a20,1x,f8.4)') 'dielectric constant:',dvalue
+      else
+         write(6,'(1x,a28)') 'No electrostatic interations'
       endif
+c     --- report the molecular masses
       write(6,*)
       do imolty = 1,nmolty
          call twh_masstotal(GLB_GET,imolty,masstotal)
@@ -1864,7 +1800,6 @@ c     --- Begin outputting information about the simulation
      &        ,'is',masstotal,'g/mol'
  40      format(a32,1x,i5,1x,a2,1x,f10.4,1x,a5)
       enddo
-
 c     --- check to make sure we are not attempting moves on any
 c     --- molecule that is not a bonded graph
  67   format('Molecule type',1x,i4,1x

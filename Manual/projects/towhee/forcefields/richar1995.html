@@ -1,13 +1,13 @@
 <html>
  <head>
-  <title>MCCCS Towhee (Richar1995)</title>
+  <title>MCCCS Towhee: Richar1995</title>
  </head>
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="675" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
      <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif">
-      <a name="top"></a>MCCCS Towhee (Richards <i>et al.</i> 1995)</font></b> </font>
+	 <a name="top"></a>MCCCS Towhee: Richards <i>et al.</i> 1995</font></b> </font>
      </div>
     </td>
    </tr>
@@ -22,12 +22,12 @@
     <td width="697" valign="top"> <b>Overview</b> 
      <ul>
       This section covers the Richards <i>et al.</i> 1995 (Richar1995) force field as it is implemented into the towhee_ff_Richar1995 file in the
-      ForceFields directory.  This force field was designed to reproduce the adsorption behavior of N<sub>2</sub> and O<sub>2</sub> in Zeolite Li-X.
+      ForceFields directory.
+      This force field was designed to reproduce the adsorption behavior of N<sub>2</sub> and O<sub>2</sub> in Zeolite Li-X.
       Note that this is a Lennard-Jones force field that uses the 'explicit' mixing rules, and therefore is not easily combined with other forcefields. 
-      Any discrepencies (especially typos) from the published values are the sole responsibility of Marcus G. Martin, and I welcome feedback on how
-      this implementation compares with other programs.
+      Any discrepencies (especially typos) from the published values are the sole responsibility of Marcus Martin,
+      and I welcome feedback on how this implementation compares with other programs.
      </ul>
-
      <b>Reference for Richards <i>et al.</i> 1995</b> 
      <ul>
       This forcefield is described in a single paper.
@@ -35,7 +35,6 @@
        <li><a href="../references.html#richards_et_al_1995">Richards <i>et al.</i> 1995</a></li>
       </ul>
      </ul>
-
      <b>Typos and comments for Richards <i>et al.</i> 1995</b>
      <ul>
       <li>I have been unable to reproduce the results shown in Figure~4 and have observed substantially higher adsorption for both 
@@ -44,40 +43,35 @@
        is able to reproduce those results please let the developers know.
       </li>
      </ul>
-
      <b>Richards <i>et al.</i> 1995 in Towhee</b> 
      <ul>
       The official force field name for Richards <i>et al.</i> 1995 in Towhee is 'Richar1995'.  Here is the list of atom names for use in the towhee_input
       file, along with a brief description.  Please note that the capitalization and spacing pattern is important and must be followed exactly as listed here.
       Note that both N<sub>2</sub> and O<sub>2</sub> are modelled with three interaction sites in this potential.
       <ul>
-       <li><b>'O'</b> : Oxygen in O<sub>2</sub> that is bonded to the midpoint site 'mp'</li>
-       <li><b>'N'</b> : Nitrogen in N<sub>2</sub> that is bonded to the midpoint site 'mp'</li>
-       <li><b>'Si'</b> : Silicon in zeolite Li-X</li>
-       <li><b>'Al'</b> : Aluminum in zeolite Li-X</li>
-       <li><b>'Oz'</b> : Oxygen in zeolite Li-X</li>
-       <li><b>'Li'</b> : Lithium in zeolite Li-X</li>
-       <li><b>'mp'</b> : the midpoint charge site of either O<sub>2</sub> or N<sub>2</sub></li>
+       <dt>'<b>O</b>' : Oxygen in O<sub>2</sub> that is bonded to the midpoint site 'mp'</dt>
+       <dt>'<b>N</b>' : Nitrogen in N<sub>2</sub> that is bonded to the midpoint site 'mp'</dt>
+       <dt>'<b>Si</b>' : Silicon in zeolite Li-X</dt>
+       <dt>'<b>Al</b>' : Aluminum in zeolite Li-X</dt>
+       <dt>'<b>Oz</b>' : Oxygen in zeolite Li-X</dt>
+       <dt>'<b>Li</b>' : Lithium in zeolite Li-X</dt>
+       <dt>'<b>mp</b>' : the midpoint charge site of either O<sub>2</sub> or N<sub>2</sub></dt>
       </ul>
      </ul>
-
      <b>Coulombic interactions</b> 
      <ul>
       This force field uses point charges and has been set up to assign the point charges using the bond increment method.
      </ul>
      <a href="../towhee_capabilities.html">Return to the Towhee Capabilities web page</a> 
-     <p>&nbsp;</p>
     </td>
    </tr>
   </table>
-  <hr width="715" align="left">
-  <i>
-  <font size="2">Send comments to:</font></i> <font size="2"> 
-   <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a><br>
-   <i>Last updated:</i> 
-   <!-- #BeginDate format:Am1 -->October 1, 2008<!-- #EndDate -->
-  </font> <br>
  </body>
+ <foot>
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
+  </font>
+ </foot>
 </html>
-
-

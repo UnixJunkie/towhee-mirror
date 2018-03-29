@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Canonical_Ensemble/DREIDING/                                                                       
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  10.0000    
  nmolty:            1
@@ -79,25 +78,6 @@ Full output of updates and block averages
  pressure_virial_freq:            0
  trmaxdispfreq:         1000
  volmaxdispfreq:     10000000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_DREIDING                                                                              
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Geometric                     
- lshift:  F
- ltailc:  F
- rmin:  1.00000    
- rcut:  14.0000    
- rcutin:  10.0000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Geometric Mixing rules
- Geometric mean of all nonbond coefficients
- max_bond_length:  6.00000    
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -160,6 +140,24 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: default ideal                 
+ max_bond_length                                   :  6.00000    
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_DREIDING                                                                              
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Geometric                     
+ lshift:  F
+ ltailc:  F
+ rmin:  1.00000    
+ rcut:  14.0000    
+ rcutin:  10.0000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Geometric Mixing rules
+ Geometric mean of all nonbond coefficients
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:           12
  nmaxcbmc:           12
@@ -208,6 +206,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is    78.1134 g/mol
  Calling initconf

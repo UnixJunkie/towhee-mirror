@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'nvt'
 temperature
@@ -32,18 +30,6 @@ trmaxdispfreq
 100
 volmaxdispfreq
 100
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_Vink2001
-classical_potential
-'Stillinger-Weber' 
-classical_mixrule
-'Explicit'
-electrostatic_form
-'none'
 linit   
 F
 initboxtype
@@ -119,6 +105,16 @@ pmtracm
           0.5d0
 cbmc_setting_style
 'widom ideal'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_Vink2001
+classical_potential
+'Stillinger-Weber' 
+classical_mixrule
+'Explicit'
+electrostatic_form
+'none'
 input_style
 'basic connectivity map'
 nunit 

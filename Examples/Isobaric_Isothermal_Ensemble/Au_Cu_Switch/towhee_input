@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'npt'
 temperature
@@ -40,20 +38,6 @@ trmaxdispfreq
 1
 volmaxdispfreq
 1
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_ParkHijazi
-classical_potential
-'Embedded Atom Method'       
-interpolatestyle
-'cubicspline'
-rcut
-1.0d0
-electrostatic_form
-'none'
 linit
 T
 initboxtype
@@ -100,6 +84,18 @@ pmtracm
           0.5d0
           tatrac
           0.5d0
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_ParkHijazi
+classical_potential
+'Embedded Atom Method'       
+interpolatestyle
+'cubicspline'
+rcut
+1.0d0
+electrostatic_form
+'none'
 #copper
 input_style
 'basic connectivity map'

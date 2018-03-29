@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Grand_Canonical_Ensemble/Steele_Wall/                                                              
- inputformat: Towhee         
  ensemble: uvt                           
  temperature:  77.0000    
  nmolty:            1
@@ -88,61 +87,6 @@ Full output of updates and block averages
  pressure_virial_freq:         1000
  trmaxdispfreq:          100
  volmaxdispfreq:        10000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_Last1993                                                                              
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Geometric                     
- lshift:  F
- ltailc:  T
- rmin:  1.00000    
- rcut:  10.0000    
- rcutin:  10.0000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Geometric Mixing rules
- Geometric mean of all nonbond coefficients
-default max_bond_length:  3.00
- nfield:            3
-Field:     1 fieldtype: Hard Wall           
- hrdbox:            1
- hrdxyz: z          
- hrdcen:  0.00000    
- hrdrad:  5.00000    
- hrd_repulsion_style: centers    
- Centers of all atoms are excluded from the hard wall
- hrd_energy_type: infinite   
- Infinitely high energy inside of wall
-Field:     2 fieldtype: Steele Wall         
- steele box:            1
- steele xyz: z          
- steele surface:  5.00000    
- steele dir:            1
- steele cutoff:  40.0000    
- steele shift:  F
- steele delta:  3.35000    
- steele rho_s:  1.14000    
- steele ntype:            1
-type:   1 steele name:N2        
-type:   1 sigma_sf:   3.49400
-type:   1 epsilon_sf:  53.22000
-Field:     3 fieldtype: Steele Wall         
- steele box:            1
- steele xyz: z          
- steele surface:  45.0000    
- steele dir:           -1
- steele cutoff:  40.0000    
- steele shift:  F
- steele delta:  3.35000    
- steele rho_s: 0.114000    
- steele ntype:            1
-type:   1 steele name:N2        
-type:   1 sigma_sf:   3.49400
-type:   1 epsilon_sf:  53.22000
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -207,6 +151,60 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: default ideal                 
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Last1993                                                                              
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Geometric                     
+ lshift:  F
+ ltailc:  T
+ rmin:  1.00000    
+ rcut:  10.0000    
+ rcutin:  10.0000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Geometric Mixing rules
+ Geometric mean of all nonbond coefficients
+ nfield:            3
+Field:     1 fieldtype: Hard Wall           
+ hrdbox:            1
+ hrdxyz: z          
+ hrdcen:  0.00000    
+ hrdrad:  5.00000    
+ hrd_repulsion_style: centers    
+ Centers of all atoms are excluded from the hard wall
+ hrd_energy_type: infinite   
+ Infinitely high energy inside of wall
+Field:     2 fieldtype: Steele Wall         
+ steele box:            1
+ steele xyz: z          
+ steele surface:  5.00000    
+ steele dir:            1
+ steele cutoff:  40.0000    
+ steele shift:  F
+ steele delta:  3.35000    
+ steele rho_s:  1.14000    
+ steele ntype:            1
+type:   1 steele name:N2        
+type:   1 sigma_sf:   3.49400
+type:   1 epsilon_sf:  53.22000
+Field:     3 fieldtype: Steele Wall         
+ steele box:            1
+ steele xyz: z          
+ steele surface:  45.0000    
+ steele dir:           -1
+ steele cutoff:  40.0000    
+ steele shift:  F
+ steele delta:  3.35000    
+ steele rho_s: 0.114000    
+ steele ntype:            1
+type:   1 steele name:N2        
+type:   1 sigma_sf:   3.49400
+type:   1 epsilon_sf:  53.22000
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            1
  nmaxcbmc:            1
@@ -241,6 +239,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  External fields specified
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is    28.0140 g/mol
  Calling initconf

@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'nvt'
 temperature
@@ -32,26 +30,6 @@ trmaxdispfreq
 1000
 volmaxdispfreq
 1000
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_MM2
-classical_potential
-'Exponential-6'       
-classical_mixrule
-'Explicit'
-lshift
-.false.
-ltailc
-.false.
-rcut  
-10.0d0
-rcutin 
-5.0d0 
-electrostatic_form
-'none'
 linit   
 .false.
 initboxtype
@@ -121,6 +99,24 @@ pmrotate
           0.05d0
           tarot
           0.5d0
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_MM2
+classical_potential
+'Exponential-6'       
+classical_mixrule
+'Explicit'
+lshift
+.false.
+ltailc
+.false.
+rcut  
+10.0d0
+rcutin 
+5.0d0 
+electrostatic_form
+'none'
 #UFF ethane
 input_style
 'basic connectivity map'

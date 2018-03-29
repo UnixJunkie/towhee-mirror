@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Canonical_Ensemble/Wall_Water/                                                                     
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  300.000    
  nmolty:            1
@@ -79,40 +78,6 @@ Full output of updates and block averages
  pressure_virial_freq:         2000
  trmaxdispfreq:            1
  volmaxdispfreq:            5
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_SPC-E                                                                                 
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Lorentz-Berthelot             
- lshift:  T
- ltailc:  F
- rmin: 0.100000    
- rcut:  10.0000    
- rcutin:  10.0000    
- electrostatic_form: coulomb                                           
- coulombstyle: ewald_fixed_kmax    
- kalp:  5.60000    
- kmax:            5
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Lorentz-Berthelot Mixing rules
- Arithmetic mean of sigma terms
- Geometric mean of epsilon term
-default max_bond_length:  3.00
- nfield:            1
-Field:     1 fieldtype: Hard Wall           
- hrdbox:            1
- hrdxyz: z          
- hrdcen:  0.00000    
- hrdrad:  26.0000    
- hrd_repulsion_style: centers    
- Centers of all atoms are excluded from the hard wall
- hrd_energy_type: infinite   
- Infinitely high energy inside of wall
- No solvation model used
  linit:  F
  initboxtype: dimensions          
 initstyle Box:    1
@@ -173,6 +138,39 @@ cbmc_formulation: Martin and Frischknecht 2006
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_SPC-E                                                                                 
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  T
+ ltailc:  F
+ rmin: 0.100000    
+ rcut:  10.0000    
+ rcutin:  10.0000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: ewald_fixed_kmax    
+ kalp:  5.60000    
+ kmax:            5
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+ nfield:            1
+Field:     1 fieldtype: Hard Wall           
+ hrdbox:            1
+ hrdxyz: z          
+ hrdcen:  0.00000    
+ hrdrad:  26.0000    
+ hrd_repulsion_style: centers    
+ Centers of all atoms are excluded from the hard wall
+ hrd_energy_type: infinite   
+ Infinitely high energy inside of wall
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            3
  nmaxcbmc:            3
@@ -212,8 +210,9 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Coupled-decoupled Configurational-bias MC
  External fields specified
  Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
+     Ewald Sum with fixed kmax:  5 kalp:  5.600
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is    18.0148 g/mol
  Reading in initial conformation from towhee_inital

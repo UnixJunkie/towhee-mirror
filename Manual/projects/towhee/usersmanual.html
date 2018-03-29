@@ -1,13 +1,12 @@
 <html>
  <head>
-  <title>MCCCS Towhee (User Manual)</title>
+  <title>MCCCS Towhee: Users Manual</title>
  </head>
-
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="800" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
-     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee (User Manual)</font></b></font></div>
+     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee: Users Manual</font></b></font></div>
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
@@ -18,7 +17,6 @@
      <p>&nbsp; </p>
      <p>&nbsp;</p>
     </td>
-
     <td width="700" valign="top"> 
      <p></p>
      <b>Overview</b> 
@@ -32,7 +30,6 @@
       Several illustrative test cases are included with the Towhee download.  Information about running those test cases can be found in the 
       <a href="examples/example_manual.html">Towhee example manual</a>.
      </ul>
-
      <dt><font color="red">Towhee Input Files</font></dt>
      <ul>
       <a name="towhee_input"><b>towhee_input (input file)</b></a>
@@ -45,7 +42,6 @@
        <dt> <i>Older input file versions</i></dt>
        <dt><a href="input/oldversionindex.html">towhee_input Versions 1 through 7</a></dt>
       </ul>
-
       <a name="towhee_coords"><b>towhee_coords (input file)</b></a>
       <ul>
        This file is used when you are first setting up the run and you want the code to directly read the initial coordinates (<b>initstyle</b>='coords').
@@ -57,18 +53,17 @@
        This technique can be useful for restarting from final coordinates while allowing <b>hmatrix</b> and maximum displacement parameters to be defined
        in the <b>towhee_input</b> file.
       </ul>
-
       <a name="towhee_ff"><b>towhee_ff (input file)</b></a>
       <ul>
        This file contains all of the force field parameters for any user-defined force field.  Several common forcefields are provided with the download
        package.  This file follows a very rigid format which is described in the <a href="towhee_ff.html">Towhee Force Field File</a> documentation.
       </ul>
-
       <a name="towhee_initial"><b>towhee_initial (input file)</b></a>
       <ul>
        This file contains the box lengths, maximum displacements, and coordinates for the system. It is used when you wish to restart a job from the final
        configuration of a previous run. The previous run output (either towhee_final or towhee_backup) is simply copied to towhee_initial and the next
-       simulation continues from this configuration. Please see the <a href="towhee_restart.html">Towhee Restart Manual</a> for more information about this file format.
+       simulation continues from this configuration.
+       Please see the <a href="towhee_restart.html">Towhee Restart Manual</a> for more information about this file format.
        Note that you must set <b>linit</b> to .false. when you want to restart and that there is some error
        checking to make sure the information in towhee_initial matches information in towhee_input.  The code can read in previous versions of the
        towhee_initial file without difficulty as the version number is at the top of the file. It is possible to directly edit this file, but if you are 
@@ -76,7 +71,6 @@
        that when <b>towhee_initial</b> is used, the <b>hmatrix</b> parameter, as well as parameters describing maximum move sizes, in <b>towhee_input</b> 
        are ignored.
       </ul>
-
       <a name="towhee_parallel"><b>towhee_parallel (input file)</b></a>
       <ul>
        This file specifies the style of parallelism to use when running the parallel version of the code.  This file is not needed for a serial job run using
@@ -84,7 +78,6 @@
        <dt> <i>Current Release version</i></dt>
        <dt><a href="towhee_parallel.html">towhee_parallel</a></dt>
       </ul>
-
       <a name="towhee_partial"><b>towhee_partial (input file)</b></a>
       <ul>
        This file is used when you are first setting up the run and you want the code to read in a partial list of atom positions, match them against the
@@ -92,7 +85,6 @@
        this file using the <a href="utils/pdb2towhee.html">pdb2towhee</a> utility.  If you are using this file to generate multiple molecules in a single
        run then you can simply cat all of the files together and then remove all of the "nul" lines, except for the final instance.
       </ul>
-
       <a name="towhee_template"><b>towhee_template (input file)</b></a>
       <ul>
        This file is used to generate an initial template for molecules when first setting up the initial configuration (<b>linit</b>=.true. and
@@ -103,7 +95,6 @@
        at (0.0,0.0,0.0). 
       </ul>
      </ul>
-
      <dt><font color="red">Towhee Output Files</font></dt>
      <ul>
       <a name="standard_output"><b>standard output (output file)</b></a>
@@ -112,19 +103,16 @@
        filename of your choosing.  That is done using standard Unix commands: for example to redirect the standard output to a file named "towhee_output"
        you would execute the following command.
        <ul>
-        <b>./towhee > towhee_output</b>
+        <code>./towhee > towhee_output</code>
        </ul>
        For more information about this output file, and a discussion of the chemical potential and pressure calculations,
        please see the <a href="standard_output.html">Towhee standard output</a> manual. 
       </ul>
-
       <a name="box.pdb"><b>box_xx_step_nnn.pdb (output file)</b></a>
       <ul> 
        This file is output for each box (where xx is replaced by the box number and nnn by the step number) at the beginning, end, and intermediate points of
        a simulation, as specified by the <b>pdb_output_freq</b> variable in the towhee_input file.  
-       <a href="http://www.bernstein-plus-sons.com/software/rasmol/">Rasmol</a> is a freely available program for visualizing pdb files.
       </ul>
-
       <a name="towhee_altinp"><b>towhee_altinp (output file)</b></a>
       <ul>
        This file contains all of the information needed to create the molecule input file for <b>inpstyle</b>=0 needed in towhee_input. This is output
@@ -134,47 +122,40 @@
        of towhee_input.  This file is also useful for seeing exactly which force field interactions are used for every term in case you want to check the
        builder to make sure it was doing what you thought it should be doing. 
       </ul>
-
       <a name="towhee_backup"><b>towhee_backup (output file)</b></a>
       <ul>
        This file contains the box lengths, maximum displacements, and coordinates for the system. It is output periodically from the code
        (see <b>backupfreq</b> in the towhee_input section) and can be used to restart the simulation from this configuration. In order to restart using this
        configuration you need to copy towhee_backup to towhee_initial (see towhee_initial). 
       </ul>
-
       <a name="towhee_cbmc"><b>towhee_cbmc (output file)</b></a>
       <ul>
        This file contains information about the trial distributions used to generate each bond and angle in the configurational-bias routines.  The amount of 
        information is controlled by the <b>cbmc_analysis</b> variable.  Originally implemented in version 7.1.0.
       </ul>
-
       <a name="towhee_citations"><b>towhee_citations (output file)</b></a>
       <ul>
        Contains a list of suggested citations given the ensemble, moves, and force fields used in a particular simulation.  For more information
        see the <a href="citation_manual.html">Citation Manual</a>.
       </ul>
-
       <a name="towhee_restart"><b>towhee_restart_nnn (output file)</b></a>
       <ul>
        This restart file is identical in format to <b>towhee_backup</b>;  the nnn suffix, which corresponds to the step at which it was written, makes the
        filename unique for a given run, so that new towhee_restart files do not overwrite old ones.  This is useful if you wish to restart from intermediate
        points of a simulation.  towhee_restart is controlled by the <b>restartfreq</b> parameter in the towhee_input.
       </ul>
-
       <a name="towhee_final"><b>towhee_final (output file)</b></a>
       <ul>
        This file contains the box lengths, maximum displacements, and coordinates for the system. It is output at the end of the simulation and can be used
        to restart the simulation from this configuration. In order to restart using this configuration you need to copy towhee_final to towhee_initial
        (see towhee_initial). 
       </ul>
-
       <a name="towhee_histogram"><b>towhee_histogram (output files)</b></a>
       <ul>
        This file contains run information output during a grand-canonical ensemble run and are suitable for use in the 
        <a href="references.html#methods_histogram_reweighting">Histogram Reweighting method.</a>  The utility program 
        <a href="utils/analyse_histogram.html">analyse_histogram</a> is used to process this output file.
       </ul>
-
       <a name="towhee_movie"><b>towhee_movie (output file)</b></a>
       <ul>
        This file contains a series of snapshots of the positions of all of the atoms in each simulation box.  The frequency of this output is controlled by
@@ -182,7 +163,6 @@
        post-processing operation.  The utility program <a href="utils/analyse_movie.html">analyse_movie</a> computes many different distribution functions
        from towhee_movie.
       </ul>
-
       <a name="towhee_ostwald"><b>towhee_ostwald (output file)</b></a>
       <ul>
        This file contains information that is useful when computing partition coefficients and free energies of transfer. The Ostwald coefficient
@@ -191,7 +171,6 @@
        transfer for each molecule type in the simulation. Partition coefficients are not output if the densities are essentially zero in the second box
        (to avoid dividing by zero). 
       </ul>
-
       <a name="towhee_vlcc"><b>towhee_vlcc (output file)</b></a>
       <ul>
        This file is only generated if you have at least 1 block in the block averages, there are 2 simulation boxes (<b>numboxes</b>=2), and there is only
@@ -201,29 +180,25 @@
        the vapor  phase.  See the <a href="utils/fitcoex.html">fitcoex</a> utility routine for more information about the uses of the towhee_vlcc files.
       </ul>
      </ul>
-
      <dt><font color="red">LAMMPS Input Files</font></dt>
      <ul>
       <a name="lammps_data"><b>lammps_data (input file)</b></a>
       <ul>
        This file is only used when the <b>inputformat</b> is set to 'LAMMPS'.  It is read into the code and used to create an initial conformation and
        force field file.  This exists to facilitate transfer of simulation data between Towhee and the
-       <a href="http://lammps.sandia.gov/">LAMMPS</a> massively parallel molecular dynamics code.
+       <a href="software.html#lammps">LAMMPS</a> massively parallel molecular dynamics code.
       </ul>
      </ul>
-
-     <p>&nbsp;</p>
      <a href="index.html">Return to the main towhee web page</a> 
     </td>
    </tr>
   </table>
-  <p></p>
-  <hr width="715" align="left">
  </body>
  <foot>
-  <i><font size="2">Send comments to:</font></i>
-  <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a><br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->March 20, 2018<!-- #EndDate -->
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>
 </html>

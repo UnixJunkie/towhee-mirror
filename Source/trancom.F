@@ -29,7 +29,7 @@ c     * number of attempts stored in bntractemp                        *
 c     * number of successful trial moves is stored in bstractemp       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -49,7 +49,7 @@ c     --- local logical arrays
       dimension loverlap(2)
 c     --- local integer scalars
       integer ichain,ibox,totunit,iunit,imolty,icbu,nchainmove,nmolty
-      integer ncmt,ipoint,nmtype,potentialstyle,ensemble
+      integer ncmt,ipoint,nmtype,ensemble
 c     --- local integer arrays
       integer chaininfo
       dimension chaininfo(1,3)
@@ -73,9 +73,6 @@ c     to the composite move (composite.F)
 #if DEBUG_TRANCOM
       write(6,*) 'start TRANCOM'
 #endif
-c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
-
 c     --- select a molecule type at random
       rchain  = twh_random()
       call twh_nmolty(GLB_GET,nmolty)
@@ -207,13 +204,7 @@ c     --- check new hard overlap, if overlap move rejected
 c     --- check old hard overlap, if overlap then big problems
       if (loverlap(1)) stop 'TRANCOM: disaster loverlap in old conf'
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         dv_trial = dvclassical_trial
-      else
-         write(6,*) 'TRANCOM: unknown potentialstyle'
-         write(6,*) potentialstyle
-         stop
-      endif
+      dv_trial = dvclassical_trial
 c     --- check for acceptance
       laccept = .false.
 
@@ -240,27 +231,21 @@ c        --- burn a random number
 c     --- update acceptance accumulators
       call twh_batrac(GLB_INCR,imolty,ibox,1.0d0)
 c     --- update energies
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_boxvclassic(GLB_INCR,ibox,dvclassical_trial)
-         call twh_boxvinter(GLB_INCR,ibox,dvinter_trial)
-         call twh_boxvintra(GLB_INCR,ibox,dvintra_trial)
-         call twh_boxvfield(GLB_INCR,ibox,dvext_trial)
-         call twh_boxvelect(GLB_INCR,ibox,dvelect_trial)
-         call twh_boxvsolvation(GLB_INCR,ibox,dvsolv_trial)
-         call twh_boxvtorsion(GLB_INCR,ibox,dvtor_trial)
-         call twh_boxvangle(GLB_INCR,ibox,dvbend_trial)
-         call twh_boxvbond(GLB_INCR,ibox,dvvib_trial)
-         call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
-         if (scp_eval_derivative) then
-            call scp_increment_derivative(ibox, LAMBDA_C, ddvdl_c)
-            call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
-         endif
-         call scp_increment_foreign_energies(ibox, dvf)
-      else
-         write(6,*) 'TRANCOM: unknown potentialstyle'
-         write(6,*) potentialstyle
-         stop
+      call twh_boxvclassic(GLB_INCR,ibox,dvclassical_trial)
+      call twh_boxvinter(GLB_INCR,ibox,dvinter_trial)
+      call twh_boxvintra(GLB_INCR,ibox,dvintra_trial)
+      call twh_boxvfield(GLB_INCR,ibox,dvext_trial)
+      call twh_boxvelect(GLB_INCR,ibox,dvelect_trial)
+      call twh_boxvsolvation(GLB_INCR,ibox,dvsolv_trial)
+      call twh_boxvtorsion(GLB_INCR,ibox,dvtor_trial)
+      call twh_boxvangle(GLB_INCR,ibox,dvbend_trial)
+      call twh_boxvbond(GLB_INCR,ibox,dvvib_trial)
+      call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+      if (scp_eval_derivative) then
+         call scp_increment_derivative(ibox, LAMBDA_C, ddvdl_c)
+         call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
       endif
+      call scp_increment_foreign_energies(ibox, dvf)
 c     --- store new coordinates
       do iunit = 1,totunit
          call twh_coordinates(GLB_GET,CRD_TEMP,ichain,iunit

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  400.000    
  nmolty:            6
@@ -79,30 +78,6 @@ Full output of updates and block averages
  pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_TraPPE-UA                                                                             
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Lorentz-Berthelot             
- lshift:  F
- ltailc:  T
- rmin:  1.00000    
- rcut:  14.0000    
- rcutin:  5.00000    
- electrostatic_form: coulomb                                           
- coulombstyle: ewald_fixed_kmax    
- kalp:  5.60000    
- kmax:            5
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Lorentz-Berthelot Mixing rules
- Arithmetic mean of sigma terms
- Geometric mean of epsilon term
-default max_bond_length:  3.00
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -137,6 +112,29 @@ cbmc_formulation: Martin and Frischknecht 2006
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_TraPPE-UA                                                                             
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  F
+ ltailc:  T
+ rmin:  1.00000    
+ rcut:  14.0000    
+ rcutin:  5.00000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: ewald_fixed_kmax    
+ kalp:  5.60000    
+ kmax:            5
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:           16
  nmaxcbmc:           16
@@ -423,8 +421,9 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
+     Ewald Sum with fixed kmax:  5 kalp:  5.600
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is   226.4446 g/mol
 Molecular mass for molecule type     2 is    32.0416 g/mol

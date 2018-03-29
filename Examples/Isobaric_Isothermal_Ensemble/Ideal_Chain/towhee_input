@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'npt'
 temperature
@@ -34,20 +32,6 @@ trmaxdispfreq
 50
 volmaxdispfreq
 10
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_HardSphere
-classical_potential
-'Hard Sphere'       
-classical_mixrule
-'Arithmetic'
-radial_pressure_delta
-1.0d-2
-electrostatic_form
-'none'
 linit   
 .true. 
 initboxtype
@@ -176,6 +160,18 @@ cbmc_formulation
 'Martin and Siepmann 1999 + Martin and Thompson 2004'
 cbmc_setting_style
 'Martin and Thompson FPE 2004'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_HardSphere
+classical_potential
+'Hard Sphere'       
+classical_mixrule
+'Arithmetic'
+radial_pressure_delta
+1.0d-2
+electrostatic_form
+'none'
 input_style
 'basic connectivity map'
 nunit

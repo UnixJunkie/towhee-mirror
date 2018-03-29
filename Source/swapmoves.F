@@ -77,7 +77,7 @@ c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -100,7 +100,7 @@ c     --- integer scalars
       integer imt,jmt,jmolty,junit,imolty,ibox,ncmt,numboxes
       integer regstart,regend,avbtype
       integer nboxmove,icordflag,num_in,num_out,index,ngood
-      integer nchain,nmolty,scp_num_foreign_lambda,potentialstyle
+      integer nchain,nmolty,scp_num_foreign_lambda
       integer activebox,nchainmove,testcord,globalcord,cpnumber,nboxpair
       integer n_tmmc_min,n_tmmc_max,c_element,macro_variable
       integer nch_nb_one
@@ -175,7 +175,6 @@ c     --- double precision arrays
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
       call twh_nmolty(GLB_GET,nmolty)
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_ltailc(GLB_GET,ltailc)
       call twh_numboxes(GLB_GET,numboxes)
       call twh_tmmc_flag(GLB_GET,tmmc_flag)
@@ -195,23 +194,14 @@ c     --- set up trickery for DUAL, TRAMONTO, or multibody potentials
       lpartial = .true.
 #endif
       lembed = .false.
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_cp_number(GLB_GET,cpnumber)
-         if ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD .or.
-     &        cpnumber .eq. CP_EAM_PAIR_ONLY .or.
-     &        cpnumber .eq. CP_STILLINGER_WEBER .or.
-     &        cpnumber .eq. CP_SW_PAIR_ONLY ) then
-            lpartial = .true.
-         endif
-         if ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD ) lembed = .true.
-      elseif ( potentialstyle .eq. POT_EXTERNAL ) then
+      call twh_cp_number(GLB_GET,cpnumber)
+      if ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD .or.
+     &     cpnumber .eq. CP_EAM_PAIR_ONLY .or.
+     &     cpnumber .eq. CP_STILLINGER_WEBER .or.
+     &     cpnumber .eq. CP_SW_PAIR_ONLY ) then
          lpartial = .true.
-      else
-         write(6,*) 'SWAPMOVES: unknown potentialstyle'
-         write(6,*) potentialstyle
-         lfailure = .true.
-         return
       endif
+      if ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD ) lembed = .true.
 c     --- set lintra and lbonded for rotational-bias
       if ( swaptype .eq. SWAP_RB_INTER ) then
 c        --- we need the intramolecular and bonded energies
@@ -673,7 +663,7 @@ c              --- old coordinates
 
          call twh_initial_atom_insertion(lfailure,lnew,ltermtest
      &        ,nch_nb_one,swaptype,imolty,totunits,iutry,globalcord
-     &        ,icordflag,testcord,potentialstyle,regend
+     &        ,icordflag,testcord,regend
      &        ,chaintest,boxtest
      &        ,testrad
      &        ,xtarget,ytarget,ztarget
@@ -846,9 +836,7 @@ c              --- safety check
 c           --- need to be tricky here to get the chemical potential
 c           --- correct.  only want the insertion energy change in the 
 c           --- "new" portion
-            if ( potentialstyle .eq. POT_INTERNAL ) then
-               vtest = dvctot(ibox)
-            endif
+            vtest = dvctot(ibox)
 c           --- For the old box the energy change sign needs to be 
 c           --- reversed
             if ( ibox .eq. 1 ) vtest = -vtest
@@ -918,16 +906,14 @@ c           --- End Tail corrections
 
 c         --- add contributions of the first bead(s)
          vrostot(icordflag) = vrostot(icordflag) + v1tottest(icordflag)
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            vrosinter(icordflag) = vrosinter(icordflag) 
-     &           + v1inttest(icordflag)
-            vrosext(icordflag) = vrosext(icordflag) 
-     &           + v1exttest(icordflag)
-            vroselect(icordflag) = vroselect(icordflag) 
-     &           + v1elctest(icordflag)
-            vrosewald(icordflag) = vrosewald(icordflag) 
-     &           + v1ewdtest(icordflag)
-         endif
+         vrosinter(icordflag) = vrosinter(icordflag) 
+     &        + v1inttest(icordflag)
+         vrosext(icordflag) = vrosext(icordflag) 
+     &        + v1exttest(icordflag)
+         vroselect(icordflag) = vroselect(icordflag) 
+     &        + v1elctest(icordflag)
+         vrosewald(icordflag) = vrosewald(icordflag) 
+     &        + v1ewdtest(icordflag)
 c        --- compute wrosen
          wrosen(icordflag) = w1test(icordflag)*waddtest(icordflag)
      &        *wrosen(icordflag)
@@ -1203,66 +1189,60 @@ c        --- the system out of the specified macrostate space.
 c        --- update energies from the rosenbluth portion
          if ( boxtest(1) .ne. 0 ) then
             index = boxtest(1)
-            if ( potentialstyle .eq. POT_INTERNAL ) then
-               vtest =  -vrostot(1)
-               call twh_boxvclassic(GLB_INCR,index,vtest)
-               vtest = - vrosinter(1)
-               call twh_boxvinter(GLB_INCR,index,vtest)
-               vtest =  - vtailtest(1)
-               call twh_boxvtail(GLB_INCR,index,vtest)
-               vtest = - vrosintra(1)
-               call twh_boxvintra(GLB_INCR,index,vtest)
-               vtest = - vrosvib(1)
-               call twh_boxvbond(GLB_INCR,index,vtest)
-               vtest = - vrostor(1)
-               call twh_boxvtorsion(GLB_INCR,index,vtest)
-               vtest =  - vrosext(1)
-               call twh_boxvfield(GLB_INCR,index,vtest)
-               vtest = - vrosang(1)
-               call twh_boxvangle(GLB_INCR,index,vtest)
-               vtest = - vroselect(1) -vrosewald(1)
-               call twh_boxvelect(GLB_INCR,index,vtest)
-            endif
+            vtest =  -vrostot(1)
+            call twh_boxvclassic(GLB_INCR,index,vtest)
+            vtest = - vrosinter(1)
+            call twh_boxvinter(GLB_INCR,index,vtest)
+            vtest =  - vtailtest(1)
+            call twh_boxvtail(GLB_INCR,index,vtest)
+            vtest = - vrosintra(1)
+            call twh_boxvintra(GLB_INCR,index,vtest)
+            vtest = - vrosvib(1)
+            call twh_boxvbond(GLB_INCR,index,vtest)
+            vtest = - vrostor(1)
+            call twh_boxvtorsion(GLB_INCR,index,vtest)
+            vtest =  - vrosext(1)
+            call twh_boxvfield(GLB_INCR,index,vtest)
+            vtest = - vrosang(1)
+            call twh_boxvangle(GLB_INCR,index,vtest)
+            vtest = - vroselect(1) -vrosewald(1)
+            call twh_boxvelect(GLB_INCR,index,vtest)
          endif
 
          if ( boxtest(2) .ne. 0 ) then
             index = boxtest(2)
-            if ( potentialstyle .eq. POT_INTERNAL ) then
-               vtest = vrostot(2)
-               call twh_boxvclassic(GLB_INCR,index,vtest)
-               vtest = vrosinter(2)
-               call twh_boxvinter(GLB_INCR,index,vtest)
-               vtest = vtailtest(2)
-               call twh_boxvtail(GLB_INCR,index,vtest)
-               vtest = vrosintra(2)
-               call twh_boxvintra(GLB_INCR,index,vtest)
-               vtest = vrosvib(2)
-               call twh_boxvbond(GLB_INCR,index,vtest)
-               vtest = vrostor(2)
-               call twh_boxvtorsion(GLB_INCR,index,vtest)
-               vtest = vrosext(2)
-               call twh_boxvfield(GLB_INCR,index,vtest)
-               vtest = vrosang(2)
-               call twh_boxvangle(GLB_INCR,index,vtest)
-               vtest = vroselect(2) + vrosewald(2)
-               call twh_boxvelect(GLB_INCR,index,vtest)
-            endif
+            vtest = vrostot(2)
+            call twh_boxvclassic(GLB_INCR,index,vtest)
+            vtest = vrosinter(2)
+            call twh_boxvinter(GLB_INCR,index,vtest)
+            vtest = vtailtest(2)
+            call twh_boxvtail(GLB_INCR,index,vtest)
+            vtest = vrosintra(2)
+            call twh_boxvintra(GLB_INCR,index,vtest)
+            vtest = vrosvib(2)
+            call twh_boxvbond(GLB_INCR,index,vtest)
+            vtest = vrostor(2)
+            call twh_boxvtorsion(GLB_INCR,index,vtest)
+            vtest = vrosext(2)
+            call twh_boxvfield(GLB_INCR,index,vtest)
+            vtest = vrosang(2)
+            call twh_boxvangle(GLB_INCR,index,vtest)
+            vtest = vroselect(2) + vrosewald(2)
+            call twh_boxvelect(GLB_INCR,index,vtest)
          endif
 c        --- update energies from the engmolec correction
          do ibox = 1,nboxmove
             index = boxtest(ibox)
             if ( index .ne. 0 ) then
-               if ( potentialstyle .eq. POT_INTERNAL ) then
-                  call twh_boxvclassic(GLB_INCR,index,dvctot(ibox))
-                  call twh_boxvinter(GLB_INCR,index,dvinter(ibox))
-                  call twh_boxvintra(GLB_INCR,index,dvintra(ibox))
-                  call twh_boxvelect(GLB_INCR,index,dvelect(ibox))
-                  call twh_boxvsolvation(GLB_INCR,index,dvsolv(ibox))
-                  call twh_boxvfield(GLB_INCR,ibox,dvext(ibox))
-                  call twh_boxvtorsion(GLB_INCR,index,dvtor(ibox))
-                  call twh_boxvangle(GLB_INCR,index,dvben(ibox))
-                  call twh_boxvbond(GLB_INCR,index,dvvib(ibox))
-               endif
+               call twh_boxvclassic(GLB_INCR,index,dvctot(ibox))
+               call twh_boxvinter(GLB_INCR,index,dvinter(ibox))
+               call twh_boxvintra(GLB_INCR,index,dvintra(ibox))
+               call twh_boxvelect(GLB_INCR,index,dvelect(ibox))
+               call twh_boxvsolvation(GLB_INCR,index,dvsolv(ibox))
+               call twh_boxvfield(GLB_INCR,ibox,dvext(ibox))
+               call twh_boxvtorsion(GLB_INCR,index,dvtor(ibox))
+               call twh_boxvangle(GLB_INCR,index,dvben(ibox))
+               call twh_boxvbond(GLB_INCR,index,dvvib(ibox))
             endif
          enddo
 
@@ -1345,7 +1325,7 @@ c           --- update embedding density
       subroutine twh_initial_atom_insertion(lfailure,lnew
      &     ,ltermtest
      &     ,nch_nb_one,swaptype,imolty,totunits,iutry,globalcord
-     &     ,icordflag,testcord,potentialstyle,regend
+     &     ,icordflag,testcord,regend
      &     ,chaintest,boxtest
      &     ,testrad
      &     ,xtarget,ytarget,ztarget
@@ -1355,7 +1335,7 @@ c     ******************************************************************
 c     * performs the initial atom insertion for swap moves             *
 c     *                                                                *
 c     * split from swapmoves.F 12-07-2008 by M.G. Martin               *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -1366,7 +1346,7 @@ c     --- variables passed to/from the subroutine
       logical ltermtest
       dimension ltermtest(2)
       integer nch_nb_one,swaptype,imolty,totunits,iutry,icordflag
-      integer testcord,potentialstyle,globalcord,regend
+      integer testcord,globalcord,regend
       integer chaintest,boxtest
       dimension chaintest(2),boxtest(2)
       double precision testrad
@@ -1717,14 +1697,7 @@ c           --- should not happen for old conformation
 c     --- factor out a minimum energy to keep bfactors in line
       lfound = .false.
       do ip = 1, nch_nb_one
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            vtest = vctry(ip)
-         else
-            write(6,*) 'INITIAL_ATOM_INSERTION: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
+         vtest = vctry(ip)
          if ( .not. lnbterm(ip) ) then
             if ( .not. lfound ) then
 c              --- this is our first energy, set is as minimum
@@ -1740,9 +1713,7 @@ c              --- this is our first energy, set is as minimum
 c     --- compute the rosenbluth weight for part 1 of the move
       w1test(icordflag) = 0.0d0
       do ip = 1, nch_nb_one
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            vtest = vctry(ip)
-         endif
+         vtest = vctry(ip)
          if ( .not. lnbterm(ip) ) then
             call twh_beta(GLB_GET,beta)
             bfactor(ip) = bfactor(ip)*twh_expon(-beta*(vtest
@@ -1787,13 +1758,11 @@ c        --- take the old conformation
       endif
 
 c     --- save the energies for the selected walk
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         v1tottest(icordflag) = vctry(iwalk)  
-         v1exttest(icordflag) = vtrext(iwalk)
-         v1inttest(icordflag) = vtrinter(iwalk)
-         v1elctest(icordflag) = vtrelect(iwalk)
-         v1ewdtest(icordflag) = vtrewald(iwalk)
-      endif
+      v1tottest(icordflag) = vctry(iwalk)  
+      v1exttest(icordflag) = vtrext(iwalk)
+      v1inttest(icordflag) = vtrinter(iwalk)
+      v1elctest(icordflag) = vtrelect(iwalk)
+      v1ewdtest(icordflag) = vtrewald(iwalk)
 #if DEBUG_SWAPMOVES
       write(6,*) 'after initial atom insertion'
       write(6,*) 'icordflag,iwalk:',icordflag,iwalk

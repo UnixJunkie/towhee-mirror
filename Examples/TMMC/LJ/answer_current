@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  random_number_generator: RANLUX                        
  random_luxlevel:            1
  random_allow_restart:  F
@@ -73,7 +72,6 @@ Testing random number generator using the single integer seed
 10 million RNG sum (approximately 5 million):   5000066.5471291253
  ensemble: uvt                           
  temperature:  1.00000    
- tmmc_flag:  T
  nmolty:            1
  nmolectyp:          270
  chempot:  6.00000    
@@ -81,11 +79,6 @@ Testing random number generator using the single integer seed
  stepstyle: moves   
  nstep:         1000
  printfreq:         1000
- N_TMMC_MAX:          270
- N_TMMC_MIN:            0
- weight_freq:         1000
- c_matrix_freq:         1000
- run_name: lj.t100r1                                         
  blocksize:    100000000
  moviefreq:            0
  backupfreq:            0
@@ -94,6 +87,12 @@ Output running block averages
  pdb_output_freq:            0
  loutdft:  F
  loutlammps:  F
+ tmmc_flag:  T
+ N_TMMC_MAX:          270
+ N_TMMC_MIN:            0
+ weight_freq:         1000
+ c_matrix_freq:         1000
+ run_name: lj.t100r1                                         
  louthist:  T
  hist_label:            1
  hist_suffix: d
@@ -104,28 +103,6 @@ Output running block averages
  trmaxdispfreq:        10000
  volmaxdispfreq:            0
  chempotperstep:            0
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_LJium                                                                                 
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Lorentz-Berthelot             
- lshift:  F
- ltailc:  F
- rmin: 0.500000    
- rcut:  2.50000    
- rcutin:  1.00000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Lorentz-Berthelot Mixing rules
- Arithmetic mean of sigma terms
- Geometric mean of epsilon term
-default max_bond_length:  3.00
- nfield:            0
- solvation_style: none                
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -190,6 +167,27 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: default ideal                 
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_LJium                                                                                 
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  F
+ ltailc:  F
+ rmin: 0.500000    
+ rcut:  2.50000    
+ rcutin:  1.00000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+ nfield:            0
+ solvation_style: none                
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            1
  nmaxcbmc:            1
@@ -222,6 +220,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is     0.6022 g/mol
  Calling initconf

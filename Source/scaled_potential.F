@@ -446,17 +446,13 @@ c     * param is either LAMBDA_C or LAMBDA_LJ                          *
 c     * function returns the derivative                                *
 c     *                                                                *
 c     * originally written 04-25-2006 by MAW                           *
-c     * last update 03-19-2018 by M.G. Martin                          *
+c     * last update 03-25-2018 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
-      integer box, param,potentialstyle
-c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
+      integer box,param
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call scp_check_param(param, .false., -1, "scp_get_derivative")
-         call twh_du_dlambda(GLB_GET,box,param,scp_get_derivative)
-      endif
+      call scp_check_param(param, .false., -1, "scp_get_derivative")
+      call twh_du_dlambda(GLB_GET,box,param,scp_get_derivative)
       return
       end
 

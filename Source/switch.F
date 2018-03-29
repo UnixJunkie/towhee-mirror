@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -43,7 +43,7 @@ c     --- local logical arrays
       logical loverlap
       dimension loverlap(2)
 c     --- local integer scalars
-      integer ipair,npair,imolty,jmolty,ibox,nmolty,potentialstyle
+      integer ipair,npair,imolty,jmolty,ibox,nmolty
       integer nimtype,njmtype,ipoint,jpoint,numboxes
       integer ichain,jchain,totiunit,totjunit,iunit,junit,nchainmove
 c     --- local integer arrays
@@ -67,7 +67,6 @@ c     --- local double precision arrays
       write(6,*) 'start SWITCH'
 #endif
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_numboxes(GLB_GET,numboxes)
 
 c     --- select a box at random
@@ -218,14 +217,7 @@ c     --- check old hard overlap, if overlap then big problems
          return
       endif
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         dv_trial = dvclassical_trial
-      else
-         write(6,*) 'SWITCH: unknown potentialstyle'
-         write(6,*) potentialstyle
-         stop
-      endif
-
+      dv_trial = dvclassical_trial
 c     --- check for acceptance
       laccept = .false.
 #if DEBUG_SWITCH
@@ -254,34 +246,26 @@ c        --- burn a random number
 c     --- update acceptance accumulators
       call twh_acsswitch(GLB_INCR,ipair,ibox,1.0d0)
 c     --- update energies
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_boxvclassic(GLB_INCR,ibox,dvclassical_trial)
-         call twh_boxvinter(GLB_INCR,ibox,dvinter_trial)
-         call twh_boxvintra(GLB_INCR,ibox,dvintra_trial)
-         call twh_boxvfield(GLB_INCR,ibox,dvext_trial)
-         call twh_boxvelect(GLB_INCR,ibox,dvelect_trial)
-         call twh_boxvsolvation(GLB_INCR,ibox,dvsolv_trial)
-         call twh_boxvtorsion(GLB_INCR,ibox,dvtor_trial)
-         call twh_boxvangle(GLB_INCR,ibox,dvbend_trial)
-         call twh_boxvbond(GLB_INCR,ibox,dvvib_trial)
-         call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
-         if (scp_eval_derivative) then
-            call scp_increment_derivative(ibox, LAMBDA_C, ddvdl_c)
-            call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
-         endif
-         call scp_increment_foreign_energies(ibox, dvf)
-      else
-         write(6,*) 'SWITCH: unknown potentialstyle'
-         write(6,*) potentialstyle
-         stop
+      call twh_boxvclassic(GLB_INCR,ibox,dvclassical_trial)
+      call twh_boxvinter(GLB_INCR,ibox,dvinter_trial)
+      call twh_boxvintra(GLB_INCR,ibox,dvintra_trial)
+      call twh_boxvfield(GLB_INCR,ibox,dvext_trial)
+      call twh_boxvelect(GLB_INCR,ibox,dvelect_trial)
+      call twh_boxvsolvation(GLB_INCR,ibox,dvsolv_trial)
+      call twh_boxvtorsion(GLB_INCR,ibox,dvtor_trial)
+      call twh_boxvangle(GLB_INCR,ibox,dvbend_trial)
+      call twh_boxvbond(GLB_INCR,ibox,dvvib_trial)
+      call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+      if (scp_eval_derivative) then
+         call scp_increment_derivative(ibox, LAMBDA_C, ddvdl_c)
+         call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
       endif
-
+      call scp_increment_foreign_energies(ibox, dvf)
 c     --- store new centers of mass
       call twh_com(GLB_GET,CRD_TEMP,ichain,xcmi,ycmi,zcmi)
       call twh_com(GLB_SET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
       call twh_com(GLB_GET,CRD_TEMP,jchain,xcmj,ycmj,zcmj)
       call twh_com(GLB_SET,CRD_REAL,jchain,xcmj,ycmj,zcmj)
-
 c     --- store new coordinates
       do iunit = 1,totiunit
          call twh_coordinates(GLB_GET,CRD_TEMP,ichain,iunit,rix,riy,riz)

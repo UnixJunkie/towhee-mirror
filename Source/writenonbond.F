@@ -27,7 +27,7 @@ c     * ifile: file index for output                                   *
 c     * lerror: logical used if there is a problem                     *
 c     *                                                                *
 c     * originally split out of readtowhee 08-16-2004 by M.G. Martin   *
-c     * last modified 07-17-2013 M.G. Martin                           *
+c     * last modified 03-25-2018 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -49,15 +49,10 @@ c     --- character string scalars
       character*20 eamdstyle,eampstyle,eamestyle
 c     --- integer scalars
       integer itype,jtype,ij,itemp,icoeff,hbtype,cpnumber,iswmax
-      integer potentialstyle,tabnpair
+      integer tabnpair
 c     --- double precsion scalars
       double precision cvalue,dvalue,sfactor,tpairone,tpairtwo
       double precision rcutin
-
-c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
-c     --- nothing to output for an external potentialstyle
-      if ( potentialstyle .eq. POT_EXTERNAL ) return
 
 c     --- get the classical potential number
       call twh_cp_number(GLB_GET,cpnumber)

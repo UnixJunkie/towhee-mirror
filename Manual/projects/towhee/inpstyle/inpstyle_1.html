@@ -1,14 +1,13 @@
 <html>
  <head>
-  <title>MCCCS Towhee (input_style 'polypeptide builder')</title>
+  <title>MCCCS Towhee: input_style 'polypeptide builder'</title>
  </head>
-
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="800" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
      <div align="center"><font size="5"><b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>
-      MCCCS Towhee (input_style 'polypeptide builder')</font></b></font>
+	 MCCCS Towhee: input_style 'polypeptide builder'</font></b></font>
      </div>
     </td>
    </tr>
@@ -20,36 +19,28 @@
      <p>&nbsp; </p>
      <p>&nbsp;</p>
     </td>
-
     <td width="700" valign="top"> 
-     This section describes the input variables associated with an <b>input_style</b> setting of 'polypeptide builder'.
+     This section describes the input parameters associated with an <b>input_style</b> setting of 'polypeptide builder'.
      Uses the polypeptide builder functionallity to set up everything for proteins from a list of the amino acids.  Documentation of the currently available
-     monomers is presented along with the forcefield information for each force field.
-
-     <p>&nbsp;</p>
+     monomers is presented along with the forcefield information for each force field (see <a href="../towhee_capabilities.html">Towhee Capabilities</a>).
      <dt><a name="nunit"><b>nunit (integer)</b></a>
       <ul>
-       <li> The number of monomers in this molecule. Must be less than or equal to NUMAX (see <a href="../code/code_manual.html#preproc">preproc.h</a>) 
-        and there is also a check in the builder to make sure you do not exceed NUMAX with the number of atoms that all of your monomers require. 
-       </li>
+       The number of monomers in this molecule. Must be less than or equal to <a href="../code/code_manual.html#numax">NUMAX</a>
+       and there is also a check in the builder to make sure you do not exceed NUMAX with the number of atoms that all of your monomers require. 
       </ul>
      </dt>
-
      <dt><a name="nmaxcbmc"><b>nmaxcbmc (integer)</b></a> 
       <ul>
-       <li> The nmaxcbmc variable determines the maximum number of atoms that are regrown during a
-        <a href="../code/cbmc.html">configurational-bias</a> regrowth.
-       </li>
+       The nmaxcbmc parameter determines the maximum number of atoms that are regrown during a
+       <a href="../algorithm/cbmc.html">configurational-bias</a> regrowth.
       </ul>
      </dt>
-
-     <dt><a name="forcefield"><b>forcefield (character)</b></a>
+     <dt><a name="forcefield"><b>forcefield (character*10)</b></a>
       <ul>
-       <li> The forcefield that you want to use to build this molecule.</li>
+       The forcefield that you want to use to build this molecule.
       </ul>
      </dt>
-
-     <dt><a name="protgeom"><b>protgeom (character)</b></a>
+     <dt><a name="protgeom"><b>protgeom (character*15)</b></a>
       <ul>
        <li> linear: The polypeptide will be generated starting from the N-terminus and finishing at the C-terminus.  Also allows for multiple N and C
         terminii where the different linear polypeptides are connected by disulfide bonds.
@@ -57,18 +48,14 @@
        <li> cyclic: The polypeptide is cyclic so the first amino acid is bonded to the final amino acid. </li>
       </ul>
      </dt>
-
-     <p>&nbsp;</p>
-     <font color="red"> The variables listed immediately below are listed as a group for each amino acid in the molecule. There is only one line of input
-      per building block in the molecule.
-     </font>
-
+     <hr></hr>
+     <font color="red"> The parameters in this section are listed as a group for each amino acid in the molecule.</font>
      <dt><a name="pepname"><b>pepname (unformatted character string of length 2), stereochem (unformatted character string of length 1), bondpartner (integer),
-      terminus (unformatted character of length 1)</b></a>
+	terminus (unformatted character of length 1)</b></a>
       <ul>
        <li> pepname is a two letter code for the building blocks of the molecule. Peptides use a code where the first letter is the one letter code for each
         amino acid. The second character is generally the charge state of the side chain, but has some different meanings for histidine and cysteine.  The
-        peptide codes can be found in the documentation for each force field./a>.
+        peptide codes can be found in the documentation for each force field.
        </li>
        <li> stereochem is a single letter which determines the stereochemistry of the peptide. The valid options are l (L-amino acid), d (D-amino acid) and
         r (racemic).
@@ -87,20 +74,19 @@
        </li>
       </ul>
      </dt>
-
      <dt><font color="red"> This is the end of the section that is repeated for each atom for input_style 'polypeptide builder'</font></dt>
+     <hr></hr>
      <a href="../index.html">Return to the main towhee web page</a> 
      <p>&nbsp;</p>
     </td>
    </tr>
   </table>
-  <hr width="715" align="left"></hr>
-  <i><font size="2">Send comments to:</font></i>
-  <font size="2"><a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
-   <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->December 22, 2006<!-- #EndDate -->
-  </font>
-  <br></br>
  </body>
+ <foot>
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
+  </font>
+ </foot>
 </html>
-

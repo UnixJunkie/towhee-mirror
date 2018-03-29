@@ -20,14 +20,16 @@ stepstyle
 'cycles  '
 nstep
            0
+controlstyle
+'manual              '
 printfreq
-         100
+           0
 blocksize
-         200
+           0
 moviefreq
-         100
+           0
 backupfreq
-         100
+           0
 restartfreq
            0
 runoutput
@@ -41,55 +43,17 @@ loutlammps
 loutdlpoly
  F
 pressure_virial_freq
-          10
+           0
 pressure_thermo_freq
            0
 pressure_thermo_style
-'range               '
-pressure_thermo_range
-  -1.0000000000000000E-002   1.0000000000000000E-002
+'move data           '
 trmaxdispfreq
-         100
+           0
 volmaxdispfreq
-         100
+           0
 chempotperstep
            0
-potentialstyle
-'internal                      '
-ffnumber
-           1
-ff_filename
-towhee_ff                                                                                                               
-classical_potential
-'Lennard-Jones                 '
-classical_mixrule
-'Lorentz-Berthelot             '
-lshift
- F
-ltailc
- F
-rmin
-   0.0000000000000000     
-rcut
-   5.0000000000000000     
-rcutin
-   5.0000000000000000     
-electrostatic_form
-'coulomb                                           '
-coulombstyle
-'ewald_fixed_kmax    '
-kalp
-   5.5999999999999996     
-kmax
-           5
-dielect
-   1.0000000000000000     
-max_bond_length
-   3.0000000000000000     
-nfield
-           0
-solvation_style
-'none                '
 linit
  T
 initboxtype
@@ -214,6 +178,72 @@ cbmc_formulation
 'Martin and Frischknecht 2006                                '
 cbmc_setting_style
 'Martin and Frischknecht       '
+cbmc_fit_strategy
+'equilibrium                   '
+cbmc_nb_one_generation 
+'uniform                       '
+nch_nb_one
+          10
+nch_nb
+          10
+nch_pre_nb
+           1
+cbmc_dihedral_generation
+'ideal                         '
+nch_tor
+         360
+nch_tor_connect
+         360
+cbmc_bend_generation
+'ideal                         '
+nch_bend_a
+         100
+nch_bend_b
+         100
+max_bond_length
+   3.0000000000000000     
+cbmc_bond_generation
+'ideal                         '
+nch_vib
+        1000
+two_bond_fixed_endpoint_bias_style
+'none                                              '
+three_bond_fixed_endpoint_bias_style
+'none                                              '
+ffnumber
+           1
+ff_filename
+towhee_ff                                                                                                               
+classical_potential
+'Lennard-Jones                 '
+classical_mixrule
+'Lorentz-Berthelot             '
+lshift
+ F
+ltailc
+ F
+rmin
+   0.0000000000000000     
+rcut
+   5.0000000000000000     
+rcutin
+   5.0000000000000000     
+electrostatic_form
+'coulomb                                           '
+coulombstyle
+'ewald_fixed_kmax    '
+kalp
+   5.5999999999999996     
+kmax
+           5
+dielect
+   1.0000000000000000     
+lcompute_madelung
+ F
+nfield
+           0
+solvation_style
+'none                '
 input_style
 explicit
 nunit

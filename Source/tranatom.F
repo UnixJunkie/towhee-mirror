@@ -27,7 +27,7 @@ c     * then number of attemped trial moves is stored in bntraatemp    *
 c     * then number of successful trial moves is stored in bstraatemp  *
 c     *                                                                *
 c     * originally written 01-26-2001 by M.G. Martin                   *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -44,7 +44,7 @@ c     --- logical arrays
       dimension loverlap(2)
 c     --- integer scalars
       integer ichain,ibox,imolty,icbu,ioldnew,atom,units,natommove
-      integer nmolty,ncmt,ipoint,nmtype,potentialstyle,ensemble
+      integer nmolty,ncmt,ipoint,nmtype,ensemble
 c     --- integer arrays
       integer atomlist
       dimension atomlist(1,3)
@@ -64,9 +64,6 @@ c     --- double precision arrays
       dimension dvf(MAX_FOREIGN_LAMBDA)
 
 c      write(6,*) 'start TRANATOM'
-c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
-
 c     --- select a chain at random
       rchain  = twh_random()
       call twh_nmolty(GLB_GET,nmolty)
@@ -164,76 +161,59 @@ c              --- move rejected
          endif
       enddo
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-c        --- initialize intramolecular bonded energies
-         dvvib = 0.0d0
-         dvbend = 0.0d0
-         dvtors = 0.0d0
-
-c        --- vibration energy
-         call twh_ec_atomlist_bond(lfailure,ichain,BXD_REAL,ibox
-     &        ,natommove,atomlist,globalcord,loverlap,dvvib)
-         if ( lfailure ) return
-         if ( loverlap(TRL_NEW) ) then
-c           --- move rejected
-            return
-         elseif ( loverlap(TRL_OLD) ) then
-            write(6,*) 'TRANATOM: Overlap in old conformation for bond'
-            lfailure = .true.
-            return
-         endif
-
-c        --- bond-bond energy
-         call twh_ec_atomlist_bond_bond(ichain,BXD_REAL,ibox,natommove
-     &        ,atomlist,globalcord,dvvib)
-
-c        --- regular angle energy
-         call twh_ec_atomlist_angle(lfailure,ichain,BXD_REAL,ibox
-     &        ,natommove,atomlist,globalcord,loverlap,dvbend)
-         if ( lfailure ) return
-         if ( loverlap(TRL_NEW) ) then
-c           --- move rejected
-            return
-         elseif ( loverlap(TRL_OLD) ) then
-            write(6,*) 'TRANATOM: Overlap in old conformation for angle'
-            lfailure = .true.
-            return
-         endif
-
-c        --- angle-angle energy
-         call twh_ec_atomlist_angle_angle(ichain,BXD_REAL,ibox,natommove
-     &        ,atomlist,globalcord,dvbend)
-
-c        --- normal torsion energy
-         call twh_ec_atomlist_torsion(lfailure,ichain,BXD_REAL,ibox
-     &        ,natommove,atomlist,globalcord,loverlap,dvtors)
-         if ( lfailure ) return
-         if ( loverlap(TRL_NEW) ) then
-c           --- move rejected
-            return
-         elseif ( loverlap(TRL_OLD) ) then
-            write(6,*) 'TRANATOM: Overlap in old conformation for'
-     &           ,' regular torsions'
-            lfailure = .true.
-            return
-         endif
-
-c        --- improper torsion energy
-         call twh_ec_atomlist_improper(ichain,BXD_REAL,ibox,natommove
-     &        ,atomlist,globalcord,dvtors)
-
-         dvclassical = dvclassical + dvvib + dvbend + dvtors
-      endif
-
-c     --- set the total energy to use for acceptance
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         dvtot = dvclassical
-      else
-         write(6,*) 'TRANATOM: unknown potentialstyle'
+c     --- initialize intramolecular bonded energies
+      dvvib = 0.0d0
+      dvbend = 0.0d0
+      dvtors = 0.0d0
+c     --- vibration energy
+      call twh_ec_atomlist_bond(lfailure,ichain,BXD_REAL,ibox
+     &     ,natommove,atomlist,globalcord,loverlap,dvvib)
+      if ( lfailure ) return
+      if ( loverlap(TRL_NEW) ) then
+c        --- move rejected
+         return
+      elseif ( loverlap(TRL_OLD) ) then
+         write(6,*) 'TRANATOM: Overlap in old conformation for bond'
          lfailure = .true.
          return
       endif
- 
+c     --- bond-bond energy
+      call twh_ec_atomlist_bond_bond(ichain,BXD_REAL,ibox,natommove
+     &     ,atomlist,globalcord,dvvib)
+c     --- regular angle energy
+      call twh_ec_atomlist_angle(lfailure,ichain,BXD_REAL,ibox
+     &     ,natommove,atomlist,globalcord,loverlap,dvbend)
+      if ( lfailure ) return
+      if ( loverlap(TRL_NEW) ) then
+c        --- move rejected
+         return
+      elseif ( loverlap(TRL_OLD) ) then
+         write(6,*) 'TRANATOM: Overlap in old conformation for angle'
+         lfailure = .true.
+         return
+      endif
+c     --- angle-angle energy
+      call twh_ec_atomlist_angle_angle(ichain,BXD_REAL,ibox,natommove
+     &     ,atomlist,globalcord,dvbend)
+c     --- normal torsion energy
+      call twh_ec_atomlist_torsion(lfailure,ichain,BXD_REAL,ibox
+     &     ,natommove,atomlist,globalcord,loverlap,dvtors)
+      if ( lfailure ) return
+      if ( loverlap(TRL_NEW) ) then
+c        --- move rejected
+         return
+      elseif ( loverlap(TRL_OLD) ) then
+         write(6,*) 'TRANATOM: Overlap in old conformation for'
+     &        ,' regular torsions'
+         lfailure = .true.
+         return
+      endif
+c     --- improper torsion energy
+      call twh_ec_atomlist_improper(ichain,BXD_REAL,ibox,natommove
+     &     ,atomlist,globalcord,dvtors)
+      dvclassical = dvclassical + dvvib + dvbend + dvtors
+c     --- set the total energy to use for acceptance
+      dvtot = dvclassical
 c     --- test for acceptance
       laccept = .false. 
 
@@ -258,23 +238,20 @@ c        --- update acceptance accumulators
          call twh_batraa(GLB_INCR,imolty,ibox,1.0d0)
 c        --- update energies
          call twh_boxvclassic(GLB_INCR,ibox,dvtot)
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvinter(GLB_INCR,ibox,dvinter)
-            call twh_boxvintra(GLB_INCR,ibox,dvintra)
-            call twh_boxvfield(GLB_INCR,ibox,dvext)
-            call twh_boxvelect(GLB_INCR,ibox,dvelect)
-            call twh_boxvbond(GLB_INCR,ibox,dvvib)
-            call twh_boxvangle(GLB_INCR,ibox,dvbend)
-            call twh_boxvtorsion(GLB_INCR,ibox,dvtors)
-            call twh_boxvsolvation(GLB_INCR,ibox,dvsolv)
-            call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
-            if (scp_eval_derivative) then
-               call scp_increment_derivative(ibox, LAMBDA_C, ddvdl_c)
-               call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
-            endif
-            call scp_increment_foreign_energies(ibox, dvf)
+         call twh_boxvinter(GLB_INCR,ibox,dvinter)
+         call twh_boxvintra(GLB_INCR,ibox,dvintra)
+         call twh_boxvfield(GLB_INCR,ibox,dvext)
+         call twh_boxvelect(GLB_INCR,ibox,dvelect)
+         call twh_boxvbond(GLB_INCR,ibox,dvvib)
+         call twh_boxvangle(GLB_INCR,ibox,dvbend)
+         call twh_boxvtorsion(GLB_INCR,ibox,dvtors)
+         call twh_boxvsolvation(GLB_INCR,ibox,dvsolv)
+         call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+         if (scp_eval_derivative) then
+            call scp_increment_derivative(ibox, LAMBDA_C, ddvdl_c)
+            call scp_increment_derivative(ibox, LAMBDA_LJ, ddvdl_lj)
          endif
-
+         call scp_increment_foreign_energies(ibox, dvf)
 c        --- assign new positions for the single atom that moved
          call twh_coordinates(GLB_GET,CRD_TEMP,ichain,atom
      &        ,xtemp,ytemp,ztemp)

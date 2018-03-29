@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * accumulates the averages taken at the end of each move         *
 c     *                                                                *
 c     * split from mainloop 10-20-2005 by M.G. Martin                  *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
@@ -39,7 +39,7 @@ c     --- local scalars
       logical scp_eval_derivative
 c     --- integer scalars
       integer ibox,iener,imolty,incount,ivap,iliq,nmolty,nchbox
-      integer potentialstyle,numboxes,keycode
+      integer numboxes,keycode
 c     --- double precision scalars
       double precision value,uliquid,uvapor,totnumden,beta,masstotal
       double precision boxvolume
@@ -48,7 +48,6 @@ c     --- double precision arrays
       dimension energy(2)
 
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_nmolty(GLB_GET,nmolty)
       call twh_numboxes(GLB_GET,numboxes)
 
@@ -60,99 +59,95 @@ c        --- accumulate molecule type independent values
 c        --- accumulate energies and energies squared
 c        --- total energy
          iener = 0
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvclassic(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvclassic(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- intermolecular vdw
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvinter(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- bond bending
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvangle(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- torsion
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvtorsion(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- intramolecular
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvintra(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- external field
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvfield(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- vibrations
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvbond(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- coulombic
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvelect(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- vdw tail
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvtail(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- solvation
+         iener = iener + 1
+         keycode = iener
+         call twh_boxvsolvation(GLB_GET,ibox,value)
+         call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
+     &        ,value,incount)
+         if ( lfailure ) return
+c        --- accumulate dU/d[lambda] if scp_eval_derivative
+         call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+         if (scp_eval_derivative) then
+c           --- dU/d[lambda_lj]
+            keycode = AC_DU_DLAMBDA_LJ
+            value = scp_get_derivative(ibox, LAMBDA_LJ)
+            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox
+     &           ,imolty,value,incount)
             if ( lfailure ) return
-c           --- intermolecular vdw
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvinter(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
+c           --- dU/d[lambda_c]
+            keycode = AC_DU_DLAMBDA_C
+            value = scp_get_derivative(ibox, LAMBDA_C)
+            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox
+     &           ,imolty,value,incount)
             if ( lfailure ) return
-c           --- bond bending
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvangle(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- torsion
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvtorsion(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- intramolecular
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvintra(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- external field
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvfield(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- vibrations
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvbond(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- coulombic
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvelect(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- vdw tail
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvtail(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- solvation
-            iener = iener + 1
-            keycode = iener
-            call twh_boxvsolvation(GLB_GET,ibox,value)
-            call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-c           --- accumulate dU/d[lambda] if scp_eval_derivative
-            call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
-            if (scp_eval_derivative) then
-c              --- dU/d[lambda_lj]
-               keycode = AC_DU_DLAMBDA_LJ
-               value = scp_get_derivative(ibox, LAMBDA_LJ)
-               call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox
-     &              ,imolty,value,incount)
-               if ( lfailure ) return
-c              --- dU/d[lambda_c]
-               keycode = AC_DU_DLAMBDA_C
-               value = scp_get_derivative(ibox, LAMBDA_C)
-               call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox
-     &              ,imolty,value,incount)
-               if ( lfailure ) return
-            endif
          endif
 c        --- total energy squared
          keycode = AC_TOT_ENERGY_SQ
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvclassic(GLB_GET,ibox,value)
-            value = value**2
-         endif
+         call twh_boxvclassic(GLB_GET,ibox,value)
+         value = value**2
          call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
      &        ,value,incount)
          if ( lfailure ) return
@@ -234,15 +229,8 @@ c           --- determine the vapor and liquid boxes
                ivap = 1
                iliq = 2
             endif
-            if ( potentialstyle .eq. POT_INTERNAL ) then
-               call twh_boxvclassic(GLB_GET,ivap,energy(ivap))
-               call twh_boxvclassic(GLB_GET,iliq,energy(iliq))
-            else
-               write(6,*) 'ACCUMULATEAVERAGES: unknown potentialstyle'
-               write(6,*) potentialstyle
-               lfailure = .true.
-               return
-            endif
+            call twh_boxvclassic(GLB_GET,ivap,energy(ivap))
+            call twh_boxvclassic(GLB_GET,iliq,energy(iliq))
             uvapor = energy(ivap)*8.314d0/1000.0d0
             uliquid = energy(iliq)*8.314d0/1000.0d0
             call twh_beta(GLB_GET,beta)

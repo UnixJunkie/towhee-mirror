@@ -214,7 +214,7 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * originally written in 1995                                     *
-c     * last modified 03-19-2018 by M.G.Martin                         *
+c     * last modified 03-25-2018 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 c     --- functions
@@ -232,7 +232,7 @@ c     --- logical scalars
 c     --- integer scalars
       integer ichain,iunit,imolty,cpnumber
       integer idim,jdim,nchain
-      integer nunit,nchbox,potentialstyle,keycode
+      integer nunit,nchbox,keycode
       integer nfield,ifield,fieldbox
 c     --- double precision scalars
       double precision volo,deltav,sfact,vinterb,vintrab
@@ -254,7 +254,6 @@ c     --- hack
 
 c     --- retrieve constants
       call twh_nchain(GLB_GET,nchain)
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_cp_number(GLB_GET,cpnumber)
 
 c     --- check for external fields in this box
@@ -432,21 +431,14 @@ c     --- initialize laccept
 c         write(6,*) 'move rejected due to overlap in VOLNPT'
       else
 c        -- store the new total box energy
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvinter(GLB_GET,boxvch,vinterb)
-            call twh_boxvintra(GLB_GET,boxvch,vintrab)
-            call twh_boxvfield(GLB_GET,boxvch,vextb)
-            call twh_boxvelect(GLB_GET,boxvch,velectb)
-            call twh_boxvsolvation(GLB_GET,boxvch,vsolvb)
-            deltav = (vintern - vinterb) + (vextn  - vextb)
-     &           + (velectn - velectb) + (vintran - vintrab)
-     &           + (vsolvn - vsolvb)
-         else
-            write(6,*) 'VOLNPT: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
+         call twh_boxvinter(GLB_GET,boxvch,vinterb)
+         call twh_boxvintra(GLB_GET,boxvch,vintrab)
+         call twh_boxvfield(GLB_GET,boxvch,vextb)
+         call twh_boxvelect(GLB_GET,boxvch,velectb)
+         call twh_boxvsolvation(GLB_GET,boxvch,vsolvb)
+         deltav = (vintern - vinterb) + (vextn  - vextb)
+     &        + (velectn - velectb) + (vintran - vintrab)
+     &        + (vsolvn - vsolvb)
 
          if ( coordtype .eq. VMC_THREED ) then
 c           --- store dU/dV in the averages
@@ -486,23 +478,16 @@ c           --- increment the number of accepted unit cell moves
             call twh_bacell(GLB_INCR,boxvch,movevector,1)
          endif
 c        --- store the new energies
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvclassic(GLB_INCR,boxvch,deltav)
-            call twh_boxvinter(GLB_SET,boxvch,vintern)
-            call twh_boxvintra(GLB_SET,boxvch,vintran)
-            call twh_boxvtail(GLB_SET,boxvch,vtailn)
-            call twh_boxvfield(GLB_SET,boxvch,vextn)
-            call twh_boxvelect(GLB_SET,boxvch,velectn)
-            call twh_boxvsolvation(GLB_SET,boxvch,vsolvn)
-            call scp_set_derivative(boxvch, LAMBDA_C, dvc)
-            call scp_set_derivative(boxvch, LAMBDA_LJ, dvl)
-            call scp_set_foreign_energies(boxvch, vf)
-         else
-            write(6,*) 'VOLNPT: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
+         call twh_boxvclassic(GLB_INCR,boxvch,deltav)
+         call twh_boxvinter(GLB_SET,boxvch,vintern)
+         call twh_boxvintra(GLB_SET,boxvch,vintran)
+         call twh_boxvtail(GLB_SET,boxvch,vtailn)
+         call twh_boxvfield(GLB_SET,boxvch,vextn)
+         call twh_boxvelect(GLB_SET,boxvch,velectn)
+         call twh_boxvsolvation(GLB_SET,boxvch,vsolvn)
+         call scp_set_derivative(boxvch, LAMBDA_C, dvc)
+         call scp_set_derivative(boxvch, LAMBDA_LJ, dvl)
+         call scp_set_foreign_energies(boxvch, vf)
       else
 c        --- move was rejected
 c        --- restore old box lengths, energy, configration etc
@@ -556,7 +541,7 @@ c     *   volume move in the other box.  The maximum change is         *
 c     *   controled by rmcell.                                         *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -577,7 +562,7 @@ c     --- integer scalars
       integer ibox,imolty,ilabel,ichain,iunit,keycode,cpnumber
       integer idim,jdim,pairvch,numboxes
       integer boxiso,boxhmat,labiso,labhmat,nchain
-      integer ivalue,jvalue,nunit,nchbox,potentialstyle
+      integer ivalue,jvalue,nunit,nchbox
 c     --- double precision scalars
       double precision volt,expdv,dx,dy,dz,vtotal,vvibb
       double precision dele,vinter,vtail,vext,velect,vintra,vvib,vbend
@@ -608,7 +593,6 @@ c     --- hack
 
 c     --- retrieve constants
       call twh_nchain(GLB_GET,nchain)
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_cp_number(GLB_GET,cpnumber)
 
 c     --- store old box dimensions, energy, configuration etc
@@ -852,31 +836,23 @@ c        --- through real space to through an image
             laccept = .false.
             goto 500
          endif
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            vintern(ilabel) = vinter
-            vtailn(ilabel)  = vtail
-            vextn(ilabel)   = vext  
-            velectn(ilabel) = velect
-            vintran(ilabel) = vintra
-            vsolvn(ilabel)  = vsolv
-c           --- did not recompute bonded energies
-            call twh_boxvbond(GLB_GET,ibox,vvibb)
-            call twh_boxvangle(GLB_GET,ibox,vbendb)
-            call twh_boxvtorsion(GLB_GET,ibox,vtorb)
-            vboxn(ilabel)   = vtotal + vtorb + vbendb + vvibb
-            call scp_set_derivative(ilabel, LAMBDA_C, dvc)
-            call scp_set_derivative(ilabel, LAMBDA_LJ, dvl)
-            call scp_set_foreign_energies(ilabel, vf)
-            
-c           --- compute current energy change for this box
-            call twh_boxvclassic(GLB_GET,ibox,vtotal)
-            delecurrent = vboxn(ilabel) - vtotal
-         else
-            write(6,*) 'VOLNVT: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
+         vintern(ilabel) = vinter
+         vtailn(ilabel)  = vtail
+         vextn(ilabel)   = vext  
+         velectn(ilabel) = velect
+         vintran(ilabel) = vintra
+         vsolvn(ilabel)  = vsolv
+c        --- did not recompute bonded energies
+         call twh_boxvbond(GLB_GET,ibox,vvibb)
+         call twh_boxvangle(GLB_GET,ibox,vbendb)
+         call twh_boxvtorsion(GLB_GET,ibox,vtorb)
+         vboxn(ilabel)   = vtotal + vtorb + vbendb + vvibb
+         call scp_set_derivative(ilabel, LAMBDA_C, dvc)
+         call scp_set_derivative(ilabel, LAMBDA_LJ, dvl)
+         call scp_set_foreign_energies(ilabel, vf)
+c        --- compute current energy change for this box
+         call twh_boxvclassic(GLB_GET,ibox,vtotal)
+         delecurrent = vboxn(ilabel) - vtotal
 c        --- increment total dele
          dele = dele + delecurrent
 
@@ -932,20 +908,13 @@ c        --- move accepted
          do ilabel = 1,2
             call twh_pairbox(GLB_GET,pairvch,ilabel,ibox)
 c           --- update the energies
-            if ( potentialstyle .eq. POT_INTERNAL ) then
-               call twh_boxvclassic(GLB_SET,ibox,vboxn(ilabel))
-               call twh_boxvinter(GLB_SET,ibox,vintern(ilabel))
-               call twh_boxvintra(GLB_SET,ibox,vintran(ilabel))
-               call twh_boxvtail(GLB_SET,ibox,vtailn(ilabel))
-               call twh_boxvfield(GLB_SET,ibox,vextn(ilabel))
-               call twh_boxvelect(GLB_SET,ibox,velectn(ilabel))
-               call twh_boxvsolvation(GLB_SET,ibox,vsolvn(ilabel))
-            else
-               write(6,*) 'VOLNVT: unknown potentialstyle'
-               write(6,*) potentialstyle
-               lfailure = .true.
-               return
-            endif
+            call twh_boxvclassic(GLB_SET,ibox,vboxn(ilabel))
+            call twh_boxvinter(GLB_SET,ibox,vintern(ilabel))
+            call twh_boxvintra(GLB_SET,ibox,vintran(ilabel))
+            call twh_boxvtail(GLB_SET,ibox,vtailn(ilabel))
+            call twh_boxvfield(GLB_SET,ibox,vextn(ilabel))
+            call twh_boxvelect(GLB_SET,ibox,velectn(ilabel))
+            call twh_boxvsolvation(GLB_SET,ibox,vsolvn(ilabel))
          enddo
       else
 c        --- volume move was rejected: restore old box lengths
@@ -1007,7 +976,7 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * rewritten from volnpt 01-22-2018 by M.G. Martin                *
-c     * last modified 03-19-2018 by M.G.Martin                         *
+c     * last modified 03-25-2018 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 c     --- functions
@@ -1025,7 +994,7 @@ c     --- logical scalars
 c     --- integer scalars
       integer ichain,iunit,imolty,cpnumber
       integer idim,jdim,nchain
-      integer nunit,nchbox,potentialstyle,keycode
+      integer nunit,nchbox,keycode
       integer nfield,ifield,fieldbox
 c     --- double precision scalars
       double precision volo,deltav,sfact,vinterb,vintrab
@@ -1047,7 +1016,6 @@ c     --- hack
 
 c     --- retrieve constants
       call twh_nchain(GLB_GET,nchain)
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_cp_number(GLB_GET,cpnumber)
 
 c     --- check for external fields in this box
@@ -1172,22 +1140,14 @@ c     --- initialize laccept
 c         write(6,*) 'move rejected due to overlap in VOLNPT'
       else
 c        -- store the new total box energy
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvinter(GLB_GET,boxvch,vinterb)
-            call twh_boxvintra(GLB_GET,boxvch,vintrab)
-            call twh_boxvfield(GLB_GET,boxvch,vextb)
-            call twh_boxvelect(GLB_GET,boxvch,velectb)
-            call twh_boxvsolvation(GLB_GET,boxvch,vsolvb)
-            deltav = (vintern - vinterb) + (vextn  - vextb)
-     &           + (velectn - velectb) + (vintran - vintrab)
-     &           + (vsolvn - vsolvb)
-         else
-            write(6,*) 'VOLNPT: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
-
+         call twh_boxvinter(GLB_GET,boxvch,vinterb)
+         call twh_boxvintra(GLB_GET,boxvch,vintrab)
+         call twh_boxvfield(GLB_GET,boxvch,vextb)
+         call twh_boxvelect(GLB_GET,boxvch,velectb)
+         call twh_boxvsolvation(GLB_GET,boxvch,vsolvb)
+         deltav = (vintern - vinterb) + (vextn  - vextb)
+     &        + (velectn - velectb) + (vintran - vintrab)
+     &        + (vsolvn - vsolvb)
          if ( coordtype .eq. VMC_THREED ) then
 c           --- store dU/dV in the averages
             keycode = AC_DU_DV
@@ -1226,24 +1186,16 @@ c           --- increment the number of accepted unit cell moves
             call twh_bacell(GLB_INCR,boxvch,movevector,1)
          endif
 c        --- store the new energies
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvclassic(GLB_INCR,boxvch,deltav)
-            call twh_boxvinter(GLB_SET,boxvch,vintern)
-            call twh_boxvintra(GLB_SET,boxvch,vintran)
-            call twh_boxvtail(GLB_SET,boxvch,vtailn)
-            call twh_boxvfield(GLB_SET,boxvch,vextn)
-            call twh_boxvelect(GLB_SET,boxvch,velectn)
-            call twh_boxvsolvation(GLB_SET,boxvch,vsolvn)
-            call scp_set_derivative(boxvch, LAMBDA_C, dvc)
-            call scp_set_derivative(boxvch, LAMBDA_LJ, dvl)
-            call scp_set_foreign_energies(boxvch, vf)
-
-         else
-            write(6,*) 'VOLNPT: unknown potentialstyle'
-            write(6,*) potentialstyle
-            lfailure = .true.
-            return
-         endif
+         call twh_boxvclassic(GLB_INCR,boxvch,deltav)
+         call twh_boxvinter(GLB_SET,boxvch,vintern)
+         call twh_boxvintra(GLB_SET,boxvch,vintran)
+         call twh_boxvtail(GLB_SET,boxvch,vtailn)
+         call twh_boxvfield(GLB_SET,boxvch,vextn)
+         call twh_boxvelect(GLB_SET,boxvch,velectn)
+         call twh_boxvsolvation(GLB_SET,boxvch,vsolvn)
+         call scp_set_derivative(boxvch, LAMBDA_C, dvc)
+         call scp_set_derivative(boxvch, LAMBDA_LJ, dvl)
+         call scp_set_foreign_energies(boxvch, vf)
 c        --- store new box dimensions
          call twh_hmatrix(GLB_STORE_ALL,BXD_T_TO_R,boxvch,idim,jdim
      &        ,hmold(idim,jdim))

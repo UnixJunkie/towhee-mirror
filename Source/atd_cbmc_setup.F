@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 01-21-2018 by M.G. Martin                        *
+c     * last modified 03-27-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -1488,7 +1488,10 @@ c     --- biasing setup
       if ( twobbias_style .eq. 'autofit gaussian'
      &     .or. threebbias_style .eq.
      &     'autofit gaussian using max and min 2-4 distance'
-     &     .or. twobbias_init .eq. 'autofit gaussian' ) then
+     &     .or. (twobbias_style .eq.
+     &     'self adapting gaussian using 1-3 distance'
+     &     .and. twobbias_init .eq. 'autofit gaussian')
+     &     ) then
          write(cfile,'(a52,1x,a10)') 
      &        'Determining Autofit Gaussian two bond fixed endpoint'
      &        ,'parameters'
@@ -1617,8 +1620,11 @@ c                 --- assign the standard deviation
          enddo
       endif
 
+      call twh_three_bond_fe_bias_style(GLB_GET,threebbias_style)
       call twh_three_bond_bias_initial_value(GLB_GET,threebbias_init)
-      if ( threebbias_init  .eq. 'autofit gaussian' ) then
+      if ( threebbias_style .eq.
+     &     'self adapting gaussian using 1-4 distance'
+     &     .and. threebbias_init  .eq. 'autofit gaussian' ) then
          write(cfile,'(a50)') 
      &        'Determining Autofit Gaussian Three Bond parameters'
          do icompute = 1,ncompute

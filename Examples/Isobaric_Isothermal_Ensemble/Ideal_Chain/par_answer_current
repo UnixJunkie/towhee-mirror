@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Isobaric_Isothermal_Ensemble/Ideal_Chain/                                                          
- inputformat: Towhee         
  ensemble: npt                           
  temperature:  300.000    
  pressure:  101.325    
@@ -80,20 +79,6 @@ Full output of updates and block averages
  pressure_virial_freq:            1
  trmaxdispfreq:           50
  volmaxdispfreq:           10
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_HardSphere                                                                            
- classical_potential: Hard Sphere                   
- READCLASSICAL: pot_num:     9 potential name: Hard Sphere                   
- classical_mixrule: Arithmetic                    
- radial_pressure_delta: 0.100000E-01
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Arithmetic mean of all nonbond parameters
-default max_bond_length:  3.00
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -164,6 +149,19 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: Martin and Thompson FPE 2004  
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_HardSphere                                                                            
+ classical_potential: Hard Sphere                   
+ READCLASSICAL: pot_num:     9 potential name: Hard Sphere                   
+ classical_mixrule: Arithmetic                    
+ radial_pressure_delta: 0.100000E-01
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Arithmetic mean of all nonbond parameters
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            8
  nmaxcbmc:            8
@@ -205,6 +203,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is     4.8176 g/mol
  Calling initconf

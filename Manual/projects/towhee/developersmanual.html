@@ -1,12 +1,12 @@
 <html>
  <head>
-  <title>MCCCS Towhee (Developer's Manual)</title>
+  <title>MCCCS Towhee: Developers Manual</title>
  </head>
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="800" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
-     <div align="center"><font size="5"><b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee (Developer Manual)</font></b></font></div>
+     <div align="center"><font size="5"><b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee: Developers Manual</font></b></font></div>
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
@@ -24,7 +24,6 @@
       This section covers the basic information that is required in order to become a Towhee developer
       and also some suggested practices and overall guidelines for working with the Towhee development team.
      </ul>
-
      <p></p>
      <b>Becoming a Developer</b> 
      <ul>
@@ -42,21 +41,20 @@
       (<a href="http://sourceforge.net/">http://sourceforge.net/</a>), and send an email indicating your 
       interest to <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>.
      </ul>
-
      <p></p>
      <b>Subversion Access</b>
      <ul>
       In order to get started using Subersion (svn) you will need to checkout the current version of the code into a workspace 
-      on one of your machines.  Directions for checking out the code are found by following the "Code" and "SVN" links from the
-      <a href="http://sourceforge.net/projects/towhee/">Towhee SourceForge</a> site.  Make sure to follow the 
-      developer access directions, and not the anonymous access directions.  Then you can checkout the code using
-      <ul>
-       svn co https://towhee.svn.sourceforge.net/svnroot/towhee towhee
-      </ul>
-      This command creates a directory named <b>towhee</b> that contains all of the Towhee files and directories. 
+      on one of your machines.  Directions for checking out the code are found by following the "Code" link from the
+      <a href="http://sourceforge.net/projects/towhee/">Towhee SourceForge</a> site.
+      If you are intending to contribute your changes into the distribution then you will need to log into SourceForge and make sure
+      you are checking out a version using the developer access directions, and not the anonymous access directions.
+      The checkout command should be similar to the following.
+      <dt><code>svn checkout --username=yourusername svn+ssh://yourusername@svn.code.sf.net/p/towhee/code/ towhee-code</code></dt>
+      Where <code>yourusername</code> is replaced with your SourceForge username.
+      This command creates a directory named <code><b>towhee-code</b></code> that contains all of the Towhee files and directories. 
       <p></p>
      </ul>
-
      <p></p>
      <b>Test Suite</b>
      <ul>
@@ -78,7 +76,7 @@
       it is a machine specific script that executes a parallel job in that directory.  If you are on a machine that 
       allows direct submission of parallel jobs then your <b>./execute_parallel</b> script would look something like
       <ul>
-       mpirun -np 2 /towheebase/Source/towhee
+       <code>mpirun -np 2 /towheebase/Source/towhee</code>
       </ul>
       This will execute a job that utilizes the <b>towhee_parallel</b> file in the Parallel_Test directory to run a jobfarm that 
       executes the test suite jobs to produce output files named <b>par_answer_current</b>.  Running the <b>./run_para_diff</b>
@@ -86,19 +84,16 @@
       <b>par_answer_current</b> and their respective <b>answer_current</b> files.  These files should be identical so the 
       <b>para_test_report</b> file should only contain the directory names of the test suite.
      </ul>
-
-     <p>&nbsp;</p>
      <a href="index.html">Return to the main towhee web page</a> 
     </td>
    </tr>
   </table>
-  <p></p>
-  <hr width="715" align="left">
-  <i><font size="2">Send comments to:</font></i>
-  <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
-   <br></br>
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->February 02, 2011<!-- #EndDate -->
-  </font>
-  <br></br>
  </body>
+ <foot>
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
+  </font>
+ </foot>
 </html>

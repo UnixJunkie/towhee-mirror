@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'nvt'
 temperature
@@ -36,32 +34,6 @@ trmaxdispfreq
 10
 volmaxdispfreq
 5000
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_Charmm27
-classical_potential
-'Lennard-Jones'       
-classical_mixrule
-'Lorentz-Berthelot'
-lshift
-.false.
-ltailc
-.false.
-rmin  
-0.1d0 
-rcut  
-9.0d0
-rcutin 
-9.0d0 
-electrostatic_form
-'coulomb'
-coulombstyle
-'minimum image'
-dielect
-1.0d0
 linit   
 .true. 
 initboxtype
@@ -120,6 +92,30 @@ two_bond_fixed_endpoint_bias_style
 'analytic Boltzmann dihedral energy sum'
 three_bond_fixed_endpoint_bias_style
 'analytic using max and min 2-4 distance'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_Charmm27
+classical_potential
+'Lennard-Jones'       
+classical_mixrule
+'Lorentz-Berthelot'
+lshift
+.false.
+ltailc
+.false.
+rmin  
+0.1d0 
+rcut  
+9.0d0
+rcutin 
+9.0d0 
+electrostatic_form
+'coulomb'
+coulombstyle
+'minimum image'
+dielect
+1.0d0
 input_style
 'nucleic acid builder'
 nunit

@@ -25,7 +25,7 @@ c     * wrapper that determines a few constants needed to dimension    *
 c     * arrays and then call the main writetowhee                      *
 c     *                                                                *
 c     * originally written 01-16-2018 by M.G. Martin                   *
-c     * last modified 03-18-2018 by M.G. Martin                        *
+c     * last modified 03-29-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -53,7 +53,7 @@ c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
 c     * split from the original writetowhee 01-16-2018 by M.G. Martin  *
-c     * last modified 01-16-2018 by M.G. Martin                        *
+c     * last modified 03-29-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -102,10 +102,10 @@ c     --- local variables
       character*10 tenchar
       character*11 fchar
       character*20 routput,cvalue,coulombstyle,fieldstring,initboxtype
-      character*20 initstyle,initlattice,interpolatestyle
+      character*20 initstyle,initlattice,interpolatestyle,controlstyle
       character*20 isarray,pressure_thermo_style
       dimension isarray(nmolty)
-      character*30 potentialstyle_str,ensemble_str
+      character*30 ensemble_str
       character*50 eform
       character*(MAXDIRLENGTH) ffname
 c     --- logical scalars
@@ -122,7 +122,7 @@ c     --- integer scalars
       integer iatom,ivib,ibend,itor,iaa,ibox,jmolty,idim,jdim,iorder
       integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
-      integer aminonum,potentialstyle,rng_code
+      integer aminonum,rng_code
       integer npair,inix,iniy,iniz,ensemble,itbang,iobang
       integer irange,pt_number,ivolmove
 c     --- integer arrays
@@ -148,7 +148,6 @@ c     --- double precision arrays
 
 c      write(6,*) 'starting WRITETOWHEE ',imoltyflag
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_ensemble(GLB_GET,ensemble)
 
       if ( imoltyflag .eq. 0 ) then
@@ -225,6 +224,9 @@ c        --- molecule information
          else
             write(6,*) 'WRITETOWHEE: unknown stepstyle'
          endif
+         write(15,'(a12)') 'controlstyle'
+         call twh_controlstyle(GLB_GET,controlstyle)
+         write(15,'(a1,a20,a1)') char(39),controlstyle,char(39)
          write(15,'(a9)') 'printfreq'
          call twh_printfreq(GLB_GET,ivalue)
          write(15,*) ivalue
@@ -306,368 +308,10 @@ c        --- molecule information
             call twh_chempotperstep(GLB_GET,jmolty,idummy(jmolty))
          enddo
          write(15,*) (idummy(jmolty),jmolty=1,nmolty)
-         write(15,'(a14)') 'potentialstyle'
-
-         if ( potentialstyle .eq. POT_INTERNAL) then
-            potentialstyle_str = 'internal'
-         elseif ( potentialstyle .eq. POT_EXTERNAL ) then
-            potentialstyle_str = 'external'
-         else
-            write(6,*) 'Unrecognized potentialstyle in WRITETOWHEE'
-            stop
-         endif    
-         write(15,'(a1,a30,a1)') char(39),potentialstyle_str,char(39)
-
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            write(15,'(a8)') 'ffnumber'
-            call twh_ffnumber(GLB_GET,ffnumber)
-            write(15,*) ffnumber
-            if ( ffnumber .gt. 0 ) then
-               write(15,'(a11)') 'ff_filename'
-               do ifile = 1,ffnumber
-                  call twh_ff_filename(GLB_GET,ifile,ffname)
-                  write(15,11) ffname
-               enddo
-            endif
- 11         format(a MAXDIRLENGTH)
-            write(15,'(a19)') 'classical_potential'
-            write(15,'(a1,a30,a1)') char(39)
-     &           ,twh_get_classical_potential(),char(39)
-
-            call twh_setpotentiallogic(lfailure,lwritemixrule
-     &           ,lwritelshift,lwriteltailc,lwritermin,lwritercut
-     &           ,lwritercutin,lwriteinterpolatestyle,lwriterpd
-     &           ,lwritescaling)
-            if ( lfailure ) return
-
-            if ( lwritemixrule ) then
-               write(15,'(a17)') 'classical_mixrule'
-               write(15,'(a1,a30,a1)') char(39)
-     &              ,twh_get_classical_mixrule(),char(39)
-
-               if ( lwritescaling ) then
-                  write(15,'(a20)') 'cmix_rescaling_style'
-                  write(15,'(a1,a30,a1)') char(39),
-     &                 scp_get_scaling_style_string() ,char(39)
-                  if ( scp_get_scaling_style() .eq. SCP_SC ) then
-                     write(15,'(a14)') 'cmix_lambda_lj'
-                     write(15,*) scp_get_native_lambda(LAMBDA_LJ)
-                     write(15,'(a13)') 'cmix_alpha_lj'
-                     write(15,*) scp_get_native_lambda(ALPHA_LJ)
-                     write(15,'(a13)') 'cmix_lambda_c'
-                     write(15,*) scp_get_native_lambda(LAMBDA_C)
-                     write(15,'(a15)') 'cmix_lprintdudl'
-                     call twh_scp_eval_derivative(GLB_GET,lvalue)
-                     write(15,*) lvalue
-                  endif
-                  if (scp_get_scaling_style() .eq. SCP_SC .or.
-     &                 scp_get_scaling_style() .eq. SCP_WCA ) then
-                     call scp_get_scaled_atoms(npair, pair_list)
-                     write(15,'(a10)') 'cmix_npair'
-                     write(15,*) npair
-                     write(15,'(a14)') 'cmix_pair_list'
-                     do ipair = 1,npair
-                        write(15,'(2(a1,a10,a1,1x))') (char(39)
-     &                       ,pair_list(ipair,ientry),char(39)
-     &                       ,ientry=1,2)
-                     enddo
-                  elseif ( scp_get_scaling_style() .eq. SCP_NONE ) then
-c                    --- nothing to output
-                  else
-                     write(6,*) 
-     &                    'WRITETOWHEE: unknown cmix_rescaling_style'
-                     stop
-                  endif
-               endif
-            endif
-            if ( lwriteinterpolatestyle ) then
-               write(15,'(a16)') 'interpolatestyle'
-               call twh_interpolatestyle(GLB_GET,interpolatestyle)
-               write(15,'(a1,a20,a1)') char(39),interpolatestyle
-     &              ,char(39)
-            endif
-            if ( lwritelshift ) then
-               write(15,'(a6)') 'lshift'
-               call twh_lshift(GLB_GET,lshift)
-               write(15,*) lshift
-            endif
-            if ( lwriteltailc ) then
-               write(15,'(a6)') 'ltailc'
-               call twh_ltailc(GLB_GET,ltailc)
-               write(15,*) ltailc
-            endif
-            if ( lwritermin ) then
-               write(15,'(a4)') 'rmin'
-               call twh_rmin(GLB_GET,rmin)
-               write(15,*) rmin
-            endif
-            if ( lwritercut ) then
-               write(15,'(a4)') 'rcut'
-               call twh_rcut(GLB_GET,rcut)
-               write(15,*) rcut
-            endif
-            if ( lwritercutin ) then
-               write(15,'(a6)') 'rcutin'
-               call twh_rcutin(GLB_GET,rcutin)
-               write(15,*) rcutin
-            endif
-            if ( lwriterpd ) then
-               write(15,'(a21)') 'radial_pressure_delta'
-               call twh_radial_pressure_delta(GLB_GET,dvalue)
-               write(15,*) dvalue
-            endif
-            write(15,'(a18)') 'electrostatic_form'
-            call twh_electrostatic_form(GLB_GET,eform)
-            write(15,'(a1,a50,a1)') char(39),eform,char(39)
-            if ( eform .eq. 'none' ) then
-c              --- nothing else to write here, but not an error
-            elseif ( eform .eq. 'coulomb' ) then
-               write(15,'(a12)') 'coulombstyle'
-               call twh_coulombstyle(GLB_GET,coulombstyle)
-               write(15,'(a1,a20,a1)') char(39),coulombstyle,char(39)
-               if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then
-                  write(15,'(a4)') 'kalp'
-                  call twh_ewald_kalp(GLB_GET,kalp)
-                  write(15,*) kalp
-                  call twh_ewald_kmax(GLB_GET,1,kmax)
-                  write(15,'(a4)') 'kmax'
-                  write(15,*) kmax
-               elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
-                  write(15,'(a10)') 'ewald_prec'
-                  call twh_ewald_prec(GLB_GET,ewald_prec)
-                  write(15,*) ewald_prec
-                  write(15,'(a7)') 'rcelect'
-                  call twh_rcelect(GLB_GET,1,dvalue)
-                  write(15,*) dvalue
-               elseif ( coulombstyle .eq. 'minimum image' ) then
-c                 --- not an error, but nothing to output
-               else
-                  write(6,*) 'WRITETOWHEE: unknown coulombstyle'
-                  stop
-               endif
-
-               write(15,'(a7)') 'dielect'
-               call twh_constant_qqfact(GLB_GET,qqfact)
-               write(15,*) CON_EETOKCAL*CON_KCALTOK/qqfact
-            else
-               write(6,*) 'WRITETOWHEE: unknown electrostatic_form'
-               write(6,*) eform
-               lfailure = .true.
-               return
-            endif
-
-            write(15,'(a15)') 'max_bond_length'
-            call twh_max_bond_length(GLB_GET,dvalue)
-            write(15,*) dvalue
-
-            write(15,'(a6)') 'nfield'
-            call twh_nfield(GLB_GET,nfield)
-            write(15,*) nfield
-            do ifld = 1,nfield
-               write(15,'(a9)') 'fieldtype'
-               call twh_fieldtypestring(GLB_GET,ifld,fieldstring)
-               write(15,'(a1,a20,a1)') char(39),fieldstring,char(39)
-               if ( fieldstring .eq. 'Hard Wall' ) then
-                  write(15,'(a6)') 'hrdbox'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a6)') 'hrdxyz'
-                  call twh_fieldchar(GLB_GET,ifld,1,fchar)
-                  write(15,'(3a1)') char(39),fchar,char(39)
-                  write(15,'(a6)') 'hrdcen'
-                  call twh_fielddp(GLB_GET,ifld,1,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a6)') 'hrdrad'
-                  call twh_fielddp(GLB_GET,ifld,2,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a19)') 'hrd_repulsion_style'
-                  call twh_fieldchar(GLB_GET,ifld,2,fchar)
-                  write(15,'(a1,a11,a1)') char(39),fchar,char(39)
-                  write(15,'(a15)') 'hrd_energy_type'
-                  call twh_fieldchar(GLB_GET,ifld,3,fchar)
-                  write(15,'(a1,a11,a1)') char(39),fchar,char(39)
-                  if ( fchar .eq. 'finite' ) then
-                     write(15,'(a15)') 'hrd_wall_energy'
-                     call twh_fielddp(GLB_GET,ifld,4,dvalue)
-                     write(15,*) dvalue
-                  endif
-               elseif ( fieldstring .eq. 'Hard Ball' ) then
-                  write(15,'(a6)') 'hrbbox'
-                  call twh_fieldint(GLB_GET,ifld,FLD_HRBBOX,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a6)') 'hrbpos'
-                  call twh_fielddp(GLB_GET,ifld,FLD_HRBPOSX,fieldtwo)
-                  call twh_fielddp(GLB_GET,ifld,FLD_HRBPOSY,fieldthree)
-                  call twh_fielddp(GLB_GET,ifld,FLD_HRBPOSZ,fieldfour)
-                  write(15,*) fieldtwo, fieldthree, fieldfour
-                  write(15,'(a6)') 'hrbrad'
-                  call twh_fielddp(GLB_GET,ifld,FLD_HRBRAD,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a6)') 'hrbfac'
-                  call twh_fielddp(GLB_GET,ifld,FLD_HRBFAC,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a15)') 'hrb_energy_type'
-                  call twh_fieldchar(GLB_GET,ifld,1,fchar)
-                  write(15,'(a1,a11,a1)') char(39),fchar,char(39)
-                  if ( fchar .eq. 'finite' ) then
-                     write(15,'(a15)') 'hrb_energy_type'
-                     call twh_fielddp(GLB_GET,ifld,FLD_HRBENERGY,dvalue)
-                     write(15,*) dvalue
-                  endif
-               elseif ( fieldstring .eq. 'Hooper Umbrella' ) then
-                  write(15,'(a6)') 'umbbox'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a6)') 'umbxyz'
-                  call twh_fieldchar(GLB_GET,ifld,1,fchar)
-                  write(15,'(3a1)') char(39),fchar,char(39)
-                  write(15,'(a9)') 'umbcenter'
-                  call twh_fielddp(GLB_GET,ifld,1,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a4)') 'umba'
-                  call twh_fielddp(GLB_GET,ifld,2,dvalue)
-                  write(15,*) dvalue
-               elseif ( fieldstring .eq. 'LJ 9-3 Wall' ) then
-                  write(15,'(a6)') 'ljfbox'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a6)') 'ljfxyz'
-                  call twh_fieldchar(GLB_GET,ifld,1,fchar)
-                  write(15,'(3a1)') char(39),fchar,char(39)
-                  write(15,'(a6)') 'ljfcen'
-                  call twh_fielddp(GLB_GET,ifld,1,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a6)') 'ljfdir'
-                  call twh_fieldint(GLB_GET,ifld,2,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a6)') 'ljfcut'
-                  call twh_fielddp(GLB_GET,ifld,2,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a8)') 'ljfshift'
-                  call twh_fieldlogical(GLB_GET,ifld,lvalue)
-                  write(15,*) lvalue
-                  write(15,'(a6)') 'ljfrho'
-                  call twh_fielddp(GLB_GET,ifld,3,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a9)') 'ljfntypes'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  do itype = 1,ivalue
-                     call twh_fieldnbint(GLB_GET,ifld,itype,1,ntii)
-                     write(15,'(a7)') 'ljfname'
-                     write(15,'(a1,a10,a1)') char(39)
-     &                    ,twh_get_nbname(ntii),char(39)
-                     write(15,'(a6)') 'ljfsig'
-                     call twh_fieldnbparam(GLB_GET,ifld,ntii,4,fnbparam)
-                     write(15,*) fnbparam
-                     write(15,'(a6)') 'ljfeps'
-                     call twh_fieldnbparam(GLB_GET,ifld,ntii,5,fnbparam)
-                     write(15,*) fnbparam
-                  enddo
-               elseif ( fieldstring .eq. 'Steele Wall' ) then
-                  write(15,'(a10)') 'steele box'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a10)') 'steele xyz'
-                  call twh_fieldchar(GLB_GET,ifld,1,fchar)
-                  write(15,'(3a1)') char(39),fchar,char(39)
-                  write(15,'(a14)') 'steele surface'
-                  call twh_fielddp(GLB_GET,ifld,1,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a10)') 'steele dir'
-                  call twh_fieldint(GLB_GET,ifld,2,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a13)') 'steele cutoff'
-                  call twh_fielddp(GLB_GET,ifld,2,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a12)') 'steele shift'
-                  call twh_fieldlogical(GLB_GET,ifld,lvalue)
-                  write(15,*) lvalue
-                  write(15,'(a12)') 'steele delta'
-                  call twh_fielddp(GLB_GET,ifld,3,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a12)') 'steele rho_s'
-                  call twh_fielddp(GLB_GET,ifld,4,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a12)') 'steele ntype'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  do itype = 1,ivalue
-                     call twh_fieldnbint(GLB_GET,ifld,itype,1,ntii)
-                     write(15,'(a11)') 'steele name'
-                     write(15,'(a1,a10,a1)') char(39)
-     &                    ,twh_get_nbname(ntii),char(39)
-                     write(15,'(a8)') 'sigma_sf'
-                     call twh_fieldnbparam(GLB_GET,ifld,ntii,2,fnbparam)
-                     write(15,*) fnbparam
-                     write(15,'(a10)') 'epsilon_sf'
-                     call twh_fieldnbparam(GLB_GET,ifld,ntii,5,fnbparam)
-                     write(15,*) fnbparam
-                  enddo
-               elseif ( fieldstring .eq. 'Harmonic Attractor' ) then
-                  write(15,'(a6)') 'hafbox'
-                  call twh_fieldint(GLB_GET,ifld,1,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a4)') 'hafk'
-                  call twh_fielddp(GLB_GET,ifld,1,dvalue)
-                  write(15,*) dvalue
-                  write(15,'(a11)') 'hafentries'
-                  call twh_fieldint(GLB_GET,ifld,2,ivalue)
-                  write(15,*) ivalue
-                  write(15,'(a9)') 'hafrefpos'
-                  call twh_fieldchar(GLB_GET,ifld,1,fchar)
-                  write(15,'(a1,a7,a1)') char(39),fchar,char(39)
-                  if ( fchar .eq. 'Global') then
-                     write(15,'(a10)') 'hafglobxyz'
-                     call twh_fielddp(GLB_GET,ifld,2,fieldtwo)
-                     call twh_fielddp(GLB_GET,ifld,3,fieldthree)
-                     call twh_fielddp(GLB_GET,ifld,4,fieldfour)
-                     write(15,'(3f10.6)') fieldtwo,fieldthree,fieldfour
-                  elseif ( fchar .ne. 'Initial') then
-                     write(6,*) 'WRITETOWHEE: unknown hafrefpos'
-                     stop
-                     return
-                  endif
-                  write(15,'(a6)') 'hafkey'
-                  call twh_fieldchar(GLB_GET,ifld,2,fchar)
-                  write(15,'(a1,a7,a1)') char(39),fchar,char(39)
-                  call twh_fieldint(GLB_GET,ifld,2,ivalue)
-                  do ientry = 1,ivalue
-                     write(15,'(a8)') 'hafmolec'
-                     call twh_fieldnbint(GLB_GET,ifld,ientry,1,ivalue)
-                     write(15,*) ivalue
-                     call twh_fieldnbint(GLB_GET,ifld,ientry,2,ntii)
-                     if ( fchar .eq. 'Element') then
-                        write(15,'(a10)') 'hafelement'
-                        write(15,'(a1,a2,a1)') char(39)
-     &                       ,twh_get_elementname(ntii),char(39)
-                     elseif ( fchar .eq. 'FFtype') then
-                        write(15,'(a7)') 'hafname'
-                        write(15,'(a1,a10,a1)') char(39)
-     &                       ,twh_get_nbname(ntii),char(39)
-                     endif
-                  enddo
-               else
-                  write(6,*) 'WRITETOWHEE: unknown fieldtype'
-                  write(6,*) fieldstring
-                  stop
-               endif
-            enddo
-         endif
-
-         write(15,'(a15)') 'solvation_style'
-         call twh_solvation_style(GLB_GET,cvalue)
-         write(15,'(a1,a20,a1)') char(39),cvalue,char(39)
-         if ( cvalue .ne. 'none' ) then
-            call twh_solvation_type(GLB_GET,cvalue)
-            write(15,'(a14)') 'solvation_type'
-            write(15,'(a1,a20,a1)') char(39),cvalue,char(39)
-         endif
-
          write(15,'(a5)') 'linit'
          call twh_linit(GLB_GET,lvalue)
          write(15,*) lvalue
-
+         
          write(15,'(a11)') 'initboxtype'
          call twh_initboxtype(GLB_GET,initboxtype)
          write(15,'(a1,a20,a1)') char(39),initboxtype,char(39)
@@ -1128,6 +772,351 @@ c                 --- output the helix_* varibles
             write(6,*) 'WRITETOWHEE: problem with cbmc output'
             return
          endif
+
+c        --- start of potential output
+         write(15,'(a8)') 'ffnumber'
+         call twh_ffnumber(GLB_GET,ffnumber)
+         write(15,*) ffnumber
+         if ( ffnumber .gt. 0 ) then
+            write(15,'(a11)') 'ff_filename'
+            do ifile = 1,ffnumber
+               call twh_ff_filename(GLB_GET,ifile,ffname)
+               write(15,11) ffname
+            enddo
+         endif
+ 11      format(a MAXDIRLENGTH)
+         write(15,'(a19)') 'classical_potential'
+         write(15,'(a1,a30,a1)') char(39)
+     &        ,twh_get_classical_potential(),char(39)
+         
+         call twh_setpotentiallogic(lfailure,lwritemixrule
+     &        ,lwritelshift,lwriteltailc,lwritermin,lwritercut
+     &        ,lwritercutin,lwriteinterpolatestyle,lwriterpd
+     &        ,lwritescaling)
+         if ( lfailure ) return
+         
+         if ( lwritemixrule ) then
+            write(15,'(a17)') 'classical_mixrule'
+            write(15,'(a1,a30,a1)') char(39)
+     &           ,twh_get_classical_mixrule(),char(39)
+            if ( lwritescaling ) then
+               write(15,'(a20)') 'cmix_rescaling_style'
+               write(15,'(a1,a30,a1)') char(39),
+     &              scp_get_scaling_style_string() ,char(39)
+               if ( scp_get_scaling_style() .eq. SCP_SC ) then
+                  write(15,'(a14)') 'cmix_lambda_lj'
+                  write(15,*) scp_get_native_lambda(LAMBDA_LJ)
+                  write(15,'(a13)') 'cmix_alpha_lj'
+                  write(15,*) scp_get_native_lambda(ALPHA_LJ)
+                  write(15,'(a13)') 'cmix_lambda_c'
+                  write(15,*) scp_get_native_lambda(LAMBDA_C)
+                  write(15,'(a15)') 'cmix_lprintdudl'
+                  call twh_scp_eval_derivative(GLB_GET,lvalue)
+                  write(15,*) lvalue
+               endif
+               if (scp_get_scaling_style() .eq. SCP_SC .or.
+     &              scp_get_scaling_style() .eq. SCP_WCA ) then
+                  call scp_get_scaled_atoms(npair, pair_list)
+                  write(15,'(a10)') 'cmix_npair'
+                  write(15,*) npair
+                  write(15,'(a14)') 'cmix_pair_list'
+                  do ipair = 1,npair
+                     write(15,'(2(a1,a10,a1,1x))') (char(39)
+     &                    ,pair_list(ipair,ientry),char(39)
+     &                    ,ientry=1,2)
+                  enddo
+               elseif ( scp_get_scaling_style() .eq. SCP_NONE ) then
+c                 --- nothing to output
+               else
+                  write(6,*) 
+     &                 'WRITETOWHEE: unknown cmix_rescaling_style'
+                  stop
+               endif
+            endif
+         endif
+         if ( lwriteinterpolatestyle ) then
+            write(15,'(a16)') 'interpolatestyle'
+            call twh_interpolatestyle(GLB_GET,interpolatestyle)
+            write(15,'(a1,a20,a1)') char(39),interpolatestyle
+     &           ,char(39)
+         endif
+         if ( lwritelshift ) then
+            write(15,'(a6)') 'lshift'
+            call twh_lshift(GLB_GET,lshift)
+            write(15,*) lshift
+         endif
+         if ( lwriteltailc ) then
+            write(15,'(a6)') 'ltailc'
+            call twh_ltailc(GLB_GET,ltailc)
+            write(15,*) ltailc
+         endif
+         if ( lwritermin ) then
+            write(15,'(a4)') 'rmin'
+            call twh_rmin(GLB_GET,rmin)
+            write(15,*) rmin
+         endif
+         if ( lwritercut ) then
+            write(15,'(a4)') 'rcut'
+            call twh_rcut(GLB_GET,rcut)
+            write(15,*) rcut
+         endif
+         if ( lwritercutin ) then
+            write(15,'(a6)') 'rcutin'
+            call twh_rcutin(GLB_GET,rcutin)
+            write(15,*) rcutin
+         endif
+         if ( lwriterpd ) then
+            write(15,'(a21)') 'radial_pressure_delta'
+            call twh_radial_pressure_delta(GLB_GET,dvalue)
+            write(15,*) dvalue
+         endif
+         write(15,'(a18)') 'electrostatic_form'
+         call twh_electrostatic_form(GLB_GET,eform)
+         write(15,'(a1,a50,a1)') char(39),eform,char(39)
+         if ( eform .eq. 'none' ) then
+c           --- nothing else to write here, but not an error
+         elseif ( eform .eq. 'coulomb' ) then
+            write(15,'(a12)') 'coulombstyle'
+            call twh_coulombstyle(GLB_GET,coulombstyle)
+            write(15,'(a1,a20,a1)') char(39),coulombstyle,char(39)
+            if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then
+               write(15,'(a4)') 'kalp'
+               call twh_ewald_kalp(GLB_GET,kalp)
+               write(15,*) kalp
+               call twh_ewald_kmax(GLB_GET,1,kmax)
+               write(15,'(a4)') 'kmax'
+               write(15,*) kmax
+            elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
+               write(15,'(a10)') 'ewald_prec'
+               call twh_ewald_prec(GLB_GET,ewald_prec)
+               write(15,*) ewald_prec
+               write(15,'(a7)') 'rcelect'
+               call twh_rcelect(GLB_GET,1,dvalue)
+               write(15,*) dvalue
+            elseif ( coulombstyle .eq. 'minimum image' ) then
+c              --- not an error, but nothing to output
+            else
+               write(6,*) 'WRITETOWHEE: unknown coulombstyle'
+               lfailure = .true.
+               return
+            endif
+            write(15,'(a7)') 'dielect'
+            call twh_constant_qqfact(GLB_GET,qqfact)
+            write(15,*) CON_EETOKCAL*CON_KCALTOK/qqfact
+            write(15,'(a17)') 'lcompute_madelung'
+            call twh_lcompute_madelung(GLB_GET,lvalue)
+            write(15,*) lvalue
+         else
+            write(6,*) 'WRITETOWHEE: unknown electrostatic_form'
+            write(6,*) eform
+            lfailure = .true.
+            return
+         endif
+         
+         write(15,'(a6)') 'nfield'
+         call twh_nfield(GLB_GET,nfield)
+         write(15,*) nfield
+         do ifld = 1,nfield
+            write(15,'(a9)') 'fieldtype'
+            call twh_fieldtypestring(GLB_GET,ifld,fieldstring)
+            write(15,'(a1,a20,a1)') char(39),fieldstring,char(39)
+            if ( fieldstring .eq. 'Hard Wall' ) then
+               write(15,'(a6)') 'hrdbox'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               write(15,'(a6)') 'hrdxyz'
+               call twh_fieldchar(GLB_GET,ifld,1,fchar)
+               write(15,'(3a1)') char(39),fchar,char(39)
+               write(15,'(a6)') 'hrdcen'
+               call twh_fielddp(GLB_GET,ifld,1,dvalue)
+               write(15,*) dvalue
+               write(15,'(a6)') 'hrdrad'
+               call twh_fielddp(GLB_GET,ifld,2,dvalue)
+               write(15,*) dvalue
+               write(15,'(a19)') 'hrd_repulsion_style'
+               call twh_fieldchar(GLB_GET,ifld,2,fchar)
+               write(15,'(a1,a11,a1)') char(39),fchar,char(39)
+               write(15,'(a15)') 'hrd_energy_type'
+               call twh_fieldchar(GLB_GET,ifld,3,fchar)
+               write(15,'(a1,a11,a1)') char(39),fchar,char(39)
+               if ( fchar .eq. 'finite' ) then
+                  write(15,'(a15)') 'hrd_wall_energy'
+                  call twh_fielddp(GLB_GET,ifld,4,dvalue)
+                  write(15,*) dvalue
+               endif
+            elseif ( fieldstring .eq. 'Hard Ball' ) then
+               write(15,'(a6)') 'hrbbox'
+               call twh_fieldint(GLB_GET,ifld,FLD_HRBBOX,ivalue)
+               write(15,*) ivalue
+               write(15,'(a6)') 'hrbpos'
+               call twh_fielddp(GLB_GET,ifld,FLD_HRBPOSX,fieldtwo)
+               call twh_fielddp(GLB_GET,ifld,FLD_HRBPOSY,fieldthree)
+               call twh_fielddp(GLB_GET,ifld,FLD_HRBPOSZ,fieldfour)
+               write(15,*) fieldtwo, fieldthree, fieldfour
+               write(15,'(a6)') 'hrbrad'
+               call twh_fielddp(GLB_GET,ifld,FLD_HRBRAD,dvalue)
+               write(15,*) dvalue
+               write(15,'(a6)') 'hrbfac'
+               call twh_fielddp(GLB_GET,ifld,FLD_HRBFAC,dvalue)
+               write(15,*) dvalue
+               write(15,'(a15)') 'hrb_energy_type'
+               call twh_fieldchar(GLB_GET,ifld,1,fchar)
+               write(15,'(a1,a11,a1)') char(39),fchar,char(39)
+               if ( fchar .eq. 'finite' ) then
+                  write(15,'(a15)') 'hrb_energy_type'
+                  call twh_fielddp(GLB_GET,ifld,FLD_HRBENERGY,dvalue)
+                  write(15,*) dvalue
+               endif
+            elseif ( fieldstring .eq. 'Hooper Umbrella' ) then
+               write(15,'(a6)') 'umbbox'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               write(15,'(a6)') 'umbxyz'
+               call twh_fieldchar(GLB_GET,ifld,1,fchar)
+               write(15,'(3a1)') char(39),fchar,char(39)
+               write(15,'(a9)') 'umbcenter'
+               call twh_fielddp(GLB_GET,ifld,1,dvalue)
+               write(15,*) dvalue
+               write(15,'(a4)') 'umba'
+               call twh_fielddp(GLB_GET,ifld,2,dvalue)
+               write(15,*) dvalue
+            elseif ( fieldstring .eq. 'LJ 9-3 Wall' ) then
+               write(15,'(a6)') 'ljfbox'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               write(15,'(a6)') 'ljfxyz'
+               call twh_fieldchar(GLB_GET,ifld,1,fchar)
+               write(15,'(3a1)') char(39),fchar,char(39)
+               write(15,'(a6)') 'ljfcen'
+               call twh_fielddp(GLB_GET,ifld,1,dvalue)
+               write(15,*) dvalue
+               write(15,'(a6)') 'ljfdir'
+               call twh_fieldint(GLB_GET,ifld,2,ivalue)
+               write(15,*) ivalue
+               write(15,'(a6)') 'ljfcut'
+               call twh_fielddp(GLB_GET,ifld,2,dvalue)
+               write(15,*) dvalue
+               write(15,'(a8)') 'ljfshift'
+               call twh_fieldlogical(GLB_GET,ifld,lvalue)
+               write(15,*) lvalue
+               write(15,'(a6)') 'ljfrho'
+               call twh_fielddp(GLB_GET,ifld,3,dvalue)
+               write(15,*) dvalue
+               write(15,'(a9)') 'ljfntypes'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               do itype = 1,ivalue
+                  call twh_fieldnbint(GLB_GET,ifld,itype,1,ntii)
+                  write(15,'(a7)') 'ljfname'
+                  write(15,'(a1,a10,a1)') char(39)
+     &                 ,twh_get_nbname(ntii),char(39)
+                  write(15,'(a6)') 'ljfsig'
+                  call twh_fieldnbparam(GLB_GET,ifld,ntii,4,fnbparam)
+                  write(15,*) fnbparam
+                  write(15,'(a6)') 'ljfeps'
+                  call twh_fieldnbparam(GLB_GET,ifld,ntii,5,fnbparam)
+                  write(15,*) fnbparam
+               enddo
+            elseif ( fieldstring .eq. 'Steele Wall' ) then
+               write(15,'(a10)') 'steele box'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               write(15,'(a10)') 'steele xyz'
+               call twh_fieldchar(GLB_GET,ifld,1,fchar)
+               write(15,'(3a1)') char(39),fchar,char(39)
+               write(15,'(a14)') 'steele surface'
+               call twh_fielddp(GLB_GET,ifld,1,dvalue)
+               write(15,*) dvalue
+               write(15,'(a10)') 'steele dir'
+               call twh_fieldint(GLB_GET,ifld,2,ivalue)
+               write(15,*) ivalue
+               write(15,'(a13)') 'steele cutoff'
+               call twh_fielddp(GLB_GET,ifld,2,dvalue)
+               write(15,*) dvalue
+               write(15,'(a12)') 'steele shift'
+               call twh_fieldlogical(GLB_GET,ifld,lvalue)
+               write(15,*) lvalue
+               write(15,'(a12)') 'steele delta'
+               call twh_fielddp(GLB_GET,ifld,3,dvalue)
+               write(15,*) dvalue
+               write(15,'(a12)') 'steele rho_s'
+               call twh_fielddp(GLB_GET,ifld,4,dvalue)
+               write(15,*) dvalue
+               write(15,'(a12)') 'steele ntype'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               do itype = 1,ivalue
+                  call twh_fieldnbint(GLB_GET,ifld,itype,1,ntii)
+                  write(15,'(a11)') 'steele name'
+                  write(15,'(a1,a10,a1)') char(39)
+     &                 ,twh_get_nbname(ntii),char(39)
+                  write(15,'(a8)') 'sigma_sf'
+                  call twh_fieldnbparam(GLB_GET,ifld,ntii,2,fnbparam)
+                  write(15,*) fnbparam
+                  write(15,'(a10)') 'epsilon_sf'
+                  call twh_fieldnbparam(GLB_GET,ifld,ntii,5,fnbparam)
+                  write(15,*) fnbparam
+               enddo
+            elseif ( fieldstring .eq. 'Harmonic Attractor' ) then
+               write(15,'(a6)') 'hafbox'
+               call twh_fieldint(GLB_GET,ifld,1,ivalue)
+               write(15,*) ivalue
+               write(15,'(a4)') 'hafk'
+               call twh_fielddp(GLB_GET,ifld,1,dvalue)
+               write(15,*) dvalue
+               write(15,'(a11)') 'hafentries'
+               call twh_fieldint(GLB_GET,ifld,2,ivalue)
+               write(15,*) ivalue
+               write(15,'(a9)') 'hafrefpos'
+               call twh_fieldchar(GLB_GET,ifld,1,fchar)
+               write(15,'(a1,a7,a1)') char(39),fchar,char(39)
+               if ( fchar .eq. 'Global') then
+                  write(15,'(a10)') 'hafglobxyz'
+                  call twh_fielddp(GLB_GET,ifld,2,fieldtwo)
+                  call twh_fielddp(GLB_GET,ifld,3,fieldthree)
+                  call twh_fielddp(GLB_GET,ifld,4,fieldfour)
+                  write(15,'(3f10.6)') fieldtwo,fieldthree,fieldfour
+               elseif ( fchar .ne. 'Initial') then
+                  write(6,*) 'WRITETOWHEE: unknown hafrefpos'
+                  stop
+                  return
+               endif
+               write(15,'(a6)') 'hafkey'
+               call twh_fieldchar(GLB_GET,ifld,2,fchar)
+               write(15,'(a1,a7,a1)') char(39),fchar,char(39)
+               call twh_fieldint(GLB_GET,ifld,2,ivalue)
+               do ientry = 1,ivalue
+                  write(15,'(a8)') 'hafmolec'
+                  call twh_fieldnbint(GLB_GET,ifld,ientry,1,ivalue)
+                  write(15,*) ivalue
+                  call twh_fieldnbint(GLB_GET,ifld,ientry,2,ntii)
+                  if ( fchar .eq. 'Element') then
+                     write(15,'(a10)') 'hafelement'
+                     write(15,'(a1,a2,a1)') char(39)
+     &                    ,twh_get_elementname(ntii),char(39)
+                  elseif ( fchar .eq. 'FFtype') then
+                     write(15,'(a7)') 'hafname'
+                     write(15,'(a1,a10,a1)') char(39)
+     &                    ,twh_get_nbname(ntii),char(39)
+                  endif
+               enddo
+            else
+               write(6,*) 'WRITETOWHEE: unknown fieldtype'
+               write(6,*) fieldstring
+               lfailure = .true.
+               return
+            endif
+         enddo
+
+         write(15,'(a15)') 'solvation_style'
+         call twh_solvation_style(GLB_GET,cvalue)
+         write(15,'(a1,a20,a1)') char(39),cvalue,char(39)
+         if ( cvalue .ne. 'none' ) then
+            call twh_solvation_type(GLB_GET,cvalue)
+            write(15,'(a14)') 'solvation_type'
+            write(15,'(a1,a20,a1)') char(39),cvalue,char(39)
+         endif
+
       else
 c        --- output the molecule information for towhee_input
          write(15,'(a11)') 'input_style'

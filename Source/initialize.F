@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 03-18-2018 by M.G. Martin                        *
+c     * last modified 03-29-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -63,6 +63,8 @@ c     --- set up constants and conversion factors
       call twh_constant_underflow(GLB_INIT,dvalue)
       call twh_constant_radtodeg(GLB_INIT,dvalue)
       call twh_constant_cuberoottwo(GLB_INIT,dvalue)
+c     --- retrieve constants
+      call twh_constant_twopi(GLB_GET,twopi)
 c     --- safety check maxtabtype
       if ( MAXTABTYPE .gt. NNTYPE ) then
          write(6,*) 'MAXTABTYPE must be <= NNTYPE'
@@ -124,14 +126,6 @@ c     --- initialize all of the structure arrays
       call twh_ntype(GLB_INIT,NTMAX,NUMAX,0)
       call twh_chempot(GLB_INIT,NTMAX,1.0d0)
       call twh_chempotperstep(GLB_INIT,NTMAX,0)
-      call twh_nmaxcbmc(GLB_INIT,NTMAX,1)
-      call twh_cbmcbondinfo(GLB_INIT,NTMAX,NUMAX,NNBOND
-     &     ,CBMCMAXBOND,0.0d0)
-      call twh_cbmcbendcount(GLB_INIT,NTMAX,NUMAX,MAXBEND,MAXBEND,0)
-      call twh_cbmcbenddist(GLB_INIT,NTMAX,NUMAX,MAXBEND,MAXBEND
-     &     ,DIST_NULL)
-      call twh_cbmcbendinfo(GLB_INIT,NTMAX,NUMAX,MAXBEND
-     &     ,MAXBEND,CBMC_MAXBENDPEAKS,CBMCMAXBEND,0.0d0)
       call twh_ncmt(GLB_INIT,MAXBOX,NTMAX,0)
       call twh_nchbox(GLB_INIT,MAXBOX,0)
 
@@ -154,23 +148,24 @@ c     --- initialize input parameters
       call twh_express(GLB_SET,1.0d0)
       call twh_stepstyle(GLB_SET,'cycles')
       call twh_nstep(GLB_SET,0)
-      call twh_printfreq(GLB_SET,100)
-      call twh_blocksize(GLB_SET,200)
-      call twh_moviefreq(GLB_SET,100)
-      call twh_backupfreq(GLB_SET,100)
+      call twh_controlstyle(GLB_SET,'manual')
+      call twh_printfreq(GLB_SET,0)
+      call twh_blocksize(GLB_SET,0)
+      call twh_moviefreq(GLB_SET,0)
+      call twh_backupfreq(GLB_SET,0)
+      call twh_restartfreq(GLB_SET,0)
       call twh_runoutput(GLB_SET,'full')
       call twh_pdb_output_freq(GLB_SET,0)
       call twh_loutdft(GLB_SET,.false.)
       call twh_loutlammps(GLB_SET,.false.)
       call twh_loutdlpoly(GLB_SET,.false.)
-      call twh_pressure_virial_freq(GLB_SET,10)
+      call twh_pressure_virial_freq(GLB_SET,0)
       call twh_pressure_thermo_freq(GLB_SET,0)
-      call twh_pressure_thermo_style(GLB_SET,'range')
+      call twh_pressure_thermo_style(GLB_SET,'move data')
       call twh_pressure_thermo_range(GLB_SET,1,-0.01d0)
       call twh_pressure_thermo_range(GLB_SET,2,0.01d0)
-      call twh_trmaxdispfreq(GLB_SET,100)
-      call twh_volmaxdispfreq(GLB_SET,100)
-      call twh_potentialstyle(GLB_SET,POT_INTERNAL)
+      call twh_trmaxdispfreq(GLB_SET,0)
+      call twh_volmaxdispfreq(GLB_SET,0)
       call twh_ffnumber(GLB_SET,1)
       call twh_ff_filename(GLB_SET,1,'towhee_ff')
       call twh_classical_mixrule(GLB_SET,'Lorentz-Berthelot')
@@ -189,9 +184,12 @@ c     --- initialize input parameters
       call twh_rcelect(GLB_INIT,MAXBOX,1.0d0)
       call twh_constant_qqfact(GLB_INIT,dvalue)
       call twh_ewald_prec(GLB_SET,1.0d-4)
+      call twh_lcompute_madelung(GLB_SET,.false.)
       call twh_ltailc(GLB_SET,.false.)
       call twh_lshift(GLB_SET,.false.)
       call twh_nfield(GLB_SET,0)
+c     --- initialize tmmc logical
+      call twh_tmmc_flag(GLB_SET,.false.)
 
 c     --- initialize all ljfld parameters
       call twh_fieldint(GLB_INIT,FLDMAX,MAXFIELDINT,0)
@@ -402,68 +400,73 @@ c     --- initialize eam parameters
       call twh_eam_embed(GLB_INIT,3,MAXTABTYPE,MAXTABLE,0.0d0)
 c     --- reinitialize classical_potential and number
       call twh_classical_potential(GLB_SET,'init-error')
+c     --- initialzie cbmc parameters
+      call twh_cbmc_analysis(GLB_SET,'normal')
+      call twh_cbmc_formulation(GLB_SET,'Martin and Frischknecht 2006')
+      call twh_cbmc_setting_style(GLB_SET,'Martin and Frischknecht')
+      call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
       call twh_cbmc_nb_one_generation(GLB_INIT,MAXBOX,NTMAX,'uniform')
       call twh_cbmc_nb_one_gencode(GLB_INIT,MAXBOX,NTMAX,DIST_UNIFORM)
+      call twh_nch_nb_one(GLB_INIT,NTMAX,10)
+      call twh_nch_nb(GLB_INIT,NTMAX,10)
+      call twh_nch_pre_nb(GLB_INIT,NTMAX,1)
+      call twh_cbmc_dihedral_generation(GLB_SET,'ideal')
+      call twh_cbmc_dihedgen_code(GLB_SET,CBMC_IDEAL)
+      call twh_sdevtor(GLB_SET,20.0d0)
+      call twh_dihedral_peak_weight_style(GLB_SET,'uniform')
+      call twh_dihedral_peak_weights(GLB_INIT,NTMAX,NUMAX,MAXTOR
+     &     ,CBMC_MAXTORPEAKS,1.0d0)
+      call twh_dihedral_sdev_multiplier(GLB_SET,1.0d0)
+      call twh_dihedral_ideal_fraction(GLB_SET,0.01d0)
+      call twh_nch_tor(GLB_INIT,NTMAX,360) 
+      call twh_nch_tor_connect(GLB_INIT,NTMAX,360)
+      call twh_cbmc_bend_generation(GLB_SET,'ideal')
+      call twh_cbmc_bendgen_code(GLB_SET,CBMC_IDEAL)
+      call twh_sdevbena(GLB_SET,5.0d0)
+      call twh_sdevbenb(GLB_SET,5.0d0)
+      call twh_bend_a_sdev_multiplier(GLB_SET,1.0d0)
+      call twh_bend_b_sdev_multiplier(GLB_SET,1.0d0)
+      call twh_bend_a_ideal_fraction(GLB_SET,0.01d0)
+      call twh_bend_b_ideal_fraction(GLB_SET,0.01d0)
+      call twh_nch_bend_a(GLB_INIT,NTMAX,100)
+      call twh_nch_bend_b(GLB_INIT,NTMAX,100)
       call twh_cbmc_bond_generation(GLB_SET,'ideal')
       call twh_cbmc_bondgen_code(GLB_SET,CBMC_IDEAL)
       call twh_bond_sdev_multiplier(GLB_SET,1.0d0)
-      call twh_cbmc_bend_generation(GLB_SET,'ideal')
-      call twh_cbmc_bendgen_code(GLB_SET,CBMC_IDEAL)
-      call twh_bend_a_sdev_multiplier(GLB_SET,1.0d0)
-      call twh_bend_b_sdev_multiplier(GLB_SET,1.0d0)
-      call twh_cbmc_dihedral_generation(GLB_SET,'ideal')
-      call twh_cbmc_dihedgen_code(GLB_SET,CBMC_IDEAL)
-      call twh_dihedral_peak_weight_style(GLB_SET,'init-error')
-      call twh_cbmctorcount(GLB_INIT,NTMAX,NUMAX,MAXTOR,0)
-      call twh_dihedral_peak_weights(GLB_INIT,NTMAX,NUMAX,MAXTOR
-     &     ,CBMC_MAXTORPEAKS,1.0d0)
-
-      call twh_nch_tor(GLB_INIT,NTMAX,360) 
-      call twh_nch_nb_one(GLB_INIT,NTMAX,10)
-      call twh_nch_nb(GLB_INIT,NTMAX,10)
-      call twh_nch_tor_connect(GLB_INIT,NTMAX,360)
-      call twh_nch_bend_a(GLB_INIT,NTMAX,100)
-      call twh_nch_bend_b(GLB_INIT,NTMAX,100)
+      call twh_sdevvib(GLB_SET,0.1d0)
+      call twh_vibrang(GLB_SET,1,0.85d0)
+      call twh_vibrang(GLB_SET,2,1.15d0)
       call twh_nch_vib(GLB_INIT,NTMAX,1000)
-      call twh_nch_pre_nb(GLB_INIT,NTMAX,1)
-      call twh_cbmc_formulation(GLB_SET,'Martin and Frischknecht 2006')
-      call twh_cbmc_analysis(GLB_SET,'normal')
-      call twh_cbmc_setting_style(GLB_SET,'Martin and Frischknecht')
-      call twh_cbmc_fit_strategy(GLB_SET,'equilibrium')
       call twh_two_bond_fe_bias_style(GLB_SET,'none')
+      call twh_two_bond_bias_sdev_multiplier(GLB_SET,1.0d0)
       call twh_two_bond_bias_vibrange(GLB_SET,1,0.85d0)
       call twh_two_bond_bias_vibrange(GLB_SET,2,1.15d0)
-      call twh_two_bond_bias_sdev_multiplier(GLB_SET,1.0d0)
-      call twh_two_bond_bias_initial_value(GLB_SET,'none')
-      call twh_two_bond_bias_update_frequency(GLB_SET,0)
+      call twh_two_bond_bias_initial_value(GLB_SET,'autofit gaussian')
       call twh_two_bond_bias_compute_frequency(GLB_SET,0)
+      call twh_two_bond_bias_update_frequency(GLB_SET,0)
       call twh_two_bond_bias_old_fraction(GLB_SET,0.5d0)
+      call twh_three_bond_fe_bias_style(GLB_SET,'none')
+      call twh_three_bond_bias_sdev_multiplier(GLB_SET,1.0d0)
+      call twh_three_bond_bias_initial_value(GLB_SET,'autofit gaussian')
+      call twh_three_bond_bias_compute_freq(GLB_SET,0)
+      call twh_three_bond_bias_update_freq(GLB_SET,0)
+      call twh_three_bond_bias_old_fraction(GLB_SET,0.5d0)
+c     --- cbmc internal data structures
+      call twh_nmaxcbmc(GLB_INIT,NTMAX,1)
+      call twh_cbmctorcount(GLB_INIT,NTMAX,NUMAX,MAXTOR,0)
+      call twh_cbmcbendcount(GLB_INIT,NTMAX,NUMAX,MAXBEND,MAXBEND,0)
+      call twh_cbmcbenddist(GLB_INIT,NTMAX,NUMAX,MAXBEND,MAXBEND
+     &     ,DIST_NULL)
+      call twh_cbmcbendinfo(GLB_INIT,NTMAX,NUMAX,MAXBEND
+     &     ,MAXBEND,CBMC_MAXBENDPEAKS,CBMCMAXBEND,0.0d0)
+      call twh_cbmcbondinfo(GLB_INIT,NTMAX,NUMAX,NNBOND
+     &     ,CBMCMAXBOND,0.0d0)
       call twh_two_bond_bias_info(GLB_INIT,NTMAX,NUMAX
      &     ,MAXBEND,MAXTWOBOND,0.0d0)
       call twh_three_bond_bias_info(GLB_INIT,NTMAX,NUMAX
      &     ,MAXTOR,MAXTHREEBOND,0.0d0)
-      call twh_three_bond_fe_bias_style(GLB_SET,'none')
-      call twh_three_bond_bias_initial_value(GLB_SET,'none')
-      call twh_three_bond_bias_update_freq(GLB_SET,0)
-      call twh_three_bond_bias_compute_freq(GLB_SET,0)
-      call twh_three_bond_bias_old_fraction(GLB_SET,0.5d0)
-      call twh_three_bond_bias_sdev_multiplier(GLB_SET,1.0d0)
-      dvalue = 0.85d0**3
-      call twh_vibrang(GLB_SET,1,dvalue)
-      dvalue = 1.15d0**3 - dvalue
-      call twh_vibrang(GLB_SET,2,dvalue)
-
-      call twh_constant_twopi(GLB_GET,twopi)
-      dvalue = 10.0d0*twopi/180.0d0
-      call twh_sdevtor(GLB_SET,dvalue)
-      dvalue = 5.0d0*twopi/180.0d0
-      call twh_sdevbena(GLB_SET,dvalue)
-      dvalue = 5.0d0*twopi/180.0d0
-      call twh_sdevbenb(GLB_SET,dvalue)
-      call twh_sdevvib(GLB_SET,0.1d0)
-
+c     --- energy calculation
       call twh_lusecom(GLB_SET,.true.)
-
       call twh_minboxdim(GLB_SET,0.0d0)
 c     --- initialize temporary accumulators
       call twh_baavb1(GLB_INIT,NTMAX,NTMAX,MAXBOX,3,0)

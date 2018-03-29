@@ -72,13 +72,10 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-29-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_ELEMENTNAME
 #define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_NCMT
-#define FUNCTION_GET_NTYPE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lovrlap, lmolecmove,lmovelist,lreport,lbonded
@@ -92,8 +89,8 @@ c     --- logical scalars
       logical lmadelung,ltailc,lelect,lewald
 c     --- integer scalars
       integer ichain, nmcount, cutstyle,lambda
-      integer classical_potnum,nchain,nmolty,nchbox
-      integer scp_num_foreign_lambda,potentialstyle,numboxes
+      integer classical_potnum,nchain,nchbox
+      integer scp_num_foreign_lambda
 c     --- double precision scalars
       double precision maddist,sself,correct,vtmp
       double precision velectinter,velectintra,vtwointer,vangleangle
@@ -102,7 +99,6 @@ c     --- double precision scalars
 c      write(6,*) 'start ENGTOTAL'
 
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_ltailc(GLB_GET,ltailc)
       call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
@@ -114,7 +110,6 @@ c        --- initialize report variables
 
       cutstyle = 0
       lovrlap = .false.
-      lmadelung = .false.
 
       vclassical = 0.0d0
       vinter = 0.0d0
@@ -142,18 +137,12 @@ c        --- initialize report variables
       do lambda=1,MAX_FOREIGN_LAMBDA
          vforeign(lambda) = 0.0d0
       enddo
-
 c     --- determine whether we want to compute the madelung constant
-      call twh_nmolty(GLB_GET,nmolty)
-      call twh_numboxes(GLB_GET,numboxes)
-      if ( numboxes .eq. 1 .and. nmolty .eq. 2 
-     &     .and. twh_get_ncmt(ibox,1) .eq. twh_get_ncmt(ibox,nmolty)
-     &     .and. twh_get_elementname(twh_get_ntype(1,1)) .eq. 'Na'
-     &     .and. twh_get_elementname(twh_get_ntype(nmolty,1)) .eq. 'Cl'
-     &     ) then
-         lmadelung = .true.
+      if ( lreport ) then
+         call twh_lcompute_madelung(GLB_GET,lmadelung)
+      else
+         lmadelung = .false.
       endif
-
 c     ---  check the molecule count
       call twh_nchain(GLB_GET,nchain)
       nmcount = 0
@@ -173,89 +162,70 @@ c     ---  check the molecule count
          return
       endif
  
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_engtotal_twobody(lfailure,crdflag
-     &        ,velectinter,vtwointer
-     &        ,vforeign,maddist,dl_inter,dl_elect,lovrlap,lmadelung
-     &        ,lmolecmove,lmovelist,cutstyle,bxdflag,ibox )
-         if ( lfailure ) return
-         if ( lovrlap ) then
-            return
-         endif
-
-         if ( ltailc ) then
-            call twh_engtotal_tail(vtail,bxdflag,ibox)
-         endif
-
-         call twh_cp_number(GLB_GET,classical_potnum)
-         if ( classical_potnum .eq. CP_STILLINGER_WEBER ) then
-            call  twh_engtotal_tb_sw(lfailure,crdflag,vthrinter
-     &           ,bxdflag,ibox)
-            if ( lfailure ) return
-         elseif ( classical_potnum .eq. CP_EMBEDDED_ATOM_METHOD ) then
-            call twh_engtotal_tb_eam(lfailure,crdflag
-     &           ,vthrinter, lovrlap,bxdflag,ibox)
-            if ( lfailure ) return
-         endif
-
-         if ( lewald ) then
-c           --- TODO: add foreign energy terms here
-            call twh_engtotal_ewald(lfailure,crdflag,bxdflag,ibox
-     &           ,vrecipsum,sself,correct)
-            if ( lfailure ) return
-         endif
-
-         call twh_engtotal_intrachain(lfailure,crdflag
-     &        ,vintra, velectintra
-     &        , lovrlap,cutstyle,bxdflag,ibox, lmolecmove, lmovelist)
-         if ( lfailure ) return
-         if ( lovrlap ) then
-            return
-         endif   
-    
-         if ( lbonded ) then
-            call twh_engtotal_vibbendtors(lfailure,crdflag
-     &           ,vvib,vbend,vtg,vangleangle,vimpr,vbondbond
-     &           ,lovrlap,lreport,bxdflag,ibox)
-            if ( lfailure ) return
-            if ( lovrlap ) then
-               return
-            endif
-         endif 
-         call twh_engtotal_ext(lfailure,bxdflag,crdflag
-     &        ,vext,lovrlap,ibox,lmolecmove
-     &        ,lmovelist )
-         if ( lfailure ) return
-         if ( lovrlap ) return
-         
-         call twh_engtotal_solv(lfailure,crdflag,bxdflag,ibox
-     &        ,vsolvation)
-         if ( lfailure ) return
-      
-         if ( lelect ) then
-            vrealelect = velectintra + velectinter
-            velect = vrealelect + sself + correct + vrecipsum
-c            write(6,*) 'velectintra:',velectintra
-c            write(6,*) 'velectinter:',velectinter
-c            write(6,*) 'vrealelect:',vrealelect
-c            write(6,*) 'sself:',sself
-c            write(6,*) 'correct:',correct
-c            write(6,*) 'vrecipsum:',vrecipsum
-         endif
-
-         vinter = vtwointer + vthrinter + vtail
-
-         vtmp = vintra + vvib + vbondbond + vbend 
-     &        + vangleangle + vtg + vimpr + vext + vsolvation
-         vclassical = vinter + velect + vtmp
-
-c        --- foreign energies add terms which do not change with lambda
-         call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
-         do lambda = 1, scp_num_foreign_lambda
-            vforeign(lambda) = vforeign(lambda) + vtmp
-         enddo
-
+      call twh_engtotal_twobody(lfailure,crdflag
+     &     ,velectinter,vtwointer
+     &     ,vforeign,maddist,dl_inter,dl_elect,lovrlap,lmadelung
+     &     ,lmolecmove,lmovelist,cutstyle,bxdflag,ibox )
+      if ( lfailure ) return
+      if ( lovrlap ) then
+         return
       endif
+      if ( ltailc ) then
+         call twh_engtotal_tail(vtail,bxdflag,ibox)
+      endif
+      call twh_cp_number(GLB_GET,classical_potnum)
+      if ( classical_potnum .eq. CP_STILLINGER_WEBER ) then
+         call  twh_engtotal_tb_sw(lfailure,crdflag,vthrinter
+     &        ,bxdflag,ibox)
+         if ( lfailure ) return
+      elseif ( classical_potnum .eq. CP_EMBEDDED_ATOM_METHOD ) then
+         call twh_engtotal_tb_eam(lfailure,crdflag
+     &        ,vthrinter, lovrlap,bxdflag,ibox)
+         if ( lfailure ) return
+      endif
+      if ( lewald ) then
+c        --- TODO: add foreign energy terms here
+         call twh_engtotal_ewald(lfailure,crdflag,bxdflag,ibox
+     &        ,vrecipsum,sself,correct)
+         if ( lfailure ) return
+      endif
+      call twh_engtotal_intrachain(lfailure,crdflag
+     &     ,vintra, velectintra
+     &     , lovrlap,cutstyle,bxdflag,ibox, lmolecmove, lmovelist)
+      if ( lfailure ) return
+      if ( lovrlap ) then
+         return
+      endif   
+      if ( lbonded ) then
+         call twh_engtotal_vibbendtors(lfailure,crdflag
+     &        ,vvib,vbend,vtg,vangleangle,vimpr,vbondbond
+     &        ,lovrlap,lreport,bxdflag,ibox)
+         if ( lfailure ) return
+         if ( lovrlap ) then
+            return
+         endif
+      endif 
+      call twh_engtotal_ext(lfailure,bxdflag,crdflag
+     &     ,vext,lovrlap,ibox,lmolecmove
+     &     ,lmovelist )
+      if ( lfailure ) return
+      if ( lovrlap ) return
+      call twh_engtotal_solv(lfailure,crdflag,bxdflag,ibox
+     &     ,vsolvation)
+      if ( lfailure ) return
+      if ( lelect ) then
+         vrealelect = velectintra + velectinter
+         velect = vrealelect + sself + correct + vrecipsum
+      endif
+      vinter = vtwointer + vthrinter + vtail
+      vtmp = vintra + vvib + vbondbond + vbend 
+     &     + vangleangle + vtg + vimpr + vext + vsolvation
+      vclassical = vinter + velect + vtmp
+c     --- foreign energies add terms which do not change with lambda
+      call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
+      do lambda = 1, scp_num_foreign_lambda
+         vforeign(lambda) = vforeign(lambda) + vtmp
+      enddo
 
       if ( lreport ) then
          call twh_eng_print(nmcount, vvib, vbondbond, vbend, 
@@ -1408,7 +1378,7 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -1431,13 +1401,11 @@ c     --- logical scalars
       logical scp_eval_derivative,ltailc,lelect,lewald
 c     --- integer scalars
       integer imolty,classical_potnum,nmolty,scp_num_foreign_lambda
-      integer potentialstyle
 c     --- double precision scalars
       double precision qqfact,vreport,sumvdw,sumchg
 
 c     --- retrieve constants
       call twh_nmolty(GLB_GET,nmolty)
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_ltailc(GLB_GET,ltailc)
       call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
@@ -1453,178 +1421,136 @@ c     --- retrieve constants
       enddo
 
 c     --- global output format
- 111     format(a54,f15.3,' [K] ',f15.5,' [kcal/mol]')
+ 111  format(a54,f15.3,' [K] ',f15.5,' [kcal/mol]')
 
 c     --- output classical energies
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-
-         outtext = ' Total vibration (atoms ij bonded together)'
-         write(6,111) outtext
-     &        ,vvib+vbondbond,(vvib+vbondbond)/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_BON_REG,vreport)
-         outtext = '  bond (ij) regular'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_BON_VDW,vreport)
-         sumvdw = sumvdw + vreport
-         outtext = '  bond (ij) van der waals'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_BON_CHG,vreport)
-         sumchg = sumchg + vreport
-         outtext = '  bond (ij) Electric'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         outtext = '  bond-bond (ij-jk)'
-         write(6,111) outtext,vbondbond,vbondbond/CON_KCALTOK
-
-         outtext = ' Total angle (atoms ijk bonded in sequence)'
-         write(6,111) outtext,vbend+vangleangle
-     &        ,(vbend+vangleangle)/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_ANG_REG,vreport)
-         outtext = '  angle (ijk) regular'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_ANG_BA,vreport)
-         outtext = '  bond-angle (ij-ijk)'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_ANG_VDW,vreport)
-         sumvdw = sumvdw + vreport
-         outtext = '  angle (ik) van der waals'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_ANG_CHG,vreport)
-         sumchg = sumchg + vreport
-         outtext = '  angle (ik) Electric'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         outtext = '  angle-angle (ijk-ijm)'
-         write(6,111) outtext,vangleangle,vangleangle/CON_KCALTOK
-
-         outtext = ' Total torsion (ijkl bonded in sequence)'
-         write(6,111) outtext,vtg,vtg/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_REG,vreport)
-         outtext = '  torsion (ijkl) regular'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_BB,vreport)
-         outtext = '  torsion (ij-kl) bond-bond'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_BT,vreport)
-         outtext = '  torsion (ij-ijkl) bond-torsion'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_AT,vreport)
-         outtext = '  torsion (ijk-ijkl) angle-torsion'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_AAT,vreport)
-         outtext = '  torsion (ijk-jkl-ijkl) angle-angle-torsion'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_VDW,vreport)
-         sumvdw = sumvdw + vreport
-         outtext = '  torsion (i-l) one-four van der waals'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         call twh_report(GLB_GET,REP_TOR_CHG,vreport)
-         sumchg = sumchg + vreport
-         outtext = '  torsion (i-l) one-four Electric'
-         write(6,111) outtext,vreport,vreport/CON_KCALTOK
-
-         outtext = ' Total improper (ijkm, i,k,m bonded to j)'
-         write(6,111) outtext,vimpr,vimpr/CON_KCALTOK
-
-         outtext = ' Total nonbond (more than 3 bonds apart) vdw'
-         sumvdw = sumvdw + vintra + vinter
-         write(6,111) outtext,vintra+vinter,(vintra+vinter)/CON_KCALTOK
-
-         outtext = '  intramolecular'
-         write(6,111) outtext,vintra,vintra/CON_KCALTOK
-
-         outtext = '  2-body vdw intermolecular'
-         write(6,111) outtext,vtwointer,vtwointer/CON_KCALTOK
-
-         outtext = '  3-body vdw intermolecular'
-         write(6,111) outtext,vthrinter,vthrinter/CON_KCALTOK
-
-         if ( ltailc ) then
-            outtext = '  tail correction'
-            write(6,111) outtext,vtail,vtail/CON_KCALTOK
+      outtext = ' Total vibration (atoms ij bonded together)'
+      write(6,111) outtext
+     &     ,vvib+vbondbond,(vvib+vbondbond)/CON_KCALTOK
+      call twh_report(GLB_GET,REP_BON_REG,vreport)
+      outtext = '  bond (ij) regular'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_BON_VDW,vreport)
+      sumvdw = sumvdw + vreport
+      outtext = '  bond (ij) van der waals'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_BON_CHG,vreport)
+      sumchg = sumchg + vreport
+      outtext = '  bond (ij) Electric'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      outtext = '  bond-bond (ij-jk)'
+      write(6,111) outtext,vbondbond,vbondbond/CON_KCALTOK
+      outtext = ' Total angle (atoms ijk bonded in sequence)'
+      write(6,111) outtext,vbend+vangleangle
+     &     ,(vbend+vangleangle)/CON_KCALTOK
+      call twh_report(GLB_GET,REP_ANG_REG,vreport)
+      outtext = '  angle (ijk) regular'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_ANG_BA,vreport)
+      outtext = '  bond-angle (ij-ijk)'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_ANG_VDW,vreport)
+      sumvdw = sumvdw + vreport
+      outtext = '  angle (ik) van der waals'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_ANG_CHG,vreport)
+      sumchg = sumchg + vreport
+      outtext = '  angle (ik) Electric'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      outtext = '  angle-angle (ijk-ijm)'
+      write(6,111) outtext,vangleangle,vangleangle/CON_KCALTOK
+      outtext = ' Total torsion (ijkl bonded in sequence)'
+      write(6,111) outtext,vtg,vtg/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_REG,vreport)
+      outtext = '  torsion (ijkl) regular'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_BB,vreport)
+      outtext = '  torsion (ij-kl) bond-bond'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_BT,vreport)
+      outtext = '  torsion (ij-ijkl) bond-torsion'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_AT,vreport)
+      outtext = '  torsion (ijk-ijkl) angle-torsion'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_AAT,vreport)
+      outtext = '  torsion (ijk-jkl-ijkl) angle-angle-torsion'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_VDW,vreport)
+      sumvdw = sumvdw + vreport
+      outtext = '  torsion (i-l) one-four van der waals'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      call twh_report(GLB_GET,REP_TOR_CHG,vreport)
+      sumchg = sumchg + vreport
+      outtext = '  torsion (i-l) one-four Electric'
+      write(6,111) outtext,vreport,vreport/CON_KCALTOK
+      outtext = ' Total improper (ijkm, i,k,m bonded to j)'
+      write(6,111) outtext,vimpr,vimpr/CON_KCALTOK
+      outtext = ' Total nonbond (more than 3 bonds apart) vdw'
+      sumvdw = sumvdw + vintra + vinter
+      write(6,111) outtext,vintra+vinter,(vintra+vinter)/CON_KCALTOK
+      outtext = '  intramolecular'
+      write(6,111) outtext,vintra,vintra/CON_KCALTOK
+      outtext = '  2-body vdw intermolecular'
+      write(6,111) outtext,vtwointer,vtwointer/CON_KCALTOK
+      outtext = '  3-body vdw intermolecular'
+      write(6,111) outtext,vthrinter,vthrinter/CON_KCALTOK
+      if ( ltailc ) then
+         outtext = '  tail correction'
+         write(6,111) outtext,vtail,vtail/CON_KCALTOK
+      endif
+      if ( lelect ) then
+         outtext =
+     &        ' Total nonbond (more than 3 bonds apart) Electric'
+         sumchg = sumchg + velect
+         write(6,111) outtext,velect,velect/CON_KCALTOK
+         outtext = '  total real space Electric'
+         write(6,111) outtext,vrealelect,vrealelect/CON_KCALTOK
+         outtext = '   intramolecular Electric'
+         write(6,111) outtext,velectintra,velectintra/CON_KCALTOK
+         outtext = '   intermolecular Electric'
+         write(6,111) outtext,velectinter,velectinter/CON_KCALTOK
+         if ( lewald ) then
+            outtext = '  self'
+            write(6,111) outtext,sself,sself/CON_KCALTOK
+            outtext = '  correction'
+            write(6,111) outtext,correct,correct/CON_KCALTOK
+            outtext = '  reciprocal sum'
+            write(6,111) outtext,vrecipsum,vrecipsum/CON_KCALTOK
          endif
-
-         if ( lelect ) then
-            outtext =
-     &           ' Total nonbond (more than 3 bonds apart) Electric'
-            sumchg = sumchg + velect
-            write(6,111) outtext,velect,velect/CON_KCALTOK
-
-            outtext = '  total real space Electric'
-            write(6,111) outtext,vrealelect,vrealelect/CON_KCALTOK
-
-            outtext = '   intramolecular Electric'
-            write(6,111) outtext,velectintra,velectintra/CON_KCALTOK
-
-            outtext = '   intermolecular Electric'
-            write(6,111) outtext,velectinter,velectinter/CON_KCALTOK
-
-            if ( lewald ) then
-               outtext = '  self'
-               write(6,111) outtext,sself,sself/CON_KCALTOK
-
-               outtext = '  correction'
-               write(6,111) outtext,correct,correct/CON_KCALTOK
-
-               outtext = '  reciprocal sum'
-               write(6,111) outtext,vrecipsum,vrecipsum/CON_KCALTOK
-            endif
-         endif
-
-         outtext = ' Total external field'
-         write(6,111) outtext,vext,vext/CON_KCALTOK
-
-         outtext = ' Total solvation'
-         write(6,111) outtext,vsolvation,vsolvation/CON_KCALTOK
-
-         outtext = 'Total classical'
-         write(6,111) outtext,vclassical,vclassical/CON_KCALTOK
-
-         outtext = ' Aggregate van der waals (bond and nonbond)'
-         write(6,111) outtext,sumvdw,sumvdw/CON_KCALTOK
-
-         outtext = ' Aggregate Electric (bond and nonbond)'
-         write(6,111) outtext,sumchg,sumchg/CON_KCALTOK
-
-         call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
-         if (scp_eval_derivative) then
-            write(6,91) dl_inter,dl_inter/CON_KCALTOK
-            write(6,92) dl_elect,dl_elect/CON_KCALTOK
-91          format(' dU/d[lambda_lj]',f17.3,' [K] ',f15.5,
-     &         ' [kcal/mol]')
-92          format(' dU/d[lambda_c] ',f17.3,' [K] ',f15.5,
-     &         ' [kcal/mol]')
-         endif
-
-         call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
-         if (scp_num_foreign_lambda .ne. 0) then
-            write(6,'(1x,a,i1,a)')
-     &           "Foreign Lambda energy calculations (box ",ibox,")"
-            write(6,901) "index","lambda_lj","lambda_c",
-     &            "Total Energy [K]", "Total Energy [kcal/mol]"
-            do l = 1,scp_num_foreign_lambda
-               write(6,902) l,scp_get_foreign_lambda(LAMBDA_LJ,l),
-     &            scp_get_foreign_lambda(LAMBDA_C,l)
-     &                 ,vforeign(l),vforeign(l)/CON_KCALTOK
-            enddo
-901         format(a6,a11,a11,a20,a25)
-902         format(i6,f11.3,f11.3,f20.4,f20.4)
-         endif
-
+      endif
+      outtext = ' Total external field'
+      write(6,111) outtext,vext,vext/CON_KCALTOK
+      outtext = ' Total solvation'
+      write(6,111) outtext,vsolvation,vsolvation/CON_KCALTOK
+      outtext = 'Total classical'
+      write(6,111) outtext,vclassical,vclassical/CON_KCALTOK
+      outtext = ' Aggregate van der waals (bond and nonbond)'
+      write(6,111) outtext,sumvdw,sumvdw/CON_KCALTOK
+      outtext = ' Aggregate Electric (bond and nonbond)'
+      write(6,111) outtext,sumchg,sumchg/CON_KCALTOK
+      call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+      if (scp_eval_derivative) then
+         write(6,91) dl_inter,dl_inter/CON_KCALTOK
+         write(6,92) dl_elect,dl_elect/CON_KCALTOK
+ 91      format(' dU/d[lambda_lj]',f17.3,' [K] ',f15.5,
+     &        ' [kcal/mol]')
+ 92      format(' dU/d[lambda_c] ',f17.3,' [K] ',f15.5,
+     &        ' [kcal/mol]')
+      endif
+      call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
+      if (scp_num_foreign_lambda .ne. 0) then
+         write(6,'(1x,a,i1,a)')
+     &        "Foreign Lambda energy calculations (box ",ibox,")"
+         write(6,901) "index","lambda_lj","lambda_c",
+     &        "Total Energy [K]", "Total Energy [kcal/mol]"
+         do l = 1,scp_num_foreign_lambda
+            write(6,902) l,scp_get_foreign_lambda(LAMBDA_LJ,l),
+     &           scp_get_foreign_lambda(LAMBDA_C,l)
+     &           ,vforeign(l),vforeign(l)/CON_KCALTOK
+         enddo
+ 901     format(a6,a11,a11,a20,a25)
+ 902     format(i6,f11.3,f11.3,f20.4,f20.4)
       endif
       
 c        --- hack to print out the madelung constant
@@ -1632,7 +1558,7 @@ c        --- only want to do this for a system of sodium chloride
       if ( lmadelung ) then
          call twh_constant_qqfact(GLB_GET,qqfact)
          write(6,'(1x,a,f15.10)') 'Madelung Constant [unitless]: '
-     &           ,(-velect*maddist)/(qqfact*dble(twh_get_ncmt(ibox,1)))
+     &        ,(-velect*maddist)/(qqfact*dble(twh_get_ncmt(ibox,1)))
       endif
       call twh_cp_number(GLB_GET,classical_potnum)
       if ( classical_potnum .eq. CP_EMBEDDED_ATOM_METHOD ) then
@@ -1642,7 +1568,6 @@ c           --- print total energy in eV for EAM potential
       endif
       return
       end
-
 
       subroutine twh_engtotal_overlap(lfailure,lmolecmove,ichain,ii
      &     ,jchain,jj,rijsq,rxui,ryui,rzui,rxuj,ryuj,rzuj)

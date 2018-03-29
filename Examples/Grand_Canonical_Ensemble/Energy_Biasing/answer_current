@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  random_number_generator: RANLUX                        
  random_luxlevel:            3
  random_allow_restart:  T
@@ -82,25 +81,6 @@ Output running block averages
  pdb_output_freq:      1000000
  trmaxdispfreq:            1
  volmaxdispfreq:     10000000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_Dubb2004                                                                              
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Explicit                      
- lshift:  F
- ltailc:  T
- rmin:  1.00000    
- rcut:  9.50000    
- rcutin:  9.50000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -168,7 +148,6 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: explicit                      
-cbmc_fit_strategy: equilibrium                   
  cbmc_nb_one_generation                            : uniform                       energy bias                   
  energy biasing requested
  mapmolty:            2
@@ -184,12 +163,30 @@ cbmc_bend_generation: ideal
  Use ideal distributions to generate angles in configurational-bias
  nch_bend_a                                        :            1         1000
  nch_bend_b                                        :            1         1000
+default max_bond_length:  3.00
 cbmc_bond_generation: r^2 with bounds               
  Use a bounded r^2 distribution to generate vibrations in config-bias
 vibrang:   0.85000    1.15000
  nch_vib                                           :            1            1
 two_bond_fixed_endpoint_bias_style: none                                              
 three_bond_fixed_endpoint_bias_style: none                                              
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Dubb2004                                                                              
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Explicit                      
+ lshift:  F
+ ltailc:  T
+ rmin:  1.00000    
+ rcut:  9.50000    
+ rcutin:  9.50000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:          576
  nmaxcbmc:          576
@@ -815,6 +812,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is 11536.1280 g/mol
 Molecular mass for molecule type     2 is    16.0326 g/mol

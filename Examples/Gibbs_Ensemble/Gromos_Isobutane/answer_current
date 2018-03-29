@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  304.000    
  nmolty:            1
@@ -79,25 +78,6 @@ Full output of updates and block averages
  pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_Gromos43A1                                                                            
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Explicit                      
- lshift:  T
- ltailc:  F
- rmin:  1.00000    
- rcut:  14.0000    
- rcutin:  10.0000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- No solvation model used
  linit:  F
  initboxtype: dimensions          
 initstyle Box:    1
@@ -182,6 +162,24 @@ cbmc_formulation: Martin and Frischknecht 2006
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Gromos43A1                                                                            
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Explicit                      
+ lshift:  T
+ ltailc:  F
+ rmin:  1.00000    
+ rcut:  14.0000    
+ rcutin:  10.0000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ No solvation model used
  input_style: explicit                                          
  nunit:            4
  nmaxcbmc:            4
@@ -216,6 +214,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is    58.1230 g/mol
  Reading in initial conformation from towhee_inital

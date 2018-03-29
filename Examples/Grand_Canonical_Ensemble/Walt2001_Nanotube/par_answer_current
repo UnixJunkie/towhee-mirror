@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Grand_Canonical_Ensemble/Walt2001_Nanotube/                                                        
- inputformat: Towhee         
  ensemble: uvt                           
  temperature:  256.000    
  nmolty:            2
@@ -86,29 +85,6 @@ Full output of updates and block averages
  pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_Walt2001                                                                              
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Explicit                      
- lshift:  F
- ltailc:  T
- rmin:  1.00000    
- rcut:  9.50000    
- rcutin:  5.00000    
- electrostatic_form: coulomb                                           
- coulombstyle: ewald_fixed_kmax    
- kalp:  5.60000    
- kmax:            5
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -176,6 +152,28 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: default ideal                 
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Walt2001                                                                              
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Explicit                      
+ lshift:  F
+ ltailc:  T
+ rmin:  1.00000    
+ rcut:  9.50000    
+ rcutin:  5.00000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: ewald_fixed_kmax    
+ kalp:  5.60000    
+ kmax:            5
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ No solvation model used
  input_style: nanotube builder                                  
 Building the nanotube input file for molecule type:    1
  forcefield: Walt2001  
@@ -241,8 +239,9 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
+     Ewald Sum with fixed kmax:  5 kalp:  5.600
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is  3843.5200 g/mol
 Molecular mass for molecule type     2 is    18.0148 g/mol

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Isobaric_Isothermal_Ensemble/Au_Cu_Switch/                                                         
- inputformat: Towhee         
  ensemble: npt                           
  temperature:  1.00000    
  pressure:  1.00000    
@@ -83,25 +82,6 @@ Full output of updates and block averages
  pressure_thermo_style: move data           
  trmaxdispfreq:            1
  volmaxdispfreq:            1
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_ParkHijazi                                                                            
- classical_potential: Embedded Atom Method          
- READCLASSICAL: pot_num:   111 potential name: Embedded Atom Method          
- interpolatestyle: cubicspline         
- Tables interpolated using cubic splines
- rcut:  1.00000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- ntypes           2
- numone,lhere           1 F
- numone,lhere           2 F
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -132,6 +112,24 @@ cbmc_formulation: Martin and Frischknecht 2006
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_ParkHijazi                                                                            
+ classical_potential: Embedded Atom Method          
+ READCLASSICAL: pot_num:   111 potential name: Embedded Atom Method          
+ interpolatestyle: cubicspline         
+ Tables interpolated using cubic splines
+ rcut:  1.00000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ ntypes           2
+ numone,lhere           1 F
+ numone,lhere           2 F
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            1
  nmaxcbmc:            1
@@ -184,6 +182,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  3-dimensional periodic box
  Additional Center-of-Mass cutoff
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is    63.5500 g/mol
 Molecular mass for molecule type     2 is   196.9700 g/mol

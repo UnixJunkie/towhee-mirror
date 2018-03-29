@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 01-16-2018 by M.G. Martin */
+/* last significant modification 03-25-2018 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -319,7 +319,6 @@
 #define TRAMONTO 0
 #define JOBFARM 1
 #define REX 2
-#define LCAO 3
 
 #ifdef SAFE_COMPARE
 /* define relative and absolute errors.  These are intended for */
@@ -345,8 +344,8 @@
 /*    [kPa * angstrom^3].                                         */
 #define CON_KCALTOK (503.2166d0)
 #define CON_KJTOK (120.2717d0)
-#define CON_EETOKCAL (332.0636d0)
 #define CON_EVTOK (11604.449d0)
+#define CON_EETOKCAL (332.0636d0)
 #define CON_ATMTOKPA (101.325d0)
 #define CON_KPATOSIM (7.2429d-5)
 #define CON_BOHRRADIUS (0.52918d0)
@@ -414,10 +413,6 @@
 #define RWCONF_RESTART 2
 #define READ_FLAG 10
 #define WRITE_FLAG 11
-
-/* Values of potentialstyle -- (numerical values arbitrary) */
-#define POT_INTERNAL 12345
-#define POT_EXTERNAL 12347
 
 /* Values of ensemble -- (numerical values arbitrary) */
 #define ENS_NVT 156

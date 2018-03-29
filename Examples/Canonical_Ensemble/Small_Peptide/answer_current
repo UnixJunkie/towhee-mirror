@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  random_number_generator: RANLUX                        
  random_luxlevel:            3
  random_allow_restart:  T
@@ -82,29 +81,6 @@ Full output of updates and block averages
  pressure_virial_freq:         2000
  trmaxdispfreq:           10
  volmaxdispfreq:         5000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_C19eef1                                                                               
- classical_potential: 12-6 plus solvation           
- READCLASSICAL: pot_num:     2 potential name: 12-6 plus solvation           
- classical_mixrule: Explicit                      
- lshift:  F
- ltailc:  F
- rmin: 0.100000    
- rcut:  9.00000    
- rcutin:  9.00000    
- electrostatic_form: coulomb                                           
- coulombstyle: minimum image       
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- solvation_style: internal            
- solvation_type: EEF1                
- Effective energy function (EEF1) implicit water applied
  linit:  F
  initboxtype: dimensions          
 initstyle Box:    1
@@ -167,7 +143,6 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: explicit                      
-cbmc_fit_strategy: equilibrium                   
  cbmc_nb_one_generation                            : uniform                       
  nch_nb_one                                        :           10
  nch_nb                                            :           10
@@ -189,6 +164,7 @@ sdevbena:  10.00000
 sdevbenb:  20.00000
  nch_bend_a                                        :            1
  nch_bend_b                                        :            1
+default max_bond_length:  3.00
 cbmc_bond_generation: global gaussian               
  Use gaussian distribution to generate vibrations in config-bias
     and correct this in the rosenbluth weights
@@ -198,6 +174,27 @@ sdevvib:   0.10000
  nch_vib                                           :            1
 two_bond_fixed_endpoint_bias_style: analytic Boltzmann dihedral energy sum            
 three_bond_fixed_endpoint_bias_style: analytic using max and min 2-4 distance           
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_C19eef1                                                                               
+ classical_potential: 12-6 plus solvation           
+ READCLASSICAL: pot_num:     2 potential name: 12-6 plus solvation           
+ classical_mixrule: Explicit                      
+ lshift:  F
+ ltailc:  F
+ rmin: 0.100000    
+ rcut:  9.00000    
+ rcutin:  9.00000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: minimum image       
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ solvation_style: internal            
+ solvation_type: EEF1                
+ Effective energy function (EEF1) implicit water applied
  input_style: polypeptide builder                               
  nunit:            9
  nmaxcbmc:           90
@@ -380,6 +377,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is   935.6990 g/mol
  Reading in initial conformation from towhee_inital

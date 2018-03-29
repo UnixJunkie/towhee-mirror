@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -71,10 +71,11 @@
  numboxes:            1
  stepstyle: cycles  
  nstep:            0
- printfreq:          100
- blocksize:          200
- moviefreq:          100
- backupfreq:          100
+ controlstyle: manual              
+ printfreq:            0
+ blocksize:            0
+ moviefreq:            0
+ backupfreq:            0
  restartfreq:            0
  runoutput: full                
 Full output of updates and block averages
@@ -82,39 +83,12 @@ Full output of updates and block averages
  loutdft:  F
  loutlammps:  T
  loutdlpoly:  F
- pressure_virial_freq:           10
+ pressure_virial_freq:            0
  pressure_thermo_freq:            0
- pressure_thermo_style: range               
- pressure_thermo_range: -.100000E-01 0.100000E-01
- trmaxdispfreq:          100
- volmaxdispfreq:          100
+ pressure_thermo_style: move data           
+ trmaxdispfreq:            0
+ volmaxdispfreq:            0
  chempotperstep:            0
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-towhee_ff                                                                                                               
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Lorentz-Berthelot             
- lshift:  F
- ltailc:  F
- rmin:  0.00000    
- rcut:  5.00000    
- rcutin:  5.00000    
- electrostatic_form: coulomb                                           
- coulombstyle: ewald_fixed_kmax    
- kalp:  5.60000    
- kmax:            5
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Lorentz-Berthelot Mixing rules
- Arithmetic mean of sigma terms
- Geometric mean of epsilon term
- max_bond_length:  3.00000    
- nfield:            0
- solvation_style: none                
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -181,6 +155,50 @@ cbmc_formulation: Martin and Frischknecht 2006
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
+cbmc_fit_strategy: equilibrium                   
+ cbmc_nb_one_generation                            : uniform                       
+ nch_nb_one                                        :           10
+ nch_nb                                            :           10
+ nch_pre_nb                                        :            1
+cbmc_dihedral_generation: ideal                         
+ Use true distributions to generate torsions in config-bias
+ nch_tor                                           :          360
+ nch_tor_connect                                   :          360
+cbmc_bend_generation: ideal                         
+ Use ideal distributions to generate angles in configurational-bias
+ nch_bend_a                                        :          100
+ nch_bend_b                                        :          100
+ max_bond_length                                   :  3.00000    
+cbmc_bond_generation: ideal                         
+ Use the ideal r^2 distribution to generate vibrations in config-bias
+ nch_vib                                           :         1000
+two_bond_fixed_endpoint_bias_style: none                                              
+three_bond_fixed_endpoint_bias_style: none                                              
+ ffnumber:            1
+ ff_filename:
+towhee_ff                                                                                                               
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  F
+ ltailc:  F
+ rmin:  0.00000    
+ rcut:  5.00000    
+ rcutin:  5.00000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: ewald_fixed_kmax    
+ kalp:  5.60000    
+ kmax:            5
+ dielect:  1.00000    
+ lcompute_madelung                                 :  F
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+ nfield:            0
+ solvation_style: none                
+ No solvation model used
  input_style: explicit                                          
  nunit:          250
  nmaxcbmc:          250
@@ -581,8 +599,9 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
+     Ewald Sum with fixed kmax:  5 kalp:  5.600
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is  1952.5605 g/mol
  Calling initconf
@@ -643,7 +662,6 @@ Molecules of type   1 :          1
 Total classical                                             23363.021 [K]        46.42737 [kcal/mol]
  Aggregate van der waals (bond and nonbond)                -23518.094 [K]       -46.73553 [kcal/mol]
  Aggregate Electric (bond and nonbond)                     -19537.196 [K]       -38.82463 [kcal/mol]
- initial virial pressure in box  1 =       59921.84
 
  +++++ start of markov chain +++++
 

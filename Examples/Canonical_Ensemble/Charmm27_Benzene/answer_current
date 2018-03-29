@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: current directory
- inputformat: Towhee         
  ensemble: nvt                           
  temperature:  300.000    
  nmolty:            1
@@ -79,28 +78,6 @@ No output of updates or block averages
  pressure_virial_freq:      2000000
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_Charmm27                                                                              
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Lorentz-Berthelot             
- lshift:  F
- ltailc:  T
- rmin:  1.00000    
- rcut:  10.0000    
- rcutin:  10.0000    
- electrostatic_form: coulomb                                           
- coulombstyle: minimum image       
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Lorentz-Berthelot Mixing rules
- Arithmetic mean of sigma terms
- Geometric mean of epsilon term
-default max_bond_length:  3.00
- No solvation model used
  linit:  F
  initboxtype: dimensions          
 initstyle Box:    1
@@ -123,6 +100,27 @@ cbmc_formulation: Martin and Frischknecht 2006
  Coupled to pre-nonbond formulation from
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
+default max_bond_length:  3.00
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_Charmm27                                                                              
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  F
+ ltailc:  T
+ rmin:  1.00000    
+ rcut:  10.0000    
+ rcutin:  10.0000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: minimum image       
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:           12
  nmaxcbmc:           12
@@ -183,6 +181,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is    78.0480 g/mol
  Reading in initial conformation from towhee_inital

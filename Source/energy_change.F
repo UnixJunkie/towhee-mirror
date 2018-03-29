@@ -58,7 +58,7 @@ c     * dl_inter: change of d[inter]/d[lambda_lj] (output)             *
 c     * dl_elect: change of d[elect]/d[lambda_lj] (output)             *
 c     *                                                                *
 c     * rewritten from engmolec 08-04-2006 by M.G. Martin              *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define DEBUG_ENERGY_CHANGE 0
@@ -77,15 +77,12 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical ldualcutoff
       integer lambda,scp_num_foreign_lambda
-      integer potentialstyle
       double precision dv_three,dv_tmp
 
 #if DEBUG_ENERGY_CHANGE
       write(6,*) 'start ENERGY_CHANGE'
 #endif
 
-c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
 c     --- initialize variables
       loverlap(1) = .false.
       loverlap(2) = .false.
@@ -100,67 +97,59 @@ c     --- initialize variables
       dv_vib = 0.0d0
       dv_three = 0.0d0
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-
-c        --- Skip this if computing just the multibody terms that are
-c        --- currently missing from engatom
-         call twh_ldualcutoff(GLB_GET,ldualcutoff)
-         if ( .not.(lpartial .and. .not. ldualcutoff) ) then
-            call twh_ec_one_body_dv(lfailure,bxdflag,activebox
-     &           ,nchainmove,chaininfo,lpartial,loverlap,dv_ext,dv_solv)
-            if ( lfailure .or. loverlap(TRL_NEW) 
-     &           .or. loverlap(TRL_OLD)) return
-            call twh_ec_two_body_dv(lfailure,bxdflag,activebox
-     &           ,nchainmove,chaininfo,lpartial,lgetcom,loverlap
-     &           ,dv_inter,dv_elect,dl_inter,dl_elect,dv_foreign)
-            if ( lfailure .or. loverlap(TRL_NEW) 
-     &           .or. loverlap(TRL_OLD)) return
-         endif
-
-         call twh_ec_multi_body_dv(lfailure,bxdflag,activebox,nchainmove
-     &        ,chaininfo,dv_three)
-         if ( lfailure ) return
-
-         call twh_ec_intra_dv(lfailure,bxdflag,activebox
-     &        ,nchainmove,chaininfo
-     &        ,lintra,lbonded,loverlap,dv_intra,dv_elect,dv_vib
-     &        ,dv_ben,dv_tor)
-         if ( lfailure ) return
-         if (loverlap(TRL_NEW) .or. loverlap(TRL_OLD)) return
-
-c        --- add dv_three to dv_inter(bindex)
-         dv_inter = dv_inter + dv_three
-c        --- note that dv_intra is only computed when
-c        --- the flag lintra is true
-         dv_tmp = dv_ext + dv_intra + dv_vib + dv_ben + dv_tor + dv_solv
-c        --- add parts of energy which do not change with lambda to 
-c        --- the foreign energies.
-         call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
-         do lambda = 1, scp_num_foreign_lambda
-            dv_foreign(lambda) = dv_foreign(lambda) + dv_tmp
-         enddo
-
-         call twh_ec_long_range_elect(activebox,nchainmove
-     &        ,chaininfo,dv_elect)
-c        --- set the total change in classical energy
-         dv_classical = dv_inter + dv_elect + dv_tmp
-
+c     --- Skip this if computing just the multibody terms that are
+c     --- currently missing from engatom
+      call twh_ldualcutoff(GLB_GET,ldualcutoff)
+      if ( .not.(lpartial .and. .not. ldualcutoff) ) then
+         call twh_ec_one_body_dv(lfailure,bxdflag,activebox
+     &        ,nchainmove,chaininfo,lpartial,loverlap,dv_ext,dv_solv)
+         if ( lfailure .or. loverlap(TRL_NEW) 
+     &        .or. loverlap(TRL_OLD)) return
+         call twh_ec_two_body_dv(lfailure,bxdflag,activebox
+     &        ,nchainmove,chaininfo,lpartial,lgetcom,loverlap
+     &        ,dv_inter,dv_elect,dl_inter,dl_elect,dv_foreign)
+         if ( lfailure .or. loverlap(TRL_NEW) 
+     &        .or. loverlap(TRL_OLD)) return
       endif
+      call twh_ec_multi_body_dv(lfailure,bxdflag,activebox,nchainmove
+     &     ,chaininfo,dv_three)
+      if ( lfailure ) return
+      call twh_ec_intra_dv(lfailure,bxdflag,activebox
+     &     ,nchainmove,chaininfo
+     &     ,lintra,lbonded,loverlap,dv_intra,dv_elect,dv_vib
+     &     ,dv_ben,dv_tor)
+      if ( lfailure ) return
+      if (loverlap(TRL_NEW) .or. loverlap(TRL_OLD)) return
+c     --- add dv_three to dv_inter(bindex)
+      dv_inter = dv_inter + dv_three
+c     --- note that dv_intra is only computed when
+c     --- the flag lintra is true
+      dv_tmp = dv_ext + dv_intra + dv_vib + dv_ben + dv_tor + dv_solv
+c     --- add parts of energy which do not change with lambda to 
+c     --- the foreign energies.
+      call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
+      do lambda = 1, scp_num_foreign_lambda
+         dv_foreign(lambda) = dv_foreign(lambda) + dv_tmp
+      enddo
+      call twh_ec_long_range_elect(activebox,nchainmove
+     &     ,chaininfo,dv_elect)
+c     --- set the total change in classical energy
+      dv_classical = dv_inter + dv_elect + dv_tmp
 
 #if DEBUG_ENERGY_CHANGE
-         write(6,*) 'Energy Change'
-         write(6,*) 'dv_classical',dv_classical
-         write(6,*) 'dv_inter',dv_inter
-         write(6,*) 'dv_ext',dv_ext
-         write(6,*) 'dv_intra',dv_intra
-         write(6,*) 'dv_elect',dv_elect
-         write(6,*) 'dv_vib',dv_vib
-         write(6,*) 'dv_ben',dv_ben
-         write(6,*) 'dv_tor',dv_tor
-         write(6,*) 'dv_solv',dv_solv
-         write(6,*) 'dv_three',dv_three
-         write(6,*) 'dl_inter',dl_inter
-         write(6,*) 'dl_elect',dl_elect
+      write(6,*) 'Energy Change'
+      write(6,*) 'dv_classical',dv_classical
+      write(6,*) 'dv_inter',dv_inter
+      write(6,*) 'dv_ext',dv_ext
+      write(6,*) 'dv_intra',dv_intra
+      write(6,*) 'dv_elect',dv_elect
+      write(6,*) 'dv_vib',dv_vib
+      write(6,*) 'dv_ben',dv_ben
+      write(6,*) 'dv_tor',dv_tor
+      write(6,*) 'dv_solv',dv_solv
+      write(6,*) 'dv_three',dv_three
+      write(6,*) 'dl_inter',dl_inter
+      write(6,*) 'dl_elect',dl_elect
 #endif
 
 #if DEBUG_ENERGY_CHANGE
@@ -1686,7 +1675,7 @@ c     * energy change for a list of atoms on a single molecule ichain  *
 c     * in box activebox                                               *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1704,11 +1693,10 @@ c     --- variables passed to/from the subroutine
       dimension dvforeign(MAX_FOREIGN_LAMBDA)
       double precision ddvdl_vdw,ddvdl_c
 c     --- local variables
-      integer lambda,scp_num_foreign_lambda,potentialstyle
+      integer lambda,scp_num_foreign_lambda
 
 c     --- retrive constant
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
-      call twh_potentialstyle(GLB_GET,potentialstyle)
 
 c     --- initialize energy changes
       dvclassical = 0.0d0
@@ -1723,34 +1711,31 @@ c     --- initialize energy changes
          dvforeign(lambda) = 0.0d0
       enddo
 
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-c        --- get the one-body energy change
-         call twh_ec_atomlist_one_body(lfailure,bxdflag,activebox,ichain
-     &        ,natommove,atomlist,globalcord,loverlap,dvsolv,dvext)
-         if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
-     &        ) return
-c        --- get the two-body energy change
-         call twh_ec_atomlist_two_body(lfailure,ichain,bxdflag,activebox
-     &        ,natommove,atomlist,globalcord,loverlap,dvinter,dvelect
-     &        ,dvforeign,ddvdl_vdw,ddvdl_c)
-         if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
-     &        ) return
-c        --- get the multi-body energy change
-         call twh_ec_atomlist_multi_body(lfailure,ichain,bxdflag
-     &        ,activebox,natommove,atomlist,dvinter)
-         if ( lfailure ) return
-c        --- get the nonbonded intramolecular energy change
-         call twh_ec_atomlist_nb_intra(lfailure,ichain,bxdflag,activebox
-     &        ,natommove,atomlist,globalcord,loverlap,dvintra,dvelect)
-         if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
-     &        ) return
-c        --- get the long-range electrostatic energy change
-         call twh_ec_atomlist_lr_elect(ichain,activebox
-     &        ,natommove,atomlist,dvelect)
-
-         dvclassical = dvinter + dvintra + dvelect + dvsolv + dvext
-
-      endif
+c     --- get the one-body energy change
+      call twh_ec_atomlist_one_body(lfailure,bxdflag,activebox,ichain
+     &     ,natommove,atomlist,globalcord,loverlap,dvsolv,dvext)
+      if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
+     &     ) return
+c     --- get the two-body energy change
+      call twh_ec_atomlist_two_body(lfailure,ichain,bxdflag,activebox
+     &     ,natommove,atomlist,globalcord,loverlap,dvinter,dvelect
+     &     ,dvforeign,ddvdl_vdw,ddvdl_c)
+      if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
+     &     ) return
+c     --- get the multi-body energy change
+      call twh_ec_atomlist_multi_body(lfailure,ichain,bxdflag
+     &     ,activebox,natommove,atomlist,dvinter)
+      if ( lfailure ) return
+c     --- get the nonbonded intramolecular energy change
+      call twh_ec_atomlist_nb_intra(lfailure,ichain,bxdflag,activebox
+     &     ,natommove,atomlist,globalcord,loverlap,dvintra,dvelect)
+      if ( lfailure .or. loverlap(TRL_NEW) .or. loverlap(TRL_OLD)
+     &     ) return
+c     --- get the long-range electrostatic energy change
+      call twh_ec_atomlist_lr_elect(ichain,activebox
+     &     ,natommove,atomlist,dvelect)
+c     --- sum up the total classical energy
+      dvclassical = dvinter + dvintra + dvelect + dvsolv + dvext
 
       return
       end

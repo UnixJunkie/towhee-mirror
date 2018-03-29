@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * outputs some runtime information to the standard output        *
 c     *                                                                *
 c     * split from old pupdate 10-13-2005 by M.G. Martin               *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
@@ -37,19 +37,16 @@ c     --- variables passed to and from the subroutine
       double precision v(MAX_FOREIGN_LAMBDA)
 c     --- local variables
       logical scp_eval_derivative
-      integer imolty,ibox,nmolty,scp_num_foreign_lambda,potentialstyle
+      integer imolty,ibox,nmolty,scp_num_foreign_lambda
       integer numboxes
       double precision energy,boxvolume
 
 c     --- retrieve constants
-      call twh_potentialstyle(GLB_GET,potentialstyle)
       call twh_nmolty(GLB_GET,nmolty)
       call twh_numboxes(GLB_GET,numboxes)
 
 c     --- write out runtime information
-      if ( potentialstyle .eq. POT_INTERNAL ) then
-         call twh_boxvclassic(GLB_GET,1,energy)
-      endif
+      call twh_boxvclassic(GLB_GET,1,energy)
       call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
       if ( scp_eval_derivative ) then
 c        --- for du/d[lambda], do only first box.  
@@ -79,9 +76,7 @@ c     write the foreign energies on a separate line, box 1 only.  Ugly...
 
 
       do ibox = 2,numboxes
-         if ( potentialstyle .eq. POT_INTERNAL ) then
-            call twh_boxvclassic(GLB_GET,ibox,energy)
-         endif
+         call twh_boxvclassic(GLB_GET,ibox,energy)
          call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
          write(6,112) ibox,energy,boxvolume
      &        ,press(ibox),(twh_get_ncmt(ibox,imolty),imolty=1,nmolty)

@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'nvt'
 temperature
@@ -34,20 +32,6 @@ volmaxdispfreq
 1000
 chempotperstep
 10
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_Hoyt2003
-classical_potential
-'Embedded Atom Method'       
-interpolatestyle
-'cubicspline'
-rcut
-1.0d0
-electrostatic_form
-'none'
 linit   
 T
 initboxtype
@@ -145,6 +129,18 @@ pmtracm
           0.5d0
 cbmc_setting_style
 'widom ideal'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_Hoyt2003
+classical_potential
+'Embedded Atom Method'       
+interpolatestyle
+'cubicspline'
+rcut
+1.0d0
+electrostatic_form
+'none'
 input_style
 'basic connectivity map'
 nunit 

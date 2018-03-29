@@ -19,13 +19,12 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-
 c     ******************************************************************
 c     * this file contains all of the globally accessed data structures*
 c     * that are stored in Fortran: see globalinfo.c for the C version *
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-25-2018 by M.G. Martin                        *
 c     ******************************************************************
 
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
@@ -5253,33 +5252,6 @@ c     --- storage variable
       return
       end
 
-      subroutine twh_external_code(flag,cvalue)
-c     ******************************************************************
-c     * the name of the external code used to compute energies         *
-c     *                                                                *
-c     * originally written 01-12-2007 by M.G. Martin                   *
-c     * last modified 01-12-2007 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from the subroutine
-      integer flag
-      character*(*) cvalue
-c     --- storage variable
-      character*20 external_code
-      save external_code
-
-      if ( flag .eq. GLB_GET ) then
-         cvalue = external_code
-      elseif ( flag .eq. GLB_SET ) then
-         external_code = cvalue
-      else
-         write(6,*) 'EXTERNAL_CODE unknown flag:',flag
-         stop
-      endif
-
-      return
-      end
-
       subroutine twh_ewald_calp(flag,ibox,dvalue)
 c     ******************************************************************
 c     * calp = kalp / boxlen                                           *
@@ -9338,6 +9310,33 @@ c     --- information variables
          lcreatemap = lvalue
       else
          write(6,*) 'LCREATEMAP: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_lcompute_madelung(flag,lvalue)
+c     ******************************************************************
+c     * computation of madelung constant logical                       *
+c     *                                                                *
+c     * originally written 03-29-2018 by M.G. Martin                   *
+c     * last modified 03-29-2018 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag
+      logical lvalue
+c     --- information variables
+      logical lcompute_madelung
+      save lcompute_madelung
+
+      if ( flag .eq. GLB_GET ) then
+         lvalue = lcompute_madelung
+      elseif ( flag .eq. GLB_SET ) then
+         lcompute_madelung = lvalue
+      else
+         write(6,*) 'LCOMPUTE_MADELUNG: invalid global flag',flag
          stop
       endif
 
@@ -13623,33 +13622,6 @@ c     --- information variables
          enddo
       else
          write(6,*) 'POLARIZABILITY: invalid global flag',flag
-         stop
-      endif
-
-      return
-      end
-
-      subroutine twh_potentialstyle(flag,ivalue)
-c     ******************************************************************
-c     * the integer the specifies whether we are using an internal or  *
-c     * external potentialstyle
-c     *                                                                *
-c     * originally written 09-25-2008 by M.G. Martin                   *
-c     * last modified 09-25-2008 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-c     --- variables passed to/from this subroutine
-      integer flag,ivalue
-c     --- information variables
-      integer potentialstyle
-      save potentialstyle
-
-      if ( flag .eq. GLB_GET ) then
-         ivalue = potentialstyle
-      elseif ( flag .eq. GLB_SET ) then
-         potentialstyle = ivalue
-      else
-         write(6,*) 'POTENTIALSTYLE: invalid global flag',flag
          stop
       endif
 

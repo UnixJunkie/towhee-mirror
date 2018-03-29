@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Gibbs_Ensemble/FENE_Hexamer/                                                                       
- inputformat: Towhee         
  random_number_generator: RANLUX                        
  random_luxlevel:            3
  random_allow_restart:  T
@@ -82,26 +81,6 @@ Full output of updates and block averages
  pressure_virial_freq:            1
  trmaxdispfreq:          200
  volmaxdispfreq:          200
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_LJium                                                                                 
- classical_potential: Lennard-Jones                 
- READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
- classical_mixrule: Lorentz-Berthelot             
- lshift:  T
- ltailc:  F
- rmin: 0.100000    
- rcut:  2.24500    
- rcutin: 0.100000    
- electrostatic_form: none                                              
- Setting up force field parameters from files
- opening forcefield file:    1
- Lorentz-Berthelot Mixing rules
- Arithmetic mean of sigma terms
- Geometric mean of epsilon term
-default max_bond_length:  3.00
- No solvation model used
  linit:  T
  initboxtype: dimensions          
 initstyle Box:    1
@@ -150,7 +129,6 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: explicit                      
-cbmc_fit_strategy: equilibrium                   
  cbmc_nb_one_generation                            : uniform                       
  uniform                       
  nch_nb_one                                        :           10
@@ -163,6 +141,7 @@ cbmc_bend_generation: ideal
  Use ideal distributions to generate angles in configurational-bias
  nch_bend_a                                        :           10
  nch_bend_b                                        :           10
+default max_bond_length:  3.00
 cbmc_bond_generation: autofit gaussian              
  Use gaussian distribution to generate vibrations in config-bias
     and correct this in the rosenbluth weights
@@ -171,6 +150,24 @@ bond_sdev_multiplier:   1.00000
  nch_vib                                           :           10
 two_bond_fixed_endpoint_bias_style: none                                              
 three_bond_fixed_endpoint_bias_style: none                                              
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_LJium                                                                                 
+ classical_potential: Lennard-Jones                 
+ READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
+ classical_mixrule: Lorentz-Berthelot             
+ lshift:  T
+ ltailc:  F
+ rmin: 0.100000    
+ rcut:  2.24500    
+ rcutin: 0.100000    
+ electrostatic_form: none                                              
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Lorentz-Berthelot Mixing rules
+ Arithmetic mean of sigma terms
+ Geometric mean of epsilon term
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:            6
  nmaxcbmc:            6
@@ -211,6 +208,7 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Additional Center-of-Mass cutoff
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
+ No electrostatic interations
 
 Molecular mass for molecule type     1 is     3.6132 g/mol
  Calling initconf

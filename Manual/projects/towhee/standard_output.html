@@ -1,12 +1,12 @@
 <html>
  <head>
-  <title>MCCCS Towhee (Standard Output)</title>
+  <title>MCCCS Towhee: Standard Output</title>
  </head>
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="800" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
-     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee (Standard Output)</font></b></font></div>
+     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee: Standard Output</font></b></font></div>
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
@@ -17,24 +17,20 @@
      <p>&nbsp; </p>
      <p>&nbsp;</p>
     </td>
-
     <td width="697" valign="top"> 
-    <p></p>
-    <b>Overview</b> 
-    <ul>
-     This section provides some information about the quantities computed and displayed to the standard output.  Much of the output to the standard
-     output is self-explanatory, so here we focus on the quantities computed and output as averages or as block averages.
-     This section is valid for the most current version of the code and was last updated for version 5.0.1.
-    </ul>
-
-    <dt>Please see the essay on <a href="algorithm/chemicalpotential.html">Chemical Potential</a> for information about the various types of chemical
-     potential computed and output into standard output.
-    </dt>
-
-    <dt>Please see the essay on <a href="algorithm/pressure.html">Pressure</a> for information about the various types of pressure computed and output
-     into standard output.
-    </dt>
-
+     <p></p>
+     <b>Overview</b> 
+     <ul>
+      This section provides some information about the quantities computed and displayed to the standard output.  Much of the output to the standard
+      output is self-explanatory, so here we focus on the quantities computed and output as averages or as block averages.
+      This section is valid for the most current version of the code and was last updated for version 5.0.1.
+     </ul>
+     <dt>Please see the essay on <a href="algorithm/chemicalpotential.html">Chemical Potential</a> for information about the various types of chemical
+      potential computed and output into standard output.
+     </dt>
+     <dt>Please see the essay on <a href="algorithm/pressure.html">Pressure</a> for information about the various types of pressure computed and output
+      into standard output.
+     </dt>
      <dt><font color="red">Average Accumulation</font></dt>
      <ul>
       The following quantities are added into the averages after every attemped Monte Carlo move.
@@ -50,9 +46,7 @@
        <li>Heat of vaporization (pV/n=RT): This is the method described in Equation (2) of
         <a href="references.html#martin_biddy_2005">Martin and Biddy 2005</a>
         <ul>
-         H<sub>vap</sub>(pV/n=RT) = <
-         (U<sub>vap</sub>/N<sub>vap</sub>) - (U<sub>liq</sub>/N<sub>liq</sub>) + RT
-         >
+         H<sub>vap</sub>(pV/n=RT) = < (U<sub>vap</sub>/N<sub>vap</sub>) - (U<sub>liq</sub>/N<sub>liq</sub>) + RT >
         </ul>
        </li>
       </ul>
@@ -70,18 +64,18 @@
        <li>Heat of vaporization (Direct): This uses a direct computation of H = U + pV in each phase.
         <ul>
          H<sub>vap</sub>(Direct) = <
-         (U<sub>vap</sub> + p<sub>vap</sub> * V<sub>vap</sub>)/N<sub>vap</sub>
-         - (U<sub>liq</sub> + p<sub>liq</sub> * V<sub>liq</sub>)/N<sub>liq</sub>
-         >
+				     (U<sub>vap</sub> + p<sub>vap</sub> * V<sub>vap</sub>)/N<sub>vap</sub>
+				     - (U<sub>liq</sub> + p<sub>liq</sub> * V<sub>liq</sub>)/N<sub>liq</sub>
+				     >
         </ul>
        </li>
        <li>Heat of vaporization (vapor p): This is the method described in Equation (1) of
         <a href="references.html#martin_biddy_2005">Martin and Biddy 2005</a>
         <ul>
          H<sub>vap</sub>(vapor p) = <
-         (U<sub>vap</sub>/N<sub>vap</sub>) - (U<sub>liq</sub>/N<sub>liq</sub>) 
-         + p<sub>vap</sub> * (V<sub>vap</sub>/N<sub>vap</sub> - V<sub>liq</sub>/N<sub>liq</sub>)
-         >
+				      (U<sub>vap</sub>/N<sub>vap</sub>) - (U<sub>liq</sub>/N<sub>liq</sub>) 
+				      + p<sub>vap</sub> * (V<sub>vap</sub>/N<sub>vap</sub> - V<sub>liq</sub>/N<sub>liq</sub>)
+				      >
         </ul>
        </li>
       </ul>
@@ -101,7 +95,9 @@
       <ul>
        <li>Ideal density chemical potential (<b>u (Density)</b>).  Computed using the average volume and the average number of molecules.</li>
        <li>Henry's law coefficients.  This is computed from the residual chemical potential and the number density.
-        <ul>Henry(i) = k<sub>B</sub> T < Sum<sub>j=1</sub><sup>n</sup>{ number density(j) } &gt; * Exp[ < &mu;<sub>residual</sub>(i) > / k<sub>B</sub> T ]</ul>
+        <ul>
+	 Henry(i) = k<sub>B</sub> T &lt; Sum<sub>j=1</sub><sup>n</sup>{ number density(j) } &gt; * Exp[ &lt; &mu;<sub>residual</sub>(i) &gt; / k<sub>B</sub> T ]
+	</ul>
        </li>
        <li>Ideal Pressure.  Computed from the average total number density.
        <li>Thermodynamic Pressure.  Computed using the Ideal Pressure and dU/dV following the work of 
@@ -109,18 +105,16 @@
        </li>
       </ul>
      </ul>
-     <p>&nbsp;</p>
      <a href="index.html">Return to the main towhee web page</a> 
     </td>
    </tr>
   </table>
-  <p></p>
-  <hr width="715" align="left"></hr>
-  <i><font size="2">Send comments to:</font></i> 
-  <font size="2"> <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a>
-   <br></br>
-   <i>Last updated:</i> <!-- #BeginDate format:Am1 -->May 19, 2010<!-- #EndDate -->
-  </font>
-  <br></br>
  </body>
+ <foot>
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
+  </font>
+ </foot>
 </html>

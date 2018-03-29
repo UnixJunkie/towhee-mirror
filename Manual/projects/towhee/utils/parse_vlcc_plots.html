@@ -1,13 +1,12 @@
 <html>
  <head>
-  <title>MCCCS Towhee (fitvlcc)</title>
+  <title>MCCCS Towhee: parse_vlcc_plots script</title>
  </head>
-
  <body bgcolor="#FFFFFF" text="#000000">
   <table width="675" border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
-     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee (parse_vlcc_plots script)</font></b>
+     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee: parse_vlcc_plots script</font></b>
       </font>
      </div>
     </td>
@@ -24,24 +23,24 @@
     <td width="697" valign="top"> 
      <dt><b>Overview</b> 
       <ul>
-       This section explains the parse_vlcc_plots utility script.  This BASH script is designed for use in conjunction with the standard towhee output file
+       This section explains the <code>parse_vlcc_plots</code> utility script.
+       This BASH script is designed for use in conjunction with the standard towhee output file
        and parses that file with gawk and grep in order to create several plottable files of the variables that are output during the run and the block
        averages.
       </ul>
      </dt>
-
      <dt><b>Compiling and Running</b> 
       <ul>
-       parse_vlcc_plots.script is a BASH script and does not need compiling.  You just need a BASH shell (the default option on most Linux installations).
+       <code>parse_vlcc_plots.script</code> is a BASH script and does not require compilation.
+       You just need a BASH shell (the default option on most Linux installations).
        Please note that this script only works with output files generated from Towhee 3.17.5 or subsequent versions.
       </ul>
      </dt>
-
      <dt><b>Features</b> 
       <ul>
        If your standard output file is named "towhee_output" then you would parse that file using the following command.
-       <ul>/towheebase/Utils/parse_vlcc_plots.script towhee_output</ul>
-       This will create a directory named "Plots" which will contain the following files with data extracted from your standard output file.  
+       <ul><code>/towheebase/Utils/parse_vlcc_plots.script towhee_output</code></ul>
+       This creates a directory named <code>Plots</code> that contains the following files with data extracted from your standard output file.  
        <ul>
         <dt><font color="red">Files with data extracted from the block averages</font>
          <li><b>avgchempot_box1</b>: contains the chemical potential (In simulation box 1) from the individual blocks used to compute the block averages.</li>
@@ -68,18 +67,16 @@
        </ul>
       </ul>
      </dt>
-
      <a href="utility_summary.html">Return to the Utility Summary page</a> 
-     <p>&nbsp;</p>
     </td>
    </tr>
   </table>
-
-  <hr width="715" align="left"><i><font size="2">Send comments to:</font></i> <font size="2"> 
-  <a href="mailto:marcus_martin@users.sourceforge.net">Marcus G. Martin</a><br>
-  <i>Last updated:</i> <!-- #BeginDate format:Am1 -->June 11, 2009<!-- #EndDate -->
-  </font>
  </body>
+ <foot>
+  <hr></hr>
+  <font face="Arial" size="2">
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
+  </font>
+ </foot>
 </html>
-
-

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 22 2018)     
+ MCCCS Towhee - Version 8.0.0   (March 29 2018)     
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -61,7 +61,6 @@
 
  Reading from towhee_input file: towhee_input                                                                                                            
  in directory: /towheebase/Examples/Gibbs_Ensemble/Catlow_Zeolite_4a/                                                                  
- inputformat: Towhee         
  ensemble: npt                           
  temperature:  300.000    
  pressure:  95.0000    
@@ -80,29 +79,6 @@ Full output of updates and block averages
  pressure_virial_freq:           20
  trmaxdispfreq:         1000
  volmaxdispfreq:         1000
- potentialstyle: internal                      
- ffnumber:            1
- ff_filename:
-/towheebase/ForceFields/towhee_ff_CatlowFaux                                                                            
- classical_potential: Exponential-12-6              
- READCLASSICAL: pot_num:    12 potential name: Exponential-12-6              
- classical_mixrule: Explicit                      
- lshift:  T
- ltailc:  F
- rmin: 0.500000    
- rcut:  12.0000    
- rcutin:  6.00000    
- electrostatic_form: coulomb                                           
- coulombstyle: ewald_fixed_kmax    
- kalp:  5.60000    
- kmax:            5
- dielect:  1.00000    
- Setting up force field parameters from files
- opening forcefield file:    1
- Explicit declaration of Cross Terms
- Please check the forcefield file carefully
-default max_bond_length:  3.00
- No solvation model used
  linit:  F
  initboxtype: dimensions          
 initstyle Box:    1
@@ -153,7 +129,6 @@ cbmc_formulation: Martin and Siepmann 1999 + Martin and Thompson 2004
  with a decoupled bond length selection from
  M.G. Martin; A.P. Thompson; Fluid Phase Equilib. 217 105-110 (2004)
 cbmc_setting_style: explicit                      
-cbmc_fit_strategy: equilibrium                   
  cbmc_nb_one_generation                            : uniform                       uniform                       uniform                       
  uniform                        uniform                        uniform                       
  nch_nb_one                                        :            1            1           10
@@ -166,12 +141,34 @@ cbmc_bend_generation: ideal
  Use ideal distributions to generate angles in configurational-bias
  nch_bend_a                                        :            1            1         1000
  nch_bend_b                                        :            1            1         1000
+default max_bond_length:  3.00
 cbmc_bond_generation: r^2 with bounds               
  Use a bounded r^2 distribution to generate vibrations in config-bias
 vibrang:   0.85000    1.15000
  nch_vib                                           :            1            1         1000
 two_bond_fixed_endpoint_bias_style: analytic Boltzmann dihedral energy sum            
 three_bond_fixed_endpoint_bias_style: analytic using max and min 2-4 distance           
+ ffnumber:            1
+ ff_filename:
+/towheebase/ForceFields/towhee_ff_CatlowFaux                                                                            
+ classical_potential: Exponential-12-6              
+ READCLASSICAL: pot_num:    12 potential name: Exponential-12-6              
+ classical_mixrule: Explicit                      
+ lshift:  T
+ ltailc:  F
+ rmin: 0.500000    
+ rcut:  12.0000    
+ rcutin:  6.00000    
+ electrostatic_form: coulomb                                           
+ coulombstyle: ewald_fixed_kmax    
+ kalp:  5.60000    
+ kmax:            5
+ dielect:  1.00000    
+ Setting up force field parameters from files
+ opening forcefield file:    1
+ Explicit declaration of Cross Terms
+ Please check the forcefield file carefully
+ No solvation model used
  input_style: basic connectivity map                            
  nunit:          576
  nmaxcbmc:          576
@@ -830,8 +827,9 @@ Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full de
  Dual Cutoff Configurational-bias Monte Carlo
  Coupled-decoupled Configurational-bias MC
  Coulombic inter- and intra-molecular interactions
-     with an Ewald sum 
+     Ewald Sum with fixed kmax:  5 kalp:  5.600
      including the real-space terms up to half the shortest box length
+     dielectric constant:   1.0000
 
 Molecular mass for molecule type     1 is 11430.1440 g/mol
 Molecular mass for molecule type     2 is    22.9900 g/mol

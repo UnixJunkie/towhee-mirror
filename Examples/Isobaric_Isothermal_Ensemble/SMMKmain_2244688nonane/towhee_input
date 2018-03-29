@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'npt'
 temperature
@@ -34,28 +32,6 @@ trmaxdispfreq
 1000
 volmaxdispfreq
 1000
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_SMMKmain
-classical_potential
-'Lennard-Jones'       
-classical_mixrule
-'Geometric'
-lshift
-.true.
-ltailc
-.false.
-rmin  
-2.0d0 
-rcut  
-13.8d0
-rcutin 
-5.0d0 
-electrostatic_form
-'none'
 linit   
 .true.
 initboxtype
@@ -184,6 +160,26 @@ cbmc_formulation
 'Martin and Siepmann 1999 + Martin and Thompson 2004'
 cbmc_setting_style
 'default ideal'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_SMMKmain
+classical_potential
+'Lennard-Jones'       
+classical_mixrule
+'Geometric'
+lshift
+.true.
+ltailc
+.false.
+rmin  
+2.0d0 
+rcut  
+13.8d0
+rcutin 
+5.0d0 
+electrostatic_form
+'none'
 #3-ethylpentane
 input_style
 'basic connectivity map'

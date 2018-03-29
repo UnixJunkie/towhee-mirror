@@ -1,5 +1,3 @@
-inputformat
-'Towhee'
 ensemble
 'nvt'
 temperature
@@ -16,21 +14,6 @@ nstep
 1
 controlstyle
 'production'
-potentialstyle
-'internal'
-ffnumber
-1
-ff_filename
-/towheebase/ForceFields/towhee_ff_Cui2002
-classical_potential
-'Hard 2580 Multistep'
-#'Repulsive 2580 Multistep'
-classical_mixrule
-'Lorentz-Berthelot'
-radial_pressure_delta
-1.0d02
-electrostatic_form
-'none'
 linit   
 F
 initboxtype
@@ -124,6 +107,19 @@ cbmc_formulation
 'Martin and Frischknecht 2006'
 cbmc_setting_style
 'Martin and Frischknecht'
+ffnumber
+1
+ff_filename
+/towheebase/ForceFields/towhee_ff_Cui2002
+classical_potential
+'Hard 2580 Multistep'
+#'Repulsive 2580 Multistep'
+classical_mixrule
+'Lorentz-Berthelot'
+radial_pressure_delta
+1.0d02
+electrostatic_form
+'none'
 #Cui2002 n-hexane
 input_style
 'basic connectivity map'
