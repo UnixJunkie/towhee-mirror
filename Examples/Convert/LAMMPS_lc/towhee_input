@@ -47,7 +47,9 @@ pressure_virial_freq
 pressure_thermo_freq
            0
 pressure_thermo_style
-'move data           '
+'range               '
+pressure_thermo_range
+  -1.0000000000000000E-002   1.0000000000000000E-002
 trmaxdispfreq
            0
 volmaxdispfreq

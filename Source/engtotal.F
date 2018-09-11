@@ -282,7 +282,7 @@ c     *   May halt program                                             *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -316,7 +316,7 @@ c     --- vforeign
 c     --- retrieve constants
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
       call twh_lusecom(GLB_GET,lusecom)
-      call twh_rcelect(GLB_GET,ibox,rcelect)
+      call twh_rcelect(GLB_GET,bxdflag,ibox,rcelect)
       call twh_lelect(GLB_GET,lelect)
 
       vtwointer = 0.0d0
@@ -425,7 +425,8 @@ c                             --- minimum image the pair separation
 c                             --- electrostatics.
                               if ( lelect .and. leval_c) then
                                  rij = dsqrt(rijsq)
-                                 call twh_vcoulomb(-1,ibox,rij,imolty,ii
+                                 call twh_vcoulomb(-1,bxdflag,ibox,rij
+     &                                ,imolty,ii
      &                                ,jmolty,jj,vf,dvdl,lovrlap
      &                                ,vcoulomb)
                                  velectinter = velectinter + vcoulomb
@@ -723,7 +724,7 @@ c     * Error conditions:                                              *
 c     *  none                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 08-09-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -753,7 +754,7 @@ c        --- update self terms and correction terms
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_nunit(GLB_GET,imolty,numiunit)
             do ii = 1,numiunit
-               sself = sself + twh_ewald_self(ibox,imolty,ii)
+               sself = sself + twh_ewald_self(bxdflag,ibox,imolty,ii)
                call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &              ,rxui,ryui,rzui)
                do jj = ii+1,numiunit
@@ -769,7 +770,8 @@ c                       --- vtorsion
      &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij)
                      rij = twh_distance(rxuij,ryuij,rzuij)
                      correct = correct
-     &                    + twh_ewald_correct(ibox,imolty,ii,jj,rij)
+     &                    + twh_ewald_correct(bxdflag,ibox,imolty,ii,jj
+     &                    ,rij)
                   endif
                enddo
             enddo
@@ -804,7 +806,7 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
@@ -893,7 +895,7 @@ c                          --- use special one-five terms for energy
 c                          --- for volume moves we only need the intra
 c                          --- coulomb
                            rij = dsqrt(rijsq)
-                           call twh_vcoulomb(-1,ibox
+                           call twh_vcoulomb(-1,bxdflag,ibox
      &                          ,rij,imolty,ii,imolty,jj,vf,dvdl
      &                          ,lovrlap,vcoulomb)
                            velectintra = velectintra + vcoulomb
@@ -944,7 +946,7 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -1023,8 +1025,8 @@ c                       --- completely through the periodic box
                      call twh_mimage(bxdflag,ibox,rxui,ryui,rzui
      &                    ,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij )
                      dist = twh_distance(rxuij,ryuij,rzuij)
-                     vvib = vvib + twh_vbond(lfailure,lreport,ibox
-     &                    ,it,dist,imolty,ii,ip1,lovrlap)
+                     vvib = vvib + twh_vbond(lfailure,lreport,bxdflag
+     &                    ,ibox,it,dist,imolty,ii,ip1,lovrlap)
                      if ( lfailure ) return
                      if ( lovrlap ) then
                         write(6,*) 'overlap vibration'

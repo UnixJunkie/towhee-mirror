@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * also creates part of the lammps_input file that has to do with *
 c     * the force field styles.  This is written to lammps_input.out   *
 c     *                                                                *
 c     * originally written 08-07-2001 by M.G. Martin                   *
-c     * last modified 07-22-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -745,7 +745,7 @@ c                 --- need to output potential style to input
      &                 'nonbond style          class2/cutoff'
      &                 ,rcut,offset
                   call twh_ewald_prec(GLB_GET,ewald_prec)
-                  call twh_rcelect(GLB_GET,ibox,rcelect)
+                  call twh_rcelect(GLB_GET,BXD_REAL,ibox,rcelect)
                   write(inpnum,*) 'coulomb style               ewald'
      &                 ,rcelect,ewald_prec
 c                 --- Lennard-Jones 9-6

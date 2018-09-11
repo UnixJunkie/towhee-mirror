@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -22,9 +22,11 @@ c     ******************************************************************
       subroutine twh_resetcoulomb(lfailure,bxdflag,ibox)
 c     ******************************************************************
 c     * resets all of the coulomb parameters in the specified box      *
+c     * complicated dependencies on the bxdflag.  We are always        *
+c     * fetching from BXD_REAL, but set to the bxdflag                 *
 c     *                                                                *
 c     * originally resetewald 08-13-2004 by M.G. Martin                *
-c     * last modified 08-09-2016 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_MAXBOXLENGTH
@@ -38,38 +40,58 @@ c     --- local variables
       character*20 coulombstyle
       integer kmax
       double precision minlength,onepi,ewald_prec,kalp,calp,rcelect
-
+c     --- check if electrostatics is used
       call twh_lelect(GLB_GET,lelect)
       if ( .not. lelect ) return
-
+c     --- get the coulombstyle
       call twh_coulombstyle(GLB_GET,coulombstyle)
       if ( coulombstyle .eq. 'ewald_fixed_kmax' ) then
-c        --- set kmax to the real value in box 1
-         call twh_ewald_kmax(GLB_GET,1,kmax)
-         call twh_ewald_kmax(GLB_SET,ibox,kmax)
-c        --- set calp based upon the minimum box lengths
-c        --- determine the minimum box length
-         minlength = twh_minboxlength(bxdflag,ibox)
-         call twh_ewald_kalp(GLB_GET,kalp)
-         calp = kalp/minlength
-         call twh_ewald_calp(GLB_SET,ibox,calp)
-         rcelect = 0.5d0*minlength
-         call twh_rcelect(GLB_SET,ibox,rcelect)
+         if ( bxdflag .eq. BXD_T_TO_R ) then
+c           --- set real to the value of temp
+            call twh_ewald_calp(GLB_STORE,bxdflag,ibox,calp)
+            call twh_rcelect(GLB_STORE,bxdflag,ibox,rcelect)
+            return
+         else
+c           --- set kmax to the real value in box 1
+            call twh_ewald_kmax(GLB_GET,BXD_REAL,1,kmax)
+            call twh_ewald_kmax(GLB_SET,bxdflag,ibox,kmax)
+c           --- set calp based upon the minimum box lengths
+c           --- determine the minimum box length
+            minlength = twh_minboxlength(bxdflag,ibox)
+            call twh_ewald_kalp(GLB_GET,kalp)
+            calp = kalp/minlength
+            call twh_ewald_calp(GLB_SET,bxdflag,ibox,calp)
+            rcelect = 0.5d0*minlength
+            call twh_rcelect(GLB_SET,bxdflag,ibox,rcelect)
+         endif
       elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
-         call twh_constant_pi(GLB_GET,onepi)
-         call twh_ewald_prec(GLB_GET,ewald_prec)
-         call twh_rcelect(GLB_GET,ibox,rcelect)
-         calp = (1.35D0 - 0.15D0*log(ewald_prec))/rcelect
-         call twh_ewald_calp(GLB_SET,ibox,calp)
-         kmax = int( (calp*twh_maxboxlength(bxdflag,ibox)/onepi)
-     &        *dsqrt(-dlog(ewald_prec)))
-         call twh_ewald_kmax(GLB_SET,ibox,kmax)
+         if ( bxdflag .eq. BXD_T_TO_R ) then
+c           --- set real to the value stored in temp
+            call twh_ewald_calp(GLB_STORE,bxdflag,ibox,calp)
+            call twh_ewald_kmax(GLB_GET,BXD_TEMP,ibox,kmax)
+            call twh_ewald_kmax(GLB_SET,BXD_REAL,ibox,kmax)
+            return
+         else
+            call twh_constant_pi(GLB_GET,onepi)
+            call twh_ewald_prec(GLB_GET,ewald_prec)
+            call twh_rcelect(GLB_GET,BXD_REAL,ibox,rcelect)
+            calp = (1.35D0 - 0.15D0*log(ewald_prec))/rcelect
+            call twh_ewald_calp(GLB_SET,bxdflag,ibox,calp)
+            kmax = int( (calp*twh_maxboxlength(bxdflag,ibox)/onepi)
+     &           *dsqrt(-dlog(ewald_prec)))
+            call twh_ewald_kmax(GLB_SET,bxdflag,ibox,kmax)
+         endif
       elseif ( coulombstyle .eq. 'minimum image' ) then
-c        --- we interact with the closest atom regardless of cutoff
-         rcelect = 10.0d0*twh_maxboxlength(bxdflag,ibox)
-         call twh_rcelect(GLB_SET,ibox,rcelect)
-c        --- disable the center of mass cutoff
-         call twh_lusecom(GLB_SET,.false.)
+         if ( bxdflag .eq. BXD_T_TO_R ) then
+            call twh_rcelect(GLB_STORE,bxdflag,ibox,rcelect)
+            return
+         else
+c           --- we interact with the closest atom regardless of cutoff
+            rcelect = 10.0d0*twh_maxboxlength(bxdflag,ibox)
+            call twh_rcelect(GLB_SET,bxdflag,ibox,rcelect)
+c           --- disable the center of mass cutoff
+            call twh_lusecom(GLB_SET,.false.)
+         endif
       else
          write(6,*) 'RESETCOULOMB: unknown coulombstyle'
          lfailure = .true.
@@ -79,7 +101,7 @@ c        --- disable the center of mass cutoff
       call twh_lewald(GLB_GET,lewald)
       if ( lewald ) then
 c        --- safety check kmax
-         call twh_ewald_kmax(GLB_GET,ibox,kmax)
+         call twh_ewald_kmax(GLB_GET,bxdflag,ibox,kmax)
          if ( kmax .lt. 0 ) then
             write(6,*) 'RESETCOULOMB: negative kmax ',kmax
      &           ,' in box ',ibox

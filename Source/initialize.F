@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 03-29-2018 by M.G. Martin                        *
+c     * last modified 04-12-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -55,14 +55,15 @@ c     --- set the names of the stress tensor components
 c     --- initialite nener
       call twh_nener(GLB_SET,0)
 c     --- set up constants and conversion factors
-      call twh_constant_pi(GLB_INIT,dvalue)
-      call twh_constant_twopi(GLB_INIT,dvalue)
+      call twh_constant_cuberoottwo(GLB_INIT,dvalue)
       call twh_constant_halfpi(GLB_INIT,dvalue)
       call twh_constant_invrootpi(GLB_INIT,dvalue)
+      call twh_constant_log_e(GLB_INIT,dvalue)
       call twh_constant_onethird(GLB_INIT,dvalue)
-      call twh_constant_underflow(GLB_INIT,dvalue)
+      call twh_constant_pi(GLB_INIT,dvalue)
       call twh_constant_radtodeg(GLB_INIT,dvalue)
-      call twh_constant_cuberoottwo(GLB_INIT,dvalue)
+      call twh_constant_twopi(GLB_INIT,dvalue)
+      call twh_constant_underflow(GLB_INIT,dvalue)
 c     --- retrieve constants
       call twh_constant_twopi(GLB_GET,twopi)
 c     --- safety check maxtabtype
@@ -161,7 +162,7 @@ c     --- initialize input parameters
       call twh_loutdlpoly(GLB_SET,.false.)
       call twh_pressure_virial_freq(GLB_SET,0)
       call twh_pressure_thermo_freq(GLB_SET,0)
-      call twh_pressure_thermo_style(GLB_SET,'move data')
+      call twh_pressure_thermo_style(GLB_SET,'range')
       call twh_pressure_thermo_range(GLB_SET,1,-0.01d0)
       call twh_pressure_thermo_range(GLB_SET,2,0.01d0)
       call twh_trmaxdispfreq(GLB_SET,0)
@@ -180,8 +181,8 @@ c     --- initialize input parameters
       call twh_lelect(GLB_SET,.true.)
       call twh_lewald(GLB_SET,.true.)
       call twh_ewald_kalp(GLB_SET,5.6d0)
-      call twh_ewald_calp(GLB_INIT,MAXBOX,0.0d0)
-      call twh_rcelect(GLB_INIT,MAXBOX,1.0d0)
+      call twh_ewald_calp(GLB_INIT,MAXBXD,MAXBOX,0.0d0)
+      call twh_rcelect(GLB_INIT,MAXBXD,MAXBOX,1.0d0)
       call twh_constant_qqfact(GLB_INIT,dvalue)
       call twh_ewald_prec(GLB_SET,1.0d-4)
       call twh_lcompute_madelung(GLB_SET,.false.)
@@ -227,59 +228,61 @@ c     --- initialize and then set hinverse
          call twh_inixyz(GLB_SET,ibox,inix,iniy,iniz)
       enddo
       call twh_ensemble(GLB_SET,ENS_NVT)
-
 c     --- Give initial values to move probabilities.
       call twh_pmvol(GLB_SET,0.0d0)
       call twh_tavol(GLB_SET,0.5d0)
       call twh_pmcell(GLB_SET,0.0d0)
       call twh_tacell(GLB_SET,0.5d0)
-      
+c     --- 2 box rotational bias molecule transfer
       call twh_pm2boxrbswap(GLB_SET,0.0d0)
       call twh_pm2rbswmt(GLB_INIT,NTMAX,1.0d0)
-
+c     --- 2 box configurational-bias molecule transfer
       call twh_pm2boxcbswap(GLB_SET,0.0d0)
       call twh_pm2cbswmt(GLB_INIT,NTMAX,1.0d0)
-
+c     --- 2 box center-of-mass switch move
+      call twh_pm2boxcomswitch(GLB_SET,0.0d0)
+      call twh_pm2comswmolpair(GLB_INIT,NTPAIRMAX,0.0d0)
+c     --- 1 box configurational-bias reinsertion
       call twh_pm1boxcbswap(GLB_SET,0.0d0)
       call twh_pm1cbswmt(GLB_INIT,NTMAX,1.0d0)
-      
+c     --- 1 box 2 molecule center of mass switch move
       call twh_pm1boxcomswitch(GLB_SET,0.0d0)
       call twh_pm1comswbox(GLB_INIT,MAXBOX,1.0d0)
       call twh_pm1comswpair(GLB_INIT,NTPAIRMAX,1.0d0)
-      
+c     --- AVB type 1
       call twh_pmavb1(GLB_SET,0.0d0)
       call twh_pmavb1in(GLB_SET,0.5d0)
       call twh_pmavb1mt(GLB_INIT,NTMAX,1.0d0)
       call twh_pmavb1ct(GLB_INIT,NTMAX,NTMAX,1.0d0)
       call twh_avb1rad(GLB_SET,0.1d0)
-      
+c     --- AVB type 2
       call twh_pmavb2(GLB_SET,0.0d0)
       call twh_pmavb2in(GLB_SET,0.5d0)
       call twh_pmavb2mt(GLB_INIT,NTMAX,1.0d0)
       call twh_pmavb2ct(GLB_INIT,NTMAX,NTMAX,1.0d0)
       call twh_avb2rad(GLB_SET,0.1d0)
-      
+c     --- AVB type 3
       call twh_pmavb3(GLB_SET,0.0d0)
       call twh_pmavb3mt(GLB_INIT,NTMAX,1.0d0)
       call twh_pmavb3ct(GLB_INIT,NTMAX,NTMAX,1.0d0)
       call twh_avb3rad(GLB_SET,0.1d0)
-      
+c     --- grand canonical configurational-bias insertion/deletion
       call twh_pmuvtcbswap(GLB_SET,0.0d0)
       call twh_pmuvtcbmt(GLB_INIT,NTMAX,1.0d0)
-      
+c     --- partial molecule confiurational-bias regrowth
       call twh_pmcb(GLB_SET,0.0d0)
       call twh_pmcbmt(GLB_INIT,NTMAX,1.0d0)
       call twh_pmall(GLB_INIT,NTMAX,0.0d0)
-      
+c     --- protein backbone configurational-bias regrowth
       call twh_pmback(GLB_SET,0.0d0)
       call twh_pmbkmt(GLB_INIT,NTMAX,1.0d0)
-
+c     --- protein sidechain configurational-bias regrowth
       call twh_pmcbside(GLB_SET,0.0d0)
       call twh_pmcbsidemt(GLB_INIT,NTMAX,1.0d0)
-
+c     --- dihedral pivot
       call twh_pmpivot(GLB_SET,0.0d0)
       call twh_pmpivmt(GLB_INIT,NTMAX,1.0d0)
-
+c     --- concerted rotation
       call twh_pmconrot(GLB_SET,0.0d0)
       call twh_pmcrmt(GLB_INIT,NTMAX,1.0d0)
 
@@ -468,6 +471,7 @@ c     --- cbmc internal data structures
 c     --- energy calculation
       call twh_lusecom(GLB_SET,.true.)
       call twh_minboxdim(GLB_SET,0.0d0)
+      call twh_lproblem(GLB_SET,.false.)
 c     --- initialize temporary accumulators
       call twh_baavb1(GLB_INIT,NTMAX,NTMAX,MAXBOX,3,0)
       call twh_bnavb1(GLB_INIT,NTMAX,NTMAX,MAXBOX,3,0)

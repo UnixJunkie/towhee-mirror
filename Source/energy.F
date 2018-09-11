@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -169,7 +169,7 @@ c     * compute the two-body energy in the active box for all molecules*
 c     * interacting with those in the chaininfo                        *
 c     *                                                                *
 c     * rewritten from engmolec 08-05-2006 by M.G. Martin              *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -209,7 +209,7 @@ c     --- retrieve constant
       call twh_nmolty(GLB_GET,nmolty)
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
       call twh_lusecom(GLB_GET,lusecom)
-      call twh_rcelect(GLB_GET,activebox,rcelect)
+      call twh_rcelect(GLB_GET,bxdflag,activebox,rcelect)
       call twh_lelect(GLB_GET,lelect)
       call twh_rcutinsq(GLB_GET,rcutinsq)
 
@@ -373,7 +373,8 @@ c                             --- not compute for rijsq < rcutinsq
 c                                --- electrostatics
                                  if ( lelect .and. leval_c) then
                                     rij = dsqrt(rijsq)
-                                    call twh_vcoulomb(-1,activebox
+                                    call twh_vcoulomb(-1,bxdflag
+     &                                   ,activebox
      &                                   ,rij,imolty,iunit,jmolty,jj
      &                                   , vf, dvdlc
      &                                   ,loverlap,venergy)
@@ -603,7 +604,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -641,8 +642,8 @@ c              --- completely through the periodic box
                call twh_mimage (bxdflag,ibox,rxunit,ryunit,rzunit
      &              ,rxipone,ryipone,rzipone,rxuij,ryuij,rzuij)
                dist = twh_distance(rxuij,ryuij,rzuij)
-               v_vib = v_vib + twh_vbond(lfailure,.false.,ibox,it,dist
-     &              ,imolty,iunit,ip1,lovrlap)
+               v_vib = v_vib + twh_vbond(lfailure,.false.,bxdflag,ibox
+     &              ,it,dist,imolty,iunit,ip1,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) return
             endif
@@ -729,7 +730,7 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EWALD_CORRECT
@@ -796,7 +797,7 @@ c                 --- special one-five
                if ( lelect ) then
 c                 --- electrostatics
                   rij = dsqrt(rijsq)
-                  call twh_vcoulomb(-1,ibox,rij,imolty
+                  call twh_vcoulomb(-1,bxdflag,ibox,rij,imolty
      &                 ,iunit,imolty,jj,vf,dv,lovrlap,vcoulomb)
                   if ( lovrlap ) return
                   v_elect = v_elect + vcoulomb
@@ -808,12 +809,13 @@ c              --- the placed atoms with themselves, and with
 c              --- the rest of their own molecule.
                rij = dsqrt(rijsq)
 c              --- correction term
-               v_elect = v_elect + twh_ewald_correct(ibox,imolty
+               v_elect = v_elect + twh_ewald_correct(bxdflag,ibox,imolty
      &              ,iunit,jj,rij)
             endif
          enddo
          if ( lewald .and. ibox .ne. 0 ) then
-            v_elect = v_elect + twh_ewald_self(ibox,imolty,iunit)
+            v_elect = v_elect + twh_ewald_self(bxdflag,ibox
+     &           ,imolty,iunit)
          endif
       enddo
 
@@ -1118,13 +1120,13 @@ c     --- double precision scalars
       return
       end
 
-      function twh_ewald_correct(ibox,imolty,iunit,junit,rij)
+      function twh_ewald_correct(bxdflag,ibox,imolty,iunit,junit,rij)
 c     ******************************************************************
 c     * computes the ewald intramolecular correction term in ibox for  *
 c     * units iunit and junit of molecule type imolty                  *
 c     *                                                                *
 c     * originally written 10-24-2006 by M.G. Martin                   *
-c     * last modified 08-18-2014 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -1132,13 +1134,13 @@ c     ******************************************************************
 #define FUNCTION_EWALD_CORRECT
 #include "functions.h"
 c     ---- variables passed to/from the function
-      integer ibox,imolty,iunit,junit
+      integer bxdflag,ibox,imolty,iunit,junit
       double precision rij,chargei,chargej,calp,rcelect
 
       call twh_qqscale(GLB_GET,imolty,iunit,chargei)
       call twh_qqscale(GLB_GET,imolty,junit,chargej)
-      call twh_ewald_calp(GLB_GET,ibox,calp)
-      call twh_rcelect(GLB_GET,ibox,rcelect)
+      call twh_ewald_calp(GLB_GET,bxdflag,ibox,calp)
+      call twh_rcelect(GLB_GET,bxdflag,ibox,rcelect)
 
       if ( twh_cmp_gt(rcelect,rij) ) then
          twh_ewald_correct = chargei*chargej
@@ -1150,24 +1152,24 @@ c     ---- variables passed to/from the function
       return
       end
 
-      function twh_ewald_self(ibox,imolty,iunit)
+      function twh_ewald_self(bxdflag,ibox,imolty,iunit)
 c     ******************************************************************
 c     * computes the ewald self interaction energy                     *
 c     *                                                                *
 c     * originally written 10-24-2006 by M.G. Martin                   *
-c     * last modified 08-18-2014 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EWALD_SELF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ibox,imolty,iunit
+      integer bxdflag,ibox,imolty,iunit
 c     --- local variables
       double precision charge,invrootpi,calp
 
       call twh_constant_invrootpi(GLB_GET,invrootpi)
       call twh_qqscale(GLB_GET,imolty,iunit,charge)
-      call twh_ewald_calp(GLB_GET,ibox,calp)
+      call twh_ewald_calp(GLB_GET,bxdflag,ibox,calp)
 c     --- self interaction term
       twh_ewald_self = -charge*charge*calp*invrootpi
 

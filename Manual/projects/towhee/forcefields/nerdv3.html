@@ -3,7 +3,7 @@
   <title>MCCCS Towhee: NERD Version 3</title>
  </head>
  <body bgcolor="#FFFFFF" text="#000000">
-  <table width="675" border="0" cellspacing="0" cellpadding="0" height="590">
+  <table border="0" cellspacing="0" cellpadding="0" >
    <tr> 
     <td colspan="2" height="29"> 
      <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif">
@@ -11,23 +11,23 @@
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
-    <IMG src="http://sourceforge.net/sflogo.php?group_id=87039&amp;type=5" width="210" height="62" border="0" 
-	 alt="SourceForge.net Logo" align="right"/>
+    <IMG src="http://sourceforge.net/sflogo.php?group_id=87039&amp;type=5" border="0" alt="SourceForge.net Logo" align="right"/>
    </A>
    <tr> 
-    <td width="18" height="371" valign="top"> 
+    <td valign="top"> 
      <p>&nbsp; </p>
      <p>&nbsp;</p>
     </td>
-    <td width="697" valign="top"> <b>Overview</b> 
+    <td><b>Overview</b> 
      <ul>
-      This section covers the NERD Version 3 United Atom (NERDv3) force field as it is implemented into the towhee_ff_NERDv3 file in the ForceFields directory.
+      This section covers the NERD Version 3 United Atom (NERD) force field as it is implemented into the towhee_ff_NERDv3 file in the ForceFields directory.
       The NERD force field has had several minor changes to parameters as time as progresses so I have broken each of these changes into a different 
       version of the force field.  All of the Towhee atom types for this force field are listed, along with a short description of their meanings.
       Note that NERDv3 is a Lennard-Jones (12-6) force field and can only be combined with other Lennard-Jones (12-6) force fields.
       I would like to thank Nicholas du Preez for initiating the implementation of this force field into Towhee.
       Any discrepencies (especially typos) from the published values are the sole responsibility of Marcus Martin,
       and I welcome feedback on how this implementation compares with other programs.
+      This forcefield was changed in version 8.1.0 so that the forcefield name is always just 'NERD' for all of the various implementations.
      </ul>
      <b>References for NERD Version 3</b> 
      <ul>
@@ -40,7 +40,7 @@
      </ul>	
      <b>NERDv3 in Towhee</b> 
      <ul>
-      The official force field name for NERD Version 2 United Atom in Towhee is 'NERDv3'.
+      The official force field name for NERD Version 3 United Atom in Towhee is 'NERD'.
       This list contains all of the atom names for use in the towhee_input file, along with a brief description.
       I created these atom names in order to work with the molecule assembler.
       NERDv3 is a united-atom force field that lumps hydrogens onto their neighboring carbons.
@@ -116,7 +116,7 @@
  <foot>
   <hr></hr>
   <font face="Arial" size="2">
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->September 10, 2018<!-- #EndDate -->
    <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>

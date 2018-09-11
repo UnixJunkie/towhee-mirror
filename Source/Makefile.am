@@ -185,6 +185,7 @@ towhee_SOURCES =  \
 		vtorsion.F \
 		vtwobody.F \
 		wcoulomb.F \
+		wmultibody.F \
 		writeangang.F \
 		writeangle.F \
 		writeaverages.F \
@@ -560,7 +561,8 @@ vembed.o: preproc.h functions.h vembed.F
 vthreebody.o: preproc.h functions.h vthreebody.F
 vtorsion.o: preproc.h functions.h vtorsion.F
 vtwobody.o: preproc.h functions.h vtwobody.F
-wcoulomb.o: preproc.h functions.h wtwobody.F
+wcoulomb.o: preproc.h functions.h wcoulomb.F
+wmultibody.o: preproc.h functions.h wmultibody.F
 writeangang.o: preproc.h functions.h writeangang.F
 writeangle.o: preproc.h functions.h writeangle.F
 writeaverages.o: preproc.h writeaverages.F

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -48,7 +48,7 @@ c     *  the calling routine.  Do not initialize in any of the vxx     *
 c     *  functions                                                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 09-06-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -92,6 +92,7 @@ c     --- local integer arrays
       dimension atype(2)
 c     --- local double precision scalars
       double precision phi,rijsq,cosphi,cos2phi,cos3phi,rij
+      double precision phi_eq,phi_diff
       double precision xaa1,yaa1,zaa1,xaa2,yaa2,zaa2,daa1,daa2
       double precision xcc,ycc,zcc,tcc
       double precision torscale,rxij,ryij,rzij
@@ -114,7 +115,6 @@ c     --- local double precision arrays
 c     --- initialize vtorsion
       twh_vtorsion = 0.0d0
       lclasstwo = .false.
-
 c     --- determine the torsion forfield number and style
       abcord = iabs(cordstyle)
       if ( abcord .eq. 0 ) then
@@ -128,13 +128,12 @@ c        --- regular torsion - use ittor
          lfailure = .true.
          return
       endif
-      
+c     --- get the torsion style code
       torstyle = twh_get_torstyle(torffnum)
 #if DEBUG_VTORSION
       write(6,*) 'imolty,unit1,torind:',imolty,unit_1,torind
       call twh_constant_radtodeg(GLB_GET,radtodeg)
 #endif
-
       if ( cordstyle .lt. 0 ) then
 c        --- use the angle that was passed to the fucntion
          if ( torstyle .eq. TOR_STYLE_COMP_X_AD ) then
@@ -495,15 +494,16 @@ c        --- used in the OPLS-UA force field
      &        twh_get_torcoeff(torffnum,1)*(1.d0 + phic) +
      &        twh_get_torcoeff(torffnum,2)*(1.d0 - dcos(2.0d0*phi)) +
      &        twh_get_torcoeff(torffnum,3)*(1.d0 + dcos(3.0d0*phi))
-      elseif ( torstyle .eq. TOR_STYLE_SUN_COS ) then
+      elseif ( torstyle .eq. TOR_STYLE_SUM_COS ) then
 c        --- Sum2003 style torsion potential
          phi = twh_arccos(phic)
-         do itor = 0,twh_get_ntorloop(torffnum)
+         phi_eq = twh_get_torcoeff(torffnum,0)
+         phi_diff = phi - phi_eq
+         do itor = 0,twh_get_ntorloop(torffnum)-1
             index = itor + 1
             twh_vtorsion = twh_vtorsion 
      &           + twh_get_torcoeff(torffnum,index)* 
-     &           ( 1.0d0 - dcos(dble(itor)
-     &           *(phi - twh_get_torcoeff(torffnum,0))))
+     &           ( 1.0d0 - dcos(dble(itor)*phi_diff ))
          enddo
       elseif ( torstyle .eq. TOR_STYLE_O_OPLS_T ) then
 c         two term torsional potential used in W.L. Jorgensen;
@@ -692,7 +692,7 @@ c        --- 1) So we don't need any error function info in this step
 c        --- 2) So I don't need any special logic to determine 1-4 
 c        --- interactions in engatom.
 
-         call twh_vcoulomb(0,ibox,rij,imolty,unit_1,imolty
+         call twh_vcoulomb(0,bxdflag,ibox,rij,imolty,unit_1,imolty
      &        ,unit_4,vf,dv,loverlap,vonefour)
          vonefour = twh_get_torcoeff(torffnum,-1)*vonefour
 

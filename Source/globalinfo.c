@@ -864,6 +864,26 @@ void twh_bnrot_(int * flag, int * imolty, int * ibox, double * value)
   return;
 }
 
+void twh_bncom2bswitch_(int * flag, int * ipair, int * ibox, int * jbox,
+			double * value)
+/* total count of attempted 2 box com switch moves
+   originally written 04-20-2018 by M.G. Martin
+   last modified 08-11-2018 by M.G. Martin
+*/
+{
+  int errorcode,mindex,nindex,oindex;
+  mindex = *ipair -1;
+  nindex = *ibox -1;
+  oindex = *jbox -1;
+  errorcode = twh_3dregdouble(PNT_BNCOM2BSWITCH, flag, mindex, nindex,
+			      oindex, value);
+  if ( errorcode == EXIT_FAILURE ) {
+    printf("in twh_bncom2bswitch \n");
+    exit(errorcode);
+  }
+  return;
+}
+
 void twh_bntraa_(int * flag, int * imolty, int * ibox, double * value)
 /* running count of attempted single-atom translation moves since the last update
    originally written in Fortran 03-21-2006 by M.G. Martin
@@ -1059,35 +1079,19 @@ void twh_cubeletweight_(int * flag, int * index, double * value)
   return;
 }
 
-void twh_ewald_kmax_(int * flag, int * index, int * value)
+void twh_ewald_kmax_(int * flag, int * bxdflag, int * boxnum, int * value)
 /* the maximum number of k-vectors in each box of the Ewald sum
    kmax controls the total number of reciprocal vectors
    rewritten from Fortran 12-04-2008 by M.G. Martin
-   last modified 06-25-2009 by M.G. Martin
+   last modified 04-03-2018 by M.G. Martin
 */
 {
-  int errorcode,newindex;
-  newindex = *index - 1;
-  errorcode = twh_1dinteger(PNT_EWALD_KMAX, flag, newindex, value);
+  int errorcode,mindex,nindex;
+  mindex = *bxdflag - 1;
+  nindex = *boxnum -1;
+  errorcode = twh_2dreginteger(PNT_EWALD_KMAX, flag, mindex, nindex, value);
   if ( errorcode == EXIT_FAILURE ) {
     printf("in twh_ewald_kmax \n");
-    exit(errorcode);
-  }
-  return;
-}
-
-void twh_gyration_(int * flag, int * index, double * value)
-/* the current radius of gyration for each molecule
-   rewritten from Fortran 12-04-2008 by M.G. Martin
-   last modified 12-04-2008 by M.G. Martin
-*/
-{
-  int errorcode,newindex;
-  /* shift index down by 1 */
-  newindex = *index -1;
-  errorcode = twh_1ddouble(PNT_GYRATION, flag, newindex, value);
-  if ( errorcode == EXIT_FAILURE ) {
-    printf("in twh_gyration \n");
     exit(errorcode);
   }
   return;
@@ -1221,6 +1225,23 @@ void twh_growvalidcount_(int * flag, int * index, int * value)
   errorcode = twh_1dinteger(PNT_GROWVALIDCOUNT, flag, newindex, value);
   if ( errorcode == EXIT_FAILURE ) {
     printf("in twh_growvalidcount \n");
+    exit(errorcode);
+  }
+  return;
+}
+
+void twh_gyration_(int * flag, int * index, double * value)
+/* the current radius of gyration for each molecule
+   rewritten from Fortran 12-04-2008 by M.G. Martin
+   last modified 12-04-2008 by M.G. Martin
+*/
+{
+  int errorcode,newindex;
+  /* shift index down by 1 */
+  newindex = *index -1;
+  errorcode = twh_1ddouble(PNT_GYRATION, flag, newindex, value);
+  if ( errorcode == EXIT_FAILURE ) {
+    printf("in twh_gyration \n");
     exit(errorcode);
   }
   return;
@@ -1391,6 +1412,23 @@ void twh_pm2rbswpr_(int * flag, int * iboxpair, double * dvalue)
   errorcode = twh_1ddouble(PNT_PM2RBSWPR, flag, mindex, dvalue);
   if ( errorcode == EXIT_FAILURE ) {
     printf("in twh_pm2rbswpr \n");
+    exit(errorcode);
+  }
+  return;
+}
+
+void twh_pm2comswboxpair_(int * flag, int * iboxpair, double * dvalue)
+/* the probability sum for selecting each pair of boxes for the 2-box center-of-mass
+   molecule transfer move
+   originally written 04-12-2018 by M.G. Martin
+   last modified 04-12-2018 by M.G. Martin
+*/
+{
+  int errorcode,mindex;
+  mindex = *iboxpair - 1;
+  errorcode = twh_1ddouble(PNT_PM2COMSWBOXPAIR, flag, mindex, dvalue);
+  if ( errorcode == EXIT_FAILURE ) {
+    printf("in twh_pm2comswboxpair \n");
     exit(errorcode);
   }
   return;

@@ -24,14 +24,13 @@ c     ******************************************************************
 c     * frees all of the allocated memory                              *
 c     *                                                                *
 c     * originally written 12-03-2008 M.G. Martin                      *
-c     * last modified 01-17-2018 by M.G. Martin                        *
+c     * last modified 08-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- local variables
       logical lvalue
       integer itemp,jtemp,ktemp,ivalue,nboxpair,nvmmax,nvmsim
       double precision dvalue
-
 c     --- constants
       call twh_nboxpair(GLB_GET,nboxpair)
       call twh_nvmmax(GLB_GET,nvmmax)
@@ -43,7 +42,6 @@ c     --- set temp variables to null values
       ktemp = 0
       ivalue = 0
       dvalue = 0.0d0
-
 c     --- free arrays based only on maxmolty
       call twh_growvalidcount(GLB_FREE,itemp,jtemp)
 c     --- free arrays based only on maxunit
@@ -111,6 +109,7 @@ c     --- free arrays based on numboxes and nmolty
       call twh_rmcomtra(GLB_FREE,itemp,jtemp,dvalue)
       call twh_acnswitch(GLB_FREE,itemp,jtemp,dvalue)
       call twh_acsswitch(GLB_FREE,itemp,jtemp,dvalue)
+      call twh_bncom2bswitch(GLB_FREE,itemp,jtemp,ktemp,dvalue)
       call twh_acntraa(GLB_FREE,itemp,jtemp,dvalue)
       call twh_acstraa(GLB_FREE,itemp,jtemp,dvalue)
       call twh_batraa(GLB_FREE,itemp,jtemp,dvalue)

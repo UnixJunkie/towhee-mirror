@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -21,19 +21,19 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_recippress(ibox,repress)
+      subroutine twh_recippress(bxdflag,ibox,repress)
 c     ******************************************************************
 c     * calculates the reciprocal space contribution to pressure using *
 c     * thermodynamic definition. See J. Chem. Phys. Vol. 109 P2791.   *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen                         *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBOXI
 #include "functions.h"
 c     --- variables passed to/from the subroutine
-      integer ibox
+      integer bxdflag,ibox
       double precision repress
       dimension repress(6)
 
@@ -47,7 +47,7 @@ c     --- local variables
          repress(index) = 0.0d0
       enddo
 
-      call twh_ewald_calp(GLB_GET,ibox,calp)
+      call twh_ewald_calp(GLB_GET,bxdflag,ibox,calp)
       call twh_ewald_numvect(GLB_GET,ibox,numvect)
       do ncount = 1,numvect
          call twh_ewald_kvector(GLB_GET,CRD_REAL,ncount,ibox,kx,ky,kz)

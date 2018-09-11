@@ -772,7 +772,7 @@ c     * ichain in the activebox for all terms that involve any of the  *
 c     * atoms in the atomlist                                          *
 c     *                                                                *
 c     * originally written 10-18-2006 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -849,8 +849,8 @@ c                 --- compute bond energy
                   call twh_itvib(GLB_GET,imolty,targetatom,ivib
      &                 ,bondtype)
                   dvatomlist = dvatomlist + dvpm(icord)*
-     &                 twh_vbond(lfailure,.false.,activebox,bondtype
-     &                 ,length,imolty
+     &                 twh_vbond(lfailure,.false.,bxdflag,activebox
+     &                 ,bondtype,length,imolty
      &                 ,targetatom,otheratom,loverlap(icord))
                   if ( lfailure ) return
                   if ( loverlap(icord) ) return
@@ -1751,7 +1751,7 @@ c     * energy (dvintra) and an intramolecular and self-term electro   *
 c     * energy (dvelect)                                               *
 c     *                                                                *
 c     * originally written 10-23-2006 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
@@ -1852,7 +1852,8 @@ c                          --- compute nonbonded electrostatic energy
                            if ( lelect ) then
                               if ( luse_ct .and. luse_ci ) then
                                  rij = dsqrt(rijsq)
-                                 call twh_vcoulomb(-1,activebox,rij
+                                 call twh_vcoulomb(-1,bxdflag,activebox
+     &                                ,rij
      &                                ,imolty,iunit,imolty,testunit,vf
      &                                ,dvdlc,loverlap(ioldnew),vcoulomb)
                                  dvelect = dvelect
@@ -1865,7 +1866,7 @@ c                          --- compute the ewald intramolecular
 c                          --- (self and correction) terms
                            rij = dsqrt(rijsq)
                            dvelect = dvelect + dvpm(ioldnew)
-     &                          *twh_ewald_correct(activebox
+     &                          *twh_ewald_correct(bxdflag,activebox
      &                          ,imolty,iunit,testunit,rij)
                         endif
                      endif
@@ -1883,7 +1884,7 @@ c     --- atomlist self interactions
                icord = atomlist(iatomlist,ioldnew)
                if ( icord .ne. CRD_NONE ) then
                   dvelect = dvelect + dvpm(ioldnew)
-     &                 *twh_ewald_self(activebox,imolty,iunit)
+     &                 *twh_ewald_self(bxdflag,activebox,imolty,iunit)
                endif
             enddo
          enddo
@@ -2030,7 +2031,7 @@ c     * computes the two-body energy change for a list of atoms on     *
 c     * molecule ichain in the activebox                               *
 c     *                                                                *
 c     * originally written 10-20-2006 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_VTWOBODY
@@ -2154,7 +2155,8 @@ c                                --- compute change in vdw energy
                               if ( leval_coul ) then
 c                                --- compute change in real coulomb
                                  rij = dsqrt(rijsq)
-                                 call twh_vcoulomb(-1,activebox,rij
+                                 call twh_vcoulomb(-1,bxdflag,activebox
+     &                                ,rij
      &                                ,imolty,iatom,testmolty,iunit
      &                                ,vfor,dl_c,loverlap(ioldnew)
      &                                ,vcoulomb)

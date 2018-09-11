@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_stresstensor(lfailure,stress,ibox)
+      subroutine twh_stresstensor(lfailure,stress,bxdflag,ibox)
 c     ******************************************************************
 c     * computes the stress tensor using the molecular virial          *
 c     * From Allen and Tildesley equation 2.54                         *
@@ -42,7 +42,7 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 03-18-2018 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -54,7 +54,7 @@ c     ******************************************************************
 #define DEBUG_STRESSTENSOR 0
 c     --- variables passed to/from the subroutine
       logical lfailure
-      integer ibox
+      integer bxdflag,ibox
       double precision stress
       dimension stress(0:7)
 
@@ -80,7 +80,7 @@ c     --- double precision arrays
 #endif
       
 c     --- retrieve constants
-      call twh_rcelect(GLB_GET,ibox,rcelect)
+      call twh_rcelect(GLB_GET,bxdflag,ibox,rcelect)
       call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
       call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
@@ -177,8 +177,8 @@ c                          --- initialize the pair virial function
                            if ( leval_c ) then
 c                             --- compute virial from coulombic terms
                               rij = dsqrt(rijsq)
-                              w_ab = w_ab + twh_wcoulomb(ibox,rij,
-     &                             imolty,ii,jmolty,jj)
+                              w_ab = w_ab + twh_wcoulomb(bxdflag,ibox
+     &                             ,rij,imolty,ii,jmolty,jj)
                            endif
                            if ( leval_v ) then
 c                             --- compute pair virial from vdw terms
@@ -231,7 +231,7 @@ c                          --- combinations of the different indices
       if ( lewald ) then
 c        --- Compute the reciprocal space contribution
 c        --- by using the thermodynamic definition
-         call twh_recippress(ibox,repress)
+         call twh_recippress(bxdflag,ibox,repress)
          do indx = 1,6
             stress(indx) = stress(indx) - repress(indx)
          enddo

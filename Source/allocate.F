@@ -208,7 +208,7 @@ c     * allocate arrays based on maximum number of molecule types and  *
 c     * the maximum number of simulation boxes                         *
 c     *                                                                *
 c     * originally written 06-17-2009 by M.G. Martin                   *
-c     * last modified 01-16-2018 M.G. Martin                           *
+c     * last modified 08-11-2018 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -216,7 +216,6 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       integer itemp,npair
       double precision dvaluezero,dvaluehalf
-
 c     --- set to null values
       itemp = 0
       dvaluezero = 0.0d0
@@ -227,13 +226,11 @@ c     --- allocate and initialize acnrot
       call twh_rmrot(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluehalf)
       call twh_barot(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
       call twh_bnrot(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
-
 c     --- allocate and initialize composite move
       call twh_acncomp(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
       call twh_acscomp(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
       call twh_rmcomrot(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluehalf)
       call twh_rmcomtra(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluehalf)
-
 c     --- accumulators for the single-atom translation move
 c     --- allocate and initialize acstraa
       call twh_acstraa(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
@@ -244,7 +241,6 @@ c     --- allocate and initialize batraa
 c     --- allocate and initialize bntraa
       call twh_bntraa(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
       call twh_rmtraa(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluehalf)
-
 c     --- accumulators for the COM translation move
 c     --- allocate and initialize acntrac
       call twh_acntrac(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
@@ -255,15 +251,16 @@ c     --- allocate and initialize batrac
 c     --- allocate and initialize bntrac
       call twh_bntrac(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluezero)
       call twh_rmtrac(GLB_ALLOC_INIT,maxmolty,numboxes,dvaluehalf)
-
       npair = ((maxmolty-1)*(maxmolty))/2
       if ( npair .gt. 0 ) then
 c        --- allocate and initialize acnswitch
          call twh_acnswitch(GLB_ALLOC_INIT,npair,numboxes,dvaluezero)
 c        --- allocate and initialize acsswitch
          call twh_acsswitch(GLB_ALLOC_INIT,npair,numboxes,dvaluezero)
+c        --- allocate and initialize bncom2bswitch
+         call twh_bncom2bswitch(GLB_ALLOC_INIT,npair,numboxes,numboxes
+     &        ,dvaluezero)
       endif
-
       return
       end
 
@@ -325,7 +322,7 @@ c     ******************************************************************
 c     * allocate arrays that depend on the number of box pairs         *
 c     *                                                                *
 c     * originally written 01-14-2018 by M.G. Martin                   *
-c     * last modified 01-16-2018 by M.G. Martin                        *
+c     * last modified 04-12-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -337,6 +334,7 @@ c     --- variables passed to/from the subroutine
       dvalue = 1.0d0
       call twh_pm2cbswpr(GLB_ALLOC_INIT,nboxpair,dvalue)
       call twh_pm2rbswpr(GLB_ALLOC_INIT,nboxpair,dvalue)
+      call twh_pm2comswboxpair(GLB_ALLOC_INIT,nboxpair,dvalue)
 
       return
       end
@@ -346,7 +344,7 @@ c     ******************************************************************
 c     * allocate arrays based on numboxes                              *
 c     *                                                                *
 c     * originally written 12-04-2008 by M.G. Martin                   *
-c     * last modified 01-16-2018 M.G. Martin                           *
+c     * last modified 04-03-2018 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -356,7 +354,7 @@ c     --- local variables
 
       itemp = 5
 c     --- ewald kmax
-      call twh_ewald_kmax(GLB_ALLOC_INIT,numboxes,itemp)
+      call twh_ewald_kmax(GLB_ALLOC_INIT,MAXBXD,numboxes,itemp)
 
       return
       end

@@ -24,7 +24,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH4       
 CH4       
@@ -48,7 +48,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3eth 
 Csp3      
@@ -72,7 +72,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3pro 
 Csp3      
@@ -96,7 +96,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3gen 
 Csp3      
@@ -120,7 +120,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3isob
 Csp3      
@@ -144,7 +144,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp32mb 
 Csp3      
@@ -168,7 +168,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3neop
 Csp3      
@@ -192,7 +192,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp322db
 Csp3      
@@ -216,7 +216,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3mesc
 Csp3      
@@ -240,7 +240,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3etsc
 Csp3      
@@ -264,7 +264,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH3sp3pene
 Csp3      
@@ -288,7 +288,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH2sp3    
 Csp3      
@@ -312,7 +312,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CHsp3     
 Csp3      
@@ -336,7 +336,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH2sp2eth 
 Csp2      
@@ -360,7 +360,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CH2sp2prim
 Csp2      
@@ -384,7 +384,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 CHsp2     
 Csp2      
@@ -408,7 +408,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 Csp3      
 Csp3      
@@ -432,7 +432,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 H_s       
 H         
@@ -456,7 +456,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 H_o       
 H         
@@ -480,7 +480,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 Osp3      
 Osp3      
@@ -504,7 +504,7 @@ Base Charge
 Polarizability
     0.1000000000E+01
 Force Field Name
-NERDv3    
+NERD      
 Atom Names
 S_sh2     
 S         
@@ -522,7 +522,7 @@ Bond Coefficients
 Vibration Order
 wild      
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            2
 Atom Names
@@ -538,7 +538,7 @@ Bond Coefficients
 Vibration Order
 wild      
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -553,7 +553,7 @@ Bond Coefficients
 Vibration Order
 wild      
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -568,7 +568,7 @@ Bond Coefficients
 Vibration Order
 wild      
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -583,7 +583,7 @@ Bond Coefficients
 Vibration Order
 wild      
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -600,7 +600,7 @@ Angle Coefficients
 Angle Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
           10
 Atom Names
@@ -624,7 +624,7 @@ Angle Coefficients
 Angle Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
           20
 Atom Names
@@ -658,7 +658,7 @@ Angle Coefficients
 Angle Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            2
 Atom Names
@@ -674,7 +674,7 @@ Angle Coefficients
 Angle Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -689,7 +689,7 @@ Angle Coefficients
 Angle Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            2
 Atom Names
@@ -705,7 +705,7 @@ Angle Coefficients
 Angle Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -726,7 +726,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -745,7 +745,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -764,7 +764,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -783,7 +783,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            4
 Atom Names
@@ -805,7 +805,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -824,7 +824,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            1
 Atom Names
@@ -843,7 +843,7 @@ Torsion Coefficients
 Torsion Order
 wild           
 Force Field Name
-NERDv3    
+NERD      
 Number of Atoms with Same Parameters  
            2
 Atom Names

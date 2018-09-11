@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * inverts the hmatrix for a particular box                       *
 c     * also computes the boxvolume and stores it                      *
 c     *                                                                *
 c     * originally written 12-13-2001 by M.G. Martin                   *
-c     * last modified 08-09-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CROSSPRODUCT
@@ -46,6 +46,14 @@ c     --- double precision arrays
       double precision wx,wy,wz
       dimension wx(3),wy(3),wz(3)
 
+      if ( bxdflag .eq. BXD_T_TO_R ) then
+c        --- set the temp information to real
+         call twh_boxvolume(GLB_SET,BXD_T_TO_R,ibox,determ)
+         call twh_hinverse(GLB_STORE_ALL,BXD_T_TO_R,ibox,3,3,dvalue)
+         call twh_halfbox(GLB_STORE_ALL,BXD_T_TO_R,ibox,3,dvalue)
+         return
+      endif
+      
 c     --- fetch the hmatrix
       call twh_hmatrix(GLB_GET,bxdflag,ibox,1,1,hm11)
       call twh_hmatrix(GLB_GET,bxdflag,ibox,1,2,hm12)

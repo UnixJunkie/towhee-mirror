@@ -25,7 +25,7 @@ c     * reads in all input parameters from towhee_input that are       *
 c     * related to the classical potential style                       *
 c     *                                                                *
 c     * split out of readtowhee 11-01-2004 by M.G. Martin              *
-c     * last modified 08-29-2018 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -326,7 +326,7 @@ c           --- read in ewald sum kalp and kmax parameters
                endif
 c              --- set all of the boxes to this initial kmax
                do ibox = 1,numboxes
-                  call twh_ewald_kmax(GLB_SET,ibox,kmax)
+                  call twh_ewald_kmax(GLB_SET,BXD_REAL,ibox,kmax)
                enddo
             endif
          elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
@@ -354,7 +354,7 @@ c           --- read in the electostatic cutoff
                return
             endif
 c           --- set all of the boxes to this initial rcelect
-            call twh_rcelect(GLB_INIT,numboxes,rcelect)
+            call twh_rcelect(GLB_INIT,MAXBXD,numboxes,rcelect)
          elseif ( coulombstyle .eq. 'minimum image' ) then
             call twh_elect_form_code(GLB_SET,EF_CODE_COUL_NOCUT)
 c            --- explicit minimum image coulombic interactions
@@ -363,7 +363,7 @@ c            --- explicit minimum image coulombic interactions
             call twh_ewald_kalp(GLB_SET,0.0d0)
 c           --- set all of the boxes to this initial kmax
             do ibox = 1,numboxes
-               call twh_ewald_kmax(GLB_SET,ibox,kmax)
+               call twh_ewald_kmax(GLB_SET,BXD_REAL,ibox,kmax)
             enddo
          else
 c           --- unknown coulombstyle

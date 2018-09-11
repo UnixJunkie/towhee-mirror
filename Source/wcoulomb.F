@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_wcoulomb( ibox,rij,imolty,iunit,jmolty,junit)
+      function twh_wcoulomb(bxdflag,ibox,rij,imolty,iunit,jmolty,junit)
 c     ******************************************************************
 c     * Computes the coulombic pair virial function divided by r^2     *
 c     * as defined by equation 2.60 in Allen and Tildesley             *
@@ -29,7 +29,7 @@ c     *                                                                *
 c     * Units returned are [K/molecule]/[angstrom^2]                   *
 c     *                                                                *
 c     * originally written 05-16-2005 by M.G. Martin                   *
-c     * last update 08-18-2014 by M.G. Martin                          *
+c     * last update 04-02-2018 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -41,7 +41,7 @@ c     ******************************************************************
 #include "functions.h"
 
 c     --- variables passed to/from the function
-      integer ibox, imolty, jmolty, iunit, junit
+      integer bxdflag, ibox, imolty, jmolty, iunit, junit
       double precision rij
 c     --- local variables
       logical scp_scale_coulomb,lewald
@@ -51,7 +51,7 @@ c     --- local variables
 c     --- retrieve constants
       call twh_qqscale(GLB_GET,imolty,iunit,qqa)
       call twh_qqscale(GLB_GET,jmolty,junit,qqb)
-      if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,ibox,rcelect)
+      if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,bxdflag,ibox,rcelect)
       call twh_lewald(GLB_GET,lewald)
 
 c     --- initialize
@@ -64,7 +64,7 @@ c        --- either way compute explicit coulomb interaction
          call twh_constant_pi(GLB_GET,onepi)
          if ( twh_cmp_gt(rcelect,rij) ) then
             rijsq = rij*rij
-            call twh_ewald_calp(GLB_GET,ibox,calp)
+            call twh_ewald_calp(GLB_GET,bxdflag,ibox,calp)
             call twh_isolvtype(GLB_GET,isolvtype)
             if ( isolvtype .eq. SOLV_NONE ) then
                twh_wcoulomb = - (2.0d0*calp*

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_findtarget(lfailure,swaptype,bxdflag,box,imolty
+      subroutine twh_findtarget(lfailure,swaptype,bxdflag,boxes,imolty
      &     ,ichain,iunit,jmolty,jchain,junit,regstart,regend,pointp
      &     ,num_in,num_out,lfound,xtarget,ytarget,ztarget)
 c     ******************************************************************
@@ -28,12 +28,14 @@ c     * constants required for array dimensions and then calls the     *
 c     * findtarget_main routine                                        *
 c     *                                                                *
 c     * originally written 06-25-2009 by M.G. Martin                   *
-c     * last modified 06-25-2009 by M.G. Martin                        *
+c     * last modified 08-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       logical lfailure,lfound
-      integer swaptype,bxdflag,box
+      integer swaptype,bxdflag
+      integer boxes
+      dimension boxes(2)
       integer imolty,ichain,iunit,jmolty,jchain,junit
       integer regstart,regend,num_in,num_out
       integer pointp
@@ -44,14 +46,14 @@ c     --- local variables
 
       call twh_nchain(GLB_GET,nchain)
 
-      call twh_findtarget_main(lfailure,swaptype,bxdflag,box,imolty
+      call twh_findtarget_main(lfailure,swaptype,bxdflag,boxes,imolty
      &     ,nchain,ichain,iunit,jmolty,jchain,junit,regstart,regend
      &     ,pointp,num_in,num_out,lfound,xtarget,ytarget,ztarget)
 
       return
       end
 
-      subroutine twh_findtarget_main(lfailure,swaptype,bxdflag,box
+      subroutine twh_findtarget_main(lfailure,swaptype,bxdflag,boxes
      &     ,imolty,nchain,ichain,iunit,jmolty,jchain,junit
      &     ,regstart,regend,pointp,num_in,num_out,lfound
      &     ,xtarget,ytarget,ztarget)
@@ -63,7 +65,7 @@ c     * it is returned, otherwise lfound is set to false and the move  *
 c     * will be rejected                                               *
 c     *                                                                *
 c     * originally written 09-13-2002 by M.G. Martin                   *
-c     * last modified 08-02-2016 by M.G. Martin                        *
+c     * last modified 08-10-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -74,7 +76,9 @@ c     --- debug toggle
 #define DEBUG_FINDTARGET 0
 c     --- variables passed to/from the subroutine
       logical lfailure,lfound
-      integer swaptype,bxdflag,box
+      integer swaptype,bxdflag
+      integer boxes
+      dimension boxes(2)
       integer imolty,nchain,ichain,iunit,jmolty,jchain,junit
       integer regstart,regend,num_in,num_out,pointp
       double precision xtarget,ytarget,ztarget
@@ -92,62 +96,63 @@ c     --- initialize variables
       num_out = 0
 c     --- retrieve constants
       call twh_nunit(GLB_GET,imolty,numiunit)
-      call twh_ncmt(GLB_GET,box,imolty,ncmti)
+      call twh_ncmt(GLB_GET,boxes(1),imolty,ncmti)
 
-      if ( swaptype .lt. 2 .or. 
-     &     swaptype .eq. 5 .or. 
-     &     swaptype .eq. 6) then
+      if ( swaptype .eq. SWAP_CB_INTER
+     &     .or. swaptype .eq. SWAP_CB_INTRA
+     &     .or. swaptype .eq. SWAP_CB_GC
+     &     .or. swaptype .eq. SWAP_RB_INTER ) then
          pointp = idint( dble(ncmti)*twh_random() ) + 1
-         call twh_chainlist(GLB_GET,pointp,box,imolty,ichain)
+         call twh_chainlist(GLB_GET,pointp,boxes(1),imolty,ichain)
 #if DEBUG_FINDTARGET
-      write(6,*) 'box,imolty,ncmt:',box,imolty,ncmti
-      write(6,*) 'pointp,ichain:',pointp,ichain
+         write(6,*) 'boxes,imolty,ncmt:',boxes(1),boxes(2),imolty,ncmti
+         write(6,*) 'pointp,ichain:',pointp,ichain
 #endif
 c        --- safety checks
          call twh_moltyp(GLB_GET,ichain,itest)
          if ( itest .ne. imolty ) then
             write(6,*) 'FINDTARGET: ichain,imolty,moltyp(ichain)'
      &           ,ichain,imolty,itest
-            write(6,*) 'swaptype,box,ncmt',swaptype,box,ncmti
+            write(6,*) 'swaptype,boxes,ncmt',swaptype,boxes(1),boxes(2)
+     &           ,ncmti
             write(6,*) 'pointp',pointp
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(ichain) .ne. box ) then
-            write(6,*) 'FINDTARGET: ichain,box,nboxi(ichain)'
-     &           ,ichain,box,twh_get_nboxi(ichain)
+         if ( twh_get_nboxi(ichain) .ne. boxes(1) ) then
+            write(6,*) 'FINDTARGET: ichain,boxes(1),nboxi(ichain)'
+     &           ,ichain,boxes(1),twh_get_nboxi(ichain)
             lfailure = .true.
             return
          endif
 c        --- choose which atom to use as the starting unit
          iunit = idint( twh_random()*numiunit ) + 1
-c         --- we are done and we found what we need
+c        --- we are done and we found what we need
          lfound = .true.
-      elseif ( swaptype .eq. 2 ) then
+      elseif ( swaptype .eq. SWAP_AVB_ONE ) then
 c        --- select the chain that will move
          pointp = idint( dble(ncmti)*twh_random() ) + 1
-         call twh_chainlist(GLB_GET,pointp,box,imolty,ichain)
+         call twh_chainlist(GLB_GET,pointp,boxes(1),imolty,ichain)
 c        --- safety checks
          call twh_moltyp(GLB_GET,ichain,itest)
          if ( itest .ne. imolty ) then
             write(6,*) 'FINDTARGET: ichain,imolty,moltyp(ichain)'
      &           ,ichain,imolty,itest
-            write(6,*) 'swaptype,box,ncmt',swaptype,box,ncmti
+            write(6,*) 'swaptype,boxes(1),ncmt',swaptype,boxes(1),ncmti
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(ichain) .ne. box ) then
-            write(6,*) 'FINDTARGET: ichain,box,nboxi(ichain)'
-     &           ,ichain,box,twh_get_nboxi(ichain)
+         if ( twh_get_nboxi(ichain) .ne. boxes(1) ) then
+            write(6,*) 'FINDTARGET: ichain,boxes(1),nboxi(ichain)'
+     &           ,ichain,boxes(1),twh_get_nboxi(ichain)
             lfailure = .true.
             return
          endif
 c        --- choose which atom to use as the starting unit
          iunit = idint( twh_random()*numiunit ) + 1
-
 c        --- we need to select a target molecule of type jmolty at 
 c        --- random from the molecules of that type in box
-         call twh_ncmt(GLB_GET,box,jmolty,ncmtj)
+         call twh_ncmt(GLB_GET,boxes(1),jmolty,ncmtj)
          if ( ncmtj .eq. 0 ) then
 c           --- no molecules of the target type, reject move
             return
@@ -164,7 +169,8 @@ c              --- choose a molecule of the appropriate type that is
 c              --- not the same molecule as the target
                do while ( .not. lfound ) 
                   pointp = idint(dble(ncmtj)*twh_random())+1
-                  call twh_chainlist(GLB_GET,pointp,box,jmolty,jchain)
+                  call twh_chainlist(GLB_GET,pointp,boxes(1),jmolty
+     &                 ,jchain)
                   if ( jchain .ne. ichain ) lfound = .true.
                enddo
             endif
@@ -172,7 +178,7 @@ c              --- not the same molecule as the target
 c           --- jmolty is of a different type than imolty, choose one
 c           --- at random
             pointp = idint( dble(ncmtj)*twh_random() ) + 1
-            call twh_chainlist(GLB_GET,pointp,box,jmolty,jchain)
+            call twh_chainlist(GLB_GET,pointp,boxes(1),jmolty,jchain)
          endif
 c        --- select an atom from jmolty at random.  this will be the
 c        --- target atom reference for insertion
@@ -185,8 +191,8 @@ c        --- determine if iunit of molecule ichain is in the inner or
 c        --- outer volume determined by junit
          call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &        ,xtemp,ytemp,ztemp)
-         call twh_mimage(bxdflag,box,xtarget(1),ytarget(1),ztarget(1)
-     &        ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
+         call twh_mimage(bxdflag,boxes(1),xtarget(1),ytarget(1)
+     &        ,ztarget(1),xtemp,ytemp,ztemp,rxij,ryij,rzij)
          dist = twh_distance(rxij,ryij,rzij)
          call twh_avb1rad(GLB_GET,testrad)
          if ( dist .le. testrad ) then
@@ -203,24 +209,21 @@ c        --- determine whether the target region is inner or outer
          else
             regend = 1
          endif
-
-      elseif ( swaptype .eq. 3 ) then
+      elseif ( swaptype .eq. SWAP_AVB_TWO ) then
 c        --- this move logic appears to be reversed from the others 
 c        --- as the first chain we select is the one that is not moving
 c        --- (refered to as the j chain)
 c        --- where the other moves first select the chain that does 
 c        --- move.  This is due to the different nature of the AVB2
 c        --- algorithm
-
-         call twh_ncmt(GLB_GET,box,jmolty,ncmtj)
+         call twh_ncmt(GLB_GET,boxes(1),jmolty,ncmtj)
          if ( ncmtj .eq. 0 ) then
 c           --- no molecules of the target type, reject move
             return
          endif
-
 c        --- select the chain that is stationary (jchain)
          pointp = idint( dble(ncmtj)*twh_random() ) + 1
-         call twh_chainlist(GLB_GET,pointp,box,jmolty,jchain)
+         call twh_chainlist(GLB_GET,pointp,boxes(1),jmolty,jchain)
 c        --- safety checks
          call twh_moltyp(GLB_GET,jchain,itest)
          if ( itest .ne. jmolty ) then
@@ -229,13 +232,12 @@ c        --- safety checks
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(jchain) .ne. box ) then
-            write(6,*) 'FINDTARGET: jchain,box,nboxi(jchain)'
-     &           ,jchain,box,twh_get_nboxi(jchain)
+         if ( twh_get_nboxi(jchain) .ne. boxes(1) ) then
+            write(6,*) 'FINDTARGET: jchain,boxes(1),nboxi(jchain)'
+     &           ,jchain,boxes(1),twh_get_nboxi(jchain)
             lfailure = .true.
             return
          endif
-
 c        --- determine whether to do an in->out or an out->in
          call twh_pmavb2in(GLB_GET,pmtest)
          if ( twh_random() .lt. pmtest ) then
@@ -252,7 +254,6 @@ c        --- choose an atom in jmolty to use as the measuring atom
          junit = idint( twh_random()*dble(numjunit) ) + 1
 c        --- choose which atom in imolty to use as the starting unit
          iunit = idint( twh_random()*dble(numiunit) ) + 1
-
 c        --- store the coordinates for the jchain reference molecule
          call twh_coordinates(GLB_GET,CRD_REAL,jchain,junit
      &        ,xtarget(1),ytarget(1),ztarget(1))
@@ -260,11 +261,11 @@ c        --- make a list of all the molecule of the appropriate type
 c        --- that are in the correct region
          ngood = 0
          do itest = 1,ncmti
-            call twh_chainlist(GLB_GET,itest,box,imolty,ichain)
+            call twh_chainlist(GLB_GET,itest,boxes(1),imolty,ichain)
             if ( ichain .ne. jchain ) then
                call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &              ,xtemp,ytemp,ztemp)
-               call twh_mimage(bxdflag,box
+               call twh_mimage(bxdflag,boxes(1)
      &              ,xtarget(1),ytarget(1),ztarget(1)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
@@ -286,7 +287,6 @@ c                    --- this is in the outer region
                endif
             endif
          enddo
-
 c        --- if there are no chains to choose from then reject move
          if ( ngood .eq. 0 ) return
 c        --- we made it this far so we must have found one
@@ -294,21 +294,19 @@ c        --- we made it this far so we must have found one
 c        --- choose one of the good chains
          pointp = idint( twh_random()*dble(ngood)) + 1
          ichain = goodchain(pointp)
-
-      elseif ( swaptype .eq. 4 ) then
+      elseif ( swaptype .eq. SWAP_AVB_THREE ) then
 c        --- the first chain we select is the one that is not moving
 c        --- (refered to as the j chain)
 c        --- retrieve the avb3rad
          call twh_avb3rad(GLB_GET,testrad)
-         call twh_ncmt(GLB_GET,box,jmolty,ncmtj)
+         call twh_ncmt(GLB_GET,boxes(1),jmolty,ncmtj)
          if ( ncmtj .lt. 2 ) then
 c           --- not enough molecules of the target type, reject move
             return
          endif
-
 c        --- select the chain that is stationary (jchain)
          pointp = idint( dble(ncmtj)*twh_random() ) + 1
-         call twh_chainlist(GLB_GET,pointp,box,jmolty,jchain)
+         call twh_chainlist(GLB_GET,pointp,boxes(1),jmolty,jchain)
 c        --- safety checks
          call twh_moltyp(GLB_GET,jchain,itest)
          if ( itest .ne. jmolty ) then
@@ -317,13 +315,12 @@ c        --- safety checks
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(jchain) .ne. box ) then
-            write(6,*) 'FINDTARGET: jchain,box,nboxi(jchain)'
-     &           ,jchain,box,twh_get_nboxi(jchain)
+         if ( twh_get_nboxi(jchain) .ne. boxes(1) ) then
+            write(6,*) 'FINDTARGET: jchain,boxes(1),nboxi(jchain)'
+     &           ,jchain,boxes(1),twh_get_nboxi(jchain)
             lfailure = .true.
             return
          endif
-
 c        --- the move is always in -> in
          regstart = 0
          regend = 0
@@ -339,11 +336,11 @@ c        --- first we need to find another molecule of type jmolty that
 c        --- does not have overlapping inner regions with jchain
          ngood = 0
          do itest = 1,ncmtj
-            call twh_chainlist(GLB_GET,itest,box,jmolty,kchain)
+            call twh_chainlist(GLB_GET,itest,boxes(1),jmolty,kchain)
             if ( kchain .ne. jchain ) then
                call twh_coordinates(GLB_GET,CRD_REAL,kchain,junit
      &              ,xtemp,ytemp,ztemp)
-               call twh_mimage(bxdflag,box
+               call twh_mimage(bxdflag,boxes(1)
      &              ,xtarget(1),ytarget(1),ztarget(1)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
@@ -366,12 +363,12 @@ c        --- of jchain and count the number in the inner regions of
 c        --- jchain and kchain
          ngood = 0
          do itest = 1,ncmti
-            call twh_chainlist(GLB_GET,itest,box,imolty,ichain)
+            call twh_chainlist(GLB_GET,itest,boxes(1),imolty,ichain)
             if ( ichain .ne. jchain .and. ichain .ne. kchain ) then
 c              --- count the number in the inner region of jchain
                call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &              ,xtemp,ytemp,ztemp)
-               call twh_mimage(bxdflag,box
+               call twh_mimage(bxdflag,boxes(1)
      &              ,xtarget(1),ytarget(1),ztarget(1)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
@@ -382,7 +379,7 @@ c              --- count the number in the inner region of jchain
                endif
 c              --- count the number in the inner region of kchain
 c              --- this is stored in num_out
-               call twh_mimage(bxdflag,box
+               call twh_mimage(bxdflag,boxes(1)
      &              ,xtarget(2),ytarget(2),ztarget(2)
      &              ,xtemp,ytemp,ztemp,rxij,ryij,rzij)
                dist = twh_distance(rxij,ryij,rzij)
@@ -391,7 +388,6 @@ c              --- this is stored in num_out
                endif
             endif
          enddo
-
 c        --- if there are no chains to choose from then reject move
          if ( ngood .eq. 0 ) return
 c        --- we made it this far so we must have found one
@@ -399,7 +395,6 @@ c        --- we made it this far so we must have found one
 c        --- choose one of the good chains
          pointp = idint( twh_random()*dble(ngood)) + 1
          ichain = goodchain(pointp)
-
          call twh_moltyp(GLB_GET,ichain,itest)
          call twh_moltyp(GLB_GET,jchain,jtest)
          call twh_moltyp(GLB_GET,kchain,ktest)
@@ -414,6 +409,29 @@ c        --- choose one of the good chains
             lfailure = .true.
             return
          endif
+      elseif ( swaptype .eq. SWAP_COM_INTER ) then
+c        --- center of mass interbox exchange
+c        --- get total number of molecules of type imolty in boxes(1)
+         call twh_ncmt(GLB_GET,boxes(1),imolty,ncmti)
+c        --- get total number of molecule of type jmolty in boxes(2)
+         call twh_ncmt(GLB_GET,boxes(2),jmolty,ncmtj)
+c        --- if either starting total is zero, move cannot be attempted
+         if ( ncmti .eq. 0 .or. ncmtj .eq. 0 ) return
+c        --- select ichain of type imolty in boxes(1)
+         pointp = idint( dble(ncmti)*twh_random() ) + 1
+         call twh_chainlist(GLB_GET,pointp,boxes(1),imolty,ichain)
+c        --- select jchain of type jmolty in boxes(2)
+         pointp = idint( dble(ncmtj)*twh_random() ) + 1
+         call twh_chainlist(GLB_GET,pointp,boxes(2),jmolty,jchain)
+c        --- iunit and junit default to zero for this move
+         iunit = 0
+         junit = 0
+c        --- if we made it this far, things worked
+         lfound = .true.
+      else
+         write(6,*) 'FINDTARGET unknown swaptype:',swaptype
+         lfailure = .true.
+         return
       endif
 
       return

@@ -1,4 +1,4 @@
- MCCCS Towhee - Version 8.0.0   (March 29 2018)     
+ MCCCS Towhee - Version 8.1.0   (September 11 2018) 
  Copyright (C) <2018> Marcus G. Martin
  Code Contributors for 2018: Marcus G. Martin;
  Copyright (C) <2017> Marcus G. Martin
@@ -139,8 +139,9 @@ cbmc_formulation: Martin and Frischknecht 2006
  M.G. Martin; A.L. Frischknecht; Mol. Phys. 104 2439-2456 (2006)
 cbmc_setting_style: Martin and Frischknecht       
 default max_bond_length:  3.00
- ffnumber:            1
+ ffnumber:            2
  ff_filename:
+/towheebase/ForceFields/towhee_ff_NERDv2                                                                                
 /towheebase/ForceFields/towhee_ff_Sum2003                                                                               
  classical_potential: Lennard-Jones                 
  READCLASSICAL: pot_num:     1 potential name: Lennard-Jones                 
@@ -157,6 +158,7 @@ default max_bond_length:  3.00
  dielect:  1.00000    
  Setting up force field parameters from files
  opening forcefield file:    1
+ opening forcefield file:    2
  Lorentz-Berthelot Mixing rules
  Arithmetic mean of sigma terms
  Geometric mean of epsilon term
@@ -165,7 +167,7 @@ default max_bond_length:  3.00
  nunit:           18
  nmaxcbmc:           18
  lpdbnames:  F
-   using the Sum2003    force field
+   using the NERD       force field
  charge_assignment: manual                        
    Building the input file for molecule type:     1
 unit:    1 name:CHsp3oac   charge:   0.20000
@@ -192,56 +194,56 @@ Default total charge on molecule   1 is   0.00000
 Total charge in the simulation system:   0.00000
 Bond Types
 Type:      1 Style: Standard Harmonic Length: 1.5400 Constant:    48250.0
-Type:      2 Style: Standard Harmonic Length: 1.4800 Constant:   132298.9
-Type:      3 Style: Standard Harmonic Length: 1.6000 Constant:   120271.7
-Type:      4 Style: Standard Harmonic Length: 1.4000 Constant:   162366.8
-Type:      5 Style: Standard Harmonic Length: 1.2600 Constant:   180407.5
-Type:      6 Style: Standard Harmonic Length: 1.5300 Constant:   120271.7
+Type:      4 Style: Standard Harmonic Length: 1.4800 Constant:   132298.9
+Type:      5 Style: Standard Harmonic Length: 1.4000 Constant:   162366.8
+Type:      6 Style: Standard Harmonic Length: 1.2600 Constant:   180407.5
+Type:      7 Style: Standard Harmonic Length: 1.5300 Constant:   120271.7
+Type:      9 Style: Standard Harmonic Length: 1.6000 Constant:   120271.7
 Angle Types
-Type:   4 Style: Standard Harmonic  Angle:    117.000 Constant:    55505.4
-Type:   5 Style: Standard Harmonic  Angle:    124.000 Constant:    91406.5
-Type:   6 Style: Standard Harmonic  Angle:    111.000 Constant:    72163.0
-Type:   7 Style: Standard Harmonic  Angle:    125.000 Constant:    91406.5
-Type:   8 Style: Standard Harmonic  Angle:    114.000 Constant:    51957.4
-Type:   9 Style: Standard Harmonic  Angle:    109.000 Constant:    60135.8
-Type:  10 Style: Standard Harmonic  Angle:    119.000 Constant:    72163.0
+Type:   5 Style: Standard Harmonic  Angle:    117.000 Constant:    55505.4
+Type:   6 Style: Standard Harmonic  Angle:    124.000 Constant:    91406.5
+Type:   7 Style: Standard Harmonic  Angle:    111.000 Constant:    72163.0
+Type:   8 Style: Standard Harmonic  Angle:    125.000 Constant:    91406.5
+Type:   9 Style: Standard Harmonic  Angle:    114.000 Constant:    51957.4
+Type:  10 Style: Standard Harmonic  Angle:    109.000 Constant:    60135.8
+Type:  11 Style: Standard Harmonic  Angle:    119.000 Constant:    72163.0
 Torsion Types
-Type:   5 Style: Sum2003 Cosine Series n:   3
+Type:   5 Style: Sum2003 Cosine Series n:   4
 Torsion shift angle [torcoeff(0)]:   0.00
 n:  0 Constant:        0.00000
-n:  1 Constant:     6332.30501
-n:  2 Constant:     3639.66219
-n:  3 Constant:        0.00000
-Type:   6 Style: Sum2003 Cosine Series n:   3
+n:  1 Constant:     3166.15250
+n:  2 Constant:     1819.83109
+n:  3 Constant:      424.61924
+Type:   6 Style: Sum2003 Cosine Series n:   4
 Torsion shift angle [torcoeff(0)]: 180.00
 n:  0 Constant:        0.00000
-n:  1 Constant:     6263.02851
-n:  2 Constant:     4050.63058
-n:  3 Constant:        0.00000
-Type:   7 Style: Sum2003 Cosine Series n:   3
+n:  1 Constant:     3131.51425
+n:  2 Constant:     2025.31529
+n:  3 Constant:      390.46207
+Type:   7 Style: Sum2003 Cosine Series n:   4
 Torsion shift angle [torcoeff(0)]: 180.00
 n:  0 Constant:        0.00000
-n:  1 Constant:      369.95575
-n:  2 Constant:      175.47641
-n:  3 Constant:        0.00000
-Type:   8 Style: Sum2003 Cosine Series n:   3
+n:  1 Constant:      184.97787
+n:  2 Constant:       87.73821
+n:  3 Constant:      176.07777
+Type:   8 Style: Sum2003 Cosine Series n:   4
 Torsion shift angle [torcoeff(0)]:   0.00
 n:  0 Constant:        0.00000
-n:  1 Constant:      369.95575
-n:  2 Constant:      175.47641
-n:  3 Constant:        0.00000
-Type:  10 Style: Sum2003 Cosine Series n:   3
+n:  1 Constant:      184.97787
+n:  2 Constant:       87.73821
+n:  3 Constant:      176.07777
+Type:  10 Style: Sum2003 Cosine Series n:   4
 Torsion shift angle [torcoeff(0)]: 180.00
 n:  0 Constant:        0.00000
-n:  1 Constant:     3885.01645
-n:  2 Constant:    -1889.10759
-n:  3 Constant:        0.00000
-Type:  11 Style: Sum2003 Cosine Series n:   3
+n:  1 Constant:     1942.50823
+n:  2 Constant:     -944.55380
+n:  3 Constant:     1587.10535
+Type:  11 Style: Sum2003 Cosine Series n:   4
 Torsion shift angle [torcoeff(0)]: 180.00
 n:  0 Constant:        0.00000
-n:  1 Constant:     1035.29879
-n:  2 Constant:     5143.78007
-n:  3 Constant:        0.00000
+n:  1 Constant:      517.64940
+n:  2 Constant:     2571.89003
+n:  3 Constant:     1216.42797
 Improper Torsion Types
    No Improper Types
 Energies exclusively from internal potentials
@@ -250,34 +252,34 @@ Lennard-Jones 12-6 potential
     with tail corrections
 u(r) = 4*epsilon[(sigma/r)^12 - (sigma/r)^6] - shift
 Num. Atom(i)    Num. Atom(j)         sigma    epsilon      shift     1-4sig     1-4eps
-   1 CH3sp3gen     1 CH3sp3gen      3.9100   104.0000     0.0000     0.0000     0.0000
-   1 CH3sp3gen     6 Csp2ac         3.6110    94.8008     0.0000     0.0000     0.0000
-   1 CH3sp3gen     7 CH2sp3oac      3.8700    89.1010     0.0000     0.0000     0.0000
-   1 CH3sp3gen     8 CH2sp3cac      3.8725    88.4388     0.0000     0.0000     0.0000
-   1 CH3sp3gen    10 CHsp3oac       3.8700    89.1010     0.0000     0.0000     0.0000
-   1 CH3sp3gen    13 Osp3           3.6910    91.7909     0.0000     0.0000     0.0000
-   1 CH3sp3gen    14 Osp2           3.3750    99.5442     0.0000     0.0000     0.0000
-   6 Csp2ac        6 Csp2ac         3.3120    86.4152     0.0000     0.0000     0.0000
-   6 Csp2ac        7 CH2sp3oac      3.5710    81.2196     0.0000     0.0000     0.0000
-   6 Csp2ac        8 CH2sp3cac      3.5735    80.6160     0.0000     0.0000     0.0000
-   6 Csp2ac       10 CHsp3oac       3.5710    81.2196     0.0000     0.0000     0.0000
-   6 Csp2ac       13 Osp3           3.3920    83.6716     0.0000     0.0000     0.0000
-   6 Csp2ac       14 Osp2           3.0760    90.7391     0.0000     0.0000     0.0000
-   7 CH2sp3oac     7 CH2sp3oac      3.8300    76.3364     0.0000     0.0000     0.0000
-   7 CH2sp3oac     8 CH2sp3cac      3.8325    75.7691     0.0000     0.0000     0.0000
-   7 CH2sp3oac    10 CHsp3oac       3.8300    76.3364     0.0000     0.0000     0.0000
-   7 CH2sp3oac    13 Osp3           3.6510    78.6409     0.0000     0.0000     0.0000
-   7 CH2sp3oac    14 Osp2           3.3350    85.2835     0.0000     0.0000     0.0000
-   8 CH2sp3cac     8 CH2sp3cac      3.8350    75.2059     0.0000     0.0000     0.0000
-   8 CH2sp3cac    10 CHsp3oac       3.8325    75.7691     0.0000     0.0000     0.0000
-   8 CH2sp3cac    13 Osp3           3.6535    78.0564     0.0000     0.0000     0.0000
-   8 CH2sp3cac    14 Osp2           3.3375    84.6496     0.0000     0.0000     0.0000
-  10 CHsp3oac     10 CHsp3oac       3.8300    76.3364     0.0000     0.0000     0.0000
-  10 CHsp3oac     13 Osp3           3.6510    78.6409     0.0000     0.0000     0.0000
-  10 CHsp3oac     14 Osp2           3.3350    85.2835     0.0000     0.0000     0.0000
-  13 Osp3         13 Osp3           3.4720    81.0150     0.0000     0.0000     0.0000
-  13 Osp3         14 Osp2           3.1560    87.8581     0.0000     0.0000     0.0000
-  14 Osp2         14 Osp2           2.8400    95.2792     0.0000     0.0000     0.0000
+   4 CH3sp3gen     4 CH3sp3gen      3.9100   104.0000     0.0000     0.0000     0.0000
+   4 CH3sp3gen    22 Csp2ac         3.6110    94.8008     0.0000     0.0000     0.0000
+   4 CH3sp3gen    23 CH2sp3oac      3.8700    89.1010     0.0000     0.0000     0.0000
+   4 CH3sp3gen    24 CH2sp3cac      3.8725    88.4388     0.0000     0.0000     0.0000
+   4 CH3sp3gen    25 CHsp3oac       3.8700    89.1010     0.0000     0.0000     0.0000
+   4 CH3sp3gen    26 Osp3           3.6910    91.7909     0.0000     0.0000     0.0000
+   4 CH3sp3gen    27 Osp2           3.3750    99.5442     0.0000     0.0000     0.0000
+  22 Csp2ac       22 Csp2ac         3.3120    86.4152     0.0000     0.0000     0.0000
+  22 Csp2ac       23 CH2sp3oac      3.5710    81.2196     0.0000     0.0000     0.0000
+  22 Csp2ac       24 CH2sp3cac      3.5735    80.6160     0.0000     0.0000     0.0000
+  22 Csp2ac       25 CHsp3oac       3.5710    81.2196     0.0000     0.0000     0.0000
+  22 Csp2ac       26 Osp3           3.3920    83.6716     0.0000     0.0000     0.0000
+  22 Csp2ac       27 Osp2           3.0760    90.7391     0.0000     0.0000     0.0000
+  23 CH2sp3oac    23 CH2sp3oac      3.8300    76.3364     0.0000     0.0000     0.0000
+  23 CH2sp3oac    24 CH2sp3cac      3.8325    75.7691     0.0000     0.0000     0.0000
+  23 CH2sp3oac    25 CHsp3oac       3.8300    76.3364     0.0000     0.0000     0.0000
+  23 CH2sp3oac    26 Osp3           3.6510    78.6409     0.0000     0.0000     0.0000
+  23 CH2sp3oac    27 Osp2           3.3350    85.2835     0.0000     0.0000     0.0000
+  24 CH2sp3cac    24 CH2sp3cac      3.8350    75.2059     0.0000     0.0000     0.0000
+  24 CH2sp3cac    25 CHsp3oac       3.8325    75.7691     0.0000     0.0000     0.0000
+  24 CH2sp3cac    26 Osp3           3.6535    78.0564     0.0000     0.0000     0.0000
+  24 CH2sp3cac    27 Osp2           3.3375    84.6496     0.0000     0.0000     0.0000
+  25 CHsp3oac     25 CHsp3oac       3.8300    76.3364     0.0000     0.0000     0.0000
+  25 CHsp3oac     26 Osp3           3.6510    78.6409     0.0000     0.0000     0.0000
+  25 CHsp3oac     27 Osp2           3.3350    85.2835     0.0000     0.0000     0.0000
+  26 Osp3         26 Osp3           3.4720    81.0150     0.0000     0.0000     0.0000
+  26 Osp3         27 Osp2           3.1560    87.8581     0.0000     0.0000     0.0000
+  27 Osp2         27 Osp2           2.8400    95.2792     0.0000     0.0000     0.0000
 Determining Arbitrary Trial Distribution Parameters: see towhee_cbmc for full details
  Canonical ensemble
  3-dimensional periodic box
@@ -310,19 +312,19 @@ Temperature [K]:       336.00000
 Initial Energies for Box     1
 Total molecules in this box         10
 Molecules of type   1 :         10
- Total vibration (atoms ij bonded together)                 29562.484 [K]        58.74704 [kcal/mol]
-  bond (ij) regular                                         29562.484 [K]        58.74704 [kcal/mol]
+ Total vibration (atoms ij bonded together)                 36968.386 [K]        73.46416 [kcal/mol]
+  bond (ij) regular                                         36968.386 [K]        73.46416 [kcal/mol]
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
   bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
   bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
- Total angle (atoms ijk bonded in sequence)                 21802.122 [K]        43.32552 [kcal/mol]
-  angle (ijk) regular                                       21802.122 [K]        43.32552 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                 20290.795 [K]        40.32219 [kcal/mol]
+  angle (ijk) regular                                       20290.795 [K]        40.32219 [kcal/mol]
   bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
   angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
   angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
   angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
- Total torsion (ijkl bonded in sequence)                   127683.206 [K]       253.73409 [kcal/mol]
-  torsion (ijkl) regular                                   127683.206 [K]       253.73409 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                   160029.555 [K]       318.01327 [kcal/mol]
+  torsion (ijkl) regular                                   160029.555 [K]       318.01327 [kcal/mol]
   torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
   torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
@@ -330,24 +332,24 @@ Molecules of type   1 :         10
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw               -33829.823 [K]       -67.22716 [kcal/mol]
-  intramolecular                                           -26388.579 [K]       -52.43980 [kcal/mol]
-  2-body vdw intermolecular                                 -5633.386 [K]       -11.19475 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw                26429.211 [K]        52.52055 [kcal/mol]
+  intramolecular                                            32807.426 [K]        65.19544 [kcal/mol]
+  2-body vdw intermolecular                                 -4570.358 [K]        -9.08229 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   tail correction                                           -1807.857 [K]        -3.59260 [kcal/mol]
- Total nonbond (more than 3 bonds apart) Electric         -257649.875 [K]      -512.00591 [kcal/mol]
-  total real space Electric                                -58757.482 [K]      -116.76380 [kcal/mol]
-   intramolecular Electric                                 -58885.131 [K]      -117.01747 [kcal/mol]
-   intermolecular Electric                                    127.649 [K]         0.25367 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) Electric         -252708.113 [K]      -502.18557 [kcal/mol]
+  total real space Electric                                -53359.629 [K]      -106.03710 [kcal/mol]
+   intramolecular Electric                                 -53395.107 [K]      -106.10760 [kcal/mol]
+   intermolecular Electric                                     35.478 [K]         0.07050 [kcal/mol]
   self                                                    -675989.460 [K]     -1343.33697 [kcal/mol]
-  correction                                               466825.565 [K]       927.68316 [kcal/mol]
-  reciprocal sum                                            10271.502 [K]        20.41169 [kcal/mol]
+  correction                                               469578.063 [K]       933.15297 [kcal/mol]
+  reciprocal sum                                             7062.913 [K]        14.03553 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                           -112431.886 [K]      -223.42643 [kcal/mol]
- Aggregate van der waals (bond and nonbond)                -33829.823 [K]       -67.22716 [kcal/mol]
- Aggregate Electric (bond and nonbond)                    -257649.875 [K]      -512.00591 [kcal/mol]
- initial virial pressure in box  1 =       -3670.50
+Total classical                                             -8990.166 [K]       -17.86540 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)                 26429.211 [K]        52.52055 [kcal/mol]
+ Aggregate Electric (bond and nonbond)                    -252708.113 [K]      -502.18557 [kcal/mol]
+ initial virial pressure in box  1 =       -4830.91
 
  +++++ start of markov chain +++++
 
@@ -364,19 +366,19 @@ Box:     1
 Final Energies for Box     1
 Total molecules in this box         10
 Molecules of type   1 :         10
- Total vibration (atoms ij bonded together)                 29562.484 [K]        58.74704 [kcal/mol]
-  bond (ij) regular                                         29562.484 [K]        58.74704 [kcal/mol]
+ Total vibration (atoms ij bonded together)                 36968.386 [K]        73.46416 [kcal/mol]
+  bond (ij) regular                                         36968.386 [K]        73.46416 [kcal/mol]
   bond (ij) van der waals                                       0.000 [K]         0.00000 [kcal/mol]
   bond (ij) Electric                                            0.000 [K]         0.00000 [kcal/mol]
   bond-bond (ij-jk)                                             0.000 [K]         0.00000 [kcal/mol]
- Total angle (atoms ijk bonded in sequence)                 21802.122 [K]        43.32552 [kcal/mol]
-  angle (ijk) regular                                       21802.122 [K]        43.32552 [kcal/mol]
+ Total angle (atoms ijk bonded in sequence)                 20290.795 [K]        40.32219 [kcal/mol]
+  angle (ijk) regular                                       20290.795 [K]        40.32219 [kcal/mol]
   bond-angle (ij-ijk)                                           0.000 [K]         0.00000 [kcal/mol]
   angle (ik) van der waals                                      0.000 [K]         0.00000 [kcal/mol]
   angle (ik) Electric                                           0.000 [K]         0.00000 [kcal/mol]
   angle-angle (ijk-ijm)                                         0.000 [K]         0.00000 [kcal/mol]
- Total torsion (ijkl bonded in sequence)                   127683.206 [K]       253.73409 [kcal/mol]
-  torsion (ijkl) regular                                   127683.206 [K]       253.73409 [kcal/mol]
+ Total torsion (ijkl bonded in sequence)                   160029.555 [K]       318.01327 [kcal/mol]
+  torsion (ijkl) regular                                   160029.555 [K]       318.01327 [kcal/mol]
   torsion (ij-kl) bond-bond                                     0.000 [K]         0.00000 [kcal/mol]
   torsion (ij-ijkl) bond-torsion                                0.000 [K]         0.00000 [kcal/mol]
   torsion (ijk-ijkl) angle-torsion                              0.000 [K]         0.00000 [kcal/mol]
@@ -384,21 +386,21 @@ Molecules of type   1 :         10
   torsion (i-l) one-four van der waals                          0.000 [K]         0.00000 [kcal/mol]
   torsion (i-l) one-four Electric                               0.000 [K]         0.00000 [kcal/mol]
  Total improper (ijkm, i,k,m bonded to j)                       0.000 [K]         0.00000 [kcal/mol]
- Total nonbond (more than 3 bonds apart) vdw               -33829.823 [K]       -67.22716 [kcal/mol]
-  intramolecular                                           -26388.579 [K]       -52.43980 [kcal/mol]
-  2-body vdw intermolecular                                 -5633.386 [K]       -11.19475 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) vdw                26429.211 [K]        52.52055 [kcal/mol]
+  intramolecular                                            32807.426 [K]        65.19544 [kcal/mol]
+  2-body vdw intermolecular                                 -4570.358 [K]        -9.08229 [kcal/mol]
   3-body vdw intermolecular                                     0.000 [K]         0.00000 [kcal/mol]
   tail correction                                           -1807.857 [K]        -3.59260 [kcal/mol]
- Total nonbond (more than 3 bonds apart) Electric         -257649.875 [K]      -512.00591 [kcal/mol]
-  total real space Electric                                -58757.482 [K]      -116.76380 [kcal/mol]
-   intramolecular Electric                                 -58885.131 [K]      -117.01747 [kcal/mol]
-   intermolecular Electric                                    127.649 [K]         0.25367 [kcal/mol]
+ Total nonbond (more than 3 bonds apart) Electric         -252708.113 [K]      -502.18557 [kcal/mol]
+  total real space Electric                                -53359.629 [K]      -106.03710 [kcal/mol]
+   intramolecular Electric                                 -53395.107 [K]      -106.10760 [kcal/mol]
+   intermolecular Electric                                     35.478 [K]         0.07050 [kcal/mol]
   self                                                    -675989.460 [K]     -1343.33697 [kcal/mol]
-  correction                                               466825.565 [K]       927.68316 [kcal/mol]
-  reciprocal sum                                            10271.502 [K]        20.41169 [kcal/mol]
+  correction                                               469578.063 [K]       933.15297 [kcal/mol]
+  reciprocal sum                                             7062.913 [K]        14.03553 [kcal/mol]
  Total external field                                           0.000 [K]         0.00000 [kcal/mol]
  Total solvation                                                0.000 [K]         0.00000 [kcal/mol]
-Total classical                                           -112431.886 [K]      -223.42643 [kcal/mol]
- Aggregate van der waals (bond and nonbond)                -33829.823 [K]       -67.22716 [kcal/mol]
- Aggregate Electric (bond and nonbond)                    -257649.875 [K]      -512.00591 [kcal/mol]
+Total classical                                             -8990.166 [K]       -17.86540 [kcal/mol]
+ Aggregate van der waals (bond and nonbond)                 26429.211 [K]        52.52055 [kcal/mol]
+ Aggregate Electric (bond and nonbond)                    -252708.113 [K]      -502.18557 [kcal/mol]
 Please see towhee_citations for a list of suggested citations for this simulation

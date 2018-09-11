@@ -1,25 +1,24 @@
 <html>
  <head><title>MCCCS Towhee: towhee_ff</title></head>
  <body bgcolor="#FFFFFF" text="#000000">
-  <table width="800" border="0" cellspacing="0" cellpadding="0" height="590">
+  <table border="0" cellspacing="0" cellpadding="0" height="590">
    <tr> 
     <td colspan="2" height="29"> 
-     <div align="center"> <font size="5"><b><font face="Arial,Helvetica,sans-serif">
-	 <a name="top"></a>MCCCS Towhee: towhee_ff</font></b></font></div>
+     <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif"><a name="top"></a>MCCCS Towhee: towhee_ff</font></b></font></div>
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
     <IMG src="http://sourceforge.net/sflogo.php?group_id=87039&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo" align="right"/>
    </A>
    <tr> 
-    <td width="18" height="371" valign="top"> 
-     <p>&nbsp; </p>
-     <p>&nbsp;</p>
-    </td>
-    <td width="697" valign="top"> <b>Overview</b> 
+    <td valign="top"> 
+     <p></p>
+     <div align="center"> <font size="5"><b>
+     </b></font></div>
+     <dt> <b>Overview</b> </dt>
      <ul>
       This section describes the format that is used to specify Towhee force field files (towhee_ff) for the current version of those file 
-      (currently force field version 15, starting with code version 7.1.0).  This documentation was last updated for version 7.1.0.
+      (currently force field version 15, starting with code version 7.1.0).  This documentation was last updated for version 8.1.0.
       Files for many commonly used force fields are provided with the download package and if you are using one of those you do not need to know the
       details of this section.  However, this feature also allows the user to utilize their own force field parameters without having to modify the code
       themselves.  The formatting for this file is extremely sensitive and the user is encouraged to look at the examples in the ForceFields directory.  
@@ -898,9 +897,10 @@
             <dt>U<sub>torsion</sub>(&phi;) = torcoeff(0) + torcoeff(1)*[1 + Cos(&phi;)] + torcoeff(2)*[1 - Cos(2&phi;)] + torcoeff(3)*[1 + Cos(3&phi;)]</dt>
            </ul>
           </li>
-          <li>12: Sun2003 Cosine Series.
+          <li>12: Sum2003 Cosine Series (<a href="references.html#sum_et_al_2003">Sum <i>et al.</i> 2003</a>)
            <ul>
-            <dt>U<sub>torsion</sub>(&phi;) = &#8721;<sup>i=0,ntorloop</sup> torcoeff(i+1) * [ 1 - Cos{i*(&phi; - torcoeff(0))}]</dt>
+	    <dt>Note: this was not functioning properly prior to version 8.1.0.</dt>
+            <dt>U<sub>torsion</sub>(&phi;) = &sum;<sup>i=0, ntorloop-1</sup> torcoeff(i+1) * [ 1 - Cos{i*(&phi; - torcoeff(0))}]</dt>
            </ul>
           </li>
           <li>13: Old OPLS Two term Cosine Series.
@@ -1309,7 +1309,7 @@
  <foot>
   <hr></hr>
   <font face="Arial" size="2">
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->September 06, 2018<!-- #EndDate -->
    <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>

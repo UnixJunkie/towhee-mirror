@@ -168,7 +168,7 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 04-05-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
@@ -193,7 +193,7 @@ c     --- local variables
 #endif
 c     --- logical scalars
       logical lovrlap,lnone,loutdft,louthist,lreadwrapper
-      logical loutdlpoly,loutlammps,tmmc_flag
+      logical loutdlpoly,loutlammps,tmmc_flag,lproblem
 c     --- logical arrays
       logical lmolmove
       dimension lmolmove(MAXBOX,NTMAX)
@@ -326,7 +326,7 @@ c     --- calculate initial energy and check for overlaps
 c        --- calculate initial stress tensor
          if ( pressurestyle .eq. PRES_VIRIAL ) then
             do ibox = 1, numboxes
-               call twh_stresstensor(lfailure,stress,ibox)
+               call twh_stresstensor(lfailure,stress,BXD_REAL,ibox)
                if ( lfailure ) return
                currentpressure(ibox) = stress(0)
                write(6,'(1x,a30,1x,i2,1x,a1,1x,f14.2)') 
@@ -699,12 +699,10 @@ c        --- test for virial computation of pressure
          endif
          if ( pressure_thermo_freq .ne. 0 ) then
             if ( mod(nnn,pressure_thermo_freq) .eq. 0 ) then
-               write(6,*) 'calling volumemoves Ghost'
                call twh_volumemoves(lfailure,VMC_TPRESS)
-               stop 'marcus was here'
+               if ( lfailure ) return
             endif
          endif
-
 c        --- see if any periodic operations need to be performed
 c        --- note that for many of these, freq=0 (implying, never) is 
 c        --- permitted, and the mod operator treats these cases 
@@ -947,7 +945,6 @@ c        --- report on cbswap performance
  51      format('  From box ',i2,' to box ',i2,' Attempted:',i8
      &        ,' Grown:',i8,' Accepted:',i8)
       endif
-
 c     --- switch moves
       npair = (nmolty*(nmolty-1))/2
 c     --- determine if any SWITCH moves were attempted
@@ -1723,12 +1720,10 @@ c     --- in box 1 only.
             call twh_wrap_foreign_energy(GLB_SET,l,vforeign(l))
          enddo
       endif
-
 c     --- close the movie file if it was opened
       if (moviefreq .ne. 0) then
          if ( moviefreq .le. nstep ) close(10)
       endif
-
 c     --- output the final configuration as a pdb file
       if ( pdboutfreq .ne. 0  ) then
          call twh_writepdb(lfailure,nstep)
@@ -1737,8 +1732,7 @@ c     --- output the final configuration as a pdb file
 c     --- output the citations information
       call twh_citations(lfailure)
       if ( lfailure ) return
-         
-c     --- output the final configuration as a tramonto file
+c    --- output the final configuration as a tramonto file
       call twh_loutdft(GLB_GET,loutdft)
       if ( loutdft ) then
          do ibox = 1,numboxes
@@ -1773,7 +1767,14 @@ c     --- output the final fixed endpoint SAFE parameters
          call twh_rwsafe(lfailure,WRITE_FLAG)
          if ( lfailure ) return
       endif
-
+c     --- final warning if there was a problem with energies
+      call twh_lproblem(GLB_GET,lproblem)
+      if ( lproblem ) then
+         write(6,'(1x,a39,1x,a22)')
+     &        '### There were problems with the energy'
+     &        ,'in this simulation ###'
+      endif
+      
       if ( lredirect_stdout ) then
 c        --- close the general output file
          close(6)
@@ -1791,7 +1792,7 @@ c     *  speden -- specific density for each box                       *
 c     *  currentpressure -- eponymous, per box                         *
 c     *  stress -- the stress tensor                                   *
 c     * Split from mainloop 04-06-2006 by MAW                          *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1823,7 +1824,7 @@ c     --- retrieve constants
          if ( pressurestyle .eq. PRES_VIRIAL ) then
             istart = 0
             iend = 7
-            call twh_stresstensor(lfailure,stress,ibox)
+            call twh_stresstensor(lfailure,stress,BXD_REAL,ibox)
             if ( lfailure ) return
          elseif ( pressurestyle .eq. PRES_RADIAL ) then
             istart = 0
@@ -1876,7 +1877,7 @@ c        --- enthalpy squared
       if ( numboxes .eq. 2 .and. nmolty .eq. 1 ) then
          ibox = 0
          imolty = 1
-c                 --- determine the vapor and liquid boxes
+c        --- determine the vapor and liquid boxes
          if ( speden(1) .gt. speden(2) ) then
             ivap = 2
             iliq = 1
@@ -1887,7 +1888,7 @@ c                 --- determine the vapor and liquid boxes
          call twh_ncmt(GLB_GET,ivap,imolty,ncmt_vap)
          call twh_ncmt(GLB_GET,iliq,imolty,ncmt_liq)
          if ( ncmt_vap * ncmt_liq .ne. 0 ) then
-c                    --- heat of vaporization (Direct)
+c           --- heat of vaporization (Direct)
             keycode = AC_H_VAP_DIRECT
             value = ((uterm(ivap) + pvterm(ivap)) / dble(ncmt_vap)) - 
      &               ( (uterm(iliq) + pvterm(iliq)) / dble(ncmt_liq))
@@ -1917,7 +1918,7 @@ c     * Perform one Monte Carlo move.                                  *
 c     *                                                                *
 c     * Variables:                                                     *
 c     *   lfailure -- set to true if problem                           *
-c     * last modified 07-16-2016 by M.G. Martin                        *
+c     * last modified 04-12-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -1949,7 +1950,6 @@ c     --- determine which move to perform according to the pm**
 #if DEBUG_MAINLOOP
       write(6,*) 'rm ',rm
 #endif
-
 c     --- isotropic volume move
       call twh_pmvol(GLB_GET,pmtest)
       if  ( rm .le. pmtest ) then
@@ -1964,7 +1964,6 @@ c           --- canonical Gibbs ensemble volume exchange
          endif
          return
       endif
-
 c     --- unit cell perturbation move
       call twh_pmcell(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -1977,7 +1976,6 @@ c     --- unit cell perturbation move
          endif
          return
       endif
-
 c     --- inter-box rotational-bias swap move
       call twh_pm2boxrbswap(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -1986,7 +1984,6 @@ c        --- imolty and ibox are dummy variables to twh_swapmoves here.
          call twh_swapmoves(lfailure,SWAP_RB_INTER,imolty,ibox)
          return
       endif
-
 c     --- inter-box configurational-bias swap move
       call twh_pm2boxcbswap(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -1994,7 +1991,13 @@ c     --- inter-box configurational-bias swap move
          call twh_swapmoves(lfailure,SWAP_CB_INTER,imolty,ibox)
          return
       endif
-
+c     --- inter-box center-of-mass switch move
+      call twh_pm2boxcomswitch(GLB_GET,pmtest)
+      if ( rm .le. pmtest ) then
+         DEBUG_WRITE('MOVE: inter-box com switch')
+         call twh_swapmoves(lfailure,SWAP_COM_INTER,imolty,ibox)
+         return
+      endif
 c     --- insertion/removal move used in grand canonical ensemble
       call twh_pmuvtcbswap(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2002,7 +2005,6 @@ c     --- insertion/removal move used in grand canonical ensemble
          call twh_swapmoves(lfailure,SWAP_CB_GC,imolty,ibox)
          return
       endif
-
 c     --- intra-box configurational-bias cbswap move 
       call twh_pm1boxcbswap(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2010,7 +2012,6 @@ c     --- intra-box configurational-bias cbswap move
          call twh_swapmoves(lfailure,SWAP_CB_INTRA,imolty,ibox)
          return
       endif
-
 c     --- intra-box center-of-mass molecule switch move
       call twh_pm1boxcomswitch(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2018,7 +2019,6 @@ c     --- intra-box center-of-mass molecule switch move
          call twh_switch(lfailure)
          return
       endif
-
 c     --- aggregation volume bias move 1
 c     --- B. Chen, J.I. Siepmann "A Novel Monte Carlo Algorithm
 c     --- for Simulating Strongly Associating Fluids:
@@ -2030,7 +2030,6 @@ c     --- Acid", J. Phys. Chem. B 104, 8725-8734 (2000).
          call twh_swapmoves(lfailure,SWAP_AVB_ONE,imolty,ibox)
          return
       endif
-
 c     --- aggregation volume bias move 2
 c     --- B. Chen; J.I. Siepmann "Improving the Efficiency 
 c     --- of the Aggregation-Volume-Bias Monte Carlo Algorithm"
@@ -2041,7 +2040,6 @@ c     --- J. Phys. Chem. B 105, 11275-11282 (2001).
          call twh_swapmoves(lfailure,SWAP_AVB_TWO,imolty,ibox)
          return
       endif
-
 c     --- aggregation volume bias move 3
 c     --- B. Chen; J.I. Siepmann "Improving the Efficiency 
 c     --- of the Aggregation-Volume-Bias Monte Carlo Algorithm"
@@ -2052,7 +2050,6 @@ c     --- J. Phys. Chem. B 105, 11275-11282 (2001).
          call twh_swapmoves(lfailure,SWAP_AVB_THREE,imolty,ibox)
          return
       endif
-
 c     --- single molecule configurational bias regrowth move
       call twh_pmcb(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2060,7 +2057,6 @@ c     --- single molecule configurational bias regrowth move
          call twh_cbregrow(lfailure,CBR_ORIGINAL)
          return
       endif
-
 c     --- single molecule configurational bias regrowth move
 c     --- which performs a fixed-endpoint regrowth of interior
 c     --- atoms along the protein backbone
@@ -2070,7 +2066,6 @@ c     --- atoms along the protein backbone
          call twh_cbregrow(lfailure,CBR_BACKBONE)
          return
       endif
-
 c     --- polypeptide sidechain regrowth move
       call twh_pmcbside(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2078,7 +2073,6 @@ c     --- polypeptide sidechain regrowth move
          call twh_cbregrow(lfailure,CBR_SIDECHAIN)
          return
       endif
-
 c     --- pivot move 
       call twh_pmpivot(GLB_GET,pmtest)
       if ( rm .le. pmtest) then
@@ -2086,7 +2080,6 @@ c     --- pivot move
          call twh_pivot(lfailure)
          return
       endif
-
 c     --- concerted rotation move 
       call twh_pmconrot(GLB_GET,pmtest)
       if ( rm .le. pmtest) then
@@ -2094,7 +2087,6 @@ c     --- concerted rotation move
          call twh_conrot(lfailure,1)
          return
       endif
-
 c     --- concerted rotation move 
       call twh_pmcrback(GLB_GET,pmtest)
       if ( rm .le. pmtest) then
@@ -2102,7 +2094,6 @@ c     --- concerted rotation move
          call twh_conrot(lfailure,0)
          return
       endif
-
 c     --- plane shift move
       call twh_pmplane(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2110,7 +2101,6 @@ c     --- plane shift move
          call twh_atomshift(lfailure,1)
          return
       endif
-
 c     --- row shift move
       call twh_pmrow(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2118,7 +2108,6 @@ c     --- row shift move
          call twh_atomshift(lfailure,2)
          return
       endif
-
 c     --- translation of atom positions
       call twh_pmtraat(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2126,15 +2115,13 @@ c     --- translation of atom positions
          call twh_tranatom(lfailure)
          return
       endif
-
-c     --- rotation around x,y, or z axis 
+c     --- translation and rotation around x,y, or z axis 
       call twh_pmcomposite(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
          DEBUG_WRITE('MOVE: composite rotation and translation')
          call twh_composite(lfailure)
          return
       endif
-
 c     --- translation of com in x,y, or z direction 
       call twh_pmtracm(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2142,7 +2129,6 @@ c     --- translation of com in x,y, or z direction
          call twh_trancom(lfailure)
          return
       endif
-
 c     --- rotation around x,y, or z axis 
       call twh_pmrotate(GLB_GET,pmtest)
       if ( rm .le. pmtest ) then
@@ -2150,13 +2136,11 @@ c     --- rotation around x,y, or z axis
          call twh_rotate(lfailure)
          return
       endif
-
 c     --- this should not happen as we should have found a move by now
       write(6,*) 'MAINLOOP: no move selected ',rm
       lfailure = .true.
       return
       end
-
 
       subroutine print_composite_move_summary()
 c     ******************************************************************
@@ -2214,7 +2198,7 @@ c     * calculation, and report if there are any problems.             *
 c     *                                                                *
 c     * Variables modified:                                            *
 c     * Split from mainloop 04-26-2006 by MAW                          *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -2243,8 +2227,6 @@ c     --- retrieve constants
 c     --- check if the final value of the potential energy is consistent
 c     --- with the running total of the energy changes
       write(6,*)
-c     --- initialize lproblem
-      lproblem = .false.
       do ibox = 1, numboxes
          write(6,'(a22,1x,i5)') 'Final Energies for Box',ibox
          call twh_engtotal(lfailure,lovrlap,v,vinter,vdum,vtail,vintra
@@ -2255,28 +2237,28 @@ c     --- initialize lproblem
 c        ---  need to check each of the types of energy 
          call twh_boxvclassic(GLB_GET,ibox,vtest)
          if ( (v - vtest)**2 .gt. ENERGY_THRESH ) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Total Energy ###  box ',ibox
             write(6,*) ' current, running, difference: ',v,vtest
      &           ,v-vtest
          endif
          call twh_boxvinter(GLB_GET,ibox,vtest)
          if ( (vinter - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Intermolecular Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',vinter,vtest
          endif
          call twh_boxvtail(GLB_GET,ibox,vtest)
          if ( (vtail - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Tail Correction Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',vtail,vtest
          endif
          call twh_boxvintra(GLB_GET,ibox,vtest)
          if ( (vintra - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Intramolecular Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running, difference: ',vintra,
@@ -2284,14 +2266,14 @@ c        ---  need to check each of the types of energy
          endif
          call twh_boxvbond(GLB_GET,ibox,vtest)
          if ( (vvib - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Bond Vibration Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',vvib,vtest
          endif
          call twh_boxvangle(GLB_GET,ibox,vtest)
          if ( (vbend - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Bond Bending Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running, difference: ',vbend,
@@ -2299,7 +2281,7 @@ c        ---  need to check each of the types of energy
          endif
          call twh_boxvtorsion(GLB_GET,ibox,vtest)
          if ( (vtg - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Torsion Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running, difference: ',vtg,vtest
@@ -2307,28 +2289,28 @@ c        ---  need to check each of the types of energy
          endif
          call twh_boxvfield(GLB_GET,ibox,vtest)
          if ( (vext - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with External Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',vext,vtest
          endif
          call twh_boxvelect(GLB_GET,ibox,vtest)
          if ( (velect - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Coulomb Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',velect,vtest
          endif
          call twh_boxvsolvation(GLB_GET,ibox,vtest)
          if ( (vsolvation - vtest)**2 .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with Solvation Energy ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',vsolvation,vtest
          endif
          if ( (dvinter - scp_get_derivative(ibox, LAMBDA_LJ))**2 
      &         .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with dU/d[lambda_lj] ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',dvinter,
@@ -2336,7 +2318,7 @@ c        ---  need to check each of the types of energy
          endif
          if ( (dvelect - scp_get_derivative(ibox, LAMBDA_C))**2 
      &         .gt. ENERGY_THRESH) then
-            lproblem = .true.
+            call twh_lproblem(GLB_SET,.true.)
             write(6,*) '### problem with dU/d[lambda_c] ###',
      &            '  box ',ibox
             write(6,*) ' current, running: ',dvelect,
@@ -2349,7 +2331,7 @@ c        ---  need to check each of the types of energy
             do l=1,scp_num_foreign_lambda
                if ( (vf(l) - vforeign(l))**2 .gt.  ENERGY_THRESH) then
                   lforeign_prob = .true.
-                  lproblem = .true.
+                  call twh_lproblem(GLB_SET,.true.)
                endif
             enddo
             if (lforeign_prob) then
@@ -2366,6 +2348,7 @@ c        ---  need to check each of the types of energy
       enddo
 
 c     --- final warning if there was a problem
+      call twh_lproblem(GLB_GET,lproblem)
       if ( lproblem ) then
          write(6,*) '### WARNING: energies calculated at the end of ',
      &        ' the run do not match running totals,',

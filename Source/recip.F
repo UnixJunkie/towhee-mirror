@@ -26,7 +26,7 @@ c     ******************************************************************
 c     * updates the reciprocal ewald-sum.                              *
 c     *                                                                *
 c     * rewritten on 06-25-1999 by Bin Chen.                           *
-c     * last modified 01-22-2018 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to and from the subroutine
@@ -37,18 +37,25 @@ c     --- local variables
       integer ncount
       double precision kx,ky,kz,prefact,ssumr,ssumi
 
+c     --- bail out if not using ewald sum
       call twh_lewald(GLB_GET,lewald)
       if ( .not. lewald ) return
-
 c     --- bail out if this is the ideal chain box
       if ( ibox .eq. 0 ) return
-
+c     --- get ncount
       call twh_ewald_numvect(GLB_GET,ibox,ncount)
-      if ( type .eq. RCP_ACCEPT_NEW ) then
-c        --- update the reciprocal space k vectors
+      if ( type .eq. RCP_ACCEPT_NEW_VOL )  then
+c        --- update for a global change
          call twh_ewald_ssumr(GLB_STORE,CRD_N_TO_R,ncount,ibox,ssumr)
          call twh_ewald_ssumi(GLB_STORE,CRD_N_TO_R,ncount,ibox,ssumi)
-
+         call twh_ewald_kvector(GLB_STORE,CRD_T_TO_R,ncount,ibox
+     &        ,kx,ky,kz)
+         call twh_ewald_prefact(GLB_STORE,CRD_T_TO_R,ncount,ibox
+     &        ,prefact)
+      elseif ( type .eq. RCP_ACCEPT_NEW ) then
+c        --- update the reciprocal space k vectors, volume didn't change
+         call twh_ewald_ssumr(GLB_STORE,CRD_N_TO_R,ncount,ibox,ssumr)
+         call twh_ewald_ssumi(GLB_STORE,CRD_N_TO_R,ncount,ibox,ssumi)
       elseif ( type .eq. RCP_STORE ) then
 c        --- store the reciprocal space k vectors         
          call twh_ewald_kvector(GLB_STORE,CRD_R_TO_T,ncount,ibox

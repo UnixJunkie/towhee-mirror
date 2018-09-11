@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 03-27-2018 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -388,7 +388,8 @@ c                    --- determine gaussian parameters
                      do itest = 0,imax
                         length = dble(itest)*rmax/dble(imax)
                         lovrlap = .false.
-                        energy = twh_vbond(lfailure,lreport,ibox,vibtype
+                        energy = twh_vbond(lfailure,lreport,BXD_REAL
+     &                       ,ibox,vibtype
      &                       ,length,imolty,iunit,junit,lovrlap)
                         if ( lfailure ) return
                         if ( lovrlap ) then
@@ -612,7 +613,7 @@ c                 --- fetch the appropriate bond lengths for the fit
 c                       --- compute 3-mem ring bond energy
                         length = twh_lawofcosine(distone,disttwo,angcos)
                         energy = energy + twh_vbond(lfailure,lreport
-     &                       ,ibox,vibtype,length
+     &                       ,BXD_REAL,ibox,vibtype,length
      &                       ,imolty,iunit,kunit,lovrlap)
                      else
                         energy = energy + twh_vangle(lfailure,lreport
@@ -1562,8 +1563,8 @@ c                    --- scan bij on two_bond_bias_range
      &                       *(twobvibtwo - twobvibone) )
 c                       --- compute the bij energy
                         bij_energy = twh_vbond(lfailure,lreport
-     &                       ,ibox,bij_type,distone,imolty,iunit,junit
-     &                       ,lovrlap)
+     &                       ,BXD_REAL,ibox,bij_type,distone
+     &                       ,imolty,iunit,junit,lovrlap)
                         if ( lfailure ) return
 c                       --- scan bjk on two_bond_bias_range
                         do iscan_bjk = 0,ibondmax
@@ -1572,7 +1573,7 @@ c                       --- scan bjk on two_bond_bias_range
      &                          *(twobvibtwo - twobvibone) )
 c                          --- compute the bjk energy
                            bjk_energy = twh_vbond(lfailure,lreport
-     &                          ,ibox,bjk_type,disttwo
+     &                          ,BXD_REAL,ibox,bjk_type,disttwo
      &                          ,imolty,junit,kunit,lovrlap)
                            if ( lfailure ) return
 c                          --- compute the aijk energy
@@ -1845,8 +1846,8 @@ c        --- sample the acceptance rate
             length_i = lolimit
      &           + (hilimit-lolimit)*dble(itest)/dble(imax)
             lovrlap = .false.
-            energy_i = twh_vbond(lfailure,lreport,ibox,vibtype,length_i
-     &           ,imolty,iunit,junit,lovrlap)
+            energy_i = twh_vbond(lfailure,lreport,BXD_REAL,ibox
+     &           ,vibtype,length_i,imolty,iunit,junit,lovrlap)
             if ( lfailure ) return
             if ( lovrlap ) then
                ptrue_i = 0.0d0
@@ -1868,8 +1869,8 @@ c        --- sample the acceptance rate
                length_j = lolimit
      &              + (hilimit-lolimit)*dble(jtest)/dble(jmax)
                lovrlap = .false.
-               energy_j = twh_vbond(lfailure,lreport,ibox,vibtype
-     &              ,length_j,imolty,iunit,junit,lovrlap)
+               energy_j = twh_vbond(lfailure,lreport,BXD_REAL,ibox
+     &              ,vibtype,length_j,imolty,iunit,junit,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) then
                   ptrue_j = 0.0d0

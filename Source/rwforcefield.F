@@ -2512,7 +2512,7 @@ c     *  ltorstring                                                    *
 c     * (values of these arguments initialized here)                   *
 c     *                                                                *
 c     * split from rwforcefield 02-22-2006 by MAW                      *
-c     * last modified 08-13-2011 by M.G. Martin                        *
+c     * last modified 09-06-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NTORLOOP
@@ -2595,7 +2595,7 @@ c           --- cosine power series
 c           --- old UA OPLS style cosine series
          coeffstart = 0
          coeffstop = 3
-      elseif ( torstyle .eq. TOR_STYLE_SUN_COS ) then
+      elseif ( torstyle .eq. TOR_STYLE_SUM_COS ) then
 c           --- NERD Version 3 style cosine series
          call twh_rwtorloop(lfailure,type,rwflag)
          if ( lfailure ) return

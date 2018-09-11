@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *         *cord(2) is iuother                                    *
 c     *         *cord(3) is iufrom                                     *
 c     *                                                                *
 c     * originally written 01-23-2001 by M.G. Martin                   *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -154,10 +154,10 @@ c              --- add in a bit of noise to avoid exactly zero
                scale = length/(lenone+lentwo)
                lenone = scale*lenone
                lentwo = scale*lentwo
-               vbias = vbias + twh_vbond(lfailure,.false.,ibox,btone
-     &              ,lenone,imolty,iunit,junit,lovrlap) 
-     &              + twh_vbond(lfailure,.false.,ibox,bttwo,lentwo
-     &              ,imolty,junit,kunit,lovrlap)
+               vbias = vbias + twh_vbond(lfailure,.false.,bxdflag,ibox
+     &              ,btone,lenone,imolty,iunit,junit,lovrlap) 
+     &              + twh_vbond(lfailure,.false.,bxdflag,ibox,bttwo
+     &              ,lentwo,imolty,junit,kunit,lovrlap)
                if ( lfailure ) return
             else
 c              --- compute the angle assuming the bond lengths are at 
@@ -482,10 +482,11 @@ c                    --- compute the scaled bond lengths
                      scale = minlen/(lenone+lentwo)
                      lenone = scale*lenone
                      lentwo = scale*lentwo
-                     vbias = vbias + twh_vbond(lfailure,.false.,ibox
+                     vbias = vbias
+     &                    + twh_vbond(lfailure,.false.,bxdflag,ibox
      &                    ,btone,lenone,imolty,iunext,iuthree,lovrlap) 
-     &                    + twh_vbond(lfailure,.false.,ibox,bttwo,lentwo
-     &                    ,imolty,iuthree,iuother,lovrlap) 
+     &                    + twh_vbond(lfailure,.false.,bxdflag,ibox
+     &                    ,bttwo,lentwo,imolty,iuthree,iuother,lovrlap) 
                      if ( lfailure ) return
                   endif
 c                 --- compute biasing energy from the angle

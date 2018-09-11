@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the quantities tracked by the averages      *
 c     * subroutine                                                     *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 08-02-2011 by M.G. Martin                        *
+c     * last modified 04-07-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -43,7 +43,6 @@ c     --- retrieve constants
       call twh_nmolty(GLB_GET,nmolty)
       call twh_numboxes(GLB_GET,numboxes)
       call twh_pressurestyle(GLB_GET,pressurestyle)
-
 c     --- assign all of the averages
       if ( pressurestyle .eq. PRES_VIRIAL ) then
 c        --- assign pressure and stress tensor
@@ -66,23 +65,7 @@ c        --- assign isotropic pressure
             if ( lfailure ) return
          enddo
       endif
-c     --- assign dU/dV for each box
-      imolty = 0
-      keycode = AC_DU_DV
-      do ibox = 1,numboxes
-         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
-     &        ,incount)
-         if ( lfailure ) return
-      enddo
-c     --- assign thermodynamic pressure for each box
-      imolty = 0
-      keycode = AC_THERMO_PRESSURE
-      do ibox = 1,numboxes
-         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
-     &        ,incount)
-         if ( lfailure ) return
-      enddo
-c     --- assign energies
+c     --- setup average energies (per box)
       imolty = 0
       call twh_nener(GLB_GET,nener)
       do iener = 1,nener
@@ -93,14 +76,25 @@ c     --- assign energies
             if ( lfailure ) return
          enddo
       enddo
-c     --- assign specific density
-      keycode = AC_SPECIFIC_DENSITY
-      imolty = 0
-      do ibox = 1,numboxes
-         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
-     &        ,incount)
-         if ( lfailure ) return
-      enddo
+c     --- averages that occur at most 1 time
+      ibox = 0
+      imolty = 1
+c     --- assign heat of vaporization (Direct)
+      keycode = AC_H_VAP_DIRECT
+      call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &     ,incount)
+      if ( lfailure ) return
+c     --- assign heat of vaporization (vapor p)
+      keycode = AC_H_VAP_VAPOR_P
+      call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &     ,incount)
+      if ( lfailure ) return
+c     --- assign heat of vaporization (pV/n=RT)
+      keycode = AC_H_VAP_PV_NRT
+      call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &     ,incount)
+      if ( lfailure ) return
+c     --- averages that depend only on the number of boxes
 c     --- assign total energy squared
       keycode = AC_TOT_ENERGY_SQ
       imolty = 0
@@ -109,6 +103,24 @@ c     --- assign total energy squared
      &        ,incount)
          if ( lfailure ) return
       enddo
+c     --- assign dU/d[lambda_*] for each box of interest
+      call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+      if (scp_eval_derivative) then
+         imolty = 0
+         keycode = AC_DU_DLAMBDA_LJ
+         do ibox = 1,numboxes
+            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
+     &           ,value,incount)
+            if ( lfailure ) return
+         enddo
+
+         keycode = AC_DU_DLAMBDA_C
+         do ibox = 1,numboxes
+            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
+     &           ,value,incount)
+            if ( lfailure ) return
+         enddo
+      endif
 c     --- assign volume
       keycode = AC_VOLUME
       imolty = 0
@@ -149,6 +161,77 @@ c     --- assign pressure*volume
      &        ,incount)
          if ( lfailure ) return
       enddo
+c     --- assign dU/dV for each box
+      imolty = 0
+      do ibox = 1,numboxes
+         keycode = AC_DU_DV
+         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &        ,incount)
+         if ( lfailure ) return
+         keycode = AC_DU_DV_EXPAND
+         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &        ,incount)
+         if ( lfailure ) return
+         keycode = AC_DU_DV_CONTRACT
+         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &        ,incount)
+         if ( lfailure ) return
+      enddo
+c     --- assign thermodynamic pressure for each box
+      imolty = 0
+      keycode = AC_THERMO_PRESSURE
+      do ibox = 1,numboxes
+         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &        ,incount)
+         if ( lfailure ) return
+      enddo
+c     --- averages that depend only on molecule type
+c     --- currently just henry's law and that is in writeaverages
+c     --- averages that depend on the number of boxes and molecule type
+c     --- assign number of molecules
+      keycode = AC_NUM_MOLECULES
+      do ibox = 1,numboxes
+         do imolty = 1,nmolty
+            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
+     &           ,value,incount)
+            if ( lfailure ) return
+         enddo
+      enddo
+c     --- assign mol fractions
+      keycode = AC_MOL_FRACTION
+      do ibox = 1,numboxes
+         do imolty = 1,nmolty
+            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
+     &           ,value,incount)
+            if ( lfailure ) return
+         enddo
+      enddo
+c     --- assign number densities
+      keycode = AC_NUMBER_DENSITY
+      do ibox = 1,numboxes
+         do imolty = 0,nmolty
+            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
+     &           ,value,incount)
+            if ( lfailure ) return
+         enddo
+      enddo
+c     --- assign specific density
+      keycode = AC_SPECIFIC_DENSITY
+      imolty = 0
+      do ibox = 1,numboxes
+         call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
+     &        ,incount)
+         if ( lfailure ) return
+      enddo
+c     --- assign radius of gyration
+      keycode = AC_RADIUS_OF_GYRATION
+      do ibox = 1,numboxes
+         do imolty = 1,nmolty
+            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
+     &           ,value,incount)
+            if ( lfailure ) return
+         enddo
+      enddo
 c     --- assign Gibbs chemical potential
       keycode = AC_GIBBS_TOT_CHEMPOT
       do ibox = 1,numboxes
@@ -187,78 +270,6 @@ c     --- assign isolated molecule chemical potential
             if ( lfailure ) return
          endif
       enddo
-c     --- assign number densities
-      keycode = AC_NUMBER_DENSITY
-      do ibox = 1,numboxes
-         do imolty = 0,nmolty
-            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         enddo
-      enddo
-c     --- assign mol fractions
-      keycode = AC_MOL_FRACTION
-      do ibox = 1,numboxes
-         do imolty = 1,nmolty
-            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         enddo
-      enddo
-c     --- assign radius of gyration
-      keycode = AC_RADIUS_OF_GYRATION
-      do ibox = 1,numboxes
-         do imolty = 1,nmolty
-            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         enddo
-      enddo
-c     --- assign number of molecules
-      keycode = AC_NUM_MOLECULES
-      do ibox = 1,numboxes
-         do imolty = 1,nmolty
-            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         enddo
-      enddo
-      ibox = 0
-      imolty = 1
-c     --- assign heat of vaporization (Direct)
-      keycode = AC_H_VAP_DIRECT
-      call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
-     &     ,incount)
-      if ( lfailure ) return
-c     --- assign heat of vaporization (vapor p)
-      keycode = AC_H_VAP_VAPOR_P
-      call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
-     &     ,incount)
-      if ( lfailure ) return
-c     --- assign heat of vaporization (pV/n=RT)
-      keycode = AC_H_VAP_PV_NRT
-      call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty,value
-     &     ,incount)
-      if ( lfailure ) return
-
-c     --- assign dU/d[lambda_*] for each box of interest
-      call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
-      if (scp_eval_derivative) then
-         imolty = 0
-         keycode = AC_DU_DLAMBDA_LJ
-         do ibox = 1,numboxes
-            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         enddo
-
-         keycode = AC_DU_DLAMBDA_C
-         do ibox = 1,numboxes
-            call twh_averages(lfailure,AVG_ASSIGN,keycode,ibox,imolty
-     &           ,value,incount)
-            if ( lfailure ) return
-         enddo
-      endif
 
       return
       end

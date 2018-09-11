@@ -137,8 +137,9 @@ pmrotate
           tarot
           0.5d0
 ffnumber
-1
+2
 ff_filename
+/towheebase/ForceFields/towhee_ff_NERDv2
 /towheebase/ForceFields/towhee_ff_Sum2003
 classical_potential
 'Lennard-Jones'       
@@ -173,7 +174,7 @@ nmaxcbmc
 lpdbnames
 F
 forcefield
-'Sum2003'
+'NERD'
 charge_assignment
 'manual'
 unit ntype qqatom

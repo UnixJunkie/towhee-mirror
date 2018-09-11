@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 03-29-2018 by M.G. Martin                        *
+c     * last modified 04-12-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -815,7 +815,6 @@ c        --- error check
          endif
          call twh_pressure_thermo_freq(GLB_SET,pressure_thermo_freq)
       endif
-
       if ( twh_check_label(lfailure,4,'pressure_thermo_style')) then
 c        --- read in optional style for thermodynamic pressure
          call twh_read_labeled_string(lfailure,4
@@ -825,28 +824,21 @@ c        --- read in optional style for thermodynamic pressure
          call twh_pressure_thermo_style(GLB_SET
      &        ,pressure_thermo_style)
       endif
-
 c     --- get the pressure_thermo integer code
       call twh_pressure_thermo_number(GLB_GET,pt_number)
-
+c     --- optional read pressure_thermo_range
       if ( pt_number .eq. PTHERMO_RANGE ) then
          if (twh_check_label(lfailure,4,'pressure_thermo_range')
      &        ) then
-c            --- read in optional range for thermo pressure
             call twh_read_labeled_float_array(lfailure,4
      &           ,'pressure_thermo_range',2, .true. ,idname,drange)
             if ( lfailure ) return
-         else
             do irange = 1,2
-               drange(irange) = 1.0d0
+               call twh_pressure_thermo_range(GLB_SET,irange
+     &              ,drange(irange))
             enddo
          endif
-         do irange = 1,2
-            call twh_pressure_thermo_range(GLB_SET,irange
-     &           ,drange(irange))
-         enddo
       endif
-
 c     --- read in number of steps between update of translational and
 c     --- rotational maximum displacements
       if (twh_check_label(lfailure,4,'trmaxdispfreq')) then
@@ -1250,7 +1242,7 @@ c     --- set up pairbox array (used for volume and swap moves)
 c     --- read in all the move probabilities
       call twh_readtowhee_moveprobs(lfailure
      &     ,ensemble,numboxes,nvmmax,nvmsim,nboxpair,nmolty)
-
+      if ( lfailure ) return
 c     --- get all of the variables associated with the details of the 
 c     --- configurational-bias monte carlo moves
       call twh_rwcbmc(lfailure,READ_FLAG,4)
@@ -1316,7 +1308,7 @@ c        --- classical density functional theory using TRAMANTO
 
 c     --- error check use of ewald sum with implicit solvent
       if ( isolvtype .ne. SOLV_NONE ) then
-         call twh_ewald_kmax(GLB_GET,1,kmax)
+         call twh_ewald_kmax(GLB_GET,BXD_REAL,1,kmax)
          call twh_ewald_kalp(GLB_GET,kalp)
          if ((kalp .ne. 0.0d0) .or. (kmax .ne. 0)) then
             write(6,*) 'READCLASSICAL: When using implicit water models'
@@ -1776,7 +1768,7 @@ c     --- Begin outputting information about the simulation
          if ( lewald ) then
             call twh_coulombstyle(GLB_GET,coulombstyle)
             if ( coulombstyle .eq. 'ewald_fixed_kmax') then
-               call twh_ewald_kmax(GLB_GET,1,kmax)
+               call twh_ewald_kmax(GLB_GET,BXD_REAL,1,kmax)
                call twh_ewald_kalp(GLB_GET,kalp)
                write(6,'(5x,a26,1x,i2,1x,a5,1x,f6.3)')
      &              'Ewald Sum with fixed kmax:',kmax,'kalp:',kalp
@@ -1962,10 +1954,10 @@ c        --- set ewald parameters:
             call twh_resetcoulomb(lfailure,BXD_REAL,ibox)
             if ( lfailure ) return
             if ( lewald ) then
-               call twh_ewald_calp(GLB_GET,ibox,calp)
+               call twh_ewald_calp(GLB_GET,BXD_REAL,ibox,calp)
                write(6,41) 'Box:',ibox,'Initial calp:',calp
  41            format(a4,1x,i5,1x,a13,1x,f10.5)
-               call twh_ewald_kmax(GLB_GET,ibox,kmax)
+               call twh_ewald_kmax(GLB_GET,BXD_REAL,ibox,kmax)
                write(6,'(a4,1x,i5,1x,a13,1x,i5)')
      &              'Box:',ibox,'Initial kmax:',kmax
             endif
@@ -1975,8 +1967,8 @@ c        --- set ewald parameters:
       if ( lhenry ) then
          ibox = numboxes+1
 c        --- disable the ewald sum in MAXBOX
-         call twh_ewald_kmax(GLB_SET,ibox,0)
-         call twh_ewald_calp(GLB_SET,ibox,0.0d0)
+         call twh_ewald_kmax(GLB_SET,BXD_REAL,ibox,0)
+         call twh_ewald_calp(GLB_SET,BXD_REAL,ibox,0.0d0)
 c        --- set extremely large hmatrix for MAXBOX
          do idim = 1,3
             call twh_hmatrix(GLB_SET,BXD_REAL,ibox,idim,idim,1.0d5)
@@ -2234,7 +2226,7 @@ c     ******************************************************************
 c     * read in the move probabilty section of towhee_input            *
 c     *                                                                *
 c     * split out of readtowhee 01-16-2018 by M.G. Martin              *
-c     * last modified 01-16-2018 by M.G. Martin                        *
+c     * last modified 04-12-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -2248,8 +2240,9 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
 c     --- character strings
       character*15 idname
+      character*50 goodstring
 c     --- integer scalars
-      integer ibox,imolty,jmolty,imove,ipair,ivalue,jvalue,npairs
+      integer ibox,imolty,jmolty,imove,ipair,ivalue,jvalue,nmolpairs
 c     --- double scalars
       double precision pmmin,dvalue,moveprob,pmax,pmtest
 c     --- double arrays
@@ -2262,16 +2255,16 @@ c     --- double arrays
       double precision prob_pair_array
       dimension prob_pair_array(1+(nmolty*(nmolty-1))/2)
 
+      idname = 'read_moveprobs'
+      call twh_nmolpairs(GLB_GET,nmolpairs)
 c     --- initialize pmmin
       pmmin = 0.0d0
-
 c     A note about default values: all move probabilities (pm*) are now
 c     optional, implying that they will take on the default values if
 c     not specified in towhee_input.  The default values are specified
 c     in initialize.F, and should give zero probabilities to moves not
 c     otherwise defined.  When adding new moves, please add them to
 c     initialize.F
-
 
 c     --- isotropic volume move
       if ( ( ensemble .eq. ENS_NVT .and. numboxes .gt. 1 ) 
@@ -2426,11 +2419,8 @@ c           --- error check
             endif
          endif
       endif
-
 c     --- 2 box rotational-bias swap
       if ( numboxes .gt. 1 ) then 
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c        --- read 2-box rotational-bias swap move
          if (twh_check_label(lfailure,4,'pm2boxrbswap')) then
             dvalue = twh_read_labeled_float(lfailure,4,'pm2boxrbswap'
@@ -2478,8 +2468,6 @@ c           --- error check pm2rbswpr
 
 c     --- 2 box configurational-bias swap
       if ( numboxes .gt. 1 ) then
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 c        --- read 2boxcbswap info
          if (twh_check_label(lfailure,4,'pm2boxcbswap')) then
             dvalue = twh_read_labeled_float(lfailure,4,'pm2boxcbswap',
@@ -2520,6 +2508,59 @@ c           --- error check pm2cbswpr
                lfailure = .true.
                return
             endif
+         endif
+      endif
+c     --- 2 box center of mass switch
+      if ( numboxes .gt. 1 ) then
+c        --- read 2boxcomswitch info
+         goodstring = 'pm2boxcomswitch'
+         if (twh_check_label(lfailure,4,goodstring)) then
+            dvalue = twh_read_labeled_float(lfailure,4,goodstring,
+     &           .true., idname)
+            if ( lfailure ) return
+            call twh_pm2boxcomswitch(GLB_SET,dvalue)
+            if ( dvalue .gt. pmmin ) pmmin = dvalue
+c           --- box pair matrix
+            call twh_read_labeled_float_array(lfailure,4
+     &           ,'pm2comswboxpair',
+     &           nboxpair, .true., idname, dtarray)
+            if ( lfailure ) return
+            do imove = 1,nboxpair
+               dvalue = dtarray(imove)
+               call twh_pm2comswboxpair(GLB_SET,imove,dvalue)
+            enddo
+c           --- error check pm2comswboxpair
+            call twh_pm2comswboxpair(GLB_GET,nboxpair,dvalue)
+            if ( dvalue .lt. 1.0d0 ) then
+               write(6,*)
+     &              'READTOWHEE: the final value of pm2comswboxpair'
+     &              ,' must be 1.0'
+               lfailure = .true.
+               return
+            endif
+c           --- molecule pair matrix
+            call twh_read_labeled_float_array(lfailure,4
+     &           ,'pm2comswmolpair',
+     &           nmolpairs, .true., idname,prob_pair_array)
+            if ( lfailure ) return
+c           --- error check box probabilities
+            pmax = 0.0d0
+            do ipair = 1,nmolpairs
+               if ( prob_pair_array(ipair) .gt. pmax ) then
+                  pmax = prob_pair_array(ipair)
+               endif
+            enddo
+            if ( pmax .lt. 1.0d0 ) then
+               write(6,*) 'READTOWHEE: at least one value of'
+     &              ,' pm2comswmolpair must be 1.0d0'
+               lfailure = .true.
+               return
+            endif
+c           --- store the values in pm2comswmolpair
+            do ipair = 1,nmolpairs
+               call twh_pm2comswmolpair(GLB_SET,ipair
+     &              ,prob_pair_array(ipair))
+            enddo
          endif
       endif
 
@@ -2578,11 +2619,7 @@ c        --- save and error check pm1cbswmt
             return
          endif
       endif
-
-
-c        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      npairs = nmolty*(nmolty-1)/2
-      if ( npairs .gt. 0 ) then
+      if ( nmolpairs .gt. 0 ) then
 c        --- read intra-box center-of-mass switch (single box) info
          if (twh_check_label(lfailure,4,'pm1boxcomswitch')) then
             moveprob = twh_read_labeled_float(lfailure,4
@@ -2614,11 +2651,11 @@ c           --- store the values in pm1comswbox
             enddo
             
             call twh_read_labeled_float_array(lfailure,4,'pm1comswpair',
-     &           npairs, .true., idname,prob_pair_array)
+     &           nmolpairs, .true., idname,prob_pair_array)
             if ( lfailure ) return
 c           --- error check box probabilities
             pmax = 0.0d0
-            do ipair = 1,npairs
+            do ipair = 1,nmolpairs
                if ( prob_pair_array(ipair) .gt. pmax ) then
                   pmax = prob_pair_array(ipair)
                endif
@@ -2631,7 +2668,7 @@ c           --- error check box probabilities
                return
             endif
 c           --- store the values in pm1comswpair
-            do ipair = 1,npairs
+            do ipair = 1,nmolpairs
                call twh_pm1comswpair(GLB_SET,ipair
      &              ,prob_pair_array(ipair))
             enddo

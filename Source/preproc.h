@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 03-25-2018 by M.G. Martin */
+/* last significant modification 09-06-2018 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -70,10 +70,6 @@
 
 /* maxblock = the maximum number of blocks for a block average */
 #define MAXBLOCK 20
-
-/* maxener = the maximum number of different kinds of energy terms */
-/* tracked in the simulation */
-#define MAXENER 11
 
 /* fldmax = the maximum number fields */
 #define FLDMAX 20
@@ -242,10 +238,6 @@
 
 /* maximum number of special adjustment terms to the mixrule */
 #define MAXMIXADJUST 3
-
-/* MAXBAPROP = maximum number of properties to average */
-#define MAXBAPROP MAXBOX*(NTMAX*8+20+MAXENER)
-
 
 /* CLASSICAL POTENTIAL ALIASES
    Maps classical potential names to integers to speed
@@ -468,32 +460,47 @@
 #define AVG_EXTRACT_NBLOCK 10
 #define AVG_INITIALIZE 11
 
+/* maxener = the maximum number of different kinds of energy terms */
+/* tracked in the simulation */
+#define MAXENER 10
 /* average codes: the numerical values are arbitrary, but must be */
 /* larger than MAXENER, except for pressure */
+/* pressure goes negative for the stress tensor and must be 0 */
 #define AC_PRESSURE (0)
-#define AC_DU_DLAMBDA_LJ (MAXENER+1)
-#define AC_DU_DLAMBDA_C (MAXENER+2)
-#define AC_TOT_ENERGY_SQ (MAXENER+3)
-#define AC_VOLUME (MAXENER+4)
-#define AC_VOLUME_SQ (MAXENER+5)
-#define AC_NUM_MOLECULES (MAXENER+6)
-#define AC_NUMBER_DENSITY (MAXENER+7)
-#define AC_SPECIFIC_DENSITY (MAXENER+8)
-#define AC_MOL_FRACTION (MAXENER+9)
-#define AC_H_VAP_PV_NRT (MAXENER+10)
-#define AC_DU_DV (MAXENER+11)
-#define AC_THERMO_PRESSURE (MAXENER+12)
-#define AC_ENTHALPY (MAXENER+13)
-#define AC_ENTHALPY_SQ (MAXENER+14)
-#define AC_PV (MAXENER+15)
-#define AC_GIBBS_TOT_CHEMPOT (MAXENER+16)
-#define AC_NPT_INSERTION_CHEMPOT (MAXENER+17)
-#define AC_NVT_INSERTION_CHEMPOT (MAXENER+18)
-#define AC_ISOLATION_CHEMPOT (MAXENER+19)
-#define AC_RADIUS_OF_GYRATION (MAXENER+20)
-#define AC_H_VAP_DIRECT (MAXENER+21)
-#define AC_H_VAP_VAPOR_P (MAXENER+22)
-#define AC_HENRY_LAW (MAXENER+23)
+/* the energy accumulators are in spots 1 to MAXENER */
+/* next are averages that only occur at most 1 time */
+#define AC_H_VAP_DIRECT (MAXENER+1)
+#define AC_H_VAP_VAPOR_P (MAXENER+2)
+#define AC_H_VAP_PV_NRT (MAXENER+3)
+/* averages that only depend on the number of boxes */
+#define AC_TOT_ENERGY_SQ (MAXENER+4)
+#define AC_DU_DLAMBDA_LJ (MAXENER+5)
+#define AC_DU_DLAMBDA_C (MAXENER+6)
+#define AC_VOLUME (MAXENER+7)
+#define AC_VOLUME_SQ (MAXENER+8)
+#define AC_ENTHALPY (MAXENER+9)
+#define AC_ENTHALPY_SQ (MAXENER+10)
+#define AC_PV (MAXENER+11)
+#define AC_DU_DV (MAXENER+12)
+#define AC_DU_DV_EXPAND (MAXENER+13)
+#define AC_DU_DV_CONTRACT (MAXENER+14)
+#define AC_THERMO_PRESSURE (MAXENER+15)
+/* averages that only depend on the molecule type */
+#define AC_HENRY_LAW (MAXENER+16)
+/* averages that depend on the box and molecule type */
+#define AC_NUM_MOLECULES (MAXENER+17)
+#define AC_MOL_FRACTION (MAXENER+18)
+#define AC_NUMBER_DENSITY (MAXENER+19)
+#define AC_SPECIFIC_DENSITY (MAXENER+20)
+#define AC_RADIUS_OF_GYRATION (MAXENER+21)
+#define AC_GIBBS_TOT_CHEMPOT (MAXENER+22)
+#define AC_NPT_INSERTION_CHEMPOT (MAXENER+23)
+#define AC_NVT_INSERTION_CHEMPOT (MAXENER+24)
+#define AC_ISOLATION_CHEMPOT (MAXENER+25)
+/* MAXBAPROP = maximum number of properties to average considering */
+/* the ones that depend on box and molecule type as multiple avaerage */
+/* pressure is 8 terms */
+#define MAXBAPROP 8+MAXENER*MAXBOX+3+12*MAXBOX+NTMAX+9*MAXBOX*NTMAX
 
 /* field integers, numerical values arbitrary */
 #define FLD_HARMONIC_ATTRACTOR 1
@@ -605,7 +612,7 @@
 #define TOR_STYLE_COMP_X_EX 9
 #define TOR_STYLE_COS_POW 10
 #define TOR_STYLE_O_OPLS_C 11
-#define TOR_STYLE_SUN_COS 12
+#define TOR_STYLE_SUM_COS 12
 #define TOR_STYLE_O_OPLS_T 13
 #define TOR_STYLE_UFF 14
 #define TOR_STYLE_DREIDING 15
@@ -633,7 +640,7 @@
 #define SWAP_RB_INTER 6
 #define SWAP_CHEMPOT_BOX 7
 #define SWAP_CHEMPOT_ISO 8
-
+#define SWAP_COM_INTER 9
 /* interpolate codes */
 #define INTERP_NORMAL 0
 #define INTERP_DERIV 1
@@ -703,8 +710,8 @@
 #define PNT_BNTRAC 21
 #define PNT_RMTRAA 22
 #define PNT_RMTRAC 23
-/* open spot */
-/* open spot */
+#define PNT_PM2COMSWBOXPAIR 24
+#define PNT_BNCOM2BSWITCH 25
 /* open spot */
 /* open spot */
 #define PNT_ACSROT 28
@@ -781,6 +788,7 @@
 #define VMC_TPRESS 200
 
 /* recip sum codes, values arbitrary */
+#define RCP_ACCEPT_NEW_VOL 1
 #define RCP_ACCEPT_NEW 2
 #define RCP_STORE 3
 #define RCP_RESTORE 4

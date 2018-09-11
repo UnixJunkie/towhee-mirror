@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up many variables for classical potentials                *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 10-22-2014 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -147,7 +147,7 @@ c        --- add up total charge in the simulation
      &     ,twh_limited_double(totalcharge,1.0d-10)
       if ( totalcharge**2 .gt. 1.0d-5 ) then
          write(6,*) 'SETCLASSICAL: total system charge is not zero'
-         call twh_ewald_kmax(GLB_GET,1,kmax)
+         call twh_ewald_kmax(GLB_GET,BXD_REAL,1,kmax)
          if ( kmax .ne. 0 ) then
             write(6,*) 'Ewald sum does not work properly for this case'
             lfailure = .true.

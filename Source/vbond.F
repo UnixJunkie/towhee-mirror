@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      function twh_vbond(lfailure,lreport,simbox,vibtype,length
+      function twh_vbond(lfailure,lreport,bxdflag,simbox,vibtype,length
      &     ,imolty,iunit,junit,lovrlap)
 c     ******************************************************************
 c     * Computes the bond energy for a given type and length           *
@@ -36,7 +36,7 @@ c     *          bond interaction - this occurs with nonbonded vib     *
 c     *          style, or if a fixed bond length is > 1% from its mean*
 c     *                                                                *
 c     * originally written 1-24-2000 M.G. Martin                       *
-c     * last modified 08-17-2014 M.G. Martin                           *
+c     * last modified 04-02-2018 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -47,7 +47,7 @@ c     ******************************************************************
 #include "functions.h"
 c     --- variables passed to/from function
       logical lfailure,lreport,lovrlap
-      integer simbox,vibtype,imolty,iunit,junit
+      integer bxdflag,simbox,vibtype,imolty,iunit,junit
       double precision length
 c     --- local variables
       logical lnonbond
@@ -191,7 +191,7 @@ c        --- store the regular bond energy
 
 
       if ( lnonbond ) then
-         call twh_vnonbondinbond(lfailure,lovrlap,simbox
+         call twh_vnonbondinbond(lfailure,lovrlap,bxdflag,simbox
      &        ,imolty,iunit,junit,length,vvdw,vcharge)
          twh_vbond = twh_vbond + vvdw + vcharge
          if ( lfailure .or. lovrlap ) return
@@ -208,20 +208,20 @@ c     &     ,length,twh_vbond/CON_KCALTOK
       return
       end
 
-      subroutine twh_vnonbondinbond(lfailure,lovrlap,simbox
+      subroutine twh_vnonbondinbond(lfailure,lovrlap,bxdflag,simbox
      &     ,imolty,iunit,junit,length,vvdw,vcharge)
 c     ******************************************************************
 c     * computes nonbond terms in the bond energy                      *
 c     *                                                                *
 c     * split from vbond 07-18-2014 by M.G. Martin                     *
-c     * last modified 08-18-2014 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lovrlap
-      integer simbox,imolty,iunit,junit
+      integer bxdflag,simbox,imolty,iunit,junit
       double precision length,vvdw,vcharge
 c     --- local variables
       integer ntii,ntjj
@@ -238,7 +238,7 @@ c     --- nonbond pair potential
       vvdw = twh_vtwobody(lfailure,distsq,ntii,ntjj,0,lovrlap,vf,dv)
       if ( lfailure .or. lovrlap ) return
 
-      call twh_vcoulomb(0,simbox,length,imolty,iunit,imolty
+      call twh_vcoulomb(0,bxdflag,simbox,length,imolty,iunit,imolty
      &     ,junit,vf,dv,lovrlap,vcharge)
 
       return

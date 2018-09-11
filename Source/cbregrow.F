@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -134,7 +134,9 @@ c           --- use the sidechainge matrix fo finding a molecule type
             rchain = 2.0d0
          endif
       enddo
-
+#if DEBUG_CBREGROW
+      write(6,*) 'nmolty,imolty:',nmolty,imolty
+#endif
       call twh_ensemble(GLB_GET,ensemble)
       if ( ensemble .eq. ENS_muVT ) then
 c        --- grand canonical, take from box 1
@@ -183,6 +185,9 @@ c        --- backbone cb growth
 c        --- sidechain cb growth
          sch_key = 6
       endif
+#if DEBUG_CBREGROW
+      write(6,*) 'calling schedule'
+#endif
       call twh_schedule(lfailure,numunits,imolty,islen,iustart,moveinfo
      &     ,0,sch_key)
       if ( lfailure ) return
@@ -213,6 +218,9 @@ c     --- always use real coordinates for all other molecules
 c     --- grow new chain conformation
       lnew = .true.
       testcord = CRD_TEMP
+#if DEBUG_CBREGROW
+      write(6,*) 'calling rosenbluth new'
+#endif
       call twh_rosenbluth (lfailure,lnew,lterm,testcord,globalcord,iname
      &     ,imolty,islen,BXD_REAL,ibox,numunits,dpscalenew
      &     ,wrosen(TRL_NEW)
@@ -226,6 +234,9 @@ c     --- termination of cbmc attempt due to walk termination
 c     --- grow old chain conformation
       lnew = .false.
       testcord = CRD_REAL
+#if DEBUG_CBREGROW
+      write(6,*) 'calling rosenbluth old'
+#endif
       call twh_rosenbluth (lfailure,lnew,lterm,testcord,globalcord,iname
      &     ,imolty,islen,BXD_REAL,ibox,numunits,dpscaleold
      &     ,wrosen(TRL_OLD)
@@ -279,7 +290,6 @@ c        --- add all of the energy change into the new array
          vrosinter(2) = vrosinter(2) + dvinter
          vroselect(2) = vroselect(2) + dvelect
       endif
-
 c     --- End of DC-CBMC and Ewald-sum Corrections
 
 c     --- we at least regrew well enough that we have a chance to accept

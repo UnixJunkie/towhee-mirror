@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * calculates the total reciprocal space ewald-sum term for volume*
 c     * moves                                                          *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen.                        *
-c     * Last modified 08-09-2016 M.G. Martin                           *
+c     * Last modified 04-03-2018 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -55,8 +55,8 @@ c     --- retrieve constants
 c     --- Set up the reciprocal space vectors
       ncount = 0
       vrecip = 0.0d0
-      call twh_ewald_calp(GLB_GET,ibox,calp)
-      call twh_ewald_kmax(GLB_GET,ibox,kmax)
+      call twh_ewald_calp(GLB_GET,bxdflag,ibox,calp)
+      call twh_ewald_kmax(GLB_GET,bxdflag,ibox,kmax)
       if ( kmax .eq. 0 ) then
 c        --- no vectors
          call twh_ewald_numvect(GLB_SET,ibox,ncount)

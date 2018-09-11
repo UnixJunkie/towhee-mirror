@@ -75,9 +75,13 @@ c     *             potential for molecule type inmoltype in box inbox *
 c     * SWAP_CHEMPOT_ISO                                               *
 c     *             computing the chemical potential of an isolated    *
 c     *             molecule                                           *
+c     * SWAP_COM_INTER                                                 *
+c     *             exchange molecules of two different types between  *
+c     *             two different boxes while using the atom locations *
+c     *             relative to the center-of-mass positions           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 08-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -95,8 +99,8 @@ c     --- logical arrays
       logical ltermtest
       dimension ltermtest(2)
 c     --- integer scalars
-      integer imol,idum,imove,mcount,cordstop,keycode
-      integer iutry,isteps,jrem,totunits,iunit,pointp,ipoint
+      integer imol,idum,imove,mcount,cordstop,keycode,nmolpairs,ipair
+      integer iutry,isteps,totunits_i,iunit,pointp,ipoint
       integer imt,jmt,jmolty,junit,imolty,ibox,ncmt,numboxes
       integer regstart,regend,avbtype
       integer nboxmove,icordflag,num_in,num_out,index,ngood
@@ -105,8 +109,8 @@ c     --- integer scalars
       integer n_tmmc_min,n_tmmc_max,c_element,macro_variable
       integer nch_nb_one
 c     --- integer arrays
-      integer boxtest,chaintest
-      dimension boxtest(2),chaintest(2)
+      integer boxtest,ichaintest,jchaintest
+      dimension boxtest(2),ichaintest(2),jchaintest(2)
       integer goodbox
       dimension goodbox(MAXBOX)
       integer chaininfo
@@ -171,9 +175,9 @@ c     --- double precision arrays
       double precision vrosewald
       dimension vrosewald(2)
 
-      log_e = 0.4342944819032520D0
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
+      call twh_constant_log_e(GLB_GET,log_e)
       call twh_nmolty(GLB_GET,nmolty)
       call twh_ltailc(GLB_GET,ltailc)
       call twh_numboxes(GLB_GET,numboxes)
@@ -184,7 +188,6 @@ c     --- retrieve constants
 #endif
 c     --- retrieve constants
       call twh_scalecut(GLB_GET,scalecut)
-
 c     --- set variables that depend only upon the swaptype
 c     --- set up trickery for DUAL, TRAMONTO, or multibody potentials
       lpartial = .false.
@@ -212,7 +215,6 @@ c        --- intramolecular taken care of in engatom
          lintra = .false.
          lbonded = .false.
       endif
-
       lgetcom = .true.
       lempty = .false.
       lfound = .false.
@@ -231,10 +233,10 @@ c        --- initialize tail correction energy
 c        --- initialize growth overlap logical
          ltermtest(icordflag) = .false.
       enddo
-
 c     --- select a box
       if ( swaptype .eq. SWAP_RB_INTER
-     &     .or. swaptype .eq. SWAP_CB_INTER ) then
+     &     .or. swaptype .eq. SWAP_CB_INTER
+     &     .or. swaptype .eq. SWAP_COM_INTER ) then
 c        --- two box swap moves
          nboxmove = 2
          call twh_nboxpair(GLB_GET,nboxpair)
@@ -250,6 +252,12 @@ c        --- choose a pair of boxes according to the probabilities
                call twh_pm2rbswpr(GLB_GET,imove,pmtest)
             elseif ( swaptype .eq. SWAP_CB_INTER ) then
                call twh_pm2cbswpr(GLB_GET,imove,pmtest)
+            elseif ( swaptype .eq. SWAP_COM_INTER ) then
+               call twh_pm2comswboxpair(GLB_GET,imove,pmtest)
+            else
+               write(6,*) 'swaptype not found in box select'
+               lfailure = .true.
+               return
             endif
             if ( .not. lfound .and. rmol .lt. pmtest ) then
 c              --- assign the two boxes
@@ -369,6 +377,39 @@ c     --- compute the volumes of the boxes
      &     .or. swaptype .eq. SWAP_CHEMPOT_ISO ) then
 c        --- use the inmoltype
          imolty = inmoltype
+      elseif ( swaptype .eq. SWAP_COM_INTER ) then
+c        --- two molecule types
+         call twh_nmolpairs(GLB_GET,nmolpairs)
+         if ( nmolpairs .eq. 1 ) then
+c           --- not random, just take the pair
+            ipair = 1
+            imolty = 1
+            jmolty = 2
+         else
+            rmol = twh_random()
+            ldone = .false.
+            ipair = 0
+            imolty = 1
+            jmolty = 1
+            do while ( .not. ldone )
+               ipair = ipair + 1
+               jmolty = jmolty + 1
+               if ( jmolty .gt. nmolty ) then
+c                 --- increment imolty instead and reset jmolty
+                  imolty = imolty + 1
+                  jmolty = imolty + 1
+               endif
+               if ( ipair .gt. nmolpairs ) then
+                  write(6,*) 'SWAPMOVES: problem finding pair'
+                  lfailure = .true.
+                  return
+               endif
+               call twh_pm2comswmolpair(GLB_GET,ipair,pmtest)
+               if ( rmol .le. pmtest ) then
+                  ldone = .true.
+               endif
+            enddo
+         endif
       else
 c        --- randomly determine the molecule type according to the 
 c        --- fixed  probabilities
@@ -422,7 +463,6 @@ c              --- interbox simple swap uses pm2rbswmt
             return
          endif
       endif
-
 c     --- select the secondary molecule type for the AVB MC moves
       if ( swaptype .eq. SWAP_AVB_ONE
      &     .or. swaptype .eq. SWAP_AVB_TWO 
@@ -454,10 +494,8 @@ c              --- choose jmolty according to pmavb3ct
             return
          endif
       endif
-
-c     --- store number of units in totunits 
-      call twh_nunit(GLB_GET,imolty,totunits)
-
+c     --- store number of units in totunits_i
+      call twh_nunit(GLB_GET,imolty,totunits_i)
       if ( lgetbox ) then
 c        --- for this type of move we have not yet selected a box
 c        --- determine valid boxes
@@ -481,7 +519,6 @@ c           --- choose an eligible box
 c        --- single box move, set boxtest(2) to boxtest(1)
          boxtest(2) = boxtest(1)
       endif
-
 c     --- initialize some values
       lfound = .true.
       regstart = -1
@@ -491,25 +528,23 @@ c     --- initialize some values
 c        --- not bothering with boxtest(1), just set lempty
          lempty = .true.
       else
-c        --- select a chain in boxtest(1) at random 
+c        --- select a chain of type imolty in boxtest(1) at random 
          call twh_ncmt(GLB_GET,boxtest(1),imolty,ncmt)
          if ( ncmt .eq. 0 ) then
             lempty = .true.
 c           --- warn users if this is uvt and the empty box is the 
 c           --- ideal gas
-            if ( boxtest(1) .eq. 0 ) then
-            IF (.NOT.tmmc_flag) THEN
+            if ( boxtest(1) .eq. 0 .and.  ( .NOT.tmmc_flag) ) then
                write(6,*) 'WARNING: no molecule remain in the ideal gas'
      &              ,' for molecule type ',imolty
                write(6,*) 'uvt is not valid if it runs out of molecules'
                write(6,*) 'simply add more of this type of molecule and'
      &              ,' continue the simulation'
-            END IF
             endif
          else
-            call twh_findtarget(lfailure,swaptype,BXD_REAL,boxtest(1)
-     &           ,imolty
-     &           ,chaintest(TRL_OLD),iutry,jmolty,jrem,junit,regstart
+            call twh_findtarget(lfailure,swaptype,BXD_REAL,boxtest
+     &           ,imolty,ichaintest(TRL_OLD),iutry
+     &           ,jmolty,jchaintest(TRL_OLD),junit,regstart
      &           ,regend,pointp,num_in,num_out,lfound,xtarget,ytarget
      &           ,ztarget)
             if ( lfailure ) return
@@ -517,11 +552,11 @@ c           --- ideal gas
       endif
       if ( lempty ) then
 c        --- set iutry at random
-         iutry = idint( twh_random()*totunits ) + 1
+         iutry = idint( twh_random()*totunits_i ) + 1
 c        --- set the chain number to a warning flag of 0
-         chaintest(TRL_OLD) = 0
+         ichaintest(TRL_OLD) = 0
       endif
-
+c     --- increment the appropriate move counter
       if ( swaptype .eq. SWAP_CB_INTER
      &     .or. swaptype .eq. SWAP_CB_INTRA
      &     .or. swaptype .eq. SWAP_CB_GC ) then
@@ -548,21 +583,23 @@ c        --- increment the number of attempted avb3 moves
       elseif ( swaptype .eq. SWAP_RB_INTER ) then
 c        --- increment the number of attempted rb moves
          call twh_bnrbswap(GLB_INCR,imolty,boxtest(2),boxtest(1),1)
+      elseif ( swaptype .eq. SWAP_COM_INTER ) then
+c        --- increment the number of attempted 2 box COM switch moves
+         call twh_bncom2bswitch(GLB_INCR,ipair,boxtest(1)
+     &        ,boxtest(2),1.0d0)
       endif
-      
       if ( .not. lfound ) return
       if ( lempty .and. swaptype .ne. SWAP_CB_INTER
      &     .and. swaptype .ne. SWAP_CHEMPOT_BOX
      &     .and. swaptype .ne. SWAP_CHEMPOT_ISO ) return
-
-c     --- assign a molecule number for chaintest(TRL_NEW)
+c     --- assign a molecule number for ichaintest(TRL_NEW)
       call twh_nchain(GLB_GET,nchain)
       if ( swaptype .eq. SWAP_RB_INTER ) then
-         chaintest(TRL_NEW) = nchain + 1
+         ichaintest(TRL_NEW) = nchain + 1
       elseif ( swaptype .eq. SWAP_CB_INTER
      &        .or. swaptype .eq. SWAP_CB_GC 
      &        .or. swaptype .eq. SWAP_CHEMPOT_BOX ) then
-         chaintest(TRL_NEW) = nchain + 1
+         ichaintest(TRL_NEW) = nchain + 1
 c        --- increment the count of chemical potential computations
 c        --- only if we are inserting into a non-ideal box
 c        --- this is a bit of trickery as if we automatically reject 
@@ -585,7 +622,7 @@ c        --- to the average
          endif
       elseif ( swaptype .eq. SWAP_CHEMPOT_ISO ) then
 c        --- computing isolated molecule chemical potential
-         chaintest(TRL_NEW) = nchain + 1
+         ichaintest(TRL_NEW) = nchain + 1
          arg = 0.0d0
          keycode = AC_ISOLATION_CHEMPOT
          call twh_averages(lfailure,AVG_INCREMENT,keycode,boxtest(2)
@@ -596,30 +633,29 @@ c        --- computing isolated molecule chemical potential
      &        .or. swaptype .eq. SWAP_AVB_TWO
      &        .or. swaptype .eq. SWAP_AVB_THREE ) then
 c        --- single box move, same chain for new and old
-         chaintest(TRL_NEW) = chaintest(TRL_OLD)
+         ichaintest(TRL_NEW) = ichaintest(TRL_OLD)
+      else
+         write(6,*) 'SWAPMOVES: chainset unknown swaptype:',swaptype
+         lfailure = .true.
+         return
       endif
-
 c     --- assign the old coordinates
       if ( .not. lempty ) then
-         do iunit = 1,totunits
-            call twh_coordinates(GLB_GET,CRD_REAL,chaintest(TRL_OLD)
+         do iunit = 1,totunits_i
+            call twh_coordinates(GLB_GET,CRD_REAL,ichaintest(TRL_OLD)
      &           ,iunit,xtemp,ytemp,ztemp)
-            call twh_coordinates(GLB_SET,CRD_TEMP,chaintest(TRL_OLD)
+            call twh_coordinates(GLB_SET,CRD_TEMP,ichaintest(TRL_OLD)
      &           ,iunit,xtemp,ytemp,ztemp)
          enddo
       endif
-
 #if DEBUG_SWAPMOVES
-      write(6,*) 'chaintest:',chaintest
+      write(6,*) 'ichaintest:',ichaintest
 #endif
-
 c     --- set some information for the new chain
-      call twh_moltyp(GLB_SET,chaintest(TRL_NEW),imolty)
-      call twh_nboxi(GLB_SET,chaintest(TRL_NEW),boxtest(2))
-
+      call twh_moltyp(GLB_SET,ichaintest(TRL_NEW),imolty)
+      call twh_nboxi(GLB_SET,ichaintest(TRL_NEW),boxtest(2))
 c     --- set some common values for new and old
       call twh_nch_nb_one(GLB_GET,imolty,nch_nb_one)
-
       if ( lempty ) then
 c        --- only need to do new if lempty
          cordstop = TRL_NEW
@@ -627,14 +663,11 @@ c        --- only need to do new if lempty
 c        --- do old and new
          cordstop = TRL_OLD
       endif
-
 c     --- always use the real coordinates for all other molecules
       globalcord = CRD_REAL
-
       do icordflag = TRL_NEW,cordstop,-1
 c        --- initialize lexist
-         call twh_lexist(GLB_INIT,totunits,.false.)
-         
+         call twh_lexist(GLB_INIT,totunits_i,.false.)
 c        --- determine testcord and lnew
          if ( icordflag .eq. TRL_NEW ) then 
 c           --- use the new coordinates to compute the energy
@@ -660,36 +693,33 @@ c              --- old coordinates
                lnew = .false.
             endif
          endif
-
          call twh_initial_atom_insertion(lfailure,lnew,ltermtest
-     &        ,nch_nb_one,swaptype,imolty,totunits,iutry,globalcord
+     &        ,nch_nb_one,swaptype,imolty,totunits_i,iutry,globalcord
      &        ,icordflag,testcord,regend
-     &        ,chaintest,boxtest
+     &        ,ichaintest,boxtest
      &        ,testrad
      &        ,xtarget,ytarget,ztarget
      &        ,vmintest,w1test,v1tottest,v1exttest
      &        ,v1inttest,v1elctest,v1ewdtest)
          if ( lfailure .or. ltermtest(icordflag) ) return
-
          if ( icordflag .eq. 2 ) then
 c           --- set up the growth pattern for the rest of the molecule
 c           --- only needs to be done once as both growths must follow 
 c           --- the identical schedule
-            call twh_schedule(lfailure,totunits,imolty,isteps,iutry
+            call twh_schedule(lfailure,totunits_i,imolty,isteps,iutry
      &           ,idum,0,2)
             if ( lfailure ) return
          endif
 #if DEBUG_SWAPMOVES
       write(6,*) 'swapmoves finished schedule imolty,iutry',imolty,iutry
 #endif
-
 c        --- perform the molecule growth for the inserted molecule
          if ( swaptype .ne. SWAP_RB_INTER ) then
 c           --- grow the rest of the molecule using configurational-bias
             call twh_rosenbluth(lfailure,lnew,ltermtest(icordflag)
-     &           ,testcord,globalcord,chaintest(icordflag),imolty,isteps
-     &           ,BXD_REAL,boxtest(icordflag)
-     &           ,totunits,dpscaletest(icordflag)
+     &           ,testcord,globalcord,ichaintest(icordflag),imolty
+     &           ,isteps,BXD_REAL,boxtest(icordflag)
+     &           ,totunits_i,dpscaletest(icordflag)
      &           ,wrosen(icordflag),vrostot(icordflag)
      &           ,vrosvib(icordflag),vrosang(icordflag)
      &           ,vrostor(icordflag),vrosext(icordflag)
@@ -697,7 +727,6 @@ c           --- grow the rest of the molecule using configurational-bias
      &           ,vroselect(icordflag),vrosewald(icordflag))
             if ( lfailure ) return
          endif
-
 #if DEBUG_SWAPMOVES
       write(6,*) 'swapmoves back from rosenbluth lnew, wrosen:',lnew
      &        ,wrosen(icordflag)
@@ -711,7 +740,6 @@ c           --- grow the rest of the molecule using configurational-bias
       write(6,*) 'vroselect:',vroselect(icordflag)
       write(6,*) 'vrosewald:',vrosewald(icordflag)
 #endif
-
 c        --- termination of cbmc attempt due to walk termination
          if ( ltermtest(icordflag) ) then
             if ( icordflag .eq. 2 ) then
@@ -723,7 +751,6 @@ c              --- warning messages
             endif
          endif
       enddo
-
       if ( lpartial .or. lintra .or. lbonded ) then
 c        --- Begin DC-CBMC Corrections
 c        --- calculate the true site-site energy
@@ -736,7 +763,7 @@ c        --- get the correction energies
 c           --- most moves use one chain as the default
             nchainmove = 1
 c           --- set the chain number
-            chaininfo(1,3) = chaintest(ibox)
+            chaininfo(1,3) = ichaintest(ibox)
             lcompute = .true.
             if ( swaptype .eq. SWAP_CB_INTER 
      &           .or. swaptype .eq. SWAP_CB_GC
@@ -822,8 +849,9 @@ c              --- foreign energies
 c              --- safety check
                do icordflag = 2,cordstop,-1
                   if ( ltermtest(icordflag) ) then
-                     write(6,*) 'chaintest(TRL_NEW)',chaintest(TRL_NEW)
-     &                    ,'chaintest(TRL_OLD)',chaintest(TRL_OLD)
+                     write(6,*) 'ichaintest(TRL_NEW)'
+     &                    ,ichaintest(TRL_NEW)
+     &                    ,'ichaintest(TRL_OLD)',ichaintest(TRL_OLD)
                      write(6,*) 'SWAPMOVES: strange screwup in DC-CBMC'
                      lfailure = .true.
                      return
@@ -831,7 +859,6 @@ c              --- safety check
                enddo
             endif
          enddo
-
          do ibox = 1,nboxmove
 c           --- need to be tricky here to get the chemical potential
 c           --- correct.  only want the insertion energy change in the 
@@ -850,7 +877,6 @@ c           --- safely convert this into a rosenbluth weight
          enddo
 c        --- End DC-CBMC Corrections
       endif
-
       do icordflag = 2,cordstop,-1
          if ( ltailc .and. boxtest(icordflag) .ne. 0 ) then
 c           --- Begin Tail corrections
@@ -903,7 +929,6 @@ c              --- compute change in tail energy
             endif
 c           --- End Tail corrections
          endif
-
 c         --- add contributions of the first bead(s)
          vrostot(icordflag) = vrostot(icordflag) + v1tottest(icordflag)
          vrosinter(icordflag) = vrosinter(icordflag) 
@@ -934,7 +959,6 @@ c           --- new weight is too low - reject move immediately
             return
          endif
       enddo
-
       if ( ( swaptype .eq. SWAP_CB_INTER
      &     .or. swaptype .eq. SWAP_CB_GC
      &     .or. swaptype .eq. SWAP_CHEMPOT_BOX
@@ -985,7 +1009,6 @@ c           --- and the thermal debroglie wavelength
             if ( lfailure ) return
          endif
       endif
-            
       if ( swaptype .eq. SWAP_CB_INTER
      &     .or. swaptype .eq. SWAP_CB_INTRA
      &     .or. swaptype .eq. SWAP_CB_GC
@@ -998,7 +1021,6 @@ c     --- if lempty then we were only performing this move to
 c     --- compute the chemical potential.  
 c     --- We can now exit this move
       if ( lempty ) return
-
 c     --- final stages to determine acceptance of the move
       if ( swaptype .eq. SWAP_RB_INTER
      &     .or. swaptype .eq. SWAP_CB_INTER ) then
@@ -1169,7 +1191,7 @@ c        --- the system out of the specified macrostate space.
       if ( laccept ) then
 #if DEBUG_SWAPMOVES
       write(6,*) 'SWAPMOVES MOVE ACCEPTED'
-      write(6,*) 'chaintest',chaintest
+      write(6,*) 'ichaintest',ichaintest
       write(6,*) 'boxtest',boxtest
 #endif
          if ( swaptype .eq. SWAP_CB_INTER
@@ -1250,13 +1272,13 @@ c        --- update book keeping
          if ( swaptype .eq. SWAP_RB_INTER
      &        .or. swaptype .eq. SWAP_CB_INTER
      &        .or. swaptype .eq. SWAP_CB_GC ) then
-            call twh_nboxi(GLB_SET,chaintest(TRL_OLD),boxtest(2))
+            call twh_nboxi(GLB_SET,ichaintest(TRL_OLD),boxtest(2))
 c           --- set the pointer for the inserted chain in the new box 
 c           --- to its original value in the deletion box
             call twh_ncmt(GLB_GET,boxtest(2),imolty,ncmt)
             ipoint = ncmt+1
             call twh_chainlist(GLB_SET,ipoint,boxtest(2),imolty
-     &           ,chaintest(TRL_OLD))
+     &           ,ichaintest(TRL_OLD))
 c           --- switch out the pointer for the deleted molecule with the
 c           --- last pointer in the list and then reset that final 
 c           --- pointer to the null value of 0
@@ -1274,14 +1296,14 @@ c           --- update molecule in box counters
 c        --- set the new coordinates for the accepted move
 c        --- unless we inserted into the ideal gas box
          if ( boxtest(2) .ne. 0 ) then
-            do iunit = 1,totunits
-               call twh_coordinates(GLB_GET,CRD_TEMP,chaintest(TRL_NEW)
+            do iunit = 1,totunits_i
+               call twh_coordinates(GLB_GET,CRD_TEMP,ichaintest(TRL_NEW)
      &              ,iunit,xtemp,ytemp,ztemp)
 #if DEBUG_SWAPMOVES
                write(6,*) 'accepted coord iunit:',iunit,xtemp,ytemp
      &              ,ztemp
 #endif
-               call twh_coordinates(GLB_SET,CRD_REAL,chaintest(TRL_OLD)
+               call twh_coordinates(GLB_SET,CRD_REAL,ichaintest(TRL_OLD)
      &              ,iunit,xtemp,ytemp,ztemp)
             enddo
          endif
@@ -1301,15 +1323,15 @@ c        --- update reciprocal-space sum
 c        --- update center of mass
          if ( boxtest(2) .ne. 0 ) then
             call twh_ctrmas(lfailure,BXD_REAL,CRD_REAL,boxtest(2)
-     &           ,chaintest(TRL_OLD),CTR_SWAP)
+     &           ,ichaintest(TRL_OLD),CTR_SWAP)
             if ( lfailure ) return
          endif
 
          if ( lembed ) then
 c           --- put the insertion density into the removed chain number
-            call twh_eam_rho(GLB_GET,CRD_TEMP,chaintest(TRL_NEW)
+            call twh_eam_rho(GLB_GET,CRD_TEMP,ichaintest(TRL_NEW)
      &           ,density)
-            call twh_eam_rho(GLB_SET,CRD_TEMP,chaintest(TRL_OLD)
+            call twh_eam_rho(GLB_SET,CRD_TEMP,ichaintest(TRL_OLD)
      &           ,density)
 c           --- update embedding density
             call twh_reseteamrho(nboxmove,boxtest)

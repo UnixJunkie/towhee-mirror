@@ -23,7 +23,7 @@
   globalc.h
   this file contains all of the information that is at the top 
   of every C routine in Towhee
-  last modified 03-20-2018 by M.G. Martin
+  last modified 04-03-2018 by M.G. Martin
    generic c includes 
 */
 #include <stdio.h>
@@ -279,7 +279,7 @@ void twh_eam_rho_temp_(int *, int *, double *);
 #ifdef INTEL_VISUAL_FORTRAN
 #define twh_ewald_kmax_ TWH_EWALD_KMAX
 #endif
-void twh_ewald_kmax_(int *, int *, int *);
+void twh_ewald_kmax_(int *, int *, int *, int *);
 #ifdef INTEL_VISUAL_FORTRAN
 #define twh_glist_ TWH_GLIST
 #endif
@@ -346,6 +346,10 @@ void twh_parall_(int *, int *, int *, int *);
 void twh_pm2cbswpr_(int *, int *, double *);
 #ifdef INTEL_VISUAL_FORTRAN
 #define twh_pm2rbswpr_ TWH_PM2RBSWPR
+#endif
+void twh_pm2comswboxpair_(int *, int *, double *);
+#ifdef INTEL_VISUAL_FORTRAN
+#define twh_pm2comswboxpair_ TWH_PM2COMSWBOXPAIR
 #endif
 void twh_pm2rbswpr_(int *, int *, double *);
 #ifdef INTEL_VISUAL_FORTRAN

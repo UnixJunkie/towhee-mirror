@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_vcoulomb( chgflag,simbox,rij,imolty,iunit
+      subroutine twh_vcoulomb( chgflag,bxdflag,simbox,rij,imolty,iunit
      &     ,jmolty,junit,vforeign, dvcoulomb,lovrlap,vcoulomb)
 c     ******************************************************************
 c     * Computes the nonbond coulombic energy for two charges in a     *
@@ -39,7 +39,7 @@ c     * Value returned is in [K/molecule] units, with distances in     *
 c     * angstroms                                                      *
 c     *                                                                *
 c     * originally written 01-08-2002 by M.G. Martin                   *
-c     * last update 08-27-2014 by M.G. Martin                          *
+c     * last update 04-02-2018 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
@@ -52,7 +52,7 @@ c     ******************************************************************
 
 c     --- variables passed to/from the function
       logical lovrlap
-      integer chgflag,simbox, imolty, jmolty, iunit, junit
+      integer chgflag,bxdflag,simbox, imolty, jmolty, iunit, junit
       double precision rij, dvcoulomb,vcoulomb
       double precision vforeign
       dimension vforeign(MAX_FOREIGN_LAMBDA)
@@ -94,7 +94,7 @@ c        --- potential in the 0 box.
          lcompute = .true.
       else
 c        --- check rcelect for this simulation box
-         call twh_rcelect(GLB_GET,simbox,rcelect)
+         call twh_rcelect(GLB_GET,bxdflag,simbox,rcelect)
          if ( twh_cmp_gt(rcelect,rij) ) then
             lcompute = .true.
             if ( chgflag .ne. 0 ) call twh_lewald(GLB_GET,lalpha)
@@ -106,7 +106,7 @@ c        --- compute coulombic interactions
          vcoulomb = qqa*qqb/rij
 
          if ( lalpha ) then
-            call twh_ewald_calp(GLB_GET,simbox,calp)
+            call twh_ewald_calp(GLB_GET,bxdflag,simbox,calp)
             vcoulomb = vcoulomb * twh_derfc(calp*rij)
          endif
 

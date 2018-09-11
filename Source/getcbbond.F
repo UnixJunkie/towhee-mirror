@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -47,7 +47,7 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 08-09-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -356,8 +356,8 @@ c              --- continuous distribution is proportional to r squared
             endif
             blfact(ivib) = pdf_true/pdf_bias
 c           --- calculate the bond vibration energy
-            vvib(ivib) = twh_vbond(lfailure,.false.,ibox,jtvib,length
-     &           ,imolty,iufrom,iugrow,lovrlap)
+            vvib(ivib) = twh_vbond(lfailure,.false.,bxdflag,ibox,jtvib
+     &           ,length,imolty,iufrom,iugrow,lovrlap)
             if ( lfailure ) return
 c           --- calculate the IJ-JK bond-bond energy
             do ib = 1,bbtot(count)

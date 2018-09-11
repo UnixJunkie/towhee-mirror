@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -623,8 +623,8 @@ c              --- of cosine
                testlen = twh_lawofcosine(distg,distp,anglec)
                crosslen(prevcode,count) = testlen
                crosslen(count,prevcode) = testlen
-               vvib(itrial) = twh_vbond(lfailure,.false.,ibox,gp_vtype
-     &              ,testlen,imolty,iugrow,iuprev,lovrlap)
+               vvib(itrial) = twh_vbond(lfailure,.false.,bxdflag,ibox
+     &              ,gp_vtype,testlen,imolty,iugrow,iuprev,lovrlap)
                if ( lfailure ) return
 c              --- connecting this bond also computes 2 additional
 c              --- angles for the rest of the triangle
@@ -1452,8 +1452,8 @@ c           --- three mem bonds
                crosslen(aaa,count) = testlen
                crosslen(count,aaa) = testlen
                call twh_itvib(GLB_GET,imolty,iugrow,ivib,vibtype)
-               vvib(itrial) = twh_vbond(lfailure,.false.,ibox,vibtype
-     &              ,testlen,imolty,iugrow,iuaaa,lovrlap)
+               vvib(itrial) = twh_vbond(lfailure,.false.,bxdflag,ibox
+     &              ,vibtype,testlen,imolty,iugrow,iuaaa,lovrlap)
                if ( lfailure ) return
                if ( lovrlap ) goto 13
             enddo

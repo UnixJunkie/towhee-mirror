@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * sets up all of the force field parameters for version 2 of the *
 c     * NERD forcefield                                                *
 c     *                                                                *
 c     * rewritten from ffnerdv1 08-18-2004 by M.G. Martin              *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 09-10-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -59,7 +59,7 @@ c     --- local variables
       character*5 bplocal
       character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
 
-      ffname = 'NERDv2'
+      ffname = 'NERD'
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
       call twh_classical_mixrule(GLB_SET,'Lorentz-Berthelot')
       type = 0

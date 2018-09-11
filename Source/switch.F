@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * switches a pair of molecules at their center-of-mass positions *
 c     *                                                                *
 c     * completely rewritten 06-07-2008 by I.A. Hijazi                 *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 08-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -68,7 +68,6 @@ c     --- local double precision arrays
 #endif
 c     --- retrieve constants
       call twh_numboxes(GLB_GET,numboxes)
-
 c     --- select a box at random
       rselect = twh_random()
       lfound = .false.
@@ -89,7 +88,7 @@ c     --- select a box at random
 c     --- select a molecule pair type at random
       rselect  = twh_random()
       call twh_nmolty(GLB_GET,nmolty)
-      npair = (nmolty*(nmolty-1))/2
+      call twh_nmolpairs(GLB_GET,npair)
       ipair = 0
       imolty = 0
       jmolty = nmolty
@@ -133,7 +132,6 @@ c     --- store number of units of i in totiunit
       call twh_nunit(GLB_GET,imolty,totiunit)
 c     --- store number of units of j in totjunit 
       call twh_nunit(GLB_GET,jmolty,totjunit)
-
 #if DEBUG_SWITCH
       write(6,*) 'nimtype,njmtype',nimtype,njmtype
       write(6,*) 'dichain,djchain',dichain,djchain
@@ -141,10 +139,9 @@ c     --- store number of units of j in totjunit
       write(6,*) 'totiunit,totjunit',totiunit,totjunit
       write(6,*) 'ichain,jchain',ichain,jchain
 #endif
-
-c  --- increment switch move attempt counter
+c     --- increment switch move attempt counter
       call twh_acnswitch(GLB_INCR,ipair,ibox,1.0d0)
-c  --- switch centers of mass temporarilly 
+c     --- switch centers of mass temporarilly 
       call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
       call twh_com(GLB_GET,CRD_REAL,jchain,xcmj,ycmj,zcmj)
       call twh_com(GLB_SET,CRD_TEMP,ichain,xcmj,ycmj,zcmj)
@@ -156,7 +153,7 @@ c  --- switch centers of mass temporarilly
       write(6,*) 'cmi:',xcmi,ycmi,zcmi
       write(6,*) 'cmj:',xcmj,ycmj,zcmj
 #endif
-c  --- update chain coordinates temporarilly  
+c     --- update chain coordinates temporarilly  
       do iunit = 1,totiunit
          call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit,rix,riy,riz)
          rix = rix + dxcm
@@ -171,7 +168,6 @@ c  --- update chain coordinates temporarilly
          rjz = rjz - dzcm
          call twh_coordinates(GLB_SET,CRD_TEMP,jchain,junit,rjx,rjy,rjz)
       enddo
-
       call twh_rcmu(GLB_GET,ichain,rcmu)
       if ( rcmu .gt. twh_minboxlength(BXD_REAL,ibox)*0.25d0 ) then
 c        --- molecule is large enough that it might be interacting with
@@ -187,7 +183,6 @@ c        --- images.  don't bother computing intramolecular or bonded
          lintra  = .false.
          lbonded = .true.
       endif
-
       nchainmove = 2
       chaininfo(1,TRL_OLD) = CRD_REAL
       chaininfo(1,TRL_NEW) = CRD_TEMP
@@ -207,7 +202,6 @@ c        --- images.  don't bother computing intramolecular or bonded
 #if DEBUG_SWITCH
       write(6,*) 'dvinter_trial:',dvinter_trial
 #endif
-
 c     --- check new hard overlap, if overlap move rejected
       if ( loverlap(2) ) return
 c     --- check old hard overlap, if overlap then big problems
@@ -216,7 +210,6 @@ c     --- check old hard overlap, if overlap then big problems
          lfailure = .true.
          return
       endif
-
       dv_trial = dvclassical_trial
 c     --- check for acceptance
       laccept = .false.
@@ -234,13 +227,12 @@ c        --- burn a random number
             laccept = .true.
          endif
       endif
-
-#if DEBUG_TRANCOM
+#if DEBUG_SWITCH
       write(6,*) 'SWITCH: dv_trial ',dv_trial
       write(6,*) 'SWITCH: laccept:',laccept
 #endif
       if ( .not. laccept ) return
-#if DEBUG_TRANCOM
+#if DEBUG_SWITCH
       write(6,*) 'SWITCH: accepted chain',ichain
 #endif
 c     --- update acceptance accumulators
@@ -275,16 +267,12 @@ c     --- store new coordinates
          call twh_coordinates(GLB_GET,CRD_TEMP,jchain,junit,rjx,rjy,rjz)
          call twh_coordinates(GLB_SET,CRD_REAL,jchain,junit,rjx,rjy,rjz)
       enddo
-      
 c     --- update reciprocal-space sum
       call twh_recip(lfailure,ibox,RCP_ACCEPT_NEW)
       if ( lfailure ) return
-
 c     --- update embedding density
       iboxa(1)=ibox
       call twh_reseteamrho(1,iboxa)
-
-
 #if DEBUG_SWITCH
       write(6,*) 'end SWITCH'
 #endif

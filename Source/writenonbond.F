@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,7 +27,7 @@ c     * ifile: file index for output                                   *
 c     * lerror: logical used if there is a problem                     *
 c     *                                                                *
 c     * originally split out of readtowhee 08-16-2004 by M.G. Martin   *
-c     * last modified 03-25-2018 M.G. Martin                           *
+c     * last modified 09-07-2018 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -56,7 +56,6 @@ c     --- double precsion scalars
 
 c     --- get the classical potential number
       call twh_cp_number(GLB_GET,cpnumber)
-
 c     --- output information about the nonbonded potential parameters
       write(ifile,'(a21)') 'Nonbonded Force Field'
       if ( cpnumber .eq. CP_9_6 ) then
@@ -144,7 +143,6 @@ c     --- output information about the nonbonded potential parameters
       call twh_lshift(GLB_GET,lshift)
       if ( lshift ) write(ifile,'(4x,a)') 
      &     'with a shift to zero at the cut-off'
-
 
       if ( cpnumber .eq. CP_9_6 ) then
          write(ifile,'(a)')

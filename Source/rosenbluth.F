@@ -96,7 +96,7 @@ c     *                                                                *
 c     * originally rewritten from rosnewbr and rosoldbr in 1998        *
 c     *            by M.G. Martin                                      *
 c     * renamed rosenbluth_main 12-06-2008 by M.G. Martin              *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -213,6 +213,7 @@ c     ******************************************************************
          call twh_growprev(GLB_GET,iw,iuprev)
 #if DEBUG_ROSENBLUTH
          write(6,*) 'iw,isteps:',iw,isteps
+         write(6,*) 'iuprev:',iuprev
 #endif
 c        --- set up the cone if we have a previous bead
          if ( iuprev .ne. 0 ) then
@@ -241,7 +242,6 @@ c           --- turn vectors into unit vector
 
 c        --- initialize maxlen
          maxlen = 0.0d0
-
          if ( cbmc_form_code .eq. CBMC_FORM_MS1999_MT2004 ) then
 c           --- bond and angle are decoupled from the rest
 c           --- only need to select them once and then use in the 
@@ -504,11 +504,10 @@ c                 --- divide out the number of outer trials
                return
             endif
          enddo
-
 c        --- now that we have the trial sites, need to compute 
 c        --- non-bond energy
          call twh_engatom(lfailure,testcord,globalcord,engastyle,lovrlap
-     &        ,ichain,imolty,BXD_REAL,ibox,nch_nb,iufrom,ntogrow,maxlen
+     &        ,ichain,imolty,bxdflag,ibox,nch_nb,iufrom,ntogrow,maxlen
      &        ,lnbterm,NNBOND,nch_nb,rxp,ryp,rzp,vctry,vtrext,vtrintra
      &        ,vtrinter,vtrelect,vtrewald)
          if ( lfailure ) return

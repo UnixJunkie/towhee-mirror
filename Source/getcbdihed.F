@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -366,7 +366,7 @@ c                 --- we can only get here if there is a problem
                   lfailure = .true.
                   return
  66               vxvib(itor) = vxvib(itor) + twh_vbond(lfailure
-     &                 ,.false.,ibox,itype,length,imolty,iu,jut2
+     &                 ,.false.,bxdflag,ibox,itype,length,imolty,iu,jut2
      &                 ,lovrlap)
                   if ( lfailure ) return
                   if ( lovrlap ) goto 90

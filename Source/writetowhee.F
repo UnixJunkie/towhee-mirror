@@ -25,7 +25,7 @@ c     * wrapper that determines a few constants needed to dimension    *
 c     * arrays and then call the main writetowhee                      *
 c     *                                                                *
 c     * originally written 01-16-2018 by M.G. Martin                   *
-c     * last modified 03-29-2018 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -53,7 +53,7 @@ c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
 c     * split from the original writetowhee 01-16-2018 by M.G. Martin  *
-c     * last modified 03-29-2018 by M.G. Martin                        *
+c     * last modified 04-12-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -121,7 +121,7 @@ c     --- small integer scalars
 c     --- integer scalars
       integer iatom,ivib,ibend,itor,iaa,ibox,jmolty,idim,jdim,iorder
       integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile
-      integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,npairs
+      integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,nmolpairs
       integer aminonum,rng_code
       integer npair,inix,iniy,iniz,ensemble,itbang,iobang
       integer irange,pt_number,ivolmove
@@ -149,6 +149,7 @@ c     --- double precision arrays
 c      write(6,*) 'starting WRITETOWHEE ',imoltyflag
 c     --- retrieve constants
       call twh_ensemble(GLB_GET,ensemble)
+      call twh_nmolpairs(GLB_GET,nmolpairs)
 
       if ( imoltyflag .eq. 0 ) then
 c        --- output all of the towhee_input file except for the 
@@ -468,8 +469,8 @@ c                 --- output the helix_* varibles
             call twh_tacell(GLB_GET,dvalue)
             write(15,100) dvalue
          endif
-
          if ( numboxes .gt. 1 ) then
+c           --- 2 box rotational-bias swap move
             write(15,'(a12)') 'pm2boxrbswap'
             call twh_pm2boxrbswap(GLB_GET,dvalue)
             write(15,44) dvalue
@@ -480,16 +481,14 @@ c                 --- output the helix_* varibles
             enddo
             write(15,100) (dmarray(jmolty),jmolty=1,nmolty)
             write(15,'(10x,a9)') 'pm2rbswpr'
-            if ( nboxpair .eq. 0 ) then
-               write(15,100) 1.0d0
-            else
-               do ibox = 1,nboxpair
-                  call twh_pm2rbswpr(GLB_GET,ibox,dvalue)
-                  dpboxarray(ibox) = dvalue
-               enddo
-               write(15,100) (dpboxarray(ibox),ibox=1,nboxpair)
-            endif
-
+            do ibox = 1,nboxpair
+               call twh_pm2rbswpr(GLB_GET,ibox,dvalue)
+               dpboxarray(ibox) = dvalue
+            enddo
+            write(15,100) (dpboxarray(ibox),ibox=1,nboxpair)
+         endif
+         if ( numboxes .gt. 1 ) then
+c           --- 2 box configurational-bias swap move
             write(15,'(a12)') 'pm2boxcbswap'
             call twh_pm2boxcbswap(GLB_GET,dvalue)
             write(15,44) dvalue
@@ -500,17 +499,30 @@ c                 --- output the helix_* varibles
             enddo
             write(15,100) (dmarray(jmolty),jmolty=1,nmolty)
             write(15,'(10x,a9)') 'pm2cbswpr'
-            if ( nboxpair .eq. 0 ) then
-               write(15,100) 1.0d0
-            else
-               do ibox = 1,nboxpair
-                  call twh_pm2cbswpr(GLB_GET,ibox,dvalue)
-                  dpboxarray(ibox) = dvalue
-               enddo
-               write(15,100) (dpboxarray(ibox),ibox=1,nboxpair)
-            endif
+            do ibox = 1,nboxpair
+               call twh_pm2cbswpr(GLB_GET,ibox,dvalue)
+               dpboxarray(ibox) = dvalue
+            enddo
+            write(15,100) (dpboxarray(ibox),ibox=1,nboxpair)
          endif
-
+         if ( numboxes .gt. 1 ) then
+c           ---  2 box center-of-mass switch move
+            write(15,'(a15)') 'pm2boxcomswitch'
+            call twh_pm2boxcomswitch(GLB_GET,dvalue)
+            write(15,44) dvalue
+            write(15,'(10x,a15)') 'pm2comswboxpair'
+            do ibox = 1,nboxpair
+               call twh_pm2comswboxpair(GLB_GET,ibox,dvalue)
+               dpboxarray(ibox) = dvalue
+            enddo
+            write(15,100) (dpboxarray(ibox),ibox=1,nboxpair)
+            write(15,'(10x,a15)') 'pm2comswmolpair'
+            do ipair = 1,nmolpairs
+               call twh_pm2comswmolpair(GLB_GET,ipair,dvalue)
+               dpairarray(ipair) = dvalue
+            enddo
+            write(15,100) (dpairarray(ipair),ipair=1,nmolpairs)
+         endif
          if ( ensemble .eq. ENS_muVT ) then
             write(15,'(a11)') 'pmuvtcbswap'
             call twh_pmuvtcbswap(GLB_GET,dvalue)
@@ -532,8 +544,7 @@ c                 --- output the helix_* varibles
          enddo
          write(15,100) (dmarray(jmolty),jmolty=1,nmolty)
 
-         npairs = (nmolty*(nmolty-1))/2
-         if ( npairs .ge. 1 ) then
+         if ( nmolpairs .ge. 1 ) then
             write(15,'(a15)') 'pm1boxcomswitch'
             call twh_pm1boxcomswitch(GLB_GET,dvalue)
             write(15,44) dvalue
@@ -544,11 +555,11 @@ c                 --- output the helix_* varibles
             enddo
             write(15,100) (dpboxarray(ibox),ibox=1,numboxes)
             write(15,'(10x,a12)') 'pm1comswpair'
-            do ipair = 1,npairs
+            do ipair = 1,nmolpairs
                call twh_pm1comswpair(GLB_GET,ipair,dvalue)
                dpairarray(ipair) = dvalue
             enddo
-            write(15,100) (dpairarray(ipair),ipair=1,npairs)
+            write(15,100) (dpairarray(ipair),ipair=1,nmolpairs)
          endif
 
          write(15,'(a6)') 'pmavb1'
@@ -784,7 +795,6 @@ c        --- start of potential output
                write(15,11) ffname
             enddo
          endif
- 11      format(a MAXDIRLENGTH)
          write(15,'(a19)') 'classical_potential'
          write(15,'(a1,a30,a1)') char(39)
      &        ,twh_get_classical_potential(),char(39)
@@ -883,7 +893,7 @@ c           --- nothing else to write here, but not an error
                write(15,'(a4)') 'kalp'
                call twh_ewald_kalp(GLB_GET,kalp)
                write(15,*) kalp
-               call twh_ewald_kmax(GLB_GET,1,kmax)
+               call twh_ewald_kmax(GLB_GET,BXD_REAL,1,kmax)
                write(15,'(a4)') 'kmax'
                write(15,*) kmax
             elseif ( coulombstyle .eq. 'ewald_fixed_cutoff' ) then
@@ -891,7 +901,7 @@ c           --- nothing else to write here, but not an error
                call twh_ewald_prec(GLB_GET,ewald_prec)
                write(15,*) ewald_prec
                write(15,'(a7)') 'rcelect'
-               call twh_rcelect(GLB_GET,1,dvalue)
+               call twh_rcelect(GLB_GET,BXD_REAL,1,dvalue)
                write(15,*) dvalue
             elseif ( coulombstyle .eq. 'minimum image' ) then
 c              --- not an error, but nothing to output
@@ -1186,11 +1196,12 @@ c              --- include pdb stuff
             enddo
          enddo
       endif
-
+c     ---  format statements
+ 11   format(a MAXDIRLENGTH)
  44   format(f6.4)
  100  format(10x,20(e10.5,1x))
  101  format(10x,20(f7.4,1x))
-         
+      
 c     write(6.*) 'finished WRITETOWHEE'
          
       return

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 04-03-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -201,10 +201,10 @@ c     --- set ewald parameters:
          call twh_resetcoulomb(lfailure,BXD_REAL,ibox)
          if ( lfailure ) return
          if ( lewald ) then
-            call twh_ewald_calp(GLB_GET,ibox,calp)
+            call twh_ewald_calp(GLB_GET,BXD_REAL,ibox,calp)
             write(6,41) 'Box:',ibox,'Initial calp:',calp
  41         format(a4,1x,i5,1x,a13,1x,f10.5)
-            call twh_ewald_kmax(GLB_GET,ibox,kmax)
+            call twh_ewald_kmax(GLB_GET,BXD_REAL,ibox,kmax)
             write(6,'(a4,1x,i5,1x,a13,1x,i5)') 
      &           'Box:',ibox,'Initial kmax:',kmax
          endif

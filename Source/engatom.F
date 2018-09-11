@@ -110,7 +110,7 @@ c     * computes the classical energy on an atom by atom basis for the *
 c     * configurational-bias class of moves                            *
 c     *                                                                *
 c     * split from engatom 10-24-2005 by M.G. Martin                   *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 04-02-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LEXIST
@@ -173,7 +173,7 @@ c     --- retrieve constants
       call twh_nmolty(GLB_GET,nmolty)
       call twh_nunit(GLB_GET,imolty,iunit)
       call twh_lusecom(GLB_GET,lusecom)
-      if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,ibox,rcelect)
+      if ( ibox .ne. 0 ) call twh_rcelect(GLB_GET,bxdflag,ibox,rcelect)
       call twh_lelect(GLB_GET,lelect)
       call twh_lewald(GLB_GET,lewald)
       call twh_rcutin(GLB_GET,rcutin)
@@ -239,7 +239,7 @@ c           --- in the subroutine that called us
             if ( lewald .and. engastyle .ne. 3 .and. ibox .ne. 0 ) then
 c           -- This part does not change for fixed charge moves, but is
 c           -- used in the cbswap rosenbluth weight. - ewald self term
-               vewald = vewald + twh_ewald_self(ibox,imolty,ii)
+               vewald = vewald + twh_ewald_self(bxdflag,ibox,imolty,ii)
             endif
          enddo
 
@@ -294,7 +294,7 @@ c                    --- special one-five nonbond
                   if ( lelect ) then
 c                    --- intramolecular electrostatics
                      rij = dsqrt(rijsq)
-                     call twh_vcoulomb(-1,ibox,rij,imolty,ii
+                     call twh_vcoulomb(-1,bxdflag,ibox,rij,imolty,ii
      &                    ,imolty,iu,vf,dvtemp,lovrtest,vcoulomb)
                      velect = velect + vcoulomb
                      if ( lovrtest ) goto 19
@@ -310,7 +310,8 @@ c                 --- vtorsion.  The combination of vtorsion with this
 c                 --- correction term results in the proper answer
                   rij = dsqrt(rijsq)
                   vewald = vewald
-     &                 + twh_ewald_correct(ibox,imolty,ii,iu,rij)
+     &                 + twh_ewald_correct(bxdflag,ibox,imolty,ii,iu
+     &                 ,rij)
                endif
             enddo
  17      continue
@@ -335,7 +336,8 @@ c                 --- determine distances - use trial chain coordinates
 c                 --- ewald sum correction term
                   rij = dsqrt(rijsq)
                   vewald = vewald
-     &                 + twh_ewald_correct(ibox,imolty,ii,iu,rij)
+     &                 + twh_ewald_correct(bxdflag,ibox,imolty,ii,iu
+     &                 ,rij)
                enddo
             enddo
          endif
@@ -451,7 +453,7 @@ c                          --- always compute if not dual cutoff
                         endif
                         if ( lcompute ) then
                            rij = dsqrt(rijsq)
-                           call twh_vcoulomb(-1,ibox,rij
+                           call twh_vcoulomb(-1,bxdflag,ibox,rij
      &                          ,imolty,ii,jmolty,jj,vf,dvtemp
      &                          ,lovrtest,vcoulomb)
                            velect = velect + vcoulomb
