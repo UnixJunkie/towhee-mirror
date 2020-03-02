@@ -1,6 +1,6 @@
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004 Marcus G. Martin,                           *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -29,7 +29,7 @@ c     * of their files so all the pair potentials are first, then the  *
 c     * embedding and then the densities                               *
 c     *                                                                *
 c     * originally written 11-26-2002 by M.G. Martin                   *
-c     * last modified 06-29-2004 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
 #define MAXDATA 2000
 #define MAXTYPES 3
@@ -59,7 +59,7 @@ c     --- filename passed in when running the code
 
 c     --- skip the first line (avaiable for comments)
       read(10,*)
-      read(10,'(a5,1x,a5)'), eunit,energy
+      read(10,'(a5,1x,a5)') eunit,energy
       write(6,*) eunit,' ',energy
       read(10,'(a5,1x,i10)') junk,ntypes
       write(6,*) junk,ntypes

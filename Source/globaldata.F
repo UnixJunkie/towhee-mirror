@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -3735,7 +3735,7 @@ c     * get or sets the coordinates of the center of mass for each     *
 c     * chain in the system                                            *
 c     *                                                                *
 c     * originally written 11-02-2007 by M.G. Martin                   *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "functions.h"
@@ -3744,12 +3744,10 @@ c     --- variables passed to/from this subroutine
       integer ichain
       double precision xxx,yyy,zzz
 c     --- local variables
-      logical lproblem
       integer index
       double precision vector,backup
       dimension vector(3),backup(3)
 
-      lproblem = .false.
       index = 3*(ichain-1)
       if ( flag .eq. GLB_GET ) then
          if ( cordflag .eq. CRD_REAL ) then
@@ -3757,12 +3755,13 @@ c     --- local variables
          elseif ( cordflag .eq. CRD_TEMP ) then
             call twh_comtempfield(GLB_GET_TRIPLE,index,vector)
          else
-            lproblem = .true.
+c           --- error, hit the report section
+            goto 666
          endif
          xxx = vector(1)
          yyy = vector(2)
          zzz = vector(3)
-         if ( .not. lproblem ) return
+         return
       elseif ( flag .eq. GLB_SET ) then
          vector(1) = xxx
          vector(2) = yyy
@@ -3814,7 +3813,7 @@ c           --- swap the coordinates
       endif
 
 c     --- if we got here there was an error
-      write(6,*) 'COM: invalid combination of flag and cordflag'
+ 666  write(6,*) 'COM: invalid combination of flag and cordflag'
       write(6,*) 'flag:',flag
       write(6,*) 'cordflag:',cordflag
       stop

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -387,7 +387,7 @@ c     * only in initialize.F and then in the cbmc_settting_style       *
 c     * section of twh_rwcbmc                                          *
 c     *                                                                *
 c     * split out of rwcbmc 08-01-2014 by M.G. Martin                  *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
@@ -567,7 +567,7 @@ c                 --- read number of cubelets in each direction
      &                 ,'cubex cubey cubez',3,.false., cube)
                   if ( lfailure ) return
                   write(6,'(1x,a18,3(i10,1x))') 
-     &                 ,'cubex,cubey,cubez:'
+     &                 'cubex,cubey,cubez:'
      &                 ,cube(1),cube(2),cube(3)
                   cubex=cube(1)
                   cubey=cube(2)

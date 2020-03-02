@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2011-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2011-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     ******************************************************************
 c     * writes out the suggested citations for a Towhee simulation     *
 c     *                                                                *
 c     * originally written 08-09-2011 by M.G. Martin                   *
-c     * last modified 01-17-2018 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -166,12 +166,12 @@ c     --- Ensemble
      &        char(34),'Equation of State Calculations by Fast'
      &        ,'Computing Machines',char(34)
          write(citefile,'(a)')
-     &        ,'J. Chem. Phys. 21 1088-1092 (1953)'
+     &        'J. Chem. Phys. 21 1088-1092 (1953)'
 
       elseif ( ensemble .eq. ENS_NPT .and. numboxes .eq. 1 ) then
          citecount = citecount + 1
          write(citefile,'(a,i2,a1)')
-     &        ,'... in the isobaric-isothermal ensemble [',citecount,']'
+     &        '... in the isobaric-isothermal ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a)')
      &        '[',citecount,']'
      &        ,'I.R. McDonald;'
@@ -193,7 +193,7 @@ c     --- Ensemble
      &        ,'Method'
      &        ,char(34)
          write(citefile,'(a)')
-     &        ,'High Temperature 7 216-222 (1969)'
+     &        'High Temperature 7 216-222 (1969)'
 
       elseif ( numboxes .gt. 1 .and.
      &        (ensemble .eq. ENS_NVT .or. ensemble .eq. ENS_NPT) ) then

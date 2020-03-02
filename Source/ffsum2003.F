@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,7 +31,7 @@ c     * prior to 09-06-2018 (all of the TOR_STYLE_SUM_2003)            *
 c     * substantial rewrite of this routine for version 8.1.0          *
 c     *                                                                *
 c     * originally written 08-20-2004 by M.G. Martin                   *
-c     * last modified 09-10-2018 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -338,7 +338,7 @@ c     C-C single bond between carbons
       vclocal(1) = (0.5d0)*(802.3d0)*CON_KJTOK
       call twh_set_vibcoeffs(type,vclocal)
       call twh_vibff(GLB_SET,type,ffname)
-      nvslocal = 2
+      nvslocal = 1
 c     --- C(sp3) - C(sp3) [jpcb2003b, Table 9, C5-C6]
       ii = 1
       vnlocal(ii,1) = 'Csp3'

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -741,7 +741,7 @@ c     * In case of a mismatched label this function halts execution.   *
 c     * (Use twh_check_label to verify the expected label if necessary)*
 c     * Lines beginning with the '#' symbol are ignored.               *
 c     * Leading blanks are ignored                                     *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 
@@ -756,7 +756,7 @@ c     -- local variables
       call twh_skip_comments(lfailure,io_unit)
       if ( lfailure ) return
  
-      read(io_unit,format_s,ERR=501), teststring
+      read(io_unit,format_s,ERR=501) teststring
 
       call twh_strip_blank(teststring)
 

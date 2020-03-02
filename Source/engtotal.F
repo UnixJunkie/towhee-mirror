@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -1380,7 +1380,7 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
@@ -1415,7 +1415,7 @@ c     --- retrieve constants
       sumvdw = 0.0d0
       sumchg = 0.0d0
 
-      write(6,'(a27,1x,i10)'),'Total molecules in this box', nmcount
+      write(6,'(a27,1x,i10)') 'Total molecules in this box', nmcount
       do imolty = 1, nmolty
          write(6,8) 'Molecules of type',imolty,': '
      &        ,twh_get_ncmt(ibox,imolty)

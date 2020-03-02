@@ -45,7 +45,7 @@ c     ******************************************************************
 c     * controls the generation of the forcefield files                *
 c     *                                                                *
 c     * originally written 06-21-2002 by M.G. Martin                   *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_NBSAME
@@ -59,7 +59,7 @@ c     --- local parameters
       parameter (maxff=100)
 c     --- local variables
 c     --- character string scalars
-      character*(FFNAMELEN) forcefield
+      character*(FFNAMELEN) ffinput
       character*(MAXDIRLENGTH) ffname
 c     --- character string arrays
       character*(FFNAMELEN) fflist
@@ -450,9 +450,10 @@ c     --- set the forcefield
       do iff = 1,nff
          write(6,*) fflist(iff)
       enddo
-      read(5,*) forcefield
+      write(6,*) 'Enter your selection'
+      read(5,*) ffinput
 
-      if ( forcefield .eq. 'All' ) then
+      if ( ffinput .eq. 'All' ) then
          lall = .true.
          istart = 1
          istop = nff
@@ -473,7 +474,7 @@ c     --- set the forcefield
 c           --- kick out if this is a file translator
             if ( .not. ffoutput(iff) ) goto 200
 c           --- set the forcefield
-            forcefield = fflist(iff)
+            ffinput = fflist(iff)
          endif
 
 c        --- initialize the counters
@@ -487,241 +488,241 @@ c        --- initialize the counters
          noftypes = 0
          nhbondtypes = 0
 
-         if ( forcefield .eq. 'Ackl2004' ) then
+         if ( ffinput .eq. 'Ackl2004' ) then
             call twh_ffackl2004(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Alavi2005' ) then
+         elseif ( ffinput .eq. 'Alavi2005' ) then
             call twh_ffalavi2005(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'Amber96' ) then
+         elseif ( ffinput .eq. 'Amber96' ) then
             call twh_ffamber96(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Aqvist' ) then
+         elseif ( ffinput .eq. 'Aqvist' ) then
             call twh_ffaqvist(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Belash2006' ) then
+         elseif ( ffinput .eq. 'Belash2006' ) then
             call twh_ffbelash2006(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Belash2013' ) then
+         elseif ( ffinput .eq. 'Belash2013' ) then
             call twh_ffbelash2013(lfailure,ntypes)
-         elseif ( forcefield .eq. 'CatlowFaux' ) then
+         elseif ( ffinput .eq. 'CatlowFaux' ) then
             call twh_ffcatlowfaux(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes)
-         elseif ( forcefield .eq. 'Charmm19' ) then
+         elseif ( ffinput .eq. 'Charmm19' ) then
             call twh_ffcharmm19(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'C19eef1' ) then
+         elseif ( ffinput .eq. 'C19eef1' ) then
             call twh_ffc19eef1(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'C19sasa' ) then
+         elseif ( ffinput .eq. 'C19sasa' ) then
             call twh_ffc19sasa(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'C27rigid' ) then
+         elseif ( ffinput .eq. 'C27rigid' ) then
             call twh_ffc27rigid(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'Charmm22' ) then
+         elseif ( ffinput .eq. 'Charmm22' ) then
             call twh_ffcharmm22(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Charmm22fe' ) then
+         elseif ( ffinput .eq. 'Charmm22fe' ) then
             call twh_ffcharmm22fe(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes)
-         elseif ( forcefield .eq. 'Charmm27' ) then
+         elseif ( ffinput .eq. 'Charmm27' ) then
             call twh_ffcharmm27(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Charmm27x' ) then
+         elseif ( ffinput .eq. 'Charmm27x' ) then
             call twh_ffcharmm27x(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'CharmmFile') then
+         elseif ( ffinput .eq. 'CharmmFile') then
             call twh_ffreadcharmmfile(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nimprotypes,ffname)
-         elseif ( forcefield .eq. 'ClayFF' ) then
+         elseif ( ffinput .eq. 'ClayFF' ) then
             call twh_ffclayff(lfailure,ntypes,nbondtypes,nangletypes)
-         elseif ( forcefield .eq. 'COMPASSv1' ) then
+         elseif ( ffinput .eq. 'COMPASSv1' ) then
             call twh_ffcompassv1(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes,naatypes,nbitypes)
-         elseif ( forcefield .eq. 'Coon1987' ) then
+         elseif ( ffinput .eq. 'Coon1987' ) then
             call twh_ffcoon1987(lfailure,ntypes,nbondtypes,nbitypes)
-         elseif ( forcefield .eq. 'Cui1998' ) then
+         elseif ( ffinput .eq. 'Cui1998' ) then
             call twh_ffcui1998(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nbitypes)
-         elseif ( forcefield .eq. 'Cui2002' ) then
+         elseif ( ffinput .eq. 'Cui2002' ) then
             call twh_ffcui2002(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'DACNIS-UA' ) then
+         elseif ( ffinput .eq. 'DACNIS-UA' ) then
             call twh_ffdacnisua(lfailure,ntypes,nbondtypes)
-         elseif ( forcefield .eq. 'devel' ) then
+         elseif ( ffinput .eq. 'devel' ) then
             call twh_ffdevel(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Dick1994' ) then
+         elseif ( ffinput .eq. 'Dick1994' ) then
             call twh_ffdick1994(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Ding1986' ) then
+         elseif ( ffinput .eq. 'Ding1986' ) then
             call twh_ffding1986(lfailure,ntypes)
-         elseif ( forcefield .eq. 'DREIDING' ) then
+         elseif ( ffinput .eq. 'DREIDING' ) then
             call twh_ffdreiding(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Dubb2004' ) then
+         elseif ( ffinput .eq. 'Dubb2004' ) then
             call twh_ffdubb2004(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nbitypes)
-         elseif ( forcefield .eq. 'DWS2001' ) then
+         elseif ( ffinput .eq. 'DWS2001' ) then
             call twh_ffdws2001(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Elli2002' ) then
+         elseif ( ffinput .eq. 'Elli2002' ) then
             call twh_ffelli2002(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'EPM' ) then
+         elseif ( ffinput .eq. 'EPM' ) then
             call twh_ffepm(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'Fris2003' ) then
+         elseif ( ffinput .eq. 'Fris2003' ) then
             call twh_fffris2003(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Fris2008' ) then
+         elseif ( ffinput .eq. 'Fris2008' ) then
             call twh_fffris2008(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Gala1994' ) then
+         elseif ( ffinput .eq. 'Gala1994' ) then
             call twh_ffgala1994(lfailure,ntypes,nbondtypes,nbitypes)
-         elseif ( forcefield .eq. 'Gordon' ) then
+         elseif ( ffinput .eq. 'Gordon' ) then
             call twh_ffgordon(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Gromos43A1' ) then
+         elseif ( ffinput .eq. 'Gromos43A1' ) then
             call twh_ffgromos43a1(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'HardSphere' ) then
+         elseif ( ffinput .eq. 'HardSphere' ) then
             call twh_ffhardsphere(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes)
-         elseif ( forcefield .eq. 'Jaramillo' ) then
+         elseif ( ffinput .eq. 'Jaramillo' ) then
             call twh_ffjaramillo(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'KFvBvS' ) then
+         elseif ( ffinput .eq. 'KFvBvS' ) then
             call twh_ffkfvbvs(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Last1993' ) then
+         elseif ( ffinput .eq. 'Last1993' ) then
             call twh_fflast1993(lfailure,ntypes)
-         elseif ( forcefield .eq. 'LGM' ) then
+         elseif ( ffinput .eq. 'LGM' ) then
             call twh_fflgm(lfailure,ntypes)
-         elseif ( forcefield .eq. 'LJium' ) then
+         elseif ( ffinput .eq. 'LJium' ) then
             call twh_ffljium(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'MCY1976' ) then
+         elseif ( ffinput .eq. 'MCY1976' ) then
             call twh_ffmcy1976(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'Mend2003' ) then
+         elseif ( ffinput .eq. 'Mend2003' ) then
             call twh_ffmend2003(lfailure,ntypes)
-         elseif ( forcefield .eq. 'mgmstereo' ) then
+         elseif ( ffinput .eq. 'mgmstereo' ) then
             call twh_ffmgmstereo(lfailure,nimprotypes)
-         elseif ( forcefield .eq. 'MM2' ) then
+         elseif ( ffinput .eq. 'MM2' ) then
             call twh_ffmm2(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'MMFF94' ) then
+         elseif ( ffinput .eq. 'MMFF94' ) then
             call twh_ffmmff94(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes,nbitypes)
-         elseif ( forcefield .eq. 'Morrow2002' ) then
+         elseif ( ffinput .eq. 'Morrow2002' ) then
             call twh_ffmorrow2002(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nimprotypes,nbitypes)
-         elseif ( forcefield .eq. 'NERDv1' ) then
+         elseif ( ffinput .eq. 'NERDv1' ) then
             call twh_ffnerdv1(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'NERDv2' ) then
+         elseif ( ffinput .eq. 'NERDv2' ) then
             call twh_ffnerdv2(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'NERDv3' ) then
+         elseif ( ffinput .eq. 'NERDv3' ) then
             call twh_ffnerdv3(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'OPLS-aa' ) then
+         elseif ( ffinput .eq. 'OPLS-aa' ) then
             call twh_ffoplsaa(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'OPLS-ua' ) then
+         elseif ( ffinput .eq. 'OPLS-ua' ) then
             call twh_ffoplsua(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'OPLS-1996' ) then
+         elseif ( ffinput .eq. 'OPLS-1996' ) then
             call twh_ffopls1996(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'OPLS-2001' ) then
+         elseif ( ffinput .eq. 'OPLS-2001' ) then
             call twh_ffopls2001(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Pana1989' ) then
+         elseif ( ffinput .eq. 'Pana1989' ) then
             call twh_ffpana1989(lfailure,ntypes)
-         elseif ( forcefield .eq. 'PMF' ) then
+         elseif ( ffinput .eq. 'PMF' ) then
             call twh_ffpmf(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Potter1997' ) then
+         elseif ( ffinput .eq. 'Potter1997' ) then
             call twh_ffpotter1997(lfailure,ntypes,nbondtypes
      &           ,nangletypes,nbitypes)
-         elseif ( forcefield .eq. 'QMFF-VIII' ) then
+         elseif ( ffinput .eq. 'QMFF-VIII' ) then
             call twh_ffqmff_viii(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,naatypes,nbitypes)
-         elseif ( forcefield .eq. 'Setfl' ) then
-            call twh_ffreadsetflfile(lfailure,ntypes,forcefield)
-         elseif ( forcefield .eq. 'Richar1995' ) then
+         elseif ( ffinput .eq. 'Setfl' ) then
+            call twh_ffreadsetflfile(lfailure,ntypes,ffinput)
+         elseif ( ffinput .eq. 'Richar1995' ) then
             call twh_ffrichar1995(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nbitypes)
-         elseif ( forcefield .eq. 'Shah2004' ) then
+         elseif ( ffinput .eq. 'Shah2004' ) then
             call twh_ffshah2004(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nbitypes)
-         elseif ( forcefield .eq. 'Shukla1987' ) then
+         elseif ( ffinput .eq. 'Shukla1987' ) then
             call twh_ffshukla1987(lfailure,ntypes)
-         elseif ( forcefield .eq. 'SKS' ) then
+         elseif ( ffinput .eq. 'SKS' ) then
             call twh_ffsks(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Smith1994' ) then
+         elseif ( ffinput .eq. 'Smith1994' ) then
             call twh_ffsmith1994(lfailure,ntypes)
-         elseif ( forcefield .eq. 'SMMKmain' ) then
+         elseif ( ffinput .eq. 'SMMKmain' ) then
             call twh_ffsmmkmain(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,noftypes)
-         elseif ( forcefield .eq. 'SMMKnaip' ) then
+         elseif ( ffinput .eq. 'SMMKnaip' ) then
             call twh_ffsmmknaip(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'SPC-E' ) then
+         elseif ( ffinput .eq. 'SPC-E' ) then
             call twh_ffspce(lfailure,ntypes,nbondtypes,nangletypes)
-         elseif ( forcefield .eq. 'SquareWell' ) then
+         elseif ( ffinput .eq. 'SquareWell' ) then
             call twh_ffsquarewell(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes)
-         elseif ( forcefield .eq. 'Stil1985' ) then
+         elseif ( ffinput .eq. 'Stil1985' ) then
             call twh_ffstil1985(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Sum2003' ) then
+         elseif ( ffinput .eq. 'Sum2003' ) then
             call twh_ffsum2003(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Tele1987' ) then
+         elseif ( ffinput .eq. 'Tele1987' ) then
             call twh_fftele1987(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'TIP3P' ) then
+         elseif ( ffinput .eq. 'TIP3P' ) then
             call twh_fftip3p(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'TIP4P' ) then
+         elseif ( ffinput .eq. 'TIP4P' ) then
             call twh_fftip4p(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nimprotypes,noftypes)
-         elseif ( forcefield .eq. 'TIP5P' ) then
+         elseif ( ffinput .eq. 'TIP5P' ) then
             call twh_fftip5p(lfailure,ntypes,nbondtypes,nangletypes)
-         elseif ( forcefield .eq. 'TraPPE-EH' ) then
+         elseif ( ffinput .eq. 'TraPPE-EH' ) then
             call twh_fftrappeeh(lfailure,ntypes,nbondtypes,nangletypes
      &           ,nbitypes)
-         elseif ( forcefield .eq. 'TraPPE-UA' ) then
+         elseif ( ffinput .eq. 'TraPPE-UA' ) then
             call twh_fftrappeua(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nbitypes,noftypes)
-         elseif ( forcefield .eq. 'TraPPE-UAf' ) then
+         elseif ( ffinput .eq. 'TraPPE-UAf' ) then
             call twh_fftrappeuaf(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nbitypes)
-         elseif ( forcefield .eq. 'UFF' ) then
+         elseif ( ffinput .eq. 'UFF' ) then
             call twh_ffuff(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nimprotypes)
-         elseif ( forcefield .eq. 'Unlu2004' ) then
+         elseif ( ffinput .eq. 'Unlu2004' ) then
             call twh_ffunlu2004(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Vega1992' ) then
+         elseif ( ffinput .eq. 'Vega1992' ) then
             call twh_ffvega1992(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
-         elseif ( forcefield .eq. 'Vink2001' ) then
+         elseif ( ffinput .eq. 'Vink2001' ) then
             call twh_ffvink2001(lfailure,ntypes)
-         elseif ( forcefield .eq. 'Walt2001' ) then
+         elseif ( ffinput .eq. 'Walt2001' ) then
             call twh_ffwalt2001(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes,nbitypes)
-         elseif ( forcefield .eq. 'Weiner1984' ) then
+         elseif ( ffinput .eq. 'Weiner1984' ) then
             call twh_ffweiner1984(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nimprotypes,nhbondtypes)
-         elseif ( forcefield .eq. 'Weiner1986' ) then
+         elseif ( ffinput .eq. 'Weiner1986' ) then
             call twh_ffweiner1986(lfailure,ntypes,nbondtypes
      &           ,nangletypes,ndihedtypes,nimprotypes,nhbondtypes)
-         elseif ( forcefield .eq. 'Wielop1985' ) then
+         elseif ( ffinput .eq. 'Wielop1985' ) then
             call twh_ffwielop1985(lfailure,ntypes,nbondtypes
      &           ,nangletypes,nbitypes)
          else   
             write(6,*) 'unknown force field'
-            write(6,*) forcefield
+            write(6,*) ffinput
             lfailure = .true.
             return
          endif
@@ -730,7 +731,7 @@ c        --- initialize the counters
 c        --- set the output
          iffnum = 1
          ffname = 'towhee_ff_'
-         ffname(11:20) = forcefield
+         ffname(11:20) = ffinput
          call twh_ff_filename(GLB_SET,iffnum,ffname)
 
          call twh_rwforcefield(lfailure,WRITE_FLAG,ntypes,nbondtypes
@@ -742,7 +743,7 @@ c        --- set the output
          endif
          ffcount = ffcount + 1
 
-         write(6,*) 'A force field file for the ',forcefield
+         write(6,*) 'A force field file for the ',ffinput
      &        ,' forcefield ','was written to ',ffname
 
 c        --- update maximums

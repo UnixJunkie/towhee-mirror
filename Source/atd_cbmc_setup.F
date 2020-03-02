@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 03-22-2019 by M.G. Martin                        *
+c     * last modified 03-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -456,19 +456,19 @@ c              --- output trial generation details
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &                 ,4,std_dev)
                   write(cfile,'(6x,a5,1x,f10.5,1x,a8,1x,f10.7)') 
-     &                 ,'Mean:',mean,'Std Dev:',std_dev
+     &                 'Mean:',mean,'Std Dev:',std_dev
                elseif ( bonddist .eq. DIST_DELTA ) then
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib,3
      &                 ,length)
                   write(cfile,'(6x,a7,1x,f10.7)') 
-     &                 ,'Length:',length
+     &                 'Length:',length
                elseif ( bonddist .eq. DIST_R_SQ ) then
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &                 ,3,lovalue)
                   call twh_cbmcbondinfo(GLB_GET,imolty,iunit,ivib
      &                 ,4,hivalue)
                   write(cfile,'(6x,a10,1x,f10.7,1x,a11,1x,f10.7)') 
-     &                 ,'Low bound:',lovalue**(1.0d0/3.0d0)
+     &                 'Low bound:',lovalue**(1.0d0/3.0d0)
      &                 ,'High bound:',(hivalue+lovalue)**(1.0d0/3.0d0)
                else
                   write(6,*) 'ATD_CBMC_SETUP: unknown bonddist',bonddist
