@@ -39,7 +39,7 @@ c     *           move the main chain                                  *
 c     *                                                                *
 c     * rewritten from old config and branch subroutines by            *
 c     * M.G. Martin 09-19-1997                                         *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 09-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -177,13 +177,13 @@ c     --- current positions
 
       if ( cbmovetype .eq. CBR_ORIGINAL ) then
 c        --- regular cb growth
-         sch_key = 1
+         sch_key = SCH_CODE_GROW
       elseif ( cbmovetype .eq. CBR_BACKBONE ) then
 c        --- backbone cb growth
-         sch_key = 4
+         sch_key = SCH_CODE_BACKBONE
       elseif ( cbmovetype .eq. CBR_SIDECHAIN ) then
 c        --- sidechain cb growth
-         sch_key = 6
+         sch_key = SCH_CODE_SIDECHAIN
       endif
 #if DEBUG_CBREGROW
       write(6,*) 'calling schedule'

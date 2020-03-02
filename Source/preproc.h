@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 09-06-2018 by M.G. Martin */
+/* last significant modification 09-11-2018 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -561,6 +561,13 @@
 /* cbmc formulation codes, values arbitrary */
 #define CBMC_FORM_MS1999_MT2004 0
 #define CBMC_FORM_MF2006 1
+/* cbmc schedule codes, values arbitrary */
+#define SCH_CODE_COUNT 0
+#define SCH_CODE_GROW 1
+#define SCH_CODE_SWAP 2
+#define SCH_CODE_BACKBONE 4
+#define SCH_CODE_LIST 5
+#define SCH_CODE_SIDECHAIN 6
 
 /* bond style integer codes, do not change for compatibility */
 #define BOND_STYLE_NULL -1

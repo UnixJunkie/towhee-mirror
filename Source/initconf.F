@@ -41,7 +41,7 @@ c     * if initstyle is negative then the center of mass of the        *
 c     *    molecule is placed in the center of the box                 *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 04-03-2018 by M.G. Martin                        *
+c     * last modified 09-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- set the file identities
@@ -259,7 +259,7 @@ c                 --- from there
                   ztemp = 0.0d0
                   call twh_coordinates(GLB_SET,testcord,ichain,1
      &                 ,xtemp,ytemp,ztemp)
-                  movetype = 2
+                  movetype = SCH_CODE_SWAP
                   iutry = 1
                elseif ( initstyle .eq. 'template' ) then
 c                 --- see if the towhee_template file needs to be opened
@@ -303,7 +303,7 @@ c                 --- create a helix using the keyatom
                   if ( lfailure ) return
 c                 --- fill in the rest of the atoms using CBMC
                   iutry = 0
-                  movetype = 5
+                  movetype = SCH_CODE_LIST
                elseif ( initstyle .eq. 'partial cbmc') then
                   lgrowcbmc = .true.
                   if ( .not. lopenpartial ) then
@@ -318,7 +318,7 @@ c                 --- seed with available atoms and then grow the rest
                   if ( lfailure ) return
 c                 --- fill in the rest of the atoms using CBMC
                   iutry = 0
-                  movetype = 5
+                  movetype = SCH_CODE_LIST
                elseif ( initstyle .eq. 'unit cell' ) then
 c                 --- nothing to do here, already done up above
                else

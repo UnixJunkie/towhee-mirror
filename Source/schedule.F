@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2009 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -38,39 +38,37 @@ c     *        used again later in those routines so don't change it.  *
 c     *        if this is a backbone move then it is not passed in, but*
 c     *        is passed back out with the value of growfrom(1) for    *
 c     *        some bookkeeping in cbregrow                            *
-c     * moveinfo: movetype == 0 this is the total number of atoms that *
-c     *          would be grown using this growth path (passed out)    *
-c     *          movetype == 4 this is the torsion number used for the *
-c     *          backbone regrowth move (passed out)                   *
-c     *          movetype ==6 this is the aminonum of the key CA       *
-c     *          (passed out)                                          *
-c     * iprev:   if movetype= 0 then use this as the vibration number  *
-c     *          of the existing neighbor and compute the growth path  *
-c     *          (passed in)                                           *
-c     *          if movetype= 3 (passed in) to tell schedule which atom*
-c     *          is the previous atom in the growth.  Only valid for   *
-c     *          the (currently unsupported) cbswitch move             *
+c     * moveinfo: if movetype is SCH_CODE_COUNT then this is the total *
+c     *           number of atoms that are grown with this growth path *
+c     *           (output)                                             *
+c     *           if movetype is SCH_CODE_BACKBONE then this is the    *
+c     *           torsion number used for the backbone regrowth move   *
+c     *           (output)                                             *
+c     *           if movetype is SCH_CODE_SIDECHAIN then this is the   *
+c     *           aminonum of the key CA (output)                      *
+c     * iprev: if movetype is SCH_CODE_COUNT then use this as the      *
+c     *        vibration number of the existing neighbor and compute   *
+c     *        the growth path (input)                                 *
 c     * movetype: tells schedule what kind of cb move we are doing     *
-c     *        0: determine the number of atoms that would be grown    *
-c     *           for a given iutry using iprev as the previous bead   *
-c     *        1: standard cbregrow which selects a bead and then      *
+c     *  SCH_CODE_COUNT: determine the number of atoms that would be   *
+c     *           grown for a given iutry using iprev as the previous  *
+c     *           bead                                                 *
+c     *  SCH_CODE_GROW: standard cbregrow selects a bead and then      *
 c     *           either regrows the entire molecule, or regrows in all*
 c     *           directions except for one from the chosen bead       *
-c     *        2: cbswap move, starts from bead iutry and grows in all *
-c     *           directions                                           *
-c     *        3: cbswitch move, starts from bead iutry and grows in   *
-c     *           all directions, except for those atoms in direction  *
-c     *           iprev                                                *
-c     *        4: backbone cbregrowth move.  currently only works for  *
-c     *           polypeptides.  Selects an atom that is on the protein*
-c     *           backbone, selects another backbone atom that is      *
-c     *           connected to the first by a torsion, and then regrows*
-c     *           the atoms inbetween                                  *
-c     *        5: regrows all atoms except for a list that remain in   *
-c     *           the same positions. Originally designed to construct *
-c     *           DNA helices from the P positions                     *
-c     *        6: regrows a particular sidechain, or occasionally      *
-c     *           multiple bonded sidechains, on a polypeptide         *
+c     *  SCH_CODE_SWAP: swap move, starts from bead iutry and grows in *
+c     *           all directions                                       *
+c     *  SCH_CODE_BACKBONE: backbone cbregrowth move.  currently only  *
+c     *           works for polypeptides.  Selects an atom that is on  *
+c     *           the protein backbone, selects another backbone atom  *
+c     *           that is connected to the first by a torsion, and then*
+c     *           regrows the atoms inbetween                          *
+c     *  SCH_CODE_LIST: regrows all atoms except for a list that remain*
+c     *           in the same positions. Originally designed to        *
+c     *           construct DNA helices from the P positions           *
+c     *  SCH_CODE_SIDECHAIN: regrows a particular sidechain, or        *
+c     *           occasionally multiple bonded sidechains, on a        *
+c     *           polypeptide                                          *
 c     *                                                                *
 c     * DECODER for the growth logic                                   *
 c     * lexsched is true if the bead exists at that time of the growth *
@@ -96,7 +94,7 @@ c     *     growxtra(index,1) is the number of xtra atoms              *
 c     *                                                                *
 c     * originally taken from the old config and swap subroutines and  *
 c     * modified by  M.G. Martin 1-29-1998                             *
-c     * last modified 06-24-2009 by M.G. Martin                        *
+c     * last modified 09-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_ELEMENTNAME
@@ -149,22 +147,18 @@ c     --- double precision scalars
       double precision rvalue,pmall
 
 c      write(6,*) 'start SCHEDULE'
-
-c     --- initialize lexsched, lstart
-c     --- initialize grownbon 
+c     --- initialize lexsched, lstart, grownbon 
       call twh_grownbon(GLB_INIT,numunits,NNBOND,0)
       do iu = 1,numunits
          call twh_lexsched(GLB_SET,iu,.true.)
          lstart(iu) = .false.
          call twh_growxtra(GLB_SET,iu,1,0)
       enddo
-
 c     --- retrieve some constants
       call twh_nunit(GLB_GET,imolty,nunit)
-
 c     --- initialize temp_count
       temp_count = 0
-      if ( movetype .eq. 0 ) then
+      if ( movetype .eq. SCH_CODE_COUNT ) then
 c        --- compute the growth pattern and return the number of atoms
 c        --- that would be grown
          call twh_inring(GLB_GET,imolty,iutry,testring)
@@ -179,7 +173,7 @@ c           --- using current logic, entire molecule regrown
          invtry = twh_get_invib(imolty,iutry)
 c        --- safety check
          if ( invtry .lt. iprev ) then
-            write(6,*) 'SCHEDULE: movetype 0 passed in an iprev'
+            write(6,*) 'SCHEDULE: movetype COUNT passed in an iprev'
             write(6,*) 'that is larger than invib',iprev,invtry
             lfailure = .true.
             return
@@ -213,9 +207,9 @@ c           --- update temp_store for next iteration
          enddo
          call twh_grownum(GLB_SET,1,count)
 
-c        ---end the part that is specific for movetype 0
+c        ---end the part that is specific for movetype SCH_CODE_COUNT
 
-      elseif ( movetype .eq. 1 ) then 
+      elseif ( movetype .eq. SCH_CODE_GROW ) then 
 c        -- select the first bead to grow from
 c        --- choose an atom at random from the growvalidlist
          rvalue = twh_random() *dble(twh_get_growvalidcount(imolty))
@@ -329,7 +323,7 @@ c              --- we regrew all branches, no previous bead
          endif   
 c        ---end the part that is specific for cbregrow
 
-      elseif ( movetype .eq. 2 ) then
+      elseif ( movetype .eq. SCH_CODE_SWAP ) then
 c        --- begin the part that is specific for cbswap
 c        --- iutry is the first bead inserted - need to grow its 
 c        ---- neighbors
@@ -365,49 +359,7 @@ c              --- update temp_store for next iteration
             enddo
          endif
 c        ---end the part that is specific for cbswap
-
-      elseif ( movetype .eq. 3 ) then
-c        --- begin part that is specific for cbswitch 
-         if ( iutry .eq. 0 ) then
-c           --- no beads to be regrown via cbmc
-            index = 0
-            return
-         endif
-         call twh_growfrom(GLB_SET,1,iutry)
-         lstart(iutry) = .true.
-         invtry = twh_get_invib(imolty,iutry)
-         call twh_growprev(GLB_SET,1,iprev)
-
-         if ( invtry .eq. 0 ) then
-c           --- Bead 1 is the only bead to be grown
-            index = 0
-         else
-
-c           --- grow all (except iprev) of the beads connected to bead 1
-            index = 1
-            do ivib = 1,invtry
-               iut = twh_get_ijvib(imolty,iutry,ivib)
-               if ( iut .ne. iprev ) then
-                  temp_count = temp_count + 1
-                  temp_store(temp_count) = iut
-               endif
-            enddo
-
-            count = 0
-            do zz = temp_count,1,-1
-c              --- choose grow bead randomly from temp_store
-               rvalue = dble(zz)* twh_random()
-               itry = idint( rvalue ) + 1
-               iut = temp_store(itry)
-               count = count + 1
-               call twh_growlist(GLB_SET,1,count,iut)
-c              --- update temp_store for next iteration
-               temp_store(itry) = temp_store(zz)
-            enddo
-            call twh_grownum(GLB_SET,1,count)
-         endif
-c        --- end part that is specific for cbswitch
-      elseif ( movetype .eq. 4 ) then
+      elseif ( movetype .eq. SCH_CODE_BACKBONE ) then
 c        --- begin part that is specific for backbone cbregrow
 c        --- select a backbone atom at random
          call twh_backlist(GLB_GET,imolty,0,ibackbone)
@@ -720,7 +672,7 @@ c        --- use in cbregrow
          iutry = iubacka
          moveinfo = itor
 c        --- end part that is specific for backbone cbregrow
-      elseif ( movetype .eq. 5 ) then
+      elseif ( movetype .eq. SCH_CODE_LIST ) then
 c        --- regrowth of all atoms, except for certain specified ones
 c        --- that remain in the same position.  Originally created to 
 c        --- construct hexlical DNA from just the P positions
@@ -741,7 +693,7 @@ c           --- set lstart
 c           --- set growprev to zero
             call twh_growprev(GLB_SET,ind_start,0)
          enddo
-      elseif ( movetype .eq. 6 ) then
+      elseif ( movetype .eq. SCH_CODE_SIDECHAIN ) then
 c        --- regrowth of a single sidechain on a polypeptide.  Can 
 c        --- regrow more than one sidechain if they are bonded together
 c        --- the most common instance of this is disulfide bonds
@@ -1150,8 +1102,8 @@ c        --- decrement index if this was not actually a growth target
          if ( count .eq. 0 ) index = index - 1
       enddo
 
-c     --- set moveinfo to ibead if this is movetype 0
-      if ( movetype .eq. 0 ) moveinfo = ibead
+c     --- set moveinfo to ibead if this is movetype SCH_CODE_COUNT
+      if ( movetype .eq. SCH_CODE_COUNT ) moveinfo = ibead
 
 #if DEBUG_SCHEDULE
       write(6,*) 'movetype',movetype

@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 04-12-2018 by M.G. Martin                        *
+c     * last modified 09-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -2157,7 +2157,7 @@ c     --- set up the growlogic arrays
                lvalid = .false.
                do ivib = 1,twh_get_invib(imolty,iunit)
                   call twh_schedule(lfailure,numunits,imolty,idum,iunit
-     &                 ,itor,ivib,0)
+     &                 ,itor,ivib,SCH_CODE_COUNT)
                   if ( lfailure ) return
                   call twh_growcount(GLB_SET,imolty,iunit,ivib,itor)
                   if ( itor .le. itest ) lvalid = .true.

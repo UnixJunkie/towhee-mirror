@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-22-2019 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -823,7 +823,7 @@ c                       --- bond, store this distance
                         call twh_cbmcbendcount(GLB_SET,imolty,iunit
      &                       ,ibend,jbend,npeak)
                         call twh_cbmcbendinfo(GLB_SET,imolty,iunit
-     &                       ,ibend,jbend,rigidlen,npeak)
+     &                       ,ibend,jbend,npeak,1,rigidlen)
                      elseif ( cbmc_bendgen_code .eq. CBMC_IDEAL ) then
 c                        --- uniform distribution
                         anglebdist = DIST_UNIFORM

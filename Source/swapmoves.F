@@ -81,7 +81,7 @@ c     *             two different boxes while using the atom locations *
 c     *             relative to the center-of-mass positions           *
 c     *                                                                *
 c     * rewritten from older subroutines on 09-19-1997 by M.G. Martin  *
-c     * last modified 08-11-2018 by M.G. Martin                        *
+c     * last modified 09-11-2018 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -707,7 +707,7 @@ c           --- set up the growth pattern for the rest of the molecule
 c           --- only needs to be done once as both growths must follow 
 c           --- the identical schedule
             call twh_schedule(lfailure,totunits_i,imolty,isteps,iutry
-     &           ,idum,0,2)
+     &           ,idum,0,SCH_CODE_SWAP)
             if ( lfailure ) return
          endif
 #if DEBUG_SWAPMOVES
