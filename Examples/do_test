@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cat header
 time /towheebase/Source/towhee > answer_new 
 diff -w answer_new answer_current > diffile

@@ -34,8 +34,9 @@
        input.  The variables are described here in the order they appear in this file. Please look at one of the example files (included with the code
        release) for the precise file format.  
        <dt> <i>Current Release version</i></dt>
-       <dt><a href="input/towhee_input_v8_1_x.html">towhee_input Version 8.1.x</a></dt>
+       <dt><a href="input/towhee_input_v8_2_x.html">towhee_input Version 8.2.x</a></dt>
        <dt> <i>Older input file versions</i></dt>
+       <dt><a href="input/towhee_input_v8_1_x.html">towhee_input Version 8.1.x</a></dt>
        <dt><a href="input/towhee_input_v8_0_x.html">towhee_input Version 8.0.x</a></dt>
        <dt><a href="input/oldversionindex.html">towhee_input Versions 1 through 7</a></dt>
       </ul>
@@ -130,6 +131,18 @@
        This file contains information about the trial distributions used to generate each bond and angle in the configurational-bias routines.  The amount of 
        information is controlled by the <b>cbmc_analysis</b> variable.  Originally implemented in version 7.1.0.
       </ul>
+      <a name="towhee_chempotdata"><b>towhee_chempotdata (output file)</b></a>
+      <ul>
+       This file contains the data needed to compute the chemical potential for each attempted insertion during the simulation.  The output of this file is
+       controled by <b>loutchempotdata</b> in the towhee_input section.
+       It is intended for the user to analyse after the simulation is complete, but currently there are no default analysis tools for this file included in the
+       code distribution.  Originally implemented in version 8.2.0.
+       The file contains some header information and then one line of output for each attempted insertion performed during the simulation.
+       The data on each line is Insertion Box number (integer),
+       Molecule Type (integer), Number of molecules of that type in the insertion box not including the molecule being inserted (integer),
+       Box Volume in Angstrom cubed (double precision), and the Rosenbluth weight for the insertion (double precision).  Please see the discussion of
+       <a href="algorithm/chemicalpotential.html">chemical potential</a> for more information.
+      </ul>
       <a name="towhee_citations"><b>towhee_citations (output file)</b></a>
       <ul>
        Contains a list of suggested citations given the ensemble, moves, and force fields used in a particular simulation.  For more information
@@ -194,7 +207,7 @@
  <foot>
   <hr></hr>
   <font face="Arial" size="2">
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->April 10, 2018<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 11, 2020<!-- #EndDate -->
    <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>

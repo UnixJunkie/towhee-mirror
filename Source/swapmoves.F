@@ -987,6 +987,14 @@ c           --- we were computing the isolated molecule chempot
      &           ,imolty,arg,0)
             if ( lfailure ) return
          else
+c           --- retrieve some constants for chemical potential
+            call twh_debroglie(GLB_GET,imolty,debroglie)
+            call twh_ncmt(GLB_GET,boxtest(2),imolty,ncmt)
+c           --- output chemical potential data if needed
+            call twh_writechempotdata(lfailure,GLB_OUTPUT,boxtest(2)
+     &           ,imolty,ncmt,voltest(2),arg)
+            if ( lfailure ) return
+c           --- increment average NVT insertion chemical potential
             keycode = AC_NVT_INSERTION_CHEMPOT
             call twh_averages(lfailure,AVG_INCREMENT,keycode,boxtest(2)
      &           ,imolty,arg,0)
@@ -999,9 +1007,7 @@ c           --- npt insertion chemical potential also includes volume
             if ( lfailure ) return
 c           --- gibbs total chem potential includes number of molecules
 c           --- and the thermal debroglie wavelength
-            call twh_debroglie(GLB_GET,imolty,debroglie)
             arg = arg /(debroglie**3)
-            call twh_ncmt(GLB_GET,boxtest(2),imolty,ncmt)
             arg = arg / dble(ncmt+1)
             keycode = AC_GIBBS_TOT_CHEMPOT
             call twh_averages(lfailure,AVG_INCREMENT,keycode,boxtest(2)

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,7 +30,7 @@ c     * initializes arrays which are required to solve the loop        *
 c     * closure problem                                                *
 c     *                                                                *
 c     * originally rewritten from E. Coutsias 05-01-2003 by C.D. Lorenz*
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-09-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -75,6 +75,7 @@ c     --- local varibles
       dimension rr_c1a1(3),rr_n2a2_ref(3),crp(4),us(3,3),rr_a2(3)
       dimension rr_a1a2(3),dr(3)
 
+c     --- get onepi constant
       call twh_constant_pi(GLB_GET,onepi)
 
       lovrlap = .false.
@@ -83,7 +84,6 @@ c     --- local varibles
       temp(2) = 0.0
       temp(3) = 0.0
       lena1n1 = 0.0d0
-
 c     --- calculate the bond lengths and the angles which are 
 c     --- required to initialize the various arrays used to solve 
 c     --- the loop closure problem

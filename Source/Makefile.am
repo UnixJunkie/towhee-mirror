@@ -190,6 +190,7 @@ towhee_SOURCES =  \
 		writeangle.F \
 		writeaverages.F \
 		writebond.F \
+		writechempotdata.F \
 		writedlpoly.F \
 		writedynamo.F \
 		writeimproper.F \
@@ -567,6 +568,7 @@ writeangang.o: preproc.h functions.h writeangang.F
 writeangle.o: preproc.h functions.h writeangle.F
 writeaverages.o: preproc.h writeaverages.F
 writebond.o: preproc.h functions.h writebond.F
+writechempotdata.o: preproc.h writechempotdata.F
 writedlpoly.o: preproc.h functions.h writedlpoly.F
 writedynamo.o: preproc.h functions.h writedynamo.F
 writeimproper.o: preproc.h functions.h writeimproper.F 

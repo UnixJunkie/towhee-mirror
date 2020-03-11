@@ -53,7 +53,7 @@ c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
 c     * split from the original writetowhee 01-16-2018 by M.G. Martin  *
-c     * last modified 04-12-2018 by M.G. Martin                        *
+c     * last modified 03-09-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_CLASSICAL_MIXRULE
@@ -309,6 +309,9 @@ c        --- molecule information
             call twh_chempotperstep(GLB_GET,jmolty,idummy(jmolty))
          enddo
          write(15,*) (idummy(jmolty),jmolty=1,nmolty)
+         write(15,'(a15)') 'loutchempotdata'
+         call twh_loutchempotdata(GLB_GET,lvalue)
+         write(15,*) lvalue
          write(15,'(a5)') 'linit'
          call twh_linit(GLB_GET,lvalue)
          write(15,*) lvalue

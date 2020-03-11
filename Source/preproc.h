@@ -1,6 +1,6 @@
 /* 
 * MCCCS - Towhee: A Monte Carlo molecular simulation program           *
-* Copyright (C) 2003-2018 Marcus G. Martin                             *
+* Copyright (C) 2003-2020 Marcus G. Martin                             *
 * see the file license.gpl for the full license information            *
 *                                                                      *
 * This program is free software; you can redistribute it and/or        *
@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 09-11-2018 by M.G. Martin */
+/* last significant modification 03-11-2020 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -369,6 +369,8 @@
 #define GLB_ALLOC_INIT 2018
 #define GLB_STORE_ALL 2019
 #define GLB_SCALE_ALL 2020
+#define GLB_OUTPUT 2021
+#define GLB_CLOSE 2022
 
 /* coordinate integer flags */
 /* values are arbitrary, but must be nonzero and different */
@@ -778,6 +780,7 @@
 
 /* fortran file numbers for input and output */
 #define FILE_MOVIE 2
+#define FILE_CHEMPOTDATA 3
 
 /* distribution limit style code, values arbitrary */
 #define LIM_VALUE 0

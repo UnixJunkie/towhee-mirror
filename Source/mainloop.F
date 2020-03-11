@@ -1724,6 +1724,8 @@ c     --- close the movie file if it was opened
       if (moviefreq .ne. 0) then
          if ( moviefreq .le. nstep ) close(10)
       endif
+c     --- close the chempotdata file
+      call twh_writechempotdata(lfailure,GLB_CLOSE,0,0,0,0.0d0,0.0d0)
 c     --- output the final configuration as a pdb file
       if ( pdboutfreq .ne. 0  ) then
          call twh_writepdb(lfailure,nstep)

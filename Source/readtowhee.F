@@ -27,7 +27,7 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 09-11-2018 by M.G. Martin                        *
+c     * last modified 03-11-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
@@ -54,7 +54,7 @@ c     --- logical scalars
       logical lreadpdbnames,lreadforcefield,lreadchargeassign
       logical lreadimpassign,lreadmatchstyle,loutdft,loutdlpoly
       logical loutlammps,lshift,ltailc,lelect,lewald,ldualcutoff
-      logical in_c_flag,lfieldcoords,lallow,lbondgraph
+      logical in_c_flag,lfieldcoords,lallow,lbondgraph,loutchempotdata
 c     --- logical arrays
       logical lpdbset
       dimension lpdbset(NTMAX)
@@ -909,6 +909,16 @@ c     --- error check
          endif
       enddo
 
+c     --- optional read the logical that controls the output of
+c     --- the chemical potential data file
+      if ( twh_check_label(lfailure,4,'loutchempotdata') ) then
+c        --- read logical for chemical potential data file
+         loutchempotdata = twh_read_labeled_logical(lfailure,4
+     &        ,'loutchempotdata',.true.,idname)
+         if ( lfailure ) return
+         call twh_loutchempotdata(GLB_SET,loutchempotdata)
+      endif
+      
 c     --- set numblock and allocate based on the blocksize
       call twh_blocksize(GLB_GET,blocksize)
       if (blocksize .ne. 0) then
@@ -1505,6 +1515,7 @@ c           --- four letter code, and a set of vibrations.
             call twh_buildmolec(lfailure,imolty,lpdbnames,input_style
      &           ,forcefield,imp_assign,match_style)
             if ( lfailure ) return
+            if ( lpdbnames ) lpdbset(imolty) = .true.
          elseif ( input_style .eq. 'nucleic acid builder' ) then
 c           --- input is as nucleotides in a nucleic acide strand 
 c           --- using a single or two letter
@@ -2086,7 +2097,7 @@ c     --- initialize movie file
          call twh_writemovie(lfailure,0)
          if ( lfailure ) return
       endif
-
+      
 c     --- write input data to stdout
       write(6,*)
       if ( stepstyle .eq. 'cycles' ) then 
@@ -2201,6 +2212,10 @@ c     --- set the thermal debroglie wavelength and uvtfactor
             call twh_uvtfactor(GLB_SET,imolty,uvtfactor)
          endif
       enddo 
+c     --- initialize chempotdata file
+      call twh_writechempotdata(lfailure,GLB_INIT,0,0,0,0.0,0.0)
+      if ( lfailure ) return
+
       call twh_louthist(GLB_GET,louthist)
       if (ensemble .eq. ENS_muVT .and. louthist) then
          call twh_file_his(GLB_GET,filename)

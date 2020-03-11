@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,7 +25,7 @@ c     * initializes all of the force field parameters                  *
 c     * initializes many of the input parameters                       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 04-12-2018 by M.G. Martin                        *
+c     * last modified 08-09-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -127,6 +127,7 @@ c     --- initialize all of the structure arrays
       call twh_ntype(GLB_INIT,NTMAX,NUMAX,0)
       call twh_chempot(GLB_INIT,NTMAX,1.0d0)
       call twh_chempotperstep(GLB_INIT,NTMAX,0)
+      call twh_loutchempotdata(GLB_SET,.false.)
       call twh_ncmt(GLB_INIT,MAXBOX,NTMAX,0)
       call twh_nchbox(GLB_INIT,MAXBOX,0)
 

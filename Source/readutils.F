@@ -360,7 +360,7 @@ c     --- get here in case of read error.
 
       function twh_read_dir_string(lfailure,io_unit,label,print_value)
 c     ******************************************************************
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 03-06-2030 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_READ_DIR_STRING
@@ -378,7 +378,7 @@ c     --- local vars
 c     --- create control list
 c     --- Note: this is sensitive to size of MAXDIRLENGTH -- be sure
 c     --- control_list is what you expect if reads fail.
-      write(control_list,"(a2,i3,a1)"),"(a",MAXDIRLENGTH,")"
+      write(control_list,"(a2,i3,a1)") "(a",MAXDIRLENGTH,")"
 c     --- read the value
       read(io_unit,control_list,ERR=104) twh_read_dir_string
 

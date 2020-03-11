@@ -24,7 +24,7 @@ c     * this file contains all of the globally accessed data structures*
 c     * that are stored in Fortran: see globalinfo.c for the C version *
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 03-09-2020 by M.G. Martin                        *
 c     ******************************************************************
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
 c     ******************************************************************
@@ -9659,6 +9659,34 @@ c     --- information variables
          enddo
       else
          write(6,*) 'LOFTOR: invalid global flag',flag
+         stop
+      endif
+
+      return
+      end
+
+      subroutine twh_loutchempotdata(flag,lvalue)
+c     ******************************************************************
+c     * logical that controls the output of chemical potential trials  *
+c     * to towhee_chempot_data                                         *
+c     *                                                                *
+c     * originally written 03-09-2020 by M.G. Martin                   *
+c     * last modified 03-09-2020 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from this subroutine
+      integer flag
+      logical lvalue
+c     --- information variable
+      logical loutchempotdata
+      save loutchempotdata
+
+      if ( flag .eq. GLB_SET ) then
+         loutchempotdata = lvalue
+      elseif ( flag .eq. GLB_GET ) then
+         lvalue = loutchempotdata
+      else
+         write(6,*) 'LOUTCHEMPOTDATA: invalid global flag',flag
          stop
       endif
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 /bin/cp ../towhee_convert towhee_input
 /towheebase/Source/towhee > middle
 /bin/cp towhee_altinp towhee_input

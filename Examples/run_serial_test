@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 cd Canonical_Ensemble/AVB1_Methane
 ../../do_test
