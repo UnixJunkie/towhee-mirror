@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -94,20 +94,9 @@ c     *     growxtra(index,1) is the number of xtra atoms              *
 c     *                                                                *
 c     * originally taken from the old config and swap subroutines and  *
 c     * modified by  M.G. Martin 1-29-1998                             *
-c     * last modified 09-11-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_GROWCOUNT
-#define FUNCTION_GET_GROWVALIDCOUNT
-#define FUNCTION_GET_GROWVALIDLIST
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NTYPE
 #define FUNCTION_RANDOM
 #include "functions.h"
 #define DEBUG_SCHEDULE 0
@@ -116,6 +105,7 @@ c     --- variables passed to/from the subroutine
       integer numunits,imolty,index,iutry,iprev,movetype,moveinfo
 c     --- local variables
 c     --- character string scalars
+      character*(ELENAMLEN) elename
       character*3 aminoshort
       character*4 pdbname
 c     --- logical scalars
@@ -132,6 +122,8 @@ c     --- integer scalars
       integer nca,iunit,target,test_index,junit,nvibs,black_index
       integer nunit,testring,growfrom,growprev,growtest
       integer grownuma,grownumb,grownbon,xtracount,nmaxcbmc
+      integer growcount,growvalidcount,invibration,ntype
+      integer ijtor2test,ijtor3test,ijtor4test,vibtemp,intorsion
 c     --- integer arrays
       integer viblist
       dimension viblist(NNBOND)
@@ -170,7 +162,7 @@ c           --- using current logic, entire molecule regrown
          call twh_growfrom(GLB_SET,1,iutry)
          lstart(iutry) = .true.
          index = 1
-         invtry = twh_get_invib(imolty,iutry)
+         call twh_invib(GLB_GET,imolty,iutry,invtry)
 c        --- safety check
          if ( invtry .lt. iprev ) then
             write(6,*) 'SCHEDULE: movetype COUNT passed in an iprev'
@@ -183,11 +175,11 @@ c           --- not enough neighbors so entire molecule will be regrown
             moveinfo = numunits - 1
             return
          endif
-         iut = twh_get_ijvib(imolty,iutry,iprev)
+         call twh_ijvib(GLB_GET,imolty,iutry,iprev,iut)
          count = 0
          do ivib = 1,invtry
             if ( ivib .ne. iprev ) then 
-               iut = twh_get_ijvib(imolty,iutry,ivib)
+               call twh_ijvib(GLB_GET,imolty,iutry,ivib,iut)
 c              --- add this branch to the list of those to grow 
                temp_count = temp_count + 1
                temp_store(temp_count) = iut
@@ -212,12 +204,13 @@ c        ---end the part that is specific for movetype SCH_CODE_COUNT
       elseif ( movetype .eq. SCH_CODE_GROW ) then 
 c        -- select the first bead to grow from
 c        --- choose an atom at random from the growvalidlist
-         rvalue = twh_random() *dble(twh_get_growvalidcount(imolty))
+         call twh_growvalidcount(GLB_GET,imolty,growvalidcount)
+         rvalue = twh_random() *dble(growvalidcount)
          atomptr = idint(rvalue) + 1
-         iutry = twh_get_growvalidlist(imolty,atomptr)
+         call twh_growvalidlist(GLB_GET,imolty,atomptr,iutry)
          call twh_growfrom(GLB_SET,1,iutry)
          lstart(iutry) = .true.
-         invtry = twh_get_invib(imolty,iutry)
+         call twh_invib(GLB_GET,imolty,iutry,invtry)
          index = 1
          if ( invtry .eq. 0 ) then
 c           --- problem, cannot do cbregrow move on a 1 bead molecule
@@ -232,14 +225,14 @@ c           --- set up the grow data structures
             call twh_growprev(GLB_SET,1,0)
             call twh_grownum(GLB_SET,1,invtry)
             ivib = invtry
-            iut = twh_get_ijvib(imolty,iutry,ivib)
+            call twh_ijvib(GLB_GET,imolty,iutry,ivib,iut)
             call twh_growlist(GLB_SET,1,ivib,iut)
          else
 c           --- at a branch point, decide how many branches to regrow
 c           --- regrow all of legal branches 
             count = 0
             do ivib = 1,invtry
-               iut = twh_get_ijvib(imolty,iutry,ivib)
+               call twh_ijvib(GLB_GET,imolty,iutry,ivib,iut)
 c              --- add this branch to the list of those to grow 
                temp_count = temp_count + 1
                temp_store(temp_count) = iut
@@ -281,11 +274,11 @@ c              --- select a valid atom from the list (check nmaxcbmc)
                   atomptr = idint( rvalue ) + 1
                   ivib = viblist(atomptr)
                   call twh_nmaxcbmc(GLB_GET,imolty,nmaxcbmc)
-                  if ( twh_get_growcount(imolty,iutry,ivib) 
-     &                 .le. nmaxcbmc ) then
+                  call twh_growcount(GLB_GET,imolty,iutry,ivib,growcount)
+                  if ( growcount .le. nmaxcbmc ) then
 c                    --- found a valid target
                      lfound = .true.
-                     iut = twh_get_ijvib(imolty,iutry,ivib)
+                     call twh_ijvib(GLB_GET,imolty,iutry,ivib,iut)
                   else
 c                    --- try again
                      viblist(atomptr) = viblist(vibcount)
@@ -330,7 +323,7 @@ c        ---- neighbors
          call twh_growfrom(GLB_SET,1,iutry)
          lstart(iutry) = .true.
 
-         invtry = twh_get_invib(imolty,iutry)
+         call twh_invib(GLB_GET,imolty,iutry,invtry)
          call twh_growprev(GLB_SET,1,0)
          if ( invtry .eq. 0 ) then
 c           --- Bead iutry is the only bead to be grown
@@ -340,7 +333,7 @@ c           --- grow all of the beads connected to bead iutry
             index = 1
             call twh_grownum(GLB_SET,1,invtry)
             do ivib = 1,invtry
-               iut = twh_get_ijvib(imolty,iutry,ivib)
+               call twh_ijvib(GLB_GET,imolty,iutry,ivib,iut)
 c              --- grow these branches
                temp_count = temp_count + 1
                temp_store(temp_count) = iut
@@ -378,10 +371,11 @@ c        --- safety check
 c        --- count the number of torsion partners who are also backbone
 c        --- atoms
          ibackbone = 0
-         do itor = 1,twh_get_intor(imolty,iubacka)
-            iumida = twh_get_ijtor2(imolty,iubacka,itor)
-            iumidb = twh_get_ijtor3(imolty,iubacka,itor)
-            iubackb = twh_get_ijtor4(imolty,iubacka,itor)
+         call twh_intor(GLB_GET,imolty,iubacka,intorsion)
+         do itor = 1,intorsion
+            call twh_ijtor2(GLB_GET,imolty,iubacka,itor,iumida)
+            call twh_ijtor3(GLB_GET,imolty,iubacka,itor,iumidb)
+            call twh_ijtor4(GLB_GET,imolty,iubacka,itor,iubackb)
             call twh_lbackbone(GLB_GET,imolty,iumida,lbackbone)
             call twh_lbackbone(GLB_GET,imolty,iumidb,lbacktwo)
             call twh_lbackbone(GLB_GET,imolty,iubackb,lbackthr)
@@ -403,9 +397,9 @@ c        --- choose one of the backbone torsions from the list
          rvalue = twh_random()*dble(ibackbone)
          itor = tempback( idint(rvalue) + 1 )
 c        --- assign the atoms
-         iumida = twh_get_ijtor2(imolty,iubacka,itor)
-         iumidb = twh_get_ijtor3(imolty,iubacka,itor)
-         iubackb = twh_get_ijtor4(imolty,iubacka,itor)
+         call twh_ijtor2(GLB_GET,imolty,iubacka,itor,iumida)
+         call twh_ijtor3(GLB_GET,imolty,iubacka,itor,iumidb)
+         call twh_ijtor4(GLB_GET,imolty,iubacka,itor,iubackb)
 
 c        --- make sure we have not just selected a backbone that will
 c        --- regrow in such a way that a starting grow bead and the 
@@ -447,10 +441,10 @@ c           --- we will end up with a grow and prev bead that are
 c           --- both on the ring of proline
 c           --- shift the atoms one space away from the b end
             ivib = 0
-            do while ( ivib .lt. twh_get_invib(imolty,iubacka) 
-     &           .and. .not. ldone)
+            call twh_invib(GLB_GET,imolty,iubacka,invibration)
+            do while ( ivib .lt. invibration .and. .not. ldone)
                ivib = ivib + 1
-               iu = twh_get_ijvib(imolty,iubacka,ivib)
+               call twh_ijvib(GLB_GET,imolty,iubacka,ivib,iu)
                call twh_lbackbone(GLB_GET,imolty,iu,lbackbone)
                if ( iu .ne. iumida .and. lbackbone ) then
 c                 --- this is the new bead a
@@ -465,14 +459,14 @@ c                 --- this is the new bead a
 c              --- could be a terminal proline, go back through and
 c              --- take any atom that is not a carbon
                ivib = 0
-               do while ( ivib .lt. twh_get_invib(imolty,iubacka) 
-     &              .and. .not. ldone)
+               call twh_invib(GLB_GET,imolty,iubacka,invibration)
+               do while ( ivib .lt. invibration .and. .not. ldone)
                   ivib = ivib + 1
-                  iu = twh_get_ijvib(imolty,iubacka,ivib)
+                  call twh_ijvib(GLB_GET,imolty,iubacka,ivib,iu)
+                  call twh_ntype(GLB_GET,imolty,iu,ntype)
+                  call twh_elementname(GLB_GET,ntype,elename)
                   if ( iu .ne. iumida 
-     &                 .and. 
-     &                 twh_get_elementname(twh_get_ntype(imolty,iu))
-     &                 .ne. ' C' ) then
+     &                 .and. elename .ne. ' C' ) then
 c                    --- this is the new bead a
                      iubackb = iumidb
                      iumidb = iumida
@@ -494,10 +488,10 @@ c           --- both on the ring of proline
 c           --- shift the atoms one space away from the a end
             ldone = .false.
             ivib = 0
-            do while ( ivib .lt. twh_get_invib(imolty,iubackb) 
-     &           .and. .not. ldone)
+            call twh_invib(GLB_GET,imolty,iubackb,invibration)
+            do while ( ivib .lt. invibration .and. .not. ldone)
                ivib = ivib + 1
-               iu = twh_get_ijvib(imolty,iubackb,ivib)
+               call twh_ijvib(GLB_GET,imolty,iubackb,ivib,iu)
                call twh_lbackbone(GLB_GET,imolty,iu,lbackbone)
                if ( iu .ne. iumidb .and. lbackbone ) then
 c                 --- this is the new bead b
@@ -512,14 +506,13 @@ c                 --- this is the new bead b
 c              --- could be a terminal proline, go back through and
 c              --- take any atom that is not a carbon
                ivib = 0
-               do while ( ivib .lt. twh_get_invib(imolty,iubackb) 
-     &              .and. .not. ldone)
+               call twh_invib(GLB_GET,imolty,iubackb,invibration)
+               do while ( ivib .lt. invibration .and. .not. ldone)
                   ivib = ivib + 1
-                  iu = twh_get_ijvib(imolty,iubackb,ivib)
-                  if ( iu .ne. iumidb 
-     &                 .and. 
-     &                 twh_get_elementname(twh_get_ntype(imolty,iu))
-     &                 .ne. ' C' ) then
+                  call twh_ijvib(GLB_GET,imolty,iubackb,ivib,iu)
+                  call twh_ntype(GLB_GET,imolty,iu,ntype)
+                  call twh_elementname(GLB_GET,ntype,elename)
+                  if ( iu .ne. iumidb .and. elename .ne. ' C' ) then
 c                    --- this is the new bead b
                      iubacka = iumida
                      iumida = iumidb
@@ -540,18 +533,16 @@ c           --- safety check
          if ( ldone ) then
 c            --- find the new torsion number for this
             itor = 0
-            do while ( itor .lt. twh_get_intor(imolty,iubacka) 
-     &           .and. ldone )
+            call twh_intor(GLB_GET,imolty,iubacka,intorsion)
+            do while ( itor .lt. intorsion .and. ldone )
                itor = itor + 1
-               if ( twh_get_ijtor2(imolty,iubacka,itor) .eq. iumida 
-     &              .and. twh_get_ijtor3(imolty,iubacka,itor) 
-     &              .eq. iumidb
-     &              .and. twh_get_ijtor4(imolty,iubacka,itor) 
-     &              .eq. iubackb
-     &              ) ldone = .false.
+               call twh_ijtor2(GLB_GET,imolty,iubacka,itor,ijtor2test)
+               call twh_ijtor3(GLB_GET,imolty,iubacka,itor,ijtor3test)
+               call twh_ijtor4(GLB_GET,imolty,iubacka,itor,ijtor4test)
+               if ( ijtor2test .eq. iumida .and. ijtor3test .eq. iumidb
+     &              .and. ijtor4test .eq. iubackb ) ldone = .false.
             enddo
          endif
-
 c        --- set up info for iubacka
          index = 1
          call twh_growfrom(GLB_SET,index,iubacka)
@@ -559,8 +550,9 @@ c        --- set up info for iubacka
 c        --- see how many neighboring atoms are both on the backbone
 c        --- and not already iumida
          ibackbone = 0
-         do ivib = 1,twh_get_invib(imolty,iubacka)
-            iut = twh_get_ijvib(imolty,iubacka,ivib)
+         call twh_invib(GLB_GET,imolty,iubacka,invibration)
+         do ivib = 1,invibration
+            call twh_ijvib(GLB_GET,imolty,iubacka,ivib,iut)
             call twh_lbackbone(GLB_GET,imolty,iut,lbackbone)
             if ( lbackbone .and. iut .ne. iumida ) then
                ibackbone = ibackbone + 1
@@ -571,8 +563,9 @@ c        --- and not already iumida
 c           --- must be one of the termini, choose one of the atoms 
 c           --- (other than iumida) to remain in place
             temp_count = 0
-            do ivib = 1,twh_get_invib(imolty,iubacka)
-               iut = twh_get_ijvib(imolty,iubacka,ivib)
+            call twh_invib(GLB_GET,imolty,iubacka,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iubacka,ivib,iut)
                if ( iut .ne. iumida ) then
                   temp_count = temp_count + 1
                   temp_store(temp_count) = iut
@@ -590,8 +583,8 @@ c              --- select one of the neighboring atoms at random
          else
 c           --- choose one of the backbone atoms as prev
             rvalue = twh_random()*dble(ibackbone)
-            growprev = twh_get_ijvib(imolty,iubacka
-     &           ,tempback( idint(rvalue) + 1))
+            vibtemp = tempback( idint(rvalue) + 1)
+            call twh_ijvib(GLB_GET,imolty,iubacka,vibtemp,growprev)
             call twh_growprev(GLB_SET,index,growprev)
          endif
 c        --- set up info for iubackb
@@ -601,8 +594,9 @@ c        --- set up info for iubackb
 c        --- see how many neighboring atoms are both on the backbone
 c        --- and not already iumida
          ibackbone = 0
-         do ivib = 1,twh_get_invib(imolty,iubackb)
-            iut = twh_get_ijvib(imolty,iubackb,ivib)
+         call twh_invib(GLB_GET,imolty,iubackb,invibration)
+         do ivib = 1,invibration
+            call twh_ijvib(GLB_GET,imolty,iubackb,ivib,iut)
             call twh_lbackbone(GLB_GET,imolty,iut,lbackbone)
             if ( lbackbone .and. iut .ne. iumidb ) then
                ibackbone = ibackbone + 1
@@ -613,8 +607,9 @@ c        --- and not already iumida
 c           --- must be one of the termini, choose one of the atoms 
 c           --- (other than iumidb) to remain in place
             temp_count = 0
-            do ivib = 1,twh_get_invib(imolty,iubackb)
-               iut = twh_get_ijvib(imolty,iubackb,ivib)
+            call twh_invib(GLB_GET,imolty,iubackb,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iubackb,ivib,iut)
                if ( iut .ne. iumidb ) then
                   temp_count = temp_count + 1
                   temp_store(temp_count) = iut
@@ -632,8 +627,8 @@ c              --- select one of the neighboring atoms at random
          else
 c           --- choose one of the atoms as prev
             rvalue = twh_random()*dble(ibackbone)
-            growprev = twh_get_ijvib(imolty,iubackb
-     &           ,tempback( idint(rvalue) + 1))
+            call twh_ijvib(GLB_GET,imolty,iubackb
+     &           ,tempback( idint(rvalue) + 1),growprev)
             call twh_growprev(GLB_SET,index,growprev)
          endif
 
@@ -645,8 +640,9 @@ c        --- grow all (except iprev) of the beads bonded to start beads
                iutry = iubackb
             endif
             temp_count = 0
-            do ivib = 1,twh_get_invib(imolty,iutry)
-               iut = twh_get_ijvib(imolty,iutry,ivib)
+            call twh_invib(GLB_GET,imolty,iutry,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iutry,ivib,iut)
                call twh_growprev(GLB_GET,ind_start,growprev)
                if ( iut .ne. growprev ) then
                   temp_count = temp_count + 1
@@ -681,11 +677,11 @@ c        --- construct hexlical DNA from just the P positions
             call twh_cbmc_atomname_list(GLB_GET,imolty,ind_start,iu)
             call twh_growfrom(GLB_SET,ind_start,iu)
 c           --- set the grownum to the number of vibrations
-            grownuma = twh_get_invib(imolty,iu)
+            call twh_invib(GLB_GET,imolty,iu,grownuma)
             call twh_grownum(GLB_SET,ind_start,grownuma)
 c           --- set growlist (don't bother with random for now)
-            do ivib = 1,twh_get_invib(imolty,iu)
-               iut = twh_get_ijvib(imolty,iu,ivib)
+            do ivib = 1,grownuma
+               call twh_ijvib(GLB_GET,imolty,iu,ivib,iut)
                call twh_growlist(GLB_SET,ind_start,ivib,iut)
             enddo
 c           --- set lstart
@@ -734,8 +730,9 @@ c        --- meaning from above
          test_index = 0
          ldone = .false.
          do while ( .not. ldone )
-            do ivib = 1,twh_get_invib(imolty,target)
-               junit = twh_get_ijvib(imolty,target,ivib)
+            call twh_invib(GLB_GET,imolty,target,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,target,ivib,junit)
                lvalid = .true.
                call twh_pdbname(GLB_GET,imolty,junit,pdbname)
                if ( pdbname .eq. ' N  ' .or.
@@ -792,12 +789,12 @@ c                 --- we are done
             enddo
             call twh_growfrom(GLB_SET,ind_start,iu)
 c           --- set the grownum to the number of vibrations
-            grownuma = twh_get_invib(imolty,iu)
+            call twh_invib(GLB_GET,imolty,iu,grownuma)
             call twh_grownum(GLB_SET,ind_start,grownuma)
 c           --- set growlist in random order
-            nvibs = twh_get_invib(imolty,iu)
+            nvibs = grownuma
             do ivib = 1,nvibs
-               temp_store(ivib) = twh_get_ijvib(imolty,iu,ivib)
+               call twh_ijvib(GLB_GET,imolty,iu,ivib,temp_store(ivib))
             enddo
 c           --- randomize the order in the growlist
             count = 0
@@ -940,8 +937,9 @@ c           --- increment counter ibead for total number of beads grown
 c           --- determine whether this bead has any non-grown neighbors
             call twh_growlist(GLB_GET,ind_start,icbu,iu)
             lfound = .false.
-            do ivib = 1,twh_get_invib(imolty,iu)
-               iut = twh_get_ijvib(imolty,iu,ivib)
+            call twh_invib(GLB_GET,imolty,iu,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iu,ivib,iut)
                if ( iut .ne. iufrom ) then
                   lhook = .false.
                   if ( lstart(iut) ) then
@@ -1010,8 +1008,9 @@ c        --- determine whether this is still a valid growth site
 c        --- a site may become invalid if it is a cyclic molecule
 c        --- if it is valid then start filling up the data structures
          temp_count = 0
-         do ivib = 1, twh_get_invib(imolty,iufrom)
-            iut = twh_get_ijvib(imolty,iufrom,ivib)
+         call twh_invib(GLB_GET,imolty,iufrom,invibration)
+         do ivib = 1,invibration
+            call twh_ijvib(GLB_GET,imolty,iufrom,ivib,iut)
             call twh_growprev(GLB_GET,index,growprev)
             if ( iut .ne. growprev ) then
                call twh_lexsched(GLB_GET,iut,lexschedule)
@@ -1062,8 +1061,9 @@ c           --- determine whether this bead has any non-grown neighbors
             call twh_growlist(GLB_GET,index,icbu,iu)
 
             lfound = .false.
-            do ivib = 1, twh_get_invib(imolty,iu)
-               iut = twh_get_ijvib(imolty,iu,ivib)
+            call twh_invib(GLB_GET,imolty,iu,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iu,ivib,iut)
 c              --- check against the current from bead (instead of prev)
                if ( iut .ne. iufrom ) then
                   call twh_lexsched(GLB_GET,iut,lexschedule)

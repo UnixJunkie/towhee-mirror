@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,15 +27,12 @@ c     * ifile: file index for output                                   *
 c     * lerror: logical used if there is a problem                     *
 c     *                                                                *
 c     * originally split out of readtowhee 08-16-2004 by M.G. Martin   *
-c     * last modified 09-07-2018 M.G. Martin                           *
+c     * last modified 03-31-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_HBONDCOEFF
 #define FUNCTION_GET_LHERE
 #define FUNCTION_GET_NATIVE_LAMBDA
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_NBNAME
 #define FUNCTION_GET_SCALING_STYLE
 #define FUNCTION_LIMITED_DOUBLE
 #include "functions.h"
@@ -47,13 +44,17 @@ c     --- logical scalars
       logical ltesti,ltestj,lshift,ltailc
 c     --- character string scalars
       character*20 eamdstyle,eampstyle,eamestyle
+      character*(FFNAMELEN) nbnamei,nbnamej
 c     --- integer scalars
       integer itype,jtype,ij,itemp,icoeff,hbtype,cpnumber,iswmax
       integer tabnpair
 c     --- double precsion scalars
       double precision cvalue,dvalue,sfactor,tpairone,tpairtwo
       double precision rcutin
-
+c     --- double precision arrays
+      double precision nbcoeff
+      dimension nbcoeff(MINNBCOEFF:MAXNBCOEFF)
+      
 c     --- get the classical potential number
       call twh_cp_number(GLB_GET,cpnumber)
 c     --- output information about the nonbonded potential parameters
@@ -155,11 +156,14 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 0,2
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,A10,1x,i4,1x,A10,3(1x,f7.3))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij)**(1.0d0/3.0d0)
-     &                 ,twh_get_nbcoeff(2,ij),twh_get_nbcoeff(0,ij)
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,nbcoeff(1)**(1.0d0/3.0d0),nbcoeff(2),nbcoeff(0)
                endif
             enddo
          enddo
@@ -176,11 +180,14 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 0,3
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,4(1x,e11.5))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij),twh_get_nbcoeff(2,ij)
-     &                 ,twh_get_nbcoeff(3,ij),twh_get_nbcoeff(0,ij)
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,nbcoeff(1),nbcoeff(2),nbcoeff(3),nbcoeff(0)
                endif
             enddo
          enddo
@@ -196,11 +203,13 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 5,6
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,2(1x,f10.4))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(5,ij)
-     &                 ,twh_get_nbcoeff(6,ij)
+     &                 itype,nbnamei,jtype,nbnamej,nbcoeff(5),nbcoeff(6)
                endif
             enddo
          enddo
@@ -214,11 +223,14 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 0,4
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,5(1x,g12.5))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,(twh_get_nbcoeff(icoeff,ij),icoeff=1,4)
-     &                 ,twh_get_nbcoeff(0,ij)
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,(nbcoeff(icoeff),icoeff=1,4),nbcoeff(0)
                endif
             enddo
          enddo
@@ -236,9 +248,10 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   call twh_eam_dens_style(GLB_GET,itype,jtype,eamdstyle)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,a20)') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
+     &                 itype,nbnamei,jtype,nbnamej
      &                 ,eamdstyle
                endif
             enddo
@@ -252,10 +265,10 @@ c     --- output information about the nonbonded potential parameters
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
                   call twh_eam_pair_style(GLB_GET,ij,eampstyle)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,a20)') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,eampstyle
+     &                 itype,nbnamei,jtype,nbnamej,eampstyle
                endif
             enddo
          enddo
@@ -265,8 +278,9 @@ c     --- output information about the nonbonded potential parameters
             ltesti = twh_get_lhere(itype)
             if ( ltesti ) then
                call twh_eam_embed_style(GLB_GET,itype,eamestyle)
+               call twh_nbname(GLB_GET,itype,nbnamei)
                write(ifile,'(i4,1x,a10,17x,a20)') 
-     &              itype,twh_get_nbname(itype),eamestyle
+     &              itype,nbnamei,eamestyle
             endif
          enddo
       elseif ( cpnumber .eq. CP_EXPONENTIAL_12_6 ) then
@@ -280,13 +294,15 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 0,4
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,A10,1x,i4,1x,A10,2(1x,f12.1)
      &                 ,1x,f8.5,1x,f12.1,1x,f8.5)')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij),twh_get_nbcoeff(3,ij)
-     &                 ,twh_get_nbcoeff(4,ij)
-     &                 ,twh_get_nbcoeff(2,ij),twh_get_nbcoeff(0,ij)
+     &                 itype,nbnamei,jtype,nbnamej,nbcoeff(1),nbcoeff(3)
+     &                 ,nbcoeff(4),nbcoeff(2),nbcoeff(0)
                endif
             enddo
          enddo
@@ -303,17 +319,18 @@ c     --- output information about the nonbonded potential parameters
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
-                  write(ifile,
-     &                 '(i4,1x,a10,1x,i4,1x,a10,1x
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 0,5
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
+                  write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x
      &                 ,4(1x,e11.4),1x,f7.3)')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij),twh_get_nbcoeff(2,ij)
-     &                 ,twh_get_nbcoeff(3,ij),twh_get_nbcoeff(0,ij)
-     &                 ,dsqrt(twh_get_nbcoeff(5,ij))
+     &                 itype,nbnamei,jtype,nbnamej,nbcoeff(1),nbcoeff(2)
+     &                 ,nbcoeff(3),nbcoeff(0),dsqrt(nbcoeff(5))
 c                 --- make sure rcutin is larger than expmin
                   call twh_rcutin(GLB_GET,rcutin)
-                  if ( rcutin .lt. dsqrt(twh_get_nbcoeff(5,ij)) ) then
+                  if ( rcutin .lt. dsqrt(nbcoeff(5)) ) then
                      write(ifile,*) 'WRITENONBOND: rcutin < expmin '
                      write(ifile,*) 'this is not allowed'
                      lerror = .true.
@@ -335,11 +352,14 @@ c                 --- make sure rcutin is larger than expmin
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 0,3
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,4(1x,f7.3))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij),twh_get_nbcoeff(2,ij)
-     &                 ,twh_get_nbcoeff(3,ij),twh_get_nbcoeff(0,ij)
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,nbcoeff(1),nbcoeff(2),nbcoeff(3),nbcoeff(0)
                endif
             enddo
          enddo
@@ -369,12 +389,14 @@ c                 --- make sure rcutin is larger than expmin
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
 c                 --- output the hard core
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 1,5
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(2(i4,1x,a10,1x),f10.5,4(1x,f15.5))')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij),twh_get_nbcoeff(2,ij)
-     &                 ,twh_get_nbcoeff(3,ij)
-     &                 ,twh_get_nbcoeff(4,ij),twh_get_nbcoeff(5,ij)
+     &                 itype,nbnamei,jtype,nbnamej,nbcoeff(1),nbcoeff(2)
+     &                 ,nbcoeff(3),nbcoeff(4),nbcoeff(5)
                endif
             enddo
          enddo
@@ -389,10 +411,11 @@ c                 --- output the hard core
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,1,ij,nbcoeff(1))
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,f7.3)') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij)
+     &                 itype,nbnamei,jtype,nbnamej,nbcoeff(1)
                endif
             enddo
          enddo
@@ -409,14 +432,17 @@ c                 --- output the hard core
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,0,ij,nbcoeff(0))
+                  do icoeff = 13,16
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,5(1x,f10.4))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,(twh_get_nbcoeff(13,ij))**(1.0/6.0)
-     &                 , twh_get_nbcoeff(14,ij)/4.0d0
-     &                 ,twh_limited_double(twh_get_nbcoeff(0,ij),1.0d-6)
-     &                 , (twh_get_nbcoeff(15,ij))**(1.0/6.0)
-     &                 ,twh_get_nbcoeff(16,ij)/4.0
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,(nbcoeff(13))**(1.0/6.0),nbcoeff(14)/4.0d0
+     &                 ,twh_limited_double(nbcoeff(0),1.0d-6)
+     &                 ,(nbcoeff(15))**(1.0/6.0),nbcoeff(16)/4.0
                endif
             enddo
          enddo
@@ -436,14 +462,17 @@ c                 --- output the hard core
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,0,ij,nbcoeff(0))
+                  do icoeff = 13,16
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,5(1x,f7.3))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,(twh_get_nbcoeff(13,ij))**(1.0/6.0)
-     &                 , twh_get_nbcoeff(14,ij)/4.0d0
-     &                 ,twh_get_nbcoeff(0,ij)
-     &                 , (twh_get_nbcoeff(15,ij))**(1.0/6.0)
-     &                 ,twh_get_nbcoeff(16,ij)/4.0
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,(nbcoeff(13))**(1.0/6.0),nbcoeff(14)/4.0d0
+     &                 ,nbcoeff(0),(nbcoeff(15))**(1.0/6.0)
+     &                 ,nbcoeff(16)/4.0
                endif
             enddo
          enddo
@@ -466,19 +495,22 @@ c                 --- output the hard core
                      dvalue = 0.0d0
                      sfactor = 0.0d0
                   else
-                     cvalue = twh_get_hbondcoeff(hbtype,1)
-                     dvalue = twh_get_hbondcoeff(hbtype,2)
-                     sfactor = twh_get_hbondcoeff(hbtype,3)
+                     call twh_hbondcoeff(GLB_GET,hbtype,1,cvalue)
+                     call twh_hbondcoeff(GLB_GET,hbtype,2,dvalue)
+                     call twh_hbondcoeff(GLB_GET,hbtype,3,sfactor)
                   endif
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,0,ij,nbcoeff(0))
+                  do icoeff = 13,16
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,5(1x,f7.3)
      &                 ,4(1x,e9.3))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,(twh_get_nbcoeff(13,ij))**(1.0/6.0)
-     &                 , twh_get_nbcoeff(14,ij)/4.0d0
-     &                 ,twh_get_nbcoeff(0,ij)
-     &                 , (twh_get_nbcoeff(15,ij))**(1.0/6.0)
-     &                 ,twh_get_nbcoeff(16,ij)/4.0,cvalue,dvalue
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,(nbcoeff(13))**(1.0/6.0),nbcoeff(14)/4.0d0
+     &                 ,nbcoeff(0),(nbcoeff(15))**(1.0/6.0)
+     &                 ,nbcoeff(16)/4.0,cvalue,dvalue
      &                 ,sfactor*cvalue,sfactor*dvalue
                endif
             enddo
@@ -500,10 +532,11 @@ c                 --- output the hard core
 c                 --- output the hard core
                   icoeff = 1
                   call twh_table_pair(GLB_GET,1,ij,icoeff,tpairone)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,i5
      &                 ,1x,f15.3,1x,7x,a8)')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
+     &                 itype,nbnamei,jtype,nbnamej
      &                 ,icoeff,tpairone,'infinity'
 c                 --- output all of the wells
                   call twh_table_npair(GLB_GET,ij,tabnpair)
@@ -534,10 +567,11 @@ c                 --- output all of the wells
 c                 --- output the hard core
                   icoeff = 1
                   call twh_table_pair(GLB_GET,1,ij,icoeff,tpairone)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,i5
      &                 ,1x,f15.3,1x,7x,a9)')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
+     &                 itype,nbnamei,jtype,nbnamej
      &                 ,icoeff,tpairone,'repulsion'
 c                 --- output all of the wells
                   call twh_table_npair(GLB_GET,ij,tabnpair)
@@ -562,10 +596,11 @@ c                 --- output all of the wells
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,1,ij,nbcoeff(1))
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,1x,f7.3)') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,twh_get_nbcoeff(1,ij)
+     &                 itype,nbnamei,jtype,nbnamej,nbcoeff(1)
                endif
             enddo
          enddo
@@ -583,12 +618,14 @@ c                 --- output all of the wells
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 1,3
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,3(1x,f10.3))')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,dsqrt(twh_get_nbcoeff(1,ij))
-     &                 ,dsqrt(twh_get_nbcoeff(2,ij))
-     &                 ,twh_get_nbcoeff(3,ij)
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,dsqrt(nbcoeff(1)),dsqrt(nbcoeff(2)),nbcoeff(3)
                endif
             enddo
          enddo
@@ -605,12 +642,14 @@ c                 --- output all of the wells
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  do icoeff = 1,3
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,3(1x,f10.3))')
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,dsqrt(twh_get_nbcoeff(1,ij))
-     &                 ,dsqrt(twh_get_nbcoeff(2,ij))
-     &                 ,twh_get_nbcoeff(3,ij)
+     &                 itype,nbnamei,jtype,nbnamej,dsqrt(nbcoeff(1))
+     &                 ,dsqrt(nbcoeff(2)),nbcoeff(3)
                endif
             enddo
          enddo
@@ -656,8 +695,11 @@ c           --- just the twobody part
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  do icoeff = 1,iswmax
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,130) itype,jtype
-     &                 ,(twh_get_nbcoeff(itemp,ij),itemp=1,iswmax)
+     &                 ,(nbcoeff(itemp),itemp=1,iswmax)
                endif
             enddo
          enddo
@@ -678,15 +720,18 @@ c           --- just the twobody part
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,0,ij,nbcoeff(0))
+                  do icoeff = 10,16
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,6(1x,f7.3))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,(twh_get_nbcoeff(13,ij))**(1.0/6.0)
-     &                 , twh_get_nbcoeff(14,ij)/4.0d0
-     &                 ,twh_get_nbcoeff(0,ij)
-     &                 , (twh_get_nbcoeff(15,ij))**(1.0/6.0)
-     &                 ,twh_get_nbcoeff(16,ij)
-     &                 /4.0,twh_get_nbcoeff(10,ij)
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,(nbcoeff(13))**(1.0/6.0)
+     &                 ,nbcoeff(14)/4.0d0,nbcoeff(0)
+     &                 ,(nbcoeff(15))**(1.0/6.0)
+     &                 ,nbcoeff(16)/4.0,nbcoeff(10)
                endif
             enddo
          enddo
@@ -696,8 +741,12 @@ c           --- just the twobody part
             ltesti = twh_get_lhere(itype)
             if ( ltesti ) then
                ij = twh_getnbtype(itype,itype)
-               write(ifile,'(a10,1x,8(f8.4,1x))') twh_get_nbname(itype)
-     &              ,(twh_get_nbcoeff(itemp,ij),itemp=5,12)
+               call twh_nbname(GLB_GET,itype,nbnamei)
+               do icoeff = 5,12
+                  call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+               enddo
+               write(ifile,'(a10,1x,8(f8.4,1x))') nbnamei
+     &              ,(nbcoeff(itemp),itemp=5,12)
             endif
          enddo
       elseif ( cpnumber .eq. CP_WEEKS_CHANDLER_ANDERSON ) then
@@ -713,14 +762,17 @@ c           --- just the twobody part
                ltestj = twh_get_lhere(jtype)
                if ( ltesti .and. ltestj ) then
                   ij = twh_getnbtype(itype,jtype)
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  call twh_nbcoeff(GLB_GET,0,ij,nbcoeff(0))
+                  do icoeff = 13,16
+                     call twh_nbcoeff(GLB_GET,icoeff,ij,nbcoeff(icoeff))
+                  enddo
                   write(ifile,'(i4,1x,a10,1x,i4,1x,a10,5(1x,f10.4))') 
-     &                 itype,twh_get_nbname(itype)
-     &                 ,jtype,twh_get_nbname(jtype)
-     &                 ,(twh_get_nbcoeff(13,ij))**(1.0/6.0)
-     &                 , twh_get_nbcoeff(14,ij)/4.0d0
-     &                 ,twh_get_nbcoeff(0,ij)
-     &                 , (twh_get_nbcoeff(15,ij))**(1.0/6.0)
-     &                 ,twh_get_nbcoeff(16,ij)/4.0
+     &                 itype,nbnamei,jtype,nbnamej
+     &                 ,(nbcoeff(13))**(1.0/6.0),nbcoeff(14)/4.0d0
+     &                 ,nbcoeff(0)
+     &                 ,(nbcoeff(15))**(1.0/6.0),nbcoeff(16)/4.0d0
                endif
             enddo
          enddo

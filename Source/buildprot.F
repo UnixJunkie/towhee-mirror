@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,19 +26,9 @@ c     * the N-terminus                                                 *
 c     * imolty: molecule type number                                   *
 c     *                                                                *
 c     * originally written 02-15-2001 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
 #include "functions.h"
 c     --- debugging flag
 #define DEBUG_BUILDPROT 0
@@ -47,7 +37,7 @@ c     ---- variables passed to/from the subroutine
       integer imolty
 c     --- local variables
       logical lfound,lautotorsion
-
+c     --- local character strings
       character*1 stereochem,terminus
       dimension stereochem(NUMAX),terminus(NUMAX)
       character*2 pepname
@@ -58,12 +48,17 @@ c     --- local variables
       character*10 forcefield
       character*15 protgeom,idname
       character*40 aminoname
-
+c     --- local integer scalars
       integer ipeptide,termflag,iatom,iha,icb,nunit
       integer iprev,total,totatoms,itemp,ivib,iimp,itor
-      integer impprev,ndisulfide,myaminonum,myatomnum,ibondend
-      dimension myaminonum(NUMAX),myatomnum(NUMAX)
+      integer impprev,ndisulfide,ibondend
+      integer improp2test,improp3test,improp4test
       integer meatom,thematom,me,them,ipair,partner,iother
+      integer ijtor2test,ijtor3test,ijtor4test,ijvibtest,inimproper
+      integer intorsion,invibration
+c     --- local integer arrays
+      integer myaminonum,myatomnum
+      dimension myaminonum(NUMAX),myatomnum(NUMAX)
       integer bondpartner
       dimension bondpartner(NUMAX)
 
@@ -313,7 +308,7 @@ c        --- check stereochem as only racemic is valid for glycine
             if ( stereochem(ipeptide) .eq. 'l'
      &           .or. stereochem(ipeptide) .eq. 'L' ) then
                write(6,*) 'L-',aminoname
-               impprev = twh_get_inimprop(imolty,iatom+1)
+               call twh_inimprop(GLB_GET,imolty,iatom+1,impprev)
                call twh_inimprop(GLB_SET,imolty,iatom+1,3+impprev)
                call twh_ijimprop2(GLB_SET,imolty,iatom+1,impprev+1
      &              ,iatom)
@@ -335,7 +330,7 @@ c        --- check stereochem as only racemic is valid for glycine
             elseif ( stereochem(ipeptide) .eq. 'd'
      &              .or. stereochem(ipeptide) .eq. 'D' ) then
                write(6,*) 'D-',aminoname
-               impprev = twh_get_inimprop(imolty,iatom+1)
+               call twh_inimprop(GLB_GET,imolty,iatom+1,impprev)
                call twh_inimprop(GLB_SET,imolty,iatom+1,3+impprev)
                call twh_ijimprop2(GLB_SET,imolty,iatom+1,impprev+1
      &              ,iatom)
@@ -396,90 +391,92 @@ c        --- search through the vibration and improper list
 c        --- reset any bonds with atom 0 to iatom+2
 c        --- reset any bonds with iatom+total to 1
          do itemp = 1,totatoms
-            do ivib = 1,twh_get_invib(imolty,itemp)
-               if ( twh_get_ijvib(imolty,itemp,ivib) .eq. iatom+total 
-     &              ) then
+            call twh_invib(GLB_GET,imolty,itemp,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,itemp,ivib,ijvibtest)
+               if ( ijvibtest .eq. iatom+total ) then
                   call twh_ijvib(GLB_SET,imolty,itemp,ivib,1)
-               elseif ( twh_get_ijvib(imolty,itemp,ivib) .eq. 0 ) then
+               elseif ( ijvibtest .eq. 0 ) then
                   call twh_ijvib(GLB_SET,imolty,itemp,ivib,iatom+2)
                endif
             enddo
             if (forcefield .eq. 'Charmm19' .or.
      &          forcefield .eq. 'C19eef1' .or. 
      &          forcefield .eq. 'C19sasa') then
-               do itor = 1,twh_get_intor(imolty,itemp)
-                  if ( twh_get_ijtor2(imolty,itemp,itor) 
-     &                 .eq. iatom+total)
+               call twh_intor(GLB_GET,imolty,itemp,intorsion)
+               do itor = 1,intorsion
+                  call twh_ijtor2(GLB_GET,imolty,itemp,itor,ijtor2test)
+                  call twh_ijtor3(GLB_GET,imolty,itemp,itor,ijtor3test)
+                  call twh_ijtor4(GLB_GET,imolty,itemp,itor,ijtor4test)
+                  if ( ijtor2test .eq. iatom+total)
      &                 call twh_ijtor2(GLB_SET,imolty,itemp,itor,1)
-                  if ( twh_get_ijtor3(imolty,itemp,itor) 
-     &                 .eq. iatom+total)
+                  if ( ijtor3test .eq. iatom+total)
      &                 call twh_ijtor3(GLB_SET,imolty,itemp,itor,1)
-                  if ( twh_get_ijtor4(imolty,itemp,itor) 
-     &                 .eq. iatom+total)
+                  if ( ijtor4test .eq. iatom+total)
      &                 call twh_ijtor4(GLB_SET,imolty,itemp,itor,1)
-                  if ( twh_get_ijtor2(imolty,itemp,itor) .eq. 0)
+
+                  if ( ijtor2test .eq. 0)
      &                 call twh_ijtor2(GLB_SET,imolty,itemp,itor
      &                 ,iatom+2)
-                  if ( twh_get_ijtor3(imolty,itemp,itor) .eq. 0)
+                  if ( ijtor3test .eq. 0)
      &                 call twh_ijtor3(GLB_SET,imolty,itemp,itor
      &                 ,iatom+2)
-                  if ( twh_get_ijtor4(imolty,itemp,itor) .eq. 0)
+                  if ( ijtor4test .eq. 0)
      &                 call twh_ijtor4(GLB_SET,imolty,itemp,itor
      &                 ,iatom+2)
-                  if ( twh_get_ijtor2(imolty,itemp,itor) 
-     &                 .eq. iatom+total+1)
+
+                  if ( ijtor2test .eq. iatom+total+1)
      &                 call twh_ijtor2(GLB_SET,imolty,itemp,itor,2)
-                  if ( twh_get_ijtor3(imolty,itemp,itor) 
-     &                 .eq. iatom+total+1)
+                  if ( ijtor3test .eq. iatom+total+1)
      &                 call twh_ijtor3(GLB_SET,imolty,itemp,itor,2)
-                  if ( twh_get_ijtor4(imolty,itemp,itor) 
-     &                 .eq. iatom+total+1)
+                  if ( ijtor4test .eq. iatom+total+1)
      &                 call twh_ijtor4(GLB_SET,imolty,itemp,itor,2)
-                  if ( twh_get_ijtor2(imolty,itemp,itor) .eq. -1)
+
+                  if ( ijtor2test .eq. -1)
      &                 call twh_ijtor2(GLB_SET,imolty,itemp,itor
      &                 ,iatom+1)
-                  if ( twh_get_ijtor3(imolty,itemp,itor) .eq. -1)
+                  if ( ijtor3test .eq. -1)
      &                 call twh_ijtor3(GLB_SET,imolty,itemp,itor
      &                 ,iatom+1)
-                  if ( twh_get_ijtor4(imolty,itemp,itor) .eq. -1)
+                  if ( ijtor4test .eq. -1)
      &                 call twh_ijtor4(GLB_SET,imolty,itemp,itor
      &                 ,iatom+1)
-                  if ( twh_get_ijtor2(imolty,itemp,itor) 
-     &                 .eq. iatom+total+2)
+
+                  if ( ijtor2test .eq. iatom+total+2)
      &                 call twh_ijtor2(GLB_SET,imolty,itemp,itor,3)
-                  if ( twh_get_ijtor3(imolty,itemp,itor) 
-     &                 .eq. iatom+total+2)
+                  if ( ijtor3test .eq. iatom+total+2)
      &                 call twh_ijtor3(GLB_SET,imolty,itemp,itor,3)
-                  if ( twh_get_ijtor4(imolty,itemp,itor) 
-     &                 .eq. iatom+total+2)
+                  if ( ijtor4test .eq. iatom+total+2)
      &                 call twh_ijtor4(GLB_SET,imolty,itemp,itor,3)
-                  if ( twh_get_ijtor2(imolty,itemp,itor) .eq. -2)
+
+                  if ( ijtor2test .eq. -2)
      &                 call twh_ijtor2(GLB_SET,imolty,itemp,itor,iatom)
-                  if ( twh_get_ijtor3(imolty,itemp,itor) .eq. -2)
+                  if ( ijtor3test .eq. -2)
      &                 call twh_ijtor3(GLB_SET,imolty,itemp,itor,iatom)
-                  if ( twh_get_ijtor4(imolty,itemp,itor) .eq. -2)
+                  if ( ijtor4test .eq. -2)
      &                 call twh_ijtor4(GLB_SET,imolty,itemp,itor,iatom)
                enddo
             endif
-            do iimp = 1,twh_get_inimprop(imolty,itemp)
-               if ( twh_get_ijimprop2(imolty,itemp,iimp) 
-     &              .eq. iatom+total)
-     &              call twh_ijimprop2(GLB_SET,imolty,itemp,iimp,1)
-               if ( twh_get_ijimprop3(imolty,itemp,iimp) 
-     &              .eq. iatom+total)
-     &              call twh_ijimprop3(GLB_SET,imolty,itemp,iimp,1)
-               if ( twh_get_ijimprop4(imolty,itemp,iimp) 
-     &              .eq. iatom+total)
-     &              call twh_ijimprop4(GLB_SET,imolty,itemp,iimp,1)
-               if ( twh_get_ijimprop2(imolty,itemp,iimp) .eq. 0)
-     &              call twh_ijimprop2(GLB_SET,imolty,itemp,iimp
-     &              ,iatom+2)
-               if ( twh_get_ijimprop3(imolty,itemp,iimp) .eq. 0)
-     &              call twh_ijimprop3(GLB_SET,imolty,itemp,iimp
-     &              ,iatom+2)
-               if ( twh_get_ijimprop4(imolty,itemp,iimp) .eq. 0)
-     &              call twh_ijimprop4(GLB_SET,imolty,itemp,iimp
-     &              ,iatom+2)
+            call twh_inimprop(GLB_GET,imolty,itemp,inimproper)
+            do iimp = 1,inimproper
+               call twh_ijimprop2(GLB_GET,imolty,itemp,iimp,improp2test)
+               call twh_ijimprop3(GLB_GET,imolty,itemp,iimp,improp3test) 
+               call twh_ijimprop4(GLB_GET,imolty,itemp,iimp,improp4test)
+               if ( improp2test .eq. iatom+total) then
+                  call twh_ijimprop2(GLB_SET,imolty,itemp,iimp,1)
+               elseif ( improp2test .eq. 0) then
+                  call twh_ijimprop2(GLB_SET,imolty,itemp,iimp,iatom+2)
+               endif
+               if ( improp3test .eq. iatom+total) then
+                  call twh_ijimprop3(GLB_SET,imolty,itemp,iimp,1)
+               elseif ( improp3test .eq. 0) then
+                  call twh_ijimprop3(GLB_SET,imolty,itemp,iimp,iatom+2)
+               endif
+               if ( improp4test .eq. iatom+total) then
+                  call twh_ijimprop4(GLB_SET,imolty,itemp,iimp,1)
+               elseif ( improp4test .eq. 0) then
+                  call twh_ijimprop4(GLB_SET,imolty,itemp,iimp,iatom+2)
+               endif
             enddo
          enddo
       endif

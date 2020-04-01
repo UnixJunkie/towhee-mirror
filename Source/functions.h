@@ -3,7 +3,7 @@ c     * functions.h                                                    *
 c     * contains all of the function type declarations in towhee       *
 c     *                                                                *
 c     * originally written 11-12-2002 by M.G. Martin                   *
-c     * last modified 01-14-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
 #ifdef FUNCTION_ARCCOS
       double precision twh_arccos
@@ -127,84 +127,9 @@ c
 #undef FUNCTION_GETSIGN
 #endif
 c
-#ifdef FUNCTION_GET_AACOEFF
-      double precision twh_get_aacoeff
-#undef FUNCTION_GET_AACOEFF
-#endif
-c
-#ifdef FUNCTION_GET_AAFF
-      character*(FFNAMELEN) twh_get_aaff
-#undef FUNCTION_GET_AAFF
-#endif
-c
-#ifdef FUNCTION_GET_AANAMES
-      character*(FFNAMELEN) twh_get_aanames
-#undef FUNCTION_GET_AANAMES
-#endif
-c
-#ifdef FUNCTION_GET_AASTYLE
-      integer twh_get_aastyle
-#undef FUNCTION_GET_AASTYLE
-#endif
-c
-#ifdef FUNCTION_GET_ANGLESTYLE
-      integer twh_get_anglestyle
-#undef FUNCTION_GET_ANGLESTYLE
-#endif
-c
 #ifdef FUNCTION_GET_ATOMLIST_CORD
       integer twh_get_atomlist_cord
 #undef FUNCTION_GET_ATOMLIST_CORD
-#endif
-c
-#ifdef FUNCTION_GET_BENCOEFF
-      double precision twh_get_bencoeff
-#undef FUNCTION_GET_BENCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_BENDFF
-      character*(FFNAMELEN) twh_get_bendff
-#undef FUNCTION_GET_BENDFF
-#endif
-c
-#ifdef FUNCTION_GET_BENDNAMES
-      character*(FFNAMELEN) twh_get_bendnames
-#undef FUNCTION_GET_BENDNAMES
-#endif
-c
-#ifdef FUNCTION_GET_BENPREFACT
-      double precision twh_get_benprefact
-#undef FUNCTION_GET_BENPREFACT
-#endif
-c
-#ifdef FUNCTION_GET_BONDPATT
-      character*(5) twh_get_bondpatt
-#undef FUNCTION_GET_BONDPATT
-#endif
-c
-#ifdef FUNCTION_GET_CANAME
-      character*(FFNAMELEN) twh_get_caname
-#undef FUNCTION_GET_CANAME
-#endif
-c
-#ifdef FUNCTION_GET_CBNAME
-      character*(FFNAMELEN) twh_get_cbname
-#undef FUNCTION_GET_CBNAME
-#endif
-c
-#ifdef FUNCTION_GET_CLASSICAL_MIXRULE
-      character*(30) twh_get_classical_mixrule
-#undef FUNCTION_GET_CLASSICAL_MIXRULE
-#endif
-c
-#ifdef FUNCTION_GET_CLASSICAL_POTENTIAL
-      character*(30) twh_get_classical_potential
-#undef FUNCTION_GET_CLASSICAL_POTENTIAL
-#endif
-c
-#ifdef FUNCTION_GET_CTNAME
-      character*(FFNAMELEN) twh_get_ctname
-#undef FUNCTION_GET_CTNAME
 #endif
 c
 #ifdef FUNCTION_GET_DERIVATIVE
@@ -212,224 +137,9 @@ c
 #undef FUNCTION_GET_DERIVATIVE
 #endif
 c
-#ifdef FUNCTION_GET_ELEMENTNAME
-      character*2 twh_get_elementname
-#undef FUNCTION_GET_ELEMENTNAME
-#endif
-c
 #ifdef FUNCTION_GET_FOREIGN_LAMBDA
       double precision scp_get_foreign_lambda
 #undef FUNCTION_GET_FOREIGN_LAMBDA
-#endif
-c
-#ifdef FUNCTION_GET_GROWCOUNT
-      integer twh_get_growcount
-#undef FUNCTION_GET_GROWCOUNT
-#endif
-c
-#ifdef FUNCTION_GET_GROWVALIDCOUNT
-      integer twh_get_growvalidcount
-#undef FUNCTION_GET_GROWVALIDCOUNT
-#endif
-c
-#ifdef FUNCTION_GET_GROWVALIDLIST
-      integer twh_get_growvalidlist
-#undef FUNCTION_GET_GROWVALIDLIST
-#endif
-c
-#ifdef FUNCTION_GET_HBONDCOEFF
-      double precision twh_get_hbondcoeff
-#undef FUNCTION_GET_HBONDCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_HBONDNAMES
-      character*(FFNAMELEN) twh_get_hbondnames
-#undef FUNCTION_GET_HBONDNAMES
-#endif
-c
-#ifdef FUNCTION_GET_IBTBEN1
-      integer twh_get_ibtben1
-#undef FUNCTION_GET_IBTBEN1
-#endif
-c
-#ifdef FUNCTION_GET_IBTBEN2
-      integer twh_get_ibtben2
-#undef FUNCTION_GET_IBTBEN2
-#endif
-c
-#ifdef FUNCTION_GET_IJAA0
-      integer twh_get_ijaa0
-#undef FUNCTION_GET_IJAA0
-#endif
-c
-#ifdef FUNCTION_GET_IJAA1
-      integer twh_get_ijaa1
-#undef FUNCTION_GET_IJAA1
-#endif
-c
-#ifdef FUNCTION_GET_IJAA2
-      integer twh_get_ijaa2
-#undef FUNCTION_GET_IJAA2
-#endif
-c
-#ifdef FUNCTION_GET_IJBEN2
-      integer twh_get_ijben2
-#undef FUNCTION_GET_IJBEN2
-#endif
-c
-#ifdef FUNCTION_GET_IJBEN3
-      integer twh_get_ijben3
-#undef FUNCTION_GET_IJBEN3
-#endif
-c
-#ifdef FUNCTION_GET_IJBNBN1
-      integer twh_get_ijbnbn1
-#undef FUNCTION_GET_IJBNBN1
-#endif
-c
-#ifdef FUNCTION_GET_IJBNBN2
-      integer twh_get_ijbnbn2
-#undef FUNCTION_GET_IJBNBN2
-#endif
-c
-#ifdef FUNCTION_GET_IJIMPROP2
-      integer twh_get_ijimprop2
-#undef FUNCTION_GET_IJIMPROP2
-#endif
-c
-#ifdef FUNCTION_GET_IJIMPROP3
-      integer twh_get_ijimprop3
-#undef FUNCTION_GET_IJIMPROP3
-#endif
-c
-#ifdef FUNCTION_GET_IJIMPROP4
-      integer twh_get_ijimprop4
-#undef FUNCTION_GET_IJIMPROP4
-#endif
-c
-#ifdef FUNCTION_GET_IJOF5
-      integer twh_get_ijof5
-#undef FUNCTION_GET_IJOF5
-#endif
-c
-#ifdef FUNCTION_GET_IJTOR2
-      integer twh_get_ijtor2
-#undef FUNCTION_GET_IJTOR2
-#endif
-c
-#ifdef FUNCTION_GET_IJTOR3
-      integer twh_get_ijtor3
-#undef FUNCTION_GET_IJTOR3
-#endif
-c
-#ifdef FUNCTION_GET_IJTOR4
-      integer twh_get_ijtor4
-#undef FUNCTION_GET_IJTOR4
-#endif
-c
-#ifdef FUNCTION_GET_IJVIB
-      integer twh_get_ijvib
-#undef FUNCTION_GET_IJVIB
-#endif
-c
-#ifdef FUNCTION_GET_IMPCOEFF
-      double precision twh_get_impcoeff
-#undef FUNCTION_GET_IMPCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_IMPFF
-      character*(FFNAMELEN) twh_get_impff
-#undef FUNCTION_GET_IMPFF
-#endif
-c
-#ifdef FUNCTION_GET_IMPFORM
-      integer twh_get_impform
-#undef FUNCTION_GET_IMPFORM
-#endif
-c
-#ifdef FUNCTION_GET_IMPNAMES
-      character*(FFNAMELEN) twh_get_impnames
-#undef FUNCTION_GET_IMPNAMES
-#endif
-c
-#ifdef FUNCTION_GET_IMPSTYLE
-      integer twh_get_impstyle
-#undef FUNCTION_GET_IMPSTYLE
-#endif
-c
-#ifdef FUNCTION_GET_INAA
-      integer twh_get_inaa
-#undef FUNCTION_GET_INAA
-#endif
-c
-#ifdef FUNCTION_GET_INBEN
-      integer twh_get_inben
-#undef FUNCTION_GET_INBEN
-#endif
-c
-#ifdef FUNCTION_GET_INBNBN
-      integer twh_get_inbnbn
-#undef FUNCTION_GET_INBNBN
-#endif
-c
-#ifdef FUNCTION_GET_INIMPROP
-      integer twh_get_inimprop
-#undef FUNCTION_GET_INIMPROP
-#endif
-c
-#ifdef FUNCTION_GET_INOF
-      integer twh_get_inof
-#undef FUNCTION_GET_INOF
-#endif
-c
-#ifdef FUNCTION_GET_INTOR
-      integer twh_get_intor
-#undef FUNCTION_GET_INTOR
-#endif
-c
-#ifdef FUNCTION_GET_INVIB
-      integer twh_get_invib
-#undef FUNCTION_GET_INVIB
-#endif
-c
-#ifdef FUNCTION_GET_ITAA
-      integer twh_get_itaa
-#undef FUNCTION_GET_ITAA
-#endif
-c
-#ifdef FUNCTION_GET_ITBEN
-      integer twh_get_itben
-#undef FUNCTION_GET_ITBEN
-#endif
-c
-#ifdef FUNCTION_GET_ITBNBN
-      integer twh_get_itbnbn
-#undef FUNCTION_GET_ITBNBN
-#endif
-c
-#ifdef FUNCTION_GET_ITIMPROP
-      integer twh_get_itimprop
-#undef FUNCTION_GET_ITIMPROP
-#endif
-c
-#ifdef FUNCTION_GET_ITOF
-      integer twh_get_itof
-#undef FUNCTION_GET_ITOF
-#endif
-c
-#ifdef FUNCTION_GET_ITSCALE
-      double precision twh_get_itscale
-#undef FUNCTION_GET_ITSCALE
-#endif
-c
-#ifdef FUNCTION_GET_ITTOR
-      integer twh_get_ittor
-#undef FUNCTION_GET_ITTOR
-#endif
-c
-#ifdef FUNCTION_GET_ITVIB
-      integer twh_get_itvib
-#undef FUNCTION_GET_ITVIB
 #endif
 c
 #ifdef FUNCTION_GET_LAAHERE
@@ -440,21 +150,6 @@ c
 #ifdef FUNCTION_GET_LBENDHERE
       logical twh_get_lbendhere
 #undef FUNCTION_GET_LBENDHERE
-#endif
-c
-#ifdef FUNCTION_GET_LBONANG
-      logical twh_get_lbonang
-#undef FUNCTION_GET_LBONANG
-#endif
-c
-#ifdef FUNCTION_GET_LBONBON
-      logical twh_get_lbonbon
-#undef FUNCTION_GET_LBONBON
-#endif
-c
-#ifdef FUNCTION_GET_LEXIST
-      logical twh_get_lexist
-#undef FUNCTION_GET_LEXIST
 #endif
 c
 #ifdef FUNCTION_GET_LHERE
@@ -487,134 +182,9 @@ c
 #undef FUNCTION_GET_LVIBHERE
 #endif
 c
-#ifdef FUNCTION_GET_MASS
-      double precision twh_get_mass
-#undef FUNCTION_GET_MASS
-#endif
-c
-#ifdef FUNCTION_GET_NAASAME
-      integer twh_get_naasame
-#undef FUNCTION_GET_NAASAME
-#endif
-c
 #ifdef FUNCTION_GET_NATIVE_LAMBDA
       double precision scp_get_native_lambda
 #undef FUNCTION_GET_NATIVE_LAMBDA
-#endif
-c
-#ifdef FUNCTION_GET_NBCOEFF
-      double precision twh_get_nbcoeff
-#undef FUNCTION_GET_NBCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_NBOXI
-      integer twh_get_nboxi
-#undef FUNCTION_GET_NBOXI
-#endif
-c
-#ifdef FUNCTION_GET_NCOEFF
-      integer twh_get_ncoeff
-#undef FUNCTION_GET_NCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_NBFF
-      character*(FFNAMELEN) twh_get_nbff
-#undef FUNCTION_GET_NBFF
-#endif
-c
-#ifdef FUNCTION_GET_NBNAME
-      character*(FFNAMELEN) twh_get_nbname
-#undef FUNCTION_GET_NBNAME
-#endif
-c
-#ifdef FUNCTION_GET_NBSAME
-      integer twh_get_nbsame
-#undef FUNCTION_GET_NBSAME
-#endif
-c
-#ifdef FUNCTION_GET_NCMT
-      integer twh_get_ncmt
-#undef FUNCTION_GET_NCMT
-#endif
-c
-#ifdef FUNCTION_GET_NIMPSAME
-      integer twh_get_nimpsame
-#undef FUNCTION_GET_NIMPSAME
-#endif
-c
-#ifdef FUNCTION_GET_NTSAME
-      integer twh_get_ntsame
-#undef FUNCTION_GET_NTSAME
-#endif
-c
-#ifdef FUNCTION_GET_NTORLOOP
-      integer twh_get_ntorloop
-#undef FUNCTION_GET_NTORLOOP
-#endif
-c
-#ifdef FUNCTION_GET_NTYPE
-      integer twh_get_ntype
-#undef FUNCTION_GET_NTYPE
-#endif
-c
-#ifdef FUNCTION_GET_NVSAME
-      integer twh_get_nvsame
-#undef FUNCTION_GET_NVSAME
-#endif
-c
-#ifdef FUNCTION_GET_OFCOEFF
-      double precision twh_get_ofcoeff
-#undef FUNCTION_GET_OFCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_OFFF
-      character*(FFNAMELEN) twh_get_offf
-#undef FUNCTION_GET_OFFF
-#endif
-c
-#ifdef FUNCTION_GET_OFNAMES
-      character*(FFNAMELEN) twh_get_ofnames
-#undef FUNCTION_GET_OFNAMES
-#endif
-c
-#ifdef FUNCTION_GET_OFSTYLE
-      integer twh_get_ofstyle
-#undef FUNCTION_GET_OFSTYLE
-#endif
-c
-#ifdef FUNCTION_GET_PM1BOXCOMSWITCH
-      double precision twh_get_pm1boxcomswitch
-#undef FUNCTION_GET_PM1BOXCOMSWITCH
-#endif
-c
-#ifdef FUNCTION_GET_PMVOL
-      double precision twh_get_pmvol
-#undef FUNCTION_GET_PMVOL
-#endif
-c
-#ifdef FUNCTION_GET_QBIFF
-      character*(FFNAMELEN) twh_get_qbiff
-#undef FUNCTION_GET_QBIFF
-#endif
-c
-#ifdef FUNCTION_GET_QBINAMES
-      character*(FFNAMELEN) twh_get_qbinames
-#undef FUNCTION_GET_QBINAMES
-#endif
-c
-#ifdef FUNCTION_GET_QBIVALUE
-      double precision twh_get_qbivalue
-#undef FUNCTION_GET_QBIVALUE
-#endif
-c
-#ifdef FUNCTION_GET_QQATOM
-      double precision twh_get_qqatom
-#undef FUNCTION_GET_QQATOM
-#endif
-c
-#ifdef FUNCTION_GET_RMVOL
-      double precision twh_get_rmvol
-#undef FUNCTION_GET_RMVOL
 #endif
 c
 #ifdef FUNCTION_GET_SCALING_STYLE
@@ -631,56 +201,6 @@ c
 #ifdef FUNCTION_GET_STRING_LENGTH
       integer twh_get_string_length
 #undef FUNCTION_GET_STRING_LENGTH
-#endif
-c
-#ifdef FUNCTION_GET_TAVOL
-      double precision twh_get_tavol
-#undef FUNCTION_GET_TAVOL
-#endif
-c
-#ifdef FUNCTION_GET_TORCOEFF
-      double precision twh_get_torcoeff
-#undef FUNCTION_GET_TORCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_TORFF
-      character*(FFNAMELEN) twh_get_torff
-#undef FUNCTION_GET_TORFF
-#endif
-c
-#ifdef FUNCTION_GET_TORNAMES
-      character*(FFNAMELEN) twh_get_tornames
-#undef FUNCTION_GET_TORNAMES
-#endif
-c
-#ifdef FUNCTION_GET_TORSTRING
-      character*(FFNAMELEN) twh_get_torstring
-#undef FUNCTION_GET_TORSTRING
-#endif
-c
-#ifdef FUNCTION_GET_TORSTYLE
-      integer twh_get_torstyle
-#undef FUNCTION_GET_TORSTYLE
-#endif
-c
-#ifdef FUNCTION_GET_VIBFF
-      character*10 twh_get_vibff
-#undef FUNCTION_GET_VIBFF
-#endif
-c
-#ifdef FUNCTION_GET_VIBCOEFF
-      double precision twh_get_vibcoeff
-#undef FUNCTION_GET_VIBCOEFF
-#endif
-c
-#ifdef FUNCTION_GET_VIBNAMES
-      character*(FFNAMELEN) twh_get_vibnames
-#undef FUNCTION_GET_VIBNAMES
-#endif
-c
-#ifdef FUNCTION_GET_VIBRANG
-      double precision twh_get_vibrang
-#undef FUNCTION_GET_VIBRANG
 #endif
 c
 #ifdef FUNCTION_IN_ATOMLIST
@@ -721,11 +241,6 @@ c
 #ifdef FUNCTION_OLDGETATOMNUM
       integer twh_oldgetatomnum
 #undef FUNCTION_OLDGETATOMNUM
-#endif
-c
-#ifdef FUNCTION_ONEFIVETYPE
-      integer twh_onefivetype
-#undef FUNCTION_ONEFIVETYPE
 #endif
 c
 #ifdef FUNCTION_PEEK_LABEL

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,12 +28,9 @@ c     * also determines the index of each molecule for use in an       *
 c     * interior regrowth                                              *
 c     *                                                                *
 c     * completely rewritten 10-09-2002 by C.D. Lorenz                 *
-c     * last modified 07-31-2014 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit  none
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_LEXIST
-#include "functions.h"
 c     --- debugging logical
 #define DEBUG_FINDRINGS 0
 c     --- variables passed to and from the subroutine
@@ -41,14 +38,14 @@ c     --- variables passed to and from the subroutine
 
 c     --- local variables
 c     --- logical scalars
-      logical ldone,lringfound
+      logical ldone,lringfound,lexist
 c     --- logical arrays
       logical lring
       dimension lring(NUMAX)
 c     --- integer scalars
       integer iunit,startunit,lowringnum,currentunit,nextunit,itest
       integer nunit,testring,aminonum
-      integer ivib,nvib,ibend,nbend,atest,btest
+      integer ivib,nvib,ibend,nbend,atest,btest,invibration
 c     --- integer arrays
       integer vibpointer,prevunit,visitcount
       dimension vibpointer(NUMAX),prevunit(NUMAX),visitcount(NUMAX)
@@ -87,7 +84,8 @@ c           --- initialize the prevunit
 c           --- initialize visitcount
             visitcount(iunit) = 0
          enddo
-         if ( twh_get_invib(imolty,startunit) .gt. 1 ) then
+         call twh_invib(GLB_GET,imolty,startunit,invibration)
+         if ( invibration .gt. 1 ) then
             currentunit = startunit
             call twh_lexist(GLB_SET,currentunit,.true.)
             ldone = .false.
@@ -98,8 +96,8 @@ c           --- cannot make a ring with an atom that only has 1 bond
          endif
          do while ( .not. ldone )
             vibpointer(currentunit) = vibpointer(currentunit) + 1
-            if ( vibpointer(currentunit) .gt. 
-     &           twh_get_invib(imolty,currentunit) ) then
+            call twh_invib(GLB_GET,imolty,currentunit,invibration)
+            if ( vibpointer(currentunit) .gt. invibration ) then
 c              --- we are finished exploring this atom, kick out
                if ( prevunit(currentunit) .eq. 0 ) then
 c                 --- completely finished with this startunit
@@ -113,6 +111,7 @@ c                 --- exit down to the previous atom
 c              --- check to see if this completes a ring
                call twh_ijvib(GLB_GET,imolty,currentunit
      &              ,vibpointer(currentunit),itest)
+               call twh_lexist(GLB_GET,itest,lexist)
                if ( itest .eq. prevunit(currentunit) ) then
 c                 --- we do not want to explore the bond that leads 
 c                 --- directly back to the previous unit
@@ -128,7 +127,7 @@ c                 --- to true for ring detection
                      call twh_ijvib(GLB_GET,imolty,iunit,ivib,iunit)
                      lring(iunit) = .true.
                   enddo
-               elseif ( twh_get_lexist(itest) ) then
+               elseif ( lexist ) then
 c                 --- if itest is not the start unit and it already
 c                 --- exists then we are looping back onto the chain
 c                 --- while this clearly has found a cyclic subunit,

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -45,38 +45,14 @@ c     * lautotorsion: true if we are autodetecting all torsions, false *
 c     *               if some torsions have already been determined    *
 c     *                                                                *
 c     * originally written 02-26-2001 by M.G. Martin                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_AAFF
-#define FUNCTION_GET_AANAMES
-#define FUNCTION_GET_CANAME
-#define FUNCTION_GET_CBNAME
-#define FUNCTION_GET_CTNAME
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IMPFF
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INOF
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_ITTOR
-#define FUNCTION_GET_NAASAME
-#define FUNCTION_GET_NBFF
-#define FUNCTION_GET_NBNAME
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_OFFF
-#define FUNCTION_GET_OFNAMES
-#include "functions.h"
 c     --- debug variable
 #define DEBUG_ASSEMBLE 0
 c     --- variables passed to/from the subroutine
       logical lfailure,lautotorsion
-      character*(FFNAMELEN) forcefield
+      character*(FFNAMELEN) forcefield,aaff,impfftest
       character*(FFNAMELEN) atomname
       dimension atomname(NUMAX)
       character*(*) match_style,improper_assignment
@@ -85,18 +61,24 @@ c     --- local variables
 c     --- logical scalars
       logical lfound,langang
 c     --- character string scalars
-      character*(FFNAMELEN) iname,jname,kname,lname
+      character*(FFNAMELEN) iname,jname,kname,lname,testname,testnbff
+      character*(FFNAMELEN) testnbname,testofff
       character*15 specialtor
 c     --- character string arrays
-      character*(FFNAMELEN) names
-      dimension names(5)
+      character*(FFNAMELEN) aanames
+      dimension aanames(4)
+      character*(FFNAMELEN) names,ofnames
+      dimension names(5),ofnames(5)
       character*15 spectornames
       dimension spectornames(spectorcount)
 c     --- integer scalars
-      integer param,type,isame,iof,iorder,inbend
+      integer param,type,isame,iof,iorder,inbend,naasame
       integer iatom,jatom,katom,latom,matom,ivib,ibend,itor,jvib
-      integer iaa,iindex,kindex,lindex,iorderba,paramba
+      integer iaa,iindex,kindex,lindex,iorderba,paramba,iset
       integer iatom_nvib,jatom_nvib,katom_nvib,latom_nvib,itest,jtest
+      integer ijtor2test,ijtor3test,ijtor4test,inben,inimproper
+      integer intortest
+      integer ntype,ntypei,ntypej
 c     --- integer arrays
       integer partners
       dimension partners(3)
@@ -115,17 +97,20 @@ c     --- determine atom types
          type = 0
          do while ( param .eq. 0 .and. type .lt. NNTYPE)
             type = type + 1
-            if ( forcefield .eq. twh_get_nbff(type) ) then
+            call twh_nbff(GLB_GET,type,testnbff)
+            if ( forcefield .eq. testnbff ) then
                if ( match_style .eq. 'standard'
      &              .or. match_style .eq. 'MMFF checkdown' 
      &              .or. match_style .eq. 'stereoselective' ) then
 c                 --- match to the nonbonded name
-                  if ( twh_get_nbname(type) .eq. names(1) ) then
+                  call twh_nbname(GLB_GET,type,testnbname)
+                  if ( testnbname .eq. names(1) ) then
                      param = type
                   endif
                elseif ( match_style .eq. 'MMFF bond checkdown' ) then
 c                 --- match to the bond name
-                  if ( twh_get_cbname(type) .eq. names(1) ) then
+                  call twh_cbname(GLB_GET,type,testname)
+                  if ( testname .eq. names(1) ) then
                      param = type
                   endif
                else
@@ -172,7 +157,7 @@ c     --- determine bending angles
                if ( iatom .ne. katom ) then
 c                 --- we found a bending angle
                   call twh_inben(GLB_INCR,imolty,iatom,1)
-                  ibend = twh_get_inben(imolty,iatom)
+                  call twh_inben(GLB_GET,imolty,iatom,ibend)
                   call twh_ijben2(GLB_SET,imolty,iatom,ibend,jatom)
                   call twh_ijben3(GLB_SET,imolty,iatom,ibend,katom)
                endif
@@ -228,9 +213,10 @@ c     --- if needed
 
 c     --- determine regular torsion angles
       do iatom = 1,totatoms
-         do ibend = 1,twh_get_inben(imolty,iatom)
-            jatom = twh_get_ijben2(imolty,iatom,ibend)
-            katom = twh_get_ijben3(imolty,iatom,ibend)
+         call twh_inben(GLB_GET,imolty,iatom,inben)
+         do ibend = 1,inben
+            call twh_ijben2(GLB_GET,imolty,iatom,ibend,jatom)
+            call twh_ijben3(GLB_GET,imolty,iatom,ibend,katom)
             call twh_invib(GLB_GET,imolty,katom,katom_nvib)
             do ivib = 1,katom_nvib
                call twh_ijvib(GLB_GET,imolty,katom,ivib,latom)
@@ -240,25 +226,31 @@ c                 --- we found a valid regular torsion
 c                    --- add this to the list of automatically 
 c                    --- detected torsions
                      call twh_intor(GLB_INCR,imolty,iatom,1)
-                     itor = twh_get_intor(imolty,iatom)
+                     call twh_intor(GLB_GET,imolty,iatom,itor)
                      call twh_ijtor2(GLB_SET,imolty,iatom,itor,jatom)
                      call twh_ijtor3(GLB_SET,imolty,iatom,itor,katom)
                      call twh_ijtor4(GLB_SET,imolty,iatom,itor,latom)
                   else
 c                    --- see if this torsion already is specified
                      lfound = .false.
-                     do itor = 1,twh_get_intor(imolty,iatom)
-                        if ( twh_get_ijtor2(imolty,iatom,itor) 
-     &                       .eq. jatom
-     &                       .and. twh_get_ijtor3(imolty,iatom,itor) 
-     &                       .eq. katom
-     &                       .and. twh_get_ijtor4(imolty,iatom,itor) 
-     &                       .eq. latom ) lfound = .true.
+                     call twh_intor(GLB_GET,imolty,iatom,intortest)
+                     do itor = 1,intortest
+                        call twh_ijtor2(GLB_GET,imolty,iatom,itor
+     &                       ,ijtor2test)
+                        call twh_ijtor3(GLB_GET,imolty,iatom,itor
+     &                       ,ijtor3test)
+                        call twh_ijtor4(GLB_GET,imolty,iatom,itor
+     &                       ,ijtor4test)
+                        if ( ijtor2test .eq. jatom
+     &                       .and. ijtor3test .eq. katom
+     &                       .and. ijtor4test .eq. latom ) then
+                           lfound = .true.
+                        endif
                      enddo
                      if ( .not. lfound ) then
 c                       --- add to the end of the list
                         call twh_intor(GLB_INCR,imolty,iatom,1)
-                        itor = twh_get_intor(imolty,iatom)
+                        call twh_intor(GLB_GET,imolty,iatom,itor)
                         call twh_ijtor2(GLB_SET,imolty,iatom,itor,jatom)
                         call twh_ijtor3(GLB_SET,imolty,iatom,itor,katom)
                         call twh_ijtor4(GLB_SET,imolty,iatom,itor,latom)
@@ -272,13 +264,14 @@ c                       --- set special type flag
       enddo
 
       do iatom = 1,totatoms
-         do itor = 1,twh_get_intor(imolty,iatom)
-            jatom = twh_get_ijtor2(imolty,iatom,itor)
-            katom = twh_get_ijtor3(imolty,iatom,itor)
-            latom = twh_get_ijtor4(imolty,iatom,itor)
+         call twh_intor(GLB_GET,imolty,iatom,intortest)
+         do itor = 1,intortest
+            call twh_ijtor2(GLB_GET,imolty,iatom,itor,jatom)
+            call twh_ijtor3(GLB_GET,imolty,iatom,itor,katom)
+            call twh_ijtor4(GLB_GET,imolty,iatom,itor,latom)
 c           --- set param to the torsion type, generally this is 0
 c           --- by initialization, but allows for clever trickery
-            param = twh_get_ittor(imolty,iatom,itor)
+            call twh_ittor(GLB_GET,imolty,iatom,itor,param)
 
             if ( match_style .eq. 'standard' ) then
                specialtor = 'wild'
@@ -325,7 +318,8 @@ c              --- check for a match in the special torsion list
 c     --- find out if this forcefield contains angle-angle terms
       langang = .false.
       do iaa = 1,TAAMAX
-         if ( forcefield .eq. twh_get_aaff(iaa) ) langang = .true.
+         call twh_aaff(GLB_GET,iaa,aaff)
+         if ( forcefield .eq. aaff ) langang = .true.
       enddo
       
 c     --- determine the angle-angle terms and their types
@@ -348,14 +342,14 @@ c                       --- found a valid angle-angle term
                         call twh_ijaa2(GLB_SET,imolty,jatom,iaa,latom)
 c                       --- send the compass angle names for this type
 c                       --- use the i,j,k,l order of compass
-                        names(1) = twh_get_caname(
-     &                       twh_get_ntype(imolty,iatom))
-                        names(2) = twh_get_caname(
-     &                       twh_get_ntype(imolty,jatom))
-                        names(3) = twh_get_caname(
-     &                       twh_get_ntype(imolty,katom))
-                        names(4) = twh_get_caname(
-     &                       twh_get_ntype(imolty,latom))
+                        call twh_ntype(GLB_GET,imolty,iatom,ntype)
+                        call twh_caname(GLB_GET,ntype,names(1))
+                        call twh_ntype(GLB_GET,imolty,jatom,ntype)
+                        call twh_caname(GLB_GET,ntype,names(2))
+                        call twh_ntype(GLB_GET,imolty,katom,ntype)
+                        call twh_caname(GLB_GET,ntype,names(3))
+                        call twh_ntype(GLB_GET,imolty,latom,ntype)
+                        call twh_caname(GLB_GET,ntype,names(4))
 c                       --- match the parameters
 c                       --- positions 1 and 4 are interchangable, 
 c                       --- but 2 and 3 must be in this exact order
@@ -363,26 +357,23 @@ c                       --- but 2 and 3 must be in this exact order
                         type = 0
                         do while ( param .eq. 0 .and. type .lt. TAAMAX )
                            type = type + 1
-                           if ( forcefield .eq. twh_get_aaff(type)
-     &                          ) then
-                              do isame = 1,twh_get_naasame(type)
-                                 if ( ( names(1)
-     &                                .eq. twh_get_aanames(type,isame,1)
-     &                                .and. names(2) 
-     &                                .eq. twh_get_aanames(type,isame,2)
-     &                                .and. names(3) 
-     &                                .eq. twh_get_aanames(type,isame,3)
-     &                                .and. names(4) 
-     &                                .eq. twh_get_aanames(type,isame,4)
+                           call twh_aaff(GLB_GET,type,aaff)
+                           if ( forcefield .eq. aaff ) then
+                              call twh_naasame(GLB_GET,type,naasame)
+                              do isame = 1,naasame
+                                 do iset = 1,4
+                                    call twh_aanames(GLB_GET,type,isame
+     &                                   ,iset,aanames(iset))
+                                 enddo
+                                 if ( ( names(1).eq. aanames(1)
+     &                                .and. names(2) .eq. aanames(2)
+     &                                .and. names(3) .eq. aanames(3)
+     &                                .and. names(4) .eq. aanames(4)
      &                                ) .or. (
-     &                                names(4) 
-     &                                .eq. twh_get_aanames(type,isame,1)
-     &                                .and. names(2) 
-     &                                .eq. twh_get_aanames(type,isame,2)
-     &                                .and. names(3) 
-     &                                .eq. twh_get_aanames(type,isame,3)
-     &                                .and. names(1) 
-     &                                .eq. twh_get_aanames(type,isame,4)
+     &                                names(4) .eq. aanames(1)
+     &                                .and. names(2) .eq. aanames(2)
+     &                                .and. names(3) .eq. aanames(3)
+     &                                .and. names(1) .eq. aanames(4)
      &                                ) ) then
                                     param = type
                                  endif
@@ -440,8 +431,9 @@ c              --- put the types in order
                   do jvib = 1,ivib-1
                      itest = partners(ivib)
                      jtest = partners(jvib)
-                     if ( twh_get_ntype(imolty,itest) 
-     &                    .lt. twh_get_ntype(imolty,jtest) ) then
+                     call twh_ntype(GLB_GET,imolty,itest,ntypei)
+                     call twh_ntype(GLB_GET,imolty,jtest,ntypej)
+                     if ( ntypei .lt. ntypej ) then
 c                       --- switch the atoms
                         partners(ivib) = jtest
                         partners(jvib) = itest
@@ -466,15 +458,20 @@ c              --- assign the improper partners
 
 c     --- determine improper torsion types
       do iatom = 1,totatoms
-         do itor = 1,twh_get_inimprop(imolty,iatom)
+         call twh_inimprop(GLB_GET,imolty,iatom,inimproper)
+         do itor = 1,inimproper
             call twh_ijimprop2(GLB_GET,imolty,iatom,itor,jatom)
             call twh_ijimprop3(GLB_GET,imolty,iatom,itor,katom)
             call twh_ijimprop4(GLB_GET,imolty,iatom,itor,latom)
 c           --- use the atomnames
-            iname = twh_get_ctname(twh_get_ntype(imolty,iatom))
-            jname = twh_get_ctname(twh_get_ntype(imolty,jatom))
-            kname = twh_get_ctname(twh_get_ntype(imolty,katom))
-            lname = twh_get_ctname(twh_get_ntype(imolty,latom))
+            call twh_ntype(GLB_GET,imolty,iatom,ntype)
+            call twh_ctname(GLB_GET,ntype,iname)
+            call twh_ntype(GLB_GET,imolty,jatom,ntype)
+            call twh_ctname(GLB_GET,ntype,jname)
+            call twh_ntype(GLB_GET,imolty,katom,ntype)
+            call twh_ctname(GLB_GET,ntype,kname)
+            call twh_ntype(GLB_GET,imolty,latom,ntype)
+            call twh_ctname(GLB_GET,ntype,lname)
 c           --- order of atoms has some exceptions
             if ( forcefield .eq. 'Amber96' ) then
 c              --- need to find the correct type for this interaction
@@ -502,13 +499,14 @@ c           --- set the param to the itimprop, this will be zero in
 c           --- all cases except those where a default value has already
 c           --- been specified (notably the stereochemistry enforcer 
 c           --- for proteins)
-            param = twh_get_itimprop(imolty,iatom,itor)
+            call twh_itimprop(GLB_GET,imolty,iatom,itor,param)
 c           --- special hack for the mgmstereochem enforcer if param -1
             if ( param .eq. -1 ) then
                type = 0
                do while ( param .eq. -1 .and. type .lt. TIMPMAX )
                   type = type + 1
-                  if ( twh_get_impff(type) .eq. 'mgmstereo' ) then
+                  call twh_impff(GLB_GET,type,impfftest)
+                  if ( impfftest .eq. 'mgmstereo' ) then
                      param = type
                   endif
                enddo
@@ -550,40 +548,49 @@ c              --- required forcefield file
 
 c     --- determine whether we have any special one-five interactions
       do iatom = 1,totatoms
-         do itor = 1,twh_get_intor(imolty,iatom)
-            jatom = twh_get_ijtor2(imolty,iatom,itor)
-            katom = twh_get_ijtor3(imolty,iatom,itor)
-            latom = twh_get_ijtor4(imolty,iatom,itor)
+         call twh_intor(GLB_GET,imolty,iatom,intortest)
+         do itor = 1,intortest
+            call twh_ijtor2(GLB_GET,imolty,iatom,itor,jatom)
+            call twh_ijtor3(GLB_GET,imolty,iatom,itor,katom)
+            call twh_ijtor4(GLB_GET,imolty,iatom,itor,latom)
             call twh_invib(GLB_GET,imolty,latom,latom_nvib)
             do ivib = 1,latom_nvib
                call twh_ijvib(GLB_GET,imolty,latom,ivib,matom)
                if ( matom .ne. katom ) then
 c                 --- potential one-five interaction
-                  names(1) = twh_get_nbname(twh_get_ntype(imolty,iatom))
-                  names(2) = twh_get_nbname(twh_get_ntype(imolty,jatom))
-                  names(3) = twh_get_nbname(twh_get_ntype(imolty,katom))
-                  names(4) = twh_get_nbname(twh_get_ntype(imolty,latom))
-                  names(5) = twh_get_nbname(twh_get_ntype(imolty,matom))
+                  call twh_ntype(GLB_GET,imolty,iatom,ntype)
+                  call twh_nbname(GLB_GET,ntype,names(1))
+                  call twh_ntype(GLB_GET,imolty,jatom,ntype)
+                  call twh_nbname(GLB_GET,ntype,names(2))
+                  call twh_ntype(GLB_GET,imolty,katom,ntype)
+                  call twh_nbname(GLB_GET,ntype,names(3))
+                  call twh_ntype(GLB_GET,imolty,latom,ntype)
+                  call twh_nbname(GLB_GET,ntype,names(4))
+                  call twh_ntype(GLB_GET,imolty,matom,ntype)
+                  call twh_nbname(GLB_GET,ntype,names(5))
 c                 --- initialize param
                   param = 0
 c                 --- check for exact matches
                   type = 0
                   do while ( param .eq. 0 .and. type .lt. TOFMAX)
                      type = type + 1
-                     if ( twh_get_offf(type) .eq. forcefield ) then
-                        if ( (
-     &                       twh_get_ofnames(type,1) .eq. names(1) .and.
-     &                       twh_get_ofnames(type,2) .eq. names(2) .and.
-     &                       twh_get_ofnames(type,3) .eq. names(3) .and.
-     &                       twh_get_ofnames(type,4) .eq. names(4) .and.
-     &                       twh_get_ofnames(type,5) .eq. names(5)
-     &                       ) .or. (
-     &                       twh_get_ofnames(type,1) .eq. names(5) .and.
-     &                       twh_get_ofnames(type,2) .eq. names(4) .and.
-     &                       twh_get_ofnames(type,3) .eq. names(3) .and.
-     &                       twh_get_ofnames(type,4) .eq. names(2) .and.
-     &                       twh_get_ofnames(type,5) .eq. names(1)
-     &                       ) ) then
+                     call twh_offf(GLB_GET,type,testofff)
+                     if ( testofff .eq. forcefield ) then
+                        call twh_ofnames(GLB_GET,type,1,ofnames(1))
+                        call twh_ofnames(GLB_GET,type,2,ofnames(2))
+                        call twh_ofnames(GLB_GET,type,3,ofnames(3))
+                        call twh_ofnames(GLB_GET,type,4,ofnames(4))
+                        call twh_ofnames(GLB_GET,type,5,ofnames(5))
+                        if ( ( ofnames(1) .eq. names(1) .and.
+     &                       ofnames(2) .eq. names(2) .and.
+     &                       ofnames(3) .eq. names(3) .and.
+     &                       ofnames(4) .eq. names(4) .and.
+     &                       ofnames(5) .eq. names(5) )
+     &                       .or. ( ofnames(1) .eq. names(5) .and.
+     &                       ofnames(2) .eq. names(4) .and.
+     &                       ofnames(3) .eq. names(3) .and.
+     &                       ofnames(4) .eq. names(2) .and.
+     &                       ofnames(5) .eq. names(1)) ) then
                            param = type
                         endif
                      endif
@@ -592,20 +599,23 @@ c                 --- check for exact end matches and triple wild center
                   type = 0
                   do while ( param .eq. 0 .and. type .lt. TOFMAX)
                      type = type + 1
-                     if ( twh_get_offf(type) .eq. forcefield ) then
-                        if ( (
-     &                       twh_get_ofnames(type,1) .eq. names(1) .and.
-     &                       twh_get_ofnames(type,2) .eq. 'wild' .and.
-     &                       twh_get_ofnames(type,3) .eq. 'wild' .and.
-     &                       twh_get_ofnames(type,4) .eq. 'wild' .and.
-     &                       twh_get_ofnames(type,5) .eq. names(5)
-     &                       ) .or. (
-     &                       twh_get_ofnames(type,1) .eq. names(5) .and.
-     &                       twh_get_ofnames(type,2) .eq. 'wild' .and.
-     &                       twh_get_ofnames(type,3) .eq. 'wild' .and.
-     &                       twh_get_ofnames(type,4) .eq. 'wild' .and.
-     &                       twh_get_ofnames(type,5) .eq. names(1)
-     &                       ) ) then
+                     call twh_offf(GLB_GET,type,testofff)
+                     if ( testofff .eq. forcefield ) then
+                        call twh_ofnames(GLB_GET,type,1,ofnames(1))
+                        call twh_ofnames(GLB_GET,type,2,ofnames(2))
+                        call twh_ofnames(GLB_GET,type,3,ofnames(3))
+                        call twh_ofnames(GLB_GET,type,4,ofnames(4))
+                        call twh_ofnames(GLB_GET,type,5,ofnames(5))
+                        if ( ( ofnames(1) .eq. names(1) .and.
+     &                       ofnames(2) .eq. 'wild' .and.
+     &                       ofnames(3) .eq. 'wild' .and.
+     &                       ofnames(4) .eq. 'wild' .and.
+     &                       ofnames(5) .eq. names(5) )
+     &                       .or. ( ofnames(1) .eq. names(5) .and.
+     &                       ofnames(2) .eq. 'wild' .and.
+     &                       ofnames(3) .eq. 'wild' .and.
+     &                       ofnames(4) .eq. 'wild' .and.
+     &                       ofnames(5) .eq. names(1) ) ) then
                            param = type
                         endif
                      endif
@@ -614,7 +624,7 @@ c                 --- we only count this if we found a non-zero param
                   if ( param .ne. 0 ) then
 c                    --- increment inof
                      call twh_inof(GLB_INCR,imolty,iatom,1)
-                     iof = twh_get_inof(imolty,iatom)
+                     call twh_inof(GLB_GET,imolty,iatom,iof)
                      call twh_ijof5(GLB_SET,imolty,iatom,iof,matom)
                      call twh_itof(GLB_SET,imolty,iatom,iof,param)
                   endif
@@ -638,12 +648,9 @@ c     ******************************************************************
 c     * finds the bond type by searching for a name match              *
 c     *                                                                *
 c     * split from assemble 05-02-2006 by M.G. Martin                  *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CBNAME
-#define FUNCTION_GET_NTYPE
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer totatoms,imolty,iatom,jatom,ivib,param
@@ -657,7 +664,7 @@ c     --- character string arrays
 c     --- logical scalars
       logical lfound
 c     --- integer scalars
-      integer jvib,nvib,itest
+      integer jvib,nvib,itest,ntype
       
 c     --- safety check
       if ( jatom .gt. totatoms ) then
@@ -671,8 +678,10 @@ c     --- safety check
          return
       endif
 c     --- use the bonding names
-      names(1) = twh_get_cbname(twh_get_ntype(imolty,iatom))
-      names(2) = twh_get_cbname(twh_get_ntype(imolty,jatom))
+      call twh_ntype(GLB_GET,imolty,iatom,ntype)
+      call twh_cbname(GLB_GET,ntype,names(1))
+      call twh_ntype(GLB_GET,imolty,jatom,ntype)
+      call twh_cbname(GLB_GET,ntype,names(2))
 c     --- check the vibration orders
       call twh_vibration_order(GLB_GET,iatom,ivib,vorder)
 c     --- find the reverse match
@@ -730,13 +739,9 @@ c     * looks for a vibname pair that matches the forcefield, names,   *
 c     * and vibration order                                            *
 c     *                                                                *
 c     * split from find_bond_type 12-10-2006 by M.G. Martin            *
-c     * last modified 08-11-2008 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NVSAME
-#define FUNCTION_GET_VIBFF
-#define FUNCTION_GET_VIBNAMES
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       integer param
       character*(*) vorder,forcefield
@@ -744,22 +749,25 @@ c     --- variables passed to/from the subroutine
       dimension names(2)
 c     --- local variables
 c     --- character scalars
-      character*(FFNAMELEN) awild,bwild,ctest
+      character*(FFNAMELEN) awild,bwild,ctest,vibfftest
+c     --- character arrays
+      character*(FFNAMELEN) vibnames
+      dimension vibnames(2)
 c     --- integer scalars
-      integer itype,inum
+      integer itype,inum,nvsame
 
 c     --- sort through the list and look for complete matches
       do itype = 1,TVIBMAX
-         if ( twh_get_vibff(itype) .eq. forcefield ) then
-            do inum = 1,twh_get_nvsame(itype)
-               if ( (twh_get_vibnames(itype,inum,1).eq. names(1) 
-     &              .and. 
-     &              twh_get_vibnames(itype,inum,2).eq.names(2))
-     &              .or. 
-     &              (twh_get_vibnames(itype,inum,1).eq.names(2) 
-     &              .and. 
-     &              twh_get_vibnames(itype,inum,2).eq.names(1)))
-     &              then
+         call twh_vibff(GLB_GET,itype,vibfftest)
+         if ( vibfftest .eq. forcefield ) then
+            call twh_nvsame(GLB_GET,itype,nvsame)
+            do inum = 1,nvsame
+               call twh_vibnames(GLB_GET,itype,inum,1,vibnames(1))
+               call twh_vibnames(GLB_GET,itype,inum,2,vibnames(2))
+               if ( ( vibnames(1) .eq. names(1) .and. 
+     &              vibnames(2) .eq. names(2) )
+     &              .or. (vibnames(1) .eq. names(2) .and. 
+     &              vibnames(2) .eq. names(1) ) ) then
 c                 --- check the vibration order
                   if ( vorder .eq. 'any' ) then
                      param = itype
@@ -780,22 +788,18 @@ c     --- no complete matches found - look for letter wild matches
       awild = ' wild'
       bwild = ' wild'
       do itype = 1,TVIBMAX
-         if ( twh_get_vibff(itype) .eq. forcefield ) then
-            do inum = 1,twh_get_nvsame(itype)
+         call twh_vibff(GLB_GET,itype,vibfftest)
+         if ( vibfftest .eq. forcefield ) then
+            call twh_nvsame(GLB_GET,itype,nvsame)
+            do inum = 1,nvsame
                awild(1:1) = names(1)(1:1)
                bwild(1:1) = names(2)(1:1)
-               if ( (
-     &              twh_get_vibnames(itype,inum,1) .eq. awild
-     &              .and. 
-     &              twh_get_vibnames(itype,inum,2).eq. bwild 
-     &              )
-     &              .or. 
-     &              ( 
-     &              twh_get_vibnames(itype,inum,1) .eq. bwild
-     &              .and. 
-     &              twh_get_vibnames(itype,inum,2) .eq. awild 
-     &              )
-     &              ) then
+               call twh_vibnames(GLB_GET,itype,inum,1,vibnames(1))
+               call twh_vibnames(GLB_GET,itype,inum,2,vibnames(2))
+               if ( (vibnames(1) .eq. awild .and. 
+     &              vibnames(2) .eq. bwild )
+     &              .or. ( vibnames(1) .eq. bwild .and. 
+     &              vibnames(2) .eq. awild ) ) then
                   param = itype
                   return
                endif
@@ -815,15 +819,9 @@ c     * this starts by looking for exact matches, and then runs       *
 c     * through a series of letter-wild cards and the full wildcards  *
 c     *                                                               *
 c     * split from assemble 12-15-2006 by M.G. Martin                 *
-c     * last modified 10-13-2008 by M.G. Martin                       *
+c     * last modified 03-29-2020 by M.G. Martin                       *
 c     *****************************************************************
       implicit none
-#define FUNCTION_GET_BENDFF
-#define FUNCTION_GET_BENDNAMES
-#define FUNCTION_GET_CANAME
-#define FUNCTION_GET_NBSAME
-#define FUNCTION_GET_NTYPE
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       integer imolty,iatom,jatom,katom,iorder,param
       character*(*) forcefield
@@ -831,35 +829,41 @@ c     --- local variables
 c     --- logical scalars
       logical lfailure
 c     --- character string scalars
-      character*(FFNAMELEN) awild,zwild,cwild
+      character*(FFNAMELEN) awild,zwild,cwild,fftest
 c     --- character string arrays
-      character*(FFNAMELEN) names
-      dimension names(3)
+      character*(FFNAMELEN) names,testnames
+      dimension names(3),testnames(3)
 c     --- integer scalars
-      integer type,inum
+      integer type,inum,nbsame,ntype
 
 c     --- use the angle names for this type
-      names(1) = twh_get_caname(twh_get_ntype(imolty,iatom))
-      names(2) = twh_get_caname(twh_get_ntype(imolty,jatom))
-      names(3) = twh_get_caname(twh_get_ntype(imolty,katom))
+      call twh_ntype(GLB_GET,imolty,iatom,ntype)
+      call twh_caname(GLB_GET,ntype,names(1))
+      call twh_ntype(GLB_GET,imolty,jatom,ntype)
+      call twh_caname(GLB_GET,ntype,names(2))
+      call twh_ntype(GLB_GET,imolty,katom,ntype)
+      call twh_caname(GLB_GET,ntype,names(3))
 c     --- initialize type (done for each kind of search)
       type = 0
 c     --- find explicit matches
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
 c              --- need center match
-               if ( twh_get_bendnames(type,inum,2) .eq.names(2) )then
+               if ( testnames(2) .eq. names(2) ) then
 c                 --- find exact end matches
-                  if ( (twh_get_bendnames(type,inum,1) .eq. names(1)
-     &                 .and.
-     &                 twh_get_bendnames(type,inum,3).eq.names(3))
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  call twh_bendnames(GLB_GET,type,inum,3,testnames(3))
+                  if ( ( testnames(1) .eq. names(1) )
+     &                 .and. ( testnames(3) .eq. names(3) )
      &                 ) then
                      iorder = ORD_FORWARD
-                  elseif ( (twh_get_bendnames(type,inum,1) .eq. names(3)
-     &                    .and.
-     &                    twh_get_bendnames(type,inum,3) .eq. names(1) )
+                  elseif ( ( testnames(1) .eq. names(3) )
+     &                    .and. ( testnames(3) .eq. names(1) )
      &                    ) then
                      iorder = ORD_REVERSE
                   endif
@@ -880,43 +884,46 @@ c     --- that they end in wild
       zwild = ' wild'
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
 c              --- assign letter wilds
                awild(1:1) = names(1)(1:1)
                zwild(1:1) = names(3)(1:1)
 c              --- need center match
-               if ( twh_get_bendnames(type,inum,2)
-     &              .eq.names(2))then
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
+               if ( testnames(2) .eq.names(2))then
 c                 --- find exact end matches
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  call twh_bendnames(GLB_GET,type,inum,3,testnames(3))
                   if ( 
 c                      --- awild - match - match
-     &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. awild
+     &                 ( testnames(1) .eq. awild
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. names(3) 
+     &                 testnames(3) .eq. names(3) 
      &                 )
      &                 .or.
 c                      --- match - match - zwild
      &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. names(1)
+     &                 testnames(1) .eq. names(1)
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. zwild
+     &                 testnames(3) .eq. zwild
      &                 ) ) then
                   iorder = ORD_FORWARD
                elseif ( 
 c                      --- zwild - match - match
      &                 (
-     &                 twh_get_bendnames(type,inum,1) .eq. zwild
+     &                 testnames(1) .eq. zwild
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. names(1)
+     &                 testnames(3) .eq. names(1)
      &                 )
      &                 .or.
 c                      --- match - match - awild
      &                 (
-     &                 twh_get_bendnames(type,inum,1) .eq. names(3)
+     &                 testnames(1) .eq. names(3)
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. awild
+     &                 testnames(3) .eq. awild
      &                 ) ) then
                   iorder = ORD_REVERSE
                endif
@@ -933,25 +940,25 @@ c     --- initialize type (done for each kind of search)
       type = 0
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
 c              --- need center match
-               if ( twh_get_bendnames(type,inum,2) .eq. names(2) )then
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
+               if ( testnames(2).eq. names(2) )then
 c                 --- find exact end matches
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  call twh_bendnames(GLB_GET,type,inum,3,testnames(3))
                   if ( 
 c                      --- wild - match - match
-     &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. 'wild'
-     &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. names(3) 
-     &                 )
+     &                 ( testnames(1) .eq. 'wild'
+     &                 .and. testnames(3).eq. names(3) )
      &                 .or.
 c                      --- match - match - wild
-     &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. names(1)
-     &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. 'wild'
-     &                 ) ) then
+     &                 ( testnames(1) .eq. names(1)
+     &                 .and. testnames(3) .eq. 'wild' )
+     &                 ) then
                   iorder = ORD_FORWARD
                   param = type
                endif
@@ -969,28 +976,29 @@ c     --- that they end in wild
       zwild = ' wild'
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
 c              --- assign letter wilds
                awild(1:1) = names(1)(1:1)
                zwild(1:1) = names(3)(1:1)
 c              --- need center match
-               if ( twh_get_bendnames(type,inum,2) .eq.names(2) )then
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
+               if ( testnames(2) .eq. names(2) )then
 c                 --- find exact end matches
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  call twh_bendnames(GLB_GET,type,inum,3,testnames(3))
                   if ( 
 c                      --- awild - match - zwild
-     &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. awild
-     &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. zwild
+     &                 ( testnames(1) .eq. awild
+     &                 .and. testnames(3) .eq. zwild
      &                 ) ) then
                   iorder = ORD_FORWARD
                elseif (
 c                      --- zwild - match - awild
-     &                 (
-     &                 twh_get_bendnames(type,inum,1) .eq. zwild
-     &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. awild
+     &                 ( testnames(2) .eq. zwild
+     &                 .and. testnames(3) .eq. awild
      &                 ) ) then
                   iorder = ORD_REVERSE
                endif
@@ -1012,43 +1020,43 @@ c     --- that they end in wild
       zwild = ' wild'
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
 c              --- assign letter wilds
                awild(1:1) = names(1)(1:1)
                cwild(1:1) = names(2)(1:1)
                zwild(1:1) = names(3)(1:1)
 c              --- need center match
-               if ( twh_get_bendnames(type,inum,2) .eq. cwild ) then
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
+               if ( testnames(2) .eq. cwild ) then
 c                 --- find end matches
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  call twh_bendnames(GLB_GET,type,inum,3,testnames(3))
                   if ( 
 c                      --- awild - cwild - match
-     &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. awild
-     &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. names(3)
-     &                 )
+     &                 ( testnames(1) .eq. awild
+     &                 .and. testnames(3) .eq. names(3) )
      &                 .or.
 c                      --- match - cwild - zwild
-     &                 ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. names(1)
+     &                 ( testnames(1) .eq. names(1)
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. zwild
-     &                 ) ) then
+     &                 testnames(3) .eq. zwild ) ) then
                   iorder = ORD_FORWARD
                elseif (
 c                      --- zwild - cwild - match
      &                 (
-     &                 twh_get_bendnames(type,inum,1) .eq. zwild
+     &                 testnames(1) .eq. zwild
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. names(1)
+     &                 testnames(3) .eq. names(1)
      &                 ) 
      &                 .or.
 c                      --- match - cwild - awild
      &                 (
-     &                 twh_get_bendnames(type,inum,1) .eq. names(3)
+     &                 testnames(1) .eq. names(3)
      &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. awild
+     &                 testnames(3) .eq. awild
      &                 ) 
      &                 ) then
                   iorder = ORD_REVERSE
@@ -1066,15 +1074,19 @@ c     --- initialize type (done for each kind of search)
       type = 0
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
 c              --- need center match
-               if ( twh_get_bendnames(type,inum,2) .eq. names(2))then
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
+               if ( testnames(2) .eq. names(2))then
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(3))
 c                 --- wild - match - wild
-                  if ( 
-     &                 twh_get_bendnames(type,inum,1) .eq. 'wild'
-     &                 .and. 
-     &                 twh_get_bendnames(type,inum,3) .eq. 'wild'
+                  call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+                  if ( testnames(1) .eq. 'wild'
+     &                 .and. testnames(3) .eq. 'wild'
      &                 ) then
                      iorder = ORD_FORWARD
                      param = type
@@ -1089,15 +1101,17 @@ c     --- initialize type (done for each kind of search)
       type = 0
       do while( param .eq. 0 .and. type .lt. TBENMAX )
          type = type + 1
-         if ( forcefield .eq. twh_get_bendff(type) ) then
-            do inum = 1,twh_get_nbsame(type)
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( forcefield .eq. fftest ) then
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
 c              --- need all to be wild
-               if ( 
-     &              twh_get_bendnames(type,inum,1) .eq. 'wild'
-     &              .and. 
-     &              twh_get_bendnames(type,inum,2) .eq. 'wild'
-     &              .and. 
-     &              twh_get_bendnames(type,inum,3) .eq. 'wild'
+               call twh_bendnames(GLB_GET,type,inum,1,testnames(1))
+               call twh_bendnames(GLB_GET,type,inum,2,testnames(2))
+               call twh_bendnames(GLB_GET,type,inum,3,testnames(3))
+               if ( testnames(1) .eq. 'wild'
+     &              .and. testnames(2) .eq. 'wild'
+     &              .and. testnames(3) .eq. 'wild'
      &              ) then
                   iorder = ORD_FORWARD
                   param = type
@@ -1127,13 +1141,9 @@ c     * that runs through a series of two-letter character codes and   *
 c     * takes the first iteration that provides a complete match       *
 c     *                                                                *
 c     * originally written 12-15-2006 by M.G. Martin                   *
-c     * last modified 08-14-2014 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_BENDFF
-#define FUNCTION_GET_BENDNAMES
-#define FUNCTION_GET_NBSAME
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer imolty,iatom,jatom,katom,param,iorderba,paramba
@@ -1143,9 +1153,9 @@ c     --- logical scalars
       logical lfound
 c     --- integer scalars
       integer type,index,inum,count,angletype
-      integer anglestyle,typei,typej,typek,rownum
+      integer anglestyle,typei,typej,typek,rownum,nbsame
 c     --- character string scalars
-      character*(FFNAMELEN) testname
+      character*(FFNAMELEN) testname,fftest
       character*15 matchorder,testorder
 c     --- character string arrays
       character*(FFNAMELEN) names
@@ -1210,13 +1220,16 @@ c           --- 5-2-5
 c           --- see if the forcefield name matches
             call twh_anglestyle(GLB_GET,type,anglestyle)
             call twh_angleorder(GLB_GET,type,testorder)
-            if ( twh_get_bendff(type) .eq. forcefield .and.
+            call twh_bendff(GLB_GET,type,fftest)
+            if ( fftest .eq. forcefield .and.
      &           anglestyle .ne. ANG_STYLE_MMFFC_BA .and.
      &           testorder .eq. matchorder ) then
 c              --- get the bendnames
-               do inum = 1,twh_get_nbsame(type)
+               call twh_nbsame(GLB_GET,type,nbsame)
+               do inum = 1,nbsame
                   do count = 1,3
-                     testname = twh_get_bendnames(type,inum,count)
+                     call twh_bendnames(GLB_GET,type,inum,count
+     &                    ,testname)
                      testkey(count) = testname(1:2)
                   enddo
                   if ( key(1) .eq. testkey(1) .and.
@@ -1267,13 +1280,15 @@ c     --- first option, or we go to rows of the periodic table
 c        --- see if the forcefield name matches
          call twh_anglestyle(GLB_GET,type,anglestyle)
          call twh_angleorder(GLB_GET,type,testorder)
-         if ( twh_get_bendff(type) .eq. forcefield .and.
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( fftest .eq. forcefield .and.
      &        anglestyle .eq. ANG_STYLE_MMFFC_BA .and.
      &        testorder .eq. matchorder ) then
 c           --- get the bendnames
-            do inum = 1,twh_get_nbsame(type)
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
                do count = 1,3
-                  testname = twh_get_bendnames(type,inum,count)
+                  call twh_bendnames(GLB_GET,type,inum,count,testname)
                   testkey(count) = testname(1:2)
                enddo
                if ( key(1) .eq. testkey(1) .and.
@@ -1315,11 +1330,13 @@ c     --- convert the element names into rows
       do while ( type .lt. TBENMAX .and. .not. lfound )
          type = type + 1
          call twh_anglestyle(GLB_GET,type,anglestyle)
-         if ( twh_get_bendff(type) .eq. forcefield .and.
+         call twh_bendff(GLB_GET,type,fftest)
+         if ( fftest .eq. forcefield .and.
      &        anglestyle .eq. ANG_STYLE_MMFFC_BA ) then
-            do inum = 1,twh_get_nbsame(type)
+            call twh_nbsame(GLB_GET,type,nbsame)
+            do inum = 1,nbsame
                do count = 1,3
-                  testname = twh_get_bendnames(type,inum,count)
+                  call twh_bendnames(GLB_GET,type,inum,count,testname)
                   testkey(count) = testname(1:2)
                enddo
             
@@ -1352,15 +1369,9 @@ c     * finds torsion matches using the standard method of staring     *
 c     * with exact matches and then looking for various wildcards      *
 c     *                                                                *
 c     * split from assemble 12-15-2006 by M.G. Martin                  *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CTNAME
-#define FUNCTION_GET_NTSAME
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_TORFF
-#define FUNCTION_GET_TORNAMES
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer imolty,iatom,jatom,katom,latom,param
@@ -1368,13 +1379,13 @@ c     --- variables passed to/from the subroutine
       character*(*) specialtor
 c     --- local variables
 c     --- character string scalars
-      character*(FFNAMELEN) awild,zwild,cwild,dwild
+      character*(FFNAMELEN) awild,zwild,cwild,dwild,torfftest
       character*15 tororder
 c     --- character string arrays
-      character*(FFNAMELEN) names
-      dimension names(4)
+      character*(FFNAMELEN) names,tornames
+      dimension names(4),tornames(4)
 c     --- integer scalars
-      integer type,inum
+      integer type,inum,ntsame,ntype,icount
 
       if ( param .eq. -20 ) then
 c        --- we want the all null torsion
@@ -1386,10 +1397,14 @@ c        --- reset param
          param = 0
       else
 c        --- use the torsion names
-         names(1) = twh_get_ctname(twh_get_ntype(imolty,iatom))
-         names(2) = twh_get_ctname(twh_get_ntype(imolty,jatom))
-         names(3) = twh_get_ctname(twh_get_ntype(imolty,katom))
-         names(4) = twh_get_ctname(twh_get_ntype(imolty,latom))
+         call twh_ntype(GLB_GET,imolty,iatom,ntype)
+         call twh_ctname(GLB_GET,ntype,names(1))
+         call twh_ntype(GLB_GET,imolty,jatom,ntype)
+         call twh_ctname(GLB_GET,ntype,names(2))
+         call twh_ntype(GLB_GET,imolty,katom,ntype)
+         call twh_ctname(GLB_GET,ntype,names(3))
+         call twh_ntype(GLB_GET,imolty,latom,ntype)
+         call twh_ctname(GLB_GET,ntype,names(4))
       endif
       
 c     --- run through the list of torsions and check for 
@@ -1397,24 +1412,22 @@ c     --- exact matches without wildcards
       type = 0
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
-               if ( (twh_get_tornames(type,inum,1) .eq. names(1)
-     &              .and. 
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(4))
-     &              .or.
-     &              (twh_get_tornames(type,inum,1) .eq. names(4)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(1)) 
-     &              )then
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. names(1) .and. 
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. names(4) )
+     &              .or. ( tornames(1) .eq. names(4) .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. names(1) ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1435,42 +1448,32 @@ c     --- that they end in wild
       zwild = ' wild'
       do while (param .eq. 0 .and. type .lt. TTORMAX)
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
                awild(1:1) = names(1)(1:1)
                zwild(1:1) = names(4)(1:1)
-               if ( ( twh_get_tornames(type,inum,1) .eq. awild 
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(4))
-     &              .or.
-     &              ( twh_get_tornames(type,inum,1) .eq. zwild
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(1))
-     &              .or.
-     &              (twh_get_tornames(type,inum,4) .eq. zwild
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,1) .eq. names(1))
-     &              .or.
-     &              (twh_get_tornames(type,inum,4) .eq. awild 
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,1) .eq. names(4))
-     &              ) then
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. awild .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. names(4) )
+     &              .or. ( tornames(1) .eq. zwild .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. names(1) )
+     &              .or. (tornames(4) .eq. zwild .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(1) .eq. names(1) )
+     &              .or. (tornames(4) .eq. awild .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(1) .eq. names(4) ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1486,40 +1489,30 @@ c     --- single global-wildcard matches
       type = 0
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
-               if ( (twh_get_tornames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(4))
-     &              .or.
-     &              (twh_get_tornames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(1))
-     &              .or.
-     &              (twh_get_tornames(type,inum,1) .eq. names(1)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. 'wild')
-     &              .or.
-     &              (twh_get_tornames(type,inum,1) .eq. names(4)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. 'wild')
-     &              )then
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. 'wild' .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. names(4) )
+     &              .or. ( tornames(1) .eq. 'wild' .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. names(1) )
+     &              .or. ( tornames(1) .eq. names(1) .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. 'wild' )
+     &              .or. ( tornames(1) .eq. names(4) .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. 'wild' ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1534,27 +1527,25 @@ c     --- look for double letter-wild matches on either end
       type = 0
       do while (param .eq. 0 .and. type .lt. TTORMAX)
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
 c              --- forward direction
                awild(1:1) = names(1)(1:1)
                zwild(1:1) = names(4)(1:1)
-               if ( (twh_get_tornames(type,inum,1) .eq. awild
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. zwild 
-     &              ) .or. ( 
-     &              twh_get_tornames(type,inum,1) .eq. zwild
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. awild )
-     &              ) then
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. awild .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. zwild )
+     &              .or. ( tornames(1) .eq. zwild .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. awild ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1569,24 +1560,24 @@ c     --- look for double letter-wild matches bond on front end
       type = 0
       do while (param .eq. 0 .and. type .lt. TTORMAX)
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
                awild(1:1) = names(1)(1:1)
                zwild(1:1) = names(2)(1:1)
-               if ( ( twh_get_tornames(type,inum,1) .eq. awild
-     &              .and. twh_get_tornames(type,inum,2) .eq. zwild
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(4) )
-     &              .or.
-     &              ( twh_get_tornames(type,inum,1) .eq. names(4)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and. twh_get_tornames(type,inum,3) .eq. zwild
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. awild ) 
-     &              ) then
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. awild .and.
+     &              tornames(2) .eq. zwild .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. names(4) )
+     &              .or. ( tornames(1) .eq. names(4) .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. zwild .and.
+     &              tornames(4) .eq. awild ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1601,24 +1592,24 @@ c     --- look for double letter-wild matches bond on back end
       type = 0
       do while (param .eq. 0 .and. type .lt. TTORMAX)
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
                awild(1:1) = names(3)(1:1)
                zwild(1:1) = names(4)(1:1)
-               if ( ( twh_get_tornames(type,inum,1) .eq. names(1)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and. twh_get_tornames(type,inum,3) .eq. awild
-     &              .and. twh_get_tornames(type,inum,4) .eq. zwild
-     &              ) .or. (
-     &              twh_get_tornames(type,inum,1) .eq. zwild
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. awild
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(1) ) 
-     &              ) then
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. names(1) .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. awild .and.
+     &              tornames(4) .eq. zwild )
+     &              .or. ( tornames(1) .eq. zwild .and.
+     &              tornames(2) .eq. awild .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. names(1) ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1635,24 +1626,22 @@ c     --- with the double wilds at the two ends
       type = 0
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
-               if ( (twh_get_tornames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. 'wild'
-     &              ) .or. (
-     &              twh_get_tornames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. 'wild')
-     &              ) then
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. 'wild' .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. 'wild' )
+     &              .or. ( tornames(1) .eq. 'wild' .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(4) .eq. 'wild') ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1669,24 +1658,22 @@ c     --- with the double wilds in the middle
       type = 0
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
-               if ( (twh_get_tornames(type,inum,1) .eq. names(1)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(4))
-     &              .or.
-     &              (twh_get_tornames(type,inum,1) .eq. names(4)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(1)))
-     &              then
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. names(1) .and.
+     &              tornames(2) .eq. 'wild' .and.
+     &              tornames(3) .eq. 'wild' .and.
+     &              tornames(4) .eq. names(4) )
+     &              .or. ( tornames(1) .eq. names(4) .and.
+     &              tornames(2) .eq. 'wild' .and.
+     &              tornames(3) .eq. 'wild' .and.
+     &              tornames(4) .eq. names(1) ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1703,24 +1690,22 @@ c     --- with the double wilds at one end
       type = 0
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
-               if ( (twh_get_tornames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. names(4)
-     &              ) .or. (
-     &              twh_get_tornames(type,inum,1) .eq. names(4)
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. 'wild')
-     &              ) then
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. 'wild' .and.
+     &              tornames(2) .eq. 'wild' .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. names(4) )
+     &              .or. ( tornames(1) .eq. names(4) .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(3) .eq. 'wild' .and.
+     &              tornames(4) .eq. 'wild' ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1741,38 +1726,34 @@ c     --- setup the letter wilds
       zwild = ' wild'
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
                awild(1:1) = names(1)(1:1)
                cwild(1:1) = names(2)(1:1)
                dwild(1:1) = names(3)(1:1)
                zwild(1:1) = names(4)(1:1)
-               if (
-     &              ( twh_get_tornames(type,inum,1) .eq. awild
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(2)
-     &              .and. twh_get_tornames(type,inum,3) .eq. dwild
-     &              .and. twh_get_tornames(type,inum,4) .eq. zwild
-     &              ) .or. (
-     &              twh_get_tornames(type,inum,1) .eq. awild
-     &              .and. twh_get_tornames(type,inum,2) .eq. cwild
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(3)
-     &              .and. twh_get_tornames(type,inum,4) .eq. zwild
-     &              ) .or. (
-     &              twh_get_tornames(type,inum,4) .eq. awild
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. names(2)
-     &              .and. twh_get_tornames(type,inum,2) .eq. dwild
-     &              .and. twh_get_tornames(type,inum,1) .eq. zwild
-     &              ) .or. (
-     &              twh_get_tornames(type,inum,4) .eq. awild
-     &              .and. twh_get_tornames(type,inum,3) .eq. cwild
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. names(3)
-     &              .and. twh_get_tornames(type,inum,1) .eq. zwild
-     &              )
-     &              ) then
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( ( tornames(1) .eq. awild .and.
+     &              tornames(2) .eq. names(2) .and.
+     &              tornames(3) .eq. dwild .and.
+     &              tornames(4) .eq. zwild )
+     &              .or. ( tornames(1) .eq. awild .and.
+     &              tornames(2) .eq. cwild .and.
+     &              tornames(3) .eq. names(3) .and.
+     &              tornames(4) .eq. zwild )
+     &              .or. ( tornames(4) .eq. awild .and.
+     &              tornames(3) .eq. names(2) .and.
+     &              tornames(2) .eq. dwild .and.
+     &              tornames(1) .eq. zwild )
+     &              .or. ( tornames(4) .eq. awild .and.
+     &              tornames(3) .eq. cwild .and.
+     &              tornames(2) .eq. names(3) .and.
+     &              tornames(1) .eq. zwild ) ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1788,16 +1769,18 @@ c     --- see if this forcefield has a global-wildcard
       type = 0
       do while ( param .eq. 0 .and. type .lt. TTORMAX )
          type = type + 1
-         if ( twh_get_torff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_ntsame(type)
-               if ( twh_get_tornames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_tornames(type,inum,4) .eq. 'wild'
-     &              ) then
+         call twh_torff(GLB_GET,type,torfftest)
+         if ( torfftest .eq. forcefield ) then
+            call twh_ntsame(GLB_GET,type,ntsame)
+            do inum = 1,ntsame
+               do icount = 1,4
+                  call twh_tornames(GLB_GET,type,inum,icount
+     &                 ,tornames(icount))
+               enddo
+               if ( tornames(1) .eq. 'wild' .and.
+     &              tornames(2) .eq. 'wild' .and.
+     &              tornames(3) .eq. 'wild' .and.
+     &              tornames(4) .eq. 'wild' ) then
 c                 --- check torsion order
                   call twh_torsionorder(GLB_GET,type,tororder)
                   if ( tororder .eq. specialtor ) then
@@ -1826,32 +1809,25 @@ c     ******************************************************************
 c     * uses the MMFF checkdown procedure to find a torsion match      *
 c     *                                                                *
 c     * originally written 12-15-2006 by M.G. Martin                   *
-c     * last modified 08-14-2014 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CTNAME
-#define FUNCTION_GET_NTSAME
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_TORFF
-#define FUNCTION_GET_TORNAMES
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer imolty,iatom,jatom,katom,latom,param
       character*(FFNAMELEN) forcefield
-
 c     --- local variables
 c     --- integer scalars
-      integer type,index,inum,count
+      integer type,index,inum,count,ntsame,ntype
 c     --- character string scalars
-      character*(FFNAMELEN) testname
+      character*(FFNAMELEN) testname,torfftest
       character*15 forwardorder,reverseorder,testorder
 c     --- character string arrays
       character*(FFNAMELEN) names
       dimension names(4)
       character*2 key,testkey
       dimension key(4),testkey(4)
-
+      
       call twh_mmff_torsion_type(lfailure,imolty,iatom,jatom,katom,latom
      &     ,type)
       if ( lfailure ) return
@@ -1863,10 +1839,14 @@ c     --- character string arrays
  55   format('MMFF t:',i1)
 
 c     --- use the torsion names for this type
-      names(1) = twh_get_ctname(twh_get_ntype(imolty,iatom))
-      names(2) = twh_get_ctname(twh_get_ntype(imolty,jatom))
-      names(3) = twh_get_ctname(twh_get_ntype(imolty,katom))
-      names(4) = twh_get_ctname(twh_get_ntype(imolty,latom))
+      call twh_ntype(GLB_GET,imolty,iatom,ntype)
+      call twh_ctname(GLB_GET,ntype,names(1))
+      call twh_ntype(GLB_GET,imolty,jatom,ntype)
+      call twh_ctname(GLB_GET,ntype,names(2))
+      call twh_ntype(GLB_GET,imolty,katom,ntype)
+      call twh_ctname(GLB_GET,ntype,names(3))
+      call twh_ntype(GLB_GET,imolty,latom,ntype)
+      call twh_ctname(GLB_GET,ntype,names(4))
 
       do index = 1,5
 c        --- this elaborate scheme is described in footnote 68 of
@@ -1905,11 +1885,13 @@ c           --- 5-2-2-5
 
          do type = 1,TTORMAX
 c           --- see if the forcefield name matches
-            if ( twh_get_torff(type) .eq. forcefield ) then
+            call twh_torff(GLB_GET,type,torfftest)
+            if ( torfftest .eq. forcefield ) then
 c              --- get the tornames
-               do inum = 1,twh_get_ntsame(type)
+               call twh_ntsame(GLB_GET,type,ntsame)
+               do inum = 1,ntsame
                   do count = 1,4
-                     testname = twh_get_tornames(type,inum,count)
+                     call twh_tornames(GLB_GET,type,inum,count,testname)
                      testkey(count) = testname(1:2)
                   enddo
 c                 --- check for a forward match
@@ -2230,43 +2212,40 @@ c     * matches up the improper parameters to determine the improper   *
 c     * type                                                           *
 c     *                                                                *
 c     * split from assemble 12-20-2006 by M.G. Martin                  *
-c     * last modified 12-20-2006 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IMPFF
-#define FUNCTION_GET_IMPNAMES
-#define FUNCTION_GET_NIMPSAME
-#include "functions.h"
 c     --- variables passed to/from the subroutine
-      character*(FFNAMELEN) names
+      character*(FFNAMELEN) names,impfftest
       dimension names(4)
       integer param
       character*(FFNAMELEN) forcefield
 c     --- local variables
-      integer type,inum
-
+      integer type,inum,icount,nimpsame
+      character*(FFNAMELEN) testnames
+      dimension testnames(4)
+      
 c     --- check for exact matches
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( (twh_get_impnames(type,inum,1) .eq. names(1)
-     &              .and. 
-     &              twh_get_impnames(type,inum,2).eq.names(2)
-     &              .and.
-     &              twh_get_impnames(type,inum,3).eq.names(3)
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq.names(4)
-     &              ) .or. (
-     &              twh_get_impnames(type,inum,1).eq.names(4)
-     &              .and.
-     &              twh_get_impnames(type,inum,2).eq.names(3)
-     &              .and.
-     &              twh_get_impnames(type,inum,3).eq.names(2)
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq.names(1)
-     &              ) ) then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( (testnames(1) .eq. names(1) .and.
+     &              testnames(2) .eq. names(2) .and.
+     &              testnames(3) .eq. names(3) .and.
+     &              testnames(4) .eq. names(4))
+     &              .or.
+     &              (testnames(1) .eq. names(4) .and.
+     &              testnames(2) .eq. names(3) .and.
+     &              testnames(3) .eq. names(2) .and.
+     &              testnames(4) .eq. names(1)) ) then
                   param = type
                endif
             enddo
@@ -2276,16 +2255,18 @@ c     --- check for single wildcard matches in the first spot
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. 'wild' 
-     &              .and.
-     &              twh_get_impnames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_impnames(type,inum,4) .eq. names(4))
-     &              then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. 'wild' .and.
+     &              testnames(2) .eq. names(2) .and.
+     &              testnames(3) .eq. names(3) .and.
+     &              testnames(4) .eq. names(4)) then
                   param = type
                endif
             enddo
@@ -2295,16 +2276,18 @@ c     --- check for double wildcard matches in the first 2 spots
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX )
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. 'wild' 
-     &              .and.
-     &              twh_get_impnames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_impnames(type,inum,4) .eq. names(4)
-     &              ) then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. 'wild' .and.
+     &              testnames(2) .eq. 'wild' .and.
+     &              testnames(3) .eq. names(3) .and.
+     &              testnames(4) .eq. names(4) ) then
                   param = type
                endif
             enddo
@@ -2314,16 +2297,18 @@ c     --- check for double wildcard matches in places 2 and 3
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. names(1) 
-     &              .and.
-     &              twh_get_impnames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq.names(4)
-     &              )then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount=1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. names(1) .and.
+     &              testnames(2) .eq. 'wild' .and.
+     &              testnames(3) .eq. 'wild' .and.
+     &              testnames(4) .eq. names(4) )then
                   param = type
                endif
             enddo
@@ -2333,16 +2318,18 @@ c     --- check for double wildcard matches in places 3 and 4
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. names(1) 
-     &              .and.
-     &              twh_get_impnames(type,inum,2) .eq. names(2)
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq. 'wild' 
-     &              )then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. names(1) .and.
+     &              testnames(2) .eq. names(2) .and.
+     &              testnames(3) .eq. 'wild' .and.
+     &              testnames(4).eq. 'wild' )then
                   param = type
                endif
             enddo
@@ -2352,16 +2339,18 @@ c     --- check for double wildcard matches in places 2 and 4
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. names(1) 
-     &              .and.
-     &              twh_get_impnames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. names(3)
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq. 'wild' 
-     &              )then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. names(1) .and.
+     &              testnames(2) .eq. 'wild' .and.
+     &              testnames(3) .eq. names(3) .and.
+     &              testnames(4) .eq. 'wild' )then
                   param = type
                endif
             enddo
@@ -2372,16 +2361,18 @@ c     --- combined with a backwards search
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,4) .eq. names(1) 
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,2) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,1).eq.names(4)
-     &              )then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(4) .eq. names(1) .and.
+     &              testnames(3) .eq. 'wild' .and.
+     &              testnames(2) .eq. 'wild' .and.
+     &              testnames(1) .eq. names(4) )then
                   param = type
                endif
             enddo
@@ -2391,16 +2382,18 @@ c     --- check for triple wildcard matches in all but spot 2
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,2).eq.names(2)
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq. 'wild'
-     &              )then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. 'wild' .and.
+     &              testnames(2) .eq. names(2) .and.
+     &              testnames(3) .eq. 'wild' .and.
+     &              testnames(4) .eq. 'wild' )then
                   param = type
                endif
             enddo
@@ -2410,16 +2403,18 @@ c     --- check for triple wildcard matches in all but spot 1
       type = 0
       do while ( param .eq. 0 .and. type .lt. TIMPMAX)
          type = type + 1
-         if ( twh_get_impff(type) .eq. forcefield ) then
-            do inum = 1,twh_get_nimpsame(type)
-               if ( twh_get_impnames(type,inum,1) .eq. names(1)
-     &              .and.
-     &              twh_get_impnames(type,inum,2).eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,3) .eq. 'wild'
-     &              .and.
-     &              twh_get_impnames(type,inum,4).eq. 'wild'
-     &              )then
+         call twh_impff(GLB_GET,type,impfftest)
+         if ( impfftest .eq. forcefield ) then
+            call twh_nimpsame(GLB_GET,type,nimpsame)
+            do inum = 1,nimpsame
+               do icount = 1,4
+                  call twh_impnames(GLB_GET,type,inum,icount
+     &                 ,testnames(icount))
+               enddo
+               if ( testnames(1) .eq. names(1) .and.
+     &              testnames(2) .eq. 'wild' .and.
+     &              testnames(3) .eq. 'wild' .and.
+     &              testnames(4) .eq. 'wild' )then
                   param = type
                endif
             enddo
@@ -2435,13 +2430,9 @@ c     ******************************************************************
 c     * computes the improper types using the MMFF checkdown procedure *
 c     *                                                                *
 c     * originally written 12-20-2006 by M.G. Martin                   *
-c     * last modified 08-15-2014 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IMPFF
-#define FUNCTION_GET_IMPNAMES
-#define FUNCTION_GET_NIMPSAME
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       character*(FFNAMELEN) names
@@ -2449,9 +2440,9 @@ c     --- variables passed to/from the subroutine
       integer param
       character*(FFNAMELEN) forcefield
 c     --- local variables
-      integer index,count,type,inum
+      integer index,count,type,inum,nimpsame
 c     --- character string scalars
-      character*(FFNAMELEN) testname
+      character*(FFNAMELEN) testname,impfftest
 c     --- character string arrays
       character*2 key,testkey
       dimension key(4),testkey(4)
@@ -2496,11 +2487,13 @@ c           --- 5-2-5:5
 
          do type = 1,TIMPMAX
 c           --- see if the forcefield name matches
-            if ( twh_get_impff(type) .eq. forcefield ) then
+            call twh_impff(GLB_GET,type,impfftest)
+            if ( impfftest .eq. forcefield ) then
 c              --- get the tornames
-               do inum = 1,twh_get_nimpsame(type)
+               call twh_nimpsame(GLB_GET,type,nimpsame)
+               do inum = 1,nimpsame
                   do count = 1,4
-                     testname = twh_get_impnames(type,inum,count)
+                     call twh_impnames(GLB_GET,type,inum,count,testname)
                      testkey(count) = testname(1:2)
                   enddo
 c                 --- check for a forward match

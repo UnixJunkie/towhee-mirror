@@ -2,7 +2,7 @@
 #define SOLVTYPE 17
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,14 +27,11 @@ c     * function (EEF1) as descriped in Lazaridis and Karplus,         *
 c     * Proteins 35, 133-152 (1999)                                    *
 c     *                                                                *
 c     * originally written 11-04-2002 by M.G. Martin and C.D. Lorenz   *
-c     * last update 08-03-2016 by M.G. Martin                          *
+c     * last update 03-31-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NBCOEFF
 #define FUNCTION_VEEFONE
 #include "functions.h"
 #define DEBUG_VEEFONE 0
@@ -43,9 +40,11 @@ c     --- variables passed to/from the function
 c     --- local variables
       integer j,eeftypej,iunit,typei,iexclude,no_exclude,imolty
       integer jexclude,nni_exclude,nnj_exclude,findexclude
-      integer iitype,jjtype,nunit
+      integer iitype,jjtype,nunit,invibration
+c     --- integer arrays
       integer eef_exclude
       dimension eef_exclude(20)
+c     --- double precision scalars
       double precision veef1i,solvent_cutoff,dgisum
       double precision piterm,eefxi,eefyi,eefzi,eefdgi_ref
       double precision eefdgi_free,eefvi,eeflambdai,eefri,eefsum
@@ -78,12 +77,15 @@ c        --- next-nearest neighbor lists are excluded
 c        --- from the solvation free energy calcs
          no_exclude = 1
          eef_exclude(no_exclude) = iunit
-         do iexclude = 1, twh_get_invib(imolty,iunit)
+         call twh_invib(GLB_GET,imolty,iunit,invibration)
+         do iexclude = 1,invibration
             no_exclude = no_exclude + 1
-            nni_exclude = twh_get_ijvib(imolty,iunit,iexclude)
+            call twh_ijvib(GLB_GET,imolty,iunit,iexclude,nni_exclude)
             eef_exclude(no_exclude) = nni_exclude
-            do jexclude = 1,twh_get_invib(imolty,nni_exclude)
-               nnj_exclude = twh_get_ijvib(imolty,nni_exclude,jexclude)
+            call twh_invib(GLB_GET,imolty,nni_exclude,invibration)
+            do jexclude = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,nni_exclude,jexclude
+     &              ,nnj_exclude)
                if (nnj_exclude .gt. iunit) then
                   no_exclude = no_exclude + 1
                   eef_exclude(no_exclude) = nnj_exclude
@@ -96,7 +98,7 @@ c        --- CHECK: nbcoeff(1,type) = sigma
          
          eefsum = 0.0d0
          iitype = twh_getnbtype(typei,typei)
-         eefdgi_ref = twh_get_nbcoeff(6,iitype)
+         call twh_nbcoeff(GLB_GET,6,iitype,eefdgi_ref)
 
          if (typei .le. SOLVTYPE ) then         
             do j = iunit+1, nunit
@@ -123,38 +125,38 @@ c                    --- determine the distance between atoms i and j
                      if (eefrij .lt. solvent_cutoff) then
                         jjtype = twh_getnbtype(eeftypej,eeftypej)
 c                       --- determine solvation free energies for atom i
-                        eefdgi_free = twh_get_nbcoeff(7,iitype)
+                        call twh_nbcoeff(GLB_GET,7,iitype,eefdgi_free)
 c                       --- look up the volume of atom i
-                        eefvi = twh_get_nbcoeff(5,iitype)
+                        call twh_nbcoeff(GLB_GET,5,iitype,eefvi)
 c                       --- determine the van der Waals radius (defined
 c                       --- as 1/2 the distance to the energy minimum
 c                       --- in the LJ potential)
-c                       --- CHECK: twh_get_nbcoeff(1,type) = sigma
-                        eefri = twh_get_nbcoeff(11,iitype)
+c                       --- CHECK: nbcoeff(1,type) = sigma
+                        call twh_nbcoeff(GLB_GET,11,iitype,eefri)
 c                       --- determine the correlation length
-                        eeflambdai = twh_get_nbcoeff(10,iitype)
+                        call twh_nbcoeff(GLB_GET,10,iitype,eeflambdai)
                         if (eeflambdai .eq. 0.0d0) then
                            eeflambdai = 3.5d0
                         endif
 
 c                       --- look up the volume of atom j
-                        eefvj = twh_get_nbcoeff(5,jjtype)
+                        call twh_nbcoeff(GLB_GET,5,jjtype,eefvj)
 c                       --- determine the correlation length
-                        eeflambdaj = twh_get_nbcoeff(10,jjtype) 
+                        call twh_nbcoeff(GLB_GET,10,jjtype,eeflambdaj)
                         if (eeflambdaj .eq. 0.0d0) then
                            eeflambdaj = 3.5d0
                         endif
 c                       --- determine the van der Waals radius (defined
 c                       --- as 1/2 the distance to the energy minimum
 c                       --- in the LJ potential)
-c                       --- CHECK: twh_get_nbcoeff(1,type) = sigma
-                        eefrj = twh_get_nbcoeff(11,jjtype)
+c                       --- CHECK: nbcoeff(1,type) = sigma
+                        call twh_nbcoeff(GLB_GET,11,jjtype,eefrj)
 c                       --- determine the exponential terms: xij and xji
                         eefxij = (eefrij - eefri)/eeflambdai
                         eefxji = (eefrij - eefrj)/eeflambdaj
 c                       --- determine solvation free energies for atom j
-                        eefdgj_ref = twh_get_nbcoeff(6,jjtype)
-                        eefdgj_free = twh_get_nbcoeff(7,jjtype)
+                        call twh_nbcoeff(GLB_GET,6,jjtype,eefdgj_ref)
+                        call twh_nbcoeff(GLB_GET,7,jjtype,eefdgj_free)
                         eefterm1 = ((2.0d0*eefdgi_free)
      &                       /(piterm*eeflambdai*eefrij*eefrij))
      &                       *exp(-1.0d0*eefxij*eefxij)*eefvj
@@ -194,35 +196,31 @@ c     * Computes temperature corrected values of the solvation         *
 c     * free energy for use in EEF1                                    *
 c     *                                                                *
 c     * originally written 11-04-2002 by M.G. Martin and C.D. Lorenz   *
-c     * last update 10-13-2008 by M.G. Martin                          *
+c     * last update 03-31-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit  none
-#define FUNCTION_GET_NBCOEFF
-#include "functions.h"
 c     --- variables passed to/from the function
       double precision tempi,tempref
 c     --- local variables
       integer atype
       double precision ds_ref,dtemp
-
-      do atype = 1, SOLVTYPE
-         ds_ref = (twh_get_nbcoeff(8,atype)
-     &        - twh_get_nbcoeff(6,atype))/tempref
+      double precision nbc_six,nbc_sev,nbc_eig,nbc_nin
       
-         dtemp = twh_get_nbcoeff(6,atype) - 
-     &        (ds_ref * (tempi - tempref)) - 
-     &        ((twh_get_nbcoeff(9,atype)/1000.0d0) * tempi * 
-     &        log(tempi/tempref)) + 
-     &        ((twh_get_nbcoeff(9,atype)/1000.0d0) * 
-     &        (tempi - tempref))
+      do atype = 1, SOLVTYPE
+         call twh_nbcoeff(GLB_GET,6,atype,nbc_six)
+         call twh_nbcoeff(GLB_GET,7,atype,nbc_sev)
+         call twh_nbcoeff(GLB_GET,8,atype,nbc_eig)
+         call twh_nbcoeff(GLB_GET,9,atype,nbc_nin)
+         ds_ref = (nbc_eig - nbc_six)/tempref
+      
+         dtemp = nbc_six - (ds_ref * (tempi - tempref)) - 
+     &        ((nbc_nin/1000.0d0) * tempi * log(tempi/tempref)) + 
+     &        ((nbc_nin/1000.0d0) * (tempi - tempref))
          call twh_nbcoeff(GLB_SET,6,atype,dtemp)
 
-         dtemp = twh_get_nbcoeff(7,atype) - 
-     &        (ds_ref * (tempi - tempref)) - 
-     &        ((twh_get_nbcoeff(9,atype)/1000.0d0) * tempi * 
-     &        log(tempi/tempref)) + 
-     &        ((twh_get_nbcoeff(9,atype)/1000.0d0) *
-     &        (tempi - tempref))
+         dtemp = nbc_sev - (ds_ref * (tempi - tempref)) - 
+     &        ((nbc_nin/1000.0d0) * tempi * log(tempi/tempref)) + 
+     &        ((nbc_nin/1000.0d0) * (tempi - tempref))
          call twh_nbcoeff(GLB_SET,7,atype,dtemp)
       enddo
 

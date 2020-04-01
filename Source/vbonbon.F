@@ -1,6 +1,6 @@
 #include "preproc.h"
 c     ******************************************************************
-c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,13 +26,9 @@ c     * the bond-bond cross type is determined from the molecule type, *
 c     * the unit number and the bond-bond index                        *
 c     *                                                                *
 c     * originally written 02-28-2000 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_ANGLESTYLE
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_ITBNBN
-#define FUNCTION_GET_VIBCOEFF
 #define FUNCTION_VBONBON
 #include "functions.h"
 c     --- variables passed to/from the function
@@ -41,39 +37,38 @@ c     --- variables passed to/from the function
       dimension length(2)
 c     --- local variables
       integer style,type,iorder,itemp
-      double precision vtone,vttwo
+      double precision vtone,vttwo,benprefact
 
-      type = twh_get_itbnbn(imolty,iunit,index)
+      call twh_itbnbn(GLB_GET,imolty,iunit,index,type)
       if ( type .gt. 0 ) then
          iorder = 1
       else
          type = -type
          iorder = -1
       endif
-      style = twh_get_anglestyle(type) 
+      call twh_anglestyle(GLB_GET,type,style)
 
       if ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c        --- Compass bond-bond cross term
 c        --- energy = k*(bond(1) - bond0(1))*(bond(2) - bond0(2))
          call twh_ibtbnbn1(GLB_GET,imolty,iunit,index,itemp)
-         vtone = twh_get_vibcoeff(itemp,0)
+         call twh_vibcoeff(GLB_GET,itemp,0,vtone)
          call twh_ibtbnbn2(GLB_GET,imolty,iunit,index,itemp)
-         vttwo = twh_get_vibcoeff(itemp,0)
-
-         twh_vbonbon = twh_get_bencoeff(type,6)*(length(1)-vtone)*
-     &        (length(2)-vttwo)
+         call twh_vibcoeff(GLB_GET,itemp,0,vttwo)
+         call twh_bencoeff(GLB_GET,type,6,benprefact)
+         twh_vbonbon = benprefact*(length(1)-vtone)*(length(2)-vttwo)
       elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c        --- Compass bond-bond cross term with explicit distances
 c        --- energy = k*(bond(1) - bond0(1))*(bond(2) - bond0(2))
          if ( iorder .eq. 1 ) then
-            vtone = twh_get_bencoeff(type,9)
-            vttwo = twh_get_bencoeff(type,10)
+            call twh_bencoeff(GLB_GET,type,9,vtone)
+            call twh_bencoeff(GLB_GET,type,10,vttwo)
          else
-            vtone = twh_get_bencoeff(type,10)
-            vttwo = twh_get_bencoeff(type,9)
+            call twh_bencoeff(GLB_GET,type,10,vtone)
+            call twh_bencoeff(GLB_GET,type,9,vttwo)
          endif
-         twh_vbonbon = twh_get_bencoeff(type,8)*(length(1)-vtone)*
-     &        (length(2)-vttwo)
+         call twh_bencoeff(GLB_GET,type,8,benprefact)
+         twh_vbonbon = benprefact*(length(1)-vtone)*(length(2)-vttwo)
       else
 c        --- these angle types should not have a bond-bond term
          stop 'bad angle type in vbonbon'

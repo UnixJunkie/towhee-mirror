@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,11 +27,10 @@ c     * calculates the total reciprocal space ewald-sum term for volume*
 c     * moves                                                          *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen.                        *
-c     * Last modified 04-03-2018 M.G. Martin                           *
+c     * Last modified 03-29-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
-#define FUNCTION_GET_NBOXI
 #include "functions.h"
 c     --- variables passed to/from subroutine
       logical lfailure
@@ -40,7 +39,7 @@ c     --- variables passed to/from subroutine
 c     --- local variables
 c     --- integer scalars
       integer nkx,nky,nkz,nky_min,nky_max,nkz_min,nkz_max
-      integer ichain,iunit,imolty,ncount,nchain,nunit,kmax
+      integer ichain,iunit,imolty,ncount,nchain,nunit,kmax,testboxi
 c     --- double precision scalars
       double precision ksqr,sumr,sumi,arg,invvol,invalpsq4
       double precision n_one,n_two,n_thr,rxui,ryui,rzui,twopi,qqfact
@@ -130,7 +129,8 @@ c              --- sum up q*cos and q*sin
                do ichain = 1,nchain
                   call twh_moltyp(GLB_GET,ichain,imolty)
                   call twh_nunit(GLB_GET,imolty,nunit)
-                  if ( twh_get_nboxi(ichain) .eq. ibox) then
+                  call twh_nboxi(GLB_GET,ichain,testboxi)
+                  if ( testboxi .eq. ibox) then
                      do iunit = 1,nunit
                         call twh_coordinates(GLB_GET,crdflag,ichain
      &                       ,iunit,rxui,ryui,rzui)

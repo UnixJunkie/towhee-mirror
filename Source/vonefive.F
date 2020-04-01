@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -30,25 +30,23 @@ c     *  1: use the inner cuttoff, unless rcut < rcutin                *
 c     *  3: compute 1-4 interaction using rcutin and special 1-4 params*
 c     *                                                                *
 c     * originally written as vnonbond 2-18-2000 by M.G. Martin        *
-c     * last update 08-09-2011 by M.G. Martin                          *
+c     * last update 03-30-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_OFCOEFF
-#define FUNCTION_GET_OFSTYLE
 #define FUNCTION_VONEFIVE
 #include "functions.h"
 c     --- debug toggle
 #define DEBUG_VONEFIVE 0
-
 c     --- variables passed to/from the function
       logical lfailure,lovrlap
       integer ioftype,cutstyle
       double precision rijsq
-
 c     --- local variables
       logical ldummy
+      integer ofstyle,icoeff
       double precision rmaxsq,srsix,rtwelve,rsix,rminsq
-
+      double precision ofcoeff
+      dimension ofcoeff(MINOFCOEFF:MAXOFCOEFF)
 #if DEBUG_VONEFIVE
       write(6,*) 'starting VONEFIVE'
 #endif
@@ -63,25 +61,27 @@ c     --- determine the cutoff
       if ( lfailure ) return
 
 c     -- compute the nonbond energy according to the classical potential
-      if ( twh_get_ofstyle(ioftype) .eq. 1 ) then
+      call twh_ofstyle(GLB_GET,ioftype,ofstyle)
+      do icoeff = MINOFCOEFF,MAXOFCOEFF
+         call twh_ofcoeff(GLB_GET,ioftype,icoeff,ofcoeff(icoeff))
+      enddo
+      if ( ofstyle .eq. 1 ) then
 c        --- lennard jones 12-6
 c        --- using pretabulated sigma^6 and 4*epsilon
          if ( rijsq .lt. rminsq ) then
             lovrlap = .true.
          elseif ( rijsq .lt. rmaxsq ) then
-            srsix = twh_get_ofcoeff(ioftype,3) / (rijsq**3)
-            twh_vonefive = srsix*(srsix-1.0d0)
-     &           *twh_get_ofcoeff(ioftype,4)
-     &           - twh_get_ofcoeff(ioftype,0)
+            srsix = ofcoeff(3) / (rijsq**3)
+            twh_vonefive = srsix*(srsix-1.0d0)*ofcoeff(4) - ofcoeff(0)
          endif
-      elseif ( twh_get_ofstyle(ioftype) .eq. 2 ) then
+      elseif ( ofstyle .eq. 2 ) then
 c        --- a/r^12
          if ( rijsq .lt. rminsq ) then
             lovrlap = .true.
          elseif ( rijsq .lt. rmaxsq ) then
             rsix = rijsq*rijsq*rijsq
             rtwelve = rsix*rsix
-            twh_vonefive = twh_get_ofcoeff(ioftype,1)/rtwelve
+            twh_vonefive = ofcoeff(1)/rtwelve
          endif
       else
          write(6,*) 'VONEFIVE: non defined ofstyle'
@@ -96,33 +96,31 @@ c        --- a/r^12
       return
       end
 
-      function twh_onefivetype(imolty,iunit,junit)
+      subroutine twh_onefivetype(imolty,iunit,junit,ivalue)
 c     ******************************************************************
 c     * returns the type number of the one-five interaction between    *
 c     * atoms iunit and junit on molecule type imolty                  *
 c     * if there is no one-five interaction then returns zero          *
 c     *                                                                *
 c     * originally written 12-15-2004 by M.G. Martin                   *
-c     * last modified 04-22-2009 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJOF5
-#define FUNCTION_GET_INOF
-#define FUNCTION_ONEFIVETYPE
-#include "functions.h"
 c     --- variables passed to/from the function
-      integer imolty,iunit,junit
+      integer imolty,iunit,junit,ivalue
 c     --- local variables
-      integer iof
+      integer iof,ijof5test,inonefive
 
 c     --- initialize onefivetype
-      twh_onefivetype = 0
+      ivalue = 0
 c     --- see if there is a special one-five interaction between these
 c     --- atoms on this molecule type
-      do iof = 1,twh_get_inof(imolty,iunit)
-         if ( twh_get_ijof5(imolty,iunit,iof) .eq. junit ) then
+      call twh_inof(GLB_GET,imolty,iunit,inonefive)
+      do iof = 1,inonefive
+         call twh_ijof5(GLB_GET,imolty,iunit,iof,ijof5test)
+         if ( ijof5test .eq. junit ) then
 c           --- match found
-            call twh_itof(GLB_GET,imolty,iunit,iof,twh_onefivetype)
+            call twh_itof(GLB_GET,imolty,iunit,iof,ivalue)
             return
          endif
       enddo

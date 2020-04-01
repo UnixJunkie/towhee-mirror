@@ -4,7 +4,7 @@ c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
 c     * see the file license.gpl for the full license information      *
-c     * Copyright (C) 2000-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
 c     * modify it under the terms of the GNU General Public License    *
@@ -32,21 +32,15 @@ c     * considered to be non-bonded interactions for the purposes of   *
 c     * setting up this table                                          *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modifed 08-09-2011 by M.G. Martin                         *
+c     * last modifed 03-28-2020 by M.G. Martin                         *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#include "functions.h"
-
 c     --- local variables
       logical lexclude
       dimension lexclude(NUMAX)
-      integer m,n,nb,imolty,count,nmolty,nunit
-
+      integer m,n,nb,imolty,count,nmolty,nunit,inbend,intorsion
+      integer invibration
+      
 c     --- loop over all types of molecules
       call twh_nmolty(GLB_GET,nmolty)
       do imolty = 1, nmolty
@@ -60,18 +54,21 @@ c           --- initiallize the array
 c           --- exclude self
             lexclude(m) = .true.
 c           --- exclude all directly bonded beads (vibrations) 
-            do n = 1, twh_get_invib(imolty,m)
+            call twh_invib(GLB_GET,imolty,m,invibration)
+            do n = 1,invibration
                call twh_ijvib(GLB_GET,imolty,m,n,nb)
                lexclude(nb) = .true.
             enddo
 c           --- exclude all next-nearest neighbor bonded beads (bending)
-            do n = 1, twh_get_inben(imolty,m)
-               nb = twh_get_ijben3(imolty,m,n)
+            call twh_inben(GLB_GET,imolty,m,inbend)
+            do n = 1, inbend
+               call twh_ijben3(GLB_GET,imolty,m,n,nb)
                lexclude(nb) = .true.
             enddo
 c           --- exclude all 3rd-nearest neighbor bonded beads(torsions) 
-            do n = 1, twh_get_intor(imolty,m)
-               nb = twh_get_ijtor4(imolty,m,n)
+            call twh_intor(GLB_GET,imolty,m,intorsion)
+            do n = 1,intorsion
+               call twh_ijtor4(GLB_GET,imolty,m,n,nb)
                lexclude(nb) = .true.
             enddo
 

@@ -1010,7 +1010,7 @@ allocate.o: preproc.h allocate.F
 angle_b_distribution.o: functions.h preproc.h angle_b_distribution.F
 arbtocart.o: preproc.h arbtocart.F
 arccos.o: functions.h arccos.F
-assemble.o: preproc.h functions.h assemble.F
+assemble.o: preproc.h assemble.F
 atd_cbmc_setup.o: preproc.h functions.h atd_cbmc_setup.F
 atomshift.o: preproc.h functions.h atomshift.F
 averages.o: preproc.h functions.h averages.F
@@ -1027,12 +1027,12 @@ checkhmatrix.o: preproc.h functions.h checkhmatrix.F
 checkstruc.o: preproc.h functions.h checkstruc.F 
 citations.o: preproc.h citations.F
 compare.o: preproc.h functions.h compare.F 
-comparestruc.o: preproc.h functions.h comparestruc.F
+comparestruc.o: preproc.h comparestruc.F
 composite.o: preproc.h composite.F
 cone.o: preproc.h functions.h cone.F
 coneangle.o: coneangle.F
 conrot.o: preproc.h functions.h dvpm.h conrot.F
-createmolecule.o: preproc.h functions.h createmolecule.F
+createmolecule.o: preproc.h createmolecule.F
 crossproduct.o: preproc.h crossproduct.F
 ctrmas.o: preproc.h functions.h ctrmas.F
 dihedral_distribution.o: preproc.h functions.h dihedral_distribution.F
@@ -1133,7 +1133,7 @@ ffweiner1986.o: preproc.h functions.h ffweiner1986.F
 ffwielop1985.o: preproc.h functions.h ffwielop1985.F
 fielddft.o: preproc.h fielddft.F
 finalize.o: preproc.h finalize.F
-findrings.o: preproc.h functions.h findrings.F
+findrings.o: preproc.h findrings.F
 findtarget.o: preproc.h functions.h findtarget.F
 gaussian.o: preproc.h functions.h gaussian.F
 gaussprob.o: preproc.h functions.h gaussprob.F
@@ -1157,7 +1157,7 @@ inverselawofcosine.o: functions.h inverselawofcosine.F
 inverthmatrix.o: preproc.h inverthmatrix.F
 lawofcosine.o: functions.h lawofcosine.F
 leastsquares.o: leastsquares.F
-linclude.o: preproc.h functions.h linclude.F 
+linclude.o: preproc.h linclude.F 
 loopclosure.o: preproc.h functions.h loopclosure.F
 mainloop.o: preproc.h functions.h wrapperF.h mainloop.F
 mapconf.o: preproc.h mapconf.F
@@ -1178,12 +1178,12 @@ polysafetycheck.o: preproc.h polysafetycheck.F
 putarbinbox.o: preproc.h putarbinbox.F
 putcartinbox.o: preproc.h putcartinbox.F
 pupdate.o: preproc.h pupdate.F
-qqassign.o: preproc.h functions.h qqassign.F
+qqassign.o: preproc.h qqassign.F
 radialpressure.o: preproc.h functions.h radialpressure.F
 ranlux.o: ranlux.F
 readclassical.o: preproc.h functions.h wrapperF.h readclassical.F
 readinput.o: preproc.h wrapperF.h functions.h readinput.F
-readlammps.o: preproc.h functions.h readlammps.F
+readlammps.o: preproc.h readlammps.F
 readtowhee.o: preproc.h wrapperF.h functions.h readtowhee.F
 readutils.o: functions.h readutils.F
 recip.o: preproc.h recip.F
@@ -1197,7 +1197,7 @@ rosenbluth.o: preproc.h functions.h rosenbluth.F
 rotate.o: preproc.h functions.h rotate.F
 rotationmatrix.o: preproc.h rotationmatrix.F
 rwcbmc.o: preproc.h functions.h rwcbmc.F
-rwconf.o: preproc.h functions.h rwconf.F
+rwconf.o: preproc.h rwconf.F
 rwforcefield.o: preproc.h functions.h rwforcefield.F
 rwsafe.o: preproc.h functions.h rwsafe.F
 scaled_potential.o: preproc.h scaled_potential.F
@@ -1218,7 +1218,7 @@ uniformbox.o: preproc.h functions.h uniformbox.F
 updatemaxtrdisp.o: preproc.h updatemaxtrdisp.F
 updatethreebondbias.o: preproc.h functions.h updatethreebondbias.F
 updatetwobondbias.o: preproc.h functions.h updatetwobondbias.F
-updatevolmaxdisp.o: functions.h preproc.h updatevolmaxdisp.F
+updatevolmaxdisp.o: preproc.h updatevolmaxdisp.F
 vangang.o: preproc.h functions.h vangang.F
 vangle.o: preproc.h functions.h vangle.F
 vbonbon.o: preproc.h functions.h vbonbon.F
@@ -1246,7 +1246,7 @@ writedynamo.o: preproc.h functions.h writedynamo.F
 writeimproper.o: preproc.h functions.h writeimproper.F 
 writeintro.o: preproc.h writeintro.F 
 writelammps.o: preproc.h functions.h writelammps.F
-writemovie.o: preproc.h functions.h writemovie.F
+writemovie.o: preproc.h writemovie.F
 writenonbond.o: preproc.h functions.h writenonbond.F
 writeonefive.o: preproc.h functions.h writeonefive.F
 writepdb.o: preproc.h functions.h writepdb.F

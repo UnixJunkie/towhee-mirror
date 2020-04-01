@@ -209,12 +209,10 @@ c     *   volume move in the other box.  The maximum change is         *
 c     *   controled by rmcell.                                         *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
-#define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_RMVOL
 #define FUNCTION_RANDOM
 #include "functions.h"
 c     --- variables that are passed to/from the subroutines
@@ -230,11 +228,11 @@ c     --- integer scalars
       integer ibox,imolty,ilabel,ichain,iunit,keycode,cpnumber
       integer idim,jdim,pairvch,numboxes
       integer boxiso,boxhmat,labiso,labhmat,nchain
-      integer ivalue,jvalue,nunit,nchbox
+      integer ivalue,jvalue,nunit,nchbox,testboxi
 c     --- double precision scalars
       double precision volt,expdv,dx,dy,dz,vtotal,vvibb
       double precision dele,vinter,vtail,vext,velect,vintra,vvib,vbend
-      double precision vbendb,vtorb,boxvolume
+      double precision vbendb,vtorb,boxvolume,rmvol
       double precision vtor,delecurrent
       double precision vsolv,vduma
       double precision xtemp,ytemp,ztemp,value,dvl,dvc
@@ -282,8 +280,8 @@ c        --- store old k vectors and reciprocal sum
       do ichain = 1, nchain
          call twh_pairbox(GLB_GET,pairvch,1,ivalue)
          call twh_pairbox(GLB_GET,pairvch,2,jvalue)
-         if ( twh_get_nboxi(ichain) .eq. ivalue .or.
-     &        twh_get_nboxi(ichain) .eq. jvalue ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ivalue .or. testboxi .eq. jvalue ) then
 c           --- make sure this molecule is not bonded through the
 c           --- periodic boundary
             call twh_lperiodic(GLB_GET,ichain,lperiodic)
@@ -292,7 +290,7 @@ c           --- periodic boundary
      &              ,' a molecule bonded through the periodic boundary'
                write(6,*) 'Molecule type:',imolty
                write(6,*) 'Chain number:',ichain
-               write(6,*) 'Box number:',twh_get_nboxi(ichain)
+               write(6,*) 'Box number:',testboxi
 c              --- automatic rejection
                return
             endif
@@ -330,8 +328,9 @@ c     --- computataions and just reset the box dimensions
       lreject = .false.
       if ( coordtype .eq. VMC_THREED ) then
 c        --- calculate new volume
+         call twh_rmvol(GLB_GET,movevch,rmvol)
          expdv = twh_expon(dlog(volo(1)/volo(2))
-     &        + twh_get_rmvol(movevch)*(2.0d0*twh_random()-1.0d0))
+     &        + rmvol*(2.0d0*twh_random()-1.0d0))
          voln(1)= expdv*volt/(1+expdv)
          voln(2)= volt-voln(1)
          if ( voln(1) .lt. 0.0d0 .or. voln(2) .lt. 0.0d0 ) then
@@ -607,8 +606,8 @@ c        --- restore old coordinates
          do ichain = 1, nchain
             call twh_pairbox(GLB_GET,pairvch,1,ivalue)
             call twh_pairbox(GLB_GET,pairvch,2,jvalue)
-            if ( twh_get_nboxi(ichain) .eq. ivalue .or.
-     &           twh_get_nboxi(ichain) .eq. jvalue ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .eq. ivalue .or. testboxi .eq. jvalue ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,nunit)
                call twh_com(GLB_STORE,CRD_T_TO_R,ichain,xcmi,ycmi,zcmi)
@@ -644,13 +643,11 @@ c     *    this move was first described by Yashonath and Rao in       *
 c     *    Mol. Phys. 54, 1, 245-251 (1985).                           *
 c     *                                                                *
 c     * rewritten from old volnpt 01-22-2018 by M.G. Martin            *
-c     * last modified 04-07-2018 by M.G.Martin                         *
+c     * last modified 03-30-2020 by M.G.Martin                         *
 c     ******************************************************************
       implicit none
 c     --- functions
 #define FUNCTION_EXPON
-#define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_RMVOL
 #define FUNCTION_RANDOM
 #include "functions.h"
 c     --- constants
@@ -666,9 +663,9 @@ c     --- integer scalars
       integer ichain,iunit,imolty,cpnumber,newcode
       integer idim,jdim,nchain
       integer nunit,nchbox,keycode
-      integer nfield,ifield,fieldbox
+      integer nfield,ifield,fieldbox,testboxi
 c     --- double precision scalars
-      double precision volo,deltav,sfact,vinterb,vintrab
+      double precision volo,deltav,sfact,vinterb,vintrab,rmvol
       double precision voln,vintern,vtailn,vextn,velectn,vintran
       double precision vsolvn,vextb,velectb,vsolvb
       double precision dx,dy,dz,v,dele,vduma
@@ -721,8 +718,8 @@ c           --- regular moves use rmvol
          endif
          if ( newcode .eq. NEWVOL_RMVOL ) then
 c        --- calculate new volume         
-            voln = volo 
-     &           + twh_get_rmvol(boxvch)*( 2.0d0*twh_random() - 1.0d0 )
+            call twh_rmvol(GLB_GET,boxvch,rmvol)
+            voln = volo + rmvol*( 2.0d0*twh_random() - 1.0d0 )
          elseif ( newcode .eq.NEWVOL_RANGE ) then
             call twh_pressure_thermo_range(GLB_GET,1,rangelow)
             call twh_pressure_thermo_range(GLB_GET,2,rangehigh)
@@ -784,7 +781,8 @@ c     --- calculate centre of mass and its displacement
       do ichain = 1, nchain
          call twh_moltyp(GLB_GET,ichain,imolty)
          call twh_nunit(GLB_GET,imolty,nunit)
-         if ( twh_get_nboxi(ichain) .eq. boxvch) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. boxvch) then
 c           --- compute the shift from the old to the new coords
             call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
 c           --- convert this to arbitrary coordinates
@@ -922,7 +920,8 @@ c        --- store new electrostatic information
          if ( lfailure ) return
 c        --- store temp coordinates as real
          do ichain = 1, nchain
-            if ( twh_get_nboxi(ichain) .eq. boxvch) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .eq. boxvch) then
                call twh_com(GLB_STORE,CRD_T_TO_R,ichain,xcmi,ycmi,zcmi)
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,nunit)

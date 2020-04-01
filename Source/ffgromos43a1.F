@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,11 +26,10 @@ c     * sets up all of the force field parameters for the gromos43a1   *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 08-13-2014 M.G. Martin                           *
+c     * last modified 03-31-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
@@ -988,11 +987,11 @@ c                    --- special cross term: consult if list
                   else
 c                    --- use gromos selection matrix to determine the
 c                    --- parameters
-                     csixi = twh_get_nbcoeff(1,ii)
-                     csixj = twh_get_nbcoeff(1,jj)
+                     call twh_nbcoeff(GLB_GET,1,ii,csixi)
+                     call twh_nbcoeff(GLB_GET,1,jj,csixj)
                      csixt = csixi*csixj
-                     ctwvi = twh_get_nbcoeff((1+isel),ii)
-                     ctwvj = twh_get_nbcoeff((1+jsel),jj)
+                     call twh_nbcoeff(GLB_GET,(1+isel),ii,ctwvi)
+                     call twh_nbcoeff(GLB_GET,(1+jsel),jj,ctwvj)
                      ctwvt = ctwvi*ctwvj
                   endif
                      
@@ -1015,15 +1014,15 @@ c                    --- specify the one-four interactions
      &                    .or. i .eq. 16) then
 c                       --- special one-four interaction parameters
                         lrecompute = .true.
-                        csixi = twh_get_nbcoeff(3,ii)
-                        ctwvi = twh_get_nbcoeff(4,ii)
+                        call twh_nbcoeff(GLB_GET,3,ii,csixi)
+                        call twh_nbcoeff(GLB_GET,4,ii,ctwvi)
                      endif
                      if ( j .eq. 12 .or. j .eq. 13  .or. j .eq. 14
      &                    .or. j .eq. 16) then
 c                       --- special one-four interaction parameters
                         lrecompute = .true.
-                        csixj = twh_get_nbcoeff(3,jj)
-                        ctwvj = twh_get_nbcoeff(4,jj)
+                        call twh_nbcoeff(GLB_GET,3,jj,csixj)
+                        call twh_nbcoeff(GLB_GET,4,jj,ctwvj)
                      endif
                      if ( lrecompute ) then
                         csixt = csixi*csixj*(CON_KJTOK)*(1d6)

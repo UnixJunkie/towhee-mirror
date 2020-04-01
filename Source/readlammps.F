@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,17 +32,15 @@ c     * set up this file, and for allowing me to take some code from   *
 c     * Lammps 2001                                                    *
 c     *                                                                *
 c     * originally written 02-27-2002 by M.G. Martin                   *
-c     * last modified 07-22-2016 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_MASS
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- function declarations local to the readlammps subroutine
       logical match
 c     --- local variables
-      character*2 ename
+      character*(ELENAMLEN) elename
       character*10 eleflag
       character*80 str
       logical ldone
@@ -351,10 +349,11 @@ c     --- check that all required options were read in from data file
 c     --- assign the element names based on the masses
       eleflag = 'getelement'
       do itype = 1,ntypes
-         localmass = twh_get_mass(itype)
-         call twh_getelement(lfailure,eleflag,localmass,ename,ielement)
+         call twh_mass(GLB_GET,itype,localmass)
+         call twh_getelement(lfailure,eleflag,localmass,elename
+     &        ,ielement)
          if ( lfailure ) return
-         call twh_elementname(GLB_SET,itype,ename)
+         call twh_elementname(GLB_SET,itype,elename)
       enddo
 
       if (natomflag.eq.0) stop 'No Atoms in data file'

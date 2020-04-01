@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,12 +50,11 @@ c     * movetype=2: finds a new position for an entire row of atoms    *
 c     *                                                                *
 c     * originally written as atomshift 01-10-2002 by M.G. Martin      *
 c     * renamed atomshift_main 06-25-2009 by M.G. Martin               *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_EXPON
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_RANDOM
 #include "functions.h"
 c     --- debug toggle
@@ -72,7 +71,7 @@ c     --- logical arrays
 c     --- integer scalars
       integer arbindex,ibox,ichain,icond
       integer imolty,iunit,idim,imove,tempdim
-      integer ntomove,nunit,bxdflag
+      integer ntomove,nunit,bxdflag,testboxi
 c     --- integer arrays
       integer ncond
       dimension ncond(2)
@@ -274,7 +273,8 @@ c     --- make a list of the molecules to move based on the COM position
       do ichain = 1,nchain
 c        --- initialize lmoveme
          call twh_lmoveme(GLB_SET,ichain,.false.)
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
 c           --- transform the COM into arbitrary units
             call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
             call twh_carttoarb(bxdflag,ibox,xcmi,ycmi,zcmi

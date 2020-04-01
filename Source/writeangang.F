@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,19 +26,19 @@ c     * simulation to the file index                                   *
 c     * index: file index for output                                   *
 c     *                                                                *
 c     * originally written 02-22-2002 by M.G. Martin                   *
-c     * last modified 08-09-2011 M.G. Martin                           *
+c     * last modified 03-21-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_AACOEFF
-#define FUNCTION_GET_AASTYLE
 #define FUNCTION_GET_LAAHERE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer index
 c     --- local variables
       logical lfound
-      integer type
+      integer type,aastyle
       double precision onepi
+      double precision aacoeff
+      dimension aacoeff(0:2)
 
       call twh_constant_pi(GLB_GET,onepi)
 
@@ -50,18 +50,23 @@ c              --- just found the first angle-angle type
                write(index,'(a17)') 'Angle-Angle Types'
                lfound = .true.
             endif
+            call twh_aastyle(GLB_GET,type,aastyle)
 c           --- output information about this interaction
-            if ( twh_get_aastyle(type) .eq. 1 ) then
+            if ( aastyle .eq. 1 ) then
 c              --- Compass angle-angle
-               write(index,64) type,twh_get_aacoeff(type,0)
-            elseif ( twh_get_aastyle(type) .eq. 2 ) then
+               call twh_aacoeff(GLB_GET,type,0,aacoeff(0))
+               write(index,64) type,aacoeff(0)
+            elseif ( aastyle .eq. 2 ) then
 c              --- Compass angle-angle with explicit angle terms
-               write(index,65) type,twh_get_aacoeff(type,0)
-     &              ,twh_get_aacoeff(type,1)*180.0d0/onepi
-     &              ,twh_get_aacoeff(type,2)*180.0d0/onepi
+               call twh_aacoeff(GLB_GET,type,0,aacoeff(0))
+               call twh_aacoeff(GLB_GET,type,1,aacoeff(1))
+               call twh_aacoeff(GLB_GET,type,2,aacoeff(2))
+               write(index,65) type,aacoeff(0)
+     &              ,aacoeff(1)*180.0d0/onepi
+     &              ,aacoeff(2)*180.0d0/onepi
             else
                write(6,*) 'WRITEANGANG: nondefined angle-angle type '
-     &              ,twh_get_aastyle(type)
+     &              ,aastyle
                stop
             endif
          endif

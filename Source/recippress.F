@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,18 +27,16 @@ c     * calculates the reciprocal space contribution to pressure using *
 c     * thermodynamic definition. See J. Chem. Phys. Vol. 109 P2791.   *
 c     *                                                                *
 c     * originally written in 1998 by Bin Chen                         *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       integer bxdflag,ibox
       double precision repress
       dimension repress(6)
-
 c     --- local variables
       integer ncount,ichain,ii,imolty,index,nchain,nunit,numvect
+      integer testboxi
       double precision factor,piix,piiy,piiz,xcmi,ycmi,zcmi,arg
       double precision inner,rxui,ryui,rzui,charge
       double precision kx,ky,kz,prefact,calp,ssumr,ssumi
@@ -68,7 +66,8 @@ c     --- the intramolecular part should be substracted
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1, nchain
 c        --- check if i is in relevant box 
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
 c           --- loop over all beads ii of chain i 

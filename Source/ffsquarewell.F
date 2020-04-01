@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -31,36 +31,39 @@ c     *       the nonbonded types                                      *
 c     * angles and torsions are strictly nonbonded interactions        *
 c     *                                                                *
 c     * originally written 04-08-2004 by M.G. Martin                   *
-c     * last modified 08-13-2014 M.G. Martin                           *
+c     * last modified 03-31-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_CBNAME
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes
 c     --- local variables
-      integer ii,jj,itype,jtype,type
+c     --- character scalars
       character*(FFNAMELEN) ffname
-      integer nvslocal,nbslocal,ntslocal
+      character*2 elelocal 
+      character*5 bplocal
+      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
+c     --- character arrays
       character*(FFNAMELEN) vnlocal
       dimension vnlocal(MAXSAMEV,MAXVNAME) 
       character*(FFNAMELEN) bnlocal 
       dimension bnlocal(MAXSAMEB,MAXBNAME)
       character*(FFNAMELEN) tnlocal
       dimension tnlocal(MAXSAMET,MAXTNAME)
+c     --- integer scalars
+      integer ii,jj,itype,jtype,type
+      integer nvslocal,nbslocal,ntslocal
+c     --- local double precision scalars
+      double precision masslocal,nbc_ii,nbc_jj
+c     --- local double precision arrays
       double precision vclocal
       dimension vclocal(MINVIBCOEFF:MAXVIBCOEFF)
       double precision tclocal
       dimension tclocal(MINTORCOEFF:MAXTORCOEFF)
       double precision nbclocal
       dimension nbclocal(MINNBCOEFF:MAXNBCOEFF)
-      double precision masslocal
-      character*2 elelocal 
-      character*5 bplocal
-      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
 
       ffname = 'SquareWell'
 c     --- square well potential
@@ -126,14 +129,15 @@ c           --- increment bond type
             type = type + 1
             call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
 c           --- set to the arithmetic average of the hard radii
-            vclocal(0) = 0.5d0*(twh_get_nbcoeff(1,ii)
-     &           + twh_get_nbcoeff(1,jj))
+            call twh_nbcoeff(GLB_GET,1,ii,nbc_ii)
+            call twh_nbcoeff(GLB_GET,1,jj,nbc_jj)
+            vclocal(0) = 0.5d0*(nbc_ii + nbc_jj)
             call twh_set_vibcoeffs(type,vclocal)
             call twh_vibff(GLB_SET,type,ffname)
             nvslocal = 1
 c           --- use the bond names of those types
-            vnlocal(1,1) = twh_get_cbname(itype)
-            vnlocal(1,2) = twh_get_cbname(jtype)
+            call twh_cbname(GLB_GET,itype,vnlocal(1,1))
+            call twh_cbname(GLB_GET,jtype,vnlocal(1,2))
             call twh_set_vibnames(type,nvslocal,vnlocal)
          enddo
       enddo

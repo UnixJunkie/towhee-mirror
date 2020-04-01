@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -38,16 +38,14 @@ c     * otherwise.  (see scaled_potential.F)                           *
 c     * value returned is in units of [K]                              *
 c     *                                                                *
 c     * originally written as vnonbond 2-18-2000 by M.G. Martin        *
-c     * last update 07-21-2013 by M.G. Martin                          *
+c     * last update 03-31-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
 #define FUNCTION_CMP_LT
 #define FUNCTION_EXPON
 #define FUNCTION_EXTRACTPAIR
-#define FUNCTION_GET_HBONDCOEFF
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_NBCOEFF
 #define FUNCTION_GET_NATIVE_LAMBDA
 #define FUNCTION_GET_FOREIGN_LAMBDA
 #define FUNCTION_SCALE_ATOMS
@@ -73,7 +71,12 @@ c     --- double precision scalars
       double precision sigoverr,x,acklandphi,scalefactor,wca_cutsq
       double precision rijseven,aaa,bbb,ccc,ddd,onethird,cbrt_two
       double precision tpair,rminsq,rvalue,rcurrent,rdiff
-      double precision avalue,powrn
+      double precision avalue
+c     --- double precision arrays
+      double precision hbondcoeff
+      dimension hbondcoeff(3)
+      double precision nbcoeff
+      dimension nbcoeff(MINNBCOEFF:MAXNBCOEFF)
 c     --- functions
       double precision vtb_lennard_jones,vtb_scaled_lj
 
@@ -134,7 +137,8 @@ c              --- no scaling for 1-4, so foreign energies same
                enddo
             else
 c              --- if sigma (aka nbcoeff(13)) = 0, vtwobody = 0        
-               if (twh_get_nbcoeff(13, ntij) .eq. 0.0d0) then
+               call twh_nbcoeff(GLB_GET,13,ntij,nbcoeff(13))
+               if ( nbcoeff(13) .eq. 0.0d0) then
                   twh_vtwobody = 0.0d0
                else
                   if (scp_scale_atoms(ntii, ntjj) ) then 
@@ -160,28 +164,29 @@ c         --- Repulsive only form of lennard jones 12-6
             ntij = twh_getnbtype(ntii,ntjj)
             if ( lonefour ) then
 c              --- no scaling for 1-4
-               srsix = twh_get_nbcoeff(15,ntij) / (rijsq**3)
-               twh_vtwobody = srsix*(srsix-1.0d0)
-     &              *twh_get_nbcoeff(16,ntij) 
+               call twh_nbcoeff(GLB_GET,15,ntij,nbcoeff(15))
+               call twh_nbcoeff(GLB_GET,16,ntij,nbcoeff(16))
+               srsix = nbcoeff(15)/ (rijsq**3)
+               twh_vtwobody = srsix*(srsix-1.0d0)*nbcoeff(16)
             else
-c              --- if sigma (aka twh_get_nbcoeff(13)) = 0, vtwobody = 0
-               if (twh_get_nbcoeff(13, ntij) .eq. 0.0d0) then
+c              --- if sigma (aka twh_nbcoeff(13)) = 0, vtwobody = 0
+               call twh_nbcoeff(GLB_GET,13,ntij,nbcoeff(13))
+               if ( nbcoeff(13) .eq. 0.0d0) then
                   twh_vtwobody = 0.0d0
                else
+                  call twh_nbcoeff(GLB_GET,14,ntij,nbcoeff(14))
+                  call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
                   if (scp_scale_atoms(ntii, ntjj)) then
                      call twh_constant_onethird(GLB_GET,onethird)
                      call twh_constant_cuberoottwo(GLB_GET,cbrt_two)
-                     wca_cutsq = cbrt_two
-     &                    *(twh_get_nbcoeff(13,ntij)**onethird)
+                     wca_cutsq = cbrt_two*(nbcoeff(13)**onethird)
                      if (twh_cmp_lt(rijsq, wca_cutsq)) then
-                        srsix = twh_get_nbcoeff(13,ntij) / (rijsq**3)
-                        twh_vtwobody = srsix*(srsix-1.0d0)*
-     &                     twh_get_nbcoeff(14,ntij)
-     &                     +(twh_get_nbcoeff(14,ntij) / 4.0d0)
+                        srsix = nbcoeff(13) / (rijsq**3)
+                        twh_vtwobody = srsix*(srsix-1.0d0)*nbcoeff(14)
+     &                     +(nbcoeff(14) / 4.0d0)
                         call twh_lshift(GLB_GET,lshift)
                         if ( lshift ) then
-                           twh_vtwobody = twh_vtwobody
-     &                          - twh_get_nbcoeff(0,ntij)
+                           twh_vtwobody = twh_vtwobody - nbcoeff(0)
                         endif
                      else 
                         twh_vtwobody = 0.0d0
@@ -189,13 +194,11 @@ c                    --- 0 if rijsq .ge. wca_cutsq
                      endif
                   else
 c                    --- if not lscale then normal LJ interaction
-                     srsix = twh_get_nbcoeff(13,ntij) / (rijsq**3)
-                     twh_vtwobody = srsix*(srsix-1.0d0)
-     &                    *twh_get_nbcoeff(14,ntij)
+                     srsix = nbcoeff(13) / (rijsq**3)
+                     twh_vtwobody = srsix*(srsix-1.0d0)*nbcoeff(14)
                      call twh_lshift(GLB_GET,lshift)
                      if ( lshift ) then
-                        twh_vtwobody = twh_vtwobody
-     &                       -twh_get_nbcoeff(0,ntij)
+                        twh_vtwobody = twh_vtwobody - nbcoeff(0)
                      endif
                   endif
                endif
@@ -210,16 +213,19 @@ c        --- 12-6 same as above, plus additional term
             ntij = twh_getnbtype(ntii,ntjj)
             rinvsix = 1.0d0 / ( rijsq**3)
             if ( lonefour ) then
-               srsix = twh_get_nbcoeff(15,ntij)*rinvsix
-               twh_vtwobody = srsix*(srsix-1.0d0)
-     &              *twh_get_nbcoeff(16,ntij) 
+               call twh_nbcoeff(GLB_GET,15,ntij,nbcoeff(15))
+               call twh_nbcoeff(GLB_GET,16,ntij,nbcoeff(16))
+               srsix = nbcoeff(15)*rinvsix
+               twh_vtwobody = srsix*(srsix-1.0d0)*nbcoeff(16)
             else
-               srsix = twh_get_nbcoeff(13,ntij)*rinvsix
-               twh_vtwobody = srsix*(srsix-1.0d0)
-     &              *twh_get_nbcoeff(14,ntij)
+               call twh_nbcoeff(GLB_GET,13,ntij,nbcoeff(13))
+               call twh_nbcoeff(GLB_GET,14,ntij,nbcoeff(14))
+               srsix = nbcoeff(13)*rinvsix
+               twh_vtwobody = srsix*(srsix-1.0d0)*nbcoeff(14)
                call twh_lshift(GLB_GET,lshift)
                if ( lshift ) then
-                  twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+                  call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+                  twh_vtwobody = twh_vtwobody - nbcoeff(0)
                endif
             endif
          endif
@@ -230,14 +236,15 @@ c        --- compute the 12-10 hbond if needed
             rinvten = rinvtwelve*rijsq
             if ( lonefour ) then
 c              --- use the scaling factor
-               scalefactor = twh_get_hbondcoeff(hbtype,3)
+               call twh_hbondcoeff(GLB_GET,hbtype,3,scalefactor)
             else
 c              --- no scaling
                scalefactor = 1.0d0
             endif
+            call twh_hbondcoeff(GLB_GET,hbtype,1,hbondcoeff(1))
+            call twh_hbondcoeff(GLB_GET,hbtype,2,hbondcoeff(2))
             twh_vtwobody = twh_vtwobody + scalefactor*(
-     &           twh_get_hbondcoeff(hbtype,1)*rinvtwelve
-     &           - twh_get_hbondcoeff(hbtype,2)*rinvten )
+     &           hbondcoeff(1)*rinvtwelve - hbondcoeff(2)*rinvten )
          endif
       elseif( classical_pot_num .eq. CP_9_6 ) then
 c        --- lennard jones 9-6 
@@ -246,14 +253,16 @@ c        --- lennard jones 9-6
          else
             ntij = twh_getnbtype(ntii,ntjj)
             rij = dsqrt(rijsq)
-            srthree = twh_get_nbcoeff(1,ntij) / (rij*rijsq)
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+            srthree = nbcoeff(1)/ (rij*rijsq)
             srsix = srthree*srthree
             srnine = srsix*srthree
-            twh_vtwobody = twh_get_nbcoeff(2,ntij)*((2.0d0)*srnine 
-     &           - (3.0d0)*srsix )
+            twh_vtwobody = nbcoeff(2)*((2.0d0)*srnine - (3.0d0)*srsix )
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
-               twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+               call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+               twh_vtwobody = twh_vtwobody - nbcoeff(0)
             endif
          endif
       elseif ( classical_pot_num .eq. CP_12_9_6 ) then
@@ -267,12 +276,15 @@ c        --- combination 12-9-6 potential
             rinvsix = rinvthree*rinvthree
             rinvnine = rinvsix*rinvthree
             rinvtwelve = rinvsix*rinvsix
-            twh_vtwobody = twh_get_nbcoeff(1,ntij)*rinvtwelve 
-     &           + twh_get_nbcoeff(2,ntij)*rinvnine
-     &           + twh_get_nbcoeff(3,ntij)*rinvsix
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+            call twh_nbcoeff(GLB_GET,3,ntij,nbcoeff(3))
+            twh_vtwobody = nbcoeff(1)*rinvtwelve + nbcoeff(2)*rinvnine
+     &           + nbcoeff(3)*rinvsix
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
-               twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+               call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+               twh_vtwobody = twh_vtwobody - nbcoeff(0)
             endif
          endif
       elseif ( classical_pot_num .eq. CP_DOUBLE_EXPONENTIAL ) then
@@ -281,16 +293,17 @@ c        --- double exponential
          if ( twh_cmp_lt(rijsq, rminsq) ) then
             lovrlap = .true.
          else
-            aaa = twh_get_nbcoeff(1,ntij)
-            bbb = twh_get_nbcoeff(2,ntij)
-            ccc = twh_get_nbcoeff(3,ntij)
-            ddd = twh_get_nbcoeff(4,ntij)
+            call twh_nbcoeff(GLB_GET,1,ntij,aaa)
+            call twh_nbcoeff(GLB_GET,2,ntij,bbb)
+            call twh_nbcoeff(GLB_GET,3,ntij,ccc)
+            call twh_nbcoeff(GLB_GET,4,ntij,ddd)
             rij = dsqrt(rijsq)
             twh_vtwobody = aaa * twh_expon(-bbb*rij)
      &           - ccc * twh_expon(-ddd*rij)
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
-               twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+               call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+               twh_vtwobody = twh_vtwobody - nbcoeff(0)
             endif
          endif
       elseif ( classical_pot_num .eq. CP_HARD_2580_MULTISTEP .or.
@@ -298,28 +311,35 @@ c        --- double exponential
 c         --- the so-called 2,5,8,0 potential of Richard Elliot
 c         --- with a hard core
          ntij = twh_getnbtype(ntii,ntjj)
-         if (twh_cmp_lt(rijsq, twh_get_nbcoeff(7,ntij)) ) then
+         call twh_nbcoeff(GLB_GET,7,ntij,nbcoeff(7))
+         if (twh_cmp_lt(rijsq, nbcoeff(7)) ) then
             if ( classical_pot_num .eq. CP_HARD_2580_MULTISTEP ) then
 c              --- hard overlap
                lovrlap = .true.
             else
 c              --- repulsive overlap
-               twh_vtwobody = 1.0d10*(twh_get_nbcoeff(7,ntij)-rijsq)
+               twh_vtwobody = 1.0d10*(nbcoeff(7)-rijsq)
             endif
-         elseif (twh_cmp_lt(rijsq, twh_get_nbcoeff(11,ntij)) ) then
-c           --- we are in one of the bins, figure out which one
-            if (twh_cmp_lt(rijsq, twh_get_nbcoeff(8,ntij)) ) then
-c              --- the 1.2 well
-               twh_vtwobody = twh_get_nbcoeff(2,ntij)
-            elseif (twh_cmp_lt(rijsq, twh_get_nbcoeff(9,ntij)) ) then
-c              --- the 1.5 well
-               twh_vtwobody = twh_get_nbcoeff(3,ntij)
-            elseif (twh_cmp_lt(rijsq, twh_get_nbcoeff(10,ntij)) ) then
-c              --- the 1.8 well
-               twh_vtwobody = twh_get_nbcoeff(4,ntij)
-            else
-c              --- we must be in the final 2.0 well
-               twh_vtwobody = twh_get_nbcoeff(5,ntij)
+         else
+            call twh_nbcoeff(GLB_GET,11,ntij,nbcoeff(11))
+            if (twh_cmp_lt(rijsq, nbcoeff(11)) ) then
+c              --- we are in one of the bins, figure out which one
+               call twh_nbcoeff(GLB_GET,8,ntij,nbcoeff(8))
+               call twh_nbcoeff(GLB_GET,9,ntij,nbcoeff(9))
+               call twh_nbcoeff(GLB_GET,10,ntij,nbcoeff(10))
+               if (twh_cmp_lt(rijsq, nbcoeff(8)) ) then
+c                 --- the 1.2 well
+                  call twh_nbcoeff(GLB_GET,2,ntij,twh_vtwobody)
+               elseif (twh_cmp_lt(rijsq, nbcoeff(9)) ) then
+c                 --- the 1.5 well
+                  call twh_nbcoeff(GLB_GET,3,ntij,twh_vtwobody)
+               elseif (twh_cmp_lt(rijsq, nbcoeff(10)) ) then
+c                 --- the 1.8 well
+                  call twh_nbcoeff(GLB_GET,4,ntij,twh_vtwobody)
+               else
+c                 --- we must be in the final 2.0 well
+                  call twh_nbcoeff(GLB_GET,5,ntij,twh_vtwobody)
+               endif
             endif
          endif
                
@@ -330,23 +350,28 @@ c        --- the annoying feature of going to -infinity as r goes to
 c        --- zero.  Have placed a potential dependent rminsq at the 
 c        --- position of maximum energy.
          ntij = twh_getnbtype(ntii,ntjj)
-         if (twh_cmp_lt(rijsq, twh_get_nbcoeff(5,ntij)) ) then
+         call twh_nbcoeff(GLB_GET,5,ntij,nbcoeff(5))
+         if (twh_cmp_lt(rijsq,nbcoeff(5)) ) then
             lovrlap = .true.
          else
             rij = dsqrt(rijsq)
-            twh_vtwobody = twh_get_nbcoeff(1,ntij)/(rijsq*rijsq*rijsq)
-     &           + twh_get_nbcoeff(2,ntij)
-     &           *twh_expon(twh_get_nbcoeff(3,ntij)*rij)
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+            call twh_nbcoeff(GLB_GET,3,ntij,nbcoeff(3))
+            twh_vtwobody = nbcoeff(1)/(rijsq*rijsq*rijsq) + nbcoeff(2)
+     &           *twh_expon(nbcoeff(3)*rij)
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
-               twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+               call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+               twh_vtwobody = twh_vtwobody - nbcoeff(0)
             endif
          endif
       elseif ( classical_pot_num .eq. CP_HARD_SPHERE ) then
 c        --- hard sphere
-c        --- the square of the diameter is stored in twh_get_nbcoeff(2)
+c        --- the square of the diameter is stored in nbcoeff(2)
          ntij = twh_getnbtype(ntii,ntjj)
-         if (twh_cmp_lt(rijsq, twh_get_nbcoeff(2,ntij)) ) then
+         call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+         if (twh_cmp_lt(rijsq,nbcoeff(2)) ) then
             lovrlap = .true.
          endif
       elseif ( classical_pot_num .eq. CP_REPULSIVE_SPHERE ) then
@@ -355,8 +380,9 @@ c        --- hard sphere run, intead of having a hard overlap, it just
 c        --- has a high energy
 c        --- the square of the diameter is stored in nbcoeff(2)
          ntij = twh_getnbtype(ntii,ntjj)
-         if (twh_cmp_lt(rijsq, twh_get_nbcoeff(2,ntij)) ) then
-            twh_vtwobody = 1.0d5 + 1.0d5*(twh_get_nbcoeff(2,ntij)-rijsq)
+         call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+         if (twh_cmp_lt(rijsq,nbcoeff(2)) ) then
+            twh_vtwobody = 1.0d5 + 1.0d5*(nbcoeff(2)-rijsq)
          endif
       elseif ( classical_pot_num .eq. CP_EMBEDDED_ATOM_METHOD
      &        .or. classical_pot_num .eq. CP_EAM_PAIR_ONLY ) then
@@ -369,37 +395,47 @@ c        --- embedded atom pair potential portion
      &           ,ntij,rij,lovrlap)
             if ( lfailure ) return
          elseif ( eampairnum .eq. EAM_PAIR_EXPON ) then
-            twh_vtwobody = twh_get_nbcoeff(1,ntij)
-     &           *twh_expon(twh_get_nbcoeff(2,ntij)*rij)
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+            twh_vtwobody = nbcoeff(1)*twh_expon(nbcoeff(2)*rij)
          elseif ( eampairnum .eq. EAM_PAIR_MORSE ) then
 c           --- uses a 3 parameter function that is a generalized
 c           --- morse potential
-            adelr = twh_get_nbcoeff(2,ntij)
-     &           *(rij - twh_get_nbcoeff(3,ntij))
-            twh_vtwobody = twh_get_nbcoeff(1,ntij)
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+            call twh_nbcoeff(GLB_GET,3,ntij,nbcoeff(3))
+            adelr = nbcoeff(2)*(rij - nbcoeff(3))
+            twh_vtwobody = nbcoeff(1)
      &           *( twh_expon(-2.0d0*adelr) - 2.0d0*twh_expon(-adelr))
          elseif ( eampairnum .eq. EAM_PAIR_ACKLANDTP ) then
 c           --- complicated pair potential that has 3 different forms
 c           --- depending upon the distances
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
             if ( rij .eq. 0.0d0 ) then
 c              --- infinite energy, set to really big to avoid divide 
 c              --- by zero
                twh_vtwobody = 1.0d50
-            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(1,ntij)) ) then
+            elseif (twh_cmp_lt(rij,nbcoeff(1)) ) then
 c              --- coulombic type repulsion
-               x = rij/twh_get_nbcoeff(4,ntij)
+               call twh_nbcoeff(GLB_GET,3,ntij,nbcoeff(3))
+               call twh_nbcoeff(GLB_GET,4,ntij,nbcoeff(4))
+               x = rij/nbcoeff(4)
                acklandphi = 0.1818d0*twh_expon(-3.2d0*x) 
      &              + 0.5099d0*twh_expon(-0.9423d0*x)
      &              + 0.2802d0*twh_expon(-0.4029d0*x)
      &              + 0.02817d0*twh_expon(-0.2016d0*x)
-               twh_vtwobody = acklandphi*twh_get_nbcoeff(3,ntij)/rij
-            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(2,ntij)) ) then
+               twh_vtwobody = acklandphi*nbcoeff(3)/rij
+            elseif (twh_cmp_lt(rij,nbcoeff(2)) ) then
 c              --- exponential repulsion
-               x = twh_get_nbcoeff(5,ntij) 
-     &              + twh_get_nbcoeff(6,ntij)*rij
-     &              + twh_get_nbcoeff(7,ntij)*rijsq
-     &              + twh_get_nbcoeff(8,ntij)*rij*rijsq
-               twh_vtwobody = twh_get_nbcoeff(9,ntij)*twh_expon(x)
+               call twh_nbcoeff(GLB_GET,5,ntij,nbcoeff(5))
+               call twh_nbcoeff(GLB_GET,6,ntij,nbcoeff(6))
+               call twh_nbcoeff(GLB_GET,7,ntij,nbcoeff(7))
+               call twh_nbcoeff(GLB_GET,8,ntij,nbcoeff(8))
+               call twh_nbcoeff(GLB_GET,9,ntij,nbcoeff(9))
+               x = nbcoeff(5) + nbcoeff(6)*rij +  nbcoeff(7)*rijsq
+     &              + nbcoeff(8)*rij*rijsq
+               twh_vtwobody = nbcoeff(9)*twh_expon(x)
             else
 c              --- cubic sum with heaviside (using a while loop to 
 c              --- recreate the heaviside and save some expense)
@@ -431,29 +467,30 @@ c                    --- out of bounds, this loop is finished
 c           --- complicated pair potential that has 3 different forms
 c           --- depending upon the distances
             rij = dsqrt(rijsq)
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
             if ( rij .eq. 0.0d0 ) then
 c              --- infinite energy, set to really big to avoid divide 
 c              --- by zero
                twh_vtwobody = 1.0d50
-            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(1,ntij)) ) then
+            elseif (twh_cmp_lt(rij,nbcoeff(1)) ) then
 c              --- coulombic type repulsion
-               acklandphi 
-     &              = twh_get_nbcoeff(4,ntij)
-     &              *twh_expon(twh_get_nbcoeff(5,ntij)*rij) 
-     &              + twh_get_nbcoeff(6,ntij)
-     &              *twh_expon(twh_get_nbcoeff(7,ntij)*rij)
-     &              + twh_get_nbcoeff(8,ntij)
-     &              *twh_expon(twh_get_nbcoeff(9,ntij)*rij)
-     &              + twh_get_nbcoeff(10,ntij)
-     &              *twh_expon(twh_get_nbcoeff(11,ntij)*rij)
-               twh_vtwobody = acklandphi*twh_get_nbcoeff(3,ntij)/rij
-            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(2,ntij)) ) then
+               do icoeff = 3,11
+                  call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+               enddo
+               acklandphi = nbcoeff(4)*twh_expon(nbcoeff(5)*rij) 
+     &              + nbcoeff(6)*twh_expon(nbcoeff(7)*rij)
+     &              + nbcoeff(8)*twh_expon(nbcoeff(9)*rij)
+     &              + nbcoeff(10)*twh_expon(nbcoeff(11)*rij)
+               twh_vtwobody = acklandphi*nbcoeff(3)/rij
+            elseif (twh_cmp_lt(rij,nbcoeff(2)) ) then
+               do icoeff = 12,16
+                  call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+               enddo
 c              --- exponential repulsion
-               x = twh_get_nbcoeff(12,ntij) 
-     &              + twh_get_nbcoeff(13,ntij)*rij
-     &              + twh_get_nbcoeff(14,ntij)*rijsq
-     &              + twh_get_nbcoeff(15,ntij)*rij*rijsq
-               twh_vtwobody = twh_get_nbcoeff(16,ntij)*twh_expon(x)
+               x = nbcoeff(12) + nbcoeff(13)*rij + nbcoeff(14)*rijsq
+     &              + nbcoeff(15)*rij*rijsq
+               twh_vtwobody = nbcoeff(16)*twh_expon(x)
             else
 c              --- power series with heaviside (using a while loop to
 c              --- recreate the heaviside and save some expense)
@@ -484,38 +521,44 @@ c                    --- out of bounds entry, the loop is complete
 c           --- Belashchenko Heaviside power series
 c           --- doing this in declining distance in an attempt to only
 c           --- fetch the minimum required parameters
-            if (twh_cmp_gt(rij, twh_get_nbcoeff(6,ntij)) ) then
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            call twh_nbcoeff(GLB_GET,6,ntij,nbcoeff(6))
+            if (twh_cmp_gt(rij,nbcoeff(6)) ) then
 c              --- beyond the cutoff distance, zero energy
                twh_vtwobody = 0.0d0
-            elseif (twh_cmp_lt(rij, twh_get_nbcoeff(1,ntij)) ) then
+            elseif (twh_cmp_lt(rij,nbcoeff(1)) ) then
 c              --- below r1, use a different potential
-               rvalue = twh_get_nbcoeff(1,ntij)
-               twh_vtwobody = twh_get_nbcoeff(7,ntij) 
-     &              + twh_get_nbcoeff(8,ntij)*(rvalue-rij)
-     &              + twh_get_nbcoeff(9,ntij)*
-     &              (twh_expon(twh_get_nbcoeff(10,ntij)*(rvalue-rij))
+               do icoeff = 7,10
+                  call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+               enddo
+               call twh_nbcoeff(GLB_GET,1,ntij,rvalue)
+               twh_vtwobody = nbcoeff(7) + nbcoeff(8)*(rvalue-rij)
+     &              + nbcoeff(9)*(twh_expon(nbcoeff(10)*(rvalue-rij))
      &              -1.0d0)
             else
 c              --- between r1 and r6, power series
-               if ( twh_cmp_lt(rij, twh_get_nbcoeff(2,ntij)) ) then
+               do icoeff = 2,6
+                  call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+               enddo
+               if ( twh_cmp_lt(rij,nbcoeff(2)) ) then
 c                 --- between r1 and r2
-                  rvalue = twh_get_nbcoeff(2,ntij)
+                  rvalue = nbcoeff(2)
                   aindex = 11
-               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(3,ntij)) ) then
+               elseif ( twh_cmp_lt(rij, nbcoeff(3)) ) then
 c                 --- between r2 and r3
-                  rvalue = twh_get_nbcoeff(3,ntij)
+                  rvalue = nbcoeff(3)
                   aindex = 20
-               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(4,ntij)) ) then
+               elseif ( twh_cmp_lt(rij, nbcoeff(4)) ) then
 c                 --- between r3 and r4
-                  rvalue = twh_get_nbcoeff(4,ntij)
+                  rvalue = nbcoeff(4)
                   aindex = 29
-               elseif ( twh_cmp_lt(rij, twh_get_nbcoeff(5,ntij)) ) then
+               elseif ( twh_cmp_lt(rij, nbcoeff(5)) ) then
 c                 --- between r4 and r5
-                  rvalue = twh_get_nbcoeff(5,ntij)
+                  rvalue = nbcoeff(5)
                   aindex = 38
                else
 c                 --- between r5 and r6
-                  rvalue = twh_get_nbcoeff(6,ntij)
+                  rvalue = nbcoeff(6)
                   aindex = 47
                endif
 c              --- compute the power series
@@ -549,13 +592,15 @@ c        --- ffnonbond or towhee_ff
             ntij = twh_getnbtype(ntii,ntjj)
             srsix = 1.0d0/(rijsq*rijsq*rijsq)
             rij = dsqrt(rijsq)
-            twh_vtwobody = twh_get_nbcoeff(1,ntij)*srsix
-     &           + twh_get_nbcoeff(2,ntij)*srsix*srsix
-     &           + twh_get_nbcoeff(3,ntij)
-     &           *twh_expon(twh_get_nbcoeff(4,ntij)*rij)
+            do icoeff = 1,4
+               call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+            enddo
+            twh_vtwobody = nbcoeff(1)*srsix + nbcoeff(2)*srsix*srsix
+     &           + nbcoeff(3)*twh_expon(nbcoeff(4)*rij)
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
-               twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+               call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+               twh_vtwobody = twh_vtwobody - nbcoeff(0)
             endif
          endif
       elseif ( classical_pot_num .eq. CP_GORDON_N_6 ) then
@@ -569,14 +614,16 @@ c        nb(5) stores 4 e c(n)
             lovrlap = .true.
          else
             ntij = twh_getnbtype(ntii,ntjj)
-            sigoverr = twh_get_nbcoeff(1,ntij)
-     &           /(dsqrt(rijsq) - twh_get_nbcoeff(4,ntij))
-            call twh_nbcoeff(GLB_GET,3,ntij,powrn)
-            twh_vtwobody = twh_get_nbcoeff(5,ntij)
-     &           *( sigoverr**powrn - sigoverr**6 )
+            call twh_nbcoeff(GLB_GET,1,ntij,nbcoeff(1))
+            do icoeff = 3,5
+               call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+            enddo
+            sigoverr = nbcoeff(1)/(dsqrt(rijsq) - nbcoeff(4))
+            twh_vtwobody = nbcoeff(5)*(sigoverr**nbcoeff(3)-sigoverr**6)
             call twh_lshift(GLB_GET,lshift)
             if ( lshift ) then
-               twh_vtwobody = twh_vtwobody - twh_get_nbcoeff(0,ntij)
+               call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff(0))
+               twh_vtwobody = twh_vtwobody - nbcoeff(0)
             endif
          endif
       elseif ( classical_pot_num .eq. CP_MULTIWELL ) then
@@ -646,10 +693,13 @@ c        --- note that these nbcoeffs have been modified and
 c        --- no longer correspond to their original meaning in 
 c        --- ffnonbond or towhee_ff
          ntij = twh_getnbtype(ntii,ntjj)
-         if ( rijsq .le. twh_get_nbcoeff(1,ntij) ) then
-            twh_vtwobody = 1.0d5 + 1.0d5*(twh_get_nbcoeff(1,ntij)-rijsq)
-         elseif ( rijsq .le. twh_get_nbcoeff(2,ntij) ) then
-            twh_vtwobody = -twh_get_nbcoeff(3,ntij)
+         do icoeff = 1,3
+            call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+         enddo
+         if ( rijsq .le. nbcoeff(1) ) then
+            twh_vtwobody = 1.0d5 + 1.0d5*(nbcoeff(1)-rijsq)
+         elseif ( rijsq .le. nbcoeff(2) ) then
+            twh_vtwobody = -nbcoeff(3)
          endif
       elseif ( classical_pot_num .eq. CP_SQUARE_WELL ) then
 c        --- square well
@@ -657,22 +707,26 @@ c        --- note that these nbcoeffs have been modified and
 c        --- no longer correspond to their original meaning in 
 c        --- towhee_ff
          ntij = twh_getnbtype(ntii,ntjj)
-         if (twh_cmp_lt(rijsq, twh_get_nbcoeff(1,ntij)) ) then
+         do icoeff = 1,3
+            call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+         enddo
+         if (twh_cmp_lt(rijsq, nbcoeff(1)) ) then
             lovrlap = .true.
-         elseif ( rijsq .le. twh_get_nbcoeff(2,ntij) ) then
-            twh_vtwobody = -twh_get_nbcoeff(3,ntij)
+         elseif ( rijsq .le. nbcoeff(2) ) then
+            twh_vtwobody = -nbcoeff(3)
          endif
       elseif ( classical_pot_num .eq. CP_STILLINGER_WEBER
      &        .or. classical_pot_num .eq. CP_SW_PAIR_ONLY ) then
 c        --- stillinger-weber potential
          ntij = twh_getnbtype(ntii,ntjj)
-         rovers = dsqrt(rijsq)/twh_get_nbcoeff(4,ntij)
-         if (twh_cmp_lt(rovers, twh_get_nbcoeff(6,ntij)) ) then
-            twh_vtwobody = twh_get_nbcoeff(1,ntij)
-     &           *twh_get_nbcoeff(2,ntij)
-     &           *((twh_get_nbcoeff(3,ntij)
-     &           *(rovers**(-twh_get_nbcoeff(5,ntij)))-1.0))
-     &           *twh_expon( 1.0d0 / (rovers-twh_get_nbcoeff(6,ntij)))
+         do icoeff = 1,6
+            call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+         enddo
+         rovers = dsqrt(rijsq)/nbcoeff(4)
+         if (twh_cmp_lt(rovers, nbcoeff(6)) ) then
+            twh_vtwobody = nbcoeff(1)*nbcoeff(2)
+     &           *((nbcoeff(3)*(rovers**(-nbcoeff(5)))-1.0))
+     &           *twh_expon( 1.0d0 / (rovers-nbcoeff(6)))
          endif
       elseif ( classical_pot_num .eq. CP_TABULATED_PAIR ) then
 c        --- tabulated pair potential
@@ -693,13 +747,13 @@ c        --- nb(8) contains 0.07 R_IJ
 c        --- nb(9) contains 1.12 R_IJ^7
 c        --- nb(10) contains 0.12 R_IJ^7
          ntij = twh_getnbtype(ntii,ntjj)
+         do icoeff = 6,10
+            call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+         enddo
          rij = dsqrt(rijsq)
          rijseven = rijsq*rijsq*rijsq*rij
-         twh_vtwobody = twh_get_nbcoeff(6,ntij) *
-     &        ( ( twh_get_nbcoeff(7,ntij) 
-     &        / (rij + twh_get_nbcoeff(8,ntij)) )**7 )
-     &        * ( ( twh_get_nbcoeff(9,ntij) 
-     &        / ( rijseven + twh_get_nbcoeff(10,ntij)) ) - 2.0d0 )
+         twh_vtwobody = nbcoeff(6)*((nbcoeff(7)/(rij+nbcoeff(8)))**7 )
+     &        *( (nbcoeff(9)/(rijseven + nbcoeff(10))) - 2.0d0 )
       else
          write(6,*)"pot_num =",classical_pot_num
          write(6,*) 'VTWOBODY: non defined classical potential'
@@ -797,46 +851,31 @@ c     ******************************************************************
 c     * calculates Lennard-Jones twobody potential                     *
 c     *                                                                *
 c     * originally split out of vtwobody 03-01-2006 by MAW             *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBCOEFF
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lonefour
       integer ntij
       double precision rijsq
 c     --- local variables
       logical lshift
-      double precision srsix
+      double precision srsix,sixterm,prefactor,shiftterm
 
       if ( lonefour ) then
-         srsix = twh_get_nbcoeff(15,ntij) / (rijsq**3)
-         vtb_lennard_jones = srsix*(srsix-1.0d0)
-     &        *twh_get_nbcoeff(16,ntij) 
-
-c    --- Frank Heilmann, BASF AG
-c    --- a possible bug? 1-4 interaction not shifted in 
-c    --- current release version?         
-c    --- --------------------------------------------------------
-c    --- email contact with Marcus: it is a feature :)
-c    --- --------------------------------------------------------
-c    --- I have it shifted here, as I am going to use a 
-c    --- 5bead/spring model (freely jointed chain) for hexadecane
-         call twh_lshift(GLB_GET,lshift)
-         if ( lshift ) then
-            vtb_lennard_jones = vtb_lennard_jones 
-     &           - twh_get_nbcoeff(0,ntij)
-         endif
+         call twh_nbcoeff(GLB_GET,15,ntij,sixterm)
+         call twh_nbcoeff(GLB_GET,16,ntij,prefactor)
       else
-         srsix = twh_get_nbcoeff(13,ntij) / (rijsq**3)
-         vtb_lennard_jones = srsix*(srsix-1.0d0)
-     &        *twh_get_nbcoeff(14,ntij)
-         call twh_lshift(GLB_GET,lshift)
-         if ( lshift ) then
-            vtb_lennard_jones = vtb_lennard_jones 
-     &           - twh_get_nbcoeff(0,ntij)
-         endif
+         call twh_nbcoeff(GLB_GET,13,ntij,sixterm)
+         call twh_nbcoeff(GLB_GET,14,ntij,prefactor)
+      endif
+c     --- this part uses the parameter set above for either 1-4 or reg
+      srsix = sixterm / (rijsq**3)
+      vtb_lennard_jones = srsix*(srsix-1.0d0)*prefactor
+      call twh_lshift(GLB_GET,lshift)
+      if ( lshift ) then
+         call twh_nbcoeff(GLB_GET,0,ntij,shiftterm)
+         vtb_lennard_jones = vtb_lennard_jones - shiftterm
       endif
 
       return
@@ -859,13 +898,12 @@ c     *  B = 4 epsilon lambda_lj^4                                     *
 c     *  A = 1/(alpha(1-lambda_lj)^2 + (r_ij / sigma)^6)               *
 c     *                                                                *
 c     * originally split out of vtwobody 03-01-2006 by MAW             *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_EQ
 #define FUNCTION_GET_FOREIGN_LAMBDA
 #define FUNCTION_GET_NATIVE_LAMBDA
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer ntij
@@ -873,41 +911,45 @@ c     --- variables passed to/from the subroutine
       dimension vforeign(MAX_FOREIGN_LAMBDA)
 c     --- local variables
       logical scp_eval_derivative,lshift
-      double precision A,B,dA,dB
-      double precision rij_sigma, lambda, alpha
       integer l,scp_num_foreign_lambda
-
+      double precision A,B,dA,dB,rij_sigma,lambda,alpha
+      double precision nbcoeff_13,nbcoeff_14,nbcoeff_0
 c     As defined in setmixterms,
-c        * twh_get_nbcoeff(13) and twh_get_nbcoeff(15) are sigma^6 
-c        * twh_get_nbcoeff(14) and twh_get_nbcoeff(16) are 4*epsilon
+c        * nbcoeff(13) and nbcoeff(15) are sigma^6 
+c        * nbcoeff(14) and nbcoeff(16) are 4*epsilon
 
 c     --- retrieve constants
       call twh_lshift(GLB_GET,lshift)
 
       dvtwobody = 0.0d0
 c     rij_sigma is r_ij^6 / sigma^6
-      rij_sigma = rijsq**3 / twh_get_nbcoeff(13,ntij)
+      call twh_nbcoeff(GLB_GET,13,ntij,nbcoeff_13)
+      rij_sigma = rijsq**3 / nbcoeff_13
       alpha = scp_get_native_lambda(ALPHA_LJ)
 
 c     Evaluate at foreign lambdas, if necessary
       call twh_scp_num_foreign_lambda(GLB_GET,scp_num_foreign_lambda)
       do l = 1, scp_num_foreign_lambda
          lambda = scp_get_foreign_lambda(LAMBDA_LJ, l)
-         B = twh_get_nbcoeff(14, ntij) * lambda**4
+         call twh_nbcoeff(GLB_GET,14,ntij,nbcoeff_14)
+         B = nbcoeff_14*lambda**4
          A = 1.0d0 / (alpha * (1.0d0-lambda)**2 + rij_sigma)
          vforeign(l) = A*(A-1.0d0)*B 
          if ( lshift ) then
-            vforeign(1) = vforeign(1) - twh_get_nbcoeff(0,ntij)
+            call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff_0)
+            vforeign(1) = vforeign(1) - nbcoeff_0
          endif
       enddo
 
 c     Evaluate at native lambda
       lambda = scp_get_native_lambda(LAMBDA_LJ)
-      B = twh_get_nbcoeff(14, ntij) * lambda**4
+      call twh_nbcoeff(GLB_GET,14,ntij,nbcoeff_14)
+      B = nbcoeff_14* lambda**4
       A = 1.0d0 / (alpha * (1.0d0-lambda)**2 + rij_sigma)
       vtb_scaled_lj = A*(A-1.0d0)*B
       if ( lshift ) then
-         vtb_scaled_lj = vtb_scaled_lj - twh_get_nbcoeff(0,ntij)
+         call twh_nbcoeff(GLB_GET,0,ntij,nbcoeff_0)
+         vtb_scaled_lj = vtb_scaled_lj - nbcoeff_0
       endif
 
 c     --- evaluate dU/dlambda, if necessary.  Derivative is 

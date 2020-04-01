@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,26 +19,26 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_writeonefive(index)
+      subroutine twh_writeonefive(lfailure,index)
 c     ******************************************************************
 c     * writes all of the information about the one-five interactions  *
 c     * to the file index                                              *
 c     *                                                                *
 c     * originally written 12-15-2004 by M.G. Martin                   *
-c     * last modified 08-09-2011 M.G. Martin                           *
+c     * last modified 03-30-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LOFHERE
-#define FUNCTION_GET_OFCOEFF
-#define FUNCTION_GET_OFNAMES
-#define FUNCTION_GET_OFSTYLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
+      logical lfailure
       integer index
-
 c     --- local variables
       logical lfound
-      integer type
+      character*(FFNAMELEN) ofnamesone,ofnamesfiv
+      integer type,ofstyle,icoeff
+      double precision ofcoeff
+      dimension ofcoeff(MINOFCOEFF:MAXOFCOEFF)
 
 c     --- see if there are any special one-five types
       lfound = .false.
@@ -49,19 +49,22 @@ c              --- this is the first found interaction - write the intro
                write(index,'(a22)') 'Special One-Five Types'
                lfound = .true.
             endif
-            if ( twh_get_ofstyle(type) .eq. 1 ) then
-               write(index,10) type,twh_get_ofnames(type,1)
-     &              ,twh_get_ofnames(type,5)
-     &              ,twh_get_ofcoeff(type,1),twh_get_ofcoeff(type,2)
-     &              ,twh_get_ofcoeff(type,0)
-            elseif ( twh_get_ofstyle(type) .eq. 2 ) then
-               write(index,20) type,twh_get_ofnames(type,1)
-     &              ,twh_get_ofnames(type,5)
-     &              ,twh_get_ofcoeff(type,1)
+            call twh_ofnames(GLB_GET,type,1,ofnamesone)
+            call twh_ofnames(GLB_GET,type,5,ofnamesfiv)
+            call twh_ofstyle(GLB_GET,type,ofstyle)
+            do icoeff = MINOFCOEFF,MAXOFCOEFF
+               call twh_ofcoeff(GLB_GET,type,icoeff,ofcoeff(icoeff))
+            enddo
+            if ( ofstyle .eq. 1 ) then
+               write(index,10) type,ofnamesone,ofnamesfiv
+     &              ,ofcoeff(1),ofcoeff(2),ofcoeff(0)
+            elseif ( ofstyle .eq. 2 ) then
+               write(index,20) type,ofnamesone,ofnamesfiv,ofcoeff(1)
             else
                write(index,*) 'WRITEONEFIVE: unknown ofstyle '
-     &              ,twh_get_ofstyle(type),' for type ',type
-               stop
+     &              ,ofstyle,' for type ',type
+               lfailure = .true.
+               return
             endif
          endif
       enddo

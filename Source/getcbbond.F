@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -47,18 +47,13 @@ c     *          had to be scaled (returned by this subroutine         *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * rewritten from geometry 07-26-2002 by M.G. Martin              *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_EXPON
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INBNBN
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITBNBN
-#define FUNCTION_GET_VIBCOEFF
 #define FUNCTION_MINBOXLENGTH
 #define FUNCTION_RANDOM
 #define FUNCTION_VBOND
@@ -80,7 +75,7 @@ c     --- integer scalars
       integer count,ntogrow,iugrow,iufrom,iv,juvib,jtvib,ib
       integer ivib,iwinner,iutest,ixtra,inum,ic,it,nchoice
       integer vibnumber,growprev,xtracount,dist_code
-      integer testbnbnone,testbnbntwo
+      integer testbnbnone,testbnbntwo,ijvibtest,inbondbond,invibration
 c     --- integer arrays
       integer bblocl
       dimension bblocl(2,MAXBEND)
@@ -93,7 +88,7 @@ c     --- double precision scalars
       double precision rxfrom,ryfrom,rzfrom,rxprev,ryprev,rzprev
       double precision rxtry,rytry,rztry,rxgrow,rygrow,rzgrow
       double precision wmin,vmin,rxuij,ryuij,rzuij,minboxdim
-      double precision pdf_true,pdf_bias
+      double precision pdf_true,pdf_bias,eqlength
       double precision xvecprev,yvecprev,zvecprev
       double precision mean,std_dev,lolimit,hilimit,onethird
       double precision arbnorm,truenorm
@@ -147,7 +142,8 @@ c     --- initialize bond-bond list
       enddo
 
 c     --- check for IJ-JK bond-bond and set up list
-      do ic = 1,twh_get_inbnbn(imolty,iufrom)
+      call twh_inbnbn(GLB_GET,imolty,iufrom,inbondbond)
+      do ic = 1,inbondbond
          do ib = 1,2
             bblocl(ib,ic) = 0
          enddo
@@ -221,8 +217,9 @@ c        --- initialize lmin which tells us if we have minimum yet
          call twh_glist(GLB_SET,count,iugrow)
             
 c        --- determine the vibration (bond) type as jtvib
-         do iv = 1, twh_get_invib(imolty,iugrow)
-            juvib = twh_get_ijvib(imolty,iugrow,iv)
+         call twh_invib(GLB_GET,imolty,iugrow,invibration)
+         do iv = 1,invibration
+            call twh_ijvib(GLB_GET,imolty,iugrow,iv,juvib)
             if ( juvib .eq. iufrom ) then
                call twh_itvib(GLB_GET,imolty,iugrow,iv,jtvib)
                vibnumber = iv
@@ -336,11 +333,12 @@ c              --- this is an extremely unlikely bond, print a warning
                write(6,*) 'luseoldone',luseoldone
                write(6,*) 'ivib,pdf_bias',ivib,pdf_bias
                write(6,*) 'length,mean,std_dev',length,mean,std_dev
-               write(6,*) 'equilibrium length: '
-     &              ,twh_get_vibcoeff(jtvib,0)
+               call twh_vibcoeff(GLB_GET,jtvib,0,eqlength)
+               write(6,*) 'equilibrium length: ',eqlength
                write(6,*) 'imolty,iugrow,vibnumber',imolty,iugrow
      &              ,vibnumber
-               write(6,*) 'ijvib',twh_get_ijvib(imolty,iugrow,vibnumber)
+               call twh_ijvib(GLB_GET,imolty,iugrow,vibnumber,ijvibtest)
+               write(6,*) 'ijvib',ijvibtest
                write(6,*) 'unless this is near the start of a run'
      &              ,' you have a big problem'
                write(6,*) 'resetting pdf_bias to 1.0d20 in the hope of '
@@ -374,7 +372,7 @@ c           --- calculate the IJ-JK bond-bond energy
                      bblen(inum) = distance
                   endif
                enddo
-               it = twh_get_itbnbn(imolty,iufrom,ic)
+               call twh_itbnbn(GLB_GET,imolty,iufrom,ic,it)
                vvib(ivib) = vvib(ivib) 
      &              + twh_vbonbon(imolty,iufrom,ic,bblen)
             enddo

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -53,49 +53,19 @@ c     * outputs information suitable for inpstyle 0 to towhee_altinp   *
 c     *                                                                *
 c     * rewritten from assemble 03-19-2002 by M.G. Martin              *
 c     * split from the original writetowhee 01-16-2018 by M.G. Martin  *
-c     * last modified 03-09-2020 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CLASSICAL_MIXRULE
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITAA
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_ITTOR
-#define FUNCTION_GET_ITVIB
 #define FUNCTION_GET_NATIVE_LAMBDA
-#define FUNCTION_GET_NBNAME
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_PMVOL
-#define FUNCTION_GET_RMVOL
 #define FUNCTION_GET_SCALING_STYLE
 #define FUNCTION_GET_SCALING_STYLE_STRING
-#define FUNCTION_GET_TAVOL
-#define FUNCTION_GET_QQATOM
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lprotein
       integer imoltyflag,numboxes,nvmmax,nvmsim,nmolty
 c     --- local variables
       character*1 hist_suffix
+      character*(ELENAMLEN) elename
       character*3 aminoshort
       character*4 pdbname
       character*8 stepstyle
@@ -107,7 +77,10 @@ c     --- local variables
       dimension isarray(nmolty)
       character*30 ensemble_str
       character*50 eform
+      character*(CLAPOTLEN) localcp
       character*(MAXDIRLENGTH) ffname
+      character*(MIXRULLEN) classical_mixrule
+      character*(FFNAMELEN) nbname
 c     --- logical scalars
       logical lfound,ldoinitstyle,loutdft,louthist,lshift
       logical lwritemixrule,lwritelshift,lwriteltailc,lwritermin
@@ -122,16 +95,19 @@ c     --- integer scalars
       integer iatom,ivib,ibend,itor,iaa,ibox,jmolty,idim,jdim,iorder
       integer kmolty,ifile,ifld,itype,ntii,ientry,ipair,rwfile
       integer nboxpair,nunit,kmax,nfield,ivalue,ffnumber,nmolpairs
-      integer aminonum,rng_code
+      integer aminonum,rng_code,ijaa0,ijaa1,ijaa2
       integer npair,inix,iniy,iniz,ensemble,itbang,iobang
-      integer irange,pt_number,ivolmove
+      integer irange,pt_number,ivolmove,itbentemp,ijben2,ijben3
+      integer ijimp2,ijimp3,ijimp4,ijtor2,ijtor3,ijtor4,ijvib,inaa
+      integer inbend,inimproper,intorsion,invibration,itaa,itimproper
+      integer ittor,itvib,ntype
 c     --- integer arrays
       integer idummy
       dimension idummy(nmolty)
 c     --- double precision scalars
       double precision dvalue,qqfact,temperature,ewald_prec,kalp,rcut
       double precision fieldtwo,fieldthree,fieldfour,fnbparam,pmcb,rmin
-      double precision rcutin
+      double precision rcutin,qqatom,tavol
 c     --- double precision arrays
       double precision dpboxarray
       dimension dpboxarray(numboxes+nvmsim)
@@ -428,7 +404,8 @@ c                 --- output the helix_* varibles
      &        .or. ensemble .eq. ENS_NPT ) then
                
             write(15,'(a5)') 'pmvol'
-            write(15,44) twh_get_pmvol()
+            call twh_pmvol(GLB_GET,dvalue)
+            write(15,44) dvalue
             write(15,'(10x,a6)') 'pmvlpr'
             if ( nvmmax .eq. 0 ) then
                write(15,100) 1.0d0
@@ -440,9 +417,11 @@ c                 --- output the helix_* varibles
                write(15,100) (dpboxarray(ivolmove),ivolmove=1,nvmsim)
             endif
             write(15,'(10x,a5)') 'rmvol'
-            write(15,100) twh_get_rmvol(1)
+            call twh_rmvol(GLB_GET,1,dvalue)
+            write(15,100) dvalue
             write(15,'(10x,a5)') 'tavol'
-            write(15,100) twh_get_tavol()
+            call twh_tavol(GLB_GET,tavol)
+            write(15,100) tavol
             write(15,'(a6)') 'pmcell'
             call twh_pmcell(GLB_GET,dvalue)
             write(15,44) dvalue
@@ -799,8 +778,8 @@ c        --- start of potential output
             enddo
          endif
          write(15,'(a19)') 'classical_potential'
-         write(15,'(a1,a30,a1)') char(39)
-     &        ,twh_get_classical_potential(),char(39)
+         call twh_classical_potential(GLB_GET,localcp)
+         write(15,'(a1,a30,a1)') char(39),localcp,char(39)
          
          call twh_setpotentiallogic(lfailure,lwritemixrule
      &        ,lwritelshift,lwriteltailc,lwritermin,lwritercut
@@ -810,8 +789,9 @@ c        --- start of potential output
          
          if ( lwritemixrule ) then
             write(15,'(a17)') 'classical_mixrule'
+            call twh_classical_mixrule(GLB_GET,classical_mixrule)
             write(15,'(a1,a30,a1)') char(39)
-     &           ,twh_get_classical_mixrule(),char(39)
+     &           ,classical_mixrule,char(39)
             if ( lwritescaling ) then
                write(15,'(a20)') 'cmix_rescaling_style'
                write(15,'(a1,a30,a1)') char(39),
@@ -1021,8 +1001,8 @@ c              --- not an error, but nothing to output
                do itype = 1,ivalue
                   call twh_fieldnbint(GLB_GET,ifld,itype,1,ntii)
                   write(15,'(a7)') 'ljfname'
-                  write(15,'(a1,a10,a1)') char(39)
-     &                 ,twh_get_nbname(ntii),char(39)
+                  call twh_nbname(GLB_GET,ntii,nbname)
+                  write(15,'(a1,a10,a1)') char(39),nbname,char(39)
                   write(15,'(a6)') 'ljfsig'
                   call twh_fieldnbparam(GLB_GET,ifld,ntii,4,fnbparam)
                   write(15,*) fnbparam
@@ -1061,8 +1041,8 @@ c              --- not an error, but nothing to output
                do itype = 1,ivalue
                   call twh_fieldnbint(GLB_GET,ifld,itype,1,ntii)
                   write(15,'(a11)') 'steele name'
-                  write(15,'(a1,a10,a1)') char(39)
-     &                 ,twh_get_nbname(ntii),char(39)
+                  call twh_nbname(GLB_GET,ntii,nbname)
+                  write(15,'(a1,a10,a1)') char(39),nbname,char(39)
                   write(15,'(a8)') 'sigma_sf'
                   call twh_fieldnbparam(GLB_GET,ifld,ntii,2,fnbparam)
                   write(15,*) fnbparam
@@ -1103,14 +1083,15 @@ c              --- not an error, but nothing to output
                   call twh_fieldnbint(GLB_GET,ifld,ientry,1,ivalue)
                   write(15,*) ivalue
                   call twh_fieldnbint(GLB_GET,ifld,ientry,2,ntii)
+                  call twh_elementname(GLB_GET,ntii,elename)
                   if ( fchar .eq. 'Element') then
                      write(15,'(a10)') 'hafelement'
                      write(15,'(a1,a2,a1)') char(39)
-     &                    ,twh_get_elementname(ntii),char(39)
+     &                    ,elename,char(39)
                   elseif ( fchar .eq. 'FFtype') then
                      write(15,'(a7)') 'hafname'
-                     write(15,'(a1,a10,a1)') char(39)
-     &                    ,twh_get_nbname(ntii),char(39)
+                     call twh_nbname(GLB_GET,ntii,nbname)
+                     write(15,'(a1,a10,a1)') char(39),nbname,char(39)
                   endif
                enddo
             else
@@ -1145,8 +1126,9 @@ c        --- output the molecule information for towhee_input
          
          do iatom = 1,nunit
             write(15,'(a17)') 'unit ntype qqatom'
-            write(15,*) iatom,twh_get_ntype(imoltyflag,iatom)
-     &           ,twh_get_qqatom(imoltyflag,iatom)
+            call twh_ntype(GLB_GET,imoltyflag,iatom,ntype)
+            call twh_qqatom(GLB_GET,imoltyflag,iatom,qqatom)
+            write(15,*) iatom,ntype,qqatom
             if ( lprotein ) then
 c              --- include pdb stuff
                write(15,'(a27)') 'pdbname aminonum aminoshort'
@@ -1157,45 +1139,55 @@ c              --- include pdb stuff
      &              ,aminonum,' ',char(39),aminoshort,char(39)
             endif
             write(15,'(a9)') 'vibration'
-            write(15,*) twh_get_invib(imoltyflag,iatom)
-            do ivib = 1,twh_get_invib(imoltyflag,iatom)
-               write(15,*) twh_get_ijvib(imoltyflag,iatom,ivib)
-     &              ,twh_get_itvib(imoltyflag,iatom,ivib)
+            call twh_invib(GLB_GET,imoltyflag,iatom,invibration)
+            write(15,*) invibration
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imoltyflag,iatom,ivib,ijvib)
+               call twh_itvib(GLB_GET,imoltyflag,iatom,ivib,itvib)
+               write(15,*) ijvib,itvib
             enddo
             write(15,'(a7)') 'bending'
-            write(15,*) twh_get_inben(imoltyflag,iatom)
-            do ibend = 1,twh_get_inben(imoltyflag,iatom)
+            call twh_inben(GLB_GET,imoltyflag,iatom,inbend)
+            write(15,*) inbend
+            do ibend = 1,inbend
                call twh_orderben(GLB_GET,imoltyflag,iatom,ibend,iorder)
                call twh_itbang(GLB_GET,imoltyflag,iatom,ibend,itbang)
                call twh_orderbang(GLB_GET,imoltyflag,iatom,ibend,iobang)
-               write(15,*) twh_get_ijben2(imoltyflag,iatom,ibend)
-     &              ,twh_get_ijben3(imoltyflag,iatom,ibend)
-     &              ,twh_get_itben(imoltyflag,iatom,ibend),iorder
-     &              ,itbang,iobang
+               call twh_itben(GLB_GET,imoltyflag,iatom,ibend,itbentemp)
+               call twh_ijben2(GLB_GET,imoltyflag,iatom,ibend,ijben2)
+               call twh_ijben3(GLB_GET,imoltyflag,iatom,ibend,ijben3)
+               write(15,*) ijben2,ijben3,itbentemp,iorder,itbang,iobang
             enddo
             write(15,'(a7)') 'torsion'
-            write(15,*) twh_get_intor(imoltyflag,iatom)
-            do itor = 1,twh_get_intor(imoltyflag,iatom)
-               write(15,*) twh_get_ijtor2(imoltyflag,iatom,itor)
-     &              ,twh_get_ijtor3(imoltyflag,iatom,itor)
-     &              ,twh_get_ijtor4(imoltyflag,iatom,itor)
-     &              ,twh_get_ittor(imoltyflag,iatom,itor)
+            call twh_intor(GLB_GET,imoltyflag,iatom,intorsion)
+            write(15,*) intorsion
+            do itor = 1,intorsion
+               call twh_ijtor2(GLB_GET,imoltyflag,iatom,itor,ijtor2)
+               call twh_ijtor3(GLB_GET,imoltyflag,iatom,itor,ijtor3)
+               call twh_ijtor4(GLB_GET,imoltyflag,iatom,itor,ijtor4)
+               call twh_ittor(GLB_GET,imoltyflag,iatom,itor,ittor)
+               write(15,*) ijtor2,ijtor3,ijtor4,ittor
             enddo
             write(15,'(a11)') 'angle-angle'
-            write(15,*) twh_get_inaa(imoltyflag,iatom)
-            do iaa = 1,twh_get_inaa(imoltyflag,iatom)
-               write(15,*) twh_get_ijaa0(imoltyflag,iatom,iaa)
-     &              ,twh_get_ijaa1(imoltyflag,iatom,iaa)
-     &              ,twh_get_ijaa2(imoltyflag,iatom,iaa)
-     &              ,twh_get_itaa(imoltyflag,iatom,iaa)
+            call twh_inaa(GLB_GET,imoltyflag,iatom,inaa)
+            write(15,*) inaa
+            do iaa = 1,inaa
+               call twh_ijaa0(GLB_GET,imoltyflag,iatom,iaa,ijaa0)
+               call twh_ijaa1(GLB_GET,imoltyflag,iatom,iaa,ijaa1)
+               call twh_ijaa2(GLB_GET,imoltyflag,iatom,iaa,ijaa2)
+               call twh_itaa(GLB_GET,imoltyflag,iatom,iaa,itaa)
+               write(15,*) ijaa0,ijaa1,ijaa2,itaa
             enddo
             write(15,'(a16)') 'improper torsion'
-            write(15,*) twh_get_inimprop(imoltyflag,iatom)
-            do itor = 1,twh_get_inimprop(imoltyflag,iatom)
-               write(15,*) twh_get_ijimprop2(imoltyflag,iatom,itor)
-     &              ,twh_get_ijimprop3(imoltyflag,iatom,itor)
-     &              ,twh_get_ijimprop4(imoltyflag,iatom,itor)
-     &              ,twh_get_itimprop(imoltyflag,iatom,itor)
+            call twh_inimprop(GLB_GET,imoltyflag,iatom,inimproper)
+            write(15,*) inimproper
+            do itor = 1,inimproper
+               call twh_ijimprop2(GLB_GET,imoltyflag,iatom,itor,ijimp2)
+               call twh_ijimprop3(GLB_GET,imoltyflag,iatom,itor,ijimp3)
+               call twh_ijimprop4(GLB_GET,imoltyflag,iatom,itor,ijimp4)
+               call twh_itimprop(GLB_GET,imoltyflag,iatom,itor
+     &              ,itimproper)
+               write(15,*) ijimp2,ijimp3,ijimp4,itimproper
             enddo
          enddo
       endif

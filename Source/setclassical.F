@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,20 +25,15 @@ c     * sets up many variables for classical potentials                *
 c     * otherwise combinations are only computed if lhere is true      *
 c     *                                                                *
 c     * split from readtowhee 11-01-2004 by M.G. Martin                *
-c     * last modified 04-03-2018 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CLASSICAL_MIXRULE
 #define FUNCTION_GET_LHERE
 #define FUNCTION_GET_LOFHERE
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_OFCOEFF
-#define FUNCTION_GET_OFSTYLE
 #define FUNCTION_GETNBTYPE
 #define FUNCTION_LIMITED_DOUBLE
 #define FUNCTION_VONEFIVE
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer numtypes
@@ -47,13 +42,15 @@ c     --- logical scalars
       logical lovrlap,lshift,ltailc,lelect
 c     --- character string scalars
       character*20 eampairstyle,eamdensstyle,keyname
+      character(MIXRULLEN) classical_mixrule
 c     --- integer scalars
       integer imolty,iunit,itype,jtype,ii,ntot,cross,iutemp,ij,cutstyle
-      integer cpnumber,nmolty,nunit,nmtype,kmax,nener
+      integer cpnumber,nmolty,nunit,nmtype,kmax,nener,ofstyle
 c     --- double precision scalars
       double precision totalcharge,qsum,vdum,rijsq,swcut,dist,dtemp
       double precision charge,tpair,eamdens,rcut,rcutsq,rcutin,rcutinsq
       double precision minboxdim,qqfact,sqrtqqfact,qtemp
+      double precision nbc_test,nbc_2_test
 c     --- initialize
       lovrlap = .false.
 
@@ -99,7 +96,8 @@ c     --- set the final value of nener
       call twh_nener(GLB_SET,nener)
 
 c     --- set up the tail correction information (if needed)
-      if ( ltailc ) call twh_tail()
+      if ( ltailc ) call twh_tail(lfailure)
+      if ( lfailure ) return
 
 c     --- check the charge on molecules and in system
       call twh_constant_qqfact(GLB_GET,qqfact)
@@ -129,8 +127,10 @@ c           --- set luse logicals for coulomb & VdW
      &           .or. cpnumber .eq. CP_SCALED_LENNARD_JONES
      &           ) then
                ii = twh_getnbtype(iutemp,iutemp)
-               if ((twh_get_nbcoeff(1,ii) .eq. 0.0d0) .and.
-     &              (twh_get_classical_mixrule() .ne. 'Explicit')) then
+               call twh_classical_mixrule(GLB_GET,classical_mixrule)
+               call twh_nbcoeff(GLB_GET,1,ii,nbc_test)
+               if (( nbc_test .eq. 0.0d0) .and.
+     &              ( classical_mixrule .ne. 'Explicit')) then
 c                 --- zero energy from the Lennard-Jones term
                   call twh_luse_v(GLB_SET,imolty,iunit,.false.)
                endif
@@ -160,7 +160,8 @@ c     --- output the stretching, bending, and torsional constants
       call twh_writeangle(6)
       call twh_writeangang(6)
       call twh_writetorsion(6)
-      call twh_writeimproper(6)
+      call twh_writeimproper(lfailure,6)
+      if ( lfailure ) return
 c     --- setup the shift constants for onefive
       cutstyle = -1
       call twh_rcut(GLB_GET,rcut)
@@ -169,11 +170,14 @@ c     --- retrieve the shift logical
       call twh_lshift(GLB_GET,lshift)
       do itype = 1,TOFMAX
          if ( twh_get_lofhere(itype) ) then
-            if ( twh_get_ofstyle(itype) .eq. 1 ) then
+            call twh_ofstyle(GLB_GET,itype,ofstyle)
+            if ( ofstyle .eq. 1 ) then
 c              --- store the modified parameters
-               dtemp = twh_get_ofcoeff(itype,1)**6
+               call twh_ofcoeff(GLB_GET,itype,1,dtemp)
+               dtemp = dtemp**6
                call twh_ofcoeff(GLB_SET,itype,3,dtemp)
-               dtemp = twh_get_ofcoeff(itype,2)*4.0d0
+               call twh_ofcoeff(GLB_GET,itype,2,dtemp)
+               dtemp = dtemp*4.0d0
                call twh_ofcoeff(GLB_SET,itype,4,dtemp)
                if ( lshift ) then
 c                 --- setup the shift constant
@@ -188,7 +192,7 @@ c                 --- setup the shift constant
 c                 --- reset the shift
                   call twh_ofcoeff(GLB_SET,itype,0,vdum)
                endif
-            elseif ( twh_get_ofstyle(itype) .eq. 2 ) then
+            elseif ( ofstyle .eq. 2 ) then
 c              --- this is not valid with a shifted potential
                if ( lshift ) then
                   write(6,*) 'one-five style of 2 and lshift are not'
@@ -206,8 +210,8 @@ c              --- unknown one-five style
          endif
       enddo
 c     --- output any one-five information
-      call twh_writeonefive(6)
-
+      call twh_writeonefive(lfailure,6)
+      if ( lfailure ) return
 c     --- set minboxdim
       if ( cpnumber .eq. CP_HARD_SPHERE .or.
      &     cpnumber .eq. CP_REPULSIVE_SPHERE ) then
@@ -218,8 +222,9 @@ c        --- find the largest diameter, or at least 1.0
                if ( twh_get_lhere(itype) .and. twh_get_lhere(jtype)
      &              ) then
                   ij = twh_getnbtype(itype,jtype)
-                  if ( twh_get_nbcoeff(1,ij) .gt. minboxdim ) then
-                     minboxdim = twh_get_nbcoeff(1,ij)
+                  call twh_nbcoeff(GLB_GET,1,ij,nbc_test)
+                  if ( nbc_test .gt. minboxdim ) then
+                     minboxdim = nbc_test
                   endif
                endif
             enddo
@@ -236,7 +241,9 @@ c        --- stillinger-weber: find the smallest "a" parameter
                if ( twh_get_lhere(itype) .and. twh_get_lhere(jtype)
      &              ) then
                   ij = twh_getnbtype(itype,jtype)
-                  swcut = twh_get_nbcoeff(6,ij)*twh_get_nbcoeff(4,ij)
+                  call twh_nbcoeff(GLB_GET,6,ij,nbc_test)
+                  call twh_nbcoeff(GLB_GET,4,ij,nbc_2_test)
+                  swcut = nbc_test*nbc_2_test
                   if ( swcut .gt. rcut ) then
                      rcut = swcut
                   endif
@@ -344,8 +351,9 @@ c        --- at this point as we have already called setmixterms
                if ( twh_get_lhere(itype) .and. twh_get_lhere(jtype)
      &              ) then
                   ij = twh_getnbtype(itype,jtype)
-                  if ( twh_get_nbcoeff(2,ij) .gt. minboxdim ) then
-                     minboxdim = twh_get_nbcoeff(2,ij)
+                  call twh_nbcoeff(GLB_GET,2,ij,nbc_test)
+                  if ( nbc_test .gt. minboxdim ) then
+                     minboxdim = nbc_test
                   endif
                endif
             enddo
@@ -388,7 +396,8 @@ c        --- find the largest distance of any of the wells
                do jtype = itype,numtypes
                   if ( twh_get_lhere(jtype) ) then
                      cross = twh_getnbtype(itype,jtype)
-                     dist = dsqrt(twh_get_nbcoeff(11,cross))
+                     call twh_nbcoeff(GLB_GET,11,cross,nbc_test)
+                     dist = dsqrt(nbc_test)
                      if ( dist .gt. minboxdim ) minboxdim = dist
                   endif
                enddo

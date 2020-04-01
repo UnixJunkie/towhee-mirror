@@ -168,18 +168,10 @@ c     *                                                                *
 c     * portions originally written prior to 1995                      *
 c     * rewritten as twh_mainloop 12-03-2008 by M.G. Martin            *
 c     * split from the old twh_mainloop 06-25-2009 by M.G. Martin      *
-c     * last modified 04-05-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c#include "wrapperF.h"
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NCMT
-#define FUNCTION_GET_RMVOL
 #define FUNCTION_LEN_TRIM
 #include "functions.h"
 c     --- variables passded to/from the subroutine
@@ -220,8 +212,8 @@ c     --- integer scalars
       integer histcalcfreq,histdumpfreq,pressurestyle
       integer two_bond_bias_update_frequency,three_bond_bias_update_freq
       integer n_tmmc_min,n_tmmc_max,c_element,c_matrix_freq,jj
-      integer macro_variable,frequency,keycode
-      integer pressure_thermo_freq
+      integer macro_variable,frequency,keycode,intorsion,invibration
+      integer pressure_thermo_freq,ijtor2,ijtor3,ijtor4,ijvib
 #if DEBUG_MAINLOOP
       integer cp_number
 #endif
@@ -235,8 +227,10 @@ c     --- integer arrays
       dimension ncmt_list(NDUMPHIST,NTMAX)
       integer chaininfo
       dimension chaininfo(1,3)
+      integer localncmt
+      dimension localncmt(NTMAX)
 c     --- double precision scalars
-      double precision v,vinter,vtail,vintra,vvib,vbend,vtg
+      double precision v,vinter,vtail,vintra,vvib,vbend,vtg,rmvol
       double precision vext,velect,vsolvation,vdum
       double precision dvinter,dvelect,datemp,dntemp
       double precision pscb1,pscb2,ratvol,ratcell,dvalue
@@ -627,8 +621,11 @@ c           --- tmmc_flag variable
                   call twh_openfile(lfailure,50,filename,'DEFAULT','OLD'
      &                 ,'APPEND')
                   if ( lfailure ) return
+                  do imolty = 1,nmolty
+                     call twh_ncmt(GLB_GET,1,imolty,localncmt(imolty))
+                  enddo
                   write(50,* ) nconfig
-     &                 ,(twh_get_ncmt(1,imolty), imolty=1,nmolty),vhist
+     &                 ,(localncmt(imolty), imolty=1,nmolty),vhist
                   close(50)
                endif
                call twh_hist_nequil(GLB_GET,hist_nequil)
@@ -637,10 +634,9 @@ c           --- tmmc_flag variable
      &              mod(nconfig,histcalcfreq).eq. 0 ) then
 c                 --- gather up histogram information
                   do imolty = 1,nmolty
-                     nminp(imolty) = min(nminp(imolty)
-     &                    ,twh_get_ncmt(1,imolty))
-                     nmaxp(imolty) = max(nmaxp(imolty)
-     &                    ,twh_get_ncmt(1,imolty))
+                     call twh_ncmt(GLB_GET,1,imolty,ncmt)
+                     nminp(imolty) = min(nminp(imolty),ncmt)
+                     nmaxp(imolty) = max(nmaxp(imolty),ncmt)
                   enddo
                   nentry = nentry + 1
                   do imolty = 1,nmolty
@@ -807,15 +803,15 @@ c        --- output information on volume move
             if ( ncount .ne. 0 ) then
                call twh_acsvol(GLB_GET,imove,scount)
                ratvol = dble(scount) / dble(ncount)
+               call twh_rmvol(GLB_GET,imove,rmvol)
                if ( imove .le. numboxes ) then
-                  write(6,40) imove,ncount,ratvol,twh_get_rmvol(imove)
+                  write(6,40) imove,ncount,ratvol,rmvol
                else
                   call twh_acsvol(GLB_GET,imove,scount)
                   ipair = imove - numboxes
                   call twh_pairbox(GLB_GET,ipair,1,ivalue)
                   call twh_pairbox(GLB_GET,ipair,2,jvalue)
-                  write(6,41) ivalue,jvalue,ncount,scount,ratvol
-     &                 ,twh_get_rmvol(imove)
+                  write(6,41) ivalue,jvalue,ncount,scount,ratvol,rmvol
                endif
             endif
          enddo
@@ -1217,7 +1213,8 @@ c     --- determine if any backbone cbregrow moves were performed
             lmolmove(ibox,imolty) = .false.
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1, nunit
-               do itor = 1,twh_get_intor(imolty,iunit)
+               call twh_intor(GLB_GET,imolty,iunit,intorsion)
+               do itor = 1,intorsion
                   call twh_bnback(GLB_GET,imolty,iunit,itor,ibox,ntemp)
                   if ( ntemp .ne. 0 ) then
                      lnone = .false.
@@ -1245,7 +1242,8 @@ c        --- write some information about backbone cbregrow performance
                   tot_acp = 0
                   call twh_nunit(GLB_GET,imolty,nunit)
                   do iunit = 1, nunit
-                     do itor = 1,twh_get_intor(imolty,iunit)
+                     call twh_intor(GLB_GET,imolty,iunit,intorsion)
+                     do itor = 1,intorsion
                         call twh_bnback(GLB_GET,imolty,iunit,itor,ibox
      &                       ,ntemp)
                         tot_try = tot_try + ntemp
@@ -1258,10 +1256,14 @@ c        --- write some information about backbone cbregrow performance
      &                          ,ibox,atemp)
                            tot_acp = tot_acp + atemp 
                            pscb2 = dble(atemp)*1d2/dble(ntemp)
+                           call twh_ijtor2(GLB_GET,imolty,iunit,itor
+     &                          ,ijtor2)
+                           call twh_ijtor3(GLB_GET,imolty,iunit,itor
+     &                          ,ijtor3)
+                           call twh_ijtor4(GLB_GET,imolty,iunit,itor
+     &                          ,ijtor4)
                            write(6,'(4i4,3i10,2f10.2)') iunit
-     &                          ,twh_get_ijtor2(imolty,iunit,itor)
-     &                          ,twh_get_ijtor3(imolty,iunit,itor)
-     &                          ,twh_get_ijtor4(imolty,iunit,itor)
+     &                          ,ijtor2,ijtor3,ijtor4
      &                          ,ntemp,stemp,atemp,pscb1,pscb2
                         endif
                      enddo
@@ -1346,7 +1348,8 @@ c     --- determine if any pivot moves were performed
             lmolmove(ibox,imolty) = .false.
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1, nunit
-               do ivib = 1, twh_get_invib(imolty,iunit)
+               call twh_invib(GLB_GET,imolty,iunit,invibration)
+               do ivib = 1,invibration
                   call twh_bnpivot(GLB_GET,imolty,iunit,ivib,ibox,ntemp)
                   if ( ntemp .ne. 0) then
                      lnone = .false.
@@ -1371,7 +1374,8 @@ c        --- write some information about the pivot move performance
                   tot_acp = 0
                   call twh_nunit(GLB_GET,imolty,nunit)
                   do iunit = 1, nunit
-                     do ivib = 1, twh_get_invib(imolty,iunit)
+                     call twh_invib(GLB_GET,imolty,iunit,invibration)
+                     do ivib = 1,invibration
                         call twh_bnpivot(GLB_GET,imolty,iunit,ivib,ibox
      &                       ,ntemp)
                         tot_try = tot_try + ntemp
@@ -1380,9 +1384,10 @@ c        --- write some information about the pivot move performance
      &                          ,ibox,atemp)
                            tot_acp = tot_acp + atemp
                            pspiv = dble(atemp) * 1d2/dble(ntemp)
-                           write(6,'(2i4,2i10,f10.2)') iunit,
-     &                          twh_get_ijvib(imolty,iunit,ivib),
-     &                          ntemp,atemp,pspiv
+                           call twh_ijvib(GLB_GET,imolty,iunit,ivib
+     &                          ,ijvib)
+                           write(6,'(2i4,2i10,f10.2)') iunit,ijvib
+     &                          ,ntemp,atemp,pspiv
                         endif
                      enddo
                   enddo

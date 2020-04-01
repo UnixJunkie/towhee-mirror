@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -1400,17 +1400,11 @@ c     * molecule ichain in the activebox for all regular torsions that *
 c     * involve any of the atoms in the atomlist                       *
 c     *                                                                *
 c     * originally written 10-13-2006 by M.G. Martin                   *
-c     * last modified 08-12-2016 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
 #define FUNCTION_GET_ATOMLIST_CORD
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
 #define FUNCTION_VTORSION
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -1428,7 +1422,8 @@ c     --- logical scalars
       logical lcompute
 c     --- integer scalars
       integer icord,itry,iatom,imolty,targetatom,jatom,testatom
-      integer icompute,itor,ibead,testunit,testcord
+      integer icompute,itor,ibead,testunit,testcord,intorsion
+      integer invibration
 c     --- integer arrays
       integer torbead
       dimension torbead(4)
@@ -1441,20 +1436,22 @@ c     --- double precision arrays
       call twh_moltyp(GLB_GET,ichain,imolty)
       do iatom = 1,natommove
          targetatom = atomlist(iatom,3)
-         do itry = 0,twh_get_invib(imolty,targetatom)
+         call twh_invib(GLB_GET,imolty,targetatom,invibration)
+         do itry = 0,invibration
             if (itry .eq. 0) then
 c             --- compute torsions starting at this atom
                icompute = targetatom
             else
 c             --- compute torsions for neighbors of this atom
-               icompute = twh_get_ijvib(imolty,targetatom,itry)
+               call twh_ijvib(GLB_GET,imolty,targetatom,itry,icompute)
             endif
-            do itor = 1,twh_get_intor(imolty,icompute)
+            call twh_intor(GLB_GET,imolty,icompute,intorsion)
+            do itor = 1,intorsion
 c              --- assign the unit types for the torsion
                torbead(1) = icompute
-               torbead(2) = twh_get_ijtor2(imolty,icompute,itor)
-               torbead(3) = twh_get_ijtor3(imolty,icompute,itor)
-               torbead(4) = twh_get_ijtor4(imolty,icompute,itor)
+               call twh_ijtor2(GLB_GET,imolty,icompute,itor,torbead(2))
+               call twh_ijtor3(GLB_GET,imolty,icompute,itor,torbead(3))
+               call twh_ijtor4(GLB_GET,imolty,icompute,itor,torbead(4))
                lcompute = .true.
 c              --- only compute if torbead 1 or 2 is targetatom
                if ( torbead(1) .ne. targetatom 
@@ -1751,14 +1748,13 @@ c     * energy (dvintra) and an intramolecular and self-term electro   *
 c     * energy (dvelect)                                               *
 c     *                                                                *
 c     * originally written 10-23-2006 by M.G. Martin                   *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
 #define FUNCTION_EWALD_CORRECT
 #define FUNCTION_EWALD_SELF
 #define FUNCTION_LINCLUDE
-#define FUNCTION_ONEFIVETYPE
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
 #include "functions.h"
@@ -1815,7 +1811,7 @@ c        --- make sure this unit is not in the atomlist
                if ( lvalidintra .or. lewald ) then
 c                 --- need to compute distance either for use in the
 c                 --- direct intramolecular interactions or ewald terms
-                  ioftype = twh_onefivetype(imolty,testunit,iunit)
+                  call twh_onefivetype(imolty,testunit,iunit,ioftype)
                   call twh_ntype(GLB_GET,imolty,iunit,ntii)
                   do ioldnew = TRL_NEW,TRL_OLD,(TRL_OLD-TRL_NEW)
                      icord = atomlist(iatomlist,ioldnew)

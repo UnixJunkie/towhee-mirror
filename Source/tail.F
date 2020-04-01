@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -19,7 +19,7 @@ c     * License along with this program; if not, write to the Free     *
 c     * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,*
 c     * MA  02111-1307, USA.                                           *
 c     ******************************************************************
-      subroutine twh_tail()
+      subroutine twh_tail(lfailure)
 c     ******************************************************************
 c     * this subroutine sets up all of the constants needed to compute *
 c     * the van der waals tail corrections for any two molecule types  *
@@ -37,27 +37,28 @@ c     * corp = -(2/3) Pi Integral(rcut,infinity) r*r*w(r)dr            *
 c     *      where w(r) = r dv(r)/dr                                   *
 c     *                                                                *
 c     * originally written 02-13-2001 by M.G. Martin                   *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_HBONDCOEFF
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
+c     --- variables passed to/from the subroutine
+      logical lfailure
 c     --- local variables
-c     --- character string scalars
-      character*30 localcp
 c     --- integer scalars
       integer imolty,jmolty,ii,jj,ntii,ntjj,ntij,hbtype
-      integer nmolty,numiunit,numjunit
+      integer nmolty,numiunit,numjunit,cpnumber,icoeff
 c     --- double precision scalars
       double precision rci3,overra,onepi,aaa,bbb,twopi,dvalue
       double precision rcut,sigma,powrn,aofn,fecofn
-
+c     --- double precision arrays
+      double precision hbondcoeff
+      dimension hbondcoeff(2)
+      double precision nbcoeff
+      dimension nbcoeff(MINNBCOEFF:MAXNBCOEFF)
 c     --- get the classical potential
-      localcp = twh_get_classical_potential()
+      call twh_cp_number(GLB_GET,cpnumber)
 c     --- retrieve constants
       call twh_constant_pi(GLB_GET,onepi)
       call twh_constant_twopi(GLB_GET,twopi)
@@ -78,140 +79,135 @@ c           --- compute coru and corp
                do jj = 1, numjunit 
                   call twh_ntype(GLB_GET,jmolty,jj,ntjj)
                   ntij = twh_getnbtype(ntii,ntjj)
-                  if ( localcp .eq. 'Lennard-Jones'
-     &                 .or. localcp .eq. 'UFF 12-6'
-     &                 .or. localcp .eq. '12-6 plus solvation' 
-     &                 .or. localcp .eq. 'Drukker H-bond'
+                  if ( cpnumber .eq. CP_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_UFF_12_6 .or.
+     &                 cpnumber .eq. CP_12_6_PLUS_SOLVATION .or.
+     &                 cpnumber .eq. CP_DRUKKER_H_BOND
      &                 ) then
 c                    --- Lennard-Jones 12-6 tail correction
-c                    --- Note: twh_get_nbcoeff(13,ij) is sigma^6
-c                    --- Note: twh_get_nbcoeff(14,ij) is 4*epsilon
-                     rci3 = dsqrt(twh_get_nbcoeff(13,ntij)) / rcut**3
-                     dvalue = 2.0d0* onepi*twh_get_nbcoeff(14,ntij)* 
-     &                    dsqrt(twh_get_nbcoeff(13,ntij))* 
+c                    --- Note: nbcoeff(13,ij) is sigma^6
+c                    --- Note: nbcoeff(14,ij) is 4*epsilon
+                     do icoeff = 13,14
+                        call twh_nbcoeff(GLB_GET,icoeff,ntij
+     &                       ,nbcoeff(icoeff))
+                     enddo
+                     rci3 = dsqrt(nbcoeff(13)) / rcut**3
+                     dvalue = 2.0d0* onepi*nbcoeff(14)* 
+     &                    dsqrt(nbcoeff(13))* 
      &                    (rci3* rci3* rci3 / 9.0d0 - rci3 / 3.0d0)
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
-                     dvalue = 8.0d0* onepi*twh_get_nbcoeff(14,ntij) 
-     &                    * dsqrt(twh_get_nbcoeff(13,ntij))*
+                     dvalue = 8.0d0* onepi*nbcoeff(14) 
+     &                    * dsqrt(nbcoeff(13))*
      &                    ( rci3*rci3*rci3/9.0d0 - rci3/6.0d0)
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
-                  elseif ( localcp 
-     &                    .eq. 'Scaled Lennard-Jones' ) then
+                  elseif ( cpnumber .eq. CP_SCALED_LENNARD_JONES ) then
 c                   --- analytical tail correction not implemented for
 c                   --- Scaled Lennard Jones (soft core, in particular)
-                        
                      write(6,*) 'Analytical tail correction (ltailc = 
      & .true) not implemented for Scaled Lennard-Jones potential.'
                      stop
-                  elseif ( localcp 
-     &                    .eq. '12-6 plus 12-10 H-bond' ) then
+                  elseif ( cpnumber .eq. CP_12_6_PLUS_12_10_H_BOND) then
 c                    --- 12-6 as above plus a 12-10
-c                    --- Note: twh_get_nbcoeff(13,ij) is sigma^6
-c                    --- Note: twh_get_nbcoeff(14,ij) is 4*epsilon
-                     rci3 = dsqrt(twh_get_nbcoeff(13,ntij)) / rcut**3
+c                    --- Note: nbcoeff(13,ij) is sigma^6
+c                    --- Note: nbcoeff(14,ij) is 4*epsilon
+                     do icoeff = 13,14
+                        call twh_nbcoeff(GLB_GET,icoeff,ntij
+     &                       ,nbcoeff(icoeff))
+                     enddo
+                     rci3 = dsqrt(nbcoeff(13)) / rcut**3
 c                    --- 12-6 LJ portion
-                     dvalue = 2.0d0* onepi*twh_get_nbcoeff(14,ntij)* 
-     &                    dsqrt(twh_get_nbcoeff(13,ntij))* 
+                     dvalue = 2.0d0* onepi*nbcoeff(14)* 
+     &                    dsqrt(nbcoeff(13))* 
      &                    (rci3* rci3* rci3 / 9.0d0 - rci3 / 3.0d0)
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
-                     dvalue = 8.0d0* onepi*twh_get_nbcoeff(14,ntij) 
-     &                    * dsqrt(twh_get_nbcoeff(13,ntij))*
+                     dvalue = 8.0d0* onepi*nbcoeff(14) 
+     &                    * dsqrt(nbcoeff(13))*
      &                    ( rci3*rci3*rci3/9.0d0 - rci3/6.0d0)
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
 c                    --- 12-10 H-bond portion (if needed)
                      call twh_nb_to_hbtype(GLB_GET,ntij,hbtype)
                      if ( hbtype .ne. 0 ) then
-                        dvalue = twopi * (twh_get_hbondcoeff(hbtype,1)
-     &                       / (9.0d0 * rcut**9)
-     &                       - twh_get_hbondcoeff(hbtype,2)
-     &                       /(7.0d0 * rcut**7) )
+                        call twh_hbondcoeff(GLB_GET,hbtype,1
+     &                       ,hbondcoeff(1))
+                        call twh_hbondcoeff(GLB_GET,hbtype,2
+     &                       ,hbondcoeff(2))
+                        dvalue = twopi*(hbondcoeff(1)/(9.0d0 * rcut**9)
+     &                       - hbondcoeff(2)/(7.0d0 * rcut**7) )
                         call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
                         dvalue = - (twopi/3.0d0) * ( -(12.0d0/9.0d0)
-     &                       *twh_get_hbondcoeff(hbtype,1)
-     &                       /(rcut**9)
-     &                       +(10.0d0/7.0d0)
-     &                       *twh_get_hbondcoeff(hbtype,2)/(rcut**7) )
+     &                       *hbondcoeff(1)/(rcut**9) +(10.0d0/7.0d0)
+     &                       *hbondcoeff(2)/(rcut**7) )
                         call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
                      endif
-                  elseif ( localcp .eq. '9-6' ) then
+                  elseif ( cpnumber .eq. CP_9_6 ) then
 c                    --- Lennard-Jones 9-6 tail correction
-c                    --- Note: twh_get_nbcoeff(1,ij) is sigma^3
-                     rci3 = twh_get_nbcoeff(1,ntij) / rcut**3
-                     dvalue = 2.0d0* onepi*twh_get_nbcoeff(2,ntij)* 
-     &                    twh_get_nbcoeff(1,ntij)* ((rci3* rci3)/3.0d0
-     &                    - rci3)
+c                    --- Note: nbcoeff(1,ij) is sigma^3
+                     do icoeff = 1,2
+                        call twh_nbcoeff(GLB_GET,icoeff,ntij
+     &                       ,nbcoeff(icoeff))
+                     enddo
+                     rci3 = nbcoeff(1) / rcut**3
+                     dvalue = 2.0d0* onepi*nbcoeff(2)* 
+     &                    nbcoeff(1)* ((rci3* rci3)/3.0d0 - rci3)
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
-                     dvalue = onepi*twh_get_nbcoeff(2,ntij)
-     &                    *twh_get_nbcoeff(1,ntij)
-     &                    *( 2.0d0*rci3*rci3 - 4.0d0*rci3 )
+                     dvalue = onepi*nbcoeff(2)
+     &                    *nbcoeff(1)*( 2.0d0*rci3*rci3 - 4.0d0*rci3 )
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
-                  elseif ( localcp .eq. 'Exponential-6' 
-     &                    ) then
+                  elseif ( cpnumber .eq. CP_EXPONENTIAL_6 ) then
 c                    --- exponential-6 tail correction
-                     dvalue = 2.0d0*onepi*(twh_get_nbcoeff(1,ntij)
-     &                    /(3.0d0*(rcut**3))
-     &                    +(-rcut*rcut+2.0d0*rcut
-     &                    /twh_get_nbcoeff(3,ntij)
-     &                    -2.0d0/(twh_get_nbcoeff(3,ntij)
-     &                    *twh_get_nbcoeff(3,ntij)))
-     &                    *twh_get_nbcoeff(2,ntij)
-     &                    *twh_expon(twh_get_nbcoeff(3,ntij)
-     &                    *rcut)/twh_get_nbcoeff(3,ntij))
+                     do icoeff = 1,3
+                        call twh_nbcoeff(GLB_GET,icoeff,ntij
+     &                       ,nbcoeff(icoeff))
+                     enddo
+                     dvalue = 2.0d0*onepi*(nbcoeff(1)/(3.0d0*(rcut**3))
+     &                    +(-rcut*rcut+2.0d0*rcut/nbcoeff(3)
+     &                    -2.0d0/(nbcoeff(3)*nbcoeff(3)))*nbcoeff(2)
+     &                    *twh_expon(nbcoeff(3)*rcut)/nbcoeff(3))
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
                      dvalue = (2.0d0/3.0d0)*onepi*(2.0d0
-     &                    *twh_get_nbcoeff(1,ntij)
-     &                    /(rcut*rcut*rcut)+twh_get_nbcoeff(2,ntij)
-     &                    *twh_expon(twh_get_nbcoeff(3,ntij)*rcut)
-     &                    *(-6.0d0/(twh_get_nbcoeff(3,ntij)
-     &                    *twh_get_nbcoeff(3,ntij)
-     &                    *twh_get_nbcoeff(3,ntij))+6.0d0*rcut
-     &                    /(twh_get_nbcoeff(3,ntij)
-     &                    *twh_get_nbcoeff(3,ntij))
-     &                    -3.0d0*rcut*rcut/twh_get_nbcoeff(3,ntij)
+     &                    *nbcoeff(1)/(rcut*rcut*rcut)+nbcoeff(2)
+     &                    *twh_expon(nbcoeff(3)*rcut)
+     &                    *(-6.0d0/(nbcoeff(3)*nbcoeff(3)
+     &                    *nbcoeff(3))+6.0d0*rcut/(nbcoeff(3)
+     &                    *nbcoeff(3))-3.0d0*rcut*rcut/nbcoeff(3)
      &                    +rcut*rcut*rcut))
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
-                  elseif ( localcp .eq. 'Exponential-12-6' 
-     &                    ) then
+                  elseif ( cpnumber .eq. CP_EXPONENTIAL_12_6 ) then
 c                    --- exp-6 plus LJ 12
-                     dvalue = 2.0d0*onepi*(twh_get_nbcoeff(1,ntij)
-     &                    /(3.0d0*(rcut**3))
-     &                    +(-rcut*rcut+2.0d0*rcut
-     &                    /twh_get_nbcoeff(4,ntij)
-     &                    -2.0d0/(twh_get_nbcoeff(4,ntij)
-     &                    *twh_get_nbcoeff(4,ntij)))
-     &                    *twh_get_nbcoeff(3,ntij)
-     &                    *twh_expon(twh_get_nbcoeff(4,ntij)
-     &                    *rcut)/twh_get_nbcoeff(4,ntij))
-     &                    + twopi*twh_get_nbcoeff(2,ntij)
-     &                    /(9.0d0*(rcut**9))
+                     do icoeff = 1,4
+                        call twh_nbcoeff(GLB_GET,icoeff,ntij
+     &                       ,nbcoeff(icoeff))
+                     enddo
+                     dvalue = 2.0d0*onepi*(nbcoeff(1)/(3.0d0*(rcut**3))
+     &                    +(-rcut*rcut+2.0d0*rcut/nbcoeff(4)
+     &                    -2.0d0/(nbcoeff(4)*nbcoeff(4)))*nbcoeff(3)
+     &                    *twh_expon(nbcoeff(4)*rcut)/nbcoeff(4))
+     &                    + twopi*nbcoeff(2)/(9.0d0*(rcut**9))
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
                      dvalue = (2.0d0/3.0d0)*onepi*(2.0d0
-     &                    *twh_get_nbcoeff(1,ntij)
-     &                    /(rcut*rcut*rcut)+twh_get_nbcoeff(3,ntij)
-     &                    *twh_expon(twh_get_nbcoeff(4,ntij)*rcut)
-     &                    *(-6.0d0/(twh_get_nbcoeff(4,ntij)
-     &                    *twh_get_nbcoeff(4,ntij)
-     &                    *twh_get_nbcoeff(4,ntij))+6.0d0*rcut
-     &                    /(twh_get_nbcoeff(4,ntij)
-     &                    *twh_get_nbcoeff(4,ntij))
-     &                    -3.0d0*rcut*rcut/twh_get_nbcoeff(4,ntij)
+     &                    *nbcoeff(1)/(rcut*rcut*rcut)+nbcoeff(3)
+     &                    *twh_expon(nbcoeff(4)*rcut)
+     &                    *(-6.0d0/(nbcoeff(4)*nbcoeff(4)
+     &                    *nbcoeff(4))+6.0d0*rcut/(nbcoeff(4)
+     &                    *nbcoeff(4))-3.0d0*rcut*rcut/nbcoeff(4)
      &                    +rcut*rcut*rcut))
      &                    + 8.0d0*onepi/(9.0d0*(rcut**9))
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
-                  elseif ( localcp .eq. '12-9-6' ) then
-                     dvalue = twopi*(
-     &                    twh_get_nbcoeff(1,ntij)/(9.0d0*(rcut**9))
-     &                    + twh_get_nbcoeff(2,ntij)/(6.0d0*(rcut**6))
-     &                    + twh_get_nbcoeff(3,ntij)/(3.0d0*(rcut**3)))
+                  elseif ( cpnumber .eq. CP_12_9_6 ) then
+                     do icoeff = 1,3
+                        call twh_nbcoeff(GLB_GET,icoeff,ntij
+     &                       ,nbcoeff(icoeff))
+                     enddo
+                     dvalue = twopi*(nbcoeff(1)/(9.0d0*(rcut**9))
+     &                    + nbcoeff(2)/(6.0d0*(rcut**6))
+     &                    + nbcoeff(3)/(3.0d0*(rcut**3)))
                      call twh_coru(GLB_INCR,imolty,jmolty,dvalue)
-                     dvalue = (2.0d0/3.0d0)*onepi*
-     &                    ( (4.0d0*twh_get_nbcoeff(1,ntij))
+                     dvalue = (2.0d0/3.0d0)*onepi*((4.0d0*nbcoeff(1))
      &                    /(3.0d0*rcut**9)
-     &                    + (3.0d0*twh_get_nbcoeff(2,ntij))
-     &                    /(2.0d0*rcut**6)
-     &                    + (2.0d0*twh_get_nbcoeff(3,ntij))/(rcut**3) )
+     &                    + (3.0d0*nbcoeff(2))/(2.0d0*rcut**6)
+     &                    + (2.0d0*nbcoeff(3))/(rcut**3) )
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
-                  elseif ( localcp .eq. 'Gordon n-6' ) then
+                  elseif ( cpnumber .eq. CP_GORDON_N_6 ) then
                      call twh_nbcoeff(GLB_GET,1,ntij,sigma)
                      call twh_nbcoeff(GLB_GET,3,ntij,powrn)
                      call twh_nbcoeff(GLB_GET,4,ntij,aofn)
@@ -243,10 +239,10 @@ c                    --- from Peter Gordon
      &                    + (3.0d0*(aofn**2)/5.0d0)*overra**5
      &                    + ((aofn**3)/6.0d0)*overra**6 ) )
                      call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
-                  elseif ( localcp .eq. 'Double Exponential' ) then
+                  elseif ( cpnumber .eq. CP_DOUBLE_EXPONENTIAL ) then
 c                    --- repulsive part
-                     aaa = twh_get_nbcoeff(1,ntij)
-                     bbb = twh_get_nbcoeff(2,ntij)
+                     call twh_nbcoeff(GLB_GET,1,ntij,aaa)
+                     call twh_nbcoeff(GLB_GET,2,ntij,bbb)
                      if ( bbb .ne. 0.0d0 ) then
                         dvalue = 2.0d0*onepi*(aaa/bbb)
      &                       *twh_expon(-bbb*rcut)
@@ -260,8 +256,7 @@ c                    --- repulsive part
                         call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
                      endif
 c                    --- attractive part
-                     aaa = -twh_get_nbcoeff(1,ntij)
-                     bbb = twh_get_nbcoeff(2,ntij)
+                     aaa = -aaa
                      if ( bbb .ne. 0.0d0 ) then
                         dvalue = 2.0d0*onepi*(aaa/bbb)
      &                       *twh_expon(-bbb*rcut)
@@ -275,7 +270,9 @@ c                    --- attractive part
                         call twh_corp(GLB_INCR,imolty,jmolty,dvalue)
                      endif
                   else
-                     stop 'undefined classical potential in TAIL'
+                     write(6,*) 'undefined classical potential in TAIL'
+                     lfailure = .true.
+                     return
                   endif
                enddo
             enddo

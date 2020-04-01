@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,11 +25,10 @@ c     * computes the bondorder between two atoms in a multi-body force *
 c     * field                                                          *
 c     *                                                                *
 c     * originally written 06-26-2002 by  M.G. Martin                  *
-c     * last update 07-21-2013 by M.G. Martin                          *
+c     * last update 03-31-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_NBCOEFF
 #define FUNCTION_EXTRACTDENS
 #define FUNCTION_EXPON
 #include "functions.h"
@@ -44,7 +43,7 @@ c     --- integer scalars
       integer ntij,looptype_a,looptype_b,loop,icoeff,potnum,eamdensnum
 c     --- double precision scalars
       double precision bloop,x,eamdensone,eamdenstwo,rcut,maxdist
-
+      double precision nb_four,nb_six
 c     --- retrieve constants
       call twh_rcut(GLB_GET,rcut)
 
@@ -55,8 +54,9 @@ c     --- initialize lzero
          ntij = twh_getnbtype(ntii,ntjj)
 c        --- stillinger-weber uses a heaviside to compute bond
 c        --- order so it is either zero or one
-         if ( rij/twh_get_nbcoeff(4,ntij) 
-     &        .lt. twh_get_nbcoeff(6,ntij)) then
+         call twh_nbcoeff(GLB_GET,4,ntij,nb_four)
+         call twh_nbcoeff(GLB_GET,6,ntij,nb_six)
+         if ( rij/nb_four .lt. nb_six ) then
 c           --- positive value in a heaviside results in 1.0
             bij = 1.0d0
             lzero = .false.

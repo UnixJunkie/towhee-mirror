@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,18 +24,15 @@ c     ******************************************************************
 c     * updated the maximum volume and cell displacements              *
 c     *                                                                *
 c     * split from old pupdate 10-13-2005 by M.G. Martin               *
-c     * last modified 01-17-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_RMVOL
-#define FUNCTION_GET_TAVOL
-#include "functions.h"
 c     --- local variables
       character*20 routput
       integer idim,jdim,imove,movevector,atemp,ntemp,ivalue,jvalue
       integer nvmmax,ensemble,ipair,numboxes
-      double precision ratvol,ratcell,dtemp,pmcell,tacell
-      double precision pmvol
+      double precision ratvol,ratcell,dtemp,pmcell,tacell,tavol
+      double precision pmvol,rmvol
 
 c     --- retrieve constants
       call twh_runoutput(GLB_GET,routput)
@@ -60,20 +57,21 @@ c        --- get the target acceptance rate
                if ( ratvol .eq. 0.0d0 ) then
                   call twh_rmvol(GLB_SCALE,imove,0.1d0)
                else
-                  dtemp = ratvol/twh_get_tavol()
+                  call twh_tavol(GLB_GET,tavol)
+                  dtemp = ratvol/tavol
                   call twh_rmvol(GLB_SCALE,imove,dtemp)
                endif
             endif
             if ( routput .eq. 'full' .or. routput .eq. 'updates'
      &           ) then
+               call twh_rmvol(GLB_GET,imove,rmvol)
                if ( imove .le. numboxes ) then
-                  write(6,60) imove,ntemp,atemp,twh_get_rmvol(imove)
+                  write(6,60) imove,ntemp,atemp,rmvol
                else
                   ipair = imove - numboxes
                   call twh_pairbox(GLB_GET,ipair,1,ivalue)
                   call twh_pairbox(GLB_GET,ipair,2,jvalue)
-                  write(6,61) ivalue,jvalue,ntemp,atemp
-     &                 ,twh_get_rmvol(imove)
+                  write(6,61) ivalue,jvalue,ntemp,atemp,rmvol
                endif
             endif
             call twh_acnvol(GLB_INCR,imove,ntemp)

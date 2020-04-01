@@ -110,14 +110,12 @@ c     * computes the classical energy on an atom by atom basis for the *
 c     * configurational-bias class of moves                            *
 c     *                                                                *
 c     * split from engatom 10-24-2005 by M.G. Martin                   *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_LEXIST
 #define FUNCTION_EWALD_CORRECT
 #define FUNCTION_EWALD_SELF
 #define FUNCTION_LINCLUDE
-#define FUNCTION_ONEFIVETYPE
 #define FUNCTION_VFIELD
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
@@ -148,7 +146,7 @@ c     --- variables passed to/from the subroutine
       dimension vtrewald(dimtrials)
 c     --- local variables
 c     --- logical scalars
-      logical lcompute,lusecom,lelect,lewald,ldualcutoff
+      logical lcompute,lusecom,lelect,lewald,ldualcutoff,lexist
 c     --- logical arrays
       logical lcmno
       dimension lcmno(nchain)
@@ -252,7 +250,8 @@ C        *****************************************
 c        --- cycle through molecule and check bead by bead
          do 17 iu = 1, iunit
 c           --- see if iu exists in the new chain yet
-            if (.not. twh_get_lexist(iu)) goto 17
+            call twh_lexist(GLB_GET,iu,lexist)
+            if (.not. lexist ) goto 17
             
 c           --- loop over all the grown beads
             do count = 1,ntogrow
@@ -277,7 +276,7 @@ c                 --- determine distances
                if ( twh_linclude(imolty,ii,iu) ) then
 c                 --- non-coulombic nonbond
                   cutstyle = 0
-                  ioftype = twh_onefivetype(imolty,ii,iu)
+                  call twh_onefivetype(imolty,ii,iu,ioftype)
                   if ( ioftype .eq. 0 ) then
 c                    --- regular nonbond
                      vintra = vintra + twh_vtwobody(lfailure,rijsq,ntii

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C)2005-2011 Marcus G. Martin                        *
+c     * Copyright (C)2005-2020 Marcus G. Martin                        *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,11 +26,9 @@ c     * information                                                    *
 c     * rwflag is either READ_FLAG or WRITE_FLAG                       *
 c     *                                                                *
 c     * originally written 10-13-2005 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INTOR
 #define FUNCTION_READ_LABELED_INTEGER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -194,9 +192,9 @@ c        --- nothing to input or output
                rwformat = '(a26)'
                if ( rwflag .eq. WRITE_FLAG ) then
                   write(rwfile,rwformat) goodstring
-                  write(rwfile,*) iunit,twh_get_inben(imolty,iunit)
-c                 --- set numbend
-                  numbend = twh_get_inben(imolty,iunit)
+c                 --- set and output numbend
+                  call twh_inben(GLB_GET,imolty,iunit,numbend)
+                  write(rwfile,*) iunit,numbend
                else
                   call twh_read_label(lfailure,rwfile,goodstring
      &                 ,.false.,idname)
@@ -272,8 +270,8 @@ c     --- set some values based on the localstyle
                rwformat = '(a30)'
                if ( rwflag .eq. WRITE_FLAG ) then
                   write(rwfile,rwformat) goodstring
-                  write(rwfile,*) iunit,twh_get_intor(imolty,iunit)
-                  numdihed = twh_get_intor(imolty,iunit)
+                  call twh_intor(GLB_GET,imolty,iunit,numdihed)
+                  write(rwfile,*) iunit,numdihed
                else
                   call twh_read_label(lfailure,rwfile,goodstring
      &                 ,.false.,idname)

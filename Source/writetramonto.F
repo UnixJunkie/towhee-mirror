@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -137,13 +137,10 @@ c     * writes out the information for a single atom in the tramonto   *
 c     * format                                                         *
 c     *                                                                *
 c     * originally written 08-04-2006 by M.G. Martin                   *
-c     * last modified 08-16-2014 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_NBCOEFF
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_QQATOM
 #include "functions.h"
 c     ---- variables passed to/from this subroutine
       logical lfailure
@@ -152,11 +149,12 @@ c     ---- variables passed to/from this subroutine
       dimension atomcode(NNTYPE)
 c     --- local variables
       logical lelect
-      integer type,ij,isolvtype
-      double precision xtemp,ytemp,ztemp
-
+      integer type,ij,isolvtype,cpnumber
+      double precision xtemp,ytemp,ztemp,qqatom,nbcoeff_one,nbcoeff_two
+      
 c     --- we are creating the initial file for tramonto
       call twh_ntype(GLB_GET,imolty,iunit,type)
+      call twh_cp_number(GLB_GET,cpnumber)
       if ( atomcode(type) .eq. -1 ) then
 c        --- we do not yet have an atom of this type, need 
 c        --- output to dft_decode.dat
@@ -164,16 +162,17 @@ c        --- output to dft_decode.dat
          atomcode(type) = count
          call twh_isolvtype(GLB_GET,isolvtype)
          if ( isolvtype .ne. SOLV_TRAMONTO ) then
-            if ( twh_get_classical_potential() .eq. 'Lennard-Jones' .or.
-     &           twh_get_classical_potential() .eq. 'UFF 12-6' ) then
+            if ( cpnumber .eq. CP_LENNARD_JONES .or.
+     &           cpnumber .eq. CP_UFF_12_6 ) then
 c              --- LJ 12-6 output
                ij = twh_getnbtype(type,type)
-               write(71,*) atomcode(type),twh_get_nbcoeff(1,ij)
-     &              ,twh_get_nbcoeff(2,ij)
+               call twh_nbcoeff(GLB_GET,1,ij,nbcoeff_one)
+               call twh_nbcoeff(GLB_GET,2,ij,nbcoeff_two)
+               write(71,*) atomcode(type),nbcoeff_one,nbcoeff_two
             else
 c              --- not coded up for tramonto yet
-               write(6,*) 'WRITETRAMONTO_ATOM: classical_potential '
-     &              ,twh_get_classical_potential()
+               write(6,*) 'WRITETRAMONTO_ATOM: classical_potential #'
+     &              ,cpnumber
      &              ,'not coded up for tramonto output.'
                lfailure = .true.
                return
@@ -185,8 +184,8 @@ c              --- not coded up for tramonto yet
 c     --- write to dft_surf.dat
       call twh_lelect(GLB_GET,lelect)
       if ( lelect ) then
-         write(72,22) atomcode(type),ichain-1,xtemp,ytemp,ztemp
-     &        ,twh_get_qqatom(imolty,iunit)
+         call twh_qqatom(GLB_GET,imolty,iunit,qqatom)
+         write(72,22) atomcode(type),ichain-1,xtemp,ytemp,ztemp,qqatom
       else
          write(72,22) atomcode(type),ichain-1,xtemp,ytemp,ztemp,0.0d0
       endif

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,27 +26,36 @@ c     * sets up all of the force field parameters for the c19sasa      *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-20-2002 by M.G. Martin  *
-c     * last modified 08-13-2014 by M.G. martin                        *
+c     * last modified 03-31-2020 by M.G. martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_NBNAME
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
+c     --- integer scalars
       integer ii,type
       integer itrial,i,j,jlo,jhi,jj,ij,isame
-      character*(FFNAMELEN) ffname
       integer nvslocal,nbslocal,ntslocal,icoeff
+      integer nislocal 
+c     --- character string scalars
+      character*2 elelocal 
+      character*5 bplocal
+      character*(FFNAMELEN) ffname
+      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
+      character*(FFNAMELEN) nbnamei,nbnamej
+c     --- character string arrays
       character*(FFNAMELEN) vnlocal
       dimension vnlocal(MAXSAMEV,MAXVNAME) 
       character*(FFNAMELEN) bnlocal 
       dimension bnlocal(MAXSAMEB,MAXBNAME)
       character*(FFNAMELEN) tnlocal
       dimension tnlocal(MAXSAMET,MAXTNAME)
+c     --- double precision scalars
+      double precision masslocal,onepi,nbc_ii,nbc_jj
+c     --- double precision arrays
       double precision vclocal
       dimension vclocal(MINVIBCOEFF:MAXVIBCOEFF)
       double precision bclocal
@@ -55,16 +64,10 @@ c     --- local variables
       dimension tclocal(MINTORCOEFF:MAXTORCOEFF)
       double precision nbclocal
       dimension nbclocal(MINNBCOEFF:MAXNBCOEFF)
-      double precision masslocal
-      character*2 elelocal 
-      character*5 bplocal
-      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
       double precision iclocal
       dimension iclocal(MINIMPCOEFF:MAXIMPCOEFF)
-      integer nislocal 
       character*(FFNAMELEN) ninlocal 
       dimension ninlocal(MAXSAMEIMP,MAXIMPNAME)
-      double precision onepi
 
       ffname = 'C19sasa'
       type = 0
@@ -802,37 +805,40 @@ c              --- we are setting up all of the self terms
 c              --- only valid for the charmm19 force field (LJ)
 c              --- Lorentz-Berthelot rules 
 c              --- arimethic mean of sigma
-               nbclocal(1)=(0.5d0*(twh_get_nbcoeff(1,ii)
-     &              + twh_get_nbcoeff(1,jj)))
+               call twh_nbcoeff(GLB_GET,1,ii,nbc_ii)
+               call twh_nbcoeff(GLB_GET,1,jj,nbc_jj)
+               nbclocal(1)=(0.5d0*(nbc_ii + nbc_jj))
 c              --- geometric mean of epsilon
-               nbclocal(2) = dsqrt(twh_get_nbcoeff(2,ii)
-     &              *twh_get_nbcoeff(2,jj) )
+               call twh_nbcoeff(GLB_GET,2,ii,nbc_ii)
+               call twh_nbcoeff(GLB_GET,2,jj,nbc_jj)
+               nbclocal(2) = dsqrt(nbc_ii*nbc_jj)
 c              --- 1-4 nonbonded interactions
-               nbclocal(3) = (0.5d0*(twh_get_nbcoeff(3,ii)
-     &              + twh_get_nbcoeff(3,jj)))
-               nbclocal(4) = dsqrt(twh_get_nbcoeff(4,ii)
-     &              *twh_get_nbcoeff(4,jj) )
+               call twh_nbcoeff(GLB_GET,3,ii,nbc_ii)
+               call twh_nbcoeff(GLB_GET,3,jj,nbc_jj)
+               nbclocal(3) = (0.5d0*(nbc_ii + nbc_jj))
+               call twh_nbcoeff(GLB_GET,4,ii,nbc_ii)
+               call twh_nbcoeff(GLB_GET,4,jj,nbc_jj)
+               nbclocal(4) = dsqrt(nbc_ii*nbc_jj)
 c              --- Charmm19 hacks for water
-               if ( twh_get_nbname(i) .eq. 'OT'
-     &              .and. twh_get_nbname(j) .eq. 'OT' ) then
+               call twh_nbname(GLB_GET,i,nbnamei)
+               call twh_nbname(GLB_GET,j,nbnamej)
+               if ( nbnamei .eq. 'OT' .and. nbnamej .eq. 'OT' ) then
 c                 --- OT OT water hack
                   nbclocal(1) = 3.5365d0
                   nbclocal(2) = 0.152073d0*CON_KCALTOK
 c                 --- don't worry about 1-4 for water
                   nbclocal(3) = 0.0d0
                   nbclocal(4) = 0.0d0
-               elseif ( twh_get_nbname(i) .eq. 'HT'
-     &                 .and. twh_get_nbname(j) .eq. 'HT' ) then
+               elseif ( nbnamei .eq. 'HT' .and. nbnamej .eq. 'HT' ) then
 c                 --- HT HT water hack
                   nbclocal(1) = 0.4490
                   nbclocal(2) = 0.04598d0*CON_KCALTOK
 c                 --- don't worry about 1-4 for water
                   nbclocal(3) = 0.0d0
                   nbclocal(4) = 0.0d0
-               elseif ( (twh_get_nbname(i) .eq. 'HT' 
-     &                 .and. twh_get_nbname(j) .eq. 'OT')
-     &                 .or. ( twh_get_nbname(i) .eq. 'OT'
-     &                 .and. twh_get_nbname(j) .eq. 'HT') ) then
+               elseif ( (nbnamei .eq. 'HT' .and. nbnamej .eq. 'OT')
+     &                 .or. ( nbnamei .eq. 'OT'
+     &                 .and. nbnamej .eq. 'HT') ) then
 c                --- OT HT water hack
                   nbclocal(1) = 1.9927d0
                   nbclocal(2) = 0.08363d0*CON_KCALTOK

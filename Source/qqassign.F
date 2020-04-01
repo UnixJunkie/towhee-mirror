@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,30 +24,22 @@ c     ******************************************************************
 c     * makes the charge assignment for a molecule we just assembled   *
 c     *                                                                *
 c     * originally written 12-10-2004 by M.G. Martin                   *
-c     * last modified 08-08-2014 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_CBNAME
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NBNAME
-#define FUNCTION_GET_QBIFF
-#define FUNCTION_GET_QBINAMES
-#define FUNCTION_GET_QBIVALUE
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       character*(*) forcefield
       logical lfailure
       integer imolty
 c     --- local variables
 c     --- character string scalars
-      character*(FFNAMELEN) viborder,testorder,wildorder
+      character*(FFNAMELEN) viborder,testorder,wildorder,nbname,qbiff
       character*30 charge_assignment
 c     --- character string arrays
-      character*(FFNAMELEN) names
-      dimension names(2)
+      character*(FFNAMELEN) names,qbinames
+      dimension names(2),qbinames(2)
 c     --- integer scalars
-      integer param,type,ivib,itype,jtype,iunit,junit,nunit
+      integer param,type,ivib,itype,jtype,iunit,junit,nunit,invibration
 c     --- double precision scalars
       double precision qadjust,totalcharge,charge
 
@@ -64,11 +56,12 @@ c        --- determine the charges using bond increment method
 c           --- assign the base charge
             call twh_qbasevalue(GLB_GET,itype,charge)
 c           --- compute the bond increments
-            names(1) = twh_get_cbname(itype)
-            do ivib = 1,twh_get_invib(imolty,iunit)
-               junit = twh_get_ijvib(imolty,iunit,ivib)
+            call twh_cbname(GLB_GET,itype,names(1))
+            call twh_invib(GLB_GET,imolty,iunit,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,junit)
                call twh_ntype(GLB_GET,imolty,junit,jtype)
-               names(2) = twh_get_cbname(jtype)
+               call twh_cbname(GLB_GET,jtype,names(2))
 c              --- get the vibration order
                call twh_vibration_order(GLB_GET,iunit,ivib,viborder)
 c              --- sort through the list and look for matches
@@ -79,20 +72,21 @@ c              --- on the first pass check for exact bond-increment type
                do while ( param .eq. 0 .and. type .lt. TBIMAX )
                   type = type + 1
                   call twh_biorder(GLB_GET,type,testorder)
-                  if ( twh_get_qbiff(type) .eq. forcefield .and.
+                  call twh_qbiff(GLB_GET,type,qbiff)
+                  if ( qbiff .eq. forcefield .and.
      &                 viborder .eq. testorder ) then
-                     if ( twh_get_qbinames(type,1) .eq. names(1) 
-     &                    .and. 
-     &                    twh_get_qbinames(type,2) .eq. names(2) ) then
+                     call twh_qbinames(GLB_GET,type,1,qbinames(1))
+                     call twh_qbinames(GLB_GET,type,2,qbinames(2))
+                     if ( qbinames(1) .eq. names(1) .and. 
+     &                    qbinames(2) .eq. names(2) ) then
                         param = type
-                        qadjust = twh_get_qbivalue(param)
-                     endif
-                     if ( twh_get_qbinames(type,1) .eq. names(2) 
-     &                    .and. 
-     &                    twh_get_qbinames(type,2) .eq. names(1) ) then
+                        call twh_qbivalue(GLB_GET,param,qadjust)
+                     elseif ( qbinames(1) .eq. names(2) .and. 
+     &                       qbinames(2) .eq. names(1) ) then
                         param = type
 c                       --- move charge in opposite direction
-                        qadjust = -twh_get_qbivalue(param)
+                        call twh_qbivalue(GLB_GET,param,qadjust)
+                        qadjust = -qadjust
                      endif
                   endif
                enddo
@@ -102,20 +96,21 @@ c              --- on the second pass check for wild bond-increment type
                do while ( param .eq. 0 .and. type .lt. TBIMAX )
                   type = type + 1
                   call twh_biorder(GLB_GET,type,testorder)
-                  if ( twh_get_qbiff(type) .eq. forcefield .and.
+                  call twh_qbiff(GLB_GET,type,qbiff)
+                  if ( qbiff .eq. forcefield .and.
      &                 wildorder .eq. testorder ) then
-                     if ( twh_get_qbinames(type,1) .eq. names(1) 
-     &                    .and. 
-     &                    twh_get_qbinames(type,2) .eq. names(2) ) then
+                     call twh_qbinames(GLB_GET,type,1,qbinames(1))
+                     call twh_qbinames(GLB_GET,type,2,qbinames(2))
+                     if ( qbinames(1) .eq. names(1) .and. 
+     &                    qbinames(2) .eq. names(2) ) then
                         param = type
-                        qadjust = twh_get_qbivalue(param)
-                     endif
-                     if ( twh_get_qbinames(type,1) .eq. names(2) 
-     &                    .and. 
-     &                    twh_get_qbinames(type,2) .eq. names(1) ) then
+                        call twh_qbivalue(GLB_GET,param,qadjust)
+                     elseif ( qbinames(1) .eq. names(2) .and. 
+     &                       qbinames(2) .eq. names(1) ) then
                         param = type
 c                       --- move charge in opposite direction
-                        qadjust = -twh_get_qbivalue(param)
+                        call twh_qbivalue(GLB_GET,param,qadjust)
+                        qadjust = -qadjust
                      endif
                   endif
                enddo
@@ -123,12 +118,14 @@ c              --- search for global wildcard matches
                type = 0
                do while ( param .eq. 0 .and. type .lt. TBIMAX )
                   type = type + 1
-                  if ( twh_get_qbiff(type) .eq. forcefield ) then
-                     if ( twh_get_qbinames(type,1) .eq. 'wild' 
-     &                    .and. 
-     &                    twh_get_qbinames(type,2) .eq. 'wild' ) then
+                  call twh_qbiff(GLB_GET,type,qbiff)
+                  if ( qbiff .eq. forcefield ) then
+                     call twh_qbinames(GLB_GET,type,1,qbinames(1))
+                     call twh_qbinames(GLB_GET,type,2,qbinames(2))
+                     if ( qbinames(1) .eq. 'wild' .and. 
+     &                    qbinames(2) .eq. 'wild' ) then
                         param = type
-                        qadjust = twh_get_qbivalue(param)
+                        call twh_qbivalue(GLB_GET,param,qadjust)
                      endif
                   endif
                enddo
@@ -151,9 +148,9 @@ c        --- output the assigned charges
          do iunit = 1,nunit
             call twh_ntype(GLB_GET,imolty,iunit,itype)
             call twh_qqatom(GLB_GET,imolty,iunit,charge)
+            call twh_nbname(GLB_GET,itype,nbname)
             write(6,'(a5,i5,1x,a7,1x,a10,1x,a7,1x,f10.5)') 
-     &           'Unit:',iunit,'nbname:',twh_get_nbname(itype)
-     &           ,'Charge:',charge
+     &           'Unit:',iunit,'nbname:',nbname,'Charge:',charge
             totalcharge = totalcharge + charge
          enddo
          write(6,'(a,1x,i4,1x,a3,1x,f10.5)') 

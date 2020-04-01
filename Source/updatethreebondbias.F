@@ -25,11 +25,9 @@ c     * updates the parameters used in the three bond fixed endpoint   *
 c     * biasing                                                        *
 c     *                                                                *
 c     * originally written 10-14-2005 by M.G. Martin                   *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INTOR
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer nnn
@@ -37,7 +35,7 @@ c     --- local variables
       character*50 threebbias_style
 c     --- integer scalars
       integer ibox,imolty,ichain,iunit,idihed,lunit,iparam,nchain
-      integer nmolty,nunit,compute_freq,update_freq
+      integer nmolty,nunit,compute_freq,update_freq,intorsion
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxul,ryul,rzul,rxuil,ryuil,rzuil
       double precision ril,rilsq,samples,newmean,newdsq,newsdev
@@ -63,11 +61,13 @@ c       --- biasing
                do iunit = 1,nunit
                   call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &                 ,rxui,ryui,rzui)
-                  do idihed = 1,twh_get_intor(imolty,iunit)
+                  call twh_intor(GLB_GET,imolty,iunit,intorsion)
+                  do idihed = 1,intorsion
                      if ( threebbias_style .eq.
      &                    'self adapting gaussian using 1-4 distance'
      &                    ) then
-                        lunit = twh_get_ijtor4(imolty,iunit,idihed)
+                        call twh_ijtor4(GLB_GET,imolty,iunit,idihed
+     &                       ,lunit)
                         call twh_coordinates(GLB_GET,CRD_REAL,ichain
      &                       ,lunit,rxul,ryul,rzul)
 c                       --- compute i-l distance
@@ -107,7 +107,8 @@ c        --- values and then reset the running results to zero
          do imolty = 1,nmolty
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
-               do idihed = 1,twh_get_intor(imolty,iunit)
+               call twh_intor(GLB_GET,imolty,iunit,intorsion)
+               do idihed = 1,intorsion
                   call twh_three_bond_bias_info(GLB_GET,imolty,iunit
      &                 ,idihed,3,samples)
                   if ( samples.gt. 0.5d0 ) then

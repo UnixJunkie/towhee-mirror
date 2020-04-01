@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,11 +24,10 @@ c     ******************************************************************
 c     * outputs some runtime information to the standard output        *
 c     *                                                                *
 c     * split from old pupdate 10-13-2005 by M.G. Martin               *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
-#define FUNCTION_GET_NCMT
 #include "functions.h"
 c     --- variables passed to and from the subroutine
       integer nnn,l
@@ -39,6 +38,8 @@ c     --- local variables
       logical scp_eval_derivative
       integer imolty,ibox,nmolty,scp_num_foreign_lambda
       integer numboxes
+      integer localncmt
+      dimension localncmt(NTMAX)
       double precision energy,boxvolume
 
 c     --- retrieve constants
@@ -48,20 +49,22 @@ c     --- retrieve constants
 c     --- write out runtime information
       call twh_boxvclassic(GLB_GET,1,energy)
       call twh_scp_eval_derivative(GLB_GET,scp_eval_derivative)
+      call twh_boxvolume(GLB_GET,BXD_REAL,1,boxvolume)
+      do imolty = 1,nmolty
+         call twh_ncmt(GLB_GET,1,imolty,localncmt(imolty))
+      enddo
       if ( scp_eval_derivative ) then
 c        --- for du/d[lambda], do only first box.  
 c        --- This can be changed if need be.
-         call twh_boxvolume(GLB_GET,BXD_REAL,1,boxvolume)
          write(6,110) nnn, 1,energy,boxvolume,press(1),
      &         scp_get_derivative(1,LAMBDA_LJ),
      &         scp_get_derivative(1,LAMBDA_C),
-     &         (twh_get_ncmt(1,imolty),imolty=1,nmolty)
+     &        (localncmt(imolty),imolty=1,nmolty)
  110     format(i10,1x,'B:',i2,1x,e15.8,1x,e12.5,1x,f12.1,1x,
      &        e12.5,1x,e12.5,NTMAX(i5))
       else
-         call twh_boxvolume(GLB_GET,BXD_REAL,1,boxvolume)
          write(6,111) nnn, 1,energy,boxvolume,press(1)
-     &        ,(twh_get_ncmt(1,imolty),imolty=1,nmolty)
+     &        ,(localncmt(imolty),imolty=1,nmolty)
  111     format(i10,1x,'B:',i2,1x,e11.4,1x,e11.4,1x,f12.1,1x,
      &        NTMAX(i5))
       endif
@@ -78,8 +81,11 @@ c     write the foreign energies on a separate line, box 1 only.  Ugly...
       do ibox = 2,numboxes
          call twh_boxvclassic(GLB_GET,ibox,energy)
          call twh_boxvolume(GLB_GET,BXD_REAL,ibox,boxvolume)
+         do imolty=1,nmolty
+            call twh_ncmt(GLB_GET,ibox,imolty,localncmt(imolty))
+         enddo
          write(6,112) ibox,energy,boxvolume
-     &        ,press(ibox),(twh_get_ncmt(ibox,imolty),imolty=1,nmolty)
+     &        ,press(ibox),(localncmt(imolty),imolty=1,nmolty)
       enddo
  112  format(11x,'B:',i2,1x,e11.4,1x,e11.4,1x,f12.1,1x,NTMAX(i5))
       

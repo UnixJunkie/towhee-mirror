@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -62,13 +62,9 @@ c     *              does not get overwritten every time               *
 c     *           if rwflag is RW_READ then 'flag'is the atomcount     *
 c     *                                                                *
 c     * rewritten 04-13-2004 by M.G. Martin from writeconf & readtowhee*
-c     * last modified 01-16-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_NCMT
-#define FUNCTION_GET_RMVOL
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer nchain,rwflag,ncycle,flag,nmolty,numboxes,nboxpair,nvmmax
@@ -85,17 +81,20 @@ c     --- integer scalars
       integer ivalue,jvalue,nunit,nchbox,ncmt
       integer globalpos,itemp,ensemble,rng_code
       integer input_code,ivolmove,ipair
-      integer ivolstart,ivolend
+      integer ivolstart,ivolend,testboxi
 c     --- integer arrays
       integer nu_temp
       dimension nu_temp(nmolty)
       integer tempstore
       dimension tempstore(nchain)
+      integer localncmt
+      dimension localncmt(MAXBOX)
 c     --- 32-bit integer arrays
       integer*4 nrng, irng
       dimension irng(1600)
 c     --- double precision scalars
       double precision xtemp,ytemp,ztemp,rmtraa,rmtrac,rmrot,boxvolume
+      double precision rmvol
 c     --- double precision arrays
       double precision dtemp
       dimension dtemp(nvmmax)
@@ -324,7 +323,7 @@ c     --- volume moves maximum displacements
       if ( rwflag .eq. WRITE_FLAG ) then
 c        --- output isotropic volume move maximum displacements
          do ivolmove = 1,nvmmax
-            dtemp(ivolmove) = twh_get_rmvol(ivolmove)
+            call twh_rmvol(GLB_GET,ivolmove,dtemp(ivolmove))
          enddo
          write(8,*) (dtemp(ivolmove),ivolmove=1,nvmmax)
       else
@@ -371,15 +370,16 @@ c        --- output new maximum displacements
          write(6,'(a54)') 
      &        'Max displacement for single box isotropic volume moves'
          do ivolmove = 1,numboxes
+            call twh_rmvol(GLB_GET,ivolmove,rmvol)
             write(6,'(1x,a4,1x,i2,1x,a11,1x,e12.4)')
-     &           'Box:',ivolmove,'rmvol(box):',twh_get_rmvol(ivolmove)
+     &           'Box:',ivolmove,'rmvol(box):',rmvol
          enddo
          write(6,'(a53)') 
      &        'Max displacement for box pairs isotropic volume moves'
          do ivolmove = numboxes+1,numboxes+nboxpair
+            call twh_rmvol(GLB_GET,ivolmove,rmvol)
             write(6,'(1x,a5,1x,i2,1x,a11,1x,e12.4)')
-     &           'Pair:',ivolmove-numboxes
-     &           ,'rmvol(box):',twh_get_rmvol(ivolmove)
+     &           'Pair:',ivolmove-numboxes,'rmvol(box):',rmvol
          enddo
       endif
 
@@ -621,7 +621,8 @@ c     --- molecule type for each chain in the data structure
 c        --- only want to output the non-ideal box moltyp values
          itest = 0
          do ichain = 1,nchain
-            if ( twh_get_nboxi(ichain) .ne. 0 ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .ne. 0 ) then
                itest = itest + 1
                call twh_moltyp(GLB_GET,ichain,tempstore(itest))
             endif
@@ -710,8 +711,10 @@ c              --- place any surplus molecules into ideal box 0
 c              --- testing for non uvt ensembles then it must match
                write(6,*) 'RWCONF: Particle type # inconsistency'
                write(6,*) 'type',imolty
-               write(6,*) 'ncmt'
-     &              ,(twh_get_ncmt(ibox,imolty),ibox=1,numboxes)
+               do ibox=1,numboxes
+                  call twh_ncmt(GLB_GET,ibox,imolty,localncmt(ibox))
+               enddo
+               write(6,*) 'ncmt',(localncmt(ibox),ibox=1,numboxes)
                write(6,*) 'nmolectyp',nmtype
                lfailure = .true.
                return
@@ -754,7 +757,8 @@ c     --- coordinates
       if ( rwflag .eq. WRITE_FLAG ) then 
          do ichain = 1, nchain
 c           --- only output the non-ideal coordinates
-            if ( twh_get_nboxi(ichain) .ne. 0 ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .ne. 0 ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,nunit)
                do iunit = 1, nunit

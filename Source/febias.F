@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -39,7 +39,7 @@ c     *         *cord(2) is iuother                                    *
 c     *         *cord(3) is iufrom                                     *
 c     *                                                                *
 c     * originally written 01-23-2001 by M.G. Martin                   *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -47,21 +47,6 @@ c     ******************************************************************
 #define FUNCTION_EXPON
 #define FUNCTION_FEBIAS
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_IBTBEN1
-#define FUNCTION_GET_IBTBEN2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_ITVIB
-#define FUNCTION_GET_VIBCOEFF
 #define FUNCTION_VANGLE
 #define FUNCTION_VBOND
 #define FUNCTION_VTORSION
@@ -83,6 +68,8 @@ c     --- character string scalars
 c     --- integer scalars
       integer iuother,btone,bttwo,junit,kunit,iunext,iuthree
       integer goodind,ivib,ibend,iumiss,icord,iphi,torind,itor,itemp
+      integer ijben2test,ijben3test,ijtor2test,ijtor3test,ijtor4test
+      integer ijvibtest,inbend,intorsion,invibration,itvibtest
 c     --- double precision scalars
       double precision lenone,lentwo,thetac,scale,theta
       double precision rxuij,ryuij,rzuij,length,dvalue
@@ -133,13 +120,13 @@ c           --- nothing to be done, return with the default bias
      &           .eq. 'analytic Boltzmann using angles' ) then
 c           --- this is an angle bias based on the angle energy given 
 c           --- the equilibrium bond lengths
-            btone = twh_get_ibtben1(imolty,iunit,index)
-            bttwo = twh_get_ibtben2(imolty,iunit,index)
-            lenone = twh_get_vibcoeff(btone,0)
-            lentwo = twh_get_vibcoeff(bttwo,0)
+            call twh_ibtben1(GLB_GET,imolty,iunit,index,btone)
+            call twh_ibtben2(GLB_GET,imolty,iunit,index,bttwo)
+            call twh_vibcoeff(GLB_GET,btone,0,lenone)
+            call twh_vibcoeff(GLB_GET,bttwo,0,lentwo)
 c           --- get the atom types for the rest of the angle
-            junit = twh_get_ijben2(imolty,iunit,index)
-            kunit = twh_get_ijben3(imolty,iunit,index)
+            call twh_ijben2(GLB_GET,imolty,iunit,index,junit)
+            call twh_ijben3(GLB_GET,imolty,iunit,index,kunit)
 c           --- compute the iunit-iuother length from the cords
             call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
      &           ,xcord(1),ycord(1),zcord(1),rxuij,ryuij,rzuij)
@@ -185,17 +172,17 @@ c           --- we have one missing atom between the one we are growing
 c           --- and our target.  
 c           --- M.D. Rintoul helped out with this function
 c           --- set the unit numbers, iunit and iufrom are already set
-            iumiss = twh_get_ijben2(imolty,iunit,index)
-            iuother = twh_get_ijben3(imolty,iunit,index)
+            call twh_ijben2(GLB_GET,imolty,iunit,index,iumiss)
+            call twh_ijben3(GLB_GET,imolty,iunit,index,iuother)
 c           --- compute the "a_len" ( |iunit-ifrom| )
             a_len = dsqrt((xcord(1)-xcord(3))**2 
      &           + (ycord(1)-ycord(3))**2 + (zcord(1)-zcord(3))**2)
 c           --- set "b_len" to the equilibrium iunit-missing bond length
-            btone = twh_get_ibtben1(imolty,iunit,index)
-            b_len = twh_get_vibcoeff(btone,0)
+            call twh_ibtben1(GLB_GET,imolty,iunit,index,btone)
+            call twh_vibcoeff(GLB_GET,btone,0,b_len)
 c           --- set "c_len" to the equil. missing-iother bond length
-            bttwo = twh_get_ibtben2(imolty,iunit,index)
-            c_len = twh_get_vibcoeff(bttwo,0)
+            call twh_ibtben2(GLB_GET,imolty,iunit,index,bttwo)
+            call twh_vibcoeff(GLB_GET,bttwo,0,c_len)
 
 c           --- safety check that a reasonable solution is possible by
 c           --- comparing iunit-iuother distance with b_len and c_len
@@ -217,15 +204,16 @@ c           --- set up the "gamma" vector (iother-iufrom)
 c           --- set theta to the equilibrium ifrom--iunit--missing angle
             lfound = .false.
             ibend = 0
-            do while ( ibend .lt. twh_get_inben(imolty,iufrom) 
-     &           .and. (.not. lfound) )
+            call twh_inben(GLB_GET,imolty,iufrom,inbend)
+            do while ( ibend .lt. inbend .and. (.not. lfound) )
                ibend = ibend + 1
-               if ( twh_get_ijben2(imolty,iufrom,ibend) .eq. iunit .and.
-     &              twh_get_ijben3(imolty,iufrom,ibend) .eq. iumiss 
+               call twh_ijben2(GLB_GET,imolty,iufrom,ibend,ijben2test)
+               call twh_ijben3(GLB_GET,imolty,iufrom,ibend,ijben3test)
+               if ( ijben2test .eq. iunit .and. ijben3test .eq. iumiss 
      &              ) then
                   lfound = .true.
-                  itemp = twh_get_itben(imolty,iufrom,ibend)
-                  theta = twh_get_bencoeff(itemp,0)
+                  call twh_itben(GLB_GET,imolty,iufrom,ibend,itemp)
+                  call twh_bencoeff(GLB_GET,itemp,0,theta)
                endif
             enddo
             if ( .not. lfound ) then
@@ -297,11 +285,14 @@ c           --- store the iufrom-iunit,imiss-iother torsion atoms
             yttmp(4) = gvect(2)
             zttmp(4) = gvect(3)
 c           --- compute the index for this torsion
-            do itor = 1,twh_get_intor(imolty,iufrom)
-               if ( twh_get_ijtor2(imolty,iufrom,itor) .eq. iunit .and.
-     &              twh_get_ijtor3(imolty,iufrom,itor) .eq. iumiss .and.
-     &              twh_get_ijtor4(imolty,iufrom,itor) .eq. iuother 
-     &              ) then
+            call twh_intor(GLB_GET,imolty,iufrom,intorsion)
+            do itor = 1,intorsion
+               call twh_ijtor2(GLB_GET,imolty,iufrom,itor,ijtor2test)
+               call twh_ijtor3(GLB_GET,imolty,iufrom,itor,ijtor3test)
+               call twh_ijtor4(GLB_GET,imolty,iufrom,itor,ijtor4test)
+               if ( ijtor2test .eq. iunit .and.
+     &              ijtor3test .eq. iumiss .and.
+     &              ijtor4test .eq. iuother ) then
                   torind = itor
                endif
             enddo
@@ -371,9 +362,9 @@ c           --- nothing to do here
      &           'autofit gaussian using max and min 2-4 distance'
      &           ) then
 c           --- find the rest of the atoms in the biasing torsion
-            iunext = twh_get_ijtor2(imolty,iunit,index)
-            iuthree = twh_get_ijtor3(imolty,iunit,index)
-            iuother = twh_get_ijtor4(imolty,iunit,index)
+            call twh_ijtor2(GLB_GET,imolty,iunit,index,iunext)
+            call twh_ijtor3(GLB_GET,imolty,iunit,index,iuthree)
+            call twh_ijtor4(GLB_GET,imolty,iunit,index,iuother)
 c           --- get all the lengths we will need
 c           --- botlen is the iuother - iufrom distance
             call twh_mimage(bxdflag,ibox,xcord(2),ycord(2),zcord(2)
@@ -389,10 +380,12 @@ c           --- prelen is the iunit - iufrom distance
             prelen = twh_distance(rxuij,ryuij,rzuij)
 c           --- nexlen is the equilibrium bond length between 
 c           --- iunit-iunext
-            do ivib = 1,twh_get_invib(imolty,iunit)
-               if ( twh_get_ijvib(imolty,iunit,ivib) .eq. iunext ) then
-                  nexlen = twh_get_vibcoeff(
-     &                 twh_get_itvib(imolty,iunit,ivib),0)
+            call twh_invib(GLB_GET,imolty,iunit,invibration)
+            do ivib = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+               if ( ijvibtest .eq. iunext ) then
+                  call twh_itvib(GLB_GET,imolty,iunit,ivib,itvibtest)
+                  call twh_vibcoeff(GLB_GET,itvibtest,0,nexlen)
                   goto 10
                endif
             enddo
@@ -401,12 +394,14 @@ c           --- iunit-iunext
             return
  10         continue
 c           --- find the iufrom-iunit,iunext angle 
-            do ibend = 1,twh_get_inben(imolty,iufrom)
-               if ( twh_get_ijben2(imolty,iufrom,ibend) .eq. iunit .and.
-     &              twh_get_ijben3(imolty,iufrom,ibend) .eq. iunext 
+            call twh_inben(GLB_GET,imolty,iufrom,inbend)
+            do ibend = 1,inbend
+               call twh_ijben2(GLB_GET,imolty,iufrom,ibend,ijben2test)
+               call twh_ijben3(GLB_GET,imolty,iufrom,ibend,ijben3test)
+               if ( ijben2test .eq. iunit .and. ijben3test .eq. iunext 
      &              ) then
-                  itemp = twh_get_itben(imolty,iufrom,ibend)
-                  bigang = twh_get_bencoeff(itemp,0)
+                  call twh_itben(GLB_GET,imolty,iufrom,ibend,itemp)
+                  call twh_bencoeff(GLB_GET,itemp,0,bigang)
                   goto 20
                endif
             enddo
@@ -437,11 +432,12 @@ c           --- law of cosines
 
 c           --- want to bias using the iunext-iuthree-iuother angle
 c           --- potential
-            do ibend = 1,twh_get_inben(imolty,iunext)
-               if ( twh_get_ijben2(imolty,iunext,ibend) .eq. iuthree
-     &              .and.
-     &              twh_get_ijben3(imolty,iunext,ibend) .eq. iuother
-     &              ) then
+            call twh_inben(GLB_GET,imolty,iunext,inbend)
+            do ibend = 1,inbend
+               call twh_ijben2(GLB_GET,imolty,iunext,ibend,ijben2test)
+               call twh_ijben3(GLB_GET,imolty,iunext,ibend,ijben3test)
+               if ( ijben2test .eq. iuthree .and.
+     &              ijben3test .eq. iuother ) then
                   goodind = ibend
                   goto 30
                endif
@@ -455,13 +451,13 @@ c           --- now we are finally to the part where we do the biasing
             if ( threebbias_style .eq. 
      &           'analytic using max and min 2-4 distance' ) then
 c              --- compute equilibrium bond lengths for this angle
-               btone = twh_get_ibtben1(imolty,iunext,goodind)
-               bttwo = twh_get_ibtben2(imolty,iunext,goodind)
-               lenone = twh_get_vibcoeff(btone,0)
-               lentwo = twh_get_vibcoeff(bttwo,0)
+               call twh_ibtben1(GLB_GET,imolty,iunext,goodind,btone)
+               call twh_ibtben2(GLB_GET,imolty,iunext,goodind,bttwo)
+               call twh_vibcoeff(GLB_GET,btone,0,lenone)
+               call twh_vibcoeff(GLB_GET,bttwo,0,lentwo)
 c              --- get the equilibrium angle
-               itemp = twh_get_itben(imolty,iunext,goodind)
-               eqangle = twh_get_bencoeff(itemp,0)
+               call twh_itben(GLB_GET,imolty,iunext,goodind,itemp)
+               call twh_bencoeff(GLB_GET,itemp,0,eqangle)
 c              --- compute the equilibrium length from law of cosine
                eqlength = dsqrt( lenone*lenone + lentwo*lentwo 
      &              - 2.0d0*lenone*lentwo*dcos(eqangle) )

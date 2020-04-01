@@ -28,57 +28,63 @@ c     * Note: UFF is a bit unusual in that it transforms its basic     *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-01-2004 by M.G. Martin                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_BONDPATT
-#define FUNCTION_GET_CANAME
-#define FUNCTION_GET_CBNAME
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_CTNAME
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
+c     --- local logical scalars
       logical lfound,lgsixj,lgsixk
+c     --- local character string scalars
       character*1 lettera,letterb,letterc,letterj,letterk
+      character*(ELENAMLEN) elename
       character*(FFNAMELEN) code,ffname
-      integer nvslocal,nbslocal,ntslocal,icoeff
+      character*2 elelocal 
+      character*(BONPATLEN) bplocal
+      character*(BONPATLEN) bondpatti,bondpattj,bondpattk
+      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
+      character*(FFNAMELEN) cbnamei,cbnamej,ctnamej,ctnamek
       character*(FFNAMELEN) vnlocal
+      character*(CLAPOTLEN) cplocal
+c     --- local character string arrays
       dimension vnlocal(MAXSAMEV,MAXVNAME) 
       character*(FFNAMELEN) bnlocal 
       dimension bnlocal(MAXSAMEB,MAXBNAME)
       character*(FFNAMELEN) tnlocal
       dimension tnlocal(MAXSAMET,MAXTNAME)
-      double precision vclocal
-      dimension vclocal(MINVIBCOEFF:MAXVIBCOEFF)
+      character*(FFNAMELEN) ninlocal 
+      dimension ninlocal(MAXSAMEIMP,MAXIMPNAME)
+c     --- local integer scalars
       integer ii,jj,kk,cc,isame,index
       integer type,itype,jtype,ctype,ktype
+      integer nvslocal,nbslocal,ntslocal,icoeff
+c     --- local double precision scalars
       double precision sixroottwo,bondorder,lamda,ri,rj,rbo,ren
       double precision theta,vj,vk,phi
+      double precision masslocal,onepi
+      double precision nbc_7_ii,nbc_8_ii,nbc_9_ii,nbc_ii,nbc_jj,nbc_kk
+c     --- local double precision arrays
+      double precision vclocal
+      dimension vclocal(MINVIBCOEFF:MAXVIBCOEFF)
       double precision bclocal
       dimension bclocal(MINBENDCOEFF:MAXBENDCOEFF)
       double precision tclocal
       dimension tclocal(MINTORCOEFF:MAXTORCOEFF)
       double precision nbclocal
       dimension nbclocal(MINNBCOEFF:MAXNBCOEFF)
-      double precision masslocal
-      character*2 elelocal 
-      character*5 bplocal
-      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
       double precision iclocal
       dimension iclocal(MINIMPCOEFF:MAXIMPCOEFF)
       integer nislocal 
-      character*(FFNAMELEN) ninlocal 
-      dimension ninlocal(MAXSAMEIMP,MAXIMPNAME)
-      double precision onepi
 
       ffname = 'UFF'
-      call twh_classical_potential(GLB_SET,'UFF 12-6')
+c     --- in theory this flag could be set for the exp-6 as well
+c     --- but that has not been tested
+      cplocal = 'UFF 12-6'
+      call twh_classical_potential(GLB_SET,cplocal)
       call twh_classical_mixrule(GLB_SET,'Geometric')
 c     --- initialize types
       type = 0
@@ -3283,11 +3289,13 @@ c     ******************************************************************
       sixroottwo = 2.0d0**(1.0d0/6.0d0)
       do itype = 1,ntypes
          ii = twh_getnbtype(itype,itype)
-         if ( twh_get_classical_potential() .eq. 'UFF 12-6' ) then
+         if ( cplocal .eq. 'UFF 12-6' ) then
 c           --- convert from Xi units to sigma
-            nbclocal(1) = twh_get_nbcoeff(7,ii)/sixroottwo
+            call twh_nbcoeff(GLB_GET,7,ii,nbc_7_ii)
+            nbclocal(1) = nbc_7_ii/sixroottwo
 c           --- convert Di from kcal to kelvin
-            nbclocal(2) = twh_get_nbcoeff(8,ii)*CON_KCALTOK
+            call twh_nbcoeff(GLB_GET,8,ii,nbc_8_ii)
+            nbclocal(2) = nbc_8_ii*CON_KCALTOK
 c           --- UFF includes full VDW and coulombic interactions for 1-4
             nbclocal(3) = nbclocal(1)
             nbclocal(4) = nbclocal(2)
@@ -3296,19 +3304,18 @@ c           --- were already set above
             do icoeff = 1,4
                call twh_nbcoeff(GLB_SET,icoeff,ii,nbclocal(icoeff))
             enddo
-         elseif ( twh_get_classical_potential() 
-     &           .eq. 'UFF Exponential-6' ) then
+         elseif ( cplocal .eq. 'UFF Exponential-6' ) then
 c           --- assign the UFF C6 term and convert from kcal
-            nbclocal(1) = CON_KCALTOK*twh_get_nbcoeff(8,ii)
-     &           *(twh_get_nbcoeff(7,ii)**6)
-     &           *( twh_get_nbcoeff(9,ii)
-     &           / (twh_get_nbcoeff(9,ii)-6.0d0) )
+            call twh_nbcoeff(GLB_GET,7,ii,nbc_7_ii)
+            call twh_nbcoeff(GLB_GET,8,ii,nbc_8_ii)
+            call twh_nbcoeff(GLB_GET,9,ii,nbc_9_ii)
+            nbclocal(1) = CON_KCALTOK*nbc_8_ii*(nbc_7_ii**6)
+     &           *(nbc_9_ii/(nbc_9_ii-6.0d0) )
 c           --- assign the UFF A term (prefactor) convert from kcal
-            nbclocal(2) = CON_KCALTOK*twh_get_nbcoeff(8,ii)
-     &           *(6.0d0/(twh_get_nbcoeff(9,ii)-6.0d0))
-     &           *dexp(twh_get_nbcoeff(9,ii))
+            nbclocal(2) = CON_KCALTOK*nbc_8_ii
+     &           *(6.0d0/(nbc_9_ii-6.0d0))*dexp(nbc_9_ii)
 c           --- assign the UFF B term
-            nbclocal(3) = -twh_get_nbcoeff(9,ii)/twh_get_nbcoeff(7,ii)
+            nbclocal(3) = -nbc_9_ii/nbc_7_ii
 c           --- set manually so we do not overwrite the variables that
 c           --- were already set above
             do icoeff = 1,3
@@ -3316,7 +3323,7 @@ c           --- were already set above
             enddo
          else
             write(6,*) 'FFUFF: unknown classical_potential'
-            write(6,*) twh_get_classical_potential()
+            write(6,*) cplocal
             lfailure = .true.
             return
          endif
@@ -3336,12 +3343,13 @@ c     --- assign all of the bonds
          do jtype = itype,ntypes
             jj = twh_getnbtype(jtype,jtype)
 c           --- determine bond order
-            code = twh_get_cbname(itype)
+            call twh_cbname(GLB_GET,itype,code)
             lettera = code(3:3)
-            code = twh_get_cbname(jtype)
+            call twh_cbname(GLB_GET,jtype,code)
             letterb = code(3:3)
-            if ( twh_get_cbname(itype) .eq. 'C_R' .and. 
-     &           twh_get_cbname(jtype) .eq. 'N_R' ) then
+            call twh_cbname(GLB_GET,itype,cbnamei)
+            call twh_cbname(GLB_GET,jtype,cbnamej)
+            if ( cbnamei .eq. 'C_R' .and. cbnamej .eq. 'N_R' ) then
 c              --- special hack for C-N amide bond
                bondorder = 1.41d0
             elseif ( lettera .eq.'R' .and. letterb .eq. 'R' ) then
@@ -3363,29 +3371,28 @@ c           --- harmonic
             call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
 c           --- compute the equilibrium bond length
 c           --- store ri
-            ri = twh_get_nbcoeff(5,ii)
+            call twh_nbcoeff(GLB_GET,5,ii,ri)
 c           --- store rj
-            rj = twh_get_nbcoeff(5,jj)
+            call twh_nbcoeff(GLB_GET,5,jj,rj)
 c           --- calculate r_BO
             rbo = - lamda * ( ri + rj ) * dlog(bondorder)
 c           --- r_EN
-            ren = ri*rj
-     &           *(dsqrt(twh_get_nbcoeff(11,ii))
-     &           - dsqrt(twh_get_nbcoeff(11,jj)))**2
-     &           / (twh_get_nbcoeff(11,ii)*ri
-     &           + twh_get_nbcoeff(11,jj)*rj)
+            call twh_nbcoeff(GLB_GET,11,ii,nbc_ii)
+            call twh_nbcoeff(GLB_GET,11,jj,nbc_jj)
+            ren = ri*rj*(dsqrt(nbc_ii) - dsqrt(nbc_jj))**2
+     &           / (nbc_ii*ri + nbc_jj*rj)
             vclocal(0) = ri + rj + rbo - ren
 c           --- compute force constant
-            vclocal(1) = 
-     &            CON_KCALTOK*(0.5d0)*
-     &           (664.12d0)*twh_get_nbcoeff(10,ii)
-     &           *twh_get_nbcoeff(10,jj)/(vclocal(0)**3)
+            call twh_nbcoeff(GLB_GET,10,ii,nbc_ii)
+            call twh_nbcoeff(GLB_GET,10,jj,nbc_jj)
+            vclocal(1) = CON_KCALTOK*(0.5d0)*(664.12d0)*nbc_ii*nbc_jj
+     &           /(vclocal(0)**3)
 c           --- set the rest of the information for this vibration
             call twh_set_vibcoeffs(type,vclocal)
             call twh_vibff(GLB_SET,type,ffname)
             nvslocal = 1
-            vnlocal(1,1) = twh_get_cbname(itype)
-            vnlocal(1,2) = twh_get_cbname(jtype)
+            call twh_cbname(GLB_GET,itype,vnlocal(1,1))
+            call twh_cbname(GLB_GET,jtype,vnlocal(1,2))
             call twh_set_vibnames(type,nvslocal,vnlocal)
          enddo
       enddo
@@ -3403,7 +3410,7 @@ c     ******************************************************************
       do ctype = 1,ntypes
 c        --- determine whether this atom can be at the center of an
 c        --- angle via the 3rd character of the code
-         code = twh_get_caname(ctype)
+         call twh_caname(GLB_GET,ctype,code)
          letterc = code(3:3)
          cc = twh_getnbtype(ctype,ctype)
          if ( letterc .ne. ' ' ) then
@@ -3411,7 +3418,7 @@ c           --- viable angle center found, run through all combinations
 c           --- increment angle counter
             type = type + 1
 c           --- equilibrium bond angle depends only on center
-            bclocal(0) = twh_get_nbcoeff(6,cc)
+            call twh_nbcoeff(GLB_GET,6,cc,bclocal(0))
 c           --- determine type of interaction based on center
             if ( letterc .eq. '1' ) then
                call twh_anglestyle(GLB_SET,type,ANG_STYLE_FOURIER)
@@ -3448,7 +3455,7 @@ c           --- set lookup information about this angle
             call twh_bendff(GLB_SET,type,ffname)
             nbslocal = 1
             bnlocal(1,1) = 'wild'
-            bnlocal(1,2) = twh_get_caname(ctype)
+            call twh_caname(GLB_GET,ctype,bnlocal(1,2))
             bnlocal(1,3) = 'wild'
             call twh_set_bendnames(type,nbslocal,bnlocal)
          endif
@@ -3465,53 +3472,59 @@ c     ******************************************************************
       type = 0
 
       do jtype = 1,ntypes
-         code = twh_get_ctname(jtype)
+         call twh_ctname(GLB_GET,jtype,code)
          letterj = code(3:3)
          jj = twh_getnbtype(jtype,jtype)
 c        --- determine whether this is a group 6 sp3 atom
          lgsixj = .false.
-         if ( twh_get_elementname(jtype) .eq. ' O' .or.
-     &        twh_get_elementname(jtype) .eq. ' S' .or.
-     &        twh_get_elementname(jtype) .eq. 'Se' .or.
-     &        twh_get_elementname(jtype) .eq. 'Te' .or.
-     &        twh_get_elementname(jtype) .eq. 'Po' ) then
+         call twh_elementname(GLB_GET,jtype,elename)
+         if ( elename .eq. ' O' .or.
+     &        elename .eq. ' S' .or.
+     &        elename .eq. 'Se' .or.
+     &        elename .eq. 'Te' .or.
+     &        elename .eq. 'Po' ) then
             lgsixj = .true.
          endif
+         call twh_bondpatt(GLB_GET,jtype,bondpattj)
          do ktype = jtype,ntypes
-            code = twh_get_ctname(ktype)
+            call twh_ctname(GLB_GET,ktype,code)
             letterk = code(3:3)
             kk = twh_getnbtype(ktype,ktype)
 c           --- determine whether this is a group 6 sp3 atom
             lgsixk = .false.
-            if ( twh_get_elementname(ktype) .eq. ' O' .or.
-     &           twh_get_elementname(ktype) .eq. ' S' .or.
-     &           twh_get_elementname(ktype) .eq. 'Se' .or.
-     &           twh_get_elementname(ktype) .eq. 'Te' .or.
-     &           twh_get_elementname(ktype) .eq. 'Po' ) then
+            call twh_elementname(GLB_GET,ktype,elename)
+            if ( elename .eq. ' O' .or.
+     &           elename .eq. ' S' .or.
+     &           elename .eq. 'Se' .or.
+     &           elename .eq. 'Te' .or.
+     &           elename .eq. 'Po' ) then
                lgsixk = .true.
             endif
             lfound = .true.
-            if ( lgsixj .and. twh_get_bondpatt(jtype) .eq. 'sp3' .and. 
-     &           lgsixk .and. twh_get_bondpatt(ktype) .eq. 'sp3' ) then
+            call twh_bondpatt(GLB_GET,ktype,bondpattk)
+            if ( lgsixj .and. bondpattj .eq. 'sp3' .and. 
+     &           lgsixk .and. bondpattk .eq. 'sp3' ) then
 c              --- very special case of
 c              For a single bond involving a pair of group 6 sp3 atoms
                type = type + 1
                tclocal(3) = 2.0d0
                tclocal(2) = -1.0d0
-               if ( twh_get_elementname(jtype) .eq. ' O' ) then
+               call twh_elementname(GLB_GET,jtype,elename)
+               if ( elename .eq. ' O' ) then
                   vj = 2.0d0
                else
                   vj = 6.8d0
                endif
-               if ( twh_get_elementname(ktype) .eq. ' O' ) then
+               call twh_elementname(GLB_GET,ktype,elename)
+               if ( elename .eq. ' O' ) then
                   vk = 2.0d0
                else
                   vk = 6.8d0
                endif
                tclocal(1) = (0.5d0)*CON_KCALTOK*dsqrt(vj*vk)
-            elseif ( lgsixj .and. twh_get_bondpatt(jtype) .eq. 'sp3'
+            elseif ( lgsixj .and. bondpattj .eq. 'sp3'
      &              .and. .not. lgsixk 
-     &              .and. twh_get_bondpatt(ktype) .eq. 'sp2' ) then
+     &              .and. bondpattk .eq. 'sp2' ) then
 c              --- very special case of
 c              For a single bond involving a sp3 atom of the oxygen 
 c              column and an sp2 or resonant atom of another column
@@ -3519,32 +3532,33 @@ c              column and an sp2 or resonant atom of another column
                tclocal(3) = 2.0d0
                tclocal(2) = -1.0d0
                bondorder = 1.0d0
+               call twh_nbcoeff(GLB_GET,12,jj,nbc_jj)
+               call twh_nbcoeff(GLB_GET,12,kk,nbc_kk)
                tclocal(1) = (0.5d0)*CON_KCALTOK*(5.0d0)
-     &              *dsqrt(twh_get_nbcoeff(12,jj)
-     &              *twh_get_nbcoeff(12,kk))
+     &              *dsqrt(nbc_jj*nbc_kk)
      &              *(1.0d0 + (4.18d0)*dlog(bondorder))
-            elseif ( twh_get_bondpatt(jtype) .eq. 'sp3' .and. 
-     &           twh_get_bondpatt(ktype) .eq. 'sp3' ) then
+            elseif ( bondpattj .eq. 'sp3' .and. 
+     &           bondpattk .eq. 'sp3' ) then
 c              --- specific general case of
 c              (a) j = an sp3 center and k = an sp3 center
                type = type + 1
                tclocal(3) = 3.0d0
                tclocal(2) = -1.0d0
-               tclocal(1) = (0.5d0)*CON_KCALTOK
-     &              *dsqrt(twh_get_nbcoeff(12,jj)
-     &              *twh_get_nbcoeff(12,kk))
-            elseif ( (twh_get_bondpatt(jtype) .eq. 'sp3' .and. 
-     &              twh_get_bondpatt(ktype) .eq. 'sp2' ) .or. 
-     &              ( twh_get_bondpatt(jtype) .eq. 'sp2' .and. 
-     &              twh_get_bondpatt(ktype) .eq. 'sp3' ) ) then
+               call twh_nbcoeff(GLB_GET,12,jj,nbc_jj)
+               call twh_nbcoeff(GLB_GET,12,kk,nbc_kk)
+               tclocal(1) = (0.5d0)*CON_KCALTOK*dsqrt(nbc_jj*nbc_kk)
+            elseif ( (bondpattj .eq. 'sp3' .and. 
+     &              bondpattk .eq. 'sp2' ) .or. 
+     &              ( bondpattj .eq. 'sp2' .and. 
+     &              bondpattk .eq. 'sp3' ) ) then
 c              --- specific general case of
 c              (b) j = an sp2 center and k = an sp3 center
                type = type + 1
                tclocal(3) = 6.0d0
                tclocal(2) = 1.0d0
                tclocal(1) = (0.5d0)*CON_KCALTOK*(1.0d0)
-            elseif ( twh_get_bondpatt(jtype) .eq. 'sp2' .and.
-     &              twh_get_bondpatt(ktype) .eq. 'sp2' ) then
+            elseif ( bondpattj .eq. 'sp2' .and.
+     &              bondpattk .eq. 'sp2' ) then
 c              --- specific general case of
 c              (c) j = an sp2 center and k = and sp 2 center of variable
 c              bond order
@@ -3552,10 +3566,10 @@ c              bond order
                tclocal(3) = 2.0d0
                tclocal(2) = 1.0d0
 c              --- guess at the bond order
-               if ( (twh_get_ctname(jtype) .eq. 'C_R' 
-     &              .and. twh_get_ctname(ktype) .eq. 'N_R') .or.
-     &              (twh_get_ctname(jtype) .eq. 'N_R' 
-     &              .and. twh_get_ctname(ktype) .eq. 'C_R') ) then
+               call twh_ctname(GLB_GET,jtype,ctnamej)
+               call twh_ctname(GLB_GET,ktype,ctnamek)
+               if ( (ctnamej .eq. 'C_R' .and. ctnamek .eq. 'N_R') .or.
+     &              (ctnamej .eq. 'N_R' .and. ctnamek .eq. 'C_R') ) then
 c                 --- special bondorder
                   bondorder = 1.41d0
                elseif ( letterj .eq. 'R' .and. letterk .eq. 'R' ) then
@@ -3566,9 +3580,10 @@ c                 --- boldly assume the bond order is 2, not always true
 c                 --- but not sure what else to do
                   bondorder = 2.0d0
                endif
+               call twh_nbcoeff(GLB_GET,12,jj,nbc_jj)
+               call twh_nbcoeff(GLB_GET,12,kk,nbc_kk)
                tclocal(1) = (0.5d0)*CON_KCALTOK*(5.0d0)
-     &              *dsqrt(twh_get_nbcoeff(12,jj)
-     &              *twh_get_nbcoeff(12,kk))
+     &              *dsqrt(nbc_jj*nbc_kk)
      &              *(1.0d0 + (4.18d0)*dlog(bondorder))
             else
                lfound = .false.
@@ -3581,8 +3596,8 @@ c                 --- but not sure what else to do
                call twh_torff(GLB_SET,type,ffname)
                ntslocal = 1
                tnlocal(1,1) = 'wild'
-               tnlocal(1,2) = twh_get_ctname(jtype)
-               tnlocal(1,3) = twh_get_ctname(ktype)
+               call twh_ctname(GLB_GET,jtype,tnlocal(1,2))
+               call twh_ctname(GLB_GET,ktype,tnlocal(1,3))
                tnlocal(1,4) = 'wild'
                call twh_set_tornames(type,ntslocal,tnlocal)
             endif
@@ -3594,11 +3609,14 @@ c     --- sp2 - sp2 - sp3 - wild
 c     --- initialize isame to dummy value
       isame = MAXSAMET + 1
       do itype = 1,ntypes
-         if ( twh_get_bondpatt(itype) .eq. 'sp2' ) then
+         call twh_bondpatt(GLB_GET,itype,bondpatti)
+         if ( bondpatti.eq. 'sp2' ) then
             do jtype = 1,ntypes
-               if ( twh_get_bondpatt(jtype) .eq. 'sp2' ) then
+               call twh_bondpatt(GLB_GET,jtype,bondpattj)
+               if ( bondpattj.eq. 'sp2' ) then
                   do ktype = 1,ntypes
-                     if ( twh_get_bondpatt(ktype) .eq. 'sp3' ) then
+                     call twh_bondpatt(GLB_GET,ktype,bondpattk)
+                     if ( bondpattk .eq. 'sp3' ) then
 c                       --- decide whether to increment type or isame
                         if ( isame .ge. MAXSAMET ) then
                            type = type + 1
@@ -3615,9 +3633,9 @@ c                       V0 = 2.0 kcal/mol, n = 3, phi = 180
                         call twh_set_torcoeff(type,tclocal)
                         call twh_torff(GLB_SET,type,ffname)
                         isame = isame + 1
-                        tnlocal(isame,1) = twh_get_ctname(itype)
-                        tnlocal(isame,2) = twh_get_ctname(jtype)
-                        tnlocal(isame,3) = twh_get_ctname(ktype)
+                        call twh_ctname(GLB_GET,itype,tnlocal(isame,1))
+                        call twh_ctname(GLB_GET,jtype,tnlocal(isame,2))
+                        call twh_ctname(GLB_GET,ktype,tnlocal(isame,3))
                         tnlocal(isame,4) = 'wild'
 c                       --- set manually
                         call twh_ntsame(GLB_SET,type,isame)

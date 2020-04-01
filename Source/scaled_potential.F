@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -470,20 +470,17 @@ c     * ntypes is (I think...) the number of atom types we have; set   *
 c     *     by rwforcefield                                            *
 c     *                                                                *
 c     * originally written 04-25-2006 by MAW                           *
-c     * last update 12-22-2007 by M.G. Martin                          *
+c     * last update 03-29-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBFF
-#define FUNCTION_GET_NBNAME
-#include "functions.h"
-
 c     arguments passed to subroutine
       integer ntypes
 c     local variables
       logical lscale
       integer itype, ipair,nscale
       character*10 scaleone,scaletwo
-
+      character*(FFNAMELEN) testnbff,testnbname
+      
 c     --- Return early if scaled_npair not set; this may happen for
 c     --- different potentials, or if scp_set_scaled_atoms has not yet
 c     --- been called (the latter case being an error)
@@ -498,10 +495,10 @@ c             --- for this atom
             call twh_scaled_pair_list(GLB_GET,ipair,1,scaleone)
             call twh_scaled_pair_list(GLB_GET,ipair,2,scaletwo)
 c           --- check for matches
-            if ( scaleone .eq. twh_get_nbff(itype) 
-     &           .and.
-     &           scaletwo .eq. twh_get_nbname(itype)
-     &           ) then
+            call twh_nbff(GLB_GET,itype,testnbff)
+            call twh_nbname(GLB_GET,itype,testnbname)
+            if ( scaleone .eq. testnbff .and.
+     &           scaletwo .eq. testnbname ) then
                lscale = .true.
             endif
          enddo
@@ -664,10 +661,10 @@ c     ******************************************************************
 c     * returns true if the interactions between atoms ntii and ntjj   *
 c     * are to be scaled.                                              *
 c     * atom types given by, e.g.                                      *
-c     *      ntii = twh_get_ntype(imolty,iunit)                        *
+c     *      ntii is from twh_ntype(imolty,iunit,ntii)                 *
 c     *                                                                *
 c     * originally written 04-25-2006 by MAW                           *
-c     * last update 12-22-2007 by M.G. Martin                          *
+c     * last update 03-30-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine

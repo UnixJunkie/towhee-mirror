@@ -65,11 +65,10 @@ c     * it is returned, otherwise lfound is set to false and the move  *
 c     * will be rejected                                               *
 c     *                                                                *
 c     * originally written 09-13-2002 by M.G. Martin                   *
-c     * last modified 08-10-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_RANDOM
 #include "functions.h"
 c     --- debug toggle
@@ -84,8 +83,9 @@ c     --- variables passed to/from the subroutine
       double precision xtarget,ytarget,ztarget
       dimension xtarget(2),ytarget(2),ztarget(2)
 c     --- local variables
-      integer ngood,goodchain,itest,jtest,ktest,pointt,kchain
-      integer ncmti,ncmtj,numiunit,numjunit
+      integer ngood,itest,jtest,ktest,pointt,kchain
+      integer ncmti,ncmtj,numiunit,numjunit,testboxi,testboxj
+      integer goodchain
       dimension goodchain(nchain)
       double precision rxij,ryij,rzij,dist,xtemp,ytemp,ztemp,pmtest
       double precision testrad
@@ -119,9 +119,10 @@ c        --- safety checks
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(ichain) .ne. boxes(1) ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .ne. boxes(1) ) then
             write(6,*) 'FINDTARGET: ichain,boxes(1),nboxi(ichain)'
-     &           ,ichain,boxes(1),twh_get_nboxi(ichain)
+     &           ,ichain,boxes(1),testboxi
             lfailure = .true.
             return
          endif
@@ -142,9 +143,10 @@ c        --- safety checks
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(ichain) .ne. boxes(1) ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .ne. boxes(1) ) then
             write(6,*) 'FINDTARGET: ichain,boxes(1),nboxi(ichain)'
-     &           ,ichain,boxes(1),twh_get_nboxi(ichain)
+     &           ,ichain,boxes(1),testboxi
             lfailure = .true.
             return
          endif
@@ -232,9 +234,10 @@ c        --- safety checks
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(jchain) .ne. boxes(1) ) then
+         call twh_nboxi(GLB_GET,jchain,testboxj)
+         if ( testboxj .ne. boxes(1) ) then
             write(6,*) 'FINDTARGET: jchain,boxes(1),nboxi(jchain)'
-     &           ,jchain,boxes(1),twh_get_nboxi(jchain)
+     &           ,jchain,boxes(1),testboxj
             lfailure = .true.
             return
          endif
@@ -315,9 +318,10 @@ c        --- safety checks
             lfailure = .true.
             return
          endif
-         if ( twh_get_nboxi(jchain) .ne. boxes(1) ) then
+         call twh_nboxi(GLB_GET,jchain,testboxj)
+         if ( testboxj .ne. boxes(1) ) then
             write(6,*) 'FINDTARGET: jchain,boxes(1),nboxi(jchain)'
-     &           ,jchain,boxes(1),twh_get_nboxi(jchain)
+     &           ,jchain,boxes(1),testboxj
             lfailure = .true.
             return
          endif

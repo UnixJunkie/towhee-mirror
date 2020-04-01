@@ -72,11 +72,9 @@ c     * Error conditions:                                              *
 c     *   May exit early if overlap found (error may be printed)       *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 03-29-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lovrlap, lmolecmove,lmovelist,lreport,lbonded
       integer crdflag,bxdflag,ibox
@@ -88,7 +86,7 @@ c     --- local variables
 c     --- logical scalars
       logical lmadelung,ltailc,lelect,lewald
 c     --- integer scalars
-      integer ichain, nmcount, cutstyle,lambda
+      integer ichain, nmcount, cutstyle,lambda,testboxi
       integer classical_potnum,nchain,nchbox
       integer scp_num_foreign_lambda
 c     --- double precision scalars
@@ -147,7 +145,8 @@ c     ---  check the molecule count
       call twh_nchain(GLB_GET,nchain)
       nmcount = 0
       do ichain = 1, nchain
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             nmcount = nmcount + 1
          endif
       enddo
@@ -282,10 +281,9 @@ c     *   May halt program                                             *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -301,6 +299,7 @@ c     --- logical scalars
 c     --- integer scalars
       integer ichain,imolty,jchain,jmolty,ii,ntii,jj,ntjj,l,nchain
       integer numiunit,numjunit,scp_num_foreign_lambda
+      integer testboxi,testboxj
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision xcmi,ycmi,zcmi,rcmi,rcm,rcmsq,rijsq,rij,dvdl
@@ -335,7 +334,8 @@ c     --- loop over all chains i
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1, nchain - 1
 c        --- check if i is in relevant box
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_nunit(GLB_GET,imolty,numiunit)
             if ( lmolecmove ) then
@@ -345,7 +345,8 @@ c        --- check if i is in relevant box
 c           --- loop over all chains j with j>i 
             do jchain = ichain + 1, nchain
 c              --- check for simulation box
-               if ( twh_get_nboxi(jchain) .eq. ibox ) then
+               call twh_nboxi(GLB_GET,jchain,testboxj)
+               if ( testboxj .eq. ibox ) then
                   call twh_moltyp(GLB_GET,jchain,jmolty)
                   call twh_nunit(GLB_GET,jmolty,numjunit)
                   lcompute = .true.
@@ -520,11 +521,10 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_VTHREEBODY
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -533,7 +533,7 @@ c     --- variables passed to/from the subroutine
       integer crdflag,bxdflag,ibox
 c     --- local variables
       integer ichain,imolty,ntii,jchain,jmolty,ntjj,kchain,kmolty,ntkk
-      integer nchain
+      integer nchain,testboxi,testboxj,testboxk
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision rxuk,ryuk,rzuk,rij,bij,duma,thetac
       double precision rxujk,ryujk,rzujk,bjk,rjk
@@ -545,14 +545,15 @@ c     --- stillinger-weber three body potential
 c     --- this only works for chains that are monatomic 
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1,nchain
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_ntype(GLB_GET,imolty,1,ntii)
             call twh_coordinates(GLB_GET,crdflag,ichain,1
      &           ,rxui,ryui,rzui)
             do jchain = 1,nchain
-               if ( twh_get_nboxi(jchain) .eq. ibox 
-     &              .and. ichain .ne. jchain) then
+               call twh_nboxi(GLB_GET,jchain,testboxj)
+               if ( testboxj .eq. ibox .and. ichain .ne. jchain) then
                   call twh_moltyp(GLB_GET,jchain,jmolty)
                   call twh_ntype(GLB_GET,jmolty,1,ntjj)
                   call twh_coordinates(GLB_GET,crdflag,jchain,1
@@ -566,7 +567,8 @@ c                    --- compute i-j bond order
                   if ( lfailure ) return
                   if ( .not. lzero ) then
                      do kchain = 1,nchain
-                        if ( twh_get_nboxi(kchain) .eq. ibox 
+                        call twh_nboxi(GLB_GET,kchain,testboxk)
+                        if ( testboxk .eq. ibox 
      &                       .and. ichain .lt. kchain 
      &                       .and. jchain .ne. kchain ) then
                            call twh_moltyp(GLB_GET,kchain,kmolty)
@@ -620,11 +622,10 @@ c     * Error conditions:                                              *
 c     *   May halt program                                             *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_VEMBED
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -634,6 +635,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical lzero
       integer ichain,imolty,ntii,jchain,jmolty,ntjj,nchain
+      integer testboxi,testboxj
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision rij,bij,bji,density
 
@@ -643,7 +645,8 @@ c     --- Embedded atom potential
 c     --- reinitialize all the local densities to zero
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1,nchain
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_eam_rho(GLB_SET,crdflag,ichain,0.0d0)
          endif
       enddo
@@ -651,14 +654,15 @@ c     --- reinitialize all the local densities to zero
 c        --- need to compute local densities for each atom and then
 c        --- use that information to compute the embedding energy
       do ichain = 1,nchain-1
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_ntype(GLB_GET,imolty,1,ntii)
             call twh_coordinates(GLB_GET,crdflag,ichain,1
      &           ,rxui,ryui,rzui)
             do jchain = ichain+1,nchain
-               if ( twh_get_nboxi(jchain) .eq. ibox 
-     &              .and. ichain .ne. jchain) then
+               call twh_nboxi(GLB_GET,jchain,testboxj)
+               if ( testboxj .eq. ibox .and. ichain .ne. jchain) then
                   call twh_moltyp(GLB_GET,jchain,jmolty)
                   call twh_ntype(GLB_GET,jmolty,1,ntjj)
                   call twh_coordinates(GLB_GET,crdflag,jchain,1
@@ -683,7 +687,8 @@ c                    --- compute i-j bond density
       enddo
 c        --- add up the embedding energy
       do ichain = 1,nchain
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_ntype(GLB_GET,imolty,1,ntii)
             call twh_eam_rho(GLB_GET,crdflag,ichain,density)
@@ -724,13 +729,12 @@ c     * Error conditions:                                              *
 c     *  none                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-12-2005 by MAW                 *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_EWALD_CORRECT
 #define FUNCTION_EWALD_SELF
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_LINCLUDE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -738,7 +742,7 @@ c     --- variables passed to/from the subroutine
       integer crdflag,bxdflag,ibox
       double precision vrecipsum, sself, correct
 c     --- local variables
-      integer ichain,imolty,ii,jj,nchain,numiunit
+      integer ichain,imolty,ii,jj,nchain,numiunit,testboxi
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision rij
 
@@ -750,7 +754,8 @@ c     --- local variables
 c        --- update self terms and correction terms
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1,nchain
-         if ( twh_get_nboxi(ichain) .eq. ibox) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_nunit(GLB_GET,imolty,numiunit)
             do ii = 1,numiunit
@@ -806,12 +811,10 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_LINCLUDE
-#define FUNCTION_ONEFIVETYPE
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
 #include "functions.h"
@@ -822,6 +825,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical lcompute,lmoveme,lelect
       integer ichain,imolty,ii,ntii,jj,ntjj,ioftype,nchain,nunit
+      integer testboxi
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision rijsq,rij,dvdl,rminsq,vcoulomb
 c     --- foreign energies ignored for intramolecular evaluations
@@ -838,7 +842,8 @@ c     --- loop over all chains
       call twh_nchain(GLB_GET,nchain)
       do ichain = 1, nchain
 c        --- check if i is in relevant box
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             if ( lmovelist ) then
                call twh_lmoveme(GLB_GET,ichain,lmoveme)
                if ( lmoveme ) then
@@ -867,7 +872,7 @@ c        --- check if i is in relevant box
                         rijsq = rxuij*rxuij + ryuij*ryuij 
      &                       + rzuij*rzuij
 c                       --- get one-five type
-                        ioftype = twh_onefivetype(imolty,ii,jj)
+                        call twh_onefivetype(imolty,ii,jj,ioftype)
                         if ( ioftype .eq. 0 ) then
 c                          --- compute nonbond intramolecular energy
                            vintra = vintra + twh_vtwobody(lfailure,rijsq
@@ -946,30 +951,10 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJBNBN1
-#define FUNCTION_GET_IJBNBN2
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INBNBN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_VANGANG
 #define FUNCTION_VANGLE
 #define FUNCTION_VBONBON
@@ -983,11 +968,17 @@ c     --- variables passed to/from the subroutine
       integer crdflag,bxdflag,ibox
 c     --- local variables
       logical lbadstereo
-      integer ichain,imolty,ii,jjvib,ip1,ip2,it,jjben,ttype,ibead,iitor
-      integer nchain,nunit
+c     --- integer scalars
+      integer ichain,imolty,ii,jjvib,ip1,ip2,it,jjben,ibead,iitor
+      integer nchain,nunit,inaa,inbend,inbondbond,inimproper,intorsion
+      integer invibration,testboxi
+c     --- integer arrays
+      integer ttype
       dimension ttype(4)
+c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rxuij,ryuij,rzuij
       double precision dist,duma,dumb,dumc
+c     --- double precision arrays
       double precision xtmp,ytmp,ztmp,length,angle
       dimension xtmp(4),ytmp(4),ztmp(4),length(4),angle(2)
 
@@ -1002,7 +993,8 @@ c     --- local variables
          call twh_moltyp(GLB_GET,ichain,imolty)
          call twh_nunit(GLB_GET,imolty,nunit)
 c        --- check if i is in relevant box
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
 c              --- calculate all bonds vectors and lengths
 c              --- calculate all stretching, bending, and torsional 
 c              --- potentials that have an end-bead with an index less
@@ -1011,7 +1003,8 @@ c              --- bond vibrations
             do ii = 2, nunit
                call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &              ,rxui,ryui,rzui)
-               do jjvib = 1, twh_get_invib(imolty,ii)
+               call twh_invib(GLB_GET,imolty,ii,invibration)
+               do jjvib = 1,invibration
                   call twh_ijvib(GLB_GET,imolty,ii,jjvib,ip1)
                   call twh_itvib(GLB_GET,imolty,ii,jjvib,it)
 c                    --- increment vibrational energy
@@ -1044,10 +1037,11 @@ c           --- molecule with bending angles
             do ii = 2, nunit
                call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                 ,xtmp(1),ytmp(1),ztmp(1))
-               do jjben = 1, twh_get_inben(imolty,ii)
-                  ip2 = twh_get_ijben3(imolty,ii,jjben)
+               call twh_inben(GLB_GET,imolty,ii,inbend)
+               do jjben = 1, inbend
+                  call twh_ijben3(GLB_GET,imolty,ii,jjben,ip2)
                   if ( ip2 .lt. ii ) then
-                     ip1 = twh_get_ijben2(imolty,ii,jjben)
+                     call twh_ijben2(GLB_GET,imolty,ii,jjben,ip1)
 c                       --- store the coordinates
                      call twh_coordinates(GLB_GET,crdflag,ichain,ip1
      &                       ,xtmp(2),ytmp(2),ztmp(2))
@@ -1070,12 +1064,13 @@ c                       --- store the coordinates
 
 c           --- bond bond cross terms
             do ii = 1,nunit
-               if ( twh_get_inbnbn(imolty,ii) .ne. 0 ) then
+               call twh_inbnbn(GLB_GET,imolty,ii,inbondbond)
+               if ( inbondbond .ne. 0 ) then
                   call twh_coordinates(GLB_GET,crdflag,ichain,ii
      &                 ,rxui,ryui,rzui)
-                  do jjben = 1,twh_get_inbnbn(imolty,ii)
-                     ip1 = twh_get_ijbnbn1(imolty,ii,jjben)
-                     ip2 = twh_get_ijbnbn2(imolty,ii,jjben)
+                  do jjben = 1,inbondbond
+                     call twh_ijbnbn1(GLB_GET,imolty,ii,jjben,ip1)
+                     call twh_ijbnbn2(GLB_GET,imolty,ii,jjben,ip2)
 c                    --- compute and store first bond length
                      call twh_coordinates(GLB_GET,crdflag,ichain,ip1
      &                    ,rxuj,ryuj,rzuj)
@@ -1099,12 +1094,13 @@ c           --- regular torsions
             do ii = 1, nunit-1
 c              --- store the charge on atom ii
                ttype(1) = ii
-               do iitor = 1, twh_get_intor(imolty,ii)
-                  ttype(4) = twh_get_ijtor4(imolty,ii,iitor)
+               call twh_intor(GLB_GET,imolty,ii,intorsion)
+               do iitor = 1,intorsion
+                  call twh_ijtor4(GLB_GET,imolty,ii,iitor,ttype(4))
                   if ( ttype(4) .gt. ii ) then
 c                    --- store unit numbers
-                     ttype(2) = twh_get_ijtor2(imolty,ii,iitor)
-                     ttype(3) = twh_get_ijtor3(imolty,ii,iitor)
+                     call twh_ijtor2(GLB_GET,imolty,ii,iitor,ttype(2))
+                     call twh_ijtor3(GLB_GET,imolty,ii,iitor,ttype(3))
 c                    --- store atom positions
                      do ibead = 1,4
                         call twh_coordinates(GLB_GET,crdflag,ichain
@@ -1128,10 +1124,11 @@ c                    --- add in the torsional energy
 c           --- angle angle cross terms
             do ii = 1,nunit
                ttype(1) = ii
-               do iitor = 1,twh_get_inaa(imolty,ii)
-                  ttype(2) = twh_get_ijaa0(imolty,ii,iitor)
-                  ttype(3) = twh_get_ijaa1(imolty,ii,iitor)
-                  ttype(4) = twh_get_ijaa2(imolty,ii,iitor)
+               call twh_inaa(GLB_GET,imolty,ii,inaa)
+               do iitor = 1,inaa
+                  call twh_ijaa0(GLB_GET,imolty,ii,iitor,ttype(2))
+                  call twh_ijaa1(GLB_GET,imolty,ii,iitor,ttype(3))
+                  call twh_ijaa2(GLB_GET,imolty,ii,iitor,ttype(4))
                   do ibead = 1,4
                      call twh_coordinates(GLB_GET,crdflag,ichain
      &                    ,ttype(ibead)
@@ -1149,10 +1146,11 @@ c           --- these are only stored on a single atom as they are
 c           --- not symmetrically defined
             do ii = 1,nunit
                ttype(1) = ii
-               do iitor = 1,twh_get_inimprop(imolty,ii)
-                  ttype(2) = twh_get_ijimprop2(imolty,ii,iitor)
-                  ttype(3) = twh_get_ijimprop3(imolty,ii,iitor)
-                  ttype(4) = twh_get_ijimprop4(imolty,ii,iitor)
+               call twh_inimprop(GLB_GET,imolty,ii,inimproper)
+               do iitor = 1,inimproper
+                  call twh_ijimprop2(GLB_GET,imolty,ii,iitor,ttype(2))
+                  call twh_ijimprop3(GLB_GET,imolty,ii,iitor,ttype(3))
+                  call twh_ijimprop4(GLB_GET,imolty,ii,iitor,ttype(4))
 c                    --- store the coordinates
                   do ibead = 1,4
                      call twh_coordinates(GLB_GET,crdflag,ichain
@@ -1194,10 +1192,9 @@ c     * Error conditions:                                              *
 c     *   May exit early (sets lovrlap=true)                           *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_VFIELD
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -1206,7 +1203,7 @@ c     --- variables passed to/from the subroutine
       integer bxdflag,crdflag,ibox
 c     --- local variables
       logical lcompute,lmoveme
-      integer ichain,imolty,ii,ntii,nchain,nunit,nfield
+      integer ichain,imolty,ii,ntii,nchain,nunit,nfield,testboxi
       double precision cord
       dimension cord(3)
 
@@ -1216,7 +1213,8 @@ c     --- local variables
       if ( nfield .ne. 0 ) then
          call twh_nchain(GLB_GET,nchain)
          do ichain = 1, nchain
-            if ( twh_get_nboxi(ichain) .eq. ibox ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .eq. ibox ) then
                if ( lmovelist ) then
                   call twh_lmoveme(GLB_GET,ichain,lmoveme)
                   if ( lmoveme ) then
@@ -1269,10 +1267,9 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_VEEFONE
 #define FUNCTION_VSASA
 #include "functions.h"
@@ -1281,7 +1278,7 @@ c     --- variables passed to/from the subroutine
       double precision vsolvation
       integer bxdflag,ibox
 c     --- local variables
-      integer ichain,imolty,totunit,isolvtype,nchain
+      integer ichain,imolty,totunit,isolvtype,nchain,testboxi
       double precision vnt
       integer crdflag,chaininfo
       dimension chaininfo(1,3)
@@ -1292,7 +1289,8 @@ c     --- local variables
       if ( isolvtype .eq. SOLV_SASA ) then
          call twh_nchain(GLB_GET,nchain)
          do ichain = 1, nchain  
-            if ( twh_get_nboxi(ichain) .eq. ibox ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .eq. ibox ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,totunit)
                vsolvation = vsolvation + twh_vsasa(ichain,bxdflag,ibox
@@ -1302,7 +1300,8 @@ c     --- local variables
       elseif( isolvtype .eq. SOLV_EEF1 ) then
          call twh_nchain(GLB_GET,nchain)
          do ichain = 1, nchain
-            if ( twh_get_nboxi(ichain) .eq. ibox ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .eq. ibox ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                call twh_nunit(GLB_GET,imolty,totunit)
                vsolvation = vsolvation + twh_veefone(ichain,bxdflag,ibox
@@ -1380,13 +1379,11 @@ c     * Error conditions:                                              *
 c     *  None                                                          *
 c     *                                                                *
 c     * split from original engtotal 08-11-2005 by MAW                 *
-c     * last modified 03-02-2020 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_FOREIGN_LAMBDA
-#define FUNCTION_GET_NCMT
 #include "functions.h"
-
 c     --- variables passed to/from the subroutine
       double precision vvib, vbondbond, vbend, vangleangle, vtg, vimpr  
       double precision vintra, vinter, vtwointer, vthrinter, velect  
@@ -1403,6 +1400,7 @@ c     --- logical scalars
       logical scp_eval_derivative,ltailc,lelect,lewald
 c     --- integer scalars
       integer imolty,classical_potnum,nmolty,scp_num_foreign_lambda
+      integer ncmt
 c     --- double precision scalars
       double precision qqfact,vreport,sumvdw,sumchg
 
@@ -1417,8 +1415,8 @@ c     --- retrieve constants
 
       write(6,'(a27,1x,i10)') 'Total molecules in this box', nmcount
       do imolty = 1, nmolty
-         write(6,8) 'Molecules of type',imolty,': '
-     &        ,twh_get_ncmt(ibox,imolty)
+         call twh_ncmt(GLB_GET,ibox,imolty,ncmt)
+         write(6,8) 'Molecules of type',imolty,': ',ncmt
  8       format(a17,1x,i3,1x,a2,i10)
       enddo
 
@@ -1559,8 +1557,9 @@ c        --- hack to print out the madelung constant
 c        --- only want to do this for a system of sodium chloride
       if ( lmadelung ) then
          call twh_constant_qqfact(GLB_GET,qqfact)
+         call twh_ncmt(GLB_GET,ibox,1,ncmt)
          write(6,'(1x,a,f15.10)') 'Madelung Constant [unitless]: '
-     &        ,(-velect*maddist)/(qqfact*dble(twh_get_ncmt(ibox,1)))
+     &        ,(-velect*maddist)/(qqfact*dble(ncmt))
       endif
       call twh_cp_number(GLB_GET,classical_potnum)
       if ( classical_potnum .eq. CP_EMBEDDED_ATOM_METHOD ) then
@@ -1578,14 +1577,12 @@ c     * handles the overlap error conditions and assigns the proper    *
 c     * degree of problem for an overlap that occurs in engtotal       *
 c     *                                                                *
 c     * split from eng_twobody 07-17-2006 by M.G. Martin               *
-c     * last modified 10-20-2008 by M.G. Martin                        *
+c     * last modified 03-20-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GETATOMNUM
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure,lmolecmove
-      integer ichain,ii,jchain,jj
+      integer ichain,ii,jchain,jj,ivalue,jvalue
       double precision rijsq,rxui,ryui,rzui,rxuj,ryuj,rzuj,rminsq
 
       if ( .not. lmolecmove ) then
@@ -1597,8 +1594,9 @@ c     --- variables passed to/from the subroutine
          write(6,*) 'i-pos', rxui,ryui,rzui
          write(6,*) 'jchain jj',jchain,jj
          write(6,*) 'j-pos',rxuj,ryuj,rzuj
-         write(6,*) 'getatompos',twh_getatomnum(ichain,ii)
-     &        ,twh_getatomnum(jchain,jj)
+         call twh_atomnum(GLB_GET,ichain,ii,ivalue)
+         call twh_atomnum(GLB_GET,jchain,jj,jvalue)
+         write(6,*) 'getatompos',ivalue,jvalue
          lfailure = .true.
          return
       endif

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -48,7 +48,7 @@ c     *  the calling routine.  Do not initialize in any of the vxx     *
 c     *  functions                                                     *
 c     *                                                                *
 c     * originally written prior to 1995                               *
-c     * last modified 09-06-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -57,19 +57,6 @@ c     ******************************************************************
 #define FUNCTION_DISTANCE
 #define FUNCTION_EXPON
 #define FUNCTION_DOTPRODUCT
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_CTNAME
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITTOR
-#define FUNCTION_GET_NTORLOOP
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_TORCOEFF
-#define FUNCTION_GET_TORSTRING
-#define FUNCTION_GET_TORSTYLE
-#define FUNCTION_GET_VIBCOEFF
 #define FUNCTION_VTORSION
 #define FUNCTION_VTWOBODY
 #include "functions.h"
@@ -82,10 +69,14 @@ c     --- variables passed to and from function
       dimension xcord(4),ycord(4),zcord(4)
 c     --- local logicals
       logical lclasstwo
+c     --- local character strings
+      character*(FFNAMELEN) testname,torstring
+      dimension testname(4),torstring(4)
 c     --- local integer scalars
-      integer itor,ntii,ntjj,bij,bjk,bkl,aijk,ajkl,i,torstyle
-      integer torffnum,itmp
+      integer itor,ntii,ntjj,bij,bjk,bkl,aijk,ajkl,torstyle,itest
+      integer torffnum,itmp,testtype,invib_two,invib_thr,torffraw
       integer abcord,ivec,unit_2,unit_3,unit_4,index,torofcode
+      integer ntorloop,icoeff
 c     --- local integer arrays
       integer atype,btype
       dimension btype(3)
@@ -99,6 +90,8 @@ c     --- local double precision scalars
       double precision xone,xtwo,yone,ytwo,zone,ztwo,cosshiftphi
       double precision totbond,dv,onepi,vonefour
       double precision vbontor,vangtor,vaator,vbb
+      double precision eqlen_bij,eqlen_bjk,eqlen_bkl
+      double precision eqang_ijk,eqang_jkl
 #if DEBUG_VTORSION
       double precision radtodeg
 #endif
@@ -111,7 +104,9 @@ c     --- local double precision arrays
       dimension angle(2)
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
-
+      double precision torcoeff
+      dimension torcoeff(MINTORCOEFF:MAXTORCOEFF)
+      
 c     --- initialize vtorsion
       twh_vtorsion = 0.0d0
       lclasstwo = .false.
@@ -122,14 +117,15 @@ c        --- just computing an angle and returning, set a dummy ff
          torffnum = 1
       elseif ( abcord .eq. 1 ) then
 c        --- regular torsion - use ittor
-         torffnum = abs(twh_get_ittor(imolty,unit_1,torind))
+         call twh_ittor(GLB_GET,imolty,unit_1,torind,torffraw)
+         torffnum = abs(torffraw)
       else
          write(6,*) 'invalid cordstyle in VTORSION',cordstyle
          lfailure = .true.
          return
       endif
 c     --- get the torsion style code
-      torstyle = twh_get_torstyle(torffnum)
+      call twh_torstyle(GLB_GET,torffnum,torstyle)
 #if DEBUG_VTORSION
       write(6,*) 'imolty,unit1,torind:',imolty,unit_1,torind
       call twh_constant_radtodeg(GLB_GET,radtodeg)
@@ -189,20 +185,23 @@ c        --- calculate cross products 3-4 x 2-3
 c        --- calculate dot product of cross products
          phic = -twh_dotproduct(xaa1,yaa1,zaa1,xaa2,yaa2,zaa2,daa1,daa2)
       endif
-
+c     --- retrieve all torcoeff values
+      do icoeff = MINTORCOEFF,MAXTORCOEFF
+         call twh_torcoeff(GLB_GET,torffnum,icoeff,torcoeff(icoeff))
+      enddo
       if ( torstyle .eq. TOR_STYLE_SIM_HARM ) then
 c        --- simple harmonic potential 
 c        --- used for TraPPE double bonds (cis vs trans) 
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,0)
-     &        *(phi-twh_get_torcoeff(torffnum,1))**2.0d0
+         twh_vtorsion = torcoeff(0)
+     &        *(phi-torcoeff(1))**2.0d0
       elseif ( torstyle .eq. TOR_STYLE_OPLS_COS  ) then
 c        --- OPLS style cosine series 
 c        --- used in the OPLS-AA force field
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)*(1.d0 + phic) +
-     &        twh_get_torcoeff(torffnum,2)*(1.d0 - dcos(2.0d0*phi)) +
-     &        twh_get_torcoeff(torffnum,3)*(1.d0 + dcos(3.0d0*phi))
+         twh_vtorsion = torcoeff(1)*(1.d0 + phic) +
+     &        torcoeff(2)*(1.d0 - dcos(2.0d0*phi)) +
+     &        torcoeff(3)*(1.d0 + dcos(3.0d0*phi))
 #if DEBUG_VTORSION
          write(6,*) 'phi,vtorsion:',phi*radtodeg
      &        ,twh_vtorsion/CON_KCALTOK
@@ -210,12 +209,13 @@ c        --- used in the OPLS-AA force field
       elseif ( torstyle .eq. TOR_STYLE_GCA_COS ) then
 c        --- Gromos/Charmm/Amber cosine potential
          phi = twh_arccos(phic)
-         do itor = 1,twh_get_ntorloop(torffnum)
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         do itor = 1,ntorloop
             index = 3*(itor-1)
             twh_vtorsion = twh_vtorsion 
-     &           + twh_get_torcoeff(torffnum,index+1)* 
-     &           ( 1.0d0 + dcos(twh_get_torcoeff(torffnum,index+2)*phi
-     &           - twh_get_torcoeff(torffnum,index+3))
+     &           + torcoeff(index+1)* 
+     &           ( 1.0d0 + dcos(torcoeff(index+2)*phi
+     &           - torcoeff(index+3))
      &           )
          enddo
       elseif ( torstyle .eq. TOR_STYLE_GCA_CUB ) then
@@ -224,20 +224,22 @@ c        --- plus a harmonic term that Charmm would traditionally call
 c        --- an improper torsion despite the fact that the bonding 
 c        --- pattern is actually that of a regular torsion
          phi = twh_arccos(phic)
-         do itor = 1,twh_get_ntorloop(torffnum)
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         do itor = 1,ntorloop
             index = 3*(itor-1)
             twh_vtorsion = twh_vtorsion 
-     &           + twh_get_torcoeff(torffnum,index+1)* 
-     &           ( 1.0d0 + dcos(twh_get_torcoeff(torffnum,index+2)*phi
-     &           - twh_get_torcoeff(torffnum,index+3))
+     &           + torcoeff(index+1)* 
+     &           ( 1.0d0 + dcos(torcoeff(index+2)*phi
+     &           - torcoeff(index+3))
      &           )
          enddo
 c        --- reset index
-         index = 3*twh_get_ntorloop(torffnum)
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         index = 3*ntorloop
 c        --- add in the harmonic term
          twh_vtorsion = twh_vtorsion 
-     &        + twh_get_torcoeff(torffnum,index+1)
-     &        *(phi-twh_get_torcoeff(torffnum,index+2))**2.0d0
+     &        + torcoeff(index+1)
+     &        *(phi-torcoeff(index+2))**2.0d0
 
       elseif ( torstyle .eq. TOR_STYLE_COMP_X_AD .or.
      &        torstyle .eq. TOR_STYLE_COMP_R_AD ) then
@@ -251,42 +253,46 @@ c        --- torstyle R does not include cross terms
          cos3phi = dcos(3.0d0*phi)
 
 c        --- simple torsion part
-         twh_vtorsion = twh_get_torcoeff(torffnum,0)*(1.0d0 - cosphi)
-     &        + twh_get_torcoeff(torffnum,1)*(1.0d0 - cos2phi)
-     &        + twh_get_torcoeff(torffnum,2)*(1.0d0 - cos3phi)
+         twh_vtorsion = torcoeff(0)*(1.0d0 - cosphi)
+     &        + torcoeff(1)*(1.0d0 - cos2phi)
+     &        + torcoeff(2)*(1.0d0 - cos3phi)
 
          if ( torstyle .eq. TOR_STYLE_COMP_X_AD ) then
             lclasstwo = .true.
 c           --- need all of the unit numbers to determine the
 c           --- order of the torsion
-            unit_2 = twh_get_ijtor2(imolty,unit_1,torind)
-            unit_3 = twh_get_ijtor3(imolty,unit_1,torind)
-            unit_4 = twh_get_ijtor4(imolty,unit_1,torind)
+            call twh_ijtor2(GLB_GET,imolty,unit_1,torind,unit_2)
+            call twh_ijtor3(GLB_GET,imolty,unit_1,torind,unit_3)
+            call twh_ijtor4(GLB_GET,imolty,unit_1,torind,unit_4)
 
 c           --- Compute the cross terms
 c           --- Determine whether we are in normal or inverse order
-            if ( twh_get_ctname(twh_get_ntype(imolty,unit_1)) 
-     &           .eq. twh_get_torstring(torffnum,1) .and.
-     &           twh_get_ctname(twh_get_ntype(imolty,unit_2))
-     &           .eq. twh_get_torstring(torffnum,2) .and.
-     &           twh_get_ctname(twh_get_ntype(imolty,unit_3))
-     &           .eq. twh_get_torstring(torffnum,3) .and.
-     &           twh_get_ctname(twh_get_ntype(imolty,unit_4))
-     &           .eq. twh_get_torstring(torffnum,4) ) then
+            call twh_ntype(GLB_GET,imolty,unit_1,testtype)
+            call twh_ctname(GLB_GET,testtype,testname(1))
+            call twh_ntype(GLB_GET,imolty,unit_2,testtype)
+            call twh_ctname(GLB_GET,testtype,testname(2))
+            call twh_ntype(GLB_GET,imolty,unit_3,testtype)
+            call twh_ctname(GLB_GET,testtype,testname(3))
+            call twh_ntype(GLB_GET,imolty,unit_4,testtype)
+            call twh_ctname(GLB_GET,testtype,testname(4))
+            do itest = 1,4
+               call twh_torstring(GLB_GET,torffnum,itest
+     &              ,torstring(itest))
+            enddo
+            if ( testname(1) .eq. torstring(1) .and.
+     &           testname(2) .eq. torstring(2) .and.
+     &           testname(3) .eq. torstring(3) .and.
+     &           testname(4) .eq. torstring(4) ) then
 c              --- normal order
                bij = 1
                bjk = 2
                bkl = 3
                aijk = 1
                ajkl = 2
-            elseif ( twh_get_ctname(twh_get_ntype(imolty,unit_4)) 
-     &              .eq. twh_get_torstring(torffnum,1) .and.
-     &              twh_get_ctname(twh_get_ntype(imolty,unit_3)) 
-     &              .eq. twh_get_torstring(torffnum,2) .and.
-     &              twh_get_ctname(twh_get_ntype(imolty,unit_2))
-     &              .eq. twh_get_torstring(torffnum,3) .and.
-     &              twh_get_ctname(twh_get_ntype(imolty,unit_1))
-     &              .eq. twh_get_torstring(torffnum,4) ) then
+            elseif ( testname(4) .eq. torstring(1) .and.
+     &              testname(3) .eq. torstring(2) .and.
+     &              testname(2) .eq. torstring(3) .and.
+     &              testname(1) .eq. torstring(4) ) then
 c              --- inverse order
                bij = 3
                bjk = 2
@@ -296,12 +302,12 @@ c              --- inverse order
             else
                write(6,*) 'VTORSION: torffnum',torffnum
                write(6,*) 'ctname'
-     &              ,twh_get_ctname(twh_get_ntype(imolty,unit_1))
-     &              ,twh_get_ctname(twh_get_ntype(imolty,unit_2))
-     &              ,twh_get_ctname(twh_get_ntype(imolty,unit_3))
-     &              ,twh_get_ctname(twh_get_ntype(imolty,unit_4))
-               write(6,*) 'torstring'
-     &              ,(twh_get_torstring(torffnum,i),i=1,4)
+     &              ,testname(1),testname(2),testname(3),testname(4)
+               do itest = 1,4
+                  call twh_torstring(GLB_GET,torffnum,itest
+     &                 ,torstring(itest))
+               enddo
+               write(6,*) 'torstring',(torstring(itest),itest=1,4)
                write(6,*) 'torsion does not match up in VTORSION'
                lfailure = .true.
                return
@@ -331,47 +337,52 @@ c           --- store the bond and angle types
             call twh_ibttor3(GLB_GET,imolty,unit_1,torind,btype(3))
             call twh_iattor1(GLB_GET,imolty,unit_1,torind,atype(1))
             call twh_iattor2(GLB_GET,imolty,unit_1,torind,atype(2))
-
+c           --- retrieve the equilibrium bond lengths
+            call twh_vibcoeff(GLB_GET,btype(bij),0,eqlen_bij)
+            call twh_vibcoeff(GLB_GET,btype(bjk),0,eqlen_bjk)
+            call twh_vibcoeff(GLB_GET,btype(bkl),0,eqlen_bkl)
+c           --- retrieve the equilibrium angles
+            call twh_bencoeff(GLB_GET,atype(aijk),0,eqang_ijk)
+            call twh_bencoeff(GLB_GET,atype(ajkl),0,eqang_jkl)
 c           --- convert angles from cosine to normal
             angle(1) = twh_arccos(angle(1))
             angle(2) = twh_arccos(angle(2))
 c           --- bond-torsion terms
             vbontor = 
 c           --- bond(ij) - torsion cross
-     &           (length(bij) -twh_get_vibcoeff(btype(bij),0))*
-     &           (twh_get_torcoeff(torffnum,3)*cosphi 
-     &           + twh_get_torcoeff(torffnum,4)*cos2phi
-     &           + twh_get_torcoeff(torffnum,5)*cos3phi)
+     &           (length(bij) - eqlen_bij)*
+     &           (torcoeff(3)*cosphi 
+     &           + torcoeff(4)*cos2phi
+     &           + torcoeff(5)*cos3phi)
 c           --- bond(jk) - torsion cross
-     &           + (length(bjk) - twh_get_vibcoeff(btype(bjk),0))*
-     &           (twh_get_torcoeff(torffnum,6)*cosphi 
-     &           + twh_get_torcoeff(torffnum,7)*cos2phi
-     &           + twh_get_torcoeff(torffnum,8)*cos3phi)
+     &           + (length(bjk) - eqlen_bjk)*
+     &           (torcoeff(6)*cosphi 
+     &           + torcoeff(7)*cos2phi
+     &           + torcoeff(8)*cos3phi)
 c           --- bond(kl) - torsion cross
-     &           + (length(bkl) - twh_get_vibcoeff(btype(bkl),0))*
-     &           (twh_get_torcoeff(torffnum,9)*cosphi 
-     &           + twh_get_torcoeff(torffnum,10)*cos2phi
-     &           + twh_get_torcoeff(torffnum,11)*cos3phi)
+     &           + (length(bkl) - eqlen_bkl)*
+     &           (torcoeff(9)*cosphi 
+     &           + torcoeff(10)*cos2phi
+     &           + torcoeff(11)*cos3phi)
 c           --- angle-torsion terms
             vangtor =
 c           --- angle(ijk) - torsion cross
-     &           (angle(aijk) - twh_get_bencoeff(atype(aijk),0))*
-     &           (twh_get_torcoeff(torffnum,12)*cosphi 
-     &           + twh_get_torcoeff(torffnum,13)*cos2phi
-     &           + twh_get_torcoeff(torffnum,14)*cos3phi)
+     &           (angle(aijk) - eqang_ijk)*
+     &           (torcoeff(12)*cosphi 
+     &           + torcoeff(13)*cos2phi
+     &           + torcoeff(14)*cos3phi)
 c           --- angle(jkl) - torsion cross
-     &           + (angle(ajkl) - twh_get_bencoeff(atype(ajkl),0))*
-     &           (twh_get_torcoeff(torffnum,15)*cosphi 
-     &           + twh_get_torcoeff(torffnum,16)*cos2phi
-     &           + twh_get_torcoeff(torffnum,17)*cos3phi)
+     &           + (angle(ajkl) - eqang_jkl)*
+     &           (torcoeff(15)*cosphi 
+     &           + torcoeff(16)*cos2phi
+     &           + torcoeff(17)*cos3phi)
 c           --- angle(ijk) - angle(jkl) - torsion cross
-            vaator = twh_get_torcoeff(torffnum,18)*
-     &           (angle(aijk) - twh_get_bencoeff(atype(aijk),0))*
-     &           (angle(ajkl) - twh_get_bencoeff(atype(ajkl),0))*cosphi
+            vaator = torcoeff(18)*
+     &           (angle(aijk) - eqang_ijk)*
+     &           (angle(ajkl) - eqang_jkl)*cosphi
 c           --- bond(ij) - bond(kl) cross
-            vbb =  twh_get_torcoeff(torffnum,19)*
-     &           (length(bij) - twh_get_vibcoeff(btype(bij),0))*
-     &           (length(bkl) - twh_get_vibcoeff(btype(bkl),0))
+            vbb =  torcoeff(19)*
+     &           (length(bij) - eqlen_bij)*(length(bkl) - eqlen_bkl)
          endif
 
       elseif ( torstyle .eq. TOR_STYLE_TRAPPE_COS ) then
@@ -379,8 +390,8 @@ c        --- TraPPE simple cosine function
 c        --- trappe is defined so that trans is at 0.0
          call twh_constant_pi(GLB_GET,onepi)
          phi = twh_arccos(phic)-onepi
-         twh_vtorsion = twh_get_torcoeff(torffnum,0)
-     &        *(1.0d0 - dcos(2.0d0*phi + twh_get_torcoeff(torffnum,1)))
+         twh_vtorsion = torcoeff(0)
+     &        *(1.0d0 - dcos(2.0d0*phi + torcoeff(1)))
 
       elseif ( torstyle .eq. TOR_STYLE_NB ) then
 c        --- nonbonded potential only -or absolutely no torsional energy
@@ -392,15 +403,15 @@ c        --- Compass cosine series plus cross terms using an explicit
 c        --- parameter declaration and negative typing to determine 
 c        --- the order
          phi = twh_arccos(phic)
-         cosshiftphi = dcos(phi - twh_get_torcoeff(torffnum,3))
+         cosshiftphi = dcos(phi - torcoeff(3))
 c        --- simple torsion part
          twh_vtorsion = 
-     &        twh_get_torcoeff(torffnum,0)
+     &        torcoeff(0)
      &        *(1.0d0 - cosshiftphi )
-     &        + twh_get_torcoeff(torffnum,1)
-     &        *(1.0d0 - dcos(2.0d0*phi - twh_get_torcoeff(torffnum,4)) )
-     &        + twh_get_torcoeff(torffnum,2)
-     &        *(1.0d0 - dcos(3.0d0*phi - twh_get_torcoeff(torffnum,5)) )
+     &        + torcoeff(1)
+     &        *(1.0d0 - dcos(2.0d0*phi - torcoeff(4)) )
+     &        + torcoeff(2)
+     &        *(1.0d0 - dcos(3.0d0*phi - torcoeff(5)) )
 
 c        --- the unshifted values of the cosines are used in the cross
 c        --- terms
@@ -427,7 +438,8 @@ c        --- compute angles using *vec (already mimaged)
          enddo
 c        --- Compute the cross terms
 c        --- Determine whether we are in normal or inverse order
-         if ( twh_get_ittor(imolty,unit_1,torind) .gt. 0 ) then
+c        --- use the raw torff number that includes a sign
+         if ( torffraw .gt. 0 ) then
 c           --- normal order, don't change a thing
             bij = 1
             bjk = 2
@@ -446,63 +458,65 @@ c           --- angles
          lclasstwo = .true.
          vbontor =
 c        --- bond(jk) - torsion cross
-     &        (length(bjk) - twh_get_torcoeff(torffnum,9))*
-     &        (twh_get_torcoeff(torffnum,6)*cosphi 
-     &        + twh_get_torcoeff(torffnum,7)*cos2phi
-     &        + twh_get_torcoeff(torffnum,8)*cos3phi)
+     &        (length(bjk) - torcoeff(9))*
+     &        (torcoeff(6)*cosphi 
+     &        + torcoeff(7)*cos2phi
+     &        + torcoeff(8)*cos3phi)
 c        --- bond(ij) - torsion cross
-     &        + (length(bij) - twh_get_torcoeff(torffnum,13))*
-     &        (twh_get_torcoeff(torffnum,10)*cosphi 
-     &        + twh_get_torcoeff(torffnum,11)*cos2phi
-     &        + twh_get_torcoeff(torffnum,12)*cos3phi)
+     &        + (length(bij) - torcoeff(13))*
+     &        (torcoeff(10)*cosphi 
+     &        + torcoeff(11)*cos2phi
+     &        + torcoeff(12)*cos3phi)
 c        --- bond(kl) - torsion cross
-     &        + (length(bkl) - twh_get_torcoeff(torffnum,17))*
-     &        (twh_get_torcoeff(torffnum,14)*cosphi 
-     &        + twh_get_torcoeff(torffnum,15)*cos2phi
-     &        + twh_get_torcoeff(torffnum,16)*cos3phi)
+     &        + (length(bkl) - torcoeff(17))*
+     &        (torcoeff(14)*cosphi 
+     &        + torcoeff(15)*cos2phi
+     &        + torcoeff(16)*cos3phi)
          vangtor =
 c        --- angle(ijk) - torsion cross
-     &        (angle(aijk) - twh_get_torcoeff(torffnum,24))*
-     &        (twh_get_torcoeff(torffnum,18)*cosphi 
-     &        + twh_get_torcoeff(torffnum,19)*cos2phi
-     &        + twh_get_torcoeff(torffnum,20)*cos3phi)
+     &        (angle(aijk) - torcoeff(24))*
+     &        (torcoeff(18)*cosphi 
+     &        + torcoeff(19)*cos2phi
+     &        + torcoeff(20)*cos3phi)
 c        --- angle(jkl) - torsion cross
-     &        + (angle(ajkl) - twh_get_torcoeff(torffnum,25))*
-     &        (twh_get_torcoeff(torffnum,21)*cosphi 
-     &        + twh_get_torcoeff(torffnum,22)*cos2phi
-     &        + twh_get_torcoeff(torffnum,23)*cos3phi)
+     &        + (angle(ajkl) - torcoeff(25))*
+     &        (torcoeff(21)*cosphi 
+     &        + torcoeff(22)*cos2phi
+     &        + torcoeff(23)*cos3phi)
 c        --- angle(ijk) - angle(jkl) - torsion cross
-         vaator = twh_get_torcoeff(torffnum,26)*
-     &        (angle(aijk) - twh_get_torcoeff(torffnum,27))*
-     &        (angle(ajkl) - twh_get_torcoeff(torffnum,28))*cosshiftphi
+         vaator = torcoeff(26)*
+     &        (angle(aijk) - torcoeff(27))*
+     &        (angle(ajkl) - torcoeff(28))*cosshiftphi
 c        --- bond(ij) - bond(kl) cross
-         vbb = twh_get_torcoeff(torffnum,29)*
-     &        (length(bij) - twh_get_torcoeff(torffnum,30))*
-     &        (length(bkl) - twh_get_torcoeff(torffnum,31))
+         vbb = torcoeff(29)*
+     &        (length(bij) - torcoeff(30))*
+     &        (length(bkl) - torcoeff(31))
 
       elseif ( torstyle .eq. TOR_STYLE_COS_POW ) then
 c        --- cosine power series
-         do itor = 0,twh_get_ntorloop(torffnum)
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         do itor = 0,ntorloop
             twh_vtorsion = twh_vtorsion 
-     &           + twh_get_torcoeff(torffnum,itor)*(phic**itor)
+     &           + torcoeff(itor)*(phic**itor)
          enddo
       elseif ( torstyle .eq. TOR_STYLE_O_OPLS_C ) then
 c        --- old OPLS style cosine series 
 c        --- used in the OPLS-UA force field
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,0) + 
-     &        twh_get_torcoeff(torffnum,1)*(1.d0 + phic) +
-     &        twh_get_torcoeff(torffnum,2)*(1.d0 - dcos(2.0d0*phi)) +
-     &        twh_get_torcoeff(torffnum,3)*(1.d0 + dcos(3.0d0*phi))
+         twh_vtorsion = torcoeff(0) + 
+     &        torcoeff(1)*(1.d0 + phic) +
+     &        torcoeff(2)*(1.d0 - dcos(2.0d0*phi)) +
+     &        torcoeff(3)*(1.d0 + dcos(3.0d0*phi))
       elseif ( torstyle .eq. TOR_STYLE_SUM_COS ) then
 c        --- Sum2003 style torsion potential
          phi = twh_arccos(phic)
-         phi_eq = twh_get_torcoeff(torffnum,0)
+         phi_eq = torcoeff(0)
          phi_diff = phi - phi_eq
-         do itor = 0,twh_get_ntorloop(torffnum)-1
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         do itor = 0,ntorloop-1
             index = itor + 1
             twh_vtorsion = twh_vtorsion 
-     &           + twh_get_torcoeff(torffnum,index)* 
+     &           + torcoeff(index)* 
      &           ( 1.0d0 - dcos(dble(itor)*phi_diff ))
          enddo
       elseif ( torstyle .eq. TOR_STYLE_O_OPLS_T ) then
@@ -510,37 +524,39 @@ c         two term torsional potential used in W.L. Jorgensen;
 c         C.J. Swenson; J. Am. Chem. Soc. 107, 569-578 (1985).
          phi = twh_arccos(phic)
          twh_vtorsion = twh_vtorsion 
-     &        + twh_get_torcoeff(torffnum,1)*(1.0d0 - phic)
-     &        + twh_get_torcoeff(torffnum,2)*(1.0d0 - dcos(2.0d0*phi))
+     &        + torcoeff(1)*(1.0d0 - phic)
+     &        + torcoeff(2)*(1.0d0 - dcos(2.0d0*phi))
       elseif ( torstyle .eq. TOR_STYLE_UFF ) then
 c        --- UFF style 1 - cosine potential
 c        --- energy is divided by the total number of torsions that 
 c        --- occur across these two atoms
-         unit_2 = twh_get_ijtor2(imolty,unit_1,torind)
-         unit_3 = twh_get_ijtor3(imolty,unit_1,torind)
-         totbond = dble((twh_get_invib(imolty,unit_2)-1)
-     &        *(twh_get_invib(imolty,unit_3)-1))
+         call twh_ijtor2(GLB_GET,imolty,unit_1,torind,unit_2)
+         call twh_ijtor3(GLB_GET,imolty,unit_1,torind,unit_3)
+         call twh_invib(GLB_GET,imolty,unit_2,invib_two)
+         call twh_invib(GLB_GET,imolty,unit_3,invib_thr)
+         totbond = dble((invib_two-1)*(invib_thr-1))
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)
-     &        *( 1.0d0 - twh_get_torcoeff(torffnum,2)
-     &        *dcos( twh_get_torcoeff(torffnum,3)*phi) )/totbond
+         twh_vtorsion = torcoeff(1)
+     &        *( 1.0d0 - torcoeff(2)
+     &        *dcos( torcoeff(3)*phi) )/totbond
       elseif ( torstyle .eq. TOR_STYLE_DREIDING ) then
 c         --- DREIDING k[ 1 - Cos ( n (phi - phi_0))]
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)*(1.0d0 
-     &        - dcos(twh_get_torcoeff(torffnum,2)
-     &        *(phi - twh_get_torcoeff(torffnum,3))))
+         twh_vtorsion = torcoeff(1)*(1.0d0 
+     &        - dcos(torcoeff(2)
+     &        *(phi - torcoeff(3))))
 c        --- energy is divided by the total number of torsions that 
 c        --- occur across these two atoms
-         unit_2 = twh_get_ijtor2(imolty,unit_1,torind)
-         unit_3 = twh_get_ijtor3(imolty,unit_1,torind)
-         totbond = dble((twh_get_invib(imolty,unit_2)-1)
-     &        *(twh_get_invib(imolty,unit_3)-1))
+         call twh_ijtor2(GLB_GET,imolty,unit_1,torind,unit_2)
+         call twh_ijtor3(GLB_GET,imolty,unit_1,torind,unit_3)
+         call twh_invib(GLB_GET,imolty,unit_2,invib_two)
+         call twh_invib(GLB_GET,imolty,unit_3,invib_thr)
+         totbond = dble((invib_two-1)*(invib_thr-1))
          twh_vtorsion = twh_vtorsion / totbond
       elseif ( torstyle .eq. TOR_STYLE_TF_COS ) then
 c        --- 2-fold cosine
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)
+         twh_vtorsion = torcoeff(1)
      &        *(1.0d0 - dcos(2.0d0*phi))
       elseif ( torstyle .eq. TOR_STYLE_TRAPPE_PLAN ) then
 c        --- Potoff torsions from J. Phys. Chem. B 108 14130-14136 2004
@@ -548,9 +564,9 @@ c        --- note that there is a typo in equation 5 of that paper
 c        --- the correct functional form is
 c        U = c1[1 + cos(phi + f1)] + c2[1 - cos^2(phi)]
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)
-     &        *(1.0d0 + dcos(phi + twh_get_torcoeff(torffnum,3)) )
-     &        + twh_get_torcoeff(torffnum,2)*(1.0d0 - phic*phic)
+         twh_vtorsion = torcoeff(1)
+     &        *(1.0d0 + dcos(phi + torcoeff(3)) )
+     &        + torcoeff(2)*(1.0d0 - phic*phic)
       elseif ( torstyle .eq. TOR_STYLE_SQUARE_WELL ) then
 c        --- square well torsions originally implemented for Elli2002
 c        --- can't just use nonbond below as has different parameters
@@ -559,48 +575,51 @@ c        --- compute the 1-4 distance squared
      &        ,xcord(1),ycord(1),zcord(1),rxij,ryij,rzij)
          rijsq = rxij*rxij + ryij*ryij + rzij*rzij
          rij = dsqrt(rijsq)
-         if ( twh_cmp_lt(rij, twh_get_torcoeff(torffnum,1)) .or.
-     &        twh_cmp_gt(rij, twh_get_torcoeff(torffnum,2)) ) then
+         if ( twh_cmp_lt(rij, torcoeff(1)) .or.
+     &        twh_cmp_gt(rij, torcoeff(2)) ) then
 c           --- hard overlap
             loverlap = .true.
          else
 c           --- assign default energy
-            twh_vtorsion = twh_get_torcoeff(torffnum,3)
+            twh_vtorsion = torcoeff(3)
          endif
       elseif ( torstyle .eq. TOR_STYLE_AMBER ) then
 c        --- Gromos/Charmm/Amber cosine potential divided by the 
 c        --- total number of torsions sharing these central atoms
          phi = twh_arccos(phic)
-         do itor = 1,twh_get_ntorloop(torffnum)
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         do itor = 1,ntorloop
             index = 3*(itor-1)
             twh_vtorsion = twh_vtorsion 
-     &           + twh_get_torcoeff(torffnum,index+1)* 
-     &           ( 1.0d0 + dcos(twh_get_torcoeff(torffnum,index+2)*phi
-     &           - twh_get_torcoeff(torffnum,index+3))
+     &           + torcoeff(index+1)* 
+     &           ( 1.0d0 + dcos(torcoeff(index+2)*phi
+     &           - torcoeff(index+3))
      &           )
          enddo
 c        --- divide out by the total number of torsions on these atoms
-         unit_2 = twh_get_ijtor2(imolty,unit_1,torind)
-         unit_3 = twh_get_ijtor3(imolty,unit_1,torind)
-         totbond = dble((twh_get_invib(imolty,unit_2)-1)
-     &        *(twh_get_invib(imolty,unit_3)-1))
+         call twh_ijtor2(GLB_GET,imolty,unit_1,torind,unit_2)
+         call twh_ijtor3(GLB_GET,imolty,unit_1,torind,unit_3)
+         call twh_invib(GLB_GET,imolty,unit_2,invib_two)
+         call twh_invib(GLB_GET,imolty,unit_3,invib_thr)
+         totbond = dble((invib_two-1)*(invib_thr-1))
          twh_vtorsion = twh_vtorsion / totbond
       elseif ( torstyle .eq. TOR_STYLE_OPLS_FL  ) then
 c        --- OPLS-AA Fluorocarbon 4 parameter cosine series 
 c        --- used in the OPLS-AA force field.
 c        --- J. Phys. Chem. A. v105, 4118-4125 (2001). 
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)*(1.d0 + phic) +
-     &        twh_get_torcoeff(torffnum,2)*(1.d0 - dcos(2.0d0*phi)) +
-     &        twh_get_torcoeff(torffnum,3)*(1.d0 + dcos(3.0d0*phi)) +
-     &        twh_get_torcoeff(torffnum,4)*(1.d0 - dcos(4.0d0*phi))
+         twh_vtorsion = torcoeff(1)*(1.d0 + phic) +
+     &        torcoeff(2)*(1.d0 - dcos(2.0d0*phi)) +
+     &        torcoeff(3)*(1.d0 + dcos(3.0d0*phi)) +
+     &        torcoeff(4)*(1.d0 - dcos(4.0d0*phi))
       elseif ( torstyle .eq. TOR_STYLE_MRD ) then
 c        --- multiple rigid dihedral
          loverlap = .true.
          phi = twh_arccos(phic)
-         do itor = 1,twh_get_ntorloop(torffnum)
-            if ( dabs( twh_get_torcoeff(torffnum,itor) - phi) .lt. 
-     &           twh_get_torcoeff(torffnum,0) ) then
+         call twh_ntorloop(GLB_GET,torffnum,ntorloop)
+         do itor = 1,ntorloop
+            if ( dabs( torcoeff(itor) - phi) .lt. 
+     &           torcoeff(0) ) then
                loverlap = .false.
                twh_vtorsion = 0.0d0
             endif
@@ -612,20 +631,20 @@ c        P.T. Cummings; "Intermolecular potentials and vapor-liquid
 c        phase equilibria of perfluorinated alkanes",
 c        Fluid Phase Equilib. 146 51-61 (1998)
          phi = twh_arccos(phic)
-         twh_vtorsion = twh_get_torcoeff(torffnum,0)
-     &        + twh_get_torcoeff(torffnum,1)*(1.0d0 - phic)
-     &        + twh_get_torcoeff(torffnum,2)*(1.0d0 - dcos(3.0d0*phi))
-     &        + twh_get_torcoeff(torffnum,3)*(1.0d0 - phic)**5
-     &        + twh_get_torcoeff(torffnum,4)
-     &        *twh_expon(-twh_get_torcoeff(torffnum,5)*phi**2)
+         twh_vtorsion = torcoeff(0)
+     &        + torcoeff(1)*(1.0d0 - phic)
+     &        + torcoeff(2)*(1.0d0 - dcos(3.0d0*phi))
+     &        + torcoeff(3)*(1.0d0 - phic)**5
+     &        + torcoeff(4)
+     &        *twh_expon(-torcoeff(5)*phi**2)
       elseif ( torstyle .eq. TOR_STYLE_DRUKKER ) then
 c        --- simple two term cosine originally from 
 c        --- K. Drukker; G. Wu; G. C. Schatz;
 c        --- "Model simulations of DNA denaturation dynamics"
 c        --- J. Chem. Phys. 114 579-590 (2001)
          phi = twh_arccos(phi)
-         twh_vtorsion = twh_get_torcoeff(torffnum,1)
-     &        *(1.0d0 - dcos(phi - twh_get_torcoeff(torffnum,0)))
+         twh_vtorsion = torcoeff(1)
+     &        *(1.0d0 - dcos(phi - torcoeff(0)))
       else
          write(6,*) 'VTORSION: non-defined torsional type'
          lfailure = .true.
@@ -661,7 +680,7 @@ c        --- compute the 1-4 distance squared
          rijsq = rxij*rxij + ryij*ryij + rzij*rzij
 
 c        --- need unit number of the opposite atom
-         unit_4 = twh_get_ijtor4(imolty,unit_1,torind)
+         call twh_ijtor4(GLB_GET,imolty,unit_1,torind,unit_4)
          call twh_ntype(GLB_GET,imolty,unit_1,ntii)
          call twh_ntype(GLB_GET,imolty,unit_4,ntjj)
 
@@ -694,7 +713,7 @@ c        --- interactions in engatom.
 
          call twh_vcoulomb(0,bxdflag,ibox,rij,imolty,unit_1,imolty
      &        ,unit_4,vf,dv,loverlap,vonefour)
-         vonefour = twh_get_torcoeff(torffnum,-1)*vonefour
+         vonefour = torcoeff(-1)*vonefour
 
          if ( torofcode .eq. CODE_RESCALE ) then
             vonefour = torscale*vonefour

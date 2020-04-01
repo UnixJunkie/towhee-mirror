@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,12 +27,10 @@ c     * the N-terminus                                                 *
 c     * imolty: molecule type number                                   *
 c     *                                                                *
 c     * split out of buildprot 12-12-2002 by M.G. Martin               *
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
 #ifndef DISABLE_POLY
       implicit none
-#define FUNCTION_GET_INIMPROP
-#include "functions.h"
 c     ---- variables passed to/from the subroutine
       logical lfailure
       integer imolty,iatom,termflag,total,ibondend,ipeptide
@@ -86,20 +84,20 @@ c           --- interior proline
             call twh_qqatom(GLB_SET,imolty,iatom+6,0.10d0)
 c           --- improper torsions
 c           --- N - Ca - Cd - prev C
-            itemp = twh_get_inimprop(imolty,iatom)
+            call twh_inimprop(GLB_GET,imolty,iatom,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom,itemp+1,iatom+1)
             call twh_ijimprop3(GLB_SET,imolty,iatom,itemp+1,iatom+6)
             call twh_ijimprop4(GLB_SET,imolty,iatom,itemp+1,ibondend)
 c           --- C - Ca - next N - O
-            itemp = twh_get_inimprop(imolty,iatom+2)
+            call twh_inimprop(GLB_GET,imolty,iatom+2,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom+2,itemp+1,iatom+1)
             call twh_ijimprop3(GLB_SET,imolty,iatom+2,itemp+1
      &           ,iatom+total)
             call twh_ijimprop4(GLB_SET,imolty,iatom+2,itemp+1,iatom+3)
 c           --- Ca - N - C - Cb
-            itemp = twh_get_inimprop(imolty,iatom+1)
+            call twh_inimprop(GLB_GET,imolty,iatom+1,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom+1,1,iatom)
             call twh_ijimprop3(GLB_SET,imolty,iatom+1,1,iatom+2)
@@ -166,13 +164,13 @@ c           --- no extra side chain improper torsions
             call twh_qqatom(GLB_SET,imolty,shift+4,0.40d0)
 c           --- side chain improper torsions
 c           --- Ne - Cd - Cz - He
-            itemp = twh_get_inimprop(imolty,hmain+3)
+            call twh_inimprop(GLB_GET,imolty,hmain+3,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+3,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+3,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+3,itemp+1,hmain+4)
             call twh_ijimprop4(GLB_SET,imolty,hmain+3,itemp+1,shift)
 c           --- Cz - Nh1 - Nh2 - Ne
-            itemp = twh_get_inimprop(imolty,hmain+4)
+            call twh_inimprop(GLB_GET,imolty,hmain+4,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+4,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+4,itemp+1,hmain+5)
             call twh_ijimprop3(GLB_SET,imolty,hmain+4,itemp+1,hmain+6)
@@ -197,13 +195,13 @@ c           --- Cz - Nh1 - Nh2 - Ne
             call twh_qqatom(GLB_SET,imolty,shift+1,0.30d0)
 c           --- side chain improper torsions
 c           --- Cg - Od1 - Nd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop4(GLB_SET,imolty,hmain+1,itemp+1,hmain)
 c           --- Nd2 - Hd21 - Hd22 - Cg
-            itemp = twh_get_inimprop(imolty,hmain+3)
+            call twh_inimprop(GLB_GET,imolty,hmain+3,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+3,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+3,itemp+1,shift)
             call twh_ijimprop3(GLB_SET,imolty,hmain+3,itemp+1,shift+1)
@@ -224,7 +222,7 @@ c           --- Nd2 - Hd21 - Hd22 - Cg
             call twh_qqatom(GLB_SET,imolty,hmain+3,-0.60d0)
 c           --- side chain improper torsion
 c           --- Cg - Od1 - Od2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
@@ -261,13 +259,13 @@ c           --- Cg - Od1 - Od2 - Cb
             call twh_qqatom(GLB_SET,imolty,shift+1,0.30d0)
 c           --- side chain improper torsions
 c           --- Cd - Oe1 - Ne2 - Cg
-            itemp = twh_get_inimprop(imolty,hmain+2)
+            call twh_inimprop(GLB_GET,imolty,hmain+2,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+2,itemp+1,hmain+3)
             call twh_ijimprop3(GLB_SET,imolty,hmain+2,itemp+1,hmain+4)
             call twh_ijimprop4(GLB_SET,imolty,hmain+2,itemp+1,hmain+1)
 c           --- Ne2 - He21 - He22 - Cd
-            itemp = twh_get_inimprop(imolty,hmain+4)
+            call twh_inimprop(GLB_GET,imolty,hmain+4,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+4,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+4,itemp+1,shift)
             call twh_ijimprop3(GLB_SET,imolty,hmain+4,itemp+1,shift+1)
@@ -323,19 +321,19 @@ c           --- Cd - Oe1 - Oe2 - Cg
             call twh_qqatom(GLB_SET,imolty,shift+1,0.35d0)
 c           --- side chain true improper torsions
 c           --- Cg - Nd1 - Cd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop4(GLB_SET,imolty,hmain+1,itemp+1,hmain)
 c           --- Nd1 - Cg - Ce1 - Hd1
-            itemp = twh_get_inimprop(imolty,hmain+2)
+            call twh_inimprop(GLB_GET,imolty,hmain+2,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+2,itemp+1,hmain+1)
             call twh_ijimprop3(GLB_SET,imolty,hmain+2,itemp+1,hmain+4)
             call twh_ijimprop4(GLB_SET,imolty,hmain+2,itemp+1,shift)
 c           --- Ne2 - Ce1 - Cd2 - He2
-            itemp = twh_get_inimprop(imolty,hmain+5)
+            call twh_inimprop(GLB_GET,imolty,hmain+5,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+5,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+5,itemp+1,hmain+4)
             call twh_ijimprop3(GLB_SET,imolty,hmain+5,itemp+1,hmain+3)
@@ -363,13 +361,13 @@ c           --- Ne2 - Ce1 - Cd2 - He2
             call twh_qqatom(GLB_SET,imolty,shift,0.30d0)
 c           --- side chain true improper torsions
 c           --- Cg - Nd1 - Cd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop4(GLB_SET,imolty,hmain+1,itemp+1,hmain)
 c           --- Nd1 - Cg - Ce1 - Hd1
-            itemp = twh_get_inimprop(imolty,hmain+2)
+            call twh_inimprop(GLB_GET,imolty,hmain+2,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+2,itemp+1,hmain+1)
             call twh_ijimprop3(GLB_SET,imolty,hmain+2,itemp+1,hmain+4)
@@ -397,13 +395,13 @@ c           --- Nd1 - Cg - Ce1 - Hd1
             call twh_qqatom(GLB_SET,imolty,shift,0.30d0)
 c           --- side chain true improper torsions
 c           --- Cg - Nd1 - Cd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop4(GLB_SET,imolty,hmain+1,itemp+1,hmain)
 c           --- Ne2 - Ce1 - Cd2 - He2
-            itemp = twh_get_inimprop(imolty,hmain+5)
+            call twh_inimprop(GLB_GET,imolty,hmain+5,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+5,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+5,itemp+1,hmain+4)
             call twh_ijimprop3(GLB_SET,imolty,hmain+5,itemp+1,hmain+3)
@@ -424,7 +422,7 @@ c           --- Ne2 - Ce1 - Cd2 - He2
             call twh_qqatom(GLB_SET,imolty,hmain+3,0.00d0)
 c           --- side chain improper torsions
 c           --- Cb - Cg1 - Cg2 - Ca
-            itemp = twh_get_inimprop(imolty,hmain)
+            call twh_inimprop(GLB_GET,imolty,hmain,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain,itemp+1,hmain+1)
             call twh_ijimprop3(GLB_SET,imolty,hmain,itemp+1,hmain+2)
@@ -452,7 +450,7 @@ c           --- reverse: Cd2 - Cg - Cb - Ca
      &           ,iatom+1,tortype)
 c           --- side chain impropers
 c           --- Cg - Cd2 - Cd1 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
@@ -517,7 +515,7 @@ c           --- no impropers on side chain
             call twh_qqatom(GLB_SET,imolty,hmain+6,0.00d0)
 c           --- side chain improper torsions
 c           --- Cg - Cd1 - Cd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
@@ -551,7 +549,7 @@ c           --- no side chain improper torsions
             call twh_qqatom(GLB_SET,imolty,shift,0.40d0)
 c           --- side chain improper torsions
 c           --- Cb - Og1 - Cg2 - Ca
-            itemp = twh_get_inimprop(imolty,hmain)
+            call twh_inimprop(GLB_GET,imolty,hmain,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain,itemp+1,hmain+1)
             call twh_ijimprop3(GLB_SET,imolty,hmain,itemp+1,hmain+2)
@@ -586,13 +584,13 @@ c           --- Cb - Og1 - Cg2 - Ca
             call twh_qqatom(GLB_SET,imolty,shift,0.30d0)
 c           --- side chain improper torsions
 c           --- Cg - Cd1 - Cd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop4(GLB_SET,imolty,hmain+1,itemp+1,hmain)
 c           --- Ne1 - Cd1 - Ce2 - He1
-            itemp = twh_get_inimprop(imolty,hmain+4)
+            call twh_inimprop(GLB_GET,imolty,hmain+4,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+4,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+4,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+4,itemp+1,hmain+5)
@@ -623,13 +621,13 @@ c           --- Ne1 - Cd1 - Ce2 - He1
             call twh_qqatom(GLB_SET,imolty,shift,0.40d0)
 c           --- side chain improper torsions
 c           --- Cg - Cd1 - Cd2 - Cb
-            itemp = twh_get_inimprop(imolty,hmain+1)
+            call twh_inimprop(GLB_GET,imolty,hmain+1,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+1,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+1,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain+1,itemp+1,hmain+3)
             call twh_ijimprop4(GLB_SET,imolty,hmain+1,itemp+1,hmain)
 c           --- Cz - Ce1 - Ce2 - Oh
-            itemp = twh_get_inimprop(imolty,hmain+6)
+            call twh_inimprop(GLB_GET,imolty,hmain+6,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain+6,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain+6,itemp+1,hmain+4)
             call twh_ijimprop3(GLB_SET,imolty,hmain+6,itemp+1,hmain+5)
@@ -648,7 +646,7 @@ c           --- Cz - Ce1 - Ce2 - Oh
             call twh_qqatom(GLB_SET,imolty,hmain+2,0.00d0)
 c           --- side chain improper torsions
 c           --- Cb - Cg2 - Cg1 - Ca
-            itemp = twh_get_inimprop(imolty,hmain)
+            call twh_inimprop(GLB_GET,imolty,hmain,itemp)
             call twh_inimprop(GLB_SET,imolty,hmain,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,hmain,itemp+1,hmain+2)
             call twh_ijimprop3(GLB_SET,imolty,hmain,itemp+1,hmain+1)
@@ -707,7 +705,7 @@ c           --- reverse backbone 3H - N - Ca - C
      &           ,hmain+heavy+2,tortype)
 c           --- improper torsions
 c           --- backbone C-Ca-N-O
-            itemp = twh_get_inimprop(imolty,iatom+2)
+            call twh_inimprop(GLB_GET,imolty,iatom+2,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom+2,itemp+1,iatom+1)
             call twh_ijimprop3(GLB_SET,imolty,iatom+2,itemp+1
@@ -715,7 +713,7 @@ c           --- backbone C-Ca-N-O
             call twh_ijimprop4(GLB_SET,imolty,iatom+2,itemp+1,iatom+3)
             if ( heavy .ne. 0 ) then
 c              --- stereochem sidechain Ca - N - C - Cb
-               itemp = twh_get_inimprop(imolty,iatom+1)
+               call twh_inimprop(GLB_GET,imolty,iatom+1,itemp)
                call twh_inimprop(GLB_SET,imolty,iatom+1,itemp+1)
                call twh_ijimprop2(GLB_SET,imolty,iatom+1,itemp+1,iatom)
                call twh_ijimprop3(GLB_SET,imolty,iatom+1,itemp+1
@@ -740,13 +738,13 @@ c           --- assign atom type and charges
             endif
 c           --- improper torsions
 c           --- backbone N - prev C - Ca - Hn
-            itemp = twh_get_inimprop(imolty,iatom)
+            call twh_inimprop(GLB_GET,imolty,iatom,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom,itemp+1,ibondend)
             call twh_ijimprop3(GLB_SET,imolty,iatom,itemp+1,iatom+1)
             call twh_ijimprop4(GLB_SET,imolty,iatom,itemp+1,hmain+heavy)
 c           --- backbone C - Ca - next N - O
-            itemp = twh_get_inimprop(imolty,iatom+2)
+            call twh_inimprop(GLB_GET,imolty,iatom+2,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom+2,itemp+1,iatom+1)
             call twh_ijimprop3(GLB_SET,imolty,iatom+2,itemp+1
@@ -754,7 +752,7 @@ c           --- backbone C - Ca - next N - O
             call twh_ijimprop4(GLB_SET,imolty,iatom+2,itemp+1,iatom+3)
             if ( heavy .ne. 0 ) then
 c              --- stereochem side chain Ca - N - C - Cb
-               itemp = twh_get_inimprop(imolty,iatom+1)
+               call twh_inimprop(GLB_GET,imolty,iatom+1,itemp)
                call twh_inimprop(GLB_SET,imolty,iatom+1,itemp+1)
                call twh_ijimprop2(GLB_SET,imolty,iatom+1,itemp+1,iatom)
                call twh_ijimprop3(GLB_SET,imolty,iatom+1,itemp+1
@@ -783,14 +781,14 @@ c           --- nitrogen hydrogen
             endif
 c           --- improper torsions
 c           --- backbone N - prev C - Ca - Hn
-            itemp = twh_get_inimprop(imolty,iatom)
+            call twh_inimprop(GLB_GET,imolty,iatom,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom,itemp+1,ibondend)
             call twh_ijimprop3(GLB_SET,imolty,iatom,itemp+1,iatom+1)
             call twh_ijimprop4(GLB_SET,imolty,iatom,itemp+1
      &           ,hmain+heavy+1)
 c           --- C-terminus C - Ca - O - O
-            itemp = twh_get_inimprop(imolty,iatom+2)
+            call twh_inimprop(GLB_GET,imolty,iatom+2,itemp)
             call twh_inimprop(GLB_SET,imolty,iatom+2,itemp+1)
             call twh_ijimprop2(GLB_SET,imolty,iatom+2,itemp+1,iatom+1)
             call twh_ijimprop3(GLB_SET,imolty,iatom+2,itemp+1
@@ -798,7 +796,7 @@ c           --- C-terminus C - Ca - O - O
             call twh_ijimprop4(GLB_SET,imolty,iatom+2,itemp+1,iatom+3)
             if ( heavy .ne. 0 ) then
 c              --- stereochem side chain Ca - N - C - Cb
-               itemp = twh_get_inimprop(imolty,iatom+1)
+               call twh_inimprop(GLB_GET,imolty,iatom+1,itemp)
                call twh_inimprop(GLB_SET,imolty,iatom+1,itemp+1)
                call twh_ijimprop2(GLB_SET,imolty,iatom+1,itemp+1,iatom)
                call twh_ijimprop3(GLB_SET,imolty,iatom+1,itemp+1

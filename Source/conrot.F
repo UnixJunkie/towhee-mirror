@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,31 +33,12 @@ c     *             and it is not so important to just focus on the    *
 c     *             backbone                                           *
 c     *                                                                *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified 03-19-2018 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #include "dvpm.h"
 #define FUNCTION_DISTANCE
 #define FUNCTION_EXPON
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJBNBN1
-#define FUNCTION_GET_IJBNBN2
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INBNBN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
 #define FUNCTION_RANDOM
 #define FUNCTION_VANGANG
 #define FUNCTION_VANGLE
@@ -97,7 +78,8 @@ c     --- integer scalars
       integer iend,iuone,ibend,iuthree,iaa,inum,ivalid,testcord
       integer nextback,prevback,junit,currentunit
       integer nchainmove,natommove,nworklist,nvib,testunit,branchunit
-      integer iworklist,itestlist,ncmt,ipoint,ensemble
+      integer iworklist,itestlist,ncmt,ipoint,ensemble,inaa,inbend
+      integer inbondbond,inimproper,intorsion,invibration
 c     --- integer arrays
       integer dcrs,crback,torbead
       dimension dcrs(NUMAX),crback(40),torbead(4)
@@ -260,8 +242,8 @@ c           --- initialize visitcount
          vibpointer(currentunit) = 0
          do while ( .not. ldone)
             vibpointer(currentunit) = vibpointer(currentunit) + 1
-            if (vibpointer(currentunit) .gt.
-     &           twh_get_invib(imolty,currentunit)) then
+            call twh_invib(GLB_GET,imolty,currentunit,invibration)
+            if (vibpointer(currentunit) .gt. invibration ) then
                if (prevunit(currentunit) .eq. 0) then
 c                 --- completely finished with this current unit
                   ldone = .true.
@@ -572,7 +554,8 @@ c           --- set neighbors of backbone atoms to 2, unless also a
 c           --- backbone atom
             do inum = 1,searchsize
                currentunit = crback(inum)
-               do ivib = 1,twh_get_invib(imolty,currentunit)
+               call twh_invib(GLB_GET,imolty,currentunit,invibration)
+               do ivib = 1,invibration
                   call twh_ijvib(GLB_GET,imolty,currentunit,ivib,iutwo)
                   if ( dcrs(iutwo) .eq. 0 ) dcrs(iutwo) = 2
                enddo
@@ -602,16 +585,20 @@ c           --- include atoms that moved on the backbone
             do icompute = 1,units
                if ( dcrs(icompute) .ne. 0) then
 c                 --- compute bond-bond interactions
-                  do iend = 0,twh_get_invib(imolty,icompute)
+                  call twh_invib(GLB_GET,imolty,icompute,invibration)
+                  do iend = 0,invibration
                      if ( iend .eq. 0 ) then
                         iuone = icompute
                      else
                         call twh_ijvib(GLB_GET,imolty,icompute,iend
      &                       ,iuone)
                      endif
-                     do ibend = 1,twh_get_inbnbn(imolty,iuone)
-                        iutwo = twh_get_ijbnbn1(imolty,iuone,ibend)
-                        iuthree = twh_get_ijbnbn2(imolty,iuone,ibend)
+                     call twh_inbnbn(GLB_GET,imolty,iuone,inbondbond)
+                     do ibend = 1,inbondbond
+                        call twh_ijbnbn1(GLB_GET,imolty,iuone,ibend
+     &                       ,iutwo)
+                        call twh_ijbnbn2(GLB_GET,imolty,iuone,ibend
+     &                       ,iuthree)
                         if ( icompute .eq. iuone 
      &                       .or. icompute .eq. iutwo
      &                       .or. icompute .eq. iuthree ) then
@@ -647,9 +634,10 @@ c                             --- compute and store second bond length
 
 c                 --- compute bond bending interactions
                   iuone = icompute
-                  do ibend = 1,twh_get_inben(imolty,iuone)
-                     iutwo = twh_get_ijben2(imolty,iuone,ibend)
-                     iuthree = twh_get_ijben3(imolty,iuone,ibend)
+                  call twh_inben(GLB_GET,imolty,iuone,inbend)
+                  do ibend = 1,inbend
+                     call twh_ijben2(GLB_GET,imolty,iuone,ibend,iutwo)
+                     call twh_ijben3(GLB_GET,imolty,iuone,ibend,iuthree)
                      if ( (dcrs(iuthree) .eq. 0) .or.
      &                    (dcrs(iuthree) .ne. 0 .and.iuone .lt. iuthree)
      &                    ) then
@@ -684,18 +672,23 @@ c                          --- store coordinates
                   enddo
 
 c                 --- compute the angle-angle energies
-                  do iend = 0,twh_get_invib(imolty,icompute)
+                  call twh_invib(GLB_GET,imolty,icompute,invibration)
+                  do iend = 0,invibration
                      if ( iend .eq. 0 ) then
                         iuone = icompute
                      else
                         call twh_ijvib(GLB_GET,imolty,icompute,iend
      &                       ,iuone)
                      endif
-                     do iaa = 1,twh_get_inaa(imolty,iuone)
+                     call twh_inaa(GLB_GET,imolty,iuone,inaa)
+                     do iaa = 1,inaa
                         torbead(1) = iuone
-                        torbead(2) = twh_get_ijaa0(imolty,iuone,iaa)
-                        torbead(3) = twh_get_ijaa1(imolty,iuone,iaa)
-                        torbead(4) = twh_get_ijaa2(imolty,iuone,iaa)
+                        call twh_ijaa0(GLB_GET,imolty,iuone,iaa
+     &                       ,torbead(2))
+                        call twh_ijaa1(GLB_GET,imolty,iuone,iaa
+     &                       ,torbead(3))
+                        call twh_ijaa2(GLB_GET,imolty,iuone,iaa
+     &                       ,torbead(4))
                         lfound = .false.
                         do ibead = 1,4
                            if (torbead(ibead).eq.icompute) 
@@ -729,12 +722,16 @@ c                 --- compute the normal torsion energies for all of the
 c                 --- backbone atoms.  The side chains should all have 
 c                 --- the same torsions and bond angles at least as of 
 c                 --- now, may change (CDL 5/21/03)
-                  do itor = 1,twh_get_intor(imolty,icompute)
+                  call twh_intor(GLB_GET,imolty,icompute,intorsion)
+                  do itor = 1,intorsion
 c                    --- assign the unit types for the torsion
                      torbead(1) = icompute
-                     torbead(2) = twh_get_ijtor2(imolty,icompute,itor)
-                     torbead(3) = twh_get_ijtor3(imolty,icompute,itor)
-                     torbead(4) = twh_get_ijtor4(imolty,icompute,itor)
+                     call twh_ijtor2(GLB_GET,imolty,icompute,itor
+     &                    ,torbead(2))
+                     call twh_ijtor3(GLB_GET,imolty,icompute,itor
+     &                    ,torbead(3))
+                     call twh_ijtor4(GLB_GET,imolty,icompute,itor
+     &                    ,torbead(4))
 c                    --- check to make sure that not double counting any
 c                    --- torsion whose other end is unit1 which has 
 c                    --- already been calculated               
@@ -787,13 +784,14 @@ c                 --- sidechains should not be affected as they are
 c                 --- placed at same bond and torsion angles as 
 c                 --- previously found just rotated around the axis.
                   torbead(1) = icompute
-                  do itor = 1, twh_get_inimprop(imolty,icompute)
-                     torbead(2) = twh_get_ijimprop2(imolty,icompute
-     &                    ,itor)
-                     torbead(3) = twh_get_ijimprop3(imolty,icompute
-     &                    ,itor)
-                     torbead(4) = twh_get_ijimprop4(imolty,icompute
-     &                    ,itor)
+                  call twh_inimprop(GLB_GET,imolty,icompute,inimproper)
+                  do itor = 1,inimproper
+                     call twh_ijimprop2(GLB_GET,imolty,icompute
+     &                    ,itor,torbead(2))
+                     call twh_ijimprop3(GLB_GET,imolty,icompute
+     &                    ,itor,torbead(3))
+                     call twh_ijimprop4(GLB_GET,imolty,icompute
+     &                    ,itor,torbead(4))
                      do ioldnew = 1,2
                         if ( ioldnew .eq. TRL_OLD ) then
                            testcord = CRD_REAL
@@ -966,19 +964,16 @@ c     * such that it will exclude unit2 and the other part of the      *
 c     * torsion arm unit1 and just gets everything 'downstream' of     *
 c     * unit2.                                                         *
 c     * originally written 05-01-2003 by C.D. Lorenz                   *
-c     * last modified in 10-13-2008 by M.G. Martin                     *
+c     * last modified in 03-28-2020 by M.G. Martin                     *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_INVIB
-#include "functions.h"
-
 c     --- variables passed to/from the subroutine
       integer imolty,checkunit,unit3,searchsize
       integer crback,dcrs,isuccess,crtype
       dimension dcrs(NUMAX),crback(40)
 c     --- local variables
       logical ldone,lbackbone
-      integer currentunit,iunit,itest
+      integer currentunit,iunit,itest,invibration
       integer vibpointer,prevunit,visitcount,nunit
       dimension vibpointer(NUMAX),prevunit(NUMAX),visitcount(NUMAX)
 
@@ -1002,8 +997,8 @@ c        --- belonging to the backbone
             do while (.not. ldone)
                vibpointer(currentunit) = vibpointer(currentunit) + 1
 c              --- we are finished exploring this atom, kick out
-               if (vibpointer(currentunit) .gt. 
-     &            twh_get_invib(imolty,currentunit)) then
+               call twh_invib(GLB_GET,imolty,currentunit,invibration)
+               if (vibpointer(currentunit) .gt. invibration ) then
                   if (prevunit(currentunit) .eq. 0) then
 c                    --- completely finished with this current unit
                      ldone = .true.
@@ -1054,8 +1049,8 @@ c        --- this type of search considers all atoms in the molecule
          do while (.not. ldone)
             vibpointer(currentunit) = vibpointer(currentunit) + 1
 c           --- we are finished exploring this atom, kick out
-            if (vibpointer(currentunit) .gt. 
-     &         twh_get_invib(imolty,currentunit)) then
+            call twh_invib(GLB_GET,imolty,currentunit,invibration)
+            if (vibpointer(currentunit) .gt. invibration ) then
                if (prevunit(currentunit) .eq. 0) then
 c                 --- completely finished with this current unit
                   ldone = .true.
@@ -1116,20 +1111,17 @@ c     * this part of the subroutine labels all of the units in        *
 c     * given segment, uses id of first unit found to be part of      *
 c     * the segment as the segment label                              *
 c     * originally written 05-01-2003 by C.D. Lorenz                  *
-c     * last modified in 10-13-2008 by M.G. Martin                    *
+c     * last modified in 03-28-2020 by M.G. Martin                    *
 c     *****************************************************************
       implicit none
-#define FUNCTION_GET_INVIB
-#include "functions.h"
-
 c     --- variables passed to and from the subroutine
       integer checkunit,initunit,imolty
       integer dcrs,crback
       dimension dcrs(NUMAX),crback(40)
-
 c     --- local variables
       integer index1,index2,unitnext,itrace,iback,nnunit,crindex
-
+      integer invibration
+      
       index1 = dcrs(checkunit)
       index2 = dcrs(initunit)
       crback(index1) = checkunit
@@ -1137,7 +1129,8 @@ c     --- local variables
       
 c     --- backtrace from index1 to index2
       do itrace = index1,index2+1,-1
-         do iback = 1,twh_get_invib(imolty,unitnext)
+         call twh_invib(GLB_GET,imolty,unitnext,invibration)
+         do iback = 1,invibration
             call twh_ijvib(GLB_GET,imolty,unitnext,iback,nnunit)
             if (nnunit .gt. 0) then
 c              --- check to make sure neighbor is previous unit in this 

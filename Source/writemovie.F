@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,20 +25,9 @@ c     * this routine outputs a single frame of information to the      *
 c     * towhee_movie file for post-processing analysis                 *
 c     *                                                                *
 c     * rewritten 07-09-2003 by M.G. Martin from pupdate               *
-c     * last modified 07-22-2016 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_NCMT
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_QQATOM
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer step
@@ -47,10 +36,15 @@ c     --- character string scalars
       character*30 filename
 c     --- integer scalars
       integer ibox,imolty,idim,ichain,iunit,jdim,ifile,nstep,numboxes
-      integer nframe,movieversion,nmolty,nunit,moviefreq
-      integer ivib,itor,nchain
+      integer nframe,movieversion,nmolty,nunit,moviefreq,nboxi,ntype
+      integer ivib,itor,nchain,ijtor2,ijtor3,ijtor4,invib,intorsion
+c     --- integer arrays
+      integer ijvibdata
+      dimension ijvibdata(NNBOND)
+      integer localncmt
+      dimension localncmt(MAXBOX)
 c     --- double precision scalars
-      double precision xtemp,ytemp,ztemp,rcut
+      double precision xtemp,ytemp,ztemp,rcut,qqatom
 c     --- double precision arrays
       double precision hmtemp
       dimension hmtemp(3)
@@ -89,18 +83,23 @@ c           --- write out movie-header
                write(ifile,*) nunit
 c              --- output bond connectivity information
                do iunit = 1,nunit
-                  write(ifile,*) twh_get_invib(imolty,iunit)
-     &                 ,(twh_get_ijvib(imolty,iunit,ivib)
-     &                 ,ivib=1,twh_get_invib(imolty,iunit))
+                  call twh_invib(GLB_GET,imolty,iunit,invib)
+                  do ivib = 1,invib
+                     call twh_ijvib(GLB_GET,imolty,iunit,ivib
+     &                    ,ijvibdata(ivib))
+                  enddo
+                  write(ifile,*) invib,(ijvibdata(ivib),ivib=1,invib)
                enddo
             
 c              --- output torsional connectivity information
                do iunit = 1,nunit
-                  write(ifile,*) twh_get_intor(imolty,iunit)
-                  do itor = 1,twh_get_intor(imolty,iunit)
-                     write(ifile,*) twh_get_ijtor2(imolty,iunit,itor)
-     &                    ,twh_get_ijtor3(imolty,iunit,itor)
-     &                    ,twh_get_ijtor4(imolty,iunit,itor)
+                  call twh_intor(GLB_GET,imolty,iunit,intorsion)
+                  write(ifile,*) intorsion
+                  do itor = 1,intorsion
+                     call twh_ijtor2(GLB_GET,imolty,iunit,itor,ijtor2)
+                     call twh_ijtor3(GLB_GET,imolty,iunit,itor,ijtor3)
+                     call twh_ijtor4(GLB_GET,imolty,iunit,itor,ijtor4)
+                     write(ifile,*) ijtor2,ijtor3,ijtor4
                   enddo
                enddo
             enddo
@@ -109,7 +108,10 @@ c              --- output torsional connectivity information
 c        --- regular output of a movie frame
          write(ifile,*) step
          do ibox = 1,numboxes
-            write(ifile,*) (twh_get_ncmt(ibox,imolty),imolty=1,nmolty)
+            do imolty = 1,nmolty
+               call twh_ncmt(GLB_GET,ibox,imolty,localncmt(imolty))
+            enddo
+            write(ifile,*) (localncmt(imolty),imolty=1,nmolty)
             do idim = 1,3
                do jdim = 1,3
                   call twh_hmatrix(GLB_GET,BXD_REAL,ibox,idim,jdim
@@ -122,14 +124,15 @@ c        --- regular output of a movie frame
          do ichain = 1, nchain
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_nunit(GLB_GET,imolty,nunit)
-            write(ifile,'(4(1x,i10))') ichain, imolty, nunit
-     &           ,twh_get_nboxi(ichain)
+            call twh_nboxi(GLB_GET,ichain,nboxi)
+            write(ifile,'(4(1x,i10))') ichain,imolty,nunit,nboxi
             do iunit = 1, nunit
                call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &              ,xtemp,ytemp,ztemp)
+               call twh_ntype(GLB_GET,imolty,iunit,ntype)
+               call twh_qqatom(GLB_GET,imolty,iunit,qqatom)
                write(ifile,'(4(1x,e15.6),i10)') xtemp,ytemp,ztemp
-     &              ,twh_get_qqatom(imolty,iunit)
-     &              ,twh_get_ntype(imolty,iunit)
+     &              ,qqatom,ntype
             enddo
          enddo
       endif

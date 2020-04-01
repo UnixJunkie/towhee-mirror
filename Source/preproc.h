@@ -19,7 +19,7 @@
 * MA  02111-1307, USA.                                                 *
 */
 
-/* last significant modification 03-11-2020 by M.G. Martin */
+/* last significant modification 03-24-2020 by M.G. Martin */
 
 /* ARRAYS */
 
@@ -170,6 +170,14 @@
 
 /* size of the character strings for describing force field names */
 #define FFNAMELEN 10
+/* size of the character strings for bond patterns */
+#define BONPATLEN 5
+/* size of the character strings for mixing rule */
+#define MIXRULLEN 30
+/* size of the character string for classical potential */
+#define CLAPOTLEN 30
+/* size of the character string for element name */
+#define ELENAMLEN 2
 
 /* array dimensions for the nonbonded coefficients (nbcoeff) */
 #define MINNBCOEFF 0
@@ -570,6 +578,9 @@
 #define SCH_CODE_BACKBONE 4
 #define SCH_CODE_LIST 5
 #define SCH_CODE_SIDECHAIN 6
+
+/* current forcefield version */
+#define CURRENT_FFVERSION 15
 
 /* bond style integer codes, do not change for compatibility */
 #define BOND_STYLE_NULL -1

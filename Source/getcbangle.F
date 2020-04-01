@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -50,7 +50,7 @@ c     * dpcbangle: the scale factor for the angle weight               *
 c     * ibox: the box in which the growth is performed                 *
 c     *                                                                *
 c     * written by M.G. Martin 07-10-1998 from geomnew and geomold     *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -59,20 +59,6 @@ c     ******************************************************************
 #define FUNCTION_EXPON
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IMPFORM
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_ITIMPROP
 #define FUNCTION_LAWOFCOSINE
 #define FUNCTION_INVERSELAWOFCOSINE
 #define FUNCTION_RANDOM
@@ -116,6 +102,9 @@ c     --- integer scalars
       integer growring,prevring,fromring,gp_vtype,icode,iuaaa
       integer testring,iutwo,iufour,jcode,ntmtor,itorsion,tmcode
       integer torunit,prevcode,ntmbond,ibond,iangle,ntmangle
+      integer ijaa0,ijaa1,ijaa2,ijben2test,ijben3test
+      integer ijimp2test,ijimp3test,ijimp4test,impform,inaa
+      integer inbendgrow,inbendprev,inimproper,itimproper
 c     --- integer arrays
       integer imptot
       dimension imptot(NNBOND)
@@ -252,20 +241,25 @@ c     --- initialize angle-angle list
       enddo
 
 c     --- check for angle-angle and set up list
-      do ic = 1,twh_get_inaa(imolty,iufrom)
+      call twh_inaa(GLB_GET,imolty,iufrom,inaa)
+      do ic = 1,inaa
          do ibend = 0,2
             call twh_cbmcaalocl(GLB_SET,ibend,ic,0)
          enddo
 c        --- unless ijaa0 is iuprev or we have an xtra 
 c        --- we will do this on step 2
          step = 2
+c        --- retrieve angle-angle information
+         call twh_ijaa0(GLB_GET,imolty,iufrom,ic,ijaa0)
+         call twh_ijaa1(GLB_GET,imolty,iufrom,ic,ijaa1)
+         call twh_ijaa2(GLB_GET,imolty,iufrom,ic,ijaa2)
 c        --- determine which (if any) of the slots is iuprev
-         if ( twh_get_ijaa0(imolty,iufrom,ic) .eq. iuprev ) then
+         if ( ijaa0 .eq. iuprev ) then
             call twh_cbmcaalocl(GLB_SET,0,ic,-1)
             step = 1
-         elseif ( twh_get_ijaa1(imolty,iufrom,ic) .eq. iuprev ) then
+         elseif ( ijaa1 .eq. iuprev ) then
             call twh_cbmcaalocl(GLB_SET,1,ic,-1)
-         elseif ( twh_get_ijaa2(imolty,iufrom,ic) .eq. iuprev ) then
+         elseif ( ijaa2 .eq. iuprev ) then
             call twh_cbmcaalocl(GLB_SET,2,ic,-1)
          endif
 
@@ -273,13 +267,13 @@ c        --- determine which (if any) of the slots is filled by xtra
          call twh_growxtra(GLB_GET,iw,1,xtracount)
          do ixtra = 2,xtracount+1
             call twh_growxtra(GLB_GET,iw,ixtra,iuxtra)
-            if ( twh_get_ijaa0(imolty,iufrom,ic) .eq. iuxtra ) then
+            if ( ijaa0 .eq. iuxtra ) then
                call twh_cbmcaalocl(GLB_SET,0,ic,-ixtra)
                step = 3
-            elseif ( twh_get_ijaa1(imolty,iufrom,ic) .eq. iuxtra ) then
+            elseif ( ijaa1 .eq. iuxtra ) then
                call twh_cbmcaalocl(GLB_SET,1,ic,-ixtra)
                step = 3
-            elseif ( twh_get_ijaa2(imolty,iufrom,ic) .eq. iuxtra ) then
+            elseif ( ijaa2 .eq. iuxtra ) then
                call twh_cbmcaalocl(GLB_SET,2,ic,-ixtra)
                step = 3
             endif
@@ -287,13 +281,13 @@ c        --- determine which (if any) of the slots is filled by xtra
 
          do count = angstart,ntogrow
             call twh_growlist(GLB_GET,iw,count,iugrow)
-            if ( twh_get_ijaa0(imolty,iufrom,ic) .eq. iugrow ) then
+            if ( ijaa0 .eq. iugrow ) then
                call twh_cbmcaalocl(GLB_SET,0,ic,count)
             endif
-            if ( twh_get_ijaa1(imolty,iufrom,ic) .eq. iugrow ) then
+            if ( ijaa1 .eq. iugrow ) then
                call twh_cbmcaalocl(GLB_SET,1,ic,count)
             endif
-            if ( twh_get_ijaa2(imolty,iufrom,ic) .eq. iugrow ) then
+            if ( ijaa2 .eq. iugrow ) then
                call twh_cbmcaalocl(GLB_SET,2,ic,count)
             endif
 
@@ -392,16 +386,16 @@ c        --- find the angle type for iugrow-iufrom-iuprev
          lfound = .false.
          ibend = 0
          style_code = DIST_NULL
-         do while ( .not. lfound 
-     &        .and. ibend .lt. twh_get_inben(imolty,iugrow) )
+         call twh_inben(GLB_GET,imolty,iugrow,inbendgrow)
+         do while ( .not. lfound .and. ibend .lt. inbendgrow )
             ibend = ibend + 1
-            iulast = twh_get_ijben2(imolty,iugrow,ibend)
+            call twh_ijben2(GLB_GET,imolty,iugrow,ibend,iulast)
             if ( iulast .eq. iufrom ) then
-               iu2back = twh_get_ijben3(imolty,iugrow,ibend)
+               call twh_ijben3(GLB_GET,imolty,iugrow,ibend,iu2back)
                if ( iu2back .eq. iuprev ) then
                   lfound = .true.
                   index = ibend
-                  type = twh_get_itben(imolty,iugrow,ibend)
+                  call twh_itben(GLB_GET,imolty,iugrow,ibend,type)
                endif
             endif
          enddo
@@ -792,7 +786,8 @@ c     --- initialize torsion list
       call twh_cbmcrimptype(GLB_SET,0,rimptotal)
 
 c     --- check for improper torsions and set up list
-      do ic = 1,twh_get_inimprop(imolty,iufrom)
+      call twh_inimprop(GLB_GET,imolty,iufrom,inimproper)
+      do ic = 1,inimproper
 c        --- initialize lingeom
          lingeom = .true.
 c        --- initialize cbmcimproper
@@ -800,34 +795,36 @@ c        --- initialize cbmcimproper
             call twh_cbmcimproper(GLB_SET,ibend,ic,0)
          enddo
 c        --- see if any of the atoms needed for this torsion are iuprev
-         if ( twh_get_ijimprop2(imolty,iufrom,ic) .eq. iuprev ) then
+         call twh_ijimprop2(GLB_GET,imolty,iufrom,ic,ijimp2test)
+         call twh_ijimprop3(GLB_GET,imolty,iufrom,ic,ijimp3test)
+         call twh_ijimprop4(GLB_GET,imolty,iufrom,ic,ijimp4test)
+         if ( ijimp2test .eq. iuprev ) then
             ivalue = -iuprev
             call twh_cbmcimproper(GLB_SET,2,ic,ivalue)
          endif
-         if ( twh_get_ijimprop3(imolty,iufrom,ic) .eq. iuprev ) then
+         if ( ijimp3test .eq. iuprev ) then
             ivalue = -iuprev
             call twh_cbmcimproper(GLB_SET,3,ic,ivalue)
          endif
-         if ( twh_get_ijimprop4(imolty,iufrom,ic) .eq. iuprev ) then
+         if ( ijimp4test .eq. iuprev ) then
             ivalue = -iuprev 
             call twh_cbmcimproper(GLB_SET,4,ic,ivalue)
          endif
-
 c        --- see if any of the atoms needed are in growxtra
          call twh_growxtra(GLB_GET,iw,1,xtracount)
          do ixtra = 2,xtracount+1
             call twh_growxtra(GLB_GET,iw,ixtra,iuxtra)
-            if ( twh_get_ijimprop2(imolty,iufrom,ic) .eq. iuxtra ) then
+            if ( ijimp2test .eq. iuxtra ) then
                ivalue = -iuxtra
                call twh_cbmcimproper(GLB_SET,2,ic,ivalue)
                lingeom = .false.
             endif
-            if ( twh_get_ijimprop3(imolty,iufrom,ic) .eq. iuxtra ) then
+            if ( ijimp3test .eq. iuxtra ) then
                ivalue = -iuxtra
                call twh_cbmcimproper(GLB_SET,3,ic,ivalue)
                lingeom = .false.
             endif
-            if ( twh_get_ijimprop4(imolty,iufrom,ic) .eq. iuxtra ) then
+            if ( ijimp4test .eq. iuxtra ) then
                ivalue = -iuxtra
                call twh_cbmcimproper(GLB_SET,4,ic,ivalue)
                lingeom = .false.
@@ -837,13 +834,13 @@ c        --- see if any of the atoms needed are in growxtra
 c        --- see if any of the atoms needed are being grown
          do count = angstart,ntogrow
             call twh_growlist(GLB_GET,iw,count,iugrow)
-            if ( twh_get_ijimprop2(imolty,iufrom,ic) .eq. iugrow ) then
+            if ( ijimp2test .eq. iugrow ) then
                call twh_cbmcimproper(GLB_SET,2,ic,count)
             endif
-            if ( twh_get_ijimprop3(imolty,iufrom,ic) .eq. iugrow ) then
+            if ( ijimp3test .eq. iugrow ) then
                call twh_cbmcimproper(GLB_SET,3,ic,count)
             endif
-            if ( twh_get_ijimprop4(imolty,iufrom,ic) .eq. iugrow ) then
+            if ( ijimp4test .eq. iugrow ) then
                call twh_cbmcimproper(GLB_SET,4,ic,count)
             endif
 c           --- get the product of the cbmcimproper values
@@ -857,9 +854,10 @@ c              --- we now have enough atoms to check the improper charmm
 c                 --- all of the atoms exist in this subroutine
                   imptot(count) = imptot(count) + 1
                   tmpimptype(count,imptot(count)) = ic
+                  call twh_itimprop(GLB_GET,imolty,iufrom,ic,itimproper)
+                  call twh_impform(GLB_GET,itimproper,impform)
                   tmpimpform(count,imptot(count)) 
-     &                 = twh_get_impform(
-     &                 twh_get_itimprop(imolty,iufrom,ic))
+     &                 = impform
                else
 c                 --- we need to pass this back to rosenbluth
                   rimptotal = rimptotal + 1
@@ -915,11 +913,11 @@ c           --- compute gamma (phi) for these unit vectors
 c     --- determine the angstart angle index
       icone = 0
       call twh_growlist(GLB_GET,iw,angstart,iuone)
-      do ibend = 1,twh_get_inben(imolty,iuprev)
-         if ( twh_get_ijben2(imolty,iuprev,ibend) .eq. iufrom
-     &        .and.
-     &        twh_get_ijben3(imolty,iuprev,ibend) .eq. iuone
-     &        ) then
+      call twh_inben(GLB_GET,imolty,iuprev,inbendprev)
+      do ibend = 1,inbendprev
+         call twh_ijben2(GLB_GET,imolty,iuprev,ibend,ijben2test)
+         call twh_ijben3(GLB_GET,imolty,iuprev,ibend,ijben3test)
+         if ( ijben2test .eq. iufrom .and. ijben3test .eq. iuone) then
             icone = ibend
          endif
       enddo
@@ -943,10 +941,11 @@ c        --- initialize lmin which tells us we havn't found the min yet
          call twh_inring(GLB_GET,imolty,iugrow,growring)
 c        --- determine current angle index
          ictwo = 0
-         do ibend = 1,twh_get_inben(imolty,iuprev)
-            if ( twh_get_ijben2(imolty,iuprev,ibend) .eq. iufrom
-     &           .and.
-     &           twh_get_ijben3(imolty,iuprev,ibend) .eq. iugrow
+         call twh_inben(GLB_GET,imolty,iuprev,inbendprev)
+         do ibend = 1,inbendprev
+            call twh_ijben2(GLB_GET,imolty,iuprev,ibend,ijben2test)
+            call twh_ijben3(GLB_GET,imolty,iuprev,ibend,ijben3test)
+            if ( ijben2test .eq. iufrom .and. ijben3test .eq. iugrow
      &           ) then
                ictwo = ibend
             endif
@@ -1396,10 +1395,12 @@ c              --- fetch distances for 1-3 and bond-angle
                call twh_bondlen(GLB_GET,aaa,distaaa)
                call twh_bondlen(GLB_GET,count,distg)
 c              --- find the angle type for iugrow-iufrom-iuaaa
-               do ibend = 1, twh_get_inben(imolty,iugrow)
-                  iulast = twh_get_ijben2(imolty,iugrow,ibend)
+               call twh_inben(GLB_GET,imolty,iugrow,inbendgrow)
+               do ibend = 1, inbendgrow
+                  call twh_ijben2(GLB_GET,imolty,iugrow,ibend,iulast)
                   if ( iulast .eq. iufrom ) then
-                     iu2back = twh_get_ijben3(imolty,iugrow,ibend)
+                     call twh_ijben3(GLB_GET,imolty,iugrow,ibend
+     &                    ,iu2back)
                      if ( iu2back .eq. iuaaa ) then
 c                       --- calculate the bond angle energy
                         vphi(itrial) = vphi(itrial) 

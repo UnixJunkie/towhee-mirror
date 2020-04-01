@@ -25,7 +25,7 @@ c     * sets up all of the arbitrary trial distribution information for*
 c     * use in the configurational-bias routines                       *
 c     *                                                                *
 c     * split from checkstruc 05-18-2006 by M.G. Martin                *
-c     * last modified 03-02-2020 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debug logical
@@ -35,17 +35,6 @@ c     --- function declarations
 #define FUNCTION_GAUSSPROB
 #endif
 #define FUNCTION_EXPON
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_INTOR
 #define FUNCTION_LAWOFCOSINE
 #define FUNCTION_VANGLE
 #define FUNCTION_VBOND
@@ -79,11 +68,11 @@ c     --- local integer scalars
       integer bij_type,bjk_type,iscan_bij,iscan_bjk
       integer nunit,ibox,cbmc_bondgen_code,cbmc_bendgen_code
       integer cbmc_dihedgen_code,bonddist,vibtype,ivalue,ncompute
-      integer icompute,numboxes,nummol,invib
+      integer icompute,numboxes,nummol,invib,ijben2test,ijben3test
       integer bendtype,bendstyle,vibstyle
       integer angleadist,torffnum,torstyle,anglebdist,jtype
       integer ithreemem,jthreemem,kthreemem,kbthreemem
-      integer cfile
+      integer cfile,ijvibtest,inbend,jnbend,knbend,intorsion,invibration
 #if DEBUG_ATD_CBMC_SETUP
       integer style_code,imgm
 #endif
@@ -275,7 +264,7 @@ c     --- set up information needed to generation trials in a cbmc move
          do iunit = 1,nunit
             call twh_invib(GLB_GET,imolty,iunit,invib)
             do ivib = 1,invib
-               junit = twh_get_ijvib(imolty,iunit,ivib)
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,junit)
                call twh_itvib(GLB_GET,imolty,iunit,ivib,vibtype)
                call twh_vibstyle(GLB_GET,vibtype,vibstyle)
 c              --- check the style to see if is one of the special cases
@@ -497,7 +486,8 @@ c              --- compute the expected acceptance rate
          do iunit = 1,nunit
 c           --- checking for three memebered rings
             call twh_inring(GLB_GET,imolty,iunit,ithreemem)
-            do ibend = 1,twh_get_inben(imolty,iunit)
+            call twh_inben(GLB_GET,imolty,iunit,inbend)
+            do ibend = 1,inbend
                call twh_ijben2(GLB_GET,imolty,iunit,ibend,junit)
                call twh_ijben3(GLB_GET,imolty,iunit,ibend,kunit)
                call twh_itben(GLB_GET,imolty,iunit,ibend,bendtype)
@@ -743,16 +733,18 @@ c              --- output trial generation information
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
 c           --- loop over the first bends
-            do ibend = 1,twh_get_inben(imolty,iunit)
-               junit = twh_get_ijben2(imolty,iunit,ibend)
-               kunit = twh_get_ijben3(imolty,iunit,ibend)
-               itype = twh_get_itben(imolty,iunit,ibend)
-               thetaone = twh_get_bencoeff(itype,0)
+            call twh_inben(GLB_GET,imolty,iunit,inbend)
+            do ibend = 1,inbend
+               call twh_ijben2(GLB_GET,imolty,iunit,ibend,junit)
+               call twh_ijben3(GLB_GET,imolty,iunit,ibend,kunit)
+               call twh_itben(GLB_GET,imolty,iunit,ibend,itype)
+               call twh_bencoeff(GLB_GET,itype,0,thetaone)
                phione = 0.0d0
 c              --- loop over the second bends
-               do jbend = 1,twh_get_inben(imolty,iunit)
-                  junitb = twh_get_ijben2(imolty,iunit,jbend)
-                  kunitb = twh_get_ijben3(imolty,iunit,jbend)
+               call twh_inben(GLB_GET,imolty,iunit,jnbend)
+               do jbend = 1,jnbend
+                  call twh_ijben2(GLB_GET,imolty,iunit,jbend,junitb)
+                  call twh_ijben3(GLB_GET,imolty,iunit,jbend,kunitb)
                   if ( ibend .ne. jbend .and.
      &                 junit .eq. junitb ) then
 c                    --- set a default anglebdist
@@ -760,11 +752,14 @@ c                    --- set a default anglebdist
                      call twh_inring(GLB_GET,imolty,junit,jthreemem)
 c                    --- get the values for the combo-angle
                      icrossbend = 0
-                     do kbend = 1,twh_get_inben(imolty,kunit)
-                        if ( twh_get_ijben2(imolty,kunit,kbend) 
-     &                       .eq. junit
-     &                       .and. twh_get_ijben3(imolty,kunit,kbend)
-     &                       .eq. kunitb ) then
+                     call twh_inben(GLB_GET,imolty,kunit,knbend)
+                     do kbend = 1,knbend
+                        call twh_ijben2(GLB_GET,imolty,kunit,kbend
+     &                       ,ijben2test)
+                        call twh_ijben3(GLB_GET,imolty,kunit,kbend
+     &                       ,ijben3test)
+                        if ( ijben2test .eq. junit
+     &                       .and. ijben3test .eq. kunitb ) then
                            icrossbend = kbend
                         endif
                      enddo
@@ -775,7 +770,8 @@ c                    --- get the values for the combo-angle
                         return
                      endif
 c                    --- check to see if we are sampling a rigid bend
-                     bendtype = twh_get_itben(imolty,kunit,icrossbend)
+                     call twh_itben(GLB_GET,imolty,kunit,icrossbend
+     &                    ,bendtype)
 c                    --- check three membered ring
                      lrigid = .false.
                      if ( jthreemem .lt. 0 ) then
@@ -924,8 +920,9 @@ c                       --- fetch the appropriate bond lengths
                         call twh_cbmc_fitbond(lfailure,imolty,junit
      &                       ,kunitb,disttwo)
                         if ( lfailure ) return
-                        itype = twh_get_itben(imolty,iunit,jbend)
-                        thetatwo = twh_get_bencoeff(itype,0)
+                        call twh_itben(GLB_GET,imolty,iunit,jbend
+     &                       ,itype)
+                        call twh_bencoeff(GLB_GET,itype,0,thetatwo)
 
 c                       --- initialize nminima
                         nminima = 0
@@ -1155,7 +1152,8 @@ c     --- get the peak weighting style
          imolty = computelist(icompute)
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
-            do itor = 1,twh_get_intor(imolty,iunit)
+            call twh_intor(GLB_GET,imolty,iunit,intorsion)
+            do itor = 1,intorsion
                call twh_ittor(GLB_GET,imolty,iunit,itor,torffnum)
                torffnum = abs(torffnum)
                call twh_torstyle(GLB_GET,torffnum,torstyle)
@@ -1166,18 +1164,19 @@ c     --- get the peak weighting style
      &              .and. torstyle .ne. TOR_STYLE_MRD
      &              ) then
 
-                  junit = twh_get_ijtor2(imolty,iunit,itor)
-                  kunit = twh_get_ijtor3(imolty,iunit,itor)
-                  lunit = twh_get_ijtor4(imolty,iunit,itor)
+                  call twh_ijtor2(GLB_GET,imolty,iunit,itor,junit)
+                  call twh_ijtor3(GLB_GET,imolty,iunit,itor,kunit)
+                  call twh_ijtor4(GLB_GET,imolty,iunit,itor,lunit)
 c                 --- set the iunit position
                   xtcord(1) = 0.0d0
                   ytcord(1) = 0.0d0
                   ztcord(1) = 0.0d0
 c                 --- use the iunit-junit bond length to get the
 c                 --- junit coordinates
-                  do ivib = 1,twh_get_invib(imolty,iunit)
-                     if ( twh_get_ijvib(imolty,iunit,ivib) .eq. junit 
-     &                    ) then
+                  call twh_invib(GLB_GET,imolty,iunit,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. junit ) then
                         call twh_itvib(GLB_GET,imolty,iunit,ivib,itype)
                         call twh_vibcoeff(GLB_GET,itype,0,length)
                      endif
@@ -1188,20 +1187,24 @@ c                 --- junit coordinates
 c                 --- use equilibrium junit-kunit length and the
 c                 --- equilibrium iunit-junit-kunit angle to get
 c                 --- the kunit coordinates
-                  do ivib = 1,twh_get_invib(imolty,junit)
-                     if ( twh_get_ijvib(imolty,junit,ivib) .eq. kunit 
-     &                    ) then
+                  call twh_invib(GLB_GET,imolty,junit,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,junit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. kunit ) then
                         call twh_itvib(GLB_GET,imolty,junit,ivib,itype)
                         call twh_vibcoeff(GLB_GET,itype,0,length)
                      endif
                   enddo
-                  do ibend = 1,twh_get_inben(imolty,iunit)
-                     if ( twh_get_ijben2(imolty,iunit,ibend) .eq. junit
-     &                    .and.
-     &                    twh_get_ijben3(imolty,iunit,ibend) .eq. kunit 
-     &                    ) then
-                        itype = twh_get_itben(imolty,iunit,ibend)
-                        theta = twh_get_bencoeff(itype,0)
+                  call twh_inben(GLB_GET,imolty,iunit,inbend)
+                  do ibend = 1,inbend
+                     call twh_ijben2(GLB_GET,imolty,iunit,ibend
+     &                    ,ijben2test)
+                     call twh_ijben3(GLB_GET,imolty,iunit,ibend
+     &                    ,ijben3test)
+                     if ( ijben2test .eq. junit
+     &                    .and. ijben3test .eq. kunit ) then
+                        call twh_itben(GLB_GET,imolty,iunit,ibend,itype)
+                        call twh_bencoeff(GLB_GET,itype,0,theta)
                      endif
                   enddo
 c                 --- setup the cone
@@ -1226,20 +1229,24 @@ c                 --- reset the cone to get ready for the next atom
                   call twh_cone(lfailure,1,xxx,yyy,zzz,theta,gamma
      &                 ,xub,yub,zub)
                   if ( lfailure ) return
-                  do ivib = 1,twh_get_invib(imolty,kunit)
-                     if ( twh_get_ijvib(imolty,kunit,ivib) .eq. lunit 
-     &                    ) then
+                  call twh_invib(GLB_GET,imolty,kunit,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,kunit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. lunit ) then
                         call twh_itvib(GLB_GET,imolty,kunit,ivib,itype)
                         call twh_vibcoeff(GLB_GET,itype,0,length)
                      endif
                   enddo
-                  do ibend = 1,twh_get_inben(imolty,junit)
-                     if ( twh_get_ijben2(imolty,junit,ibend) .eq. kunit
-     &                    .and.
-     &                    twh_get_ijben3(imolty,junit,ibend) .eq. lunit
-     &                    ) then
-                        itype = twh_get_itben(imolty,junit,ibend)
-                        theta = twh_get_bencoeff(itype,0)
+                  call twh_inben(GLB_GET,imolty,junit,inbend)
+                  do ibend = 1,inbend
+                     call twh_ijben2(GLB_GET,imolty,junit,ibend
+     &                    ,ijben2test)
+                     call twh_ijben3(GLB_GET,imolty,junit,ibend
+     &                    ,ijben3test)
+                     if ( ijben2test .eq. kunit
+     &                    .and. ijben3test .eq. lunit ) then
+                        call twh_itben(GLB_GET,imolty,junit,ibend,itype)
+                        call twh_bencoeff(GLB_GET,itype,0,theta)
                      endif
                   enddo
 c                 --- initialize extrema
@@ -1503,19 +1510,20 @@ c        --- get the vibrange values
             imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
-               do ibend = 1,twh_get_inben(imolty,iunit)
-                  junit = twh_get_ijben2(imolty,iunit,ibend)
-                  kunit = twh_get_ijben3(imolty,iunit,ibend)
+               call twh_inben(GLB_GET,imolty,iunit,inbend)
+               do ibend = 1,inbend
+                  call twh_ijben2(GLB_GET,imolty,iunit,ibend,junit)
+                  call twh_ijben3(GLB_GET,imolty,iunit,ibend,kunit)
 c                 --- take the equilibrium bond lengths for the angle
 c                 --- computation
                   ivib = 0
                   lfound = .false.
                   bij_equil = 1.0d0
-                  do while ( ivib .lt. twh_get_invib(imolty,iunit) .and.
-     &                 .not. lfound )
+                  call twh_invib(GLB_GET,imolty,iunit,invibration)
+                  do while ( ivib .lt. invibration .and. .not. lfound )
                      ivib = ivib + 1
-                     if ( twh_get_ijvib(imolty,iunit,ivib) .eq. junit 
-     &                    ) then
+                     call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. junit ) then
                         call twh_itvib(GLB_GET,imolty,iunit,ivib
      &                       ,bij_type)
                         call twh_vibcoeff(GLB_GET,itype,0,bij_equil)
@@ -1530,11 +1538,11 @@ c                 --- computation
                   ivib = 0
                   lfound = .false.
                   bjk_equil = 1.0d0
-                  do while ( ivib .lt. twh_get_invib(imolty,junit) .and.
-     &                 .not. lfound )
+                  call twh_invib(GLB_GET,imolty,junit,invibration)
+                  do while ( ivib .lt. invibration .and. .not. lfound )
                      ivib = ivib + 1
-                     if ( twh_get_ijvib(imolty,junit,ivib) .eq. kunit 
-     &                    ) then
+                     call twh_ijvib(GLB_GET,imolty,junit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. kunit ) then
                         call twh_itvib(GLB_GET,imolty,junit,ivib
      &                       ,bjk_type)
                         call twh_vibcoeff(GLB_GET,itype,0,bjk_equil)
@@ -1632,19 +1640,21 @@ c                 --- assign the standard deviation
             imolty = computelist(icompute)
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
-               do itor = 1,twh_get_intor(imolty,iunit)
-                  junit = twh_get_ijtor2(imolty,iunit,itor)
-                  kunit = twh_get_ijtor3(imolty,iunit,itor)
-                  lunit = twh_get_ijtor4(imolty,iunit,itor)
+               call twh_intor(GLB_GET,imolty,iunit,intorsion)
+               do itor = 1,intorsion
+                  call twh_ijtor2(GLB_GET,imolty,iunit,itor,junit)
+                  call twh_ijtor3(GLB_GET,imolty,iunit,itor,kunit)
+                  call twh_ijtor4(GLB_GET,imolty,iunit,itor,lunit)
 c                 --- set the iunit position
                   xtcord(1) = 0.0d0
                   ytcord(1) = 0.0d0
                   ztcord(1) = 0.0d0
 c                 --- use the iunit-junit bond length to get the
 c                 --- junit coordinates
-                  do ivib = 1,twh_get_invib(imolty,iunit)
-                     if ( twh_get_ijvib(imolty,iunit,ivib) .eq. junit 
-     &                    ) then
+                  call twh_invib(GLB_GET,imolty,iunit,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. junit ) then
                         call twh_itvib(GLB_GET,imolty,iunit,ivib,itype)
                         call twh_vibcoeff(GLB_GET,itype,0,length)
                      endif
@@ -1655,20 +1665,24 @@ c                 --- junit coordinates
 c                 --- use equilibrium junit-kunit length and the
 c                 --- equilibrium iunit-junit-kunit angle to get
 c                 --- the kunit coordinates
-                  do ivib = 1,twh_get_invib(imolty,junit)
-                     if ( twh_get_ijvib(imolty,junit,ivib) .eq. kunit 
-     &                    ) then
+                  call twh_invib(GLB_GET,imolty,junit,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,junit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. kunit ) then
                         call twh_itvib(GLB_GET,imolty,junit,ivib,itype)
                         call twh_vibcoeff(GLB_GET,itype,0,length)
                      endif
                   enddo
-                  do ibend = 1,twh_get_inben(imolty,iunit)
-                     if ( twh_get_ijben2(imolty,iunit,ibend) .eq. junit
-     &                    .and.
-     &                    twh_get_ijben3(imolty,iunit,ibend) .eq. kunit
-     &                    ) then
-                        itype = twh_get_itben(imolty,iunit,ibend)
-                        theta = twh_get_bencoeff(itype,0)
+                  call twh_inben(GLB_GET,imolty,iunit,inbend)
+                  do ibend = 1,inbend
+                     call twh_ijben2(GLB_GET,imolty,iunit,ibend
+     &                    ,ijben2test)
+                     call twh_ijben3(GLB_GET,imolty,iunit,ibend
+     &                    ,ijben3test)
+                     if ( ijben2test .eq. junit
+     &                    .and. ijben3test .eq. kunit ) then
+                        call twh_itben(GLB_GET,imolty,iunit,ibend,itype)
+                        call twh_bencoeff(GLB_GET,itype,0,theta)
                      endif
                   enddo
 c                 --- setup the cone
@@ -1693,20 +1707,24 @@ c                 --- reset the cone to get ready for the next atom
                   call twh_cone(lfailure,1,xxx,yyy,zzz,theta,gamma
      &                 ,xub,yub,zub)
                   if ( lfailure ) return
-                  do ivib = 1,twh_get_invib(imolty,kunit)
-                     if ( twh_get_ijvib(imolty,kunit,ivib) .eq. lunit 
-     &                    ) then
+                  call twh_invib(GLB_GET,imolty,kunit,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,kunit,ivib,ijvibtest)
+                     if ( ijvibtest .eq. lunit ) then
                         call twh_itvib(GLB_GET,imolty,kunit,ivib,itype)
                         call twh_vibcoeff(GLB_GET,itype,0,length)
                      endif
                   enddo
-                  do ibend = 1,twh_get_inben(imolty,junit)
-                     if ( twh_get_ijben2(imolty,junit,ibend) .eq. kunit
-     &                    .and.
-     &                    twh_get_ijben3(imolty,junit,ibend) .eq. lunit
-     &                    ) then
-                        itype = twh_get_itben(imolty,junit,ibend)
-                        theta = twh_get_bencoeff(itype,0)
+                  call twh_inben(GLB_GET,imolty,junit,jnbend)
+                  do ibend = 1,jnbend
+                     call twh_ijben2(GLB_GET,imolty,junit,ibend
+     &                    ,ijben2test)
+                     call twh_ijben3(GLB_GET,imolty,junit,ibend
+     &                    ,ijben3test)
+                     if ( ijben2test .eq. kunit
+     &                    .and. ijben3test .eq. lunit ) then
+                        call twh_itben(GLB_GET,imolty,junit,ibend,itype)
+                        call twh_bencoeff(GLB_GET,itype,0,theta)
                      endif
                   enddo
                   imax = 1000

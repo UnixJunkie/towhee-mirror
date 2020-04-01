@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,14 +25,10 @@ c     * makes a pdb file of the system                                 *
 c     * the pdb file is written to boxone.pdb and boxtwo.pdb  etc      *
 c     *                                                                *
 c     * subroutine originally written in 2000 by M.G. Martin           *
-c     * last modified 07-22-2016 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_NTYPE
-#define FUNCTION_GET_QQATOM
 #define FUNCTION_DISTANCE
 #define FUNCTION_ARCCOS
 #include "functions.h"
@@ -43,20 +39,21 @@ c     --- local variables
 c     --- logical scalars
       logical lrectbox
 c     --- character string scalars
+      character*(ELENAMLEN) elename
       character*2 numbers
       character*3 shortname
       character*4 pdbname
       character*14 stepchar
-      character*30 filename,localcp
+      character*30 filename
 c     --- integer scalars
       integer imolty,base,ibox,ichain,iunit,ipeptide,type,ii
-      integer nchain,nunit,numboxes
+      integer nchain,nunit,numboxes,cpnumber,ntype
 c     --- integer arrays
       integer counter
       dimension counter(MAXBOX)
 c     --- double precision scalars
       double precision xmin,ymin,zmin,sigma,xtemp,ytemp,ztemp
-      double precision radtodeg,hm1,hm2,hm3
+      double precision radtodeg,hm1,hm2,hm3,qqatom
 c     --- double precision arrays
       double precision vector_len,vector_ang
       dimension  vector_len(3), vector_ang(3)
@@ -65,7 +62,7 @@ c      write(6,*) 'starting writepdb'
 
 c     --- retrieve constants
       call twh_constant_radtodeg(GLB_GET,radtodeg)
-      call twh_classical_potential(GLB_GET,localcp)
+      call twh_cp_number(GLB_GET,cpnumber)
       call twh_numboxes(GLB_GET,numboxes)
 
       base = 80
@@ -152,26 +149,26 @@ c              --- find peptide name
                else
                   call twh_aminoshort(GLB_GET,imolty,iunit,shortname)
                endif
-               if ( localcp .eq. 'Lennard-Jones' .or.
-     &              localcp .eq. 'Scaled Lennard-Jones' .or.
-     &              localcp .eq. 'UFF 12-6' ) then
+               if ( cpnumber .eq. CP_LENNARD_JONES .or.
+     &              cpnumber .eq. CP_SCALED_LENNARD_JONES .or.
+     &              cpnumber .eq. CP_UFF_12_6 ) then
 c                 --- output the sigma
                   call twh_ntype(GLB_GET,imolty,iunit,type)
                   type = twh_getnbtype(type,type)
-                  sigma = twh_get_nbcoeff(1,type)
-               elseif ( localcp .eq. 'Hard Sphere' .or. 
-     &                 localcp .eq. 'Repulsive Sphere' 
-     &                 ) then 
+                  call twh_nbcoeff(GLB_GET,1,type,sigma)
+               elseif ( cpnumber .eq. CP_HARD_SPHERE .or. 
+     &                 cpnumber .eq. CP_REPULSIVE_SPHERE ) then 
 c                 --- output hard sphere radius
                   call twh_ntype(GLB_GET,imolty,iunit,type)
                   type = twh_getnbtype(type,type)
-                  sigma = twh_get_nbcoeff(1,type)
-               elseif ( localcp .eq. 'Square Well' .or.
-     &                 localcp .eq. 'Repulsive Well' ) then
+                  call twh_nbcoeff(GLB_GET,1,type,sigma)
+               elseif ( cpnumber .eq. CP_SQUARE_WELL .or.
+     &                 cpnumber .eq. CP_REPULSIVE_WELL ) then
 c                 --- output hard sphere radius
                   call twh_ntype(GLB_GET,imolty,iunit,type)
                   type = twh_getnbtype(type,type)
-                  sigma = dsqrt(twh_get_nbcoeff(1,type))
+                  call twh_nbcoeff(GLB_GET,1,type,sigma)
+                  sigma = dsqrt(sigma)
                else
 c                 --- just put in a dummy factor
                   sigma = 1.0d0
@@ -180,12 +177,13 @@ c              --- write to the appropriate file (base + box)
                call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &              ,xtemp,ytemp,ztemp)
                call twh_pdbname(GLB_GET,imolty,iunit,pdbname)
+               call twh_ntype(GLB_GET,imolty,iunit,ntype)
+               call twh_elementname(GLB_GET,ntype,elename)
+               call twh_qqatom(GLB_GET,imolty,iunit,qqatom)
                write(base+ibox,12)
      &              'ATOM  ',counter(ibox),pdbname,shortname,ipeptide
      &              ,xtemp-xmin,ytemp-ymin,ztemp-zmin
-     &              ,sigma,1.0,twh_get_elementname(
-     &              twh_get_ntype(imolty,iunit))
-     &              ,twh_get_qqatom(imolty,iunit)
+     &              ,sigma,1.0,elename,qqatom
             enddo
          endif
       enddo

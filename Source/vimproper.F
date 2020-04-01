@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,15 +33,11 @@ c     * phic: cosine of the torsional angle (oop impropers)            *
 c     * phic: is instead the angle from -pi to +pi for stereo impropers*
 c     *                                                                *
 c     * rewritten from vtorsion 03-21-2002 by M.G. Martin              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
 #define FUNCTION_DOTPRODUCT
-#define FUNCTION_GET_IMPCOEFF
-#define FUNCTION_GET_IMPFORM
-#define FUNCTION_GET_IMPSTYLE
-#define FUNCTION_GET_ITIMPROP
 #define FUNCTION_VIMPROPER
 #include "functions.h"
 c     --- variables passed to and from function
@@ -52,7 +48,7 @@ c     --- variables passed to and from function
       dimension xcord(4),ycord(4),zcord(4)
 c     --- local variables
 c     --- integer scalars
-      integer style,ivec,improperform,impffnum
+      integer style,ivec,improperform,impffnum,icoeff
 c     --- double precision scalars
       double precision phi,onepi,temperature
       double precision xaa1,yaa1,zaa1,xaa2,yaa2,zaa2,daa1,daa2
@@ -66,7 +62,9 @@ c     --- double precision arrays
       dimension costheta(3),invstheta(3)
       double precision phiarray
       dimension phiarray(3)
-
+      double precision impcoeff
+      dimension impcoeff(MINIMPCOEFF:MAXIMPCOEFF)
+      
 c      write(6,*) 'Start VIMPROPER'
 
 c     --- retrieve constants
@@ -81,11 +79,11 @@ c     --- initialize lbadstereo and vimproper
       enddo
 
 c     --- determine the improper forcefield number and style
-      impffnum = twh_get_itimprop(imolty,unit_1,impind)
+      call twh_itimprop(GLB_GET,imolty,unit_1,impind,impffnum)
 c     --- determine the improper form
-      improperform = twh_get_impform(impffnum)
+      call twh_impform(GLB_GET,impffnum,improperform)
 c     --- determine the improper style
-      style = twh_get_impstyle(impffnum)
+      call twh_impstyle(GLB_GET,impffnum,style)
       if ( improperform .eq. 1 ) then
 c        --- amber/stereo improper angle
          do ivec = 1,3
@@ -245,22 +243,25 @@ c        --- compute the three values
          write(6,*) 'VIMPROPER: invalid improperform',improperform
          stop
       endif
-
+c     --- retrieve improper coefficients
+      do icoeff = MINIMPCOEFF,MAXIMPCOEFF
+         call twh_impcoeff(GLB_GET,impffnum,icoeff,impcoeff(icoeff))
+      enddo
       if ( style .eq. 1 ) then
 c        --- simple harmonic potential 
 c        --- used for TraPPE double bonds (cis vs trans) 
 c        --- used for Gromos improper torsions
 c        --- used for Charmm improper torsions
          phi = twh_arccos(phic)
-         twh_vimproper = twh_get_impcoeff(impffnum,0)
-     &        *(phi-twh_get_impcoeff(impffnum,1))**2.0d0
+         twh_vimproper = impcoeff(0)
+     &        *(phi-impcoeff(1))**2.0d0
       elseif ( style .eq. 2  ) then
 c        --- OPLS style cosine series 
 c        --- used in the OPLS-AA force field
 c        --- stero version so phi is phic
-         twh_vimproper = twh_get_impcoeff(impffnum,1)*(1.d0 + dcos(phi))
-     &        + twh_get_impcoeff(impffnum,2)*(1.d0 - dcos(2.0d0*phi))
-     &        + twh_get_impcoeff(impffnum,3)*(1.d0 + dcos(3.0d0*phi))
+         twh_vimproper = impcoeff(1)*(1.d0 + dcos(phi))
+     &        + impcoeff(2)*(1.d0 - dcos(2.0d0*phi))
+     &        + impcoeff(3)*(1.d0 + dcos(3.0d0*phi))
       elseif ( style .eq. 3 ) then
 c        --- potentials for enforcing stereochemistry
          if ( phi .lt. 0.0d0 ) then
@@ -272,31 +273,31 @@ c        --- potentials for enforcing stereochemistry
                tcc = -phi
             endif
             call twh_temperature(GLB_GET,temperature)
-            twh_vimproper = (twh_get_impcoeff(impffnum,0) 
-     &           + twh_get_impcoeff(impffnum,1)*tcc)*temperature
+            twh_vimproper = (impcoeff(0) 
+     &           + impcoeff(1)*tcc)*temperature
          endif
       elseif ( style .eq. 4 ) then
 c        --- Amber improper torsion
-         twh_vimproper = twh_get_impcoeff(impffnum,1)* 
-     &        ( 1.0d0 + dcos(twh_get_impcoeff(impffnum,2)*phi
-     &        - twh_get_impcoeff(impffnum,3)))
+         twh_vimproper = impcoeff(1)* 
+     &        ( 1.0d0 + dcos(impcoeff(2)*phi
+     &        - impcoeff(3)))
       elseif ( style .eq. 5 ) then
 c        --- wilson harmonic
-         twh_vimproper = twh_get_impcoeff(impffnum,0)
-     &        *(phi-twh_get_impcoeff(impffnum,1))**2.0d0
+         twh_vimproper = impcoeff(0)
+     &        *(phi-impcoeff(1))**2.0d0
       elseif ( style .eq. 6 ) then
 c        --- UFF cosine Fourier expansion
-         twh_vimproper = twh_get_impcoeff(impffnum,3)
-     &        *(twh_get_impcoeff(impffnum,0) 
-     &        + twh_get_impcoeff(impffnum,1)*dcos(phi)
-     &        + twh_get_impcoeff(impffnum,2)*dcos(2.0d0*phi) )
+         twh_vimproper = impcoeff(3)
+     &        *(impcoeff(0) 
+     &        + impcoeff(1)*dcos(phi)
+     &        + impcoeff(2)*dcos(2.0d0*phi) )
       elseif ( style .eq. 7 ) then
 c        --- k[1 - Cos(phi)]
-         twh_vimproper = twh_get_impcoeff(impffnum,1)
+         twh_vimproper = impcoeff(1)
      &        *(1.0d0 - dcos(phi))
       elseif ( style .eq. 8 ) then
 c        --- harmonic over the three phi angles
-         twh_vimproper = twh_get_impcoeff(impffnum,1)*(phiarray(1)**2
+         twh_vimproper = impcoeff(1)*(phiarray(1)**2
      &        + phiarray(2)**2 + phiarray(3)**2)
       else
          stop 'you picked a non-defined improper type'

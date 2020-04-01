@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,15 +26,11 @@ c     * computes the angle-angle cross term for a given angle-angle    *
 c     * type and the single angle types plus the two angles            *
 c     *                                                                *
 c     * originally written 02-24-2000 by M.G. Martin                   *
-c     * last modified 08-02-2016 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_AACOEFF
-#define FUNCTION_GET_AASTYLE
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_ITAA
 #define FUNCTION_VANGANG
 #include "functions.h"
 c     --- variables passed to/from the function
@@ -45,8 +41,10 @@ c     --- variables passed to/from the function
 c     --- local variables
       integer type,atypeone,atypetwo,style
       double precision angone,angtwo,xone,yone,zone,xtwo,ytwo,ztwo
-      double precision distone,disttwo
-
+      double precision distone,disttwo,coeffone,coefftwo
+      double precision aacoeff
+      dimension aacoeff(0:2)
+      
 c     --- get the angles
       if ( cordstyle .eq. AA_COORD ) then
 c        --- compute angles from the cords
@@ -75,23 +73,27 @@ c        --- use the angles that were passed to the function
       endif
          
 c     --- determine angle-angle type
-      type = twh_get_itaa(imolty,iunit,index)
-      style = twh_get_aastyle(type)
+      call twh_itaa(GLB_GET,imolty,iunit,index,type)
+      call twh_aastyle(GLB_GET,type,style)
 
       if ( style .eq. 1 ) then
 c        --- Compass angle-angle cross term
 c        --- energy = k* (angle(1) - equil(1))*(angle(2) - equil(2))
          call twh_iataa1(GLB_GET,imolty,iunit,index,atypeone)
          call twh_iataa2(GLB_GET,imolty,iunit,index,atypetwo)
-         twh_vangang = twh_get_aacoeff(type,0)
-     &        *(angone - twh_get_bencoeff(atypeone,0))
-     &        *(angtwo - twh_get_bencoeff(atypetwo,0))
+         call twh_bencoeff(GLB_GET,atypeone,0,coeffone)
+         call twh_bencoeff(GLB_GET,atypetwo,0,coefftwo)
+         call twh_aacoeff(GLB_GET,type,0,aacoeff(0))
+         twh_vangang = aacoeff(0)*(angone - coeffone)
+     &        *(angtwo - coefftwo)
       elseif ( style .eq. 2 ) then
 c        --- Compass angle-angle term, but without the clever logic
 c        --- of storing the angles in the bencoeffs.  
-         twh_vangang = twh_get_aacoeff(type,0)
-     &        *(angone - twh_get_aacoeff(type,1))
-     &        *(angtwo - twh_get_aacoeff(type,2))
+         call twh_aacoeff(GLB_GET,type,0,aacoeff(0))
+         call twh_aacoeff(GLB_GET,type,1,aacoeff(1))
+         call twh_aacoeff(GLB_GET,type,2,aacoeff(2))
+         twh_vangang = aacoeff(0)*(angone - aacoeff(1))
+     &        *(angtwo - aacoeff(2))
       else
          stop 'non defined angle-angle type'
       endif

@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -418,13 +418,9 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_INAA
 #define FUNCTION_VANGANG
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -432,7 +428,7 @@ c     --- variables passed to/from the subroutine
       double precision v_ben
 c     --- local variables
 c     --- integer scalars
-      integer iunit,itor,ibead,imolty,nunit
+      integer iunit,itor,ibead,imolty,nunit,inaa
 c     --- integer arrays
       integer ttype
       dimension ttype(4)
@@ -447,10 +443,11 @@ c     --- double precision arrays
       call twh_nunit(GLB_GET,imolty,nunit)
       do iunit = 1,nunit
          ttype(1) = iunit
-         do itor = 1,twh_get_inaa(imolty,iunit)
-            ttype(2) = twh_get_ijaa0(imolty,iunit,itor)
-            ttype(3) = twh_get_ijaa1(imolty,iunit,itor)
-            ttype(4) = twh_get_ijaa2(imolty,iunit,itor)
+         call twh_inaa(GLB_GET,imolty,iunit,inaa)
+         do itor = 1,inaa
+            call twh_ijaa0(GLB_GET,imolty,iunit,itor,ttype(2))
+            call twh_ijaa1(GLB_GET,imolty,iunit,itor,ttype(3))
+            call twh_ijaa2(GLB_GET,imolty,iunit,itor,ttype(4))
             do ibead = 1,4
                call twh_coordinates(GLB_GET,icf,ichain,ttype(ibead)
      &              ,xtmp(ibead),ytmp(ibead),ztmp(ibead))
@@ -478,12 +475,9 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_INBEN
 #define FUNCTION_VANGLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -492,7 +486,7 @@ c     --- variables passed to/from the subroutine
       double precision v_ben
 c     --- local variables
 c     --- integer scalars
-      integer iunit,iben,ip1,ip2,imolty,nunit
+      integer iunit,iben,ip1,ip2,imolty,nunit,inbend
 c     --- double precision scalars
       double precision duma,dumb,dumc
 c     --- double precision arrays
@@ -505,10 +499,11 @@ c     --- double precision arrays
       do iunit = 2,nunit
          call twh_coordinates(GLB_GET,icf,ichain,iunit
      &        ,xtmp(1),ytmp(1),ztmp(1))
-         do iben = 1, twh_get_inben(imolty,iunit)
-            ip2 = twh_get_ijben3(imolty,iunit,iben)
+         call twh_inben(GLB_GET,imolty,iunit,inbend)
+         do iben = 1,inbend
+            call twh_ijben3(GLB_GET,imolty,iunit,iben,ip2)
             if ( ip2 .lt. iunit ) then
-               ip1 = twh_get_ijben2(imolty,iunit,iben)
+               call twh_ijben2(GLB_GET,imolty,iunit,iben,ip1)
 c              --- fetch the coordinates
                call twh_coordinates(GLB_GET,icf,ichain,ip1
      &              ,xtmp(2),ytmp(2),ztmp(2))
@@ -536,13 +531,10 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_IJBNBN1
-#define FUNCTION_GET_IJBNBN2
-#define FUNCTION_GET_INBNBN
 #define FUNCTION_VBONBON
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -550,7 +542,7 @@ c     --- variables passed to/from the subroutine
       double precision v_vib
 c     --- local variables
 c     --- integer scalars
-      integer iunit,iben,ip1,ip2,imolty,nunit
+      integer iunit,iben,ip1,ip2,imolty,nunit,inbondbond
 c     --- double precision scalars
       double precision rxuij,ryuij,rzuij
       double precision rxunit,ryunit,rzunit,rxipone,ryipone,rzipone
@@ -563,9 +555,10 @@ c     --- double precision arrays
       call twh_moltyp(GLB_GET,ichain,imolty)
       call twh_nunit(GLB_GET,imolty,nunit)
       do iunit = 1,nunit
-         do iben = 1,twh_get_inbnbn(imolty,iunit)
-            ip1 = twh_get_ijbnbn1(imolty,iunit,iben)
-            ip2 = twh_get_ijbnbn2(imolty,iunit,iben)
+         call twh_inbnbn(GLB_GET,imolty,iunit,inbondbond)
+         do iben = 1,inbondbond
+            call twh_ijbnbn1(GLB_GET,imolty,iunit,iben,ip1)
+            call twh_ijbnbn2(GLB_GET,imolty,iunit,iben,ip2)
             call twh_coordinates(GLB_GET,icf,ichain,iunit
      &           ,rxunit,ryunit,rzunit)
             call twh_coordinates(GLB_GET,icf,ichain,ip1
@@ -604,11 +597,10 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_INVIB
 #define FUNCTION_VBOND
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -617,7 +609,7 @@ c     --- variables passed to/from the subroutine
       double precision v_vib
 c     --- local variables
 c     --- integer scalars
-      integer iunit,ivib,ip1,it,imolty,nunit
+      integer iunit,ivib,ip1,it,imolty,nunit,invibration
 c     --- double precision scalars
       double precision rxuij,ryuij,rzuij,dist
       double precision rxunit,ryunit,rzunit,rxipone,ryipone,rzipone
@@ -626,7 +618,8 @@ c     --- double precision scalars
       call twh_moltyp(GLB_GET,ichain,imolty)
       call twh_nunit(GLB_GET,imolty,nunit)
       do iunit = 2,nunit
-         do ivib = 1, twh_get_invib(imolty,iunit)
+         call twh_invib(GLB_GET,imolty,iunit,invibration)
+         do ivib = 1,invibration
             call twh_ijvib(GLB_GET,imolty,iunit,ivib,ip1)
             call twh_itvib(GLB_GET,imolty,iunit,ivib,it)
 c           --- increment vibrational energy
@@ -665,13 +658,9 @@ c     * Error conditions:                                              *
 c     *   none                                                         *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_INIMPROP
 #define FUNCTION_VIMPROPER
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -681,7 +670,7 @@ c     --- local variables
 c     --- logical scalars
       logical lbadstereo
 c     --- integer scalars
-      integer iunit,itor,ibead,imolty,nunit
+      integer iunit,itor,ibead,imolty,nunit,inimproper
 c     --- integer arrays
       integer ttype
       dimension ttype(4)
@@ -698,10 +687,11 @@ c     --- these are only stored on a single atom as they are
 c     --- not symmetrically defined
       do iunit = 1,nunit
          ttype(1) = iunit
-         do itor = 1,twh_get_inimprop(imolty,iunit)
-            ttype(2) = twh_get_ijimprop2(imolty,iunit,itor)
-            ttype(3) = twh_get_ijimprop3(imolty,iunit,itor)
-            ttype(4) = twh_get_ijimprop4(imolty,iunit,itor)
+         call twh_inimprop(GLB_GET,imolty,iunit,inimproper)
+         do itor = 1,inimproper
+            call twh_ijimprop2(GLB_GET,imolty,iunit,itor,ttype(2))
+            call twh_ijimprop3(GLB_GET,imolty,iunit,itor,ttype(3))
+            call twh_ijimprop4(GLB_GET,imolty,iunit,itor,ttype(4))
 c           --- fetch the coordinates
             do ibead = 1,4
                call twh_coordinates(GLB_GET,icf,ichain,ttype(ibead)
@@ -730,13 +720,12 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 08-25-2006 by M.G. Martin              *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EWALD_CORRECT
 #define FUNCTION_EWALD_SELF
 #define FUNCTION_LINCLUDE
-#define FUNCTION_ONEFIVETYPE
 #define FUNCTION_VINTRA
 #define FUNCTION_VONEFIVE
 #define FUNCTION_VTWOBODY
@@ -780,7 +769,7 @@ c     --- get molecule type
             rijsq = rxuij*rxuij + ryuij*ryuij + rzuij*rzuij
             if ( twh_linclude(imolty,iunit,jj) ) then
 c              --- get one-five type
-               ioftype = twh_onefivetype(imolty,iunit,jj)
+               call twh_onefivetype(imolty,iunit,jj,ioftype)
                if ( ioftype .eq. 0 ) then
 c                 --- normal vtwobody
                   v_intra = v_intra + twh_vtwobody(lfailure,rijsq
@@ -834,13 +823,9 @@ c     * Error conditions:                                              *
 c     *   returns early if lovrlap is true                             *
 c     *                                                                *
 c     * rewritten from engmolec 10-09-2006 by M.G. Martin              *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INTOR
 #define FUNCTION_VTORSION
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -849,7 +834,7 @@ c     --- variables passed to/from the subroutine
       double precision v_tor
 c     --- local variables
 c     --- integer scalars
-      integer iunit,itor,ibead,imolty,nunit
+      integer iunit,itor,ibead,imolty,nunit,intorsion
 c     --- local double precision
       double precision duma
 c     --- integer arrays
@@ -865,12 +850,13 @@ c     --- double precision arrays
       do iunit = 2,nunit
 c        --- store the charge on atom j
          ttype(1) = iunit
-         do itor = 1, twh_get_intor(imolty,iunit)
-            ttype(4) = twh_get_ijtor4(imolty,iunit,itor)
+         call twh_intor(GLB_GET,imolty,iunit,intorsion)
+         do itor = 1,intorsion
+            call twh_ijtor4(GLB_GET,imolty,iunit,itor,ttype(4))
             if ( ttype(4) .lt. iunit ) then
 c                    --- store unit numbers
-               ttype(2) = twh_get_ijtor2(imolty,iunit,itor)
-               ttype(3) = twh_get_ijtor3(imolty,iunit,itor)
+               call twh_ijtor2(GLB_GET,imolty,iunit,itor,ttype(2))
+               call twh_ijtor3(GLB_GET,imolty,iunit,itor,ttype(3))
 c                    --- store atom positions
                do ibead = 1,4
                   call twh_coordinates(GLB_GET,icf,ichain,ttype(ibead)

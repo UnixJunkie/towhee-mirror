@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,19 +26,16 @@ c     * surface area (SASA) implicit water model as defined in         *
 c     * Ferrara, Apostolakis, and Caflisch, Proteins 46, 24-33 (2002)  *
 c     *                                                                *
 c     * originally written 10-31-2002 by M.G. Martin                   *
-c     * last update 08-04-2016 by M.G. Martin                          *
+c     * last update 03-31-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_NBCOEFF
 #define FUNCTION_VSASA
 #include "functions.h"
 c     --- variables passed to/from the function
       integer ichain,bxdflag,ibox,cordtype
 c     --- local variables
-      integer j,typej,inn,iunit,typei,imolty,nunit
+      integer j,typej,inn,iunit,typei,imolty,nunit,ijvibtest,invibration
       double precision rprobe,sasaprod,xi,yi,zi,risasa
       double precision pisasa,sisasa,sigmaisasa,xj,yj,zj
       double precision rjsasa,pijsasa,bijsasa,deltax,deltay
@@ -55,23 +52,23 @@ c     --- local variables
       do iunit = 1,nunit
          call twh_coordinates(GLB_GET,cordtype,ichain,iunit,xi,yi,zi)
          call twh_ntype(GLB_GET,imolty,iunit,typei)
-         risasa = twh_get_nbcoeff(5,typei)
+         call twh_nbcoeff(GLB_GET,5,typei,risasa)
          sisasa = 4*onepi*(risasa+rprobe)*(risasa+rprobe)
-         pisasa = twh_get_nbcoeff(6,typei)
-         sigmaisasa = twh_get_nbcoeff(7,typei)
+         call twh_nbcoeff(GLB_GET,6,typei,pisasa)
+         call twh_nbcoeff(GLB_GET,7,typei,sigmaisasa)
 c        --- calculate the solvent assessible surface area of particle i
          do j = 1,nunit
             if (j .ne. iunit) then
                call twh_coordinates(GLB_GET,cordtype,ichain,j
      &              ,xj,yj,zj)
                call twh_ntype(GLB_GET,imolty,j,typej)
-               rjsasa = twh_get_nbcoeff(5,typej)
+               call twh_nbcoeff(GLB_GET,5,typej,rjsasa)
                lneigh = .false.
-               do inn = 1, twh_get_invib(imolty,iunit)
+               call twh_invib(GLB_GET,imolty,iunit,invibration)
+               do inn = 1,invibration
                   if (.not. lneigh) then
-                     if (j .eq. twh_get_ijvib(imolty,iunit,inn)) then
-                        lneigh = .true.
-                     endif
+                     call twh_ijvib(GLB_GET,imolty,iunit,inn,ijvibtest)
+                     if ( j .eq. ijvibtest ) lneigh = .true.
                   endif
                enddo
                if (lneigh) then

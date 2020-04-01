@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,11 +25,9 @@ c     * places certain key atoms onto a helix for molecule type imolty *
 c     * stores the results in the coordinates according to testcord    *
 c     *                                                                *
 c     * originally written 08-03-2004 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_NBNAME
 #include "functions.h"
 c     --- debug toggle
 #define DEBUG_BUILDHELIX 0
@@ -40,9 +38,10 @@ c     --- local variables
 c     --- logical scalars
       logical lfound 
 c     --- character string scalars
-      character*2 key_element
+      character*2 key_element,elename
       character*4 key_pdbname,pdbname
       character*10 key_nbname,helix_keyname,helix_keytype
+      character*(FFNAMELEN) nbname
 c     --- integer scalars
       integer count,iunit,ntii,ichain,nunit
 c     --- double precision scalars
@@ -80,7 +79,9 @@ c     --- set the key
          lfound = .false.
          if ( helix_keytype .eq. 'element' ) then
 c           --- test against the element
-            if ( key_element .eq. twh_get_elementname(ntii) ) then
+            call twh_elementname(GLB_GET,ntii,elename)
+            if ( key_element .eq. elename  ) then
+            
                lfound = .true.
             endif
          elseif ( helix_keytype .eq. 'pdbname' ) then
@@ -89,7 +90,8 @@ c           --- test against the pdbname
             if ( key_pdbname .eq. pdbname ) lfound = .true.
          elseif ( helix_keytype .eq. 'nbname' ) then
 c           --- test against the atomname
-            if ( key_nbname .eq. twh_get_nbname(ntii) ) lfound = .true.
+            call twh_nbname(GLB_GET,ntii,nbname)
+            if ( key_nbname .eq. nbname ) lfound = .true.
          else
             write(6,*) 'BUILDHELIX: unknown helix_keytype',imolty
             write(6,*) 'keyname =',helix_keytype,'='

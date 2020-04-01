@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,15 +26,13 @@ c     * computes the energy from all of the external fields with the   *
 c     * atom in box ibox                                               *
 c     *                                                                *
 c     * originally written 11-17-2004 by M.G. Martin                   *
-c     * last update 08-01-2016 by M.G. Martin                          *
+c     * last update 03-31-2020 by M.G. Martin                          *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_NBCOEFF
 #define FUNCTION_VFIELD
 #include "functions.h"
-
 c     --- variables passed to/from the function
       logical lfailure,lovrlap
       integer bxdflag,ibox,ntii,imolty,ichain,iunit,nbii
@@ -53,6 +51,7 @@ c     --- double precision scalars
       double precision szone,sztwo,szfour,szten,energy
       double precision dpfieldone,dpfieldtwo,dpfieldthree,dpfieldfour
       double precision fnbone,fnbtwo,fnbthr,fnbfou,fconstant
+      double precision nbcoeff_one
 c     --- double precision arrays
       double precision localcoord
       dimension localcoord(3)
@@ -120,8 +119,8 @@ c              --- calculate the distance
 c              --- calculate atom radius 
                nbii = twh_getnbtype(ntii,ntii)
 c              --- perform overlap test
-               dum = dpfieldone
-     &               + 0.5d0*twh_get_nbcoeff(1,nbii)
+               call twh_nbcoeff(GLB_GET,1,nbii,nbcoeff_one)
+               dum = dpfieldone + 0.5d0*nbcoeff_one
                dum = dum * dpfieldtwo
                if ( dabs(dist) .lt. dum ) then
 c                 --- check the overlap style
@@ -181,8 +180,9 @@ c                    --- zcoord field
                   elseif ( fchar .eq. 'hard radii' ) then
                      nbii = twh_getnbtype(ntii,ntii)
                      call twh_fielddp(GLB_GET,ifield,2,dpfieldtwo)
-                     if ( dabs(dist) .lt. dpfieldtwo
-     &                    + 0.5d0*twh_get_nbcoeff(1,nbii) ) then
+                     call twh_nbcoeff(GLB_GET,1,nbii,nbcoeff_one)
+                     if ( dabs(dist) .lt.
+     &                    dpfieldtwo + 0.5d0*nbcoeff_one ) then
                         linfield = .true.
                      endif
                   else

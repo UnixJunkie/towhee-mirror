@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2003-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2003-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -42,11 +42,10 @@ c     * 5: x-z stress                                                  *
 c     * 6: y-z stress                                                  *
 c     *                                                                *
 c     * rewritten from pressure 12-17-2003 by M.G. Martin              *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CMP_GT
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_WCOULOMB
 #define FUNCTION_WTWOBODY
 #include "functions.h"
@@ -66,6 +65,7 @@ c     --- integer scalars
       integer ichain,jchain,indx,ensemble
       integer ii,jj,ntii,ntjj,imolty,jmolty,nchain,nmolty
       integer numiunit,numjunit,nchbox,ncmti,ncmtj
+      integer testboxi,testboxj
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rx_ab,ry_ab,rz_ab
       double precision rijsq,rhosq,rij,w_ab,xcmi,ycmi,zcmi
@@ -104,7 +104,8 @@ c     --- make sure there are no periodic molecules in this box as the
 c     --- molecular virial does not make sense for molecules that do
 c     --- not have a center-of-mass
       do ichain = 1,nchain
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_lperiodic(GLB_GET,ichain,lperiodic)
             if ( lperiodic ) then
 c              --- cannot compute the virial pressure in this box
@@ -117,7 +118,8 @@ c              --- so leave it as zero and return
 c     --- loop over all molecules
       do ichain = 1, nchain - 1
 c        --- check if i is in relevant box 
-         if ( twh_get_nboxi(ichain) .eq. ibox ) then
+         call twh_nboxi(GLB_GET,ichain,testboxi)
+         if ( testboxi .eq. ibox ) then
             call twh_moltyp(GLB_GET,ichain,imolty)
             call twh_nunit(GLB_GET,imolty,numiunit)
             call twh_com(GLB_GET,CRD_REAL,ichain,xcmi,ycmi,zcmi)
@@ -125,7 +127,8 @@ c        --- check if i is in relevant box
 c           --- loop over all chains j with j>i 
             do jchain = ichain + 1, nchain
 c              --- check for simulation box
-               if ( twh_get_nboxi(jchain) .eq. ibox ) then
+               call twh_nboxi(GLB_GET,jchain,testboxj)
+               if ( testboxj .eq. ibox ) then
                   call twh_moltyp(GLB_GET,jchain,jmolty)
                   call twh_nunit(GLB_GET,jmolty,numjunit)
 c                 --- need to compute the center of mass separations

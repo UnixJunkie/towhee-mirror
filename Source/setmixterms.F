@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,17 +26,11 @@ c     * appropriate constants                                          *
 c     * also converts degrees into radians for the bending terms       *
 c     *                                                                *
 c     * originally written 03-01-2002 by M.G. Martin                   *
-c     * last modified 07-21-2014 M.G. Martin                           *
+c     * last modified 03-31-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_ANGLESTYLE
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_HBONDNAMES
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_NBNAME
 #define FUNCTION_VTWOBODY
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -47,29 +41,39 @@ c     --- logical scalars
       logical lovrlap,lproblem,lhbond,lfound,lshift,loutput
 c     --- character string scalars
       character*1 dai,daj
-      character*2 twoelei,twoelej
+      character*(ELENAMLEN) twoelei,twoelej
       character*(FFNAMELEN) testone,testtwo,elei,elej,key
       character*20 interpolatestyle,eampairstyle,eamembedstyle
       character*20 eamdensstyle
-      character*30 localcp,localcm
+      character*(CLAPOTLEN) localcp
+      character*(MIXRULLEN) localcm
+      character*(FFNAMELEN) nbnamei,nbnamej
+c     --- character string arrays
+      character*(FFNAMELEN) hbondnames
+      dimension hbondnames(2)
 c     --- integer scalars
       integer idist,imax,itype,jtype,ii,jj,ij,itrial,jlo,jhi
       integer hbtype,id,nadjust,iadjust,icoeff,itest,style
+      integer anglestyle,cpnumber
 c     --- double precision scalars
-      double precision maxval,test,dist,rpos,dv,dtemp
+      double precision maxval,test,dist,rpos,dv,dtemp,coefftemp
       double precision esigsix,esigtwelve,polari,polarj,denom
       double precision valuei,valuej,twopi
       double precision ai,aj,alphai,alphaj,gi,gj,nni,nnj,power,bbb
       double precision epsscale,radscale,gamma,nbbeta,rii,rjj,rij,rcut
       double precision dvibone,dvibtwo,dvibthree,rijfinal,epsfinal
+      double precision nbc_1_ii,nbc_1_jj,nbc_2_ii,nbc_2_jj
+      double precision nbc_1id_ii,nbc_2id_ii,nbc_1id_jj,nbc_2id_jj
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
-
+      double precision nbcoeff
+      dimension nbcoeff(MINNBCOEFF:MAXNBCOEFF)
+      
 c     --- get the classical potential
-      localcp = twh_get_classical_potential()
+      call twh_classical_potential(GLB_GET,localcp)
+      call twh_cp_number(GLB_GET,cpnumber)
       call twh_classical_mixrule(GLB_GET,localcm)
-
 c     --- retrieve constants
       call twh_constant_twopi(GLB_GET,twopi)
       call twh_lshift(GLB_GET,lshift)
@@ -130,7 +134,7 @@ c     --- output method in which cross terms are computed
       endif
 
 c     --- classical_potential specific section
-      if ( localcp .eq. 'Exponential-6' ) then
+      if ( cpnumber .eq. CP_EXPONENTIAL_6 ) then
 c        --- need to avoid some divide by zero problems.  If term 3
 c        --- is zero we have to reset it to be 1.0d0
 c        --- term 3 needs to be reinitialized to 1.0 to aviod 
@@ -138,23 +142,25 @@ c        --- division by zero in the tail corrections
          do itype = 1,ntypes
             do jtype = 1,ntypes
                ij = twh_getnbtype(itype,jtype)
-               if ( twh_get_nbcoeff(3,ij) .eq. 0.0d0 ) then
+               call twh_nbcoeff(GLB_GET,3,ij,nbcoeff(3))
+               if ( nbcoeff(3) .eq. 0.0d0 ) then
                   call twh_nbcoeff(GLB_SET,3,ij,1.0d0)
                endif
             enddo
          enddo
-      elseif ( localcp .eq. 'Exponential-12-6' ) then
+      elseif ( cpnumber .eq. CP_EXPONENTIAL_12_6 ) then
 c        --- if term 4 is zero then it needs to be reinitialized to 1.0 
 c        --- to avoid problem in the exp-6 force fields
          do itype = 1,ntypes
             do jtype = 1,ntypes
                ij = twh_getnbtype(itype,jtype)
-               if ( twh_get_nbcoeff(4,ij) .eq. 0.0d0 ) then
+               call twh_nbcoeff(GLB_GET,4,ij,nbcoeff(4))
+               if ( nbcoeff(4) .eq. 0.0d0 ) then
                   call twh_nbcoeff(GLB_SET,4,ij,1.0d0)
                endif
             enddo
          enddo
-      elseif ( localcp .eq. '12-6 plus 12-10 H-bond' ) then
+      elseif ( cpnumber .eq. CP_12_6_PLUS_12_10_H_BOND ) then
 c        --- need to do hbonds
          lhbond = .true.
       endif
@@ -169,19 +175,14 @@ c              --- find a match
                hbtype = 0
                do while ( hbtype  .lt. THBONDMAX .and. .not. lfound )
                   hbtype = hbtype + 1
-                  if ( (
-     &                 twh_get_nbname(itype) 
-     &                 .eq. twh_get_hbondnames(hbtype,1)
-     &                 .and.
-     &                 twh_get_nbname(jtype)
-     &                 .eq. twh_get_hbondnames(hbtype,2) 
-     &                 ) .or. (
-     &                 twh_get_nbname(itype)
-     &                 .eq. twh_get_hbondnames(hbtype,2)
-     &                 .and.
-     &                 twh_get_nbname(jtype)
-     &                 .eq. twh_get_hbondnames(hbtype,1) 
-     &                 ) ) then
+                  call twh_hbondnames(GLB_GET,hbtype,1,hbondnames(1))
+                  call twh_hbondnames(GLB_GET,hbtype,2,hbondnames(2))
+                  call twh_nbname(GLB_GET,itype,nbnamei)
+                  call twh_nbname(GLB_GET,jtype,nbnamej)
+                  if ( (nbnamei .eq. hbondnames(1)
+     &                 .and. nbnamej .eq. hbondnames(2))
+     &                 .or. (nbnamei .eq. hbondnames(2)
+     &                 .and. nbnamej .eq. hbondnames(1) ) ) then
 c                    --- match found, set nb_to_hb array
                      call twh_nb_to_hbtype(GLB_SET,ij,hbtype)
                      lfound = .true.
@@ -191,8 +192,8 @@ c                    --- match found, set nb_to_hb array
          enddo
       endif
 
-      if ( localcp .eq. 'Scaled Lennard-Jones' .or.
-     &     localcp .eq. 'Weeks-Chandler-Anderson') then
+      if ( cpnumber .eq. CP_SCALED_LENNARD_JONES .or.
+     &     cpnumber .eq. CP_WEEKS_CHANDLER_ANDERSON ) then
 c        --- we wish to mark which atoms will be rescaled.  Rescaling of
 c        --- LJ terms takes place during energy evaluation since lambdas
 c        --- may vary at runtime.  
@@ -201,8 +202,7 @@ c        --- for WCA this keeps track of repulsive-only atomtypes
          call scp_initialize_atom_scaling(ntypes)
       endif
             
-c     --- set all of the nbcoeffs according to mixing rules and 
-c     --- localcp
+c     --- set all of the nbcoeffs according to mixing rules and cp
       do itrial = 1,2
          do itype = 1,ntypes
             if ( itrial .eq. 1 ) then
@@ -219,7 +219,7 @@ c              --- we are setting up all of the self terms
                jj = twh_getnbtype(jtype,jtype)
                ij = twh_getnbtype(itype,jtype)
                if ( localcm .eq. 'Lorentz-Berthelot' ) then
-                  call twh_set_lorentz_berthelot(lproblem,localcp
+                  call twh_set_lorentz_berthelot(lproblem,cpnumber
      &                 ,localcm,ii,jj,ij)
                elseif ( localcm .eq. 'LB plus manual' ) then
 c                 --- check to see if this is one that is manually 
@@ -248,8 +248,10 @@ c                 --- adjusted, or if we should just use LB
      &                       ,1,testone)
                         call twh_mixrule_adjust_keynames(GLB_GET,iadjust
      &                       ,2,testtwo)
-                        elei = twh_get_nbname(itype)
-                        elej = twh_get_nbname(jtype)
+                        call twh_nbname(GLB_GET,itype,nbnamei)
+                        elei = nbnamei(1:2)
+                        call twh_nbname(GLB_GET,jtype,nbnamej)
+                        elej = nbnamej(1:2)
                         if ( (testone .eq. elei .and. testtwo .eq. elej)
      &                       .or.
      &                       (testone .eq. elej .and. testtwo .eq. elei)
@@ -264,7 +266,7 @@ c                 --- adjusted, or if we should just use LB
                         return
                      endif
                      if ( lfound ) then
-                        if ( localcp .eq. 'Lennard-Jones' ) then
+                        if ( cpnumber .eq. CP_LENNARD_JONES ) then
                            icoeff = 1
                            call twh_mixrule_adjustments(GLB_GET
      &                          ,iadjust,icoeff,dtemp)
@@ -305,26 +307,26 @@ c                          --- store 4*epslion (1-4)
                   enddo
                   if ( .not. lfound ) then
 c                    --- did not find a manual match, use LB
-                     call twh_set_lorentz_berthelot(lproblem,localcp
+                     call twh_set_lorentz_berthelot(lproblem,cpnumber
      &                    ,localcm,ii,jj,ij)
                   endif
                elseif ( localcm .eq. 'Geometric' ) then
-                  if ( localcp .eq. 'Lennard-Jones' .or.
-     &                 localcp .eq.  'Scaled Lennard-Jones' 
-     &                 .or. localcp .eq. 'UFF 12-6' .or.
-     &                 localcp .eq. 'Weeks-Chandler-Anderson' ) then
+                  if ( cpnumber .eq. CP_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_SCALED_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_UFF_12_6 .or.
+     &                 cpnumber .eq. CP_WEEKS_CHANDLER_ANDERSON ) then
 c                    --- geometric mean of sigma values
 c                    --- store sigma**6
-                     valuei = twh_get_nbcoeff(1,ii)
-                     valuej = twh_get_nbcoeff(1,jj)
+                     call twh_nbcoeff(GLB_GET,1,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,1,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
                      dtemp = dtemp**6
                      call twh_nbcoeff(GLB_SET,13,ij,dtemp)
 c                    --- store 1-4 sigma**6
-                     valuei = twh_get_nbcoeff(3,ii)
-                     valuej = twh_get_nbcoeff(3,jj)
+                     call twh_nbcoeff(GLB_GET,3,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,3,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
@@ -332,40 +334,40 @@ c                    --- store 1-4 sigma**6
                      call twh_nbcoeff(GLB_SET,15,ij,dtemp)
 c                    --- geometric mean of epsilon
 c                    --- store 4*epsilon
-                     valuei = twh_get_nbcoeff(2,ii)
-                     valuej = twh_get_nbcoeff(2,jj)
+                     call twh_nbcoeff(GLB_GET,2,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,2,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
                      dtemp = 4.0d0*dtemp
                      call twh_nbcoeff(GLB_SET,14,ij,dtemp)
 c                    --- store 4*epsion 1-4
-                     valuei = twh_get_nbcoeff(4,ii)
-                     valuej = twh_get_nbcoeff(4,jj)
+                     call twh_nbcoeff(GLB_GET,4,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,4,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
                      dtemp = 4.0d0*dtemp
                      call twh_nbcoeff(GLB_SET,16,ij,dtemp)
-                  elseif ( localcp .eq. '12-9-6' ) then
+                  elseif ( cpnumber .eq. CP_12_9_6 ) then
 c                    --- geometric mean of the three nbcoeffs
 c                    --- geometric mean of the "12" values
-                     valuei = twh_get_nbcoeff(1,ii)
-                     valuej = twh_get_nbcoeff(1,jj)
+                     call twh_nbcoeff(GLB_GET,1,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,1,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
                      call twh_nbcoeff(GLB_SET,1,ij,dtemp)
 c                    --- geometric mean of the "9" values
-                     valuei = twh_get_nbcoeff(2,ii)
-                     valuej = twh_get_nbcoeff(2,jj)
+                     call twh_nbcoeff(GLB_GET,2,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,2,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
                      call twh_nbcoeff(GLB_SET,2,ij,dtemp)
 c                    --- geometric mean of the "6" parameters
-                     valuei = twh_get_nbcoeff(3,ii)
-                     valuej = twh_get_nbcoeff(3,jj)
+                     call twh_nbcoeff(GLB_GET,3,ii,valuei)
+                     call twh_nbcoeff(GLB_GET,3,jj,valuej)
                      call twh_geometricmean(lfailure,valuei,valuej
      &                    ,dtemp)
                      if ( lfailure ) return
@@ -376,18 +378,18 @@ c                    --- geometric mean of the "6" parameters
                elseif ( localcm .eq. 'Sixth Power' ) then
 c                 --- sixth order combination of epsilon and sigma
 c                 --- note that nbcoeff(1) contains r^3
-                  if ( localcp .eq. '9-6' ) then
-                     if ( twh_get_nbcoeff(1,ii)*twh_get_nbcoeff(1,jj)
-     &                    .gt. 1.0d-5 ) then
-                        dtemp = dsqrt((twh_get_nbcoeff(1,ii)**6
-     &                       + twh_get_nbcoeff(1,jj)**6)/(2.0d0))
+                  if ( cpnumber .eq. CP_9_6 ) then
+                     call twh_nbcoeff(GLB_GET,1,ii,nbc_1_ii)
+                     call twh_nbcoeff(GLB_GET,1,jj,nbc_1_jj)
+                     if ( nbc_1_ii*nbc_1_jj .gt. 1.0d-5 ) then
+                        dtemp = dsqrt( (nbc_1_ii**6+nbc_1_jj**6)
+     &                       /(2.0d0))
                         call twh_nbcoeff(GLB_SET,1,ij,dtemp)
-                        dtemp = 2.0d0*dsqrt(twh_get_nbcoeff(2,ii)
-     &                       *twh_get_nbcoeff(2,jj))*
-     &                       (  ((twh_get_nbcoeff(1,ii)**3)
-     &                       *(twh_get_nbcoeff(1,jj)**3))
-     &                       /(twh_get_nbcoeff(1,ii)**6 
-     &                       + twh_get_nbcoeff(1,jj)**6) )
+                        call twh_nbcoeff(GLB_GET,2,ii,nbc_2_ii)
+                        call twh_nbcoeff(GLB_GET,2,jj,nbc_2_jj)
+                        dtemp = 2.0d0*dsqrt(nbc_2_ii*nbc_2_jj)*
+     &                       (  (nbc_1_ii**3)*(nbc_1_jj**3) )
+     &                       /(nbc_1_ii**6 + nbc_1_jj**6)
                         call twh_nbcoeff(GLB_SET,2,ij,dtemp)
                      else
                         call twh_nbcoeff(GLB_SET,1,ij,0.0d0)
@@ -397,27 +399,31 @@ c                 --- note that nbcoeff(1) contains r^3
                      lproblem = .true.
                   endif
                elseif ( localcm .eq. 'Explicit' ) then
-                  if ( localcp .eq. 'Lennard-Jones' .or.
-     &                 localcp .eq.  'Scaled Lennard-Jones' 
-     &          .or.     localcp .eq. '12-6 plus solvation'
-     &          .or. localcp .eq. 'Weeks-Chandler-Anderson'
+                  if ( cpnumber .eq. CP_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_SCALED_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_12_6_PLUS_SOLVATION .or.
+     &                 cpnumber .eq. CP_WEEKS_CHANDLER_ANDERSON
      &                 ) then
 c                    --- explicit terms for LJ 12-6 
 c                    --- need to convert
 c                    --- store sixth power of sigma
-                     dtemp = (twh_get_nbcoeff(1,ij))**6
+                     call twh_nbcoeff(GLB_GET,1,ij,dtemp)
+                     dtemp = (dtemp)**6
                      call twh_nbcoeff(GLB_SET,13,ij,dtemp)
 c                    --- store 4*epsilon
-                     dtemp = 4.0d0*twh_get_nbcoeff(2,ij)
+                     call twh_nbcoeff(GLB_GET,2,ij,dtemp)
+                     dtemp = 4.0d0*dtemp
                      call twh_nbcoeff(GLB_SET,14,ij,dtemp)
 c                    --- sixth power 1-4 sigma
-                     dtemp = (twh_get_nbcoeff(3,ij))**6
+                     call twh_nbcoeff(GLB_GET,3,ij,dtemp)
+                     dtemp = (dtemp)**6
                      call twh_nbcoeff(GLB_SET,15,ij,dtemp)
 c                    --- 4*epsilon 1-4
-                     dtemp = 4.0d0*twh_get_nbcoeff(4,ij)
+                     call twh_nbcoeff(GLB_GET,4,ij,dtemp)
+                     dtemp = 4.0d0*dtemp
                      call twh_nbcoeff(GLB_SET,16,ij,dtemp)
-                  elseif ( localcp .eq. 'Embedded Atom Method' .or.
-     &                    localcp .eq. 'EAM pair only' ) then
+                  elseif ( cpnumber .eq. CP_EMBEDDED_ATOM_METHOD .or.
+     &                    cpnumber .eq. CP_EAM_PAIR_ONLY ) then
                      call twh_interpolatestyle(GLB_GET,interpolatestyle)
                      if ( interpolatestyle .eq. 'cubicspline' ) then
 c                       --- need to set up the spline routines for EAM
@@ -446,8 +452,7 @@ c                          --- set up table_pair
                            call twh_splineset(3,itype,jtype)
                         endif
                      endif
-                  elseif ( localcp .eq. 'Tabulated Pair' 
-     &                    ) then
+                  elseif ( cpnumber .eq. CP_TABULATED_PAIR ) then
                      call twh_interpolatestyle(GLB_GET,interpolatestyle)
                      if ( interpolatestyle .eq. 'cubicspline' ) then
 c                       --- need to set up the spline routines
@@ -460,45 +465,43 @@ c                    --- potential there is just nothing to be done
                   endif
                elseif ( localcm .eq. 'Arithmetic' ) then
 c                 --- arithmetic mean
-                  if ( localcp .eq. 'Hard Sphere' .or.
-     &                 localcp .eq. 'Repulsive Sphere') then
+                  if ( cpnumber .eq. CP_HARD_SPHERE .or.
+     &                 cpnumber .eq. CP_REPULSIVE_SPHERE ) then
 c                    --- store the actual distance in the 1 spot
-                     dtemp = 0.5d0*(twh_get_nbcoeff(1,ii)
-     &                    + twh_get_nbcoeff(1,jj))
+                     call twh_nbcoeff(GLB_GET,1,ii,nbc_1_ii)
+                     call twh_nbcoeff(GLB_GET,1,jj,nbc_1_jj)
+                     dtemp = 0.5d0*(nbc_1_ii + nbc_1_jj)
                      call twh_nbcoeff(GLB_SET,1,ij,dtemp)
 c                    --- store the square of the distance in the 2 spot
-                     dtemp = (0.5d0*(twh_get_nbcoeff(1,ii)
-     &                    + twh_get_nbcoeff(1,jj)) )**2
+                     dtemp = (0.5d0*(nbc_1_ii + nbc_1_jj) )**2
                      call twh_nbcoeff(GLB_SET,2,ij,dtemp)
                   else
                      lproblem = .true.
                   endif
                elseif ( localcm .eq. 'Shukla' ) then
-                  if ( localcp .eq. 'Lennard-Jones' .or.
-     &                 localcp .eq.  'Scaled Lennard-Jones' .or.
-     &                 localcp .eq. 'Weeks-Chandler-Anderson' .or.
-     &                 localcp .eq. '12-6 plus 12-10 H-bond') then
+                  if ( cpnumber .eq. CP_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_SCALED_LENNARD_JONES .or.
+     &                 cpnumber .eq. CP_WEEKS_CHANDLER_ANDERSON .or.
+     &                 cpnumber .eq. CP_12_6_PLUS_12_10_H_BOND ) then
 c                    --- store nbcoeff(13) and nb(15) with sigma^6 
 c                    --- store nbcoeff(14) and nb(16) with 4*epsilon
                      call twh_polarizability(GLB_GET,itype,polari)
                      call twh_polarizability(GLB_GET,jtype,polarj)
                      do id = 0,2,2
 c                       --- first compute the epsilon*sigma^6 term
-                        denom = ( twh_get_nbcoeff(2+id,ii)
-     &                       *(twh_get_nbcoeff(1+id,ii)**6)*(polarj**2)
-     &                       + twh_get_nbcoeff(2+id,jj)
-     &                       *(twh_get_nbcoeff(1+id,jj)**6)*(polari**2))
+                        call twh_nbcoeff(GLB_GET,2+id,ii,nbc_2id_ii)
+                        call twh_nbcoeff(GLB_GET,1+id,ii,nbc_1id_ii)
+                        call twh_nbcoeff(GLB_GET,2+id,jj,nbc_2id_jj)
+                        call twh_nbcoeff(GLB_GET,1+id,jj,nbc_1id_jj)
+                        denom = ( nbc_2id_ii*(nbc_1id_ii**6)*(polarj**2)
+     &                       + nbc_2id_jj*(nbc_1id_jj**6)*(polari**2))
                         if ( denom .ne. 0.0d0 ) then
-                           esigsix = 2.0d0*(twh_get_nbcoeff(2+id,ii)
-     &                          *(twh_get_nbcoeff(1+id,ii)**6)
-     &                          *twh_get_nbcoeff(2+id,jj)
-     &                          *(twh_get_nbcoeff(1+id,jj)**6)
+                           esigsix = 2.0d0*(nbc_2id_ii*(nbc_1id_ii**6)
+     &                          *nbc_2id_jj*(nbc_1id_jj**6)
      &                          *polari*polarj) / denom
-                           esigtwelve = (((twh_get_nbcoeff(2+id,ii)
-     &                          *(twh_get_nbcoeff(1+id,ii)**12)
-     &                          )**(1.0d0/13.0d0)
-     &                          + (twh_get_nbcoeff(2+id,jj)
-     &                          *(twh_get_nbcoeff(1+id,jj)**12)
+                           esigtwelve = (((nbc_2id_ii
+     &                          *(nbc_1id_ii**12))**(1.0d0/13.0d0)
+     &                          + (nbc_2id_jj*(nbc_1id_jj**12)
      &                          )**(1.0d0/13.0d0)) /2.0d0 )**13
 c                          --- store sigma^6
                            dtemp = esigtwelve/esigsix
@@ -517,7 +520,7 @@ c                          --- set to zero
                      lproblem = .true.
                   endif
                elseif ( localcm .eq. 'MMFF' ) then
-                  if ( localcp .eq. 'Buffered 14-7' ) then
+                  if ( cpnumber .eq. CP_BUFFERED_14_7 ) then
 c                    --- get the donor/acceptor flag for both atoms
                      call twh_donor_acceptor(GLB_GET,itype,dai)
                      call twh_donor_acceptor(GLB_GET,jtype,daj)
@@ -547,10 +550,10 @@ c                       --- no scaling
                      power = 0.25d0
                      nbbeta = 12.0d0
 c                    --- determine the self parameters
-                     ai = twh_get_nbcoeff(3,ii)
-                     aj = twh_get_nbcoeff(3,jj)
-                     alphai = twh_get_nbcoeff(1,ii)
-                     alphaj = twh_get_nbcoeff(1,jj)
+                     call twh_nbcoeff(GLB_GET,3,ii,ai)
+                     call twh_nbcoeff(GLB_GET,3,jj,aj)
+                     call twh_nbcoeff(GLB_GET,1,ii,alphai)
+                     call twh_nbcoeff(GLB_GET,1,jj,alphaj)
                      rii = ai*alphai**power
                      rjj = aj*alphaj**power
                      if ( itype .eq. jtype ) then
@@ -565,10 +568,10 @@ c                       --- augmented arithmetic for R terms
                      endif
                      rijfinal = radscale*rij
 c                    --- slater-kirkwood for epsilon
-                     gi = twh_get_nbcoeff(4,ii)
-                     gj = twh_get_nbcoeff(4,jj)
-                     nni = twh_get_nbcoeff(2,ii)
-                     nnj = twh_get_nbcoeff(2,jj)
+                     call twh_nbcoeff(GLB_GET,4,ii,gi)
+                     call twh_nbcoeff(GLB_GET,4,jj,gj)
+                     call twh_nbcoeff(GLB_GET,2,ii,nni)
+                     call twh_nbcoeff(GLB_GET,2,jj,nnj)
 c                    --- use the unscaled rij to compute epsilon
                      epsfinal = epsscale
      &                    *((181.16d0*CON_KCALTOK*gi*gj*alphai*alphaj)
@@ -625,7 +628,7 @@ c              --- set the shift potential (nbcoeff(0,ij))
          enddo
       enddo
 
-      if ( localcp .eq. 'Exponential-6' ) then
+      if ( cpnumber .eq. CP_EXPONENTIAL_6 ) then
          do itype = 1,ntypes
             do jtype = itype,ntypes
                ij = twh_getnbtype(itype,jtype)
@@ -673,18 +676,21 @@ c           --- setup vib(3)
       
 c     --- change degrees into radians and assign cosine of angle
       do itest = 1, TBENMAX
-         dtemp = twh_get_bencoeff(itest,0)*twopi/360.0d0
-         if ( twh_get_anglestyle(itest) .eq. ANG_STYLE_NONBOND ) then
+         call twh_bencoeff(GLB_GET,itest,0,coefftemp)
+         dtemp = coefftemp*twopi/360.0d0
+         call twh_anglestyle(GLB_GET,itest,anglestyle)
+         if ( anglestyle .eq. ANG_STYLE_NONBOND ) then
 c           --- there is no bencoeff 0 value so use a default of Pi/2
             dtemp = twopi/4.0d0
          endif
          call twh_bencoeff(GLB_SET,itest,0,dtemp)
-         dtemp = dcos(twh_get_bencoeff(itest,0))
+         call twh_bencoeff(GLB_GET,itest,0,coefftemp)
+         dtemp = dcos(coefftemp)
          call twh_bencoeff(GLB_SET,itest,-1,dtemp)
-         if ( twh_get_anglestyle(itest)
-     &        .eq. ANG_STYLE_MULTI_RIGID ) then
+         if ( anglestyle .eq. ANG_STYLE_MULTI_RIGID ) then
 c           --- also need to convert term 1 for multiple angle
-            dtemp = twh_get_bencoeff(itest,1)*twopi/360.0d0
+            call twh_bencoeff(GLB_GET,itest,1,coefftemp)
+            dtemp = coefftemp*twopi/360.0d0
             call twh_bencoeff(GLB_SET,itest,1,dtemp)
          endif
       enddo
@@ -745,85 +751,91 @@ c        --- incompatable signs
       return
       end
 
-      subroutine twh_set_lorentz_berthelot(lfailure,localcp,localcm
+      subroutine twh_set_lorentz_berthelot(lfailure,cpnumber,localcm
      &     ,ii,jj,ij)
 c     ******************************************************************
 c     * sets the nbcoeffs according to the Lorentz-Berthelot mixing    *
 c     * rules                                                          *
 c     *                                                                *
 c     * split from setmixterms 04-26-2006 by M.G. Martin               *
-c     * last modified 07-19-2013 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETSIGN
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
-      character*(*) localcp,localcm
-      integer ii,jj,ij
+      character*(*) localcm
+      integer cpnumber,ii,jj,ij
 c     --- local variables
       integer icoeff,tabnpairi,tabnpairj
       double precision dtemp,gorfact,sigma,soverr,rminimum
       double precision valuei,valuej,tpairii,tpairij,tpairjj
       double precision powrn
+      double precision nbc_1_ii,nbc_1_jj,nbc_2_ii,nbc_2_jj
+      double precision nbc_3_ii,nbc_3_jj
+      double precision nbc_1_ij,nbc_2_ij,nbc_4_ij
 
 c     --- Lorentz-Berthelot rules 
-      if ( localcp .eq. 'Lennard-Jones'
-     &     .or. localcp .eq.  'Scaled Lennard-Jones' 
-     &     .or. localcp .eq. 'Weeks-Chandler-Anderson'
-     &     .or. localcp .eq. '12-6 plus 12-10 H-bond' 
-     &     .or. localcp .eq. 'Drukker H-bond' ) then
+      if ( cpnumber .eq. CP_LENNARD_JONES
+     &     .or. cpnumber .eq. CP_SCALED_LENNARD_JONES
+     &     .or. cpnumber .eq. CP_WEEKS_CHANDLER_ANDERSON
+     &     .or. cpnumber .eq. CP_12_6_PLUS_12_10_H_BOND
+     &     .or. cpnumber .eq. CP_DRUKKER_H_BOND ) then
 c        --- store nbcoeff(13) and nb(15) with sigma^6 
 c        --- store nbcoeff(14) and nb(16) with 4*epsilon
 c        --- arimethic mean of sigma (including 1-4)
-         dtemp = (0.5d0*(twh_get_nbcoeff(1,ii)
-     &        + twh_get_nbcoeff(1,jj)))**6
+         call twh_nbcoeff(GLB_GET,1,ii,nbc_1_ii)
+         call twh_nbcoeff(GLB_GET,1,jj,nbc_1_jj)
+         dtemp = (0.5d0*(nbc_1_ii + nbc_1_jj))**6
          call twh_nbcoeff(GLB_SET,13,ij,dtemp)
-         dtemp = (0.5d0*(twh_get_nbcoeff(3,ii)
-     &        + twh_get_nbcoeff(3,jj)))**6
+         call twh_nbcoeff(GLB_GET,3,ii,nbc_3_ii)
+         call twh_nbcoeff(GLB_GET,3,jj,nbc_3_jj)
+         dtemp = (0.5d0*(nbc_3_ii + nbc_3_jj))**6
          call twh_nbcoeff(GLB_SET,15,ij,dtemp)
 c        --- geometric mean of epsilon (including 1-4)
 c        --- store 4 times the geometric mean of epsilon
-         valuei = twh_get_nbcoeff(2,ii)
-         valuej = twh_get_nbcoeff(2,jj)
+         call twh_nbcoeff(GLB_GET,2,ii,valuei)
+         call twh_nbcoeff(GLB_GET,2,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          dtemp = 4.0d0*dtemp
          call twh_nbcoeff(GLB_SET,14,ij,dtemp)
 c        --- store 4 times the geometric mean of 1-4 epsilon
-         valuei = twh_get_nbcoeff(4,ii)
-         valuej = twh_get_nbcoeff(4,jj)
+         call twh_nbcoeff(GLB_GET,4,ii,valuei)
+         call twh_nbcoeff(GLB_GET,4,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          dtemp = 4.0d0*dtemp
          call twh_nbcoeff(GLB_SET,16,ij,dtemp)
-      elseif ( localcp .eq. 'Square Well' .or.
-     &        localcp .eq. 'Repulsive Well' 
-     &        ) then
+      elseif ( cpnumber .eq. CP_SQUARE_WELL .or.
+     &        cpnumber .eq. CP_REPULSIVE_WELL ) then
 c        --- arithmetic mean of hard sphere and attractive 
 c        --- well diameters
 c        --- store the square of the distance
-         dtemp = (0.5d0*(twh_get_nbcoeff(1,ii)
-     &        + twh_get_nbcoeff(1,jj)) )**2
+         call twh_nbcoeff(GLB_GET,1,ii,nbc_1_ii)
+         call twh_nbcoeff(GLB_GET,1,jj,nbc_1_jj)
+         dtemp = (0.5d0*(nbc_1_ii + nbc_1_jj) )**2
          call twh_nbcoeff(GLB_SET,1,ij,dtemp)
-         dtemp = (0.5d0*(twh_get_nbcoeff(2,ii)
-     &        + twh_get_nbcoeff(2,jj)) )**2
+         call twh_nbcoeff(GLB_GET,2,ii,nbc_2_ii)
+         call twh_nbcoeff(GLB_GET,2,jj,nbc_2_jj)
+         dtemp = (0.5d0*(nbc_2_ii + nbc_2_jj) )**2
          call twh_nbcoeff(GLB_SET,2,ij,dtemp)
 c        --- geometric mean of the attractive well depth
-         valuei = twh_get_nbcoeff(3,ii)
-         valuej = twh_get_nbcoeff(3,jj)
+         call twh_nbcoeff(GLB_GET,3,ii,valuei)
+         call twh_nbcoeff(GLB_GET,3,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,3,ij,dtemp)
-      elseif ( localcp .eq. 'Gordon n-6' ) then
+      elseif ( cpnumber .eq. CP_GORDON_N_6 ) then
 c        --- sigma with arithmetic mean
-         dtemp = 0.5d0*(twh_get_nbcoeff(1,ii)
-     &        + twh_get_nbcoeff(1,jj))
+         call twh_nbcoeff(GLB_GET,1,ii,nbc_1_ii)
+         call twh_nbcoeff(GLB_GET,1,jj,nbc_1_jj)
+         dtemp = 0.5d0*(nbc_1_ii + nbc_1_jj)
          call twh_nbcoeff(GLB_SET,1,ij,dtemp)
 c        --- epsilon with geometric mean
-         valuei = twh_get_nbcoeff(2,ii)
-         valuej = twh_get_nbcoeff(2,jj)
+         call twh_nbcoeff(GLB_GET,2,ii,valuei)
+         call twh_nbcoeff(GLB_GET,2,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,2,ij,dtemp)
@@ -836,20 +848,19 @@ c        --- n with geometric mean
 c        --- compute the gordon (n/6)^(1/(n-6)) factor
          gorfact = (powrn/6.0d0)**(1.0d0/(powrn-6.0d0))
 c        --- store a(n)
-         dtemp = twh_get_nbcoeff(1,ij)*
-     &        (2.0d0**(1.0d0/6.0d0) - gorfact)
+         call twh_nbcoeff(GLB_GET,1,ij,nbc_1_ij)
+         dtemp = nbc_1_ij*(2.0d0**(1.0d0/6.0d0) - gorfact)
          call twh_nbcoeff(GLB_SET,4,ij,dtemp)
 c        --- compute rminimum
-         rminimum = twh_get_nbcoeff(4,ij)
-     &        + gorfact*twh_get_nbcoeff(1,ij)
-         soverr = twh_get_nbcoeff(1,ij)
-     &        /(rminimum-twh_get_nbcoeff(4,ij))
+         call twh_nbcoeff(GLB_GET,4,ij,nbc_4_ij)
+         rminimum = nbc_4_ij + gorfact*nbc_1_ij
+         soverr = nbc_1_ij/(rminimum-nbc_4_ij)
 c        --- store 4 epsilon c(n)
-         dtemp = -twh_get_nbcoeff(2,ij)*(1.0d0/
-     &        (soverr**powrn - soverr**6))
+         call twh_nbcoeff(GLB_GET,2,ij,nbc_2_ij)
+         dtemp = -nbc_2_ij*(1.0d0/(soverr**powrn - soverr**6))
          call twh_nbcoeff(GLB_SET,5,ij,dtemp)
-      elseif ( localcp .eq. 'Multiwell' .or.
-     &        localcp .eq. 'Repulsive Multiwell'
+      elseif ( cpnumber .eq. CP_MULTIWELL .or.
+     &        cpnumber .eq. CP_REPULSIVE_MULTIWELL
      &        ) then
 c        --- run through the table_npair and combine the
 c        --- distances with arithmetic means and the well 
@@ -861,8 +872,8 @@ c        --- same number of table_npair
          if ( tabnpairi .ne. tabnpairj ) then
 c           --- problem
             write(6,*) 'SETMIXTERMS: cannot use '
-     &           ,localcm,' with '
-     &           ,localcp,' unless the '
+     &           ,localcm,' with classical potential number '
+     &           ,cpnumber,' unless the '
      &           ,'table_npair are the same'
             write(6,*) 'ii,table_npair',ii,tabnpairi
             write(6,*) 'jj,table_npair',jj,tabnpairj
@@ -886,13 +897,12 @@ c           --- geometric mean of the second parameter
             if ( lfailure ) return
             call twh_table_pair(GLB_SET,2,ij,icoeff,dtemp)
          enddo
-      elseif ( localcp 
-     &        .eq. 'Hard 2580 Multistep' .or.
-     &        localcp
-     &        .eq. 'Repulsive 2580 Multistep' ) then
+      elseif ( cpnumber .eq. CP_HARD_2580_MULTISTEP
+     &        .or. cpnumber .eq. CP_REPULSIVE_2580_MULTISTEP ) then
 c        --- take the arithmetic average of the sigmas
-         sigma = 0.5d0*(twh_get_nbcoeff(1,ii)
-     &        + twh_get_nbcoeff(1,jj))
+         call twh_nbcoeff(GLB_GET,1,ii,nbc_1_ii)
+         call twh_nbcoeff(GLB_GET,1,jj,nbc_1_jj)
+         sigma = 0.5d0*(nbc_1_ii + nbc_1_jj)
          call twh_nbcoeff(GLB_SET,1,ij,sigma)
 c        --- store the square of the distances
 c        --- hard core distance
@@ -912,26 +922,26 @@ c        --- the 2.0 distance
          call twh_nbcoeff(GLB_SET,11,ij,dtemp)
 c        --- geometric mean of the well depths
 c        --- the 1.2 well
-         valuei = twh_get_nbcoeff(2,ii)
-         valuej = twh_get_nbcoeff(2,jj)
+         call twh_nbcoeff(GLB_GET,2,ii,valuei)
+         call twh_nbcoeff(GLB_GET,2,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,2,ij,dtemp)
 c        --- the 1.5 well
-         valuei = twh_get_nbcoeff(3,ii)
-         valuej = twh_get_nbcoeff(3,jj)
+         call twh_nbcoeff(GLB_GET,3,ii,valuei)
+         call twh_nbcoeff(GLB_GET,3,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,3,ij,dtemp)
 c        --- the 1.8 well
-         valuei = twh_get_nbcoeff(4,ii)
-         valuej = twh_get_nbcoeff(4,jj)
+         call twh_nbcoeff(GLB_GET,4,ii,valuei)
+         call twh_nbcoeff(GLB_GET,4,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,4,ij,dtemp)
 c        --- the 2.0 well
-         valuei = twh_get_nbcoeff(5,ii)
-         valuej = twh_get_nbcoeff(5,jj)
+         call twh_nbcoeff(GLB_GET,5,ii,valuei)
+         call twh_nbcoeff(GLB_GET,5,jj,valuej)
          call twh_geometricmean(lfailure,valuei,valuej,dtemp)
          if ( lfailure ) return
          call twh_nbcoeff(GLB_SET,5,ij,dtemp)

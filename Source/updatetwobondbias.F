@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,19 +25,16 @@ c     * updates the parameters used in the two bond fixed endpoint     *
 c     * biasing                                                        *
 c     *                                                                *
 c     * originally written 10-13-2005 by M.G. Martin                   *
-c     * last modified 08-01-2016 by M.G. Martin                        *
+c     * last modified 03-27-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_INBEN
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       integer nnn
 c     --- local variables
       character*50 twobbias_style
       integer ibox,imolty,ichain,iunit,ibend,kunit,iparam,nchain,nmolty
       integer nunit,two_bond_bias_update_frequency
-      integer two_bond_bias_compute_frequency
+      integer two_bond_bias_compute_frequency,inben
       double precision rxui,ryui,rzui,rxuk,ryuk,rzuk,rxuik,ryuik,rzuik
       double precision rik,riksq,samples,newmean,newdsq,newsdev
       double precision variance,twoboldfrac,dvalue
@@ -63,11 +60,13 @@ c        --- biasing
                do iunit = 1,nunit
                   call twh_coordinates(GLB_GET,CRD_REAL,ichain,iunit
      &                 ,rxui,ryui,rzui)
-                  do ibend = 1,twh_get_inben(imolty,iunit)
+                  call twh_inben(GLB_GET,imolty,iunit,inben)
+                  do ibend = 1,inben
                      if ( twobbias_style .eq.
      &                    'self adapting gaussian using 1-3 distance'
      &                    ) then
-                        kunit = twh_get_ijben3(imolty,iunit,ibend)
+                        call twh_ijben3(GLB_GET,imolty,iunit,ibend
+     &                       ,kunit)
                         call twh_coordinates(GLB_GET,CRD_REAL,ichain
      &                       ,kunit,rxuk,ryuk,rzuk)
 c                       --- compute i-k distance
@@ -108,7 +107,8 @@ c        --- values and then reset the running results to zero
          do imolty = 1,nmolty
             call twh_nunit(GLB_GET,imolty,nunit)
             do iunit = 1,nunit
-               do ibend = 1,twh_get_inben(imolty,iunit)
+               call twh_inben(GLB_GET,imolty,iunit,inben)
+               do ibend = 1,inben
                   call twh_two_bond_bias_info(GLB_GET,imolty,iunit
      &                 ,ibend,3,samples)
                   if ( samples.gt. 0.5d0 ) then

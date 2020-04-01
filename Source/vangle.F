@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -46,22 +46,13 @@ c     *          Note: we are a bit tricky as lovrlap is not intialized*
 c     *          in this routine, should be intialized by the caller   *
 c     *                                                                *
 c     * rewritten from old sumup subroutines 01-21-2000 by M.G. Martin *
-c     * last modified 04-02-2018 M.G. Martin                           *
+c     * last modified 03-30-2020 M.G. Martin                           *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
 #define FUNCTION_CMP_GT
 #define FUNCTION_CMP_LT
 #define FUNCTION_DOTPRODUCT
-#define FUNCTION_GET_ANGLESTYLE
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_BENPREFACT
-#define FUNCTION_GET_IBTBEN1
-#define FUNCTION_GET_IBTBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_LBONANG
-#define FUNCTION_GET_VIBCOEFF
 #define FUNCTION_LAWOFCOSINE
 #define FUNCTION_VANGLE
 #define FUNCTION_VTWOBODY
@@ -76,15 +67,16 @@ c     --- variables passed to and from the function
       dimension xcord(3),ycord(3),zcord(3)
 c     --- local variables
 c     --- logical scalars
-      logical ldononbond,lbondang
+      logical ldononbond,lbonang
 c     --- integer scalars
       integer style,iutype,jutype,type,junit,iorder,bone,btwo,iallow
-      integer bangtype
+      integer bangtype,ibcoeff
 c     --- double precision scalars
       double precision dist,distsq,vbondang,vvdw,vcharge
       double precision angle,differ,value,prefac,diffsquare,diffcube
       double precision xone,yone,zone,xtwo,ytwo,ztwo,dv
-      double precision fac_one,fac_two
+      double precision fac_one,fac_two,benprefact
+      double precision len_bone,len_btwo
 #if DEBUG_VANGLE
       double precision radtodeg
 #endif
@@ -94,10 +86,14 @@ c     --- double precision parameters
 c     --- double precision arrays
       double precision vf
       dimension vf(MAX_FOREIGN_LAMBDA)
-
+      double precision bencoeff
+      dimension bencoeff(MINBENDCOEFF:MAXBENDCOEFF)
+      double precision bangcoeff
+      dimension bangcoeff(2)
+      
+c     --- initialize
       twh_vangle = 0.0d0
       ldononbond = .false.
-      lbondang = .false.
       if ( abs(iflag) .eq. 1 ) then
 c        --- compute the bond lengths and angles from the coordinates
          call twh_mimage(bxdflag,ibox,xcord(1),ycord(1),zcord(1)
@@ -122,21 +118,26 @@ c        --- compute the bond lengths and angles from the coordinates
 #endif
 
 c     --- determine type, style and order of the angle
-      type = twh_get_itben(imolty,iunit,ibend)
-
-      style = twh_get_anglestyle(type)
-
+      call twh_itben(GLB_GET,imolty,iunit,ibend,type)
+      call twh_anglestyle(GLB_GET,type,style)
+c     --- determine if there are bond-angle terms
+      call twh_lbonang(GLB_GET,type,lbonang)
+c     --- retrieve all bencoeff values for this type
+      do ibcoeff = MINBENDCOEFF,MAXBENDCOEFF
+         call twh_bencoeff(GLB_GET,type,ibcoeff,bencoeff(ibcoeff))
+      enddo
       if ( style .eq. ANG_STYLE_RIGID ) then
 c        --- rigid angle, make sure it is within tolerance, else overlap
+c        --- local store bencoeffs
          angle = twh_arccos(angcos)
-         value = (angle - twh_get_bencoeff(type,0))**2
-         if (twh_cmp_gt(value, twh_get_bencoeff(type,1)) ) then 
+         value = (angle - bencoeff(0))**2
+         if (twh_cmp_gt(value, bencoeff(1)) ) then 
 c           --- out of tolerance, hard overlap
             lovrlap = .true.
 #if DEBUG_VANGLE
             write(6,*) 'vangle angle:',angle*radtodeg
             call twh_constant_radtodeg(GLB_GET,radtodeg)
-            write(6,*) 'coeff angle:',twh_get_bencoeff(type,0)*radtodeg
+            write(6,*) 'coeff angle:',bencoeff(0)*radtodeg
 #endif
          else
 c           --- in tolerance, no energy
@@ -145,43 +146,44 @@ c           --- in tolerance, no energy
       elseif ( style .eq. ANG_STYLE_HARMONIC ) then
 c        --- standard harmonic bond bending potential
 c        --- energy = k* (angle - equil)**2
+c        --- local store bencoeffs
          angle = twh_arccos(angcos)
-         twh_vangle = twh_get_bencoeff(type,1)
-     &        *(angle-twh_get_bencoeff(type,0))**2
+         twh_vangle = bencoeff(1)
+     &        *(angle-bencoeff(0))**2
       elseif ( style .eq. ANG_STYLE_DREIDING ) then
 c        --- Dreiding K[ 1 + Cos(angle)]
-         twh_vangle = twh_get_bencoeff(type,1)*(1.0d0 + angcos)
+c        --- local store bencoeffs
+         ibcoeff = 1
+         twh_vangle = bencoeff(1)*(1.0d0 + angcos)
       elseif ( style .eq. ANG_STYLE_HARM_COS ) then
 c        --- harmonic cosine potential
+c        --- local store bencoeffs
 c        --- energy = k* (cos(angle) - cos(equil))**2
-         twh_vangle = twh_get_bencoeff(type,1)
-     &        *(angcos - twh_get_bencoeff(type,-1))**2
+         twh_vangle = bencoeff(1)
+     &        *(angcos - bencoeff(-1))**2
       elseif ( style .eq. ANG_STYLE_COMPASS_AUTO ) then
 c        --- Compass quartic angle with autodetection
          angle = twh_arccos(angcos)
-         differ = angle - twh_get_bencoeff(type,0)
+         differ = angle - bencoeff(0)
          value = differ*differ
-         twh_vangle = twh_get_bencoeff(type,1)*(value)
-     &        + twh_get_bencoeff(type,2)*(value*differ)
-     &        + twh_get_bencoeff(type,3)*(value*value)
-         if ( twh_get_lbonang(type) ) then
-            lbondang = .true.
+         twh_vangle = bencoeff(1)*(value)
+     &        + bencoeff(2)*(value*differ)
+     &        + bencoeff(3)*(value*value)
+         if ( lbonang ) then
 c           --- add in both of the bond-angle cross terms
-            bone = twh_get_ibtben1(imolty,iunit,ibend)
-            btwo = twh_get_ibtben2(imolty,iunit,ibend)
+            call twh_ibtben1(GLB_GET,imolty,iunit,ibend,bone)
+            call twh_ibtben2(GLB_GET,imolty,iunit,ibend,btwo)
             call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
+            call twh_vibcoeff(GLB_GET,bone,0,len_bone)
+            call twh_vibcoeff(GLB_GET,btwo,0,len_btwo)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
-               prefac = twh_get_bencoeff(type,4)*(distone 
-     &              - twh_get_vibcoeff(bone,0))
-     &              + twh_get_bencoeff(type,5)*(disttwo 
-     &              - twh_get_vibcoeff(btwo,0))
+               prefac = bencoeff(4)*(distone - len_bone)
+     &              + bencoeff(5)*(disttwo - len_btwo)
             elseif ( iorder .eq. ORD_REVERSE ) then
 c              --- force constants match with inverted bond order
-               prefac = twh_get_bencoeff(type,5)*(distone 
-     &              - twh_get_vibcoeff(bone,0))
-     &              + twh_get_bencoeff(type,4)*(disttwo 
-     &              - twh_get_vibcoeff(btwo,0))
+               prefac = bencoeff(5)*(distone - len_bone)
+     &              + bencoeff(4)*(disttwo - len_btwo)
             else
                write(6,*) 'ang type',type
                write(6,*) 'iorder',iorder
@@ -194,47 +196,46 @@ c              --- force constants match with inverted bond order
       elseif ( style .eq. ANG_STYLE_CHARMM_UB ) then
 c         --- Charmm harmonic with urey-bradley
          angle = twh_arccos(angcos)
-         twh_vangle = twh_get_bencoeff(type,1)
-     &        *((angle-twh_get_bencoeff(type,0))**2)
+         twh_vangle = bencoeff(1)
+     &        *((angle-bencoeff(0))**2)
 
 c        --- compute the distance between the 1-3 atoms
          dist = twh_lawofcosine(distone,disttwo,angcos)
          twh_vangle = twh_vangle 
-     &        + twh_get_bencoeff(type,3)
-     &        *((dist-twh_get_bencoeff(type,2))**2)
+     &        + bencoeff(3)
+     &        *((dist-bencoeff(2))**2)
       elseif ( style .eq. ANG_STYLE_NONBOND ) then
 c        --- nonbonded interaction between the 1-3 atoms
          ldononbond = .true.
       elseif ( style .eq. ANG_STYLE_NB_HARM ) then
 c        --- harmonic plus nonbond and coulombic between the 1-3 atoms
          angle = twh_arccos(angcos)
-         twh_vangle = twh_get_bencoeff(type,1)
-     &        *(angle-twh_get_bencoeff(type,0))**2
+         twh_vangle = bencoeff(1)
+     &        *(angle-bencoeff(0))**2
          ldononbond = .true.
       elseif ( style .eq. ANG_STYLE_COMPASS_EX ) then
 c        --- Compass quartic angle with explicit ordering of terms
          angle = twh_arccos(angcos)
-         differ = angle - twh_get_bencoeff(type,0)
+         differ = angle - bencoeff(0)
          value = differ*differ
-         twh_vangle = twh_get_bencoeff(type,1)*(value)
-     &        + twh_get_bencoeff(type,2)*(value*differ)
-     &        + twh_get_bencoeff(type,3)*(value*value)
-         if ( twh_get_lbonang(type) ) then
-            lbondang = .true.
+         twh_vangle = bencoeff(1)*(value)
+     &        + bencoeff(2)*(value*differ)
+     &        + bencoeff(3)*(value*value)
+         if ( lbonang ) then
 c           --- add in both of the bond angle cross terms
             call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
-               prefac = twh_get_bencoeff(type,4)
-     &              *(distone - twh_get_bencoeff(type,5))
-     &              + twh_get_bencoeff(type,6)
-     &              *(disttwo - twh_get_bencoeff(type,7))
+               prefac = bencoeff(4)
+     &              *(distone - bencoeff(5))
+     &              + bencoeff(6)
+     &              *(disttwo - bencoeff(7))
             elseif ( iorder .eq. ORD_REVERSE ) then
 c              --- force constants match with inverted bond order
-               prefac = twh_get_bencoeff(type,6)
-     &              *(distone - twh_get_bencoeff(type,7))
-     &              + twh_get_bencoeff(type,4)
-     &              *(disttwo - twh_get_bencoeff(type,5))
+               prefac = bencoeff(6)
+     &              *(distone - bencoeff(7))
+     &              + bencoeff(4)
+     &              *(disttwo - bencoeff(5))
             else
                write(6,*) 'VANGLE: bad iorder value ',iorder
                lfailure = .true.
@@ -245,39 +246,38 @@ c              --- force constants match with inverted bond order
       elseif ( style .eq. ANG_STYLE_FOURIER ) then
 c        --- Fourier expansion with constant minus single term
          angle = twh_arccos(angcos)
-         twh_vangle = twh_get_benprefact(imolty,iunit,ibend)
-     &        *(1.0d0 + twh_get_bencoeff(type,2)
-     &        *dcos( twh_get_bencoeff(type,1)*angle))
+         call twh_benprefact(GLB_GET,imolty,iunit,ibend,benprefact)
+         twh_vangle = benprefact*(1.0d0 + bencoeff(2)
+     &        *dcos( bencoeff(1)*angle))
       elseif ( style .eq. ANG_STYLE_TTFOURIER ) then
 c        --- 3 term Fourier expansion
          angle = twh_arccos(angcos)
-         twh_vangle = twh_get_benprefact(imolty,iunit,ibend)
-     &        *(twh_get_bencoeff(type,1)
-     &        + twh_get_bencoeff(type,2)*angcos
-     &        + twh_get_bencoeff(type,3)*dcos(2.0d0*angle) )
+         call twh_benprefact(GLB_GET,imolty,iunit,ibend,benprefact)
+         twh_vangle = benprefact*(bencoeff(1)
+     &        + bencoeff(2)*angcos
+     &        + bencoeff(3)*dcos(2.0d0*angle) )
       elseif ( style .eq. ANG_STYLE_NONE ) then
 c        --- no energy for this term
          twh_vangle = 0.0d0
       elseif ( style .eq. ANG_STYLE_SIXTH_AUTO ) then
 c        --- MM2 sixth power angle with autodetection
          angle = twh_arccos(angcos)
-         differ = angle - twh_get_bencoeff(type,0)
+         differ = angle - bencoeff(0)
          value = differ*differ
-         twh_vangle = twh_get_bencoeff(type,1)*value*
-     &        (1.0d0 + twh_get_bencoeff(type,2)*value*value)
-         if ( twh_get_lbonang(type) ) then
-            lbondang = .true.
+         twh_vangle = bencoeff(1)*value*
+     &        (1.0d0 + bencoeff(2)*value*value)
+         if ( lbonang ) then
 c           --- add in both of the bond-angle cross terms
 c           --- check based upon only the first letter for this term
             call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
-               bone = twh_get_ibtben1(imolty,iunit,ibend)
-               btwo = twh_get_ibtben2(imolty,iunit,ibend)
+               call twh_ibtben1(GLB_GET,imolty,iunit,ibend,bone)
+               call twh_ibtben2(GLB_GET,imolty,iunit,ibend,btwo)
             elseif ( iorder .eq. ORD_REVERSE ) then
 c              --- force constants match with inverted bond order
-               bone = twh_get_ibtben2(imolty,iunit,ibend)
-               btwo = twh_get_ibtben1(imolty,iunit,ibend)
+               call twh_ibtben2(GLB_GET,imolty,iunit,ibend,bone)
+               call twh_ibtben1(GLB_GET,imolty,iunit,ibend,btwo)
             else
                write(6,*) 'ang type',type
                write(6,*) 'orderben:',iorder
@@ -285,19 +285,20 @@ c              --- force constants match with inverted bond order
                lfailure = .true.
                return
             endif
-            vbondang = twh_get_bencoeff(type,4)*differ*(
-     &           ( distone - twh_get_vibcoeff(bone,0) ) +
-     &           ( disttwo - twh_get_vibcoeff(btwo,0) ) )
+            call twh_vibcoeff(GLB_GET,bone,0,len_bone)
+            call twh_vibcoeff(GLB_GET,btwo,0,len_btwo)
+            vbondang = bencoeff(4)*differ*(
+     &           (distone - len_bone) + (disttwo - len_btwo) )
          endif
       elseif ( style .eq. ANG_STYLE_SQUARE_WELL ) then
 c        --- infinite square well bending angle
 c        --- compute the distance between the 1-3 atoms
          dist = twh_lawofcosine(distone,disttwo,angcos)
-         if ( twh_cmp_lt(dist, twh_get_bencoeff(type,1)) .or.
-     &        twh_cmp_gt(dist, twh_get_bencoeff(type,2)) ) then
+         if ( twh_cmp_lt(dist, bencoeff(1)) .or.
+     &        twh_cmp_gt(dist, bencoeff(2)) ) then
             lovrlap = .true.
          else
-            twh_vangle = twh_get_bencoeff(type,3)
+            twh_vangle = bencoeff(3)
          endif
       elseif ( style .eq. ANG_STYLE_MULTI_RIGID ) then
 c        --- rigid angle with two allowed angles
@@ -306,8 +307,8 @@ c        --- angles, else overlap
          lovrlap = .true.
          angle = twh_arccos(angcos)
          do iallow = 0,1
-            value = (angle - twh_get_bencoeff(type,iallow))**2
-            if ( .not. twh_cmp_gt(value, twh_get_bencoeff(type,2)) 
+            value = (angle - bencoeff(iallow))**2
+            if ( .not. twh_cmp_gt(value, bencoeff(2)) 
      &           ) then 
 c              --- in tolerance, no energy
                lovrlap = .false.
@@ -317,30 +318,27 @@ c              --- in tolerance, no energy
       elseif ( style .eq. ANG_STYLE_MMFF ) then
 c        --- MMFF cubic plus a bond-angle cross term
          angle = twh_arccos(angcos)
-         differ = angle - twh_get_bencoeff(type,0)
+         differ = angle - bencoeff(0)
          diffsquare = differ*differ
          diffcube = differ*diffsquare
-         twh_vangle = twh_get_bencoeff(type,1)*diffsquare
-     &        + twh_get_bencoeff(type,2)*diffcube
+         twh_vangle = bencoeff(1)*diffsquare
+     &        + bencoeff(2)*diffcube
 c        --- cross terms
-         if ( twh_get_lbonang(type) ) then
-            lbondang = .true.
+         if ( lbonang ) then
 c           --- add in both of the bond-angle cross terms
-            bone = twh_get_ibtben1(imolty,iunit,ibend)
-            btwo = twh_get_ibtben2(imolty,iunit,ibend)
+            call twh_ibtben1(GLB_GET,imolty,iunit,ibend,bone)
+            call twh_ibtben2(GLB_GET,imolty,iunit,ibend,btwo)
             call twh_orderben(GLB_GET,imolty,iunit,ibend,iorder)
+            call twh_vibcoeff(GLB_GET,bone,0,len_bone)
+            call twh_vibcoeff(GLB_GET,btwo,0,len_btwo)
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
-               fac_one = twh_get_bencoeff(type,3)
-     &              *(distone - twh_get_vibcoeff(bone,0))
-               fac_two = twh_get_bencoeff(type,4)
-     &              *(disttwo - twh_get_vibcoeff(btwo,0))
+               fac_one = bencoeff(3)*(distone - len_bone)
+               fac_two = bencoeff(4)*(disttwo - len_btwo)
             elseif ( iorder .eq. ORD_REVERSE ) then
 c              --- force constants match with inverted bond order
-               fac_one = twh_get_bencoeff(type,4)
-     &              *(distone - twh_get_vibcoeff(bone,0))
-               fac_two = twh_get_bencoeff(type,3)
-     &              *(disttwo - twh_get_vibcoeff(btwo,0))
+               fac_one = bencoeff(4)*(distone - len_bone)
+               fac_two = bencoeff(3)*(disttwo - len_btwo)
             else
                write(6,*) 'ang type',type
                write(6,*) 'benorder:',iorder
@@ -353,49 +351,50 @@ c              --- force constants match with inverted bond order
             write(6,'(4(a,1x,f8.3,1x))')
      &           ,'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
-     &           ,'delta one:',distone-twh_get_vibcoeff(bone,0)
+     &           ,'delta one:',distone-len_bone
      &           ,'ba one:',fac_one*differ/CON_KCALTOK
             write(6,'(4(a,1x,f8.3,1x))')
      &           ,'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
-     &           ,'delta two:',disttwo-twh_get_vibcoeff(btwo,0)
+     &           ,'delta two:',disttwo-len_btwo
      &           ,'ba two:',fac_two*differ/CON_KCALTOK
 #endif            
          endif
       elseif ( style .eq. ANG_STYLE_HARM_COS_OT ) then
 c        --- harmonic cosine plus nonbond between the 1-3 atoms
-         twh_vangle = twh_get_bencoeff(type,1)
-     &        *(angcos - twh_get_bencoeff(type,-1))**2
+         twh_vangle = bencoeff(1)
+     &        *(angcos - bencoeff(-1))**2
          ldononbond = .true.
 
       elseif ( style .eq. ANG_STYLE_MMFFC_ANG ) then
 c        --- MMFF cubic plus a bond-angle cross term
          angle = twh_arccos(angcos)
-         differ = angle - twh_get_bencoeff(type,0)
+         differ = angle - bencoeff(0)
          diffsquare = differ*differ
          diffcube = differ*diffsquare
-         twh_vangle = twh_get_bencoeff(type,1)*diffsquare
-     &        + twh_get_bencoeff(type,2)*diffcube
+         twh_vangle = bencoeff(1)*diffsquare
+     &        + bencoeff(2)*diffcube
 c        --- cross terms
          call twh_itbang(GLB_GET,imolty,iunit,ibend,bangtype)
          if ( bangtype .ne. 0 ) then
-            lbondang = .true.
+c           --- special case logic for bond-ang
+            lbonang = .true.
 c           --- add in both of the bond-angle cross terms
-            bone = twh_get_ibtben1(imolty,iunit,ibend)
-            btwo = twh_get_ibtben2(imolty,iunit,ibend)
+            call twh_ibtben1(GLB_GET,imolty,iunit,ibend,bone)
+            call twh_ibtben2(GLB_GET,imolty,iunit,ibend,btwo)
             call twh_orderbang(GLB_GET,imolty,iunit,ibend,iorder)
+            call twh_vibcoeff(GLB_GET,bone,0,len_bone)
+            call twh_vibcoeff(GLB_GET,btwo,0,len_btwo)
+            call twh_bencoeff(GLB_GET,bangtype,1,bangcoeff(1))
+            call twh_bencoeff(GLB_GET,bangtype,2,bangcoeff(2))
             if ( iorder .eq. ORD_FORWARD ) then
 c              --- force constants match up with bond order
-               fac_one = twh_get_bencoeff(bangtype,1)
-     &              *(distone - twh_get_vibcoeff(bone,0))
-               fac_two = twh_get_bencoeff(bangtype,2)
-     &              *(disttwo - twh_get_vibcoeff(btwo,0))
+               fac_one = bangcoeff(1)*(distone-len_bone)
+               fac_two = bangcoeff(2)*(disttwo-len_btwo)
             elseif ( iorder .eq. ORD_REVERSE ) then
 c              --- force constants match with inverted bond order
-               fac_one = twh_get_bencoeff(bangtype,2)
-     &              *(distone - twh_get_vibcoeff(bone,0))
-               fac_two = twh_get_bencoeff(bangtype,1)
-     &              *(disttwo - twh_get_vibcoeff(btwo,0))
+               fac_one = bangcoeff(2)*(distone-len_bone)
+               fac_two = bangcoeff(1)*(disttwo-len_btwo)
             else
                write(6,*) 'iutype',iutype,'bang type',bangtype
                write(6,*) 'orderbang:',iorder
@@ -408,14 +407,16 @@ c              --- force constants match with inverted bond order
             write(6,'(4(a,1x,f8.3,1x))')
      &           ,'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
-     &           ,'delta one:',distone-twh_get_vibcoeff(bone,0)
+     &           ,'delta one:',distone-len_bone
      &           ,'ba one:',fac_one*differ/CON_KCALTOK
             write(6,'(4(a,1x,f8.3,1x))')
      &           ,'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
-     &           ,'delta two:',disttwo-twh_get_vibcoeff(btwo,0)
+     &           ,'delta two:',disttwo-len_btwo
      &           ,'ba two:',fac_two*differ/CON_KCALTOK
 #endif            
+         else
+            lbonang = .false.
          endif
 
 
@@ -429,7 +430,7 @@ c              --- force constants match with inverted bond order
          call twh_report(GLB_INCR,REP_ANG_REG,twh_vangle)
       endif
 
-      if ( lbondang ) then
+      if ( lbonang ) then
          if ( lreport ) then
             call twh_report(GLB_INCR,REP_ANG_BA,vbondang)
          endif
@@ -441,7 +442,7 @@ c        --- compute the distance between the 1-3 atoms
          dist = twh_lawofcosine(distone,disttwo,angcos)
          distsq = dist*dist
 c        --- get the nonbonded vdw energy 
-         junit = twh_get_ijben3(imolty,iunit,ibend)
+         call twh_ijben3(GLB_GET,imolty,iunit,ibend,junit)
          call twh_ntype(GLB_GET,imolty,iunit,iutype)
          call twh_ntype(GLB_GET,imolty,junit,jutype)
          vvdw = twh_vtwobody(lfailure,distsq

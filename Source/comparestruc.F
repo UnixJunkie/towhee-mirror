@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2011 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -25,39 +25,23 @@ c     * this subroutine checks to see if two molecules have identical  *
 c     * molecule templates                                             *
 c     *                                                                *
 c     * originally written 07-03-2002 by M.G. Martin                   *
-c     * last modified 08-09-2011 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITAA
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_ITTOR
-#define FUNCTION_GET_ITVIB
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lsame
       integer imolty,jmolty,nmaxi,nmaxj
-
 c     --- local variables
       integer unit,ivib,iben,itor,iaa,iunit,junit
-
+      integer itbentest,jtbentest
+      integer ijaa0i,ijaa0j,ijaa1i,ijaa1j,ijaa2i,ijaa2j
+      integer ijben2i,ijben2j,ijben3i,ijben3j
+      integer ijimp2i,ijimp2j,ijimp3i,ijimp3j,ijimp4i,ijimp4j
+      integer ijtor2i,ijtor2j,ijtor3i,ijtor3j,ijtor4i,ijtor4j
+      integer ijvibi,ijvibj,inaai,inaaj,inbendi,inbendj
+      integer inimproperi,inimproperj,intorsioni,intorsionj
+      integer invibi,invibj,itaai,itaaj,itimpropi,itimpropj
+      integer ittori,ittorj,itvibi,itvibj
 c     --- initialize lsame
       lsame = .true.
 
@@ -77,94 +61,106 @@ c     --- initialize lsame
 
       do unit = 1,iunit
 c        --- vibrations
-         if ( twh_get_invib(imolty,unit) 
-     &        .ne. twh_get_invib(jmolty,unit) ) then
+         call twh_invib(GLB_GET,imolty,unit,invibi)
+         call twh_invib(GLB_GET,jmolty,unit,invibj)
+         if ( invibi .ne. invibj ) then
             lsame = .false.
             return
          endif
-         do ivib = 1,twh_get_invib(imolty,unit)
-            if ( twh_get_ijvib(imolty,unit,ivib) 
-     &           .ne. twh_get_ijvib(jmolty,unit,ivib) 
-     &           .or. twh_get_itvib(imolty,unit,ivib)
-     &           .ne.twh_get_itvib(imolty,unit,ivib)
-     &           ) then
+         do ivib = 1,invibi
+            call twh_ijvib(GLB_GET,imolty,unit,ivib,ijvibi)
+            call twh_ijvib(GLB_GET,jmolty,unit,ivib,ijvibj)
+            call twh_itvib(GLB_GET,imolty,unit,ivib,itvibi)
+            call twh_itvib(GLB_GET,jmolty,unit,ivib,itvibj)
+            if ( ijvibi .ne. ijvibj .or. itvibi .ne. itvibj ) then
                lsame = .false.
                return
             endif
          enddo
 c        --- angles
-         if ( twh_get_inben(imolty,unit) 
-     &        .ne. twh_get_inben(jmolty,unit) ) then
+         call twh_inben(GLB_GET,imolty,unit,inbendi)
+         call twh_inben(GLB_GET,jmolty,unit,inbendj)
+         if ( inbendi .ne. inbendj ) then
             lsame = .false.
             return
          endif
-         do iben = 1,twh_get_inben(imolty,unit)
-            if ( twh_get_ijben2(imolty,unit,iben) 
-     &           .ne. twh_get_ijben2(jmolty,unit,iben)
-     &           .or. ( twh_get_ijben3(imolty,unit,iben)
-     &           .ne. twh_get_ijben3(jmolty,unit,iben))
-     &           .or. ( twh_get_itben(imolty,unit,iben)
-     &           .ne. twh_get_itben(jmolty,unit,iben)) ) then
+         do iben = 1,inbendi
+            call twh_itben(GLB_GET,imolty,unit,iben,itbentest)
+            call twh_itben(GLB_GET,jmolty,unit,iben,jtbentest)
+            call twh_ijben2(GLB_GET,imolty,unit,iben,ijben2i)
+            call twh_ijben2(GLB_GET,jmolty,unit,iben,ijben2j)
+            call twh_ijben3(GLB_GET,imolty,unit,iben,ijben3i)
+            call twh_ijben3(GLB_GET,jmolty,unit,iben,ijben3j)
+            if ( (ijben2i .ne. ijben2j) .or. ( ijben3i .ne. ijben3j )
+     &           .or. ( itbentest .ne. jtbentest ) ) then
                lsame = .false.
                return
             endif
          enddo
 c        --- torsions
-         if ( twh_get_intor(imolty,unit) 
-     &        .ne. twh_get_intor(jmolty,unit) ) then
+         call twh_intor(GLB_GET,imolty,unit,intorsioni)
+         call twh_intor(GLB_GET,jmolty,unit,intorsionj)
+         if ( intorsioni .ne. intorsionj ) then
             lsame = .false.
             return
          endif
-         do itor = 1,twh_get_intor(imolty,unit)
-            if ( twh_get_ijtor2(imolty,unit,itor) 
-     &           .ne. twh_get_ijtor2(jmolty,unit,itor)
-     &           .or. ( twh_get_ijtor3(imolty,unit,itor) 
-     &           .ne. twh_get_ijtor3(jmolty,unit,itor) )
-     &           .or. ( twh_get_ijtor4(imolty,unit,itor) 
-     &           .ne. twh_get_ijtor4(jmolty,unit,itor) )
-     &           .or. ( twh_get_ittor(imolty,unit,itor) 
-     &           .ne. twh_get_ittor(jmolty,unit,itor) ) ) then
+         do itor = 1,intorsioni
+            call twh_ijtor2(GLB_GET,imolty,unit,itor,ijtor2i)
+            call twh_ijtor2(GLB_GET,jmolty,unit,itor,ijtor2j)
+            call twh_ijtor3(GLB_GET,imolty,unit,itor,ijtor3i)
+            call twh_ijtor3(GLB_GET,jmolty,unit,itor,ijtor3j)
+            call twh_ijtor4(GLB_GET,imolty,unit,itor,ijtor4i)
+            call twh_ijtor4(GLB_GET,jmolty,unit,itor,ijtor4j)
+            call twh_ittor(GLB_GET,imolty,unit,itor,ittori)
+            call twh_ittor(GLB_GET,jmolty,unit,itor,ittorj)
+            if ( (ijtor2i .ne. ijtor2j) .or. ( ijtor3i .ne. ijtor3j )
+     &           .or. ( ijtor4i .ne. ijtor4j )
+     &           .or. ( ittori .ne. ittorj ) ) then
                lsame = .false.
                return
             endif
          enddo
 c        --- improper torsions
-         if ( twh_get_inimprop(imolty,unit) 
-     &        .ne. twh_get_inimprop(jmolty,unit) ) then
+         call twh_inimprop(GLB_GET,imolty,unit,inimproperi)
+         call twh_inimprop(GLB_GET,jmolty,unit,inimproperj)
+         if ( inimproperi .ne. inimproperj ) then
             lsame = .false.
             return
          endif
-         do itor = 1,twh_get_inimprop(imolty,unit)
-            if ( twh_get_ijimprop2(imolty,unit,itor) 
-     &           .ne. twh_get_ijimprop2(jmolty,unit,itor)
-     &           .or. ( twh_get_ijimprop3(imolty,unit,itor) 
-     &           .ne. twh_get_ijimprop3(jmolty,unit,itor) )
-     &           .or. ( twh_get_ijimprop4(imolty,unit,itor) 
-     &           .ne. twh_get_ijimprop4(jmolty,unit,itor) )
-     &           .or. ( twh_get_itimprop(imolty,unit,itor) 
-     &           .ne. twh_get_itimprop(jmolty,unit,itor) ) ) then
+         do itor = 1,inimproperi
+            call twh_ijimprop2(GLB_GET,imolty,unit,itor,ijimp2i)
+            call twh_ijimprop2(GLB_GET,jmolty,unit,itor,ijimp2j)
+            call twh_ijimprop3(GLB_GET,imolty,unit,itor,ijimp3i)
+            call twh_ijimprop3(GLB_GET,jmolty,unit,itor,ijimp3j)
+            call twh_ijimprop4(GLB_GET,imolty,unit,itor,ijimp4i)
+            call twh_ijimprop4(GLB_GET,jmolty,unit,itor,ijimp4j)
+            call twh_itimprop(GLB_GET,imolty,unit,itor,itimpropi)
+            call twh_itimprop(GLB_GET,jmolty,unit,itor,itimpropj)
+            if ( (ijimp2i .ne. ijimp2j) .or. (ijimp3i .ne. ijimp3j)
+     &           .or. (ijimp4i .ne. ijimp4j)
+     &           .or. (itimpropi .ne. itimpropj) ) then
                lsame = .false.
                return
             endif
          enddo
 c        --- angle-angle
-         if ( twh_get_inaa(imolty,unit) 
-     &        .ne. twh_get_inaa(jmolty,unit) ) then
+         call twh_inaa(GLB_GET,imolty,unit,inaai)
+         call twh_inaa(GLB_GET,jmolty,unit,inaaj)
+         if ( inaai .ne. inaaj ) then
             lsame = .false.
             return
          endif
-         do iaa = 1,twh_get_inaa(imolty,unit)
-            if ( twh_get_ijaa0(imolty,unit,iaa) 
-     &           .ne. twh_get_ijaa0(jmolty,unit,iaa)
-     &           .or. 
-     &           twh_get_ijaa1(imolty,unit,iaa) 
-     &           .ne. twh_get_ijaa1(jmolty,unit,iaa)
-     &           .or. 
-     &           twh_get_ijaa2(imolty,unit,iaa) 
-     &           .ne. twh_get_ijaa2(jmolty,unit,iaa)
-     &           .or. twh_get_itaa(imolty,unit,iaa) 
-     &           .ne. twh_get_itaa(jmolty,unit,iaa)
-     &           ) then
+         do iaa = 1,inaai
+            call twh_ijaa0(GLB_GET,imolty,unit,iaa,ijaa0i)
+            call twh_ijaa0(GLB_GET,jmolty,unit,iaa,ijaa0j)
+            call twh_ijaa1(GLB_GET,imolty,unit,iaa,ijaa1i)
+            call twh_ijaa1(GLB_GET,jmolty,unit,iaa,ijaa1j)
+            call twh_ijaa2(GLB_GET,imolty,unit,iaa,ijaa2i)
+            call twh_ijaa2(GLB_GET,jmolty,unit,iaa,ijaa2j)
+            call twh_itaa(GLB_GET,imolty,unit,iaa,itaai)
+            call twh_itaa(GLB_GET,jmolty,unit,iaa,itaaj)
+            if ( ijaa0i .ne. ijaa0j .or. ijaa1i .ne. ijaa1j 
+     &           .or. ijaa2i .ne. ijaa2j .or. itaai .ne. itaaj ) then
                lsame = .false.
                return
             endif

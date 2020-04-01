@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -34,12 +34,10 @@ c     * implemented it as a curiosity for the discontinuous well       *
 c     * potentials (MGM 06-27-2005)                                    *
 c     *                                                                *
 c     * originally written 06-27-2005 by M.G. Martin                   *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
@@ -52,10 +50,10 @@ c     --- local variables
 c     --- logical scalars
       logical lelect
 c     --- integer scalars
-      integer ichain,jchain,ilist,jlist,jstart,ivalue,iwell
+      integer ichain,jchain,ilist,jlist,jstart,ivalue,iwell,icoeff
       integer ii,jj,ntii,ntjj,ntij,imolty,jmolty,nmolty
       integer numiunit,numjunit,ncmti,ncmtj
-      integer nwells,ensemble
+      integer nwells,ensemble,cpnumber
 c     --- double precision scalars
       double precision rxui,ryui,rzui,rxuj,ryuj,rzuj,rx_ab,ry_ab,rz_ab
       double precision rijsq,rdfconst,convertfact,boxvolume
@@ -70,6 +68,8 @@ c     --- double precision arrays
       dimension atcount(NNTYPE)
       double precision gofr
       dimension gofr(2)
+      double precision nbcoeff
+      dimension nbcoeff(MINNBCOEFF:MAXNBCOEFF)
 
 c     --- initialize pressure
       pressure = 0.0d0
@@ -112,80 +112,90 @@ c     --- initialize the atomcount array
 
 c     --- set nwell and well boundaries depending upon the classical
 c     --- potential
-      if ( twh_get_classical_potential() .eq. 'Hard Sphere' ) then
+      call twh_cp_number(GLB_GET,cpnumber)
+      if ( cpnumber .eq. CP_HARD_SPHERE ) then
          iwell = 0
 c        --- set the hard sphere boundary
          iwell = iwell + 1
          do ntij = 1,CROSSTYPEMAX
-            wellbounds(1,iwell,ntij) = ( twh_get_nbcoeff(1,ntij) 
+            do icoeff = 1,2
+               call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+            enddo
+            wellbounds(1,iwell,ntij) = ( nbcoeff(1) 
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(2,ntij)
-            wellbounds(3,iwell,ntij) = ( twh_get_nbcoeff(1,ntij) 
+            wellbounds(2,iwell,ntij) = nbcoeff(2)
+            wellbounds(3,iwell,ntij) = ( nbcoeff(1) 
      &           + radial_pressure_delta )**2
          enddo
 c        --- set nwells
          nwells = iwell
-      elseif ( twh_get_classical_potential() .eq. 'Square Well' ) then
+      elseif ( cpnumber .eq. CP_SQUARE_WELL ) then
          iwell = 0
 c        --- set the hard sphere boundary
          iwell = iwell + 1
          do ntij = 1,CROSSTYPEMAX
-            wellbounds(1,iwell,ntij) = ( dsqrt(twh_get_nbcoeff(1,ntij))
+            do icoeff = 1,2
+               call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+            enddo
+            wellbounds(1,iwell,ntij) = ( dsqrt(nbcoeff(1))
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(1,ntij)
-            wellbounds(3,iwell,ntij) = ( dsqrt(twh_get_nbcoeff(1,ntij)) 
+            wellbounds(2,iwell,ntij) = nbcoeff(1)
+            wellbounds(3,iwell,ntij) = ( dsqrt(nbcoeff(1)) 
      &           + radial_pressure_delta )**2
          enddo
 c        --- set the attractive well boundary
          iwell = iwell + 1
          do ntij = 1,CROSSTYPEMAX
-            wellbounds(1,iwell,ntij) = ( dsqrt(twh_get_nbcoeff(2,ntij)) 
+            call twh_nbcoeff(GLB_GET,2,ntij,nbcoeff(2))
+            wellbounds(1,iwell,ntij) = ( dsqrt(nbcoeff(2)) 
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(2,ntij)
-            wellbounds(3,iwell,ntij) = ( dsqrt(twh_get_nbcoeff(2,ntij)) 
+            wellbounds(2,iwell,ntij) = nbcoeff(2)
+            wellbounds(3,iwell,ntij) = ( dsqrt(nbcoeff(2)) 
      &           + radial_pressure_delta )**2
          enddo
 c        --- set nwells
          nwells = iwell
-      elseif ( twh_get_classical_potential() 
-     &        .eq. 'Hard 2580 Multistep' ) then
+      elseif ( cpnumber .eq. CP_HARD_2580_MULTISTEP ) then
 c        --- hard wall plus 4 wells
          do ntij = 1,CROSSTYPEMAX
+            do icoeff = 1,11
+               call twh_nbcoeff(GLB_GET,icoeff,ntij,nbcoeff(icoeff))
+            enddo
             iwell = 0
 c           --- hard boundary
             iwell = iwell + 1
-            wellbounds(1,iwell,ntij) = ( twh_get_nbcoeff(1,ntij) 
+            wellbounds(1,iwell,ntij) = ( nbcoeff(1) 
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(7,ntij)
-            wellbounds(3,iwell,ntij) = ( twh_get_nbcoeff(1,ntij) 
+            wellbounds(2,iwell,ntij) = nbcoeff(7)
+            wellbounds(3,iwell,ntij) = ( nbcoeff(1) 
      &           + radial_pressure_delta )**2
 c           --- 1.2 sigma boundary
             iwell = iwell + 1
-            wellbounds(1,iwell,ntij) = ( (1.2d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(1,iwell,ntij) = ( (1.2d0)*nbcoeff(1)
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(8,ntij)
-            wellbounds(3,iwell,ntij) = ( (1.2d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(2,iwell,ntij) = nbcoeff(8)
+            wellbounds(3,iwell,ntij) = ( (1.2d0)*nbcoeff(1)
      &           + radial_pressure_delta )**2
 c           --- 1.5 sigma boundary
             iwell = iwell + 1
-            wellbounds(1,iwell,ntij) = ( (1.5d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(1,iwell,ntij) = ( (1.5d0)*nbcoeff(1)
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(9,ntij)
-            wellbounds(3,iwell,ntij) = ( (1.5d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(2,iwell,ntij) = nbcoeff(9)
+            wellbounds(3,iwell,ntij) = ( (1.5d0)*nbcoeff(1)
      &           + radial_pressure_delta )**2
 c           --- 1.8 sigma boundary
             iwell = iwell + 1
-            wellbounds(1,iwell,ntij) = ( (1.8d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(1,iwell,ntij) = ( (1.8d0)*nbcoeff(1)
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(10,ntij)
-            wellbounds(3,iwell,ntij) = ( (1.8d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(2,iwell,ntij) = nbcoeff(10)
+            wellbounds(3,iwell,ntij) = ( (1.8d0)*nbcoeff(1)
      &           + radial_pressure_delta )**2
 c           --- 2.0 sigma boundary
             iwell = iwell + 1
-            wellbounds(1,iwell,ntij) = ( (2.0d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(1,iwell,ntij) = ( (2.0d0)*nbcoeff(1)
      &           - radial_pressure_delta )**2
-            wellbounds(2,iwell,ntij) = twh_get_nbcoeff(11,ntij)
-            wellbounds(3,iwell,ntij) = ( (2.0d0)*twh_get_nbcoeff(1,ntij)
+            wellbounds(2,iwell,ntij) = nbcoeff(11)
+            wellbounds(3,iwell,ntij) = ( (2.0d0)*nbcoeff(1)
      &           + radial_pressure_delta )**2
             nwells = iwell
          enddo

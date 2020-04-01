@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,21 +28,9 @@ c     * to construct all of the molecule connectivity templates needed *
 c     * for a Towhee run                                               *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 08-26-2014 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_ITTOR
-#include "functions.h"
-
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer natoms,nbonds,nangles,ndihedrals,nimpropers,nangleangle
@@ -52,28 +40,37 @@ c     --- local variables
       dimension lopen(NTMAX)
       character*2 numbers
       character*30 filename
-      integer iatom,atomtype,mybonds,bondtype,bondpart,ibond,base
-      integer inix,iniy,iniz
-      integer imp2,imp3,imp4
+c     --- local integer scalars
+      integer iatom,atomtype,mybonds,ibond,base
+      integer inix,iniy,iniz,imp2,imp3,imp4
+      integer ijtor2i,ijtor2j,ijtor3i,ijtor3j,ijtor4i
+      integer iangle,myangles,iunit,ibox,nmtype
+      integer mydiheds,itor,iimp,ilast
+      integer myimprops
+      integer ninvert,current,lmpnum,itmp,imolty,isearch
+      integer listatom,type,index,zero,one,two,newmolty
+      integer myangang,ittortest
+      integer isplit,tortype,imptype,imatch,inew,iother,totmolecs,itemp
+      integer iorder,nmolty,inimproper,intorcurrent,intorother
+c     --- local integer arrays
+      integer bondtype,bondpart
       dimension bondtype(NNBOND),bondpart(NNBOND)
-      double precision charge,xtmp,ytmp,ztmp,checkx,checky,checkz,s
-      integer iangle,angtype,angpart,myangles,iunit,ibox,nmtype
+      integer angtype,angpart
       dimension angtype(MAXBEND)
       dimension angpart(MAXBEND,2)
-      integer mydiheds,dihtype,dihpart,itor,iimp,ilast
+      integer dihtype,dihpart
       dimension dihtype(MAXTOR)
       dimension dihpart(MAXTOR,3)
-      integer myimprops,impropertype,imppart
+      integer impropertype,imppart
       dimension impropertype(MAXIMPROP)
       dimension imppart(MAXIMPROP,3)
-      integer ninvert,listinvert,current,lmpnum,itmp,imolty,isearch
+      integer listinvert
       dimension listinvert(NUMAX)
-      integer listatom,type,index,zero,one,two,newmolty
-      integer myangang,myaatype,aapart
+      integer myaatype,aapart
       dimension myaatype(MAXAA)
       dimension aapart(MAXAA,3)
-      integer isplit,tortype,imptype,imatch,inew,iother,totmolecs,itemp
-      integer iorder,nmolty
+c     --- local double precision scalars
+      double precision charge,xtmp,ytmp,ztmp,checkx,checky,checkz,s
 
 c     Floating point comparisons vary between architectures.  
 c     See http://www.lahey.com/float.htm for discussion
@@ -326,17 +323,22 @@ c           --- field
             do current = 1,ninvert
                iimp = 1
                imatch = 0
-               do while ( iimp .le. twh_get_inimprop(nmolty,current) )
+               call twh_inimprop(GLB_GET,nmolty,current,inimproper)
+               do while ( iimp .le. inimproper )
                   lmatch = .false.
-                  do itor = 1,twh_get_intor(nmolty,current)
-                     if ( twh_get_ijimprop2(nmolty,current,iimp) .eq. 
-     &                    twh_get_ijtor2(nmolty,current,itor)
-     &                    .and.  
-     &                    twh_get_ijimprop3(nmolty,current,iimp) .eq. 
-     &                    twh_get_ijtor3(nmolty,current,itor)
-     &                    .and.  
-     &                    twh_get_ijimprop4(nmolty,current,iimp) .eq. 
-     &                    twh_get_ijtor4(nmolty,current,itor) ) then
+                  call twh_ijimprop2(GLB_GET,nmolty,current,iimp,imp2)
+                  call twh_ijimprop3(GLB_GET,nmolty,current,iimp,imp3)
+                  call twh_ijimprop4(GLB_GET,nmolty,current,iimp,imp4)
+                  call twh_intor(GLB_GET,nmolty,current,intorcurrent)
+                  do itor = 1,intorcurrent
+                     call twh_ijtor2(GLB_GET,nmolty,current,itor
+     &                    ,ijtor2i)
+                     call twh_ijtor3(GLB_GET,nmolty,current,itor
+     &                    ,ijtor3i)
+                     call twh_ijtor4(GLB_GET,nmolty,current,itor
+     &                    ,ijtor4i)
+                     if ( imp2 .eq. ijtor2i .and.  imp3 .eq. ijtor3i
+     &                    .and. imp4 .eq. ijtor4i ) then
 c                       --- this improper is actually an existing 
 c                       --- regular torsion
                         if ( lmatch ) then
@@ -353,8 +355,10 @@ c                       --- flag this for adjustment
 
                   if ( lmatch ) then
 c                    --- adjust the types and numbers
-                     tortype = twh_get_ittor(nmolty,current,imatch)
-                     imptype = twh_get_itimprop(nmolty,current,iimp)
+                     call twh_ittor(GLB_GET,nmolty,current,imatch
+     &                    ,tortype)
+                     call twh_itimprop(GLB_GET,nmolty,current,iimp
+     &                    ,imptype)
 c                    --- combine to make a new torsion type, see if 
 c                    --- this particular combination has been 
 c                    --- added, if not they create it
@@ -366,16 +370,25 @@ c                    --- reassign torsion type
                      call twh_ittor(GLB_SET,nmolty,current,imatch,inew)
 c                    --- change the torsion type of the symmetric 
 c                    --- partner
-                     iother = twh_get_ijtor4(nmolty,current,imatch)
+                     call twh_ijtor4(GLB_GET,nmolty,current,imatch
+     &                    ,iother)
                      lfound = .false.
-                     do itor = 1,twh_get_intor(nmolty,iother)
+                     call twh_ijtor2(GLB_GET,nmolty,current,imatch
+     &                    ,ijtor2j)
+                     call twh_ijtor3(GLB_GET,nmolty,current,imatch
+     &                    ,ijtor3j)
+                     call twh_intor(GLB_GET,nmolty,iother,intorother)
+                     do itor = 1,intorother
 c                       --- see if this is symmetric with current
-                        if ( twh_get_ijtor2(nmolty,iother,itor) .eq. 
-     &                       twh_get_ijtor3(nmolty,current,imatch) .and.
-     &                       twh_get_ijtor3(nmolty,iother,itor) .eq. 
-     &                       twh_get_ijtor2(nmolty,current,imatch) .and.
-     &                       twh_get_ijtor4(nmolty,iother,itor) .eq. 
-     &                       current ) then
+                        call twh_ijtor2(GLB_GET,nmolty,iother,itor
+     &                       ,ijtor2i)
+                        call twh_ijtor3(GLB_GET,nmolty,iother,itor
+     &                       ,ijtor3i)
+                        call twh_ijtor4(GLB_GET,nmolty,iother,itor
+     &                       ,ijtor4i)
+                        if ( ijtor2i .eq. ijtor3j
+     &                       .and. ijtor3i .eq. ijtor2j
+     &                       .and. ijtor4i .eq. current ) then
 c                          --- found the symmetric torsion
                            if ( lfound ) then
 c                             --- should only find one sym torsion
@@ -388,8 +401,9 @@ c                             --- should only find one sym torsion
 c                          --- assign the new torsion type
 c                          --- make sure we maintain the sign of the
 c                          --- other torsion as that matters for class2
-                           if ( twh_get_ittor(nmolty,iother,itor) 
-     &                          .gt. 0 ) then
+                           call twh_ittor(GLB_GET,nmolty,iother,itor
+     &                          ,ittortest)
+                           if ( ittortest .gt. 0 ) then
                               call twh_ittor(GLB_SET,nmolty,iother,itor
      &                             ,inew)
                            else
@@ -407,17 +421,21 @@ c                          --- other torsion as that matters for class2
 
 c                    --- switch improper information with the last
 c                    --- improper
-                     ilast = twh_get_inimprop(nmolty,current)
-                     itemp = twh_get_itimprop(nmolty,current,ilast) 
+                     call twh_inimprop(GLB_GET,nmolty,current,ilast)
+                     call twh_itimprop(GLB_GET,nmolty,current,ilast
+     &                    ,itemp)
                      call twh_itimprop(GLB_SET,nmolty,current,iimp
      &                    ,itemp)
-                     imp2 = twh_get_ijimprop2(nmolty,current,ilast)
+                     call twh_ijimprop2(GLB_GET,nmolty,current,ilast
+     &                    ,imp2)
                      call twh_ijimprop2(GLB_SET,nmolty,current,iimp
      &                    ,imp2)
-                     imp3 = twh_get_ijimprop3(nmolty,current,ilast)
+                     call twh_ijimprop3(GLB_GET,nmolty,current,ilast
+     &                    ,imp3)
                      call twh_ijimprop3(GLB_SET,nmolty,current,iimp
      &                    ,imp3)
-                     imp4 = twh_get_ijimprop4(nmolty,current,ilast)
+                     call twh_ijimprop4(GLB_GET,nmolty,current,ilast
+     &                    ,imp4)
                      call twh_ijimprop4(GLB_SET,nmolty,current,iimp
      &                    ,imp4)
 c                    --- decrease inimp, but don't change iimp
@@ -619,11 +637,9 @@ c     * There is a safety check to make sure we don't have more than   *
 c     * MAXBEND angles from any atom                                   *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 07-21-2014 by M.G. Martin                        *
+c     * last modified 03-22-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_ANGLESTYLE
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer nangles,lam_id,myangles,types,partners
@@ -632,6 +648,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical lnew
       integer iangle,atoma,atomb,atomc,atype,othera,otherb,iorder
+      integer anglestyle
       character*30 filename
 
       myangles = 0
@@ -663,7 +680,8 @@ c           --- found a new angle, add it to the data structure
                lfailure = .true.
                return
             endif
-            if ( twh_get_anglestyle(atype) .eq. ANG_STYLE_COMPASS_EX 
+            call twh_anglestyle(GLB_GET,atype,anglestyle)
+            if ( anglestyle .eq. ANG_STYLE_COMPASS_EX 
      &           .and. iorder .eq. -1 ) then
 c              --- this is an explicitly declared class 2 angle that 
 c              --- originated from the opposite atom.  This gets a 
@@ -694,11 +712,9 @@ c     * There is a safety check to make sure we don't have more than   *
 c     * MAXTOR dihedrals from any atom                                 *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_TORSTYLE
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer ndihedrals,lam_id,mydiheds,types,partners
@@ -707,7 +723,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical lnew
       integer itor,atoma,atomb,atomc,atomd,ttype,othera,otherb,otherc
-      integer iorder
+      integer iorder,torstyle
       character*30 filename
 
       mydiheds = 0
@@ -741,7 +757,8 @@ c           --- found a new dihedral, add it to the data structure
                lfailure = .true.
                return
             endif
-            if ( twh_get_torstyle(ttype) .eq. TOR_STYLE_COMP_X_EX
+            call twh_torstyle(GLB_GET,ttype,torstyle)
+            if ( torstyle .eq. TOR_STYLE_COMP_X_EX
      &           .and. iorder .eq. -1 ) then
 c              --- this is the explicitly declared class 2 torsion 
 c              --- which is not symmetric so we declare a negative 
@@ -773,12 +790,9 @@ c     * There is a safety check to make sure we don't have more than   *
 c     * MAXIMPROP impropers from any atom                              *
 c     *                                                                *
 c     * originally written 03-18-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IMPCOEFF
-#define FUNCTION_GET_IMPFORM
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer nimpropers,lam_id,myimprops,types,partners
@@ -787,8 +801,9 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       logical lnew
       integer itor,atoma,atomb,atomc,atomd,ttype,othera,otherb,otherc
+      integer impform
       character*30 filename
-      
+      double precision dtemp
       myimprops = 0
 c     --- there is no file to open if nimpropers is 0
       if ( nimpropers .eq. 0 ) return
@@ -805,7 +820,8 @@ c        --- class 2 force fields use different defaults for which atom
 c        --- is central.  Check the style of this type to figure out 
 c        --- which it is.  If the style is zero then this is a null 
 c        --- improper which is actually an angle-angle term
-         if ( twh_get_impform(ttype) .eq. 2 ) then
+         call twh_impform(GLB_GET,ttype,impform)
+         if ( impform .eq. 2 ) then
 c           --- defined from the first atom
             if ( atoma .eq. lam_id ) then
                lnew = .true.
@@ -813,11 +829,12 @@ c           --- defined from the first atom
                otherb = atomc
                otherc = atomd
             endif
-         elseif ( twh_get_impform(ttype) .eq. 3 ) then
+         elseif ( impform .eq. 3 ) then
 c           --- class 2, defined from the second atom
             if ( atomb .eq. lam_id ) then
 c              --- don't bother with the "null" improper torsions
-               if ( twh_get_impcoeff(ttype,0) .gt. 0.0d0 ) then
+               call twh_impcoeff(GLB_GET,ttype,0,dtemp)
+               if ( dtemp .gt. 0.0d0 ) then
                   lnew = .true.
                   othera = atoma
                   otherb = atomc
@@ -861,11 +878,9 @@ c     * There is a safety check to make sure we don't have more than   *
 c     * MAXAA terms from any atom                                      *
 c     *                                                                *
 c     * originally written 03-22-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-21-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_AACOEFF
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer nangleangle,lam_id,myangang,types,partners
@@ -876,7 +891,9 @@ c     --- local variables
       integer itor,atoma,atomb,atomc,atomd,ttype,othera,otherb,otherc
       integer index
       character*30 filename
-
+      double precision aacoeff
+      dimension aacoeff(3)
+      
       myangang = 0
 c     --- there is nothing to do if nangleangle is zero
       if ( nangleangle .eq. 0 ) return
@@ -891,9 +908,12 @@ c     --- otherwise open the file and search the impropers
          if ( atomb .eq. lam_id ) then
 c           --- make sure we have some nonzero prefactors
             index = 3*(ttype-1) 
-            if ( (twh_get_aacoeff(index+1,0) .ne. 0.0d0) 
-     &           .or. (twh_get_aacoeff(index+2,0) .ne. 0.0d0 ) 
-     &           .or. ( twh_get_aacoeff(index+3,0) .ne. 0.0d0) ) then
+            call twh_aacoeff(GLB_GET,index+1,0,aacoeff(1))
+            call twh_aacoeff(GLB_GET,index+2,0,aacoeff(2))
+            call twh_aacoeff(GLB_GET,index+3,0,aacoeff(3))
+            if ( ( aacoeff(1) .ne. 0.0d0 ) 
+     &           .or. ( aacoeff(2) .ne. 0.0d0 ) 
+     &           .or. ( aacoeff(3) .ne. 0.0d0) ) then
                lnew = .true.
                othera = atoma
                otherb = atomc
@@ -973,27 +993,22 @@ c     * if this new combined torsion already exists, otherwise it adds *
 c     * a new torsion                                                  *
 c     *                                                                *
 c     * originally written 03-22-2002 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IMPCOEFF
-#define FUNCTION_GET_IMPSTYLE
-#define FUNCTION_GET_NTORLOOP
-#define FUNCTION_GET_TORCOEFF
-#define FUNCTION_GET_TORSTYLE
-#include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer inew,tortype,imptype,ndihedtypes
 c     --- local variables
       logical lmatch
       integer ittype,newstyle,index,itor,tstyle,istyle,itemp
-      double precision toler,dtemp
+      integer ntorlooptest,ntorloop,torstyle
+      double precision toler,dtemp,tcoeff_i,tcoeff_t
       parameter (toler = 0.001d0)
 
 c     --- determine how to combine this regular and improper
       call twh_torstyle(GLB_GET,tortype,tstyle)
-      istyle = twh_get_impstyle(imptype)
+      call twh_impstyle(GLB_GET,imptype,istyle)
 
       if ( tstyle .eq. TOR_STYLE_GCA_COS .and. istyle .eq. 1 ) then
 c        --- we can handle this
@@ -1008,27 +1023,35 @@ c        --- we can handle this
       do ittype = 1,ndihedtypes
          lmatch = .true.
 c        --- see if this dihedral has the new style
-         if ( twh_get_torstyle(ittype) .eq. newstyle ) then
+         call twh_torstyle(GLB_GET,ittype,torstyle)
+         if ( torstyle .eq. newstyle ) then
 c           --- assume a match, check coefficients to see if any don't
 c           --- match
             if ( newstyle .eq. 4 ) then
 c              --- check the regular torsion part
-               if ( twh_get_ntorloop(ittype) 
-     &              .ne. twh_get_ntorloop(tortype) ) then
+               call twh_ntorloop(GLB_GET,ittype,ntorlooptest)
+               call twh_ntorloop(GLB_GET,tortype,ntorloop)
+               if ( ntorlooptest .ne. ntorloop ) then
                   lmatch = .false.
                else
 c                 --- check all the regular torsion coefficients
-                  do itor = 1,3*twh_get_ntorloop(tortype)
-                     if ( (twh_get_torcoeff(tortype,itor)
-     &                    -twh_get_torcoeff(ittype,itor))**2 
-     &                    .gt. toler ) lmatch = .false.
+                  call twh_ntorloop(GLB_GET,tortype,ntorloop)
+                  do itor = 1,3*ntorloop
+                     call twh_torcoeff(GLB_GET,tortype,itor,tcoeff_t)
+                     call twh_torcoeff(GLB_GET,ittype,itor,tcoeff_i)
+                     if ( (tcoeff_t-tcoeff_i)**2 .gt. toler ) then
+                        lmatch = .false.
+                     endif
                   enddo
 c                 --- check the harmonic improper part
-                  index = 3*twh_get_ntorloop(tortype)+1
+                  index = 3*ntorloop + 1
                   do itor = 0,1
-                     if ( (twh_get_impcoeff(imptype,itor)
-     &                    -twh_get_torcoeff(ittype,index+itor))**2
-     &                    .gt. toler ) lmatch = .false.
+                     call twh_torcoeff(GLB_GET,ittype,index+itor
+     &                    ,tcoeff_i)
+                     call twh_impcoeff(GLB_GET,imptype,itor,dtemp)
+                     if ( (dtemp-tcoeff_i)**2 .gt. toler ) then
+                        lmatch = .false.
+                     endif
                   enddo
                endif
             endif
@@ -1048,17 +1071,18 @@ c     --- torsion type
       ndihedtypes = ndihedtypes + 1
       call twh_torstyle(GLB_SET,ndihedtypes,newstyle)
       if ( newstyle .eq. 4 ) then
-         itemp = twh_get_ntorloop(tortype)
+         call twh_ntorloop(GLB_GET,tortype,itemp)
          call twh_ntorloop(GLB_SET,ndihedtypes,itemp)
 c        --- regular torsion part
-         do itor = 1,3*twh_get_ntorloop(tortype)
-            dtemp = twh_get_torcoeff(tortype,itor)
+         call twh_ntorloop(GLB_GET,tortype,ntorloop)
+         do itor = 1,3*ntorloop
+            call twh_torcoeff(GLB_GET,tortype,itor,dtemp)
             call twh_torcoeff(GLB_SET,ndihedtypes,itor,dtemp)
          enddo
 c        --- harmonic part
-         index = 3*twh_get_ntorloop(tortype)+1
+         index = 3*ntorloop + 1
          do itor = 0,1
-            dtemp = twh_get_impcoeff(imptype,itor)
+            call twh_impcoeff(GLB_GET,imptype,itor,dtemp)
             call twh_torcoeff(GLB_SET,ndihedtypes,index+itor,dtemp)
          enddo
       endif

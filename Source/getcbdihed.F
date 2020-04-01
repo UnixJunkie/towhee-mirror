@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     ******************************************************************
 c     * performs a biased dihedral selection                           *
 c     *                                                                *
 c     * written by M.G. Martin 08-08-2002 from rosenbluth              *
-c     * last modified 04-02-2018 by M.G. Martin                        *
+c     * last modified 03-28-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
@@ -36,14 +36,6 @@ c     ******************************************************************
 #define FUNCTION_FEBIAS
 #define FUNCTION_GAUSSIAN
 #define FUNCTION_GAUSSPROB
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_LEXIST
 #define FUNCTION_RANDOM
 #define FUNCTION_VANGANG
 #define FUNCTION_VANGLE
@@ -67,11 +59,14 @@ c     --- logical scalars
 c     --- logical arrays
       logical lovrtor
       dimension lovrtor(ichtor)
+      logical lexist
+      dimension lexist(NNBOND)
 c     --- integer scalars
       integer itor,count,iu,ixtra,jut2,ivib,itype,ibend,ibead,itest,iaa
       integer ttype,it,iend,iimprop,ibias,iunit,biastype,index,iuother
       integer imin,growprev,iflip,growtest,grownbon,nxangle,nxbias
       integer naabead,nimpbead,style_code,iwinner,npeak,delta_old,ipeak
+      integer ijvibtest,intorsion,invibration
 c     --- integer arrays
       integer torbead
       dimension torbead(4)
@@ -355,8 +350,10 @@ c              --- fetch the coords
      &                 ,rxjut,ryjut,rzjut,rxuij,ryuij,rzuij)
                   length = twh_distance(rxuij,ryuij,rzuij)
 c                 --- find the vibration type
-                  do ivib = 1,twh_get_invib(imolty,iu)
-                     if ( twh_get_ijvib(imolty,iu,ivib) .eq. jut2 ) then
+                  call twh_invib(GLB_GET,imolty,iu,invibration)
+                  do ivib = 1,invibration
+                     call twh_ijvib(GLB_GET,imolty,iu,ivib,ijvibtest)
+                     if ( ijvibtest .eq. jut2 ) then
                         call twh_itvib(GLB_GET,imolty,iu,ivib,itype)
                         goto 66
                      endif
@@ -454,19 +451,22 @@ c                    --- or ixtra as the 4th
                   endif
 
 c                 --- check all of the torsions starting at iu
-                  do it = 1, twh_get_intor(imolty,iu)
+                  call twh_intor(GLB_GET,imolty,iu,intorsion)
+                  do it = 1,intorsion
 c                    --- initialize lcompute
                      lcompute = .false.
 c                    --- assign the unit types for the torsion
                      torbead(1) = iu
-                     torbead(2) = twh_get_ijtor2(imolty,iu,it)
-                     torbead(3) = twh_get_ijtor3(imolty,iu,it)
-                     torbead(4) = twh_get_ijtor4(imolty,iu,it)
+                     call twh_ijtor2(GLB_GET,imolty,iu,it,torbead(2))
+                     call twh_ijtor3(GLB_GET,imolty,iu,it,torbead(3))
+                     call twh_ijtor4(GLB_GET,imolty,iu,it,torbead(4))
+                     call twh_lexist(GLB_GET,torbead(2),lexist(2))
+                     call twh_lexist(GLB_GET,torbead(3),lexist(3))
+                     call twh_lexist(GLB_GET,torbead(4),lexist(4))
 c                    --- determine if this torsion should be computed
                      if ( iend .eq. -1 ) then
-                        if ( twh_get_lexist(torbead(2)) 
-     &                       .and. twh_get_lexist(torbead(3))
-     &                       .and. twh_get_lexist(torbead(4)) ) then
+                        if ( lexist(2) .and. lexist(3)
+     &                       .and. lexist(4) ) then
 c                          --- compute this torsion
                            lcompute =.true.
 c                          --- temporarily switch back to count
@@ -475,8 +475,7 @@ c                          --- temporarily switch back to count
                      elseif ( iend .eq. 0 ) then
                         call twh_growlist(GLB_GET,iw,count,growtest)
                         if ( growtest .eq. torbead(2)
-     &                       .and. twh_get_lexist(torbead(3)) 
-     &                       .and. twh_get_lexist(torbead(4)) ) then
+     &                       .and. lexist(3).and. lexist(4) ) then
 c                          --- compute this torsion
                            lcompute =.true.
 c                          --- the second bead is count
@@ -485,10 +484,10 @@ c                          --- the second bead is count
                      else
                         call twh_growlist(GLB_GET,iw,count,growtest)
                         if ( growtest .eq. torbead(2)
-     &                       .and. twh_get_lexist(torbead(3)) ) then
+     &                       .and. lexist(3) ) then
 c                          --- see if torbead(4) either exists, or
 c                          --- is one of the other growlist atoms
-                           if ( twh_get_lexist(torbead(4)) ) then
+                           if ( lexist(4) ) then
 c                             --- compute this torsion
                               lcompute = .true.
 c                             --- torbead 2 is count
@@ -579,10 +578,12 @@ c           --- used to help with fecbmc regrowth
                   call twh_xbias(GLB_GET,2,count,ibias,index)
                   if ( biastype .eq. 1 ) then
 c                    --- angle biasing
-                     iuother = twh_get_ijben3(imolty,iunit,index)
+                     call twh_ijben3(GLB_GET,imolty,iunit,index
+     &                    ,iuother)
                   elseif ( biastype .eq. 2 ) then
 c                    --- torsional biasing
-                     iuother = twh_get_ijtor4(imolty,iunit,index)
+                     call twh_ijtor4(GLB_GET,imolty,iunit,index
+     &                    ,iuother)
                   else
                      write(6,*) 'GETCBDIHED: unknown biastype',biastype
                      lfailure = .true.

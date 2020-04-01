@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2000-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,56 +28,34 @@ c     * it then sets up some arrays of information that is useful when *
 c     * computing bending angles, and torsions                         *
 c     *                                                                *
 c     * Originally written 12-15-2000 by M.G. Martin                   *
-c     * Last modified 08-07-2014 by M.G. Martin                        *
+c     * Last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_ANGLESTYLE
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_BONDPATT
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_IBTBEN1
-#define FUNCTION_GET_IBTBEN2
-#define FUNCTION_GET_IJAA0
-#define FUNCTION_GET_IJAA1
-#define FUNCTION_GET_IJAA2
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJOF5
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INBNBN
-#define FUNCTION_GET_INOF
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITAA
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_ITVIB
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_ITTOR
-#define FUNCTION_GET_LBONBON
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_VIBCOEFF
 #include "functions.h"
 #define DEBUG_CHECKSTRUC 0
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
 c     --- local logicals
-      logical lfound,lbnbn,lintraterm,loutdft,lonefourtor
+      logical lfound,lbnbn,lintraterm,loutdft,lonefourtor,lbonbon
+c     --- local characters
+      character*(BONPATLEN) bondpatt
 c     --- integer scalars
       integer imolty,ivib,jvib,iben,jben,itor,jtor,iunit,iaa,jaa,itype
       integer iimp,jimp,itest,itestb,itestc,junit,count,iof,jof,itemp
       integer aunit,bunit,cunit,kunit,atype,ii,kk,ktype,matom,type
-      integer iorder,nmolty,nunit,nstep,numtor
+      integer iorder,nmolty,nunit,nstep,numtor,thetatwo
+      integer itbentest,jtbentest,anglestyle,cpnumber
+      integer ijaa0i,ijaa0j,ijaa1i,ijaa1j,ijaa2i,ijaa2j
+      integer ijben2test,ijben3test,ijben2j,ijben3j
+      integer ijimp2test,ijimp3test,ijimp4test,ijimp2j,ijimp3j,ijimp4j
+      integer ijof5test,ijvibtest,ijvibj
+      integer ijtor2i,ijtor2j,ijtor3i,ijtor3j,ijtor4i,ijtor4j
+      integer inaaunit,invibunit,invibtest
+      integer inbend,inbenda,inbendb,inbendt,inimproper,itimproper
+      integer inonefivei,inonefivej,intorsion,intorsionc,itaatest
+      integer ittortest,ittori,ittorj,itvibi,itvibj
 c     --- local double precision arrays
       integer torcross
       dimension torcross(NUMAX)
@@ -105,28 +83,27 @@ c     --- any towhee simulation steps
 c        --- check that each atom has self-consistent and valid values
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1, nunit
+            call twh_invib(GLB_GET,imolty,iunit,invibunit)
 c           --- check vibrations
-            do ivib = 1, twh_get_invib(imolty,iunit)
+            do ivib = 1, invibunit
 c              --- check that vibration atoms are between 1 and nunit
-               if ( twh_get_ijvib(imolty,iunit,ivib) .lt. 1 .or.
-     &              twh_get_ijvib(imolty,iunit,ivib) .gt. nunit
-     &              )then
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+               if ( ijvibtest .lt. 1 .or. ijvibtest .gt. nunit )then
                   write(6,*) 'Problem: imolty,iunit,ivib',imolty
      &                 ,iunit,ivib
                   write(6,*) 'Atom is connected to nonvalid atom '
-     &                 ,twh_get_ijvib(imolty,iunit,ivib)
+     &                 ,ijvibtest
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
                   endif
                endif
 c              --- check that vibration type is between 1 and tvibmax
-               if ( twh_get_itvib(imolty,iunit,ivib) .lt. 1 .or.
-     &              twh_get_itvib(imolty,iunit,ivib) .gt. TVIBMAX )then
+               call twh_itvib(GLB_GET,imolty,iunit,ivib,itvibi)
+               if ( itvibi .lt. 1 .or. itvibi .gt. TVIBMAX )then
                   write(6,*) 'Problem: imolty,iunit,ivib',imolty
      &                 ,iunit,ivib
-                  write(6,*) 'Vibration type is nonvalid value '
-     &                 ,twh_get_itvib(imolty,iunit,ivib)
+                  write(6,*) 'Vibration type is nonvalid value ',itvibi
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
@@ -134,14 +111,15 @@ c              --- check that vibration type is between 1 and tvibmax
                endif
             enddo
 c           --- check for multiple vibrations across the same atoms
-            do ivib = 1, twh_get_invib(imolty,iunit)-1
-               do jvib = ivib+1, twh_get_invib(imolty,iunit)
-                  if ( twh_get_ijvib(imolty,iunit,ivib) .eq. 
-     &                 twh_get_ijvib(imolty,iunit,jvib) ) then
+            do ivib = 1, invibunit-1
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+               do jvib = ivib+1, invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,jvib,ijvibj)
+                  if ( ijvibtest .eq. ijvibj ) then
                      write(6,*) 'Problem: imolty,iunit,ivib,jvib',
      &                    imolty,iunit,ivib,jvib
                      write(6,*) 'Are both connected to atom '
-     &                    ,twh_get_ijvib(imolty,iunit,ivib)
+     &                    ,ijvibtest
                      if ( lintraterm ) then
                         lfailure = .true.
                         return
@@ -151,16 +129,19 @@ c           --- check for multiple vibrations across the same atoms
             enddo
 c           --- check that each pair of atoms that is bonded to this
 c           --- atom also have a bending interaction
-            do ivib = 1, twh_get_invib(imolty,iunit)-1
-               aunit = twh_get_ijvib(imolty,iunit,ivib)
-               do jvib = ivib+1,twh_get_invib(imolty,iunit)
-                  bunit = twh_get_ijvib(imolty,iunit,jvib)
+            do ivib = 1, invibunit-1
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,aunit)
+               do jvib = ivib+1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,jvib,bunit)
                   lfound = .false.
-                  do iben = 1,twh_get_inben(imolty,aunit)
-                     if ( twh_get_ijben2(imolty,aunit,iben) .eq. iunit 
-     &                    .and.
-     &                    twh_get_ijben3(imolty,aunit,iben) .eq. bunit 
-     &                    ) then
+                  call twh_inben(GLB_GET,imolty,aunit,inbenda)
+                  do iben = 1,inbenda
+                     call twh_ijben2(GLB_GET,imolty,aunit,iben
+     &                    ,ijben2test)
+                     call twh_ijben3(GLB_GET,imolty,aunit,iben
+     &                    ,ijben3test)
+                     if ( ijben2test .eq. iunit 
+     &                    .and. ijben3test .eq. bunit ) then
                         lfound = .true.
                      endif
                   enddo
@@ -178,32 +159,29 @@ c           --- atom also have a bending interaction
             enddo
 
 c           --- check bending
-            do iben = 1, twh_get_inben(imolty,iunit)
+            call twh_inben(GLB_GET,imolty,iunit,inbend)
+            do iben = 1, inbend
 c              --- check that bending atoms are between 1 and nunit
-               if ( twh_get_ijben2(imolty,iunit,iben) .lt. 1 .or.
-     &              twh_get_ijben2(imolty,iunit,iben) .gt. nunit
-     &              .or.
-     &              twh_get_ijben3(imolty,iunit,iben) .lt. 1 .or.
-     &              twh_get_ijben3(imolty,iunit,iben) .gt. nunit
-     &              )then
+               call twh_ijben2(GLB_GET,imolty,iunit,iben,ijben2test)
+               call twh_ijben3(GLB_GET,imolty,iunit,iben,ijben3test)
+               if ( ijben2test .lt. 1 .or. ijben2test .gt. nunit .or.
+     &              ijben3test .lt. 1 .or. ijben3test .gt. nunit )then
                   write(6,*) 'Problem: imolty,iunit,iben',imolty
      &                 ,iunit,iben
                   write(6,*) 'Atom is connected to nonvalid atom '
-     &                 ,twh_get_ijben2(imolty,iunit,iben)
-     &                 ,twh_get_ijben3(imolty,iunit,iben)
+     &                 ,ijben2test,ijben3test
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
                   endif
                endif
 c              --- check that bending type is between 1 and tbenmax
-               if ( twh_get_itben(imolty,iunit,iben) .lt. 1 .or.
-     &              twh_get_itben(imolty,iunit,iben) .gt. TBENMAX 
-     &              )then
+               call twh_itben(GLB_GET,imolty,iunit,iben,itbentest)
+               if ( itbentest .lt. 1 .or. itbentest .gt. TBENMAX )then
                   write(6,*) 'Problem: imolty,iunit,iben',imolty
      &                 ,iunit,iben
                   write(6,*) 'Bending type is nonvalid value '
-     &                 ,twh_get_itben(imolty,iunit,iben)
+     &                 ,itbentest
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
@@ -211,17 +189,18 @@ c              --- check that bending type is between 1 and tbenmax
                endif
             enddo
 c           --- check for multiple bends across the same atoms
-            do iben = 1, twh_get_inben(imolty,iunit)-1
-               do jben = iben+1, twh_get_inben(imolty,iunit)
-                  if ( twh_get_ijben2(imolty,iunit,iben) .eq. 
-     &                 twh_get_ijben2(imolty,iunit,jben) .and. 
-     &                 twh_get_ijben3(imolty,iunit,iben) .eq. 
-     &                 twh_get_ijben3(imolty,iunit,jben) ) then
+            do iben = 1, inbend-1
+               call twh_ijben2(GLB_GET,imolty,iunit,iben,ijben2test)
+               call twh_ijben3(GLB_GET,imolty,iunit,iben,ijben3test)
+               do jben = iben+1, inbend
+                  call twh_ijben2(GLB_GET,imolty,iunit,jben,ijben2j)
+                  call twh_ijben3(GLB_GET,imolty,iunit,jben,ijben3j)
+                  if ( ijben2test .eq. ijben2j .and. 
+     &                 ijben3test .eq. ijben3j ) then
                      write(6,*) 'Problem: imolty,iunit,iben,jben',
      &                    imolty,iunit,iben,jben
                      write(6,*) 'Are both connected to atoms '
-     &                    ,twh_get_ijben2(imolty,iunit,iben)
-     &                    ,twh_get_ijben3(imolty,iunit,iben)
+     &                    ,ijben2test,ijben3test
                      if ( lintraterm ) then
                         lfailure = .true.
                         return
@@ -231,21 +210,24 @@ c           --- check for multiple bends across the same atoms
             enddo
 c           --- check that all bends which are also bonded to another
 c           --- atom have a torsion interaction.
-            do iben = 1, twh_get_inben(imolty,iunit)
-               aunit = twh_get_ijben3(imolty,iunit,iben)
-               bunit = twh_get_ijben2(imolty,iunit,iben)
-               do ivib = 1, twh_get_invib(imolty,iunit)
-                  cunit = twh_get_ijvib(imolty,iunit,ivib)
+            do iben = 1, inbend
+               call twh_ijben3(GLB_GET,imolty,iunit,iben,aunit)
+               call twh_ijben2(GLB_GET,imolty,iunit,iben,bunit)
+               do ivib = 1, invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,cunit)
                   if ( cunit .ne. bunit .and. cunit .ne. aunit ) then
                      lfound = .false.
                      call twh_intor(GLB_GET,imolty,cunit,numtor)
                      do itor = 1,numtor
-                        if ( twh_get_ijtor2(imolty,cunit,itor).eq.iunit
-     &                       .and.
-     &                       twh_get_ijtor3(imolty,cunit,itor).eq.bunit
-     &                       .and.
-     &                       twh_get_ijtor4(imolty,cunit,itor).eq.aunit
-     &                       ) then
+                        call twh_ijtor2(GLB_GET,imolty,cunit,itor
+     &                       ,ijtor2i)
+                        call twh_ijtor3(GLB_GET,imolty,cunit,itor
+     &                       ,ijtor3i)
+                        call twh_ijtor4(GLB_GET,imolty,cunit,itor
+     &                       ,ijtor4i)
+                        if ( ijtor2i .eq. iunit
+     &                       .and. ijtor3i .eq. bunit
+     &                       .and. ijtor4i .eq. aunit ) then
                            lfound = .true.
                         endif
                      enddo
@@ -266,22 +248,17 @@ c           --- atom have a torsion interaction.
 c           --- check torsions
             call twh_intor(GLB_GET,imolty,iunit,numtor)
             do itor = 1, numtor
+               call twh_ijtor2(GLB_GET,imolty,iunit,itor,ijtor2i)
+               call twh_ijtor3(GLB_GET,imolty,iunit,itor,ijtor3i)
+               call twh_ijtor4(GLB_GET,imolty,iunit,itor,ijtor4i)
 c              --- check that torsion atoms are between 1 and nunit
-               if ( twh_get_ijtor2(imolty,iunit,itor) .lt. 1 .or.
-     &              twh_get_ijtor2(imolty,iunit,itor) .gt. nunit
-     &              .or.
-     &              twh_get_ijtor3(imolty,iunit,itor) .lt. 1 .or.
-     &              twh_get_ijtor3(imolty,iunit,itor) .gt. nunit
-     &              .or.
-     &              twh_get_ijtor4(imolty,iunit,itor) .lt. 1 .or.
-     &              twh_get_ijtor4(imolty,iunit,itor) .gt. nunit
-     &              )then
+               if ( ijtor2i .lt. 1 .or. ijtor2i .gt. nunit
+     &              .or. ijtor3i .lt. 1 .or. ijtor3i .gt. nunit
+     &              .or. ijtor4i .lt. 1 .or. ijtor4i .gt. nunit )then
                   write(6,*) 'Problem: imolty,iunit,itor',imolty
      &                 ,iunit,itor
                   write(6,*) 'Atom is connected to nonvalid atom '
-     &                 ,twh_get_ijtor2(imolty,iunit,itor)
-     &                 ,twh_get_ijtor3(imolty,iunit,itor)
-     &                 ,twh_get_ijtor4(imolty,iunit,itor)
+     &                 ,ijtor2i,ijtor3i,ijtor4i
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
@@ -289,13 +266,13 @@ c              --- check that torsion atoms are between 1 and nunit
                endif
 
 c              --- check that torsion type is between 1 and ttormax
-               if ( abs(twh_get_ittor(imolty,iunit,itor)) .eq. 0 .or.
-     &              abs(twh_get_ittor(imolty,iunit,itor)) .gt. TTORMAX 
-     &              )then
+               call twh_ittor(GLB_GET,imolty,iunit,itor,ittortest)
+               if ( abs(ittortest) .eq. 0 .or.
+     &              abs(ittortest) .gt. TTORMAX )then
                   write(6,*) 'Problem: imolty,iunit,itor',imolty
      &                 ,iunit,itor
                   write(6,*) 'Torsion type is nonvalid value '
-     &                 ,twh_get_ittor(imolty,iunit,itor)
+     &                 ,ittortest
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
@@ -306,19 +283,20 @@ c              --- check that torsion type is between 1 and ttormax
 c           --- check for multiple torsions across the same atoms
             call twh_intor(GLB_GET,imolty,iunit,numtor)
             do itor = 1, numtor-1
-               do jtor = itor+1, twh_get_intor(imolty,iunit)
-                  if ( twh_get_ijtor2(imolty,iunit,itor) .eq. 
-     &                 twh_get_ijtor2(imolty,iunit,jtor) .and. 
-     &                 twh_get_ijtor3(imolty,iunit,itor) .eq. 
-     &                 twh_get_ijtor3(imolty,iunit,jtor) .and.
-     &                 twh_get_ijtor4(imolty,iunit,itor) .eq. 
-     &                 twh_get_ijtor4(imolty,iunit,jtor) ) then
+               call twh_ijtor2(GLB_GET,imolty,iunit,itor,ijtor2i)
+               call twh_ijtor3(GLB_GET,imolty,iunit,itor,ijtor3i)
+               call twh_ijtor4(GLB_GET,imolty,iunit,itor,ijtor4i)
+               do jtor = itor+1,numtor
+                  call twh_ijtor2(GLB_GET,imolty,iunit,jtor,ijtor2j)
+                  call twh_ijtor3(GLB_GET,imolty,iunit,jtor,ijtor3j)
+                  call twh_ijtor4(GLB_GET,imolty,iunit,jtor,ijtor4j)
+                  if ( ijtor2i .eq. ijtor2j .and. 
+     &                 ijtor3i .eq. ijtor3j .and.
+     &                 ijtor4i .eq. ijtor4j ) then
                      write(6,*) 'Problem: imolty,iunit,itor,jtor',
      &                    imolty,iunit,itor,jtor
                      write(6,*) 'Are both connected to atoms '
-     &                    ,twh_get_ijtor2(imolty,iunit,itor)
-     &                    ,twh_get_ijtor3(imolty,iunit,itor)
-     &                    ,twh_get_ijtor4(imolty,iunit,itor)
+     &                    ,ijtor2i,ijtor3i,ijtor4i
                      if ( lintraterm ) then
                         lfailure = .true.
                         return
@@ -328,35 +306,32 @@ c           --- check for multiple torsions across the same atoms
             enddo
 
 c           --- check angle-angle terms
-            do iaa = 1, twh_get_inaa(imolty,iunit)
+            call twh_inaa(GLB_GET,imolty,iunit,inaaunit)
+            do iaa = 1, inaaunit
 c              --- check that ang-ang atoms are between 1 and nunit
-               if ( twh_get_ijaa0(imolty,iunit,iaa) .lt. 1 .or.
-     &              twh_get_ijaa0(imolty,iunit,iaa) .gt. nunit
-     &              .or.
-     &              twh_get_ijaa1(imolty,iunit,iaa) .lt. 1 .or.
-     &              twh_get_ijaa1(imolty,iunit,iaa) .gt. nunit
-     &              .or.
-     &              twh_get_ijaa2(imolty,iunit,iaa) .lt. 1 .or.
-     &              twh_get_ijaa2(imolty,iunit,iaa) .gt. nunit
+               call twh_ijaa0(GLB_GET,imolty,iunit,iaa,ijaa0i)
+               call twh_ijaa1(GLB_GET,imolty,iunit,iaa,ijaa1i)
+               call twh_ijaa2(GLB_GET,imolty,iunit,iaa,ijaa2i)
+               if ( ijaa0i .lt. 1 .or. ijaa0i .gt. nunit
+     &              .or. ijaa1i .lt. 1 .or. ijaa1i .gt. nunit
+     &              .or. ijaa2i .lt. 1 .or. ijaa2i .gt. nunit
      &              )then
                   write(6,*) 'Problem: imolty,iunit,iaa',imolty
      &                 ,iunit,iaa
                   write(6,*) 'Atom is connected to nonvalid atom '
-     &                 ,twh_get_ijaa0(imolty,iunit,iaa)
-     &                 ,twh_get_ijaa1(imolty,iunit,iaa)
-     &                 ,twh_get_ijaa2(imolty,iunit,iaa)
+     &                 ,ijaa0i,ijaa1i,ijaa2i
                   if ( lintraterm )  then
                      lfailure = .true.
                      return
                   endif
                endif
 c              --- check that ang-ang type is between 1 and taamax
-               if ( twh_get_itaa(imolty,iunit,iaa) .lt. 1 .or.
-     &              twh_get_itaa(imolty,iunit,iaa) .gt. TAAMAX )then
+               call twh_itaa(GLB_GET,imolty,iunit,iaa,itaatest)
+               if ( itaatest .lt. 1 .or. itaatest .gt. TAAMAX )then
                   write(6,*) 'Problem: imolty,iunit,iaa',imolty
      &                 ,iunit,iaa
                   write(6,*) 'Ang-ang type is nonvalid value '
-     &                 ,twh_get_itaa(imolty,iunit,iaa)
+     &                 ,itaatest
                   if ( lintraterm )  then
                      lfailure = .true.
                      return
@@ -364,20 +339,21 @@ c              --- check that ang-ang type is between 1 and taamax
                endif
             enddo
 c           --- check for multiple ang-ang across the same atoms
-            do iaa = 1, twh_get_inaa(imolty,iunit)-1
-               do jaa = iaa+1, twh_get_inaa(imolty,iunit)
-                  if ( twh_get_ijaa0(imolty,iunit,iaa) .eq. 
-     &                 twh_get_ijaa0(imolty,iunit,jaa) .and. 
-     &                 twh_get_ijaa1(imolty,iunit,iaa) .eq. 
-     &                 twh_get_ijaa1(imolty,iunit,jaa) .and.
-     &                 twh_get_ijaa2(imolty,iunit,iaa) .eq. 
-     &                 twh_get_ijaa2(imolty,iunit,jaa) ) then
+            do iaa = 1, inaaunit-1
+               do jaa = iaa+1, inaaunit
+                  call twh_ijaa0(GLB_GET,imolty,iunit,iaa,ijaa0i)
+                  call twh_ijaa0(GLB_GET,imolty,iunit,jaa,ijaa0j)
+                  call twh_ijaa1(GLB_GET,imolty,iunit,iaa,ijaa1i)
+                  call twh_ijaa1(GLB_GET,imolty,iunit,jaa,ijaa1j)
+                  call twh_ijaa2(GLB_GET,imolty,iunit,iaa,ijaa2i)
+                  call twh_ijaa2(GLB_GET,imolty,iunit,jaa,ijaa2j)
+                  if (  ijaa0i .eq. ijaa0j .and. 
+     &                 ijaa1i .eq. ijaa1j .and.
+     &                 ijaa2i .eq. ijaa2j ) then
                      write(6,*) 'Problem: imolty,iunit,iaa,jaa',
      &                    imolty,iunit,iaa,jaa
                      write(6,*) 'Are both connected to atoms '
-     &                    ,twh_get_ijaa0(imolty,iunit,iaa)
-     &                    ,twh_get_ijaa1(imolty,iunit,iaa)
-     &                    ,twh_get_ijaa2(imolty,iunit,iaa)
+     &                    ,ijaa0i,ijaa1i,ijaa2i
                      if ( lintraterm )  then
                         lfailure = .true.
                         return
@@ -387,40 +363,31 @@ c           --- check for multiple ang-ang across the same atoms
             enddo
 
 c           --- check improper torsions
-            do iimp = 1, twh_get_inimprop(imolty,iunit)
+            call twh_inimprop(GLB_GET,imolty,iunit,inimproper)
+            do iimp = 1,inimproper 
 c              --- check that atoms are between 1 and nunit
-               if ( twh_get_ijimprop2(imolty,iunit,iimp) .lt. 1 .or.
-     &              twh_get_ijimprop2(imolty,iunit,iimp) 
-     &              .gt. nunit .or.
-     &              twh_get_ijimprop3(imolty,iunit,iimp) .lt. 1 .or.
-     &              twh_get_ijimprop3(imolty,iunit,iimp) 
-     &              .gt. nunit .or.
-     &              twh_get_ijimprop4(imolty,iunit,iimp) .lt. 1 .or.
-     &              twh_get_ijimprop4(imolty,iunit,iimp) 
-     &              .gt. nunit)then
+               call twh_ijimprop2(GLB_GET,imolty,iunit,iimp,ijimp2test)
+               call twh_ijimprop3(GLB_GET,imolty,iunit,iimp,ijimp3test)
+               call twh_ijimprop4(GLB_GET,imolty,iunit,iimp,ijimp4test)
+               if ( ijimp2test .lt. 1 .or. ijimp2test .gt. nunit .or.
+     &              ijimp3test .lt. 1 .or. ijimp3test .gt. nunit .or.
+     &              ijimp4test .lt. 1 .or. ijimp4test .gt. nunit) then
                   write(6,*) 'Problem: imolty,iunit,iimp',imolty
      &                 ,iunit,iimp
                   write(6,*) 'Atom is connected to nonvalid atom '
-     &                 ,twh_get_ijimprop2(imolty,iunit,iimp)
-     &                 ,twh_get_ijimprop3(imolty,iunit,iimp)
-     &                 ,twh_get_ijimprop4(imolty,iunit,iimp)
+     &                 ,ijimp2test,ijimp3test,ijimp4test
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
                   endif
                endif
 c              --- check that imp torsion type is between 1 and timpmax
-               if ( twh_get_itimprop(imolty,iunit,iimp) .lt. 1 .or.
-     &              twh_get_itimprop(imolty,iunit,iimp) .gt. TIMPMAX 
-     &              )then
+               call twh_itimprop(GLB_GET,imolty,iunit,iimp,itimproper)
+               if ( itimproper .lt. 1 .or. itimproper .gt. TIMPMAX )then
                   write(6,*) 'Problem: imolty,iunit,iimp',imolty
      &                 ,iunit,iimp
-                  write(6,*) 'ijimprop2,ijimprop3,ijimprop4'
-     &                 ,twh_get_ijimprop2(imolty,iunit,iimp)
-     &                 ,twh_get_ijimprop3(imolty,iunit,iimp)
-     &                 ,twh_get_ijimprop4(imolty,iunit,iimp)
                   write(6,*) 'Improper torsion type is nonvalid value '
-     &                 ,twh_get_itimprop(imolty,iunit,iimp)
+     &                 ,itimproper
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
@@ -428,20 +395,22 @@ c              --- check that imp torsion type is between 1 and timpmax
                endif
             enddo
 c           --- check for multiple imp torsions across the same atoms
-            do iimp = 1, twh_get_inimprop(imolty,iunit)-1
-               do jimp = iimp+1, twh_get_inimprop(imolty,iunit)
-                  if ( twh_get_ijimprop2(imolty,iunit,iimp) .eq. 
-     &                 twh_get_ijimprop2(imolty,iunit,jimp) .and. 
-     &                 twh_get_ijimprop3(imolty,iunit,iimp) .eq. 
-     &                 twh_get_ijimprop3(imolty,iunit,jimp) .and.
-     &                 twh_get_ijimprop4(imolty,iunit,iimp) .eq. 
-     &                 twh_get_ijimprop4(imolty,iunit,jimp) ) then
+            call twh_inimprop(GLB_GET,imolty,iunit,inimproper)
+            do iimp = 1,inimproper-1
+               call twh_ijimprop2(GLB_GET,imolty,iunit,iimp,ijimp2test)
+               call twh_ijimprop3(GLB_GET,imolty,iunit,iimp,ijimp3test)
+               call twh_ijimprop4(GLB_GET,imolty,iunit,iimp,ijimp4test)
+               do jimp = iimp+1,inimproper
+                  call twh_ijimprop2(GLB_GET,imolty,iunit,jimp,ijimp2j)
+                  call twh_ijimprop3(GLB_GET,imolty,iunit,jimp,ijimp3j)
+                  call twh_ijimprop4(GLB_GET,imolty,iunit,jimp,ijimp4j)
+                  if ( ijimp2test .eq. ijimp2j .and. 
+     &                 ijimp3test .eq. ijimp3j .and.
+     &                 ijimp4test .eq. ijimp4j ) then
                      write(6,*) 'Problem: imolty,iunit,iimp,jimp',
      &                    imolty,iunit,iimp,jimp
                      write(6,*) 'Are both connected to atoms '
-     &                    ,twh_get_ijimprop2(imolty,iunit,iimp)
-     &                    ,twh_get_ijimprop3(imolty,iunit,iimp)
-     &                    ,twh_get_ijimprop4(imolty,iunit,iimp)
+     &                    ,ijimp2test,ijimp3test,ijimp4test
                      if ( lintraterm ) then
                         lfailure = .true.
                         return
@@ -450,8 +419,9 @@ c           --- check for multiple imp torsions across the same atoms
                enddo
             enddo
 c           --- check one-five interactions
-            do iof = 1,twh_get_inof(imolty,iunit)
-               matom = twh_get_ijof5(imolty,iunit,iof)
+            call twh_inof(GLB_GET,imolty,iunit,inonefivei)
+            do iof = 1,inonefivei
+               call twh_ijof5(GLB_GET,imolty,iunit,iof,matom)
                if ( matom .lt. 1 .or. matom .gt. nunit ) then
 c                 --- ijof5 out of bounds
                   write(6,*) 'CHECKSTRUC: atom out of allowed range'
@@ -468,15 +438,16 @@ c                 --- itof out of bound
                   return
                endif
 c              --- check multiples
-               do jof = 1,twh_get_inof(imolty,iunit)
+               call twh_inof(GLB_GET,imolty,iunit,inonefivej)
+               do jof = 1,inonefivej
                   if ( iof .ne. jof ) then
-                     if ( twh_get_ijof5(imolty,iunit,jof) 
-     &                    .eq. matom ) then
+                     call twh_ijof5(GLB_GET,imolty,iunit,jof,ijof5test)
+                     if ( ijof5test .eq. matom ) then
                         write(6,*) 'CHECKSTRUC: multiple identical 1-5'
                         write(6,*) 'imolty,iunit,iof,ijof5',imolty,iunit
-     &                       ,iof,twh_get_ijof5(imolty,iunit,iof)
+     &                       ,iof,matom
                         write(6,*) 'imolty,iunit,jof,ijof5',imolty,iunit
-     &                       ,jof,twh_get_ijof5(imolty,iunit,jof)
+     &                       ,jof,ijof5test
                         lfailure = .true.
                         return
                      endif
@@ -489,13 +460,14 @@ c        --- check the terms are consistent from one atom to the next
 c        --- for the terms that should be symmetric
          do iunit = 1,nunit
 c           --- check vibrations
-            do ivib = 1, twh_get_invib(imolty,iunit)
+            call twh_invib(GLB_GET,imolty,iunit,invibunit)
+            do ivib = 1, invibunit
 c              --- check that atom is not connected to itself
-               if ( twh_get_ijvib(imolty,iunit,ivib) .eq. iunit )then
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+               if ( ijvibtest .eq. iunit )then
                   write(6,*) 'Problem: imolty,iunit,ivib',imolty
      &                 ,iunit,ivib
-                  write(6,*) 'Atom is connected to itself '
-     &                 ,twh_get_ijvib(imolty,iunit,ivib)
+                  write(6,*) 'Atom is connected to itself ',ijvibtest
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
@@ -503,21 +475,21 @@ c              --- check that atom is not connected to itself
                endif
 c              --- check that each other atom also contains this 
 c              --- interaction
-               itest = twh_get_ijvib(imolty,iunit,ivib)
+               call twh_ijvib(GLB_GET,imolty,iunit,ivib,itest)
                lfound = .false.
-               do jvib = 1, twh_get_invib(imolty,itest)
-                  if ( twh_get_ijvib(imolty,itest,jvib) .eq. iunit 
-     &                 ) then
-                     if ( twh_get_itvib(imolty,itest,jvib) .ne. 
-     &                    twh_get_itvib(imolty,iunit,ivib) ) then
+               call twh_invib(GLB_GET,imolty,itest,invibtest)
+               do jvib = 1, invibtest
+                  call twh_ijvib(GLB_GET,imolty,itest,jvib,ijvibj)
+                  if ( ijvibj .eq. iunit ) then
+                     call twh_itvib(GLB_GET,imolty,itest,jvib,itvibi)
+                     call twh_itvib(GLB_GET,imolty,iunit,ivib,itvibj)
+                     if ( itvibi .ne. itvibj ) then
                         write(6,*) 'Problem: imolty,iunit,ivib',imolty
      &                       ,iunit,ivib
                         write(6,*) 'Has nonsymmetric type: itest,jvib'
      &                       ,itest,jvib
-                        write(6,*) 'iunit ivib type '
-     &                       ,twh_get_itvib(imolty,iunit,ivib)
-                        write(6,*) 'itest jvib type '
-     &                       ,twh_get_itvib(imolty,itest,jvib)
+                        write(6,*) 'iunit ivib type ',itvibi
+                        write(6,*) 'itest jvib type ',itvibj
                         if ( lintraterm ) then
                            lfailure = .true.
                            return
@@ -540,17 +512,19 @@ c              --- interaction
 
          do iunit = 1,nunit
 c           --- check bends
-            do iben = 1, twh_get_inben(imolty,iunit)
-               itest = twh_get_ijben2(imolty,iunit,iben)
-               itestb = twh_get_ijben3(imolty,iunit,iben)
+            call twh_inben(GLB_GET,imolty,iunit,inbend)
+            do iben = 1, inbend
+               call twh_ijben2(GLB_GET,imolty,iunit,iben,itest)
+               call twh_ijben3(GLB_GET,imolty,iunit,iben,itestb)
 c              --- check that atom #2 is bonded to this atom
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
-                  if ( twh_get_ijvib(imolty,iunit,ivib) .eq. itest 
-     &                 ) then
+               call twh_invib(GLB_GET,imolty,iunit,invibunit)
+               do ivib = 1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itest ) then
                      lfound = .true.
 c                    --- store bond type in this angle
-                     itemp = twh_get_itvib(imolty,iunit,ivib)
+                     call twh_itvib(GLB_GET,imolty,iunit,ivib,itemp)
                      call twh_ibtben1(GLB_SET,imolty,iunit,iben,itemp)
                   endif
                enddo
@@ -566,12 +540,13 @@ c                    --- store bond type in this angle
                endif
 c              --- check that atom #3 is bonded to atom #2
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,itest)
-                  if ( twh_get_ijvib(imolty,itest,ivib) .eq. itestb 
-     &                 ) then
+               call twh_invib(GLB_GET,imolty,itest,invibtest)
+               do ivib = 1,invibtest
+                  call twh_ijvib(GLB_GET,imolty,itest,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itestb ) then
                      lfound = .true.
 c                    --- store bond type in this angle
-                     itemp = twh_get_itvib(imolty,itest,ivib)
+                     call twh_itvib(GLB_GET,imolty,itest,ivib,itemp)
                      call twh_ibtben2(GLB_SET,imolty,iunit,iben,itemp)
                   endif
                enddo
@@ -589,21 +564,22 @@ c                    --- store bond type in this angle
 c              --- check that each other atom also contains this 
 c              --- interaction
                lfound = .false.
-               do jben = 1, twh_get_inben(imolty,itestb)
-                  if ( twh_get_ijben3(imolty,itestb,jben) .eq. iunit 
-     &                 .and. 
-     &                 twh_get_ijben2(imolty,itestb,jben) .eq. itest 
-     &                 ) then
-                     if ( twh_get_itben(imolty,itestb,jben) .ne. 
-     &                    twh_get_itben(imolty,iunit,iben) ) then
+               call twh_inben(GLB_GET,imolty,itestb,inbendb)
+               do jben = 1, inbendb
+                  call twh_ijben2(GLB_GET,imolty,itestb,jben,ijben2test)
+                  call twh_ijben3(GLB_GET,imolty,itestb,jben,ijben3test)
+                  if ( ijben3test .eq. iunit .and. 
+     &                 ijben2test .eq. itest ) then
+                     call twh_itben(GLB_GET,imolty,iunit,iben,itbentest)
+                     call twh_itben(GLB_GET,imolty,itestb,jben
+     &                    ,jtbentest)
+                     if ( jtbentest .ne. itbentest ) then
                         write(6,*) 'Problem: imolty,iunit,iben',imolty
      &                       ,iunit,iben
                         write(6,*) 'Has nonsymmetric type: itestb,itest'
      &                       ,',jben',itestb,itest,jben
-                        write(6,*) 'itest iben type '
-     &                       ,twh_get_itben(imolty,iunit,iben)
-                        write(6,*) 'itestb jben type '
-     &                       ,twh_get_itben(imolty,itestb,jben)
+                        write(6,*) 'itest iben type ',itbentest
+                        write(6,*) 'itestb jben type ',jtbentest
                         if ( lintraterm ) then
                            lfailure = .true.
                            return
@@ -621,16 +597,16 @@ c              --- interaction
                      return
                   endif
                endif
-
-               if ( twh_get_lbonbon(
-     &              twh_get_itben(imolty,iunit,iben)) ) then
+               call twh_itben(GLB_GET,imolty,iunit,iben,itbentest)
+               call twh_lbonbon(GLB_GET,itbentest,lbonbon)
+               if ( lbonbon ) then
 c                 --- we have at least on bond-bond interaction
                   lbnbn = .true.
 c                 --- do not double count as we are on the center atom
                   if ( iunit .lt. itestb ) then
                      call twh_inbnbn(GLB_INCR,imolty,itest,1)
-                     count = twh_get_inbnbn(imolty,itest)
-                     itemp = twh_get_itben(imolty,iunit,iben)
+                     call twh_inbnbn(GLB_GET,imolty,itest,count)
+                     call twh_itben(GLB_GET,imolty,iunit,iben,itemp)
                      call twh_orderben(GLB_GET,imolty,iunit,iben,iorder)
                      if ( iorder .eq. ORD_REVERSE ) then
                         itemp = -itemp
@@ -638,22 +614,22 @@ c                 --- do not double count as we are on the center atom
                      call twh_itbnbn(GLB_SET,imolty,itest,count,itemp)
                      call twh_ijbnbn1(GLB_SET,imolty,itest,count,iunit)
                      call twh_ijbnbn2(GLB_SET,imolty,itest,count,itestb)
-                     itemp = twh_get_ibtben1(imolty,iunit,iben)
+                     call twh_ibtben1(GLB_GET,imolty,iunit,iben,itemp)
                      call twh_ibtbnbn1(GLB_SET,imolty,itest,count,itemp)
-                     itemp = twh_get_ibtben2(imolty,iunit,iben)
+                     call twh_ibtben2(GLB_GET,imolty,iunit,iben,itemp)
                      call twh_ibtbnbn2(GLB_SET,imolty,itest,count,itemp)
                   endif
                endif
-               atype = twh_get_itben(imolty,iunit,iben)
-               if ( twh_get_anglestyle(atype) .eq. ANG_STYLE_FOURIER
-     &              .or. twh_get_anglestyle(atype)
-     &              .eq. ANG_STYLE_TTFOURIER ) then
+               call twh_itben(GLB_GET,imolty,iunit,iben,atype)
+               call twh_anglestyle(GLB_GET,atype,anglestyle)
+               if ( anglestyle .eq. ANG_STYLE_FOURIER
+     &              .or. anglestyle .eq. ANG_STYLE_TTFOURIER ) then
 c                 --- this only works with the UFF 12-6 classical
 c                 --- potential
-                  if ( twh_get_classical_potential() 
-     &                 .ne. 'UFF 12-6' ) then
+                  call twh_cp_number(GLB_GET,cpnumber)
+                  if ( cpnumber .ne. CP_UFF_12_6 ) then
                      write(6,*) 'CHECKSTRUC: cannot combine anglestyle'
-     &                    ,twh_get_anglestyle(atype)
+     &                    ,anglestyle
                      write(6,*) 'with anything other than a'
      &                    ,' classical_potential of UFF 12-6'
                      lfailure = .true.
@@ -664,20 +640,20 @@ c                 --- setup the prefactor here to save time later on
 c                 --- set zi
                   call twh_ntype(GLB_GET,imolty,iunit,itype)
                   ii = twh_getnbtype(itype,itype)
-                  zi = twh_get_nbcoeff(10,ii)
+                  call twh_nbcoeff(GLB_GET,10,ii,zi)
 c                 --- set zk
-                  kunit = twh_get_ijben3(imolty,iunit,iben)
+                  call twh_ijben3(GLB_GET,imolty,iunit,iben,kunit)
                   call twh_ntype(GLB_GET,imolty,kunit,ktype)
                   kk = twh_getnbtype(ktype,ktype)
-                  zk = twh_get_nbcoeff(10,kk)
+                  call twh_nbcoeff(GLB_GET,10,kk,zk)
 c                 --- set theta naught
-                  itemp = twh_get_itben(imolty,iunit,iben)
-                  theta = twh_get_bencoeff(itemp,0)
+                  call twh_itben(GLB_GET,imolty,iunit,iben,itemp)
+                  call twh_bencoeff(GLB_GET,itemp,0,theta)
 c                 --- get the equilibrium bond lengths
-                  itemp = twh_get_ibtben1(imolty,iunit,iben)
-                  rij = twh_get_vibcoeff(itemp,0)
-                  itemp = twh_get_ibtben2(imolty,iunit,iben)
-                  rjk = twh_get_vibcoeff(itemp,0)
+                  call twh_ibtben1(GLB_GET,imolty,iunit,iben,itemp)
+                  call twh_vibcoeff(GLB_GET,itemp,0,rij)
+                  call twh_ibtben2(GLB_GET,imolty,iunit,iben,itemp)
+                  call twh_vibcoeff(GLB_GET,itemp,0,rjk)
 c                 --- determine the rik squared value
                   rik = dsqrt(rij*rij + rjk*rjk 
      &                 - 2.0d0*rij*rjk*dcos(theta))
@@ -686,11 +662,11 @@ c                 --- set benprefact
      &                 *(zi*zk/(rik**5))*( 
      &                 3.0d0*rij*rjk*(1.0d0 - dcos(theta)**2)
      &                 - rik*rik*dcos(theta))
-                  if ( twh_get_anglestyle(atype)
-     &                 .eq. ANG_STYLE_FOURIER ) then
+                  if ( anglestyle .eq. ANG_STYLE_FOURIER ) then
 c                    --- divide out by n^2
-                     itemp = twh_get_itben(imolty,iunit,iben)
-                     dvalue = dvalue/(twh_get_bencoeff(itemp,1)**2)
+                     call twh_itben(GLB_GET,imolty,iunit,iben,itemp)
+                     call twh_bencoeff(GLB_GET,itemp,1,thetatwo)
+                     dvalue = dvalue/(thetatwo**2)
                   endif
                   call twh_benprefact(GLB_SET,imolty,iunit,iben,dvalue)
                endif
@@ -699,17 +675,19 @@ c                    --- divide out by n^2
 
          do iunit = 1,nunit
 c           --- check torsions
-            do itor = 1, twh_get_intor(imolty,iunit)
-               itest = twh_get_ijtor2(imolty,iunit,itor)
-               itestb = twh_get_ijtor3(imolty,iunit,itor)
-               itestc = twh_get_ijtor4(imolty,iunit,itor)
+            call twh_intor(GLB_GET,imolty,iunit,intorsion)
+            do itor = 1,intorsion
+               call twh_ijtor2(GLB_GET,imolty,iunit,itor,itest)
+               call twh_ijtor3(GLB_GET,imolty,iunit,itor,itestb)
+               call twh_ijtor4(GLB_GET,imolty,iunit,itor,itestc)
 c              --- check that atom #2 is bonded to this atom
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
-                  if ( twh_get_ijvib(imolty,iunit,ivib) .eq. itest 
-     &                 ) then
+               call twh_invib(GLB_GET,imolty,iunit,invibunit)
+               do ivib = 1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itest ) then
                      lfound = .true.
-                     itemp = twh_get_itvib(imolty,iunit,ivib) 
+                     call twh_itvib(GLB_GET,imolty,iunit,ivib,itemp)
                      call twh_ibttor1(GLB_SET,imolty,iunit,itor,itemp)
                   endif
                enddo
@@ -726,11 +704,12 @@ c              --- check that atom #2 is bonded to this atom
                endif
 c              --- check that atom #3 is bonded to atom #2
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,itest)
-                  if ( twh_get_ijvib(imolty,itest,ivib) .eq. itestb 
-     &                 ) then
+               call twh_invib(GLB_GET,imolty,itest,invibtest)
+               do ivib = 1,invibtest
+                  call twh_ijvib(GLB_GET,imolty,itest,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itestb ) then
                      lfound = .true.
-                     itemp = twh_get_itvib(imolty,itest,ivib)
+                     call twh_itvib(GLB_GET,imolty,itest,ivib,itemp)
                      call twh_ibttor2(GLB_SET,imolty,iunit,itor,itemp)
                   endif
                enddo
@@ -747,11 +726,12 @@ c              --- check that atom #3 is bonded to atom #2
                endif
 c              --- check that atom #4 is bonded to atom #3
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,itestb)
-                  if ( twh_get_ijvib(imolty,itestb,ivib) .eq. itestc 
-     &                 ) then
+               call twh_invib(GLB_GET,imolty,itestb,invibtest)
+               do ivib = 1,invibtest
+                  call twh_ijvib(GLB_GET,imolty,itestb,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itestc ) then
                      lfound = .true.
-                     itemp = twh_get_itvib(imolty,itestb,ivib) 
+                     call twh_itvib(GLB_GET,imolty,itestb,ivib,itemp)
                      call twh_ibttor3(GLB_SET,imolty,iunit,itor,itemp)
                   endif
                enddo
@@ -768,13 +748,14 @@ c              --- check that atom #4 is bonded to atom #3
                endif
 c              --- check that the 1-2-3 bend exists
                lfound = .false.
-               do iben = 1, twh_get_inben(imolty,iunit)
-                  if ( twh_get_ijben2(imolty,iunit,iben) .eq. itest 
-     &                 .and.
-     &                 twh_get_ijben3(imolty,iunit,iben) .eq. itestb 
-     &                 ) then
+               call twh_inben(GLB_GET,imolty,iunit,inbend)
+               do iben = 1, inbend
+                  call twh_ijben2(GLB_GET,imolty,iunit,iben,ijben2test)
+                  call twh_ijben3(GLB_GET,imolty,iunit,iben,ijben3test)
+                  if ( ijben2test .eq. itest .and.
+     &                 ijben3test .eq. itestb ) then
                      lfound = .true.
-                     itemp = twh_get_itben(imolty,iunit,iben)
+                     call twh_itben(GLB_GET,imolty,iunit,iben,itemp)
                      call twh_iattor1(GLB_SET,imolty,iunit,itor,itemp) 
                   endif
                enddo
@@ -791,13 +772,14 @@ c              --- check that the 1-2-3 bend exists
                endif
 c              --- check that the 2-3-4 bend exists
                lfound = .false.
-               do iben = 1, twh_get_inben(imolty,itest)
-                  if ( twh_get_ijben2(imolty,itest,iben) .eq. itestb 
-     &                 .and.
-     &                 twh_get_ijben3(imolty,itest,iben) .eq. itestc 
-     &                 ) then
+               call twh_inben(GLB_GET,imolty,itest,inbend)
+               do iben = 1, inbend
+                  call twh_ijben2(GLB_GET,imolty,itest,iben,ijben2test)
+                  call twh_ijben3(GLB_GET,imolty,itest,iben,ijben3test)
+                  if ( ijben2test .eq. itestb .and.
+     &                 ijben3test .eq. itestc ) then
                      lfound = .true.
-                     itemp = twh_get_itben(imolty,itest,iben)
+                     call twh_itben(GLB_GET,imolty,itest,iben,itemp)
                      call twh_iattor2(GLB_SET,imolty,iunit,itor,itemp)
                   endif
                enddo
@@ -812,31 +794,27 @@ c              --- check that the 2-3-4 bend exists
                      return
                   endif
                endif
-
 c              --- check that each other atom also contains this 
 c              --- interaction
                lfound = .false.
-               do jtor = 1, twh_get_intor(imolty,itestc)
-                  if ( twh_get_ijtor4(imolty,itestc,jtor) .eq. iunit 
-     &                 .and. 
-     &                 twh_get_ijtor3(imolty,itestc,jtor) .eq. itest
-     &                 .and.
-     &                 twh_get_ijtor2(imolty,itestc,jtor) .eq. itestb 
-     &                 ) then
-                     if ( abs(twh_get_ittor(imolty,itestc,jtor)) .ne. 
-     &                    abs(twh_get_ittor(imolty,iunit,itor)) ) then
+               call twh_intor(GLB_GET,imolty,itestc,intorsionc)
+               do jtor = 1,intorsionc
+                  call twh_ijtor4(GLB_GET,imolty,itestc,jtor,ijtor4j)
+                  call twh_ijtor3(GLB_GET,imolty,itestc,jtor,ijtor3j)
+                  call twh_ijtor2(GLB_GET,imolty,itestc,jtor,ijtor2j)
+                  if ( ijtor4j .eq. iunit .and. ijtor3j .eq. itest
+     &                 .and. ijtor2j .eq. itestb ) then
+                     call twh_ittor(GLB_GET,imolty,itestc,jtor,ittorj)
+                     call twh_ittor(GLB_GET,imolty,iunit,itor,ittori)
+                     if ( abs(ittorj) .ne. abs(ittori) ) then
                         write(6,*) 'Problem: imolty,iunit,itor',imolty
      &                       ,iunit,itor
                         write(6,*) 'forward atoms ',iunit,itest,itestb
      &                       ,itestc
                         write(6,*) 'reverse atoms ',itestc
-     &                       ,twh_get_ijtor2(imolty,itestc,jtor)
-     &                       ,twh_get_ijtor3(imolty,itestc,jtor)
-     &                       ,twh_get_ijtor4(imolty,itestc,jtor)
-                        write(6,*) 'iunit itor forward type '
-     &                       ,twh_get_ittor(imolty,iunit,itor)
-                        write(6,*) 'itestb jtor reverse type '
-     &                       ,twh_get_ittor(imolty,itestc,jtor)
+     &                       ,ijtor2j,ijtor3j,ijtor4j
+                        write(6,*) 'iunit itor forward type ',ittori
+                        write(6,*) 'itestb jtor reverse type ',ittorj
                         if ( lintraterm ) then
                            lfailure = .true.
                            return
@@ -859,20 +837,22 @@ c              --- interaction
 
 c        --- setup the angletypes for the angle-angle terms
          do iunit = 1,nunit
-            do iaa = 1,twh_get_inaa(imolty,iunit)
-               itest = twh_get_ijaa0(imolty,iunit,iaa)
-               itestb = twh_get_ijaa1(imolty,iunit,iaa)
-               itestc = twh_get_ijaa2(imolty,iunit,iaa)
-               do iben = 1,twh_get_inben(imolty,itest)
-                  if ( iunit .eq. twh_get_ijben2(imolty,itest,iben) 
-     &                 ) then
-                     if (itestb .eq. twh_get_ijben3(imolty,itest,iben)
-     &                    ) then
-                        itemp = twh_get_itben(imolty,itest,iben)
+            call twh_inaa(GLB_GET,imolty,iunit,inaaunit)
+            do iaa = 1,inaaunit
+               call twh_ijaa0(GLB_GET,imolty,iunit,iaa,itest)
+               call twh_ijaa1(GLB_GET,imolty,iunit,iaa,itestb)
+               call twh_ijaa2(GLB_GET,imolty,iunit,iaa,itestc)
+               call twh_inben(GLB_GET,imolty,itest,inbendt)
+               do iben = 1,inbendt
+                  call twh_ijben2(GLB_GET,imolty,itest,iben,ijben2test)
+                  if ( iunit .eq. ijben2test ) then
+                     call twh_ijben3(GLB_GET,imolty,itest,iben
+     &                    ,ijben3test)
+                     if (itestb .eq. ijben3test ) then
+                        call twh_itben(GLB_GET,imolty,itest,iben,itemp)
                         call twh_iataa1(GLB_SET,imolty,iunit,iaa,itemp)
-                     elseif( itestc .eq. 
-     &                       twh_get_ijben3(imolty,itest,iben)) then
-                        itemp = twh_get_itben(imolty,itest,iben)
+                     elseif( itestc .eq. ijben3test ) then
+                        call twh_itben(GLB_GET,imolty,itest,iben,itemp)
                         call twh_iataa2(GLB_SET,imolty,iunit,iaa,itemp)
                      endif
                   endif
@@ -882,13 +862,15 @@ c        --- setup the angletypes for the angle-angle terms
 
 c        --- check improper torsions
          do iunit = 1,nunit
-            do iimp = 1, twh_get_inimprop(imolty,iunit)
+            call twh_inimprop(GLB_GET,imolty,iunit,inimproper)
+            do iimp = 1, inimproper
 c              --- check that atom #2 is bonded to first atom
-               itest = twh_get_ijimprop2(imolty,iunit,iimp)
+               call twh_ijimprop2(GLB_GET,imolty,iunit,iimp,itest)
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
-                  if ( twh_get_ijvib(imolty,iunit,ivib) .eq. itest ) 
-     &                 lfound = .true.
+               call twh_invib(GLB_GET,imolty,iunit,invibunit)
+               do ivib = 1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itest ) lfound = .true.
                enddo
                if ( .not. lfound ) then
                   write(6,*) 'Problem: imolty,iunit,ijimprop2,iimp'
@@ -901,11 +883,11 @@ c              --- check that atom #2 is bonded to first atom
                   endif
                endif
 c              --- check that atom #3 is bonded to first atom
-               itestb = twh_get_ijimprop3(imolty,iunit,iimp)
+               call twh_ijimprop3(GLB_GET,imolty,iunit,iimp,itestb)
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
-                  if ( twh_get_ijvib(imolty,iunit,ivib) .eq. itestb ) 
-     &                 lfound = .true.
+               do ivib = 1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itestb ) lfound = .true.
                enddo
                if ( .not. lfound ) then
                   write(6,*) 'Problem: imolty,iunit,ijimprop3,iimp'
@@ -918,11 +900,11 @@ c              --- check that atom #3 is bonded to first atom
                   endif
                endif
 c              --- check that atom #4 is bonded to first atom
-               itestc = twh_get_ijimprop4(imolty,iunit,iimp)
+               call twh_ijimprop4(GLB_GET,imolty,iunit,iimp,itestc)
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
-                  if ( twh_get_ijvib(imolty,iunit,ivib) .eq. itestc ) 
-     &                 lfound = .true.
+               do ivib = 1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                  if ( ijvibtest .eq. itestc ) lfound = .true.
                enddo
                if ( .not. lfound ) then
                   write(6,*) 'Problem: imolty,iunit,ijimprop4,iimp'
@@ -938,18 +920,20 @@ c              --- check that atom #4 is bonded to first atom
          enddo
 c        --- check special one-five
          do iunit = 1,nunit
-            do iof = 1,twh_get_inof(imolty,iunit)
-               matom = twh_get_ijof5(imolty,iunit,iof)
+            call twh_inof(GLB_GET,imolty,iunit,inonefivei)
+            do iof = 1,inonefivei
+               call twh_ijof5(GLB_GET,imolty,iunit,iof,matom)
                lfound = .false.
-               do jof = 1,twh_get_inof(imolty,matom)
-                  if ( twh_get_ijof5(imolty,matom,jof) .eq. iunit ) 
-     &                 lfound = .true.
+               call twh_inof(GLB_GET,imolty,matom,inonefivej)
+               do jof = 1,inonefivej
+                  call twh_ijof5(GLB_GET,imolty,matom,jof,ijof5test)
+                  if ( ijof5test .eq. iunit ) lfound = .true.
                enddo
                if ( .not. lfound ) then
                   write(6,*) 'CHECKSTRUC: non-symetric one-five'
                   write(6,*) 'imolty,iunit,iof',imolty,iunit,iof
                   write(6,*) 'has no return interaction from ijof5'
-     &                 ,twh_get_ijof5(imolty,iunit,iof)
+     &                 ,matom
                   lfailure = .true.
                   return
                endif
@@ -978,22 +962,24 @@ c              --- torsion
                call twh_ittor(GLB_GET,imolty,iunit,itor,itype)
                call twh_loftor(GLB_GET,iabs(itype),lonefourtor)
                if ( lonefourtor ) then
-                  torcross(twh_get_ijtor4(imolty,iunit,itor)) = 
-     &                 torcross(twh_get_ijtor4(imolty,iunit,itor)) + 1
+                  call twh_ijtor4(GLB_GET,imolty,iunit,itor,ijtor4i)
+                  torcross(ijtor4i) = torcross(ijtor4i) + 1
                endif
             enddo
 c           --- now make sure we don't have bonded or angle interaction
 c           --- with that 4th bead (possible in rings)
-            do itor = 1,twh_get_intor(imolty,iunit)
-               junit = twh_get_ijtor4(imolty,iunit,itor)
+            do itor = 1,numtor
+               call twh_ijtor4(GLB_GET,imolty,iunit,itor,junit)
                lfound = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
-                  if ( junit .eq. twh_get_ijvib(imolty,iunit,ivib) )
-     &                 lfound = .true.
+               call twh_invib(GLB_GET,imolty,iunit,invibunit)
+               do ivib = 1,invibunit
+                  call twh_ijvib(GLB_GET,imolty,iunit,ivib,ijvibtest)
+                  if ( junit .eq. ijvibtest ) lfound = .true.
                enddo
-               do iben = 1,twh_get_inben(imolty,iunit)
-                  if ( junit .eq. twh_get_ijben3(imolty,iunit,iben) ) 
-     &                 lfound = .true.
+               call twh_inben(GLB_GET,imolty,iunit,inbend)
+               do iben = 1,inbend
+                  call twh_ijben3(GLB_GET,imolty,iunit,iben,ijben3test)
+                  if ( junit .eq.ijben3test ) lfound = .true.
                enddo
 c              --- store the scaling factor for each torsion
                if ( lfound .or. torcross(junit) .eq. 0 ) then
@@ -1022,47 +1008,44 @@ c     --- bonds to an atom for its hybridization then we are in trouble
       do imolty = 1,nmolty
          call twh_nunit(GLB_GET,imolty,nunit)
          do iunit = 1,nunit
-            ivib = twh_get_invib(imolty,iunit)
+            call twh_invib(GLB_GET,imolty,iunit,ivib)
             call twh_ntype(GLB_GET,imolty,iunit,itype)
-            if ( twh_get_bondpatt(itype) .eq. 'sp3' ) then
+            call twh_bondpatt(GLB_GET,itype,bondpatt)
+            if ( bondpatt.eq. 'sp3' ) then
                if ( ivib .gt. 4 ) then
                   write(6,*) 'too many bonds to an sp3 atom'
                   write(6,*) 'imolty,iunit,ivib',imolty,iunit,ivib
-                  write(6,*) 'itype,bondpatt',itype
-     &                 ,twh_get_bondpatt(itype)
+                  write(6,*) 'itype,bondpatt',itype,bondpatt
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
                   endif
                endif
-            elseif ( twh_get_bondpatt(itype) .eq. 'sp2' ) then
+            elseif ( bondpatt .eq. 'sp2' ) then
                if ( ivib .gt. 3 ) then
                   write(6,*) 'too many bonds to an sp2 atom'
                   write(6,*) 'imolty,iunit,ivib',imolty,iunit,ivib
-                  write(6,*) 'itype,bondpatt',itype
-     &                 ,twh_get_bondpatt(itype)
+                  write(6,*) 'itype,bondpatt',itype,bondpatt
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
                   endif
                endif
-            elseif ( twh_get_bondpatt(itype) .eq. 'sp' ) then
+            elseif ( bondpatt .eq. 'sp' ) then
                if ( ivib .gt. 2 ) then
                   write(6,*) 'too many bonds to an sp atom'
                   write(6,*) 'imolty,iunit,ivib',imolty,iunit,ivib
-                  write(6,*) 'itype,bondpatt',itype
-     &                 ,twh_get_bondpatt(itype)
+                  write(6,*) 'itype,bondpatt',itype,bondpatt
                   if ( lintraterm ) then
                      lfailure = .true.
                      return
                   endif
                endif
-            elseif ( twh_get_bondpatt(itype) .eq. 's' ) then
+            elseif ( bondpatt .eq. 's' ) then
                if ( ivib .gt. 1 ) then
                   write(6,*) 'too many bonds to an s atom'
                   write(6,*) 'imolty,iunit,ivib',imolty,iunit,ivib
-                  write(6,*) 'itype,bondpatt',itype
-     &                 ,twh_get_bondpatt(itype)
+                  write(6,*) 'itype,bondpatt',itype,bondpatt
                   if ( lintraterm ) then
                      lfailure = .true.
                      return

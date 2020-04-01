@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -27,18 +27,12 @@ c     * calls initconf to set up the initial conformation              *
 c     * performs some simple error checking to find input errors       *
 c     *                                                                *
 c     * rewritten from old readinput 05-15-2002 by M.G. Martin         *
-c     * last modified 03-11-2020 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_EXPON
 #define FUNCTION_LEN_TRIM
 #define FUNCTION_CHECK_LABEL
-#define FUNCTION_GET_GROWVALIDCOUNT
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_MASS
-#define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_NTYPE
 #define FUNCTION_READ_FLOAT
 #define FUNCTION_READ_LABELED_FLOAT
 #define FUNCTION_READ_LABELED_INTEGER
@@ -60,6 +54,7 @@ c     --- logical arrays
       dimension lpdbset(NTMAX)
 c     --- character string scalars
       character*1 hist_suffix
+      character*(ELENAMLEN) elename
       character*3 fname3,fname4
       character*4 pdbname
       character*8 stepstyle
@@ -81,7 +76,7 @@ c     --- integer 4 scalars
       integer*4 luxvalue,iseed
 c     --- integer scalars
       integer imolty,jmolty,iunit,ivib,itor,cpnumber,nchain,kmax
-      integer ichain,nmolty,ivalue
+      integer ichain,nmolty,ivalue,testboxi
       integer itest,count,idim,jdim,nboxpair,nchbox,nfield
       integer icount,itmp,crtype,iutemp,idum, numunits
       integer nmcount,ibox,jbox,isuccess,numtypes,isolvtype,nmtype
@@ -93,7 +88,7 @@ c     --- integer scalars
       integer histdumpfreq,n_tmmc_min,ii,n_tmmc_max,jj,maxunit,maxchain
       integer maxboxes,natoms,ifield,fieldtype,total,atomcount
       integer maxnumtor,numtor,numblock,rng_code,irange,pt_number
-      integer nvmsim
+      integer nvmsim,invibration,ntype
 c     --- integer arrays
       integer idummy
       dimension idummy(NTMAX)
@@ -111,7 +106,7 @@ c     --- double precision scalars
       double precision minboxdim,chempot,uvtfactor,pmtype
       double precision cm_ii_one,cm_ii_zero,cm_ii_negone
       double precision cm_jj_one,cm_jj_zero,cm_jj_negone
-      double precision xtemp,ytemp,ztemp
+      double precision xtemp,ytemp,ztemp,mass
 c     --- double precision arrays
       double precision drange
       dimension drange(2)
@@ -1581,8 +1576,9 @@ c     --- allocate arrays based on nmolty,maxunit and maxnumtor
          if ( .not. lpdbset(imolty) ) then
 c           --- setup pdbname 
             do iunit = 1,numunits
-               pdbname = twh_get_elementname(
-     &              twh_get_ntype(imolty,iunit))
+               call twh_ntype(GLB_GET,imolty,iunit,ntype)
+               call twh_elementname(GLB_GET,ntype,elename)
+               pdbname = elename
                call twh_pdbname(GLB_SET,imolty,iunit,pdbname)
             enddo
          endif
@@ -1594,7 +1590,8 @@ c     --- compute the molecular weight of the molecules
          masstotal = 0.0d0
          do iunit = 1,numunits
             call twh_ntype(GLB_GET,imolty,iunit,iutemp)
-            masstotal = masstotal + twh_get_mass(iutemp)
+            call twh_mass(GLB_GET,iutemp,mass)
+            masstotal = masstotal + mass
          enddo
          call twh_masstotal(GLB_SET,imolty,masstotal)
       enddo
@@ -2027,7 +2024,8 @@ c     --- book keeping arrays
             idummy(imolty) = 0
          enddo      
          do ichain = 1, nchain
-            if ( twh_get_nboxi(ichain) .eq. ibox ) then
+            call twh_nboxi(GLB_GET,ichain,testboxi)
+            if ( testboxi .eq. ibox ) then
                call twh_moltyp(GLB_GET,ichain,imolty)
                if ( imolty .lt. 1 .or. imolty .gt. NTMAX ) then
                   write(6,*) 'READTOWHEE: error with assigned moltyp'
@@ -2166,7 +2164,8 @@ c     --- set up the growlogic arrays
          if ( itest .lt. numunits ) then
             do iunit = 1,numunits
                lvalid = .false.
-               do ivib = 1,twh_get_invib(imolty,iunit)
+               call twh_invib(GLB_GET,imolty,iunit,invibration)
+               do ivib = 1,invibration
                   call twh_schedule(lfailure,numunits,imolty,idum,iunit
      &                 ,itor,ivib,SCH_CODE_COUNT)
                   if ( lfailure ) return
@@ -2188,7 +2187,7 @@ c           --- all units are equally valid when not using nmaxcbmc
 c        --- set the growvalidcount
          call twh_growvalidcount(GLB_SET,imolty,count)
 c        --- safety check to make sure this is positive
-         if ( twh_get_growvalidcount(imolty) .eq. 0 ) then
+         if ( count .eq. 0 ) then
             call twh_nmaxcbmc(GLB_GET,imolty,ivalue)
             write(6,*) 'READTOWHEE: nmaxcbmc of ',ivalue
      &           ,' for molecule type ',imolty
@@ -2241,11 +2240,10 @@ c     ******************************************************************
 c     * read in the move probabilty section of towhee_input            *
 c     *                                                                *
 c     * split out of readtowhee 01-16-2018 by M.G. Martin              *
-c     * last modified 04-12-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
-#define FUNCTION_GET_PMVOL
 #define FUNCTION_READ_FLOAT
 #define FUNCTION_READ_LABELED_FLOAT
 #include "functions.h"
@@ -2291,7 +2289,7 @@ c        --- read in probabilities for the 3d volume move
      &           ,idname)
             if ( lfailure ) return
             call twh_pmvol(GLB_SET,dvalue)
-            if ( twh_get_pmvol() .gt. pmmin ) pmmin = twh_get_pmvol()
+            if ( dvalue .gt. pmmin ) pmmin = dvalue
 
             call twh_read_labeled_float_array(lfailure,4,'pmvlpr'
      &           ,nvmsim, .true. , idname, dtarray)
@@ -3414,21 +3412,15 @@ c     * lpdbset                                                        *
 c     * lfailure                                                       *
 c     * lpdb, lpdbset, lerror are modified in this subroutine          *
 c     *                                                                *
-c     * last modified 08-11-2014 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_INAA
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_NTYPE
 #define FUNCTION_READ_LABELED_INTEGER
 #define FUNCTION_READ_LABELED_LOGICAL
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer imolty
       logical lpdbnames,lfailure
-
 c     --- local variables
 c     --- character string scalars
       character*3 aminoshort
@@ -3436,7 +3428,7 @@ c     --- character string scalars
       character*30 idname
 c     --- integer scalars
       integer iunit,ibead,ivib,iben,ivalue,itor,iaa,numvib
-      integer numunits,aminonum
+      integer numunits,aminonum,inaa,inbend,inimproper,intorsion
 c     --- integer arrays
       integer iatmp
       dimension iatmp(6)
@@ -3457,9 +3449,7 @@ c        --- read in the atom type
          if ( lfailure ) return
          call twh_ntype(GLB_SET,imolty,iunit,ivalue)
          call twh_qqatom(GLB_SET,imolty,iunit,charge)
-         write(6,36) 'bead:',ibead
-     &        ,'beadtype:',twh_get_ntype(imolty,iunit)
-     &        ,'charge:',charge
+         write(6,36) 'bead:',ibead,'beadtype:',ivalue,'charge:',charge
 36            format(a5,1x,i10,1x,a9,1x,i10,1x,a7,1x,f10.5)
 
          if ( lpdbnames ) then
@@ -3496,16 +3486,16 @@ c        --- read in bond vibrations
          enddo
 
 c        --- read in bond bending
-         iatmp(1) = twh_read_labeled_integer(lfailure,4,'bending'
+         inbend = twh_read_labeled_integer(lfailure,4,'bending'
      &        , .false., idname)
          if ( lfailure ) return
-         call twh_inben(GLB_SET,imolty,iunit,iatmp(1))
-         if ( twh_get_inben(imolty,iunit) .gt. MAXBEND ) then
+         call twh_inben(GLB_SET,imolty,iunit,inbend)
+         if ( inbend .gt. MAXBEND ) then
             write(6,*) 'READTOWHEE: too many bends'
             lfailure = .true.
             return
          endif
-         do iben = 1, twh_get_inben(imolty,iunit)
+         do iben = 1,inbend
             call twh_read_integer_array(lfailure,4,'bending',
      &         6,.false.,iatmp)
             if ( lfailure ) return
@@ -3525,16 +3515,16 @@ c        --- read in bond bending
          enddo
 
 c        --- read in torsions
-         iatmp(1) = twh_read_labeled_integer(lfailure,4,'torsion'
+         intorsion = twh_read_labeled_integer(lfailure,4,'torsion'
      &        , .false., idname)
          if ( lfailure ) return
-         call twh_intor(GLB_SET,imolty,iunit,iatmp(1))
-         if ( twh_get_intor(imolty,iunit) .gt. MAXTOR ) then
+         call twh_intor(GLB_SET,imolty,iunit,intorsion)
+         if ( intorsion .gt. MAXTOR ) then
             write(6,*) 'READTOWHEE: too many torsions'
             lfailure = .true.
             return
          endif
-         do itor = 1, twh_get_intor(imolty,iunit)
+         do itor = 1,intorsion
             call twh_read_integer_array(lfailure,4,'torsion',
      &         4,.false.,iatmp)
             if ( lfailure ) return
@@ -3547,16 +3537,16 @@ c        --- read in torsions
 c        --- angle - angle (compass)
 c        --- specified from atom J in the following format K I L
 c        --- where the angle - angle is K-J-I and K-J-L
-         iatmp(1) = twh_read_labeled_integer(lfailure,4,'angle-angle'
+         inaa = twh_read_labeled_integer(lfailure,4,'angle-angle'
      &        , .false., idname)
          if ( lfailure ) return
-         call twh_inaa(GLB_SET,imolty,iunit,iatmp(1))
-         if ( twh_get_inaa(imolty,iunit) .gt. MAXAA ) then
+         call twh_inaa(GLB_SET,imolty,iunit,inaa)
+         if ( inaa .gt. MAXAA ) then
             write(6,*) 'READTOWHEE: too many angle-angle terms'
             lfailure = .true.
             return
          endif
-         do iaa = 1,twh_get_inaa(imolty,iunit)
+         do iaa = 1,inaa
             call twh_read_integer_array(lfailure,4,'angle-angle',
      &         4,.false.,iatmp)
             if ( lfailure ) return
@@ -3567,16 +3557,16 @@ c        --- where the angle - angle is K-J-I and K-J-L
          enddo
 
 c        --- read in improper torsions
-         iatmp(1) = twh_read_labeled_integer(lfailure,4
+         inimproper = twh_read_labeled_integer(lfailure,4
      &        ,'improper torsion', .false., idname)
          if ( lfailure ) return
-         call twh_inimprop(GLB_SET,imolty,iunit,iatmp(1))
-         if ( twh_get_inimprop(imolty,iunit) .gt. MAXIMPROP ) then
+         call twh_inimprop(GLB_SET,imolty,iunit,inimproper)
+         if ( inimproper .gt. MAXIMPROP ) then
             write(6,*) 'READTOWHEE: too many improper torsions'
             lfailure = .true.
             return
          endif
-         do itor = 1, twh_get_inimprop(imolty,iunit)
+         do itor = 1,inimproper
             call twh_read_integer_array(lfailure,4,'improper torsion'
      &           ,4,.false.,iatmp)
             if ( lfailure ) return

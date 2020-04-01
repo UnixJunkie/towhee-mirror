@@ -1,7 +1,7 @@
 #include "preproc.h"
-c     ******************************************************************
+c     *****************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2001-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2001-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -33,56 +33,42 @@ c     *     angle types 2 (DREIDING) and 3 (harmonic cosine)           *
 c     *     dihedral types 15 (DREIDING) and (not) 8 (nonbond)         *
 c     *     improper form 4 type 7 (DREIDING 1-cos)                    *
 c     *     fixed unit cell vector output and changed to triclinic pbc *
-c     * last modified 07-22-2016 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_ANGLESTYLE
-#define FUNCTION_GET_BENCOEFF
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_INVIB
-#define FUNCTION_GET_ITBEN
-#define FUNCTION_GET_ITTOR
 #define FUNCTION_GET_LHERE
-#define FUNCTION_GET_MASS
-#define FUNCTION_GET_NBCOEFF
-#define FUNCTION_GET_NBOXI
-#define FUNCTION_GET_NCMT
-#define FUNCTION_GET_TORCOEFF
-#define FUNCTION_GET_TORSTYLE
-#define FUNCTION_GET_VIBCOEFF
 #define FUNCTION_OLDGETATOMNUM
-#define FUNCTION_GET_MASS
-#define FUNCTION_GET_NBNAME
-#define FUNCTION_GET_IMPCOEFF
-#define FUNCTION_GET_IMPSTYLE
-#define FUNCTION_GET_ITIMPROP
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
 c     --- local variables
+c     --- local logicals
       logical ladd,lconstraints
-      integer dlp_bond,dlp_angle,dlp_dihedral
+c     --- local character strings
+      character*30 filename
+      character*(FFNAMELEN) nbnamei,nbnamej
+c     --- local integer scalars
+      integer dlp_bond,dlp_angle,dlp_dihedral,cpnumber
       integer nuni,testmolty,reset,itype,jtype,ij
       integer ibox,ivib,ibend,itor,type,ichain,imolty,iunit
       integer count_atom,count_bond,nchain,nunit
       integer style,inpnum,count_angle,count_dihedral,nmolty
       integer dlp_improper, count_improper, ncmt, icmt,numboxes
-      character*30 filename,localcp
-      double precision xtemp,ytemp,ztemp,radtodeg,charge
-      double precision totbond,hm1,hm2,hm3
-
+      integer ijben2test,ijben3test,ijimp2,ijimp3,ijimp4
+      integer ijtor2test,ijtor3test,ijtor4test,ijvibtest,inbend
+      integer inimproper,intorsion,invibration,invib_two,invib_thr
+      integer testboxi,icoeff
+c     --- local double precision
+      double precision xtemp,ytemp,ztemp,radtodeg,charge,impcoeff
+      double precision totbond,hm1,hm2,hm3,mass,bc_one,bc_zero
+      double precision nbcoeff_13,nbcoeff_14
+c     --- local double precision arrays
+      double precision vibcoeff
+      dimension vibcoeff(0:1)
+      double precision torcoeff
+      dimension torcoeff(0:3)
+      
 c     --- retrieve constants
       call twh_constant_radtodeg(GLB_GET,radtodeg)
       call twh_nchain(GLB_GET,nchain)
@@ -103,15 +89,16 @@ c      --- open FIELD
        do imolty=1,nmolty
           call twh_nunit(GLB_GET,imolty,nunit)
           write(inpnum,'(a17,i2)') 'Name of Molecule ', imolty
-          write(inpnum,'(a9,i6)') 'NUMMOLS  '
-     &         , twh_get_ncmt(ibox,imolty)
+          call twh_ncmt(GLB_GET,ibox,imolty,ncmt)
+          write(inpnum,'(a9,i6)') 'NUMMOLS  ',ncmt
           write(inpnum,'(a7,i6)') 'ATOMS  ', nunit
           do iunit = 1,nunit
              call twh_ntype(GLB_GET,imolty,iunit,type)
              call twh_qqatom(GLB_GET,imolty,iunit,charge)
+             call twh_mass(GLB_GET,type,mass)
+             call twh_nbname(GLB_GET,type,nbnamei)
              write(inpnum,'(a8,2f12.5,2a5)')
-     &            twh_get_nbname(type),twh_get_mass(type)
-     &            ,charge,'    1','    0'
+     &            nbnamei,mass,charge,'    1','    0'
           enddo
 c         ---- number of bonds,angles,torsions
           dlp_bond = 0
@@ -119,37 +106,45 @@ c         ---- number of bonds,angles,torsions
           dlp_dihedral = 0
           dlp_improper = 0
           do ichain = 1,nchain
-             if ( twh_get_nboxi(ichain) .eq. ibox ) then
+             call twh_nboxi(GLB_GET,ichain,testboxi)
+             if ( testboxi .eq. ibox ) then
                 call twh_moltyp(GLB_GET,ichain,testmolty)
                 if ( imolty .eq. testmolty ) then
                    do iunit = 1,nunit
 c                     --- number of bonds
-                      do ivib = 1,twh_get_invib(imolty,iunit)
-                         if ( twh_get_ijvib(imolty,iunit,ivib) .gt.
-     &                        iunit ) then
+                      call twh_invib(GLB_GET,imolty,iunit,invibration)
+                      do ivib = 1,invibration
+                         call twh_ijvib(GLB_GET,imolty,iunit,ivib
+     &                        ,ijvibtest)
+                         if ( ijvibtest .gt. iunit ) then
                             dlp_bond = dlp_bond + 1
                          endif
                       enddo
 c                     --- number of angles
-                      do ibend = 1,twh_get_inben(imolty,iunit)
-                         type = twh_get_itben(imolty,iunit,ibend)
+                      call twh_inben(GLB_GET,imolty,iunit,inbend)
+                      do ibend = 1,inbend
+                         call twh_itben(GLB_GET,imolty,iunit,ibend,type)
                          ladd = .false.
 c                        --- add based solely on ijben3 > iunit
-                         if ( twh_get_ijben3(imolty,iunit,ibend)
-     &                        .gt. iunit ) ladd = .true.
+                         call twh_ijben3(GLB_GET,imolty,iunit,ibend
+     &                        ,ijben3test)
+                         if ( ijben3test .gt. iunit ) ladd = .true.
                          if ( ladd ) then
                             dlp_angle = dlp_angle + 1
                          endif
                       enddo
 c                     --- number of torsions
-                      do itor = 1,twh_get_intor(imolty,iunit)
-                         type = twh_get_ittor(imolty,iunit,itor)
+                      call twh_intor(GLB_GET,imolty,iunit,intorsion)
+                      do itor = 1,intorsion
+                         call twh_ittor(GLB_GET,imolty,iunit,itor
+     &                        ,type)
                          if ( type .gt. 0 ) then
                             ladd = .false.
 c                           --- any other case compare ijt4 > iunit
-                            if ( twh_get_ijtor4(imolty,iunit,itor)
-     &                           .gt. iunit ) then
-                               style = twh_get_torstyle(type)
+                            call twh_ijtor4(GLB_GET,imolty,iunit,itor
+     &                           ,ijtor4test)
+                            if ( ijtor4test .gt. iunit ) then
+                               call twh_torstyle(GLB_GET,type,style)
                                if ( style .ne. 8) then
                                   ladd = .true.
                                endif
@@ -162,8 +157,10 @@ c                           --- any other case compare ijt4 > iunit
 c                     --- end number of torsions
 
 c                     --- number of impropers
-                      do itor = 1,twh_get_inimprop(imolty,iunit)
-                         type = twh_get_itimprop(imolty,iunit,itor)
+                      call twh_inimprop(GLB_GET,imolty,iunit,inimproper)
+                      do itor = 1,inimproper
+                         call twh_itimprop(GLB_GET,imolty,iunit,itor
+     &                        ,type)
                          if ( type .gt. 0 ) then
 c c                         --- compare ijimprop4 > iunit
                             dlp_improper = dlp_improper + 1
@@ -184,17 +181,22 @@ c            --- DL_POLY treats fixed bonds with SHAKE
 c            --- and lists under a seperate section called CONSTRAINTS
              lconstraints = .false.
              do ichain = 1,nchain
-                if ( twh_get_nboxi(ichain) .eq. ibox ) then
+                call twh_nboxi(GLB_GET,ichain,testboxi)
+                if ( testboxi .eq. ibox ) then
                    call twh_moltyp(GLB_GET,ichain,imolty)
                    if (imolty .eq. testmolty ) then
-                      reset = twh_oldgetatomnum(ichain,1)-1
+                      call twh_oldatomnum(GLB_GET,ichain,1,reset)
+                      reset = reset-1
                       do iunit = 1,nunit
-                         do ivib = 1,twh_get_invib(imolty,iunit)
+                         call twh_invib(GLB_GET,imolty,iunit
+     &                        ,invibration)
+                         do ivib = 1,invibration
                             call twh_itvib(GLB_GET,imolty,iunit,ivib
      &                           ,type)
                             if (type .gt.0) then
-                               if ( twh_get_ijvib(imolty,iunit,ivib)
-     &                              .gt. iunit ) then
+                               call twh_ijvib(GLB_GET,imolty,iunit,ivib
+     &                              ,ijvibtest)
+                               if ( ijvibtest .gt. iunit ) then
                                   call twh_vibstyle(GLB_GET,type
      &                                 ,style)
                                   if ( style .eq. BOND_STYLE_FIXED) then
@@ -204,13 +206,14 @@ c            --- and lists under a seperate section called CONSTRAINTS
                                         write(inpnum,'(a13,i5)')
      &                                       'CONSTRAINTS  ', dlp_bond
                                      endif
+                                     call twh_vibcoeff(GLB_GET,type,0
+     &                                    ,vibcoeff(0))
                                      write(inpnum,'(2i5,f12.5)')
      &                                    twh_oldgetatomnum(ichain
      &                                    ,iunit) - reset
      &                                    ,twh_oldgetatomnum(ichain
-     &                                    ,twh_get_ijvib(imolty,iunit
-     &                                    ,ivib)) - reset
-     &                                    ,twh_get_vibcoeff(type,0)
+     &                                    ,ijvibtest) - reset
+     &                                    ,vibcoeff(0)
                                   endif
                                endif
                             endif
@@ -228,32 +231,39 @@ c            --- if there are no flexible bonds continue with angles
              if (dlp_bond .eq. 0) goto 444
              write(inpnum,'(a8,i5)') 'BONDS   ', dlp_bond
              do ichain = 1,nchain
-                if ( twh_get_nboxi(ichain) .eq. ibox ) then
+                call twh_nboxi(GLB_GET,ichain,testboxi)
+                if ( testboxi .eq. ibox ) then
                    call twh_moltyp(GLB_GET,ichain,imolty)
                    if (imolty .eq. testmolty ) then
                       reset = twh_oldgetatomnum(ichain,1)-1
                       do iunit = 1,nunit
-                         do ivib = 1,twh_get_invib(imolty,iunit)
+                         call twh_invib(GLB_GET,imolty,iunit
+     &                        ,invibration)
+                         do ivib = 1,invibration
                             call twh_itvib(GLB_GET,imolty,iunit,ivib
      &                           ,type)
                             if (type .gt.0) then
-                               if ( twh_get_ijvib(imolty,iunit,ivib)
-     &                              .gt. iunit ) then
+                               call twh_ijvib(GLB_GET,imolty,iunit,ivib
+     &                              ,ijvibtest)
+                               if ( ijvibtest .gt. iunit ) then
                                   count_bond = count_bond + 1
                                   call twh_vibstyle(GLB_GET,type
      &                                 ,style)
                                   if ( style .eq. BOND_STYLE_HARMONIC
      &                                 ) then
+                                     call twh_vibcoeff(GLB_GET,type,0
+     &                                    ,vibcoeff(0))
+                                     call twh_vibcoeff(GLB_GET,type,1
+     &                                    ,vibcoeff(1))
                                      write(inpnum,'(a5,2i5,2f12.5)')
      &                                    'harm '
      &                                    ,twh_oldgetatomnum(ichain
      &                                    ,iunit) - reset
      &                                    ,twh_oldgetatomnum(ichain
-     &                                    ,twh_get_ijvib(imolty,iunit
-     &                                    ,ivib)) - reset
-     &                                    ,twh_get_vibcoeff(type,1)
+     &                                    ,ijvibtest) - reset
+     &                                    ,vibcoeff(1)
      &                                    *2.0d0/CON_KJTOK
-     &                                    ,twh_get_vibcoeff(type,0)
+     &                                    ,vibcoeff(0)
                                   else
                                      if ( .not. lconstraints ) then
                                         write(6,*) 'WRITEDLPOLY: ',
@@ -283,69 +293,70 @@ c         ----  output angle information
           if ( dlp_angle .ne. 0 ) then
              count_angle = 0
              do ichain = 1,nchain
-                if ( twh_get_nboxi(ichain) .eq. ibox ) then
+                call twh_nboxi(GLB_GET,ichain,testboxi)
+                if ( testboxi .eq. ibox ) then
                    call twh_moltyp(GLB_GET,ichain,imolty)
                    if (imolty .eq. testmolty ) then
                       reset = twh_oldgetatomnum(ichain,1)-1
                       do iunit = 1,nunit
-                         do ibend = 1,twh_get_inben(imolty,iunit)
-                            type = twh_get_itben(imolty,iunit,ibend)
-                            if ( twh_get_ijben3(imolty,iunit,ibend)
-     &                           .gt.iunit ) then
+                         call twh_inben(GLB_GET,imolty,iunit,inbend)
+                         do ibend = 1,inbend
+                            call twh_itben(GLB_GET,imolty,iunit,ibend
+     &                           ,type)
+                            call twh_ijben3(GLB_GET,imolty,iunit,ibend
+     &                           ,ijben3test)
+                            if ( ijben3test .gt.iunit ) then
                                count_angle = count_angle + 1
-                               style = twh_get_anglestyle(type)
+                               call twh_ijben2(GLB_GET,imolty,iunit
+     &                              ,ibend,ijben2test)
+                               call twh_ijben3(GLB_GET,imolty,iunit
+     &                              ,ibend,ijben3test)
+                               call twh_anglestyle(GLB_GET,type,style)
                                if ( style .eq. ANG_STYLE_HARMONIC ) then
+                                  call twh_bencoeff(GLB_GET,type,0
+     &                                 ,bc_zero)
+                                  call twh_bencoeff(GLB_GET,type,1
+     &                                 ,bc_one)
                                   write(inpnum,'(a5,3i5,2f12.5)')
      &                                 'harm '
      &                                 ,twh_oldgetatomnum(ichain
      &                                 ,iunit) - reset
      &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijben2(imolty,iunit
-     &                                 ,ibend))
-     &                                 - reset
+     &                                 ,ijben2test) - reset
      &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijben3(imolty,iunit
-     &                                 ,ibend))
-     &                                 - reset
-     &                                 ,twh_get_bencoeff(type,1)
-     &                                 *2.0d0/CON_KJTOK
-     &                                 ,twh_get_bencoeff(type,0)
-     &                                 *radtodeg
+     &                                 ,ijben3test) - reset
+     &                                 ,bc_one*2.0d0/CON_KJTOK
+     &                                 ,bc_zero*radtodeg
                                elseif ( style .eq. ANG_STYLE_DREIDING
      &                                 ) then
+                                  call twh_bencoeff(GLB_GET,type,1
+     &                                 ,bc_one)
                                   write(inpnum,'(a5,3i5,3f12.5)')
      &                                 'cos  '
      &                                 ,twh_oldgetatomnum(ichain
      &                                 ,iunit) - reset
      &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijben2(imolty,iunit
-     &                                 ,ibend))
-     &                                 - reset
+     &                                 ,ijben2test) - reset
      &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijben3(imolty,iunit
-     &                                 ,ibend))
-     &                                 - reset
-     &                                 ,twh_get_bencoeff(type,1)
-     &                                 *2.0d0/CON_KJTOK
+     &                                 ,ijben3test)- reset
+     &                                 ,bc_one*2.0d0/CON_KJTOK
      &                                 , 0.0, 1.0
                                elseif ( style .eq. ANG_STYLE_HARM_COS
      &                                 ) then
+                                  call twh_bencoeff(GLB_GET,type,0
+     &                                 ,bc_zero)
+                                  call twh_bencoeff(GLB_GET,type,1
+     &                                 ,bc_one)
                                   write(inpnum,'(a5,3i5,2f12.5)')
      &                                 'hcos '
      &                                 ,twh_oldgetatomnum(ichain
      &                                 ,iunit) - reset
      &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijben2(imolty,iunit
-     &                                 ,ibend))
-     &                                 - reset
+     &                                 ,ijben2test) - reset
      &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijben3(imolty,iunit
-     &                                 ,ibend))
-     &                                 - reset
-     &                                 ,twh_get_bencoeff(type,1)
-     &                                 *2.0d0/CON_KJTOK
-     &                                 ,twh_get_bencoeff(type,0)
-     &                                 *radtodeg
+     &                                 ,ijben3test) - reset
+     &                                 ,bc_one*2.0d0/CON_KJTOK
+     &                                 ,bc_zero*radtodeg
                                else
                                   write(6,*) 'WRITEDLPOLY: ',
      &                                 'invalid angle style ',style, 
@@ -371,22 +382,34 @@ c         ---- output torsion information
           if ( dlp_dihedral .ne. 0 ) then
              count_dihedral = 0
              do ichain = 1,nchain
-                if ( twh_get_nboxi(ichain) .eq. ibox ) then
+                call twh_nboxi(GLB_GET,ichain,testboxi)
+                if ( testboxi .eq. ibox ) then
                    call twh_moltyp(GLB_GET,ichain,imolty)
                    if (imolty .eq. testmolty ) then
                       reset = twh_oldgetatomnum(ichain,1)-1
                       do iunit = 1,nunit
-                         do itor = 1,twh_get_intor(imolty,iunit)
-                            type = twh_get_ittor(imolty,iunit,itor)
+                         call twh_intor(GLB_GET,imolty,iunit,intorsion)
+                         do itor = 1,intorsion
+                            call twh_ittor(GLB_GET,imolty,iunit,itor
+     &                           ,type)
                             if ( type .gt. 0 ) then
-                               if ( twh_get_ijtor4(imolty,iunit,itor)
-     &                              .gt. iunit ) then
+                               call twh_ijtor4(GLB_GET,imolty,iunit
+     &                              ,itor,ijtor4test)
+                               if ( ijtor4test .gt. iunit ) then
 c                                 --- ignore style 8 as it has
 c                                 --- (one-four interactions only)
-                                  style = twh_get_torstyle(type)
+                                  call twh_torstyle(GLB_GET,type,style)
                                   if ( style .ne. 8) then
                                      count_dihedral = count_dihedral
      &                                    + 1
+                                     call twh_ijtor2(GLB_GET,imolty
+     &                                    ,iunit,itor,ijtor2test)
+                                     call twh_ijtor3(GLB_GET,imolty
+     &                                    ,iunit,itor,ijtor3test)
+                                     do icoeff = 0,3
+                                        call twh_torcoeff(GLB_GET,type
+     &                                       ,icoeff,torcoeff(icoeff))
+                                     enddo
                                      if ( style .eq. 2) then
                                         write(inpnum
      &                                       ,'(a5,4i5,3f12.5,2a8)')
@@ -394,20 +417,16 @@ c                                 --- (one-four interactions only)
      &                                       ,twh_oldgetatomnum(
      &                                       ichain,iunit) - reset
      &                                       ,twh_oldgetatomnum(
-     &                                       ichain
-     &                                       ,twh_get_ijtor2(imolty
-     &                                       ,iunit,itor)) - reset
+     &                                       ichain,ijtor2test) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor3(imolty
-     &                                       ,iunit,itor)) - reset
+     &                                       ,ijtor3test) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor4(imolty
-     &                                       ,iunit,itor)) - reset
-     &                                       ,twh_get_torcoeff(type,1)
+     &                                       ,ijtor4test) - reset
+     &                                       ,torcoeff(1)
      &                                       *2.0d0/CON_KJTOK
-     &                                       ,twh_get_torcoeff(type,2)
+     &                                       ,torcoeff(2)
      &                                       *2.0d0/CON_KJTOK
-     &                                       ,twh_get_torcoeff(type,3)
+     &                                       ,torcoeff(3)
      &                                       *2.0d0/CON_KJTOK
      &                                       ,'     0.5', '     0.5'
                                      else if ( style .eq. 11) then
@@ -417,53 +436,44 @@ c                                 --- (one-four interactions only)
      &                                       ,twh_oldgetatomnum(ichain
      &                                       ,iunit) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor2(imolty
-     &                                       ,iunit,itor))
-     &                                       - reset
+     &                                       ,ijtor2test) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor3(imolty
-     &                                       ,iunit,itor)) - reset
+     &                                       ,ijtor3test) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor4(imolty
-     &                                       ,iunit,itor)) - reset
-     &                                       ,twh_get_torcoeff(type,0)
+     &                                       ,ijtor4test) - reset
+     &                                       ,torcoeff(0)
      &                                       /CON_KJTOK
-     &                                       ,twh_get_torcoeff(type,1)
+     &                                       ,torcoeff(1)
      &                                       *2.0d0/CON_KJTOK
-     &                                       ,twh_get_torcoeff(type,2)
+     &                                       ,torcoeff(2)
      &                                       *2.0d0/CON_KJTOK
      &                                       ,'     0.5', '     0.5'
-     &                                       ,twh_get_torcoeff(type,3)
+     &                                       ,torcoeff(3)
      &                                       *2.0d0/CON_KJTOK
                                      else if ( style .eq. 15) then
-                                        totbond =
-     &                                       dble((twh_get_invib(
-     &                                       imolty,twh_get_ijtor2(
-     &                                       imolty,iunit,itor))-1)
-     &                                       *(twh_get_invib(imolty
-     &                                       ,twh_get_ijtor3(imolty
-     &                                       ,iunit,itor))-1))
+                                        call twh_invib(GLB_GET,imolty
+     &                                       ,ijtor2test,invib_two)
+                                        call twh_invib(GLB_GET,imolty
+     &                                       ,ijtor3test,invib_thr)
+                                        totbond = dble((invib_two-1)
+     &                                       *(invib_thr-1))
                                         write(inpnum,'(a5,4i5,3f12.5,2a8
      &,f12.5)')
      &                                       'cos '
      &                                       ,twh_oldgetatomnum(ichain
      &                                       ,iunit) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor2(imolty
-     &                                       ,iunit,itor)) - reset
+     &                                       ,ijtor2test) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor3(imolty
-     &                                       ,iunit,itor))
-     &                                       - reset
+     &                                       ,ijtor3test) - reset
      &                                       ,twh_oldgetatomnum(ichain
-     &                                       ,twh_get_ijtor4(imolty
-     &                                       ,iunit,itor)) - reset
-     &                                       ,twh_get_torcoeff(type,1)
+     &                                       ,ijtor4test) - reset
+     &                                       ,torcoeff(1)
      &                                       /CON_KJTOK/totbond
-     &                                       ,twh_get_torcoeff(type,2)
-     &                                       *twh_get_torcoeff(type,3)
+     &                                       ,torcoeff(2)
+     &                                       *torcoeff(3)
      &                                       *radtodeg-180.0d0
-     &                                       ,twh_get_torcoeff(type,2)
+     &                                       ,torcoeff(2)
      &                                       ,'     1.0', '     1.0'
                                      else
                                         write(6,*) 'WRITEDLPOLY: ',
@@ -494,35 +504,40 @@ c         ---- output improper torsion (inversion) information
           if ( dlp_improper .ne. 0 ) then
              count_improper = 0
              do ichain = 1,nchain
-                if ( twh_get_nboxi(ichain) .eq. ibox ) then
+                call twh_nboxi(GLB_GET,ichain,testboxi)
+                if ( testboxi .eq. ibox ) then
                    call twh_moltyp(GLB_GET,ichain,imolty)
                    if (imolty .eq. testmolty ) then
                       reset = twh_oldgetatomnum(ichain,1)-1
                       do iunit = 1,nunit
-                         do itor = 1,twh_get_inimprop(imolty,iunit)
-                            type = twh_get_itimprop(imolty,iunit,itor)
+                         call twh_inimprop(GLB_GET,imolty,iunit
+     &                        ,inimproper)
+                         do itor = 1,inimproper
+                            call twh_itimprop(GLB_GET,imolty,iunit,itor
+     &                           ,type)
                             if ( type .gt. 0 ) then
                                count_improper = count_improper + 1
-                               style = twh_get_impstyle(type)
+                               call twh_impstyle(GLB_GET,type,style)
                                if (style .eq. 7) then
+                                  call twh_ijimprop2(GLB_GET,imolty
+     &                                 ,iunit,itor,ijimp2)
+                                  call twh_ijimprop3(GLB_GET,imolty
+     &                                 ,iunit,itor,ijimp3)
+                                  call twh_ijimprop4(GLB_GET,imolty
+     &                                 ,iunit,itor,ijimp4)
+                                  call twh_impcoeff(GLB_GET,type,1
+     &                                 ,impcoeff)
                                   write(inpnum,'(a5,4i5,f12.5)')
      &                                 'plan '
      &                                 ,twh_oldgetatomnum(ichain,iunit)
      &                                 - reset
-     &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijimprop2(imolty,iunit
-     &                                 ,itor))
+     &                                 ,twh_oldgetatomnum(ichain,ijimp2)
      &                                 - reset
-     &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijimprop3(imolty,iunit
-     &                                 ,itor))
+     &                                 ,twh_oldgetatomnum(ichain,ijimp3)
      &                                 - reset
-     &                                 ,twh_oldgetatomnum(ichain
-     &                                 ,twh_get_ijimprop4(imolty,iunit
-     &                                 ,itor))
+     &                                 ,twh_oldgetatomnum(ichain,ijimp4)
      &                                 - reset
-     &                                 ,twh_get_impcoeff(type,1)
-     &                                 /CON_KJTOK
+     &                                 ,impcoeff/CON_KJTOK
                                else
                                   write(6,*) 'WRITEDLPOLY: ',
      &                                 'invalid improper style ',style,
@@ -547,7 +562,7 @@ c         ---- output improper torsion (inversion) information
        enddo
 c      --- ouptput nonbonded parameters
 c      --- get the classical potential
-       call twh_classical_potential(GLB_GET,localcp)
+       call twh_cp_number(GLB_GET,cpnumber)
 c      --- determine the number of unique nonbonded interactions (nuni)
        nuni=0
        do itype = 1,NNTYPE
@@ -559,17 +574,20 @@ c      --- determine the number of unique nonbonded interactions (nuni)
           enddo
        enddo
        write(inpnum,'(a6,i5)') 'VDW   ', nuni
-       if ( localcp .eq. 'Lennard-Jones' ) then
+       if ( cpnumber .eq. CP_LENNARD_JONES ) then
           do itype = 1,NNTYPE
              do jtype = itype,NNTYPE
                 if ( twh_get_lhere(itype)
      &               .and. twh_get_lhere(jtype) ) then
                    ij = twh_getnbtype(itype,jtype)
+                   call twh_nbname(GLB_GET,itype,nbnamei)
+                   call twh_nbname(GLB_GET,jtype,nbnamej)
+                   call twh_nbcoeff(GLB_GET,13,ij,nbcoeff_13)
+                   call twh_nbcoeff(GLB_GET,14,ij,nbcoeff_14)
                    write(inpnum,'(2a8,1x,a4,2f12.5)')
-     &                  twh_get_nbname(itype)
-     &                  ,twh_get_nbname(jtype),'lj  '
-     &                  ,twh_get_nbcoeff(14,ij)/(4.0d0*CON_KJTOK)
-     &                  ,(twh_get_nbcoeff(13,ij))**(1.0/6.0)
+     &                  nbnamei,nbnamej,'lj  '
+     &                  ,nbcoeff_14/(4.0d0*CON_KJTOK)
+     &                  ,(nbcoeff_13)**(1.0/6.0)
                 endif
              enddo
           enddo
@@ -614,10 +632,9 @@ c        --- output coordinates
                   call twh_coordinates(GLB_GET,CRD_REAL,ichain
      &                 ,iunit,xtemp,ytemp,ztemp)
 c                 --- default format
-                  write(inpnum,'(a8,i10)')
-     &                 twh_get_nbname(type),count_atom
-                  write(inpnum,'(3f20.12)')
-     &                 xtemp,ytemp,ztemp
+                  call twh_nbname(GLB_GET,type,nbnamei)
+                  write(inpnum,'(a8,i10)') nbnamei,count_atom
+                  write(inpnum,'(3f20.12)') xtemp,ytemp,ztemp
                enddo
             enddo
          enddo

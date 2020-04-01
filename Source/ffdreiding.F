@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2004-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2004-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,50 +28,51 @@ c     * Note: Dreiding force field transforms its basic                *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-08-2004 by M.G. Martin                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 03-31-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
-#define FUNCTION_GET_CANAME
-#define FUNCTION_GET_CBNAME
-#define FUNCTION_GET_CTNAME
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_NBCOEFF
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       logical lfailure
       integer ntypes,nbondtypes,nangletypes,ndihedtypes,nimprotypes
 c     --- local variables
+c     --- local logical scalars
       logical lgroupi,lgroupj,lfound
+c     --- local character scalars
       character*1 lettera,letterb,letteri,letterj,letterk
+      character*(ELENAMLEN) elenamei,elenamej
       character*(FFNAMELEN) code,ffname
-      integer nvslocal,nbslocal,ntslocal
+      character*2 elelocal 
+      character*5 bplocal
+      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
+c     --- local character arrays
       character*(FFNAMELEN) vnlocal
       dimension vnlocal(MAXSAMEV,MAXVNAME) 
       character*(FFNAMELEN) bnlocal 
       dimension bnlocal(MAXSAMEB,MAXBNAME)
       character*(FFNAMELEN) tnlocal
       dimension tnlocal(MAXSAMET,MAXTNAME)
+      character*(FFNAMELEN) ninlocal 
+      dimension ninlocal(MAXSAMEIMP,MAXIMPNAME)
+c     --- local integer scalars
+      integer nvslocal,nbslocal,ntslocal
+      integer nallatom,ii,jj,itype,jtype,type,isame,ktype,index,icoeff
+      integer nislocal 
+c     --- local double precision scalars
+      double precision sixroottwo,bondorder,theta
+      double precision masslocal,onepi,nbc_ii,nbc_jj
+c     --- local double precision arrays
       double precision vclocal
       dimension vclocal(MINVIBCOEFF:MAXVIBCOEFF)
-      integer nallatom,ii,jj,itype,jtype,type,isame,ktype,index,icoeff
-      double precision sixroottwo,bondorder,theta
       double precision bclocal
       dimension bclocal(MINBENDCOEFF:MAXBENDCOEFF)
       double precision tclocal
       dimension tclocal(MINTORCOEFF:MAXTORCOEFF)
       double precision nbclocal
       dimension nbclocal(MINNBCOEFF:MAXNBCOEFF)
-      double precision masslocal
-      character*2 elelocal 
-      character*5 bplocal
-      character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
       double precision iclocal
       dimension iclocal(MINIMPCOEFF:MAXIMPCOEFF)
-      integer nislocal 
-      character*(FFNAMELEN) ninlocal 
-      dimension ninlocal(MAXSAMEIMP,MAXIMPNAME)
-      double precision onepi
 
       ffname = 'DREIDING'
       call twh_classical_potential(GLB_SET,'Lennard-Jones')
@@ -973,9 +974,11 @@ c     (c) use the same R0 and D0 for 12-6 as exp-6
       do itype = 1,ntypes
          ii = twh_getnbtype(itype,itype)
 c        --- convert from R_0 units to sigma
-         nbclocal(1) = twh_get_nbcoeff(7,ii)/sixroottwo
+         call twh_nbcoeff(GLB_GET,7,ii,nbc_ii)
+         nbclocal(1) = nbc_ii/sixroottwo
 c        --- convert Di from kcal to kelvin
-         nbclocal(2) = twh_get_nbcoeff(8,ii)*CON_KCALTOK
+         call twh_nbcoeff(GLB_GET,8,ii,nbc_ii)
+         nbclocal(2) = nbc_ii*CON_KCALTOK
 c        --- UFF includes full VDW and coulombic interactions for 1-4
          nbclocal(3) = nbclocal(1)
          nbclocal(4) = nbclocal(2)
@@ -993,17 +996,18 @@ c     --- initialize type
       type = 0
       do itype = 1,nallatom
          ii = twh_getnbtype(itype,itype)
-         code = twh_get_cbname(itype)
+         call twh_cbname(GLB_GET,itype,code)
          lettera = code(3:3)
          do jtype = itype,nallatom
             jj = twh_getnbtype(jtype,jtype)
-            code = twh_get_cbname(jtype)
+            call twh_cbname(GLB_GET,jtype,code)
             letterb = code(3:3)
             type = type + 1
             call twh_vibstyle(GLB_SET,type,BOND_STYLE_HARMONIC)
 c           --- compute the equilibrium bond length
-            vclocal(0) = twh_get_nbcoeff(5,ii) + twh_get_nbcoeff(5,jj)
-     &           - 0.01d0
+            call twh_nbcoeff(GLB_GET,5,ii,nbc_ii)
+            call twh_nbcoeff(GLB_GET,5,jj,nbc_jj)
+            vclocal(0) = nbc_ii + nbc_jj - 0.01d0
             if ( lettera .eq. '1' .and. letterb .eq. '1' ) then
 c               --- triple bond
                bondorder = 3.0d0
@@ -1022,8 +1026,8 @@ c           --- set the rest of the information for this vibration
             call twh_set_vibcoeffs(type,vclocal)
             call twh_vibff(GLB_SET,type,ffname)
             nvslocal = 1
-            vnlocal(1,1) = twh_get_cbname(itype)
-            vnlocal(1,2) = twh_get_cbname(jtype)
+            call twh_cbname(GLB_GET,itype,vnlocal(1,1))
+            call twh_cbname(GLB_GET,jtype,vnlocal(1,2))
             call twh_set_vibnames(type,nvslocal,vnlocal)
          enddo
       enddo
@@ -1040,7 +1044,7 @@ c     ******************************************************************
 
       do itype = 1,nallatom
          ii = twh_getnbtype(itype,itype)
-         theta = twh_get_nbcoeff(6,ii)
+         call twh_nbcoeff(GLB_GET,6,ii,theta)
          type = type + 1
 c        --- set equilibrium angle (degrees)
          bclocal(0) = theta
@@ -1061,7 +1065,7 @@ c        --- set the rest of the information
          call twh_bendff(GLB_SET,type,ffname)
          nbslocal = 1
          bnlocal(1,1) = 'wild'
-         bnlocal(1,2) = twh_get_caname(itype)
+         call twh_caname(GLB_GET,itype,bnlocal(1,2))
          bnlocal(1,3) = 'wild'
          call twh_set_bendnames(type,nbslocal,bnlocal)
       enddo
@@ -1077,11 +1081,11 @@ c     ******************************************************************
       type = 0
 
       do itype = 1,nallatom
-         code = twh_get_cbname(itype)
+         call twh_cbname(GLB_GET,itype,code)
          lettera = code(3:3)
          if ( lettera .ne. ' ' .and. code(1:1) .ne. 'H' ) then
             do jtype = itype,nallatom
-               code = twh_get_cbname(jtype)
+               call twh_cbname(GLB_GET,jtype,code)
                letterb = code(3:3)
                if ( letterb .ne. ' ' .and. code(1:1) .ne. 'H' ) then
 c                 --- increase type (perhaps temporarily)
@@ -1091,18 +1095,20 @@ c                 --- initialize lfound
 c                 --- check to see if atoms are group 16
                   lgroupi = .false.
                   lgroupj = .false.
-                  if ( twh_get_elementname(itype) .eq. ' O' .or.
-     &                 twh_get_elementname(itype) .eq. ' S' .or.
-     &                 twh_get_elementname(itype) .eq. 'Se' .or.
-     &                 twh_get_elementname(itype) .eq. 'Te' .or.
-     &                 twh_get_elementname(itype) .eq. 'Po' ) then
+                  call twh_elementname(GLB_GET,itype,elenamei)
+                  if ( elenamei .eq. ' O' .or.
+     &                 elenamei .eq. ' S' .or.
+     &                 elenamei .eq. 'Se' .or.
+     &                 elenamei .eq. 'Te' .or.
+     &                 elenamei .eq. 'Po' ) then
                      lgroupi = .true.
                   endif
-                  if ( twh_get_elementname(jtype) .eq. ' O' .or.
-     &                 twh_get_elementname(jtype) .eq. ' S' .or.
-     &                 twh_get_elementname(jtype) .eq. 'Se' .or.
-     &                 twh_get_elementname(jtype) .eq. 'Te' .or.
-     &                 twh_get_elementname(jtype) .eq. 'Po' ) then
+                  call twh_elementname(GLB_GET,jtype,elenamej)
+                  if ( elenamej .eq. ' O' .or.
+     &                 elenamej .eq. ' S' .or.
+     &                 elenamej .eq. 'Se' .or.
+     &                 elenamej .eq. 'Te' .or.
+     &                 elenamej .eq. 'Po' ) then
                      lgroupj = .true.
                   endif
                   if ( lettera .eq. '3' .and. letterb .eq. '3' ) then
@@ -1166,8 +1172,8 @@ c                    --- set all of the logic
                      call twh_torff(GLB_SET,type,ffname)
                      ntslocal = 1
                      tnlocal(1,1) = 'wild'
-                     tnlocal(1,2) = twh_get_ctname(itype)
-                     tnlocal(1,3) = twh_get_ctname(jtype)
+                     call twh_ctname(GLB_GET,itype,tnlocal(1,2))
+                     call twh_ctname(GLB_GET,jtype,tnlocal(1,3))
                      tnlocal(1,4) = 'wild'
                      call twh_set_tornames(type,ntslocal,tnlocal)
                   endif
@@ -1185,15 +1191,15 @@ c         K = X_3
 c     --- initialize isame to dummy value
       isame = MAXSAMET + 1
       do jtype = 1,nallatom
-         code = twh_get_ctname(jtype)
+         call twh_ctname(GLB_GET,jtype,code)
          letterj = code(3:3)
          if ( letterj .eq. '2' .or. letterj .eq. 'R' ) then
             do ktype = 1,nallatom
-               code = twh_get_ctname(ktype)
+               call twh_ctname(GLB_GET,ktype,code)
                letterk = code(3:3)
                if ( letterk .eq. '3' ) then
                   do itype = 1,nallatom
-                     code = twh_get_ctname(itype)
+                     call twh_ctname(GLB_GET,itype,code)
                      letteri = code(3:3)
                      if ( letteri .ne. '2' .and. letteri .ne. 'R') then
                         if ( isame .ge. MAXSAMET ) then
@@ -1211,9 +1217,9 @@ c                       V0 = 2.0 kcal/mol, n = 3, phi = 180
                         call twh_set_torcoeff(type,tclocal)
                         call twh_torff(GLB_SET,type,ffname)
                         isame = isame + 1
-                        tnlocal(isame,1) = twh_get_ctname(itype)
-                        tnlocal(isame,2) = twh_get_ctname(jtype)
-                        tnlocal(isame,3) = twh_get_ctname(ktype)
+                        call twh_ctname(GLB_GET,itype,tnlocal(isame,1))
+                        call twh_ctname(GLB_GET,jtype,tnlocal(isame,2))
+                        call twh_ctname(GLB_GET,ktype,tnlocal(isame,3))
                         tnlocal(isame,4) = 'wild'
 c                       --- exception to our normal means of setting
 c                       --- torsion names, need to do this by hand
@@ -1301,7 +1307,7 @@ c     ******************************************************************
 
 c     --- improper exists for all of the _2 and _R atomtypes
       do itype = 1,nallatom
-         code = twh_get_ctname(itype)
+         call twh_ctname(GLB_GET,itype,code)
          lettera = code(3:3)
          if ( lettera .eq. '2' .or. lettera .eq. 'R' ) then
 c           --- add this to the list
@@ -1313,7 +1319,7 @@ c           --- safety check isame
                return
             endif
 c           --- assign the names
-            ninlocal(isame,1) = twh_get_ctname(itype)
+            call twh_ctname(GLB_GET,itype,ninlocal(isame,1))
             ninlocal(isame,2) = 'wild'
             ninlocal(isame,3) = 'wild'
             ninlocal(isame,4) = 'wild'

@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -32,12 +32,10 @@ c     *   CRD_SINGLE compute ctrmas for one molecule using single crds *
 c     * ibox is the box of the chain                                   *
 c     * ichain is the chain number.                                    *
 c     * originally written in 1996 by M.G. Martin                      *
-c     * last modified 07-25-2016 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
-#define FUNCTION_GET_MASS
-#define FUNCTION_GET_NBOXI
 #define FUNCTION_MAXBOXLENGTH
 #include "functions.h"
 c     --- variables passed to/from the subroutine
@@ -50,7 +48,7 @@ c     --- logical scalars
 c     --- integer scalars
       integer iunit,imolty,nunit,stt,edd,flagon,itype,crdflag,nchain
       integer testchain,cenunit,itogo,itest,junit,ivib,nvib,endunit
-      integer testunit,testring,istorage
+      integer testunit,testring,istorage,testboxi
 c     --- double precision parameters
       double precision tolerance
       parameter (tolerance = 1.0d-10)
@@ -60,7 +58,7 @@ c     --- double precision scalars
       double precision rxui,ryui,rzui,rcmu
       double precision xtemp,ytemp,ztemp,gyration
       double precision boxcenx,boxceny,boxcenz,arba,arbb,arbc
-      double precision shortest,altdist,dist,masstotal
+      double precision shortest,altdist,dist,masstotal,mass
 
       flagon = 0
       if ( iall .eq. 0 ) then
@@ -112,7 +110,8 @@ c     --- move.
          call twh_masstotal(GLB_GET,imolty,masstotal)
          call twh_lbondgraph(GLB_GET,imolty,lbondgraph)
 c         ----- Check if testchain is in the correct box
-         if ( twh_get_nboxi(testchain) .eq. ibox) then
+         call twh_nboxi(GLB_GET,testchain,testboxi)
+         if ( testboxi .eq. ibox) then
             if ( mtype .eq. CTR_INITIAL ) then
 c              --- make sure all of the atoms are in the same reference
 c              --- frame.  This could get messed up for molecules
@@ -292,9 +291,10 @@ c              --- for some of the energy calcaultions to save time)
      &                 ,xtemp,ytemp,ztemp)
                   if ( masstotal .gt. 0.0d0 ) then
 c                    --- mass weighting
-                     nxcm = nxcm + xtemp*twh_get_mass(itype)
-                     nycm = nycm + ytemp*twh_get_mass(itype)
-                     nzcm = nzcm + ztemp*twh_get_mass(itype)
+                     call twh_mass(GLB_GET,itype,mass)
+                     nxcm = nxcm + xtemp*mass
+                     nycm = nycm + ytemp*mass
+                     nzcm = nzcm + ztemp*mass
                   else
 c                    --- determine the positional center without regard
 c                    --- to mass
@@ -445,7 +445,8 @@ c                    --- test if this is the largest distance
                      if ( rijsq .gt. dmaxsq ) dmaxsq = rijsq
 c                    --- update radius of gyration
                      call twh_ntype(GLB_GET,imolty,iunit,itype)
-                     gyration = gyration + rijsq*twh_get_mass(itype)
+                     call twh_mass(GLB_GET,itype,mass)
+                     gyration = gyration + rijsq*mass
                   enddo                  
                   rcmu = dsqrt(dmaxsq)+ 1.0d-5
 c                 --- divide out the mass for the Rg

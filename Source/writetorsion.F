@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,24 +26,24 @@ c     * the file index                                                 *
 c     * index: file index for output                                   *
 c     *                                                                *
 c     * originally written 02-22-2002 by M.G. Martin                   *
-c     * last modified 09-07-2018 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_LOFTOR
 #define FUNCTION_GET_LTORHERE
-#define FUNCTION_GET_NTORLOOP
-#define FUNCTION_GET_TORCOEFF
-#define FUNCTION_GET_TORFF
-#define FUNCTION_GET_TORSTRING
-#define FUNCTION_GET_TORSTYLE
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       integer index
 c     --- local variables
       logical lfound
-      integer type,i,itemp,tstyle,tloop
+      character*(FFNAMELEN) torff
+      character*(FFNAMELEN) torstring
+      dimension torstring(4)
+      integer type,i,itemp,tstyle,ntorloop,icoeff
       double precision radtodeg
-
+      double precision torcoeff
+      dimension torcoeff(MINTORCOEFF:MAXTORCOEFF)
+      
 c     --- retrieve constants
       call twh_constant_radtodeg(GLB_GET,radtodeg)
 c     --- output torsion information
@@ -51,161 +51,171 @@ c     --- output torsion information
       lfound = .false.
       do type = 1,TTORMAX
          if ( twh_get_ltorhere(type) ) then
+            do icoeff = MINTORCOEFF,MAXTORCOEFF
+               call twh_torcoeff(GLB_GET,type,icoeff,torcoeff(icoeff))
+            enddo
             lfound = .true.
-            tstyle = twh_get_torstyle(type)
+            call twh_torstyle(GLB_GET,type,tstyle)
             if ( tstyle .eq. TOR_STYLE_SIM_HARM ) then
-               write(index,10) type,twh_get_torcoeff(type,1)
-     &              ,twh_get_torcoeff(type,0)
+               write(index,10) type,torcoeff(1)
+     &              ,torcoeff(0)
  10            format('Type: ',i3,1x,'Style: Harmonic  Angle:'
      &              ,f6.4,1x,'k ',f10.1)
             elseif ( tstyle .eq. TOR_STYLE_OPLS_COS ) then
-               write(index,20) type,(twh_get_torcoeff(type,i),i=1,3)
+               write(index,20) type,(torcoeff(i),i=1,3)
  20            format('Type: ',i3
      &              ,1x,'Style: OPLS Cosine Series',/
      &              ,10x,'k1:',f10.1,1x,'k2:',f10.1,1x,'k3:'
      &              ,f10.1)
             elseif ( tstyle .eq. TOR_STYLE_GCA_COS ) then
-               write(index,30) type,twh_get_ntorloop(type)
+               call twh_ntorloop(GLB_GET,type,ntorloop)
+               write(index,30) type,ntorloop
  30            format('Type: ',i3,1x
      &              ,'Style: Amber/Charmm/Gromos Cosine Series'
      &              ,' n: ',i3)
-               do i = 1,twh_get_ntorloop(type)
+               do i = 1,ntorloop
                   itemp = 3*(i-1)
-                  write(index,33) i,twh_get_torcoeff(type,itemp+1)
-     &                 ,twh_get_torcoeff(type,itemp+2)
-     &                 ,twh_get_torcoeff(type,itemp+3)
+                  write(index,33) i,torcoeff(itemp+1)
+     &                 ,torcoeff(itemp+2)
+     &                 ,torcoeff(itemp+3)
                enddo
  33            format(10x,'Index',i3,3x,' k:',f10.1,' m:',f3.1
      &              ,' d:',f10.7)
             elseif ( tstyle .eq. TOR_STYLE_GCA_CUB ) then
-               write(index,40) type,twh_get_ntorloop(type)
+               call twh_ntorloop(GLB_GET,type,ntorloop)
+               write(index,40) type,ntorloop
  40            format('Type: ',i3,1x
      &              ,'Style: Amber/Charmm/Gromos Cosine Series'
      &              ,' n: ',i3)
-               do i = 1,twh_get_ntorloop(type)
+               do i = 1,ntorloop
                   itemp = 3*(i-1)
-                  write(index,33) i,twh_get_torcoeff(type,itemp+1)
-     &                 ,twh_get_torcoeff(type,itemp+2)
-     &                 ,twh_get_torcoeff(type,itemp+3)
+                  write(index,33) i,torcoeff(itemp+1)
+     &                 ,torcoeff(itemp+2)
+     &                 ,torcoeff(itemp+3)
                enddo
-               itemp = 3*twh_get_ntorloop(type)
-               write(index,41) twh_get_torcoeff(type,itemp+2)*radtodeg
-     &              ,twh_get_torcoeff(type,itemp+1)
+               itemp = 3*ntorloop
+               write(index,41) torcoeff(itemp+2)*radtodeg
+     &              ,torcoeff(itemp+1)
  41            format('With additional Harmonic   Angle:'
      &              ,f8.4,1x,'k ',f10.1)
             elseif ( tstyle .eq. TOR_STYLE_COMP_X_AD ) then
-               write(index,62) type,(twh_get_torstring(type,i),i=1,4)
-     &              ,(twh_get_torcoeff(type,i),i=0,19)
+               do i = 1,4
+                  call twh_torstring(GLB_GET,type,i,torstring(i))
+               enddo
+               write(index,62) type,(torstring(i),i=1,4)
+     &              ,(torcoeff(i),i=0,19)
             elseif ( tstyle .eq. TOR_STYLE_COMP_R_AD ) then
-               write(index,63) type,(twh_get_torcoeff(type,i),i=0,2)
+               write(index,63) type,(torcoeff(i),i=0,2)
                
             elseif ( tstyle .eq. TOR_STYLE_TRAPPE_COS ) then
-               write(index,70) type,(twh_get_torcoeff(type,i),i=0,1)
+               write(index,70) type,(torcoeff(i),i=0,1)
  70            format('Type: ',i3,1x,'Style: TraPPE simple cosine '
      &              ,/,10x,'e0 ',f10.2,'e1 ',f10.2)
             elseif ( tstyle .eq. TOR_STYLE_NB ) then
-               write(index,73) type,twh_get_torff(type)
+               call twh_torff(GLB_GET,type,torff)
+               write(index,73) type,torff
                
             elseif ( tstyle .eq. TOR_STYLE_COMP_X_EX ) then
 c               --- class 2 with explicit terms
-               write(index,91) type,(twh_get_torcoeff(type,i),i=0,31)
+               write(index,91) type,(torcoeff(i),i=0,31)
                
             elseif ( tstyle .eq. TOR_STYLE_COS_POW ) then
-               write(index,100)type,twh_get_ntorloop(type)
+               call twh_ntorloop(GLB_GET,type,ntorloop)
+               write(index,100)type,ntorloop
  100           format('Type: ',i3,1x,'Style: Cosine Power Series '
      &              ,'Sum x=1,Ntor a(x) Cos(phi)^x'
      &              ,/,10x,'Ntor:',1x,i3)
-               do i=0,twh_get_ntorloop(type)
-                  write(index,101) i,twh_get_torcoeff(type,i)
+               do i=0,ntorloop
+                  write(index,101) i,torcoeff(i)
                enddo
  101           format (10x,'a(',i1,'):',1x,g12.6)
             elseif ( tstyle .eq. TOR_STYLE_O_OPLS_C ) then
-               write(index,50) type,(twh_get_torcoeff(type,i),i=0,3)
+               write(index,50) type,(torcoeff(i),i=0,3)
             elseif ( tstyle .eq. TOR_STYLE_SUM_COS ) then
+               call twh_ntorloop(GLB_GET,type,ntorloop)
                write(index,'(a5,1x,i3,1x,a28,1x,a2,1x,i3)') 
      &              'Type:',type
-     &              ,'Style: Sum2003 Cosine Series','n:'
-     &              ,twh_get_ntorloop(type)
+     &              ,'Style: Sum2003 Cosine Series','n:',ntorloop
                write(index,'(a34,1x,f6.2)') 
      &              'Torsion shift angle [torcoeff(0)]:'
-     &              ,twh_get_torcoeff(type,0)*radtodeg
-               do i = 0,twh_get_ntorloop(type)-1
+     &              ,torcoeff(0)*radtodeg
+               do i = 0,ntorloop-1
                   itemp = i+1
                   write(index,'(a2,i3,1x,a9,f15.5)')
-     &                 'n:',i,'Constant:',twh_get_torcoeff(type,itemp)
+     &                 'n:',i,'Constant:',torcoeff(itemp)
                enddo
             elseif ( tstyle .eq. TOR_STYLE_O_OPLS_T ) then
                write(index,'(a5,1x,i3,1x,a27)') 'Type:',type
      &              ,'Style: 2 term Cosine Series'
                do i = 1,2
                   write(index,'(a9,i1,a2,f15.5)') 
-     &                 'twh_get_torcoeff(',i,'):'
-     &                 ,twh_get_torcoeff(type,i)
+     &                 'torcoeff(',i,'):',torcoeff(i)
                enddo
             elseif ( tstyle .eq. TOR_STYLE_UFF ) then
                write(index,140) 'Type:',type
      &              ,'Style: UFF K[1 - Cn Cos(n phi)]'
-     &              ,'K:',twh_get_torcoeff(type,1),'Cn:'
-     &              ,twh_get_torcoeff(type,2)
-     &              ,'n:',twh_get_torcoeff(type,3)
+     &              ,'K:',torcoeff(1),'Cn:'
+     &              ,torcoeff(2)
+     &              ,'n:',torcoeff(3)
  140           format(a5,1x,i4,1x,a31,/,11x,a2,1x,f10.3,1x,a3,f10.3,1x
      &              ,a2,1x,f5.2)
             elseif ( tstyle .eq. TOR_STYLE_DREIDING ) then
                write(index,150) 'Type:',type
      &              ,'Style: K[1 - Cos(n (phi - phi_0))]'
-     &              ,'K:',twh_get_torcoeff(type,1),'n:'
-     &              ,twh_get_torcoeff(type,2)
-     &              ,'phi_0:',twh_get_torcoeff(type,3)
+     &              ,'K:',torcoeff(1),'n:'
+     &              ,torcoeff(2)
+     &              ,'phi_0:',torcoeff(3)
  150           format(a5,1x,i4,1x,a34,/,11x,a2,1x,f10.3,1x,a2,f10.3,1x
      &              ,a6,1x,f10.3)
             elseif ( tstyle .eq. TOR_STYLE_TF_COS ) then
                write(index,160) 'Type:',type
      &              ,'Style: K[1 - Cos(2 phi)]','K:'
-     &              ,twh_get_torcoeff(type,1)
+     &              ,torcoeff(1)
  160           format(a5,1x,i4,1x,a24,/,10x,a2,1x,f10.3)
             elseif ( tstyle .eq. TOR_STYLE_TRAPPE_PLAN ) then
-               write(index,170) type,'c1:',twh_get_torcoeff(type,1)
-     &              ,'c2:',twh_get_torcoeff(type,2),'f:'
-     &              ,twh_get_torcoeff(type,3)
+               write(index,170) type,'c1:',torcoeff(1)
+     &              ,'c2:',torcoeff(2),'f:'
+     &              ,torcoeff(3)
  170           format('Type:',i4,1x
      &              ,'Style: c1[1 + Cos(phi + f)] + c2[1 - Cos^2(phi)]'
      &              ,/,10x,2(a3,1x,f10.3,1x),a2,1x
      &              ,f10.5)
             elseif ( tstyle .eq. TOR_STYLE_SQUARE_WELL ) then
-               write(index,180) type,twh_get_torcoeff(type,1)
-     &              ,twh_get_torcoeff(type,2)
-     &              ,twh_get_torcoeff(type,3)
+               write(index,180) type,torcoeff(1)
+     &              ,torcoeff(2)
+     &              ,torcoeff(3)
  180           format('Type:',i4,1x,'Style: Square Well',/,10x
      &              ,'Low Wall:',1x,f10.3,1x,'High Wall:',1x,f10.3,1x
      &              ,'Well Depth:',f10.3)
             elseif ( tstyle .eq. TOR_STYLE_AMBER ) then
-               write(index,190) type,twh_get_ntorloop(type)
+               call twh_ntorloop(GLB_GET,type,ntorloop)
+               write(index,190) type,ntorloop
  190           format('Type: ',i3,1x
      &              ,'Style: Amber Cosine Series / Total Torsions'
      &              ,' n: ',i3)
-               do i = 1,twh_get_ntorloop(type)
+               do i = 1,ntorloop
                   itemp = 3*(i-1)
-                  write(index,33) i,twh_get_torcoeff(type,itemp+1)
-     &                 ,twh_get_torcoeff(type,itemp+2)
-     &                 ,twh_get_torcoeff(type,itemp+3)
+                  write(index,33) i,torcoeff(itemp+1)
+     &                 ,torcoeff(itemp+2)
+     &                 ,torcoeff(itemp+3)
                enddo
             elseif ( tstyle .eq. TOR_STYLE_OPLS_FL ) then
-               write(index,200) type,(twh_get_torcoeff(type,i),i=1,4)
+               write(index,200) type,(torcoeff(i),i=1,4)
  200           format('Type: ',i3
      &              ,1x,'Style: OPLS 4 Parameter Cosine Series',/
      &              ,10x,'k1:',f10.1,1x,'k2:',f10.1,1x,'k3:'
      &              ,f10.1,1x,'k4:',f10.1)
             elseif ( tstyle .eq. TOR_STYLE_MRD ) then
-               tloop = twh_get_ntorloop(type)
-               write(index,210) type,tloop
+               call twh_ntorloop(GLB_GET,type,ntorloop)
+               write(index,210) type,ntorloop
  210           format('Type:',1x,i3,1x,'Style: Multiple Rigid Torsions'
      &              ,/,10x,'Number of allowed Torsions:',1x,i3)
-               do i = 1,tloop
-                  write(index,211) i,twh_get_torcoeff(type,i)
+               do i = 1,ntorloop
+                  write(index,211) i,torcoeff(i)
                enddo
  211           format(10x,'Torsion(',i1,'):',1x,f10.5)
             elseif ( tstyle .eq. TOR_STYLE_FL ) then
-               write(index,220) type,(twh_get_torcoeff(type,i),i=0,5)
+               write(index,220) type,(torcoeff(i),i=0,5)
  220           format('Type:',1x,i3,1x,'Style: Siepmann Fluoroalkane'
      &              ,/,'a0 + a1(1-cos(phi)) + a2(1-Cos(3 phi))',1x
      &              ,'+ a3(1-Cos(phi))^5 + b0 exp[-b1 phi^2]'
@@ -213,7 +223,7 @@ c               --- class 2 with explicit terms
      &              ,1x,'a3:',f10.1
      &              ,/,10x,'b0:',f10.1,1x,'b1:',f10.1)
             elseif ( tstyle .eq. TOR_STYLE_DRUKKER ) then
-               write(index,230) type,(twh_get_torcoeff(type,i),i=0,1)
+               write(index,230) type,(torcoeff(i),i=0,1)
  230           format('Type:',1x,i3,1x,'Style: k1 (1 - Cos(phi - k0))'
      &              ,/,'k0:',1x,g12.6
      &              ,/,'k1:',1x,g12.6)
@@ -224,7 +234,7 @@ c               --- class 2 with explicit terms
                stop
             endif
             if ( twh_get_loftor(type) ) then
-               write(6,11) twh_get_torcoeff(type,-1)
+               write(6,11) torcoeff(-1)
             endif
  11         format(10x,'with 1-4 vdw and scaled (',f5.3,') 1-4 coulomb')
          endif

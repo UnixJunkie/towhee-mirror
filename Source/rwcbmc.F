@@ -387,11 +387,10 @@ c     * only in initialize.F and then in the cbmc_settting_style       *
 c     * section of twh_rwcbmc                                          *
 c     *                                                                *
 c     * split out of rwcbmc 08-01-2014 by M.G. Martin                  *
-c     * last modified 03-02-2020 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_CHECK_LABEL
-#define FUNCTION_GET_VIBRANG
 #define FUNCTION_READ_LABELED_FLOAT
 #define FUNCTION_READ_LABELED_INTEGER
 #define FUNCTION_READ_LABELED_LOGICAL
@@ -1237,9 +1236,8 @@ c        --- optional read vibrang for this type
                if ( lfailure ) return
                call twh_vibrang(GLB_SET,1,dtemp(1))
                call twh_vibrang(GLB_SET,2,dtemp(2))
-               write(6,'(a8,2(f10.5,1x))') 'vibrang:',twh_get_vibrang(1)
-     &              ,twh_get_vibrang(2)
-               if ( twh_get_vibrang(2) .le. twh_get_vibrang(1) ) then
+               write(6,'(a8,2(f10.5,1x))') 'vibrang:',dtemp(1),dtemp(2)
+               if ( dtemp(2) .le. dtemp(1) ) then
                   write(6,*) 'RWCBMC: vibrang(2) must be > vibrang(1)'
                   lfailure = .true.
                   return
@@ -1247,7 +1245,9 @@ c        --- optional read vibrang for this type
             else
                write(rwfile,rwformat) goodstring
 c              --- output these values
-               write(rwfile,*) twh_get_vibrang(1),twh_get_vibrang(2)
+               call twh_vibrang(GLB_GET,1,dtemp(1))
+               call twh_vibrang(GLB_GET,2,dtemp(2))
+               write(rwfile,*) dtemp(1),dtemp(2)
             endif
          endif
       elseif ( cbmc_bond_generation .eq. 'global gaussian' ) then

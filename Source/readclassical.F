@@ -834,13 +834,10 @@ c     ******************************************************************
 c     * reads all of the information related to the additional fields  *
 c     *                                                                *
 c     * originally split from readclassical.F 10-26-2008 by M.G. Martin*
-c     * last modified 08-04-2011 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- functions
-#define FUNCTION_GET_CLASSICAL_POTENTIAL
-#define FUNCTION_GET_ELEMENTNAME
-#define FUNCTION_GET_NBNAME
 #define FUNCTION_READ_LABELED_FLOAT
 #define FUNCTION_READ_LABELED_INTEGER
 #define FUNCTION_READ_LABELED_LOGICAL
@@ -850,11 +847,12 @@ c     --- variables passed to/from the subroutine
       integer ifile
 c     --- local variables
 c     --- character string scalars
+      character*(ELENAMLEN) elename
       character*11 fchar
       character*15 idname
       character*20 fieldstring
-      character*(FFNAMELEN) atomname
-      character*30 cplocal
+      character*(FFNAMELEN) atomname,nbname
+      character*(CLAPOTLEN) cplocal
 c     --- logical scalars
       logical ltemp
 c     --- integer scalars
@@ -968,7 +966,7 @@ c           --- hard wall repulsion style
      &              ,' hard wall'
             elseif ( fchar .eq. 'hard radii' ) then
                write(6,*)'Hard Sphere radii excluded from the hard wall'
-               cplocal = twh_get_classical_potential()
+               call twh_classical_potential(GLB_GET,cplocal)
                if ( cplocal .ne. 'Hard Sphere' .and.
      &              cplocal .ne. 'Repulsive Sphere' .and.
      &              cplocal .ne. 'Lennard-Jones') then
@@ -1183,7 +1181,8 @@ c              --- resolve ljfname into type numbers
                type = 0
                do while ( ntii .eq. 0 .and. type .lt. NNTYPE)
                   type = type + 1
-                  if ( twh_get_nbname(type) .eq. atomname ) then
+                  call twh_nbname(GLB_GET,type,nbname)
+                  if ( nbname .eq. atomname ) then
                      ntii = type
                   endif
                enddo
@@ -1391,7 +1390,8 @@ c              --- resolve atomname into type numbers
                type = 0
                do while ( ntii .eq. 0 .and. type .lt. NNTYPE)
                   type = type + 1
-                  if ( twh_get_nbname(type) .eq. atomname ) then
+                  call twh_nbname(GLB_GET,type,nbname)
+                  if ( nbname .eq. atomname ) then
                      ntii = type
                   endif
                enddo
@@ -1543,8 +1543,8 @@ c                 --- resolve atomname into type numbers
                   type = 0
                   do while ( ntii .eq. 0 .and. type .lt. NNTYPE)
                      type = type + 1
-                     if ( twh_get_elementname(type) 
-     &                    .eq. atomname(1:2) ) then
+                     call twh_elementname(GLB_GET,type,elename)
+                     if ( elename .eq. atomname(1:2) ) then
                         ntii = type
                      endif
                   enddo
@@ -1563,7 +1563,8 @@ c                 --- resolve atomname into type numbers
                   type = 0
                   do while ( ntii .eq. 0 .and. type .lt. NNTYPE)
                      type = type + 1
-                     if ( twh_get_nbname(type) .eq. atomname ) then
+                     call twh_nbname(GLB_GET,type,nbname)
+                     if ( nbname .eq. atomname ) then
                         ntii = type
                      endif
                   enddo

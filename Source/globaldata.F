@@ -393,6 +393,30 @@ c     --- local variables
       return
       end
 
+      subroutine twh_atomnum(flag,ichain,iunit,ivalue)
+c     ******************************************************************
+c     * returns the atom position in the coordinate arrays             *
+c     *                                                                *
+c     * originally written 03-25-2002 as getatomnum by M.G. Martin     *
+c     * last modified 03-20-2020 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the function
+      integer flag,ichain,iunit,ivalue
+c     --- local variables
+      integer globalpos
+
+      if ( flag .eq. GLB_GET ) then
+         call twh_globalpos(GLB_GET,ichain,globalpos)
+         ivalue = globalpos + 3*(iunit-1)
+      else
+         write(6,*) 'ATOMNUM: invalid flag:',flag
+         stop
+      endif
+
+      return
+      end
+
       subroutine twh_avb1rad(flag,dvalue)
 c     ******************************************************************
 c     * the radius for the aggregation-volume-bias move type 1         *
@@ -1983,7 +2007,7 @@ c     * the bond pattern of each atom type in the simulation for use   *
 c     * with some of the CBMC growth styles                            *
 c     *                                                                *
 c     * originally written 04-12-2006 by M.G. Martin                   *
-c     * last modified 04-12-2006 by M.G. Martin                        *
+c     * last modified 03-24-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -1992,7 +2016,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       integer ittemp
 c     --- storage variable
-      character*5 bondpatt
+      character*(BONPATLEN) bondpatt
       dimension bondpatt(NNTYPE)
       save bondpatt
 
@@ -3606,14 +3630,14 @@ c     ******************************************************************
 c     * the classical mixing rule expressed as a test string           *
 c     *                                                                *
 c     * originally written 04-15-2006 by M.G. Martin                   *
-c     * last modified 04-15-2006 by M.G. Martin                        *
+c     * last modified 03-24-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
       integer flag
       character*(*) cvalue
 c     --- storage variable
-      character*30 classical_mixrule
+      character*(MIXRULLEN) classical_mixrule
       save classical_mixrule
 
       if ( flag .eq. GLB_GET ) then
@@ -3634,7 +3658,7 @@ c     * the classical potential expressed as a text string             *
 c     *                                                                *
 c     * originally written 04-14-2006 by M.G. Martin                   *
 c     * twh_set_classicalpotnum inserted here 04-29-2016 by M.G. Martin*
-c     * last modified 04-29-2016 by M.G. Martin                        *
+c     * last modified 03-24-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -3643,7 +3667,7 @@ c     --- local variables
       integer classical_pot_num
       character*(*) cvalue
 c     --- storage variable
-      character*30 classical_potential
+      character*(CLAPOTLEN) classical_potential
       save classical_potential
 
       if ( flag .eq. GLB_GET ) then
@@ -4132,11 +4156,9 @@ c     * get or sets the coordinates of a single atom in the            *
 c     * coordstorage array                                             *
 c     *                                                                *
 c     * originally written 08-04-2003 by M.G. Martin                   *
-c     * last modified 10-13-2008 by M.G. Martin                        *
+c     * last modified 03-20-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GETATOMNUM
-#include "functions.h"
 c     --- variables passed to/from this subroutine
       integer flag,cordflag
       integer ichain,iunit
@@ -4152,14 +4174,14 @@ c     --- storage variables
 
       if ( flag .eq. GLB_SET ) then
          if ( cordflag .eq. CRD_REAL ) then
-            index = twh_getatomnum(ichain,iunit)
+            call twh_atomnum(GLB_GET,ichain,iunit,index)
             coordvector(1) = xxx
             coordvector(2) = yyy
             coordvector(3) = zzz
             call twh_coordstorage(GLB_SET_TRIPLE,index,coordvector)
             return
          elseif ( cordflag .eq. CRD_TEMP ) then
-            index = twh_getatomnum(ichain,iunit)
+            call twh_atomnum(GLB_GET,ichain,iunit,index)
             coordvector(1) = xxx
             coordvector(2) = yyy
             coordvector(3) = zzz
@@ -4173,14 +4195,14 @@ c     --- storage variables
          endif
       elseif ( flag .eq. GLB_GET ) then
          if ( cordflag .eq. CRD_REAL ) then
-            index = twh_getatomnum(ichain,iunit)
+            call twh_atomnum(GLB_GET,ichain,iunit,index)
             call twh_coordstorage(GLB_GET_TRIPLE,index,coordvector)
             xxx = coordvector(1)
             yyy = coordvector(2)
             zzz = coordvector(3)
             return
          elseif ( cordflag .eq. CRD_TEMP ) then
-            index = twh_getatomnum(ichain,iunit)
+            call twh_atomnum(GLB_GET,ichain,iunit,index)
             call twh_coordtemp(GLB_GET_TRIPLE,index,coordvector)
             xxx = coordvector(1)
             yyy = coordvector(2)
@@ -5206,7 +5228,7 @@ c     * the two letter element name for each atom type in the          *
 c     * simulation                                                     *
 c     *                                                                *
 c     * originally written 04-12-2006 by M.G. Martin                   *
-c     * last modified 04-12-2006 by M.G. Martin                        *
+c     * last modified 03-24-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from the subroutine
@@ -5215,7 +5237,7 @@ c     --- variables passed to/from the subroutine
 c     --- local variables
       integer ittemp
 c     --- storage variable
-      character*2 elementname
+      character*(ELENAMLEN) elementname
       dimension elementname(NNTYPE)
       save elementname
 
@@ -5834,11 +5856,9 @@ c     * get or sets the initial coordinates of a single atom in the    *
 c     * coordinit array                                                *
 c     *                                                                *
 c     * originally written 08-04-2003 by M.G. Martin                   *
-c     * last modified 12-06-2008 by M.G. Martin                        *
+c     * last modified 03-20-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GETATOMNUM
-#include "functions.h"
 c     --- variables passed to/from this subroutine
       integer flag
       integer ichain,iunit
@@ -5848,7 +5868,7 @@ c     --- local variables
       double precision fieldvector
       dimension fieldvector(3)
 
-      index = twh_getatomnum(ichain,iunit)
+      call twh_atomnum(GLB_GET,ichain,iunit,index)
 
       if ( flag .eq. GLB_SET ) then
          fieldvector(1) = xxx
@@ -6278,24 +6298,6 @@ c     --- storage variable
       endif
 #endif
 
-      return
-      end
-
-      function twh_getatomnum(ichain,iunit)
-c     ******************************************************************
-c     * returns the atom position in the coordinate arrays             *
-c     *                                                                *
-c     * originally written 03-25-2002 by M.G. Martin                   *
-c     * last modified 08-04-2011 by M.G. Martin                        *
-c     ******************************************************************
-      implicit none
-#define FUNCTION_GETATOMNUM
-#include "functions.h"
-c     --- variables passed to the function
-      integer ichain,iunit,globalpos
-
-      call twh_globalpos(GLB_GET,ichain,globalpos)
-      twh_getatomnum = globalpos + 3*(iunit-1)
       return
       end
 
@@ -11941,6 +11943,30 @@ c     --- information variables
          stop
       endif
 
+      return
+      end
+
+      subroutine twh_oldatomnum(flag,ichain,iunit,ivalue)
+c     ******************************************************************
+c     * old version that returns the atom position in the coordinate   *
+c     * arrays used for some old conversion routines                   *
+c     *                                                                *
+c     * originally written 03-25-2002 as oldgetatomnum by M.G. Martin  *
+c     * last modified 03-20-2020 by M.G. Martin                        *
+c     ******************************************************************
+      implicit none
+c     --- variables passed to/from the subroutine
+      integer flag,ichain,iunit,ivalue
+c     --- local variables
+      integer globalpos
+
+      if ( flag .eq. GLB_GET ) then
+         call twh_globalpos(GLB_GET,ichain,globalpos)
+         ivalue = (globalpos-1)/3 + iunit
+      else
+         write(6,*) 'OLDATOMNUM unknown flag:',flag
+         stop
+      endif
       return
       end
 

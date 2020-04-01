@@ -45,13 +45,9 @@ c     ******************************************************************
 c     * controls the generation of the forcefield files                *
 c     *                                                                *
 c     * originally written 06-21-2002 by M.G. Martin                   *
-c     * last modified 03-02-2020 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_NBSAME
-#define FUNCTION_GET_NTSAME
-#define FUNCTION_GET_NVSAME
-#include "functions.h"
 c     --- values passed to/from the subroutine
       logical lfailure
 c     --- local parameters
@@ -76,7 +72,7 @@ c     --- integer scalars
       integer maxtypes,maxbondtypes,maxangletypes,maxdihedtypes
       integer maximprotypes,maxaatypes,maxbitypes,maxoftypes
       integer maxsamevib,maxsameben,maxsametor,maxhbondtypes
-      integer ffcount
+      integer ffcount,nbsame,ntsame,nvsame
 
 c     --- initialize max variables
       maxtypes = 0
@@ -762,19 +758,20 @@ c        --- update maximums
      &        maxhbondtypes = nhbondtypes
 c        --- update maxsames
          do type = 1,nbondtypes
-            if ( twh_get_nvsame(type) .gt. maxsamevib ) then
-               maxsamevib = twh_get_nvsame(type)
+            call twh_nvsame(GLB_GET,type,nvsame)
+            if ( nvsame .gt. maxsamevib ) then
+               maxsamevib = nvsame
             endif
          enddo
          do type = 1,nangletypes
-            if ( twh_get_nbsame(type) .gt. maxsameben ) then
-               maxsameben = twh_get_nbsame(type)
+            call twh_nbsame(GLB_GET,type,nbsame)
+            if ( nbsame .gt. maxsameben ) then
+               maxsameben = nbsame
             endif
          enddo
          do type = 1,ndihedtypes
-            if ( twh_get_ntsame(type) .gt. maxsametor ) then
-               maxsametor = twh_get_ntsame(type)
-            endif
+            call twh_ntsame(GLB_GET,type,ntsame)
+            if ( ntsame .gt. maxsametor ) maxsametor = ntsame
          enddo
  200     continue
       enddo

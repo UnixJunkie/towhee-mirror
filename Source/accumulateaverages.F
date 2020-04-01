@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,11 +24,10 @@ c     ******************************************************************
 c     * accumulates the averages taken at the end of each move         *
 c     *                                                                *
 c     * split from mainloop 10-20-2005 by M.G. Martin                  *
-c     * last modified 03-25-2018 by M.G. Martin                        *
+c     * last modified 03-29-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GET_DERIVATIVE
-#define FUNCTION_GET_NCMT
 #include "functions.h"
 c     --- variables passed to/from the subroutine
       double precision speden
@@ -39,7 +38,7 @@ c     --- local scalars
       logical scp_eval_derivative
 c     --- integer scalars
       integer ibox,iener,imolty,incount,ivap,iliq,nmolty,nchbox
-      integer numboxes,keycode
+      integer numboxes,keycode,ncmta,ncmtb
 c     --- double precision scalars
       double precision value,uliquid,uvapor,totnumden,beta,masstotal
       double precision boxvolume
@@ -167,7 +166,8 @@ c        --- average volume squared (in cubic angstroms squared)
 c        --- accumulate molecule type dependent quantities
 c        --- accumulate number of molecules
          do imolty = 1, nmolty
-            value = dble(twh_get_ncmt(ibox,imolty))
+            call twh_ncmt(GLB_GET,ibox,imolty,ncmta)
+            value = dble(ncmta)
             keycode = AC_NUM_MOLECULES
             call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
      &           ,value,incount)
@@ -177,7 +177,8 @@ c        --- accumulate number density (and compute spec den)
          speden(ibox) = 0.0d0
          totnumden = 0.0d0
          do imolty = 1, nmolty
-            value = 1.0d3*dble(twh_get_ncmt(ibox,imolty))/boxvolume
+            call twh_ncmt(GLB_GET,ibox,imolty,ncmta)
+            value = 1.0d3*dble(ncmta)/boxvolume
             call twh_masstotal(GLB_GET,imolty,masstotal)
             speden(ibox) = speden(ibox) + masstotal*value/0.6022045d3
             totnumden = totnumden + value
@@ -204,7 +205,8 @@ c        --- accumulate mol fractions
          do imolty = 1, nmolty
             call twh_nchbox(GLB_GET,ibox,nchbox)
             if ( nchbox .ne. 0 ) then
-               value = dble(twh_get_ncmt(ibox,imolty))/dble(nchbox)
+               call twh_ncmt(GLB_GET,ibox,imolty,ncmta)
+               value = dble(ncmta)/dble(nchbox)
             else
                value = 0.0d0
             endif
@@ -219,8 +221,9 @@ c        --- heat of vaporization (pV/n=RT)
          keycode = AC_H_VAP_PV_NRT
          ibox = 0
          imolty = 1
-         if ( twh_get_ncmt(1,imolty) * twh_get_ncmt(2,imolty)
-     &        .ne. 0 ) then
+         call twh_ncmt(GLB_GET,1,imolty,ncmta)
+         call twh_ncmt(GLB_GET,2,imolty,ncmtb)
+         if ( ncmta*ncmtb .ne. 0 ) then
 c           --- determine the vapor and liquid boxes
             if ( speden(1) .gt. speden(2) ) then
                ivap = 2
@@ -234,8 +237,9 @@ c           --- determine the vapor and liquid boxes
             uvapor = energy(ivap)*8.314d0/1000.0d0
             uliquid = energy(iliq)*8.314d0/1000.0d0
             call twh_beta(GLB_GET,beta)
-            value = (uvapor/dble(twh_get_ncmt(ivap,imolty)))
-     &           - (uliquid/dble(twh_get_ncmt(iliq,imolty)))
+            call twh_ncmt(GLB_GET,ivap,imolty,ncmta)
+            call twh_ncmt(GLB_GET,iliq,imolty,ncmtb)
+            value = (uvapor/dble(ncmta)) - (uliquid/dble(ncmtb))
      &           + 8.314d0/(beta*1000.0d0)
             call twh_averages(lfailure,AVG_INCREMENT,keycode,ibox,imolty
      &           ,value,incount)

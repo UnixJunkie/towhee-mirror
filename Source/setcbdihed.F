@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2016 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,23 +28,9 @@ c     * sets up the logic arrays needed to do the dihedral selection   *
 c     * for configurational-bias                                       *
 c     *                                                                *
 c     * originally split from rosenbluth 08-07-2002 by M.G. Martin     *
-c     * last modified 08-04-2016 by M.G. Martin                        *
+c     * last modified 03-30-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_BONDPATT
-#define FUNCTION_GET_IJBEN2
-#define FUNCTION_GET_IJBEN3
-#define FUNCTION_GET_IJIMPROP2
-#define FUNCTION_GET_IJIMPROP3
-#define FUNCTION_GET_IJIMPROP4
-#define FUNCTION_GET_IJTOR2
-#define FUNCTION_GET_IJTOR3
-#define FUNCTION_GET_IJTOR4
-#define FUNCTION_GET_INBEN
-#define FUNCTION_GET_INIMPROP
-#define FUNCTION_GET_INTOR
-#define FUNCTION_GET_LEXIST
-#define FUNCTION_GET_NTYPE
 #define FUNCTION_VTORSION
 #include "functions.h"
 c     --- debug toggle
@@ -57,7 +43,10 @@ c     --- variables passed to/from the subroutine
       double precision phishift
 c     --- local variables
 c     --- logical scalars
-      logical lstore,lbias,lcompute,lovrlap
+      logical lstore,lbias,lcompute,lovrlap,lexist_test
+c     --- logical arrays
+      logical lexist
+      dimension lexist(NNBOND)
 c     --- character string scalars
       character*5 hyfrom,hyprev
 c     --- integer scalars
@@ -65,7 +54,8 @@ c     --- integer scalars
       integer itemp,iutwo,iuthree,iufour,ibond,iubond,iaa,ibead
       integer itest,ttype,iang,ivalue,rimptotal,total,growprev,iflip
       integer grownbon,xtracount,nxangle,nxbias,naabead,nimpbead
-      integer cbmc_dihedgen_code,tortype,torstyle
+      integer cbmc_dihedgen_code,tortype,torstyle,ijben3test,ijben2test
+      integer inben,inimproper,intorsion,ntypefrom,ntypeprev
 c     --- integer arrays
       integer torbead
       dimension torbead(4)
@@ -98,16 +88,18 @@ c        --- initialize nxangle and nxbias
          call twh_nxbias(GLB_SET,count,0)
 c        --- set up growbond and xtra angle information
 c        --- where iu is one of the end beads
-         do ibend = 1,twh_get_inben(imolty,iu)
+         call twh_inben(GLB_GET,imolty,iu,inben)
+         do ibend = 1,inben
 c           --- account for angles with the forms
 c           --- iu - growbond - xx
 c           --- iu - iufrom - growxtra 
             lstore = .false.
             lbias = .false.
-            jut2 = twh_get_ijben2(imolty,iu,ibend)
-            jut3 = twh_get_ijben3(imolty,iu,ibend)
-            
-            if ( twh_get_lexist(jut3) .and. jut3 .ne. iuprev 
+            call twh_ijben2(GLB_GET,imolty,iu,ibend,jut2)
+            call twh_ijben3(GLB_GET,imolty,iu,ibend,jut3)
+            call twh_lexist(GLB_GET,jut2,lexist(2))
+            call twh_lexist(GLB_GET,jut3,lexist(3))
+            if ( lexist(3) .and. jut3 .ne. iuprev 
      &           .and. jut3 .ne. iufrom ) then
                if ( jut2 .eq. iufrom ) then
 c                --- see if jut3 is one of the xtra beads
@@ -116,7 +108,7 @@ c                --- see if jut3 is one of the xtra beads
                      call twh_growxtra(GLB_GET,iw,ixtra,itest)
                      if ( jut3 .eq. itest ) lstore = .true.
                   enddo
-               elseif ( twh_get_lexist(jut2) ) then
+               elseif ( lexist(2) ) then
 c                --- jut2 must be one of the growbond atoms
                   lstore = .true.
                else
@@ -144,12 +136,14 @@ c              --- add this to the list of biasing sites
 
 c        --- set up growbond and xtra angle information
 c        --- where iu is the middle bead
-         do ibend = 1,twh_get_inben(imolty,iufrom)
+         call twh_inben(GLB_GET,imolty,iufrom,inben)
+         do ibend = 1,inben
 c           --- account for angles with the form
 c           --- iufrom - iu - growbond
-            jut1 = twh_get_ijben3(imolty,iufrom,ibend)
-            if ( iu .eq. twh_get_ijben2(imolty,iufrom,ibend) .and.
-     &           twh_get_lexist(jut1) ) then
+            call twh_ijben3(GLB_GET,imolty,iufrom,ibend,jut1)
+            call twh_lexist(GLB_GET,jut1,lexist(1))
+            call twh_ijben2(GLB_GET,imolty,iufrom,ibend,ijben2test)
+            if ( iu .eq. ijben2test .and. lexist(1) ) then
 c              --- add this to the data structure
                call twh_nxangle(GLB_INCR,count,1)
                call twh_nxangle(GLB_GET,count,nxangle)
@@ -163,13 +157,16 @@ c              --- add this to the data structure
 
 c        --- set up the biasing information for torsions which
 c        --- do not yet exist, but have both endpoints in place
-         do it = 1, twh_get_intor(imolty,iu)
-            jut2 = twh_get_ijtor2(imolty,iu,it)
-            jut3 = twh_get_ijtor3(imolty,iu,it)
-            jut4 = twh_get_ijtor4(imolty,iu,it)
-            if ( (.not. twh_get_lexist(jut2))
-     &           .and. (.not. twh_get_lexist(jut3))
-     &           .and. twh_get_lexist(jut4) ) then
+         call twh_intor(GLB_GET,imolty,iu,intorsion)
+         do it = 1,intorsion
+            call twh_ijtor2(GLB_GET,imolty,iu,it,jut2)
+            call twh_ijtor3(GLB_GET,imolty,iu,it,jut3)
+            call twh_ijtor4(GLB_GET,imolty,iu,it,jut4)
+            call twh_lexist(GLB_GET,jut2,lexist(2))
+            call twh_lexist(GLB_GET,jut3,lexist(3))
+            call twh_lexist(GLB_GET,jut4,lexist(4))
+            if ( (.not. lexist(2)) .and. (.not. lexist(3) )
+     &           .and. lexist(4) ) then
                call twh_nxbias(GLB_INCR,count,1)
                call twh_nxbias(GLB_GET,count,ibias)
                call twh_xbias(GLB_SET,1,count,ibias,2)
@@ -206,12 +203,15 @@ c     --- see if any of the growing beads fills in the center of
 c     --- an improper torsion 
       do count = 1,ntogrow
          call twh_growlist(GLB_GET,iw,count,iu)
-         do imp = 1,twh_get_inimprop(imolty,iu)
-            iutwo = twh_get_ijimprop2(imolty,iu,imp)
-            iuthree = twh_get_ijimprop3(imolty,iu,imp)
-            iufour = twh_get_ijimprop4(imolty,iu,imp)
-            if ( twh_get_lexist(iutwo) .and. twh_get_lexist(iuthree) 
-     &           .and. twh_get_lexist(iufour) ) then
+         call twh_inimprop(GLB_GET,imolty,iu,inimproper)
+         do imp = 1,inimproper
+            call twh_ijimprop2(GLB_GET,imolty,iu,imp,iutwo)
+            call twh_ijimprop3(GLB_GET,imolty,iu,imp,iuthree)
+            call twh_ijimprop4(GLB_GET,imolty,iu,imp,iufour)
+            call twh_lexist(GLB_GET,iutwo,lexist(2))
+            call twh_lexist(GLB_GET,iuthree,lexist(3))
+            call twh_lexist(GLB_GET,iufour,lexist(4))
+            if ( lexist(2).and. lexist(3).and. lexist(4) ) then
 c              --- increment the number of improper torsions
                call twh_nimpbead(GLB_INCR,1)
                call twh_nimpbead(GLB_GET,nimpbead)
@@ -232,12 +232,15 @@ c     --- see if the growbond atoms are centers of imp torsions
          call twh_grownbon(GLB_GET,iw,count,grownbon)
          do ibond = 1,grownbon
             call twh_growbond(GLB_GET,iw,count,ibond,iubond)
-            do imp = 1,twh_get_inimprop(imolty,iubond)
-               iutwo = twh_get_ijimprop2(imolty,iubond,imp) 
-               iuthree = twh_get_ijimprop3(imolty,iubond,imp)
-               iufour = twh_get_ijimprop4(imolty,iubond,imp)
-               if ( iutwo .eq. iu .and. twh_get_lexist(iuthree) 
-     &              .and. twh_get_lexist(iufour) ) then
+            call twh_inimprop(GLB_GET,imolty,iubond,inimproper)
+            do imp = 1,inimproper
+               call twh_ijimprop2(GLB_GET,imolty,iubond,imp,iutwo)
+               call twh_ijimprop3(GLB_GET,imolty,iubond,imp,iuthree)
+               call twh_ijimprop4(GLB_GET,imolty,iubond,imp,iufour)
+               call twh_lexist(GLB_GET,iutwo,lexist(2))
+               call twh_lexist(GLB_GET,iuthree,lexist(3))
+               call twh_lexist(GLB_GET,iufour,lexist(4))
+               if ( iutwo .eq. iu .and. lexist(3) .and. lexist(4) ) then
 c                 --- increment the number of improper torsions
                   call twh_nimpbead(GLB_INCR,1)
                   call twh_nimpbead(GLB_GET,nimpbead)
@@ -248,8 +251,8 @@ c                 --- store the information about this improper
                   call twh_impbead(GLB_SET,nimpbead,3,iuthree)
                   call twh_impbead(GLB_SET,nimpbead,4,iufour)
                   call twh_impropernum(GLB_SET,nimpbead,imp)
-               elseif ( twh_get_lexist(iutwo) .and. iuthree .eq. iu 
-     &                 .and. twh_get_lexist(iufour) ) then
+               elseif ( lexist(2) .and. iuthree .eq. iu 
+     &                 .and. lexist(4) ) then
 c                 --- increment the number of improper torsions
                   call twh_nimpbead(GLB_INCR,1)
                   call twh_nimpbead(GLB_GET,nimpbead)
@@ -260,8 +263,7 @@ c                 --- store the information about this improper
                   call twh_impbead(GLB_SET,nimpbead,3,iflip)
                   call twh_impbead(GLB_SET,nimpbead,4,iufour)
                   call twh_impropernum(GLB_SET,nimpbead,imp)
-               elseif ( twh_get_lexist(iutwo)
-     &                 .and. twh_get_lexist(iuthree)
+               elseif ( lexist(2) .and. lexist(3)
      &                 .and. iufour .eq .iu ) then
 c                 --- increment the number of improper torsions
                   call twh_nimpbead(GLB_INCR,1)
@@ -332,11 +334,14 @@ c     --- growbond atoms.
       call twh_growprev(GLB_GET,iw,growprev)
       if ( growprev .ne. 0 ) then
 c        --- see if there is the possiblity for existing torsions
-         do iang = 1,twh_get_inben(imolty,iufrom)
-            if ( twh_get_ijben2(imolty,iufrom,iang) .eq. iuprev 
-     &           .and. 
-     &           twh_get_lexist(twh_get_ijben3(imolty,iufrom,iang)) 
-     &           ) ldihed_direct = .true.
+         call twh_inben(GLB_GET,imolty,iufrom,inben)
+         do iang = 1,inben
+            call twh_ijben3(GLB_GET,imolty,iufrom,iang,ijben3test)
+            call twh_lexist(GLB_GET,ijben3test,lexist_test)
+            call twh_ijben2(GLB_GET,imolty,iufrom,iang,ijben2test)
+            if ( ijben2test .eq. iuprev .and. lexist_test ) then
+               ldihed_direct = .true.
+            endif
          enddo
       endif
       do count = 1,ntogrow
@@ -380,9 +385,11 @@ c        --- this is not needed for a zero growprev as in that case
 c        --- we just use uniform
          if ( cbmc_dihedgen_code .eq. CBMC_GLOBAL_GAUSSIAN ) then
 c           --- store the hybridizations of iufrom and iuprev
-            hyfrom = twh_get_bondpatt(twh_get_ntype(imolty,iufrom))
+            call twh_ntype(GLB_GET,imolty,iufrom,ntypefrom)
+            call twh_bondpatt(GLB_GET,ntypefrom,hyfrom)
             call twh_hyfrom(GLB_SET,hyfrom)
-            hyprev = twh_get_bondpatt(twh_get_ntype(imolty,iuprev))
+            call twh_ntype(GLB_GET,imolty,iuprev,ntypeprev)
+            call twh_bondpatt(GLB_GET,ntypeprev,hyprev)
             call twh_hyprev(GLB_SET,hyprev)
          endif
 c        --- determine the dihedral angle between the first 
@@ -407,20 +414,21 @@ c        --- initialize lcompute
          lcompute = .false.
 c        --- check all of the torsions starting at iu
          it = 0
-         do while ( it .lt. twh_get_intor(imolty,iu) 
-     &        .and. .not. lcompute ) 
+         call twh_intor(GLB_GET,imolty,iu,intorsion)
+         do while ( it .lt. intorsion .and. .not. lcompute ) 
             it = it + 1
 c           --- assign the unit types for the torsion
             torbead(1) = iu
-            torbead(2) = twh_get_ijtor2(imolty,iu,it)
-            torbead(3) = twh_get_ijtor3(imolty,iu,it)
-            torbead(4) = twh_get_ijtor4(imolty,iu,it)
+            call twh_ijtor2(GLB_GET,imolty,iu,it,torbead(2))
+            call twh_ijtor3(GLB_GET,imolty,iu,it,torbead(3))
+            call twh_ijtor4(GLB_GET,imolty,iu,it,torbead(4))
+            call twh_lexist(GLB_GET,torbead(2),lexist(2))
+            call twh_lexist(GLB_GET,torbead(3),lexist(3))
+            call twh_lexist(GLB_GET,torbead(4),lexist(4))
 c           --- determine if this torsion should be computed
             if ( torbead(2) .eq. iufrom .and.
      &           torbead(3) .eq. iuprev .and.
-     &           twh_get_lexist(torbead(2)) .and.
-     &           twh_get_lexist(torbead(3)) .and.
-     &           twh_get_lexist(torbead(4)) ) then
+     &           lexist(2) .and. lexist(3) .and. lexist(4) ) then
 c              --- compute this torsion
                lcompute =.true.
 c              --- temporarily switch back to count
@@ -434,7 +442,7 @@ c              --- assign torkey
                   write(6,*) 'torkey',torkey
                   write(6,*) 'torbead:',torbead
                   write(6,*) 'imolty,iu,intor',imolty,iu
-     &                 ,twh_get_intor(imolty,iu)
+     &                 ,intorsion
                endif
 c              --- assign the positions
                do ibead = 1,4

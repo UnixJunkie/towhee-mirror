@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2018 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,13 +28,11 @@ c     * angle between 0 and 2 pi.  the number of successful pivots are *
 c     * stored in bapivot(molty,nunit,nvib,nbox).                      *
 c     *                                                                *
 c     * originally written by M.G. Martin and C.D. Lorenz 10-16-2002   *
-c     * last modifed in 03-19-2018 by M.G. Martin                      *
+c     * last modifed in 03-28-2020 by M.G. Martin                      *
 c     ******************************************************************
       implicit none
 #define FUNCTION_DISTANCE
 #define FUNCTION_EXPON
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INVIB
 #define FUNCTION_RANDOM
 #include "functions.h"
 #define DEBUG_PIVOT 0
@@ -51,7 +49,7 @@ c     --- integer scalars
       integer icmol,imolty,iunit,ichain,activebox,units,iu
       integer unit1,unit1ptr,unit1nno,unit2,junit,bintheta,binsize
       integer nchainmove,natommove,nmolty,ncmt,ipoint,nmtype
-      integer inringone,inringtwo,ensemble
+      integer inringone,inringtwo,ensemble,invibration,invib_two
 c     --- integer arrays
       integer ds,ntotry,ivalid,validlist
       dimension ds(NUMAX)
@@ -145,9 +143,6 @@ c     --- one of the two units is in a ring, as defined in findrings
       do while ( .not. lfound .and. ntotry .gt. 0 )
          unit1ptr = idint(( dble(ntotry)*twh_random())+1)
          unit1 = ds(unit1ptr)
-#if DEBUG_PIVOT
-         write(6,*) 'ntotry,unit1ptr,unit1:',ntotry,unit1ptr,unit1
-#endif
 c        --- select bonded neighbor (unit2) from unit1.
 c        --- everything downstream from unit2 will be pivoted.
 c        --- make a list of all the atoms bonded to unit1 that would
@@ -155,28 +150,19 @@ c        --- be valid
          ivalid = 0
 c        --- if the first atom has more than 1 bond then check for 
 c        --- second atom, otherwise this is not valid
-#if DEBUG_PIVOT
-         write(6,*) 'unit1,invib:',unit1,twh_get_invib(imolty,unit1)
-#endif
-         if ( twh_get_invib(imolty,unit1) .gt. 1 ) then
-            do unit1nno = 1, twh_get_invib(imolty,unit1)
-               unit2 = twh_get_ijvib(imolty,unit1,unit1nno)
-#if DEBUG_PIVOT
-               write(6,*) 'unit1nno,unit2,invib(unit2)',unit1nno
-     &             ,unit2,twh_get_invib(imolty,unit2)
-#endif
+         call twh_invib(GLB_GET,imolty,unit1,invibration)
+         if ( invibration .gt. 1 ) then
+            do unit1nno = 1,invibration
+               call twh_ijvib(GLB_GET,imolty,unit1,unit1nno,unit2)
 c              --- make sure this atom is bonded to something else
 c              --- as otherwise this is a meaningless pivot
-               if ( twh_get_invib(imolty,unit2) .gt. 1 ) then
+               call twh_invib(GLB_GET,imolty,unit2,invib_two)
+               if ( invib_two .gt. 1 ) then
 c                 --- both atoms are potentially valid for pivot
 c                 --- make sure that if they are in rings then they are
 c                 --- not in the same ring
                   call twh_inring(GLB_GET,imolty,unit1,inringone)
                   call twh_inring(GLB_GET,imolty,unit2,inringtwo)
-#if DEBUG_PIVOT
-                  write(6,*) 'inring(unit1),inring(unit2):'
-     &               ,inringone,inringtwo
-#endif
                   if ( inringone .eq. 0 .or.
      &                 inringone .ne. inringtwo ) then 
                      ivalid = ivalid + 1
@@ -185,14 +171,11 @@ c                 --- not in the same ring
                endif
             enddo
          endif
-#if DEBUG_PIVOT
-         write(6,*) 'ivalid:',ivalid
-#endif
          if ( ivalid .gt. 0 ) then
 c           --- select one of the valid targets at random
             unit1nno = idint( dble(ivalid)*twh_random() ) + 1
             unit1nno = validlist(unit1nno)
-            unit2 = twh_get_ijvib(imolty,unit1,unit1nno)
+            call twh_ijvib(GLB_GET,imolty,unit1,unit1nno,unit2)
             lfound = .true.
          else
 c           --- no valid targets for this unit, remove it from the 
@@ -410,19 +393,14 @@ c     * rewritten so that it uses a while loop to find every atom that *
 c     * is "downstream" of the checkunit                               *
 c     *                                                                *
 c     * originally written on 10-17-2002 by C.D. Lorenz                *
-c     * last modified on 10-13-2008 by M.G. Martin                     *
+c     * last modified on 03-28-2020 by M.G. Martin                     *
 c     ******************************************************************
       implicit none
-#define FUNCTION_GET_IJVIB
-#define FUNCTION_GET_INVIB
-#include "functions.h"
-
 c     --- variables passed to/from the subroutine
       integer imolty,checkunit,ds
       dimension ds(NUMAX)
-
 c     --- local variables
-      integer icheck,junit,workleft,testunit
+      integer icheck,junit,workleft,testunit,invibration
       integer worklist
       dimension worklist(NUMAX)
 
@@ -441,8 +419,9 @@ c        --- decrease this from the worklist
          workleft = workleft - 1
 c        --- check all of the neighbors of the testunit and add them
 c        --- unless they have already been added to the list
-         do icheck = 1,twh_get_invib(imolty,testunit)
-            junit =  twh_get_ijvib(imolty,testunit,icheck)
+         call twh_invib(GLB_GET,imolty,testunit,invibration)
+         do icheck = 1,invibration
+            call twh_ijvib(GLB_GET,imolty,testunit,icheck,junit)
             if ( ds(junit) .eq. 0 ) then
 c              --- add this to the list
                workleft = workleft + 1
