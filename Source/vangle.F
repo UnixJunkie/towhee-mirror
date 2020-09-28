@@ -349,12 +349,12 @@ c              --- force constants match with inverted bond order
             vbondang = (fac_one + fac_two)*differ
 #if DEBUG_VANGLE
             write(6,'(4(a,1x,f8.3,1x))')
-     &           ,'angle:',angle*radtodeg
+     &           'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
      &           ,'delta one:',distone-len_bone
      &           ,'ba one:',fac_one*differ/CON_KCALTOK
             write(6,'(4(a,1x,f8.3,1x))')
-     &           ,'angle:',angle*radtodeg
+     &           'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
      &           ,'delta two:',disttwo-len_btwo
      &           ,'ba two:',fac_two*differ/CON_KCALTOK
@@ -405,12 +405,12 @@ c              --- force constants match with inverted bond order
             vbondang = (fac_one + fac_two)*differ
 #if DEBUG_VANGLE
             write(6,'(4(a,1x,f8.3,1x))')
-     &           ,'angle:',angle*radtodeg
+     &           'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
      &           ,'delta one:',distone-len_bone
      &           ,'ba one:',fac_one*differ/CON_KCALTOK
             write(6,'(4(a,1x,f8.3,1x))')
-     &           ,'angle:',angle*radtodeg
+     &           'angle:',angle*radtodeg
      &           ,'differ:',differ*radtodeg
      &           ,'delta two:',disttwo-len_btwo
      &           ,'ba two:',fac_two*differ/CON_KCALTOK

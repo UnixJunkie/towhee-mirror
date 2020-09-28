@@ -25,8 +25,9 @@
       For more information about the TraPPE United Atom force field see the <a href="../software.html#siepmann">Siepmann group web site</a>.
       Note that TraPPE United Atom is a Lennard-Jones (12-6) force field and can only be combined with other Lennard-Jones (12-6) force fields.
       I would like to acknowledge Collin D. Wick, Jeff Potoff, and J. Ilja Siepmann for providing very useful guidance about implementing TraPPE-UA.
-      Any discrepencies (especially typos) from the published TraPPE-UA force field values had better not exist considering I helped create this 
-      force field.  The detail presented here for the TraPPE-UA force field is greater than the general level of detail for other forcefields due to the
+      Any discrepencies (especially typos) from the published TraPPE-UA force field force field are mentioned in this manual page along with a note about
+      why the implemented version differs from published accounts.
+      The detail presented here for the TraPPE-UA force field is greater than the general level of detail for other forcefields due to the
       close relation between the authors of Towhee and TraPPE-UA.  If someone does find a discrepancy with the published values I would be extremely grateful
       if they let me know about it.  I welcome feedback on how this implementation compares with other programs.
      </ul>
@@ -41,6 +42,7 @@
        <li><a href="../references.html#chen_et_al_2001">Chen <i>et al.</i> 2001</a></li>
        <li><a href="../references.html#kamath_et_al_2004">Kamath <i>et al.</i> 2004</a></li>
        <li><a href="../references.html#stubbs_et_al_2004">Stubbs <i>et al.</i> 2004</a></li>
+       <li><a href="../references.html#kamath_et_al_2006">Kamath <i>et al.</i> 2006</a></li>
       </ul>
      </ul>
      <b>Typos and comments for TraPPE-UA</b> 
@@ -236,9 +238,8 @@
      </ul>
      <b>TraPPE-UA and the Molecule Assembler</b> 
      <ul>
-      The molecule builder is only partially functional for TraPPE-UA.  The builder can assemble aliphatic hydrocarbons and alcohols, but it does not
-      work for aromatics.  In the case of alkenes, TraPPE-UA has different torsional potentials for cis and trans and these can be distinguished using
-      the options in the 'advanced connectivity map'.  TraPPE-UA also uses a rigid model for aromatics, which is currently problematic for Towhee.
+      The molecule builder is functional for TraPPE-UA.  In the case of alkenes, TraPPE-UA has different torsional potentials for cis and trans and these can
+      be distinguished using the options in the 'advanced connectivity map'.  
      </ul>
 
      <b>Coulombic interactions</b> 
@@ -276,7 +277,7 @@
  <foot>
   <hr></hr>
   <font face="Arial" size="2">
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->April 03, 2020<!-- #EndDate -->
    <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>

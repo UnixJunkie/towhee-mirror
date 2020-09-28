@@ -28,7 +28,7 @@ c     * Note: Dreiding force field transforms its basic                *
 c     * parameters into use with a variety of functional forms.        *
 c     *                                                                *
 c     * originally written 12-08-2004 by M.G. Martin                   *
-c     * last modified 03-31-2020 by M.G. Martin                        *
+c     * last modified 08-24-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -1211,7 +1211,8 @@ c                       V0 = 2.0 kcal/mol, n = 3, phi = 180
                         tclocal(1) = 2.0d0*(0.5d0)*CON_KCALTOK
                         tclocal(2) = 3.0d0
                         tclocal(3) = 180.0d0*(onepi/180.0d0)
-                        call twh_torstyle(GLB_SET,type,TOR_STYLE_DREIDING)
+                        call twh_torstyle(GLB_SET,type
+     &                       ,TOR_STYLE_DREIDING)
                         tclocal(-1) = 1.0d0
                         call twh_loftor(GLB_SET,type,.true.)
                         call twh_set_torcoeff(type,tclocal)

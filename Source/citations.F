@@ -157,7 +157,7 @@ c     --- Ensemble
       if ( ensemble .eq. ENS_NVT .and. numboxes .eq. 1 ) then
          citecount = citecount + 1
          write(citefile,'(a,i2,a1)')
-     &        '... in the Canonical ensemble [',citecount,']'
+     &        'Canonical ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a,1x,a)')
      &        '[',citecount,']'
      &        ,'N. Metropolis; A.W. Rosenbluth; M.N. Rosenbluth'
@@ -171,7 +171,7 @@ c     --- Ensemble
       elseif ( ensemble .eq. ENS_NPT .and. numboxes .eq. 1 ) then
          citecount = citecount + 1
          write(citefile,'(a,i2,a1)')
-     &        '... in the isobaric-isothermal ensemble [',citecount,']'
+     &        'Isobaric-isothermal ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a)')
      &        '[',citecount,']'
      &        ,'I.R. McDonald;'
@@ -183,7 +183,7 @@ c     --- Ensemble
       elseif ( ensemble .eq. ENS_muVT ) then
          citecount = citecount + 1
          write(citefile,'(a,i2,a1)')
-     &        '... in the Grand Canonical ensemble [',citecount,']'
+     &        'Grand Canonical ensemble [',citecount,']'
          write(citefile,'(a1,i2,a1,1x,a)')
      &        '[',citecount,']'
      &        ,'G.E. Norman; V.S. Filinov;'
@@ -203,8 +203,8 @@ c     --- Ensemble
          else
             ensstring = 'NpT'
          endif
-         write(citefile,'(a10,1x,a3,a17,i2,a1,i2,a1)')
-     &        '... in the',ensstring,'-Gibbs ensemble [',citecount
+         write(citefile,'(a3,a17,i2,a1,i2,a1)')
+     &        ensstring,'-Gibbs ensemble [',citecount
      &        ,char(44),citecount+1,']'
 c        --- first Gibbs ensemble reference
          write(citefile,'(a1,i2,a1,1x,a)') 

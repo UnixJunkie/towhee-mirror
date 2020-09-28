@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2020 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -26,7 +26,7 @@ c     * sets up all of the force field parameters for the trappe-ua    *
 c     * forcefield                                                     *
 c     *                                                                *
 c     * rewritten from several old routines 12-24-2002 by M.G. Martin  *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 04-03-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -124,7 +124,12 @@ c     N. Lubna; G. Kamath; J.J. Potoff; N. Rai; J.I. Siepmann;
 c     "Transferable Potentials for Phase Equilibria. 8. United-Atom
 c     Description for Thiols, Sulfides, Disulfides, and Thiophene"
 c     J. Phys. Chem. B 109, 24100-24107 (2005).
-
+c     [fpe2006]
+c     G. Kamath; J. Robinson; J.J. Potoff;
+c     "Application of the TraPPE-UA force field for determination of
+c     vapor-liquid equilibria of carboxylate esters"
+c     Fluid Phase Equilib. 240, 46-55 (2006)
+      
       type = 0
 c     *** Argon ***
       
@@ -1029,6 +1034,32 @@ c     CH-S (aromatic) [TraPPE-8]
       isame = isame + 1
       vnlocal(isame,1) = 'Caro'
       vnlocal(isame,2) = 'Scc(aro)'
+      nvslocal = isame
+      call twh_set_vibnames(type,nvslocal,vnlocal)
+
+      type = type + 1
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
+      vclocal(0) = 1.20d0
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+      isame = 0
+c     C=O (all double bonded C=O) [fpe2006]
+      isame = isame + 1
+      vnlocal(isame,1) = 'Csp2'
+      vnlocal(isame,2) = 'O=c(sp2)'
+      nvslocal = isame
+      call twh_set_vibnames(type,nvslocal,vnlocal)
+
+      type = type + 1
+      call twh_vibstyle(GLB_SET,type,BOND_STYLE_FIXED)
+      vclocal(0) = 1.344d0
+      call twh_set_vibcoeffs(type,vclocal)
+      call twh_vibff(GLB_SET,type,ffname)
+      isame = 0
+c     C-O (all) [fpe2006]
+      isame = isame + 1
+      vnlocal(isame,1) = 'Csp3'
+      vnlocal(isame,2) = 'O=c(sp2)'
       nvslocal = isame
       call twh_set_vibnames(type,nvslocal,vnlocal)
 
@@ -2248,6 +2279,24 @@ c     H - S thiol [TraPPE-8]
 c     C - S thiophene [TraPPE-8]
       qbinlocal(1) = 'Caro'
       qbinlocal(2) = 'Scc(aro)'
+      call twh_set_qbinames(type,qbinlocal)
+
+      type = type + 1
+      call twh_qbiff(GLB_SET,type,ffname)
+      qbivlocal = 0.15d0
+      call twh_qbivalue(GLB_SET,type,qbivlocal)
+c     C - O  [TraPPE-6]
+      qbinlocal(1) = 'Csp3'
+      qbinlocal(2) = 'Occ(sp3)'
+      call twh_set_qbinames(type,qbinlocal)
+
+      type = type + 1
+      call twh_qbiff(GLB_SET,type,ffname)
+      qbivlocal = -0.15d0
+      call twh_qbivalue(GLB_SET,type,qbivlocal)
+c     O - C(=O)  acetates [fpe2006]
+      qbinlocal(1) = 'Occ(sp3)'
+      qbinlocal(2) = 'Cco=o(sp2)'
       call twh_set_qbinames(type,qbinlocal)
 
       nbitypes = type

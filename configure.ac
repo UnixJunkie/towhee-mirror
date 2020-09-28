@@ -84,6 +84,10 @@ AM_CONDITIONAL(DisableCLA, test x$DisableCLA = xtrue)
 #   breaks.
 # This has to be done oustide a conditional.  Silly, huh?
 AC_PROG_CC
+# fix for redhat icc
+if test x${CC} = xicc ; then	
+   CFLAGS="${CFLAGS} -pie -fpic"
+fi
 
 # Compiler Tests
 # Already did CC test

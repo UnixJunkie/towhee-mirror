@@ -30,7 +30,7 @@ c     * initializes arrays which are required to solve the loop        *
 c     * closure problem                                                *
 c     *                                                                *
 c     * originally rewritten from E. Coutsias 05-01-2003 by C.D. Lorenz*
-c     * last modified 03-09-2020 by M.G. Martin                        *
+c     * last modified 04-07-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_ARCCOS
@@ -84,6 +84,7 @@ c     --- get onepi constant
       temp(2) = 0.0
       temp(3) = 0.0
       lena1n1 = 0.0d0
+      lenc3a3 = 0.0d0
 c     --- calculate the bond lengths and the angles which are 
 c     --- required to initialize the various arrays used to solve 
 c     --- the loop closure problem
@@ -108,7 +109,7 @@ c     --- the loop closure problem
       do j = 1,8
          if (j .eq. 1) then
             lenab = lena1n1
-         else if (j .eq. 8) then
+         elseif (j .eq. 8) then
             lenab = lenc3a3
          else 
             i = j-1

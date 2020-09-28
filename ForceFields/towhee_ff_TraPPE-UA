@@ -703,7 +703,7 @@ Scc(aro)
 Scc(aro)  
 Scc(aro)  
 Number of Bonded Terms
-          15
+          17
 Bond Type Number
            1
 Bond Style
@@ -920,6 +920,34 @@ Number of Atoms with Same Parameters
            1
 Atom Names
 Caro       Scc(aro)  
+Bond Type Number
+          16
+Bond Style
+           1
+Bond Coefficients
+    0.1200000000E+01
+Vibration Order
+wild      
+Force Field Name
+TraPPE-UA 
+Number of Atoms with Same Parameters  
+           1
+Atom Names
+Csp2       O=c(sp2)  
+Bond Type Number
+          17
+Bond Style
+           1
+Bond Coefficients
+    0.1344000000E+01
+Vibration Order
+wild      
+Force Field Name
+TraPPE-UA 
+Number of Atoms with Same Parameters  
+           1
+Atom Names
+Csp3       O=c(sp2)  
 Number of Angle Terms
           19
 Angle Type Number
@@ -1757,7 +1785,7 @@ TraPPE-UA
 Atom Names
 Ho         wild       wild       wild       Och(sp3)  
 Number of Bond Increments
-          20
+          22
 Bond Increment Type Number
            1
 Bond Increment Value
@@ -1958,3 +1986,23 @@ Force Field Name
 TraPPE-UA 
 Atom Names
 Caro       Scc(aro)  
+Bond Increment Type Number
+          21
+Bond Increment Value
+    0.1500000000E+00
+Bond Increment Order
+wild      
+Force Field Name
+TraPPE-UA 
+Atom Names
+Csp3       Occ(sp3)  
+Bond Increment Type Number
+          22
+Bond Increment Value
+   -0.1500000000E+00
+Bond Increment Order
+wild      
+Force Field Name
+TraPPE-UA 
+Atom Names
+Occ(sp3)   Cco=o(sp2)

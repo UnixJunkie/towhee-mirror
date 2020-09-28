@@ -4334,6 +4334,10 @@ else
 fi
 
 
+# fix for redhat icc
+if test x${CC} = xicc ; then
+   CFLAGS="${CFLAGS} -pie -fpic"
+fi
 
 # Compiler Tests
 # Already did CC test
