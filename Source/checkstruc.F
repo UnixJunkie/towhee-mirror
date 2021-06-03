@@ -28,7 +28,7 @@ c     * it then sets up some arrays of information that is useful when *
 c     * computing bending angles, and torsions                         *
 c     *                                                                *
 c     * Originally written 12-15-2000 by M.G. Martin                   *
-c     * Last modified 03-31-2020 by M.G. Martin                        *
+c     * Last modified 06-03-2021 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_GETNBTYPE
@@ -45,7 +45,7 @@ c     --- integer scalars
       integer imolty,ivib,jvib,iben,jben,itor,jtor,iunit,iaa,jaa,itype
       integer iimp,jimp,itest,itestb,itestc,junit,count,iof,jof,itemp
       integer aunit,bunit,cunit,kunit,atype,ii,kk,ktype,matom,type
-      integer iorder,nmolty,nunit,nstep,numtor,thetatwo
+      integer iorder,nmolty,nunit,nstep,numtor
       integer itbentest,jtbentest,anglestyle,cpnumber
       integer ijaa0i,ijaa0j,ijaa1i,ijaa1j,ijaa2i,ijaa2j
       integer ijben2test,ijben3test,ijben2j,ijben3j
@@ -60,7 +60,7 @@ c     --- local double precision arrays
       integer torcross
       dimension torcross(NUMAX)
 c     --- local dp scalars
-      double precision rij,rjk,rik,zi,zk,theta,dvalue
+      double precision rij,rjk,rik,zi,zk,theta,dvalue,thetatwo
 
       write(6,*) 'Verifying input structures are consistent'
 

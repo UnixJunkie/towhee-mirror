@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2005-2020 Marcus G. Martin                       *
+c     * Copyright (C) 2005-2021 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,88 +24,71 @@ c     ******************************************************************
 c     * writes out the introductory information about Towhee           *
 c     *                                                                *
 c     * split from mainloop 05-13-2005 by M.G. Martin                  *
-c     * last modified 09-28-2020 by M.G. Martin                        *
+c     * last modified 06-03-2021 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
       character*7 version
       character*20 date
 
-      version = '8.2.1'
+      version = '8.2.2'
       call twh_version(GLB_SET,version)
-      date = '(September 28 2020)'
+      date = '(June 03 2021)'
 c     --- Output some information about the code
       write(6,'(1x,a22,1x,a,1x,a)') 'MCCCS Towhee - Version',version
      &     ,date
-c     --- 2020 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2020> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2020:'
+c     --- current copyright
+      write(6,'(1x,a)') 'Copyright (C) <2000-2021> Marcus G. Martin'
+c     --- 2021 code contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2021:'
      &     ,'Marcus G. Martin;'
-c     --- 2019 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2019> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2019:'
+c     --- 2020 code contributors
+      write(6,'(2(1x,a))')'Code Contributors for 2020:'
      &     ,'Marcus G. Martin;'
-c     --- 2018 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2018> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2018:'
+c     --- 2019 code contributors
+      write(6,'(2(1x,a))')'Code Contributors for 2019:'
      &     ,'Marcus G. Martin;'
-c     --- 2017 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2017> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2017:'
+c     --- 2018 code contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2018:'
      &     ,'Marcus G. Martin;'
-c     --- 2016 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2016> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2016:'
+c     --- 2017 code contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2017:'
      &     ,'Marcus G. Martin;'
-c     --- 2015 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2015> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2015:'
+c     --- 2016 code contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2016:'
      &     ,'Marcus G. Martin;'
-c     --- 2014 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2014> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2014:'
+c     --- 2015 contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2015:'
      &     ,'Marcus G. Martin;'
-c     --- 2013 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2013> Marcus G. Martin'
-      write(6,'(3(1x,a))')
-     &     'Code Contributors for 2013:'
+c     --- 2014 code contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2014:'
+     &     ,'Marcus G. Martin;'
+c     --- 2013 code contributors
+      write(6,'(3(1x,a))') 'Code Contributors for 2013:'
      &     ,'Wesley Emeneker;'
      &     ,'Marcus G. Martin;'
-c     --- 2012 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2012> Marcus G. Martin'
-      write(6,'(2(1x,a))')
-     &     'Code Contributors for 2012:'
+c     --- 2012 code contributors
+      write(6,'(2(1x,a))') 'Code Contributors for 2012:'
      &     ,'Marcus G. Martin;'
-c     --- 2011 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2011> Marcus G. Martin'
+c     --- 2011 code contributors
       write(6,'(4(1x,a))')
      &     'Code Contributors for 2011:'
      &     ,'Fred James;'
      &     ,'Marcus G. Martin;'
      &     ,'Suleiman Oloriegbe;'
-c     --- 2010 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2010> Marcus G. Martin'
+c     --- 2010 code contributors
       write(6,'(5(1x,a))')
      &     'Code Contributors for 2010:'
      &     ,'Rene Haber;'
      &     ,'Andrej Lajovic;'
      &     ,'Marcus G. Martin;'
      &     ,'Loukas Peristeras;'
-c     --- 2009 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2009> Marcus G. Martin'
+c     --- 2009 code contributors
       write(6,'(4(1x,a))')
      &     'Code Contributors for 2009:'
      &     ,'Rene Haber;'
      &     ,'Marcus G. Martin;'
      &     ,'Loukas Peristeras;'
-c     --- 2008 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2008> Marcus G. Martin'
+c     --- 2008 code contributors
       write(6,'(6(1x,a))')
      &     'Code Contributors for 2008:'
      &     ,'Rene Haber;'
@@ -113,8 +96,7 @@ c     --- 2008 copyright plus code contributors
      &     ,'Marcus G. Martin;'
      &     ,'Loukas Peristeras;'
      &     ,'Craig Tenney;'
-c     --- 2007 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2007> Marcus G. Martin'
+c     --- 2007 code contributors
       write(6,'(7(1x,a))')
      &     'Code Contributors for 2007:'
      &     ,'Bernhard Eckl;'
@@ -123,8 +105,7 @@ c     --- 2007 copyright plus code contributors
      &     ,'Marcus G. Martin;'
      &     ,'Craig M. Tenney;'
      &     ,'Ozgur Yazaydin'
-c     --- 2006 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2006> Marcus G. Martin'
+c     --- 2006 code contributors
       write(6,'(9(1x,a))')
      &     'Code Contributors for 2006:'
      &     ,'Alan A. Chen;'
@@ -135,16 +116,14 @@ c     --- 2006 copyright plus code contributors
      &     ,'Vincent K. Shen;'
      &     ,'Matthew A. Wyczalkowski;'
      &     ,'Ozgur Yazaydin'
-c     --- 2005 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2005> Marcus G. Martin'
+c     --- 2005 code contributors
       write(6,'(5(1x,a))')
      &     'Code Contributors for 2005:'
      &     ,'Marcus G. Martin;'
      &     ,'Alan A. Chen;'
      &     ,'Christian D. Lorenz;'
      &     ,'Matthew A. Wyczalkowski'
-c     --- 2004 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2004> Marcus G. Martin'
+c     --- 2004 code contributors
       write(6,'(9(1x,a))') 
      &     'Code Contributors for 2004:'
      &     ,'Marcus G. Martin;'
@@ -155,8 +134,7 @@ c     --- 2004 copyright plus code contributors
      &     ,'Steve R. Lustig;'
      &     ,'Paul S. Crozier;'
      &     ,'Nicholas du Preez'
-c     --- 2003 copyright plus code contributors
-      write(6,'(1x,a)') 'Copyright (C) <2003> Marcus G. Martin'
+c     --- 2003 code contributors
       write(6,'(7(1x,a))') 
      &     'Code Contributors for 2003:'
      &     ,'Marcus G. Martin;'
@@ -166,15 +144,20 @@ c     --- 2003 copyright plus code contributors
      &     ,'Yogesh Srivastava;'
      &     ,'Evangelos A Coutsias'
 c     --- 2002
-      write(6,'(1x,a)') 'Copyright (C) <2002> Marcus G. Martin'
       write(6,'(5(1x,a))') 
      &     'Code Contributors for 2002:'
      &     ,'Marcus G. Martin;'
      &     ,'Christian D. Lorenz;'
      &     ,'Aidan P. Thompson;'
      &     ,'Allen G. Sault'
-c     --- 2000-2001
-      write(6,'(1x,a)') 'Copyright (C) <2000-2001> Marcus G. Martin'
+c     --- 2001
+      write(6,'(2(1x,a))') 
+     &     'Code Contributors for 2001:'
+     &     ,'Marcus G. Martin'
+c     --- 2000
+      write(6,'(2(1x,a))') 
+     &     'Code Contributors for 2000:'
+     &     ,'Marcus G. Martin'
 c     --- 1999
       write(6,'(1x,a,1x,a)') 
      &     'Copyright (C) <1999> J. Ilja Siepmann and' 

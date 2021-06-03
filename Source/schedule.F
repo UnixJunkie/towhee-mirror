@@ -3,7 +3,7 @@ c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
 c     * Copyright (C) 1999 Bin Chen, Marcus G. Martin,                 *
 c     * J. Ilja Siepmann, John Stubbs, and Collin D. Wick              *
-c     * Copyright (C) 2000-2020 Marcus G. Martin                       *
+c     * Copyright (C) 2000-2021 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -94,7 +94,7 @@ c     *     growxtra(index,1) is the number of xtra atoms              *
 c     *                                                                *
 c     * originally taken from the old config and swap subroutines and  *
 c     * modified by  M.G. Martin 1-29-1998                             *
-c     * last modified 03-30-2020 by M.G. Martin                        *
+c     * last modified 10-02-2020 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 #define FUNCTION_RANDOM
@@ -274,7 +274,8 @@ c              --- select a valid atom from the list (check nmaxcbmc)
                   atomptr = idint( rvalue ) + 1
                   ivib = viblist(atomptr)
                   call twh_nmaxcbmc(GLB_GET,imolty,nmaxcbmc)
-                  call twh_growcount(GLB_GET,imolty,iutry,ivib,growcount)
+                  call twh_growcount(GLB_GET,imolty,iutry,ivib
+     &                 ,growcount)
                   if ( growcount .le. nmaxcbmc ) then
 c                    --- found a valid target
                      lfound = .true.
