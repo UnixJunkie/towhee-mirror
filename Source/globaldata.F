@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2006-2020 Marcus G. Martin                       *
+c     * Copyright (C) 2006-2021 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -24,7 +24,7 @@ c     * this file contains all of the globally accessed data structures*
 c     * that are stored in Fortran: see globalinfo.c for the C version *
 c     *                                                                *
 c     * originally written 03-20-2006 by M.G. Martin                   *
-c     * last modified 03-09-2020 by M.G. Martin                        *
+c     * last modified 06-24-2021 by M.G. Martin                        *
 c     ******************************************************************
       subroutine twh_aabead(flag,iaa,iatom,ivalue)
 c     ******************************************************************
@@ -4156,7 +4156,7 @@ c     * get or sets the coordinates of a single atom in the            *
 c     * coordstorage array                                             *
 c     *                                                                *
 c     * originally written 08-04-2003 by M.G. Martin                   *
-c     * last modified 03-20-2020 by M.G. Martin                        *
+c     * last modified 06-24-2021 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- variables passed to/from this subroutine
@@ -4217,13 +4217,17 @@ c     --- storage variables
       elseif (flag .eq. GLB_FIX) then
          if ( cordflag .eq. CRD_TEMP ) then
             index =  iunit
-            call twh_coordtemp(GLB_SET,index,xxx)
+            coordvector(1) = xxx
+            coordvector(2) = 0.0d0
+            coordvector(3) = 0.0d0
+            call twh_coordtemp(GLB_SET_TRIPLE,index,coordvector)
             return
          endif
       elseif (flag .eq. GLB_CHK) then
          index = iunit 
          if ( cordflag .eq. CRD_TEMP ) then
-            call twh_coordtemp(GLB_GET,index,xxx)
+            call twh_coordtemp(GLB_GET_TRIPLE,index,coordvector)
+            xxx = coordvector(1)
             yyy = 0.0d0
             zzz = 0.0d0
             return

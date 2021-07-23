@@ -3,7 +3,7 @@
   <title>MCCCS Towhee: Code Manual</title>
  </head>
  <body bgcolor="#FFFFFF" text="#000000">
-  <table width="800" border="0" cellspacing="0" cellpadding="0" height="590">
+  <table border="0" cellspacing="0" cellpadding="0" >
    <tr> 
     <td colspan="2" height="29"> 
      <div align="center"> <font size="5"> <b><font face="Arial, Helvetica, sans-serif">
@@ -12,14 +12,14 @@
     </td>
    </tr>
    <A href="http://sourceforge.net"> 
-    <IMG src="http://sourceforge.net/sflogo.php?group_id=87039&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo" align="right"/>
+    <IMG src="http://sourceforge.net/sflogo.php?group_id=87039&amp;type=5" border="0" alt="SourceForge.net Logo" align="right"/>
    </A>
    <tr> 
-    <td width="18" height="371" valign="top"> 
+    <td valign="top"> 
      <p>&nbsp; </p>
      <p>&nbsp;</p>
     </td>
-    <td width="700" valign="top"> <b>Overview</b> 
+    <td valign="top"> <b>Overview</b> 
      <ul>
       This section explains the general structure of the Towhee program and also includes instructions on compiling Towhee.  This page is only maintained
       for the current version of the Towhee code.  It was last updated for version 8.0.0.
@@ -650,20 +650,26 @@
        <li><b>ffaqvist.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/aqvist.html">Aqvist</a> force field.
        </li>
+       <li><b>ffbelash2006.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/belash2006.html">Belashchenko 2006</a> force field.
+       </li>
+       <li><b>ffbelash2013.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/belash2013.html">Belashchenko 2013</a> force field.
+       </li>
        <li><b>ffc19eef1.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/c19eef1.html">C19eef1</a> force field.
        </li>
        <li><b>ffc19sasa.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/c19sasa.html">C19sasa</a> force field.
        </li>
+       <li><b>ffc27rigid.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/c27rigid.html">C27rigid</a> force field.
+       </li>
        <li><b>ffcatlowfaux.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/catlow_faux.html">CatlowFaux</a> force field.
        </li>
        <li><b>ffcharmm19.F</b>: this subroutine sets all of the parameters needed to build the 
         Charmm19 force field.  For an unknown reason the manual page for Charmm19 is currently missing.
-       </li>
-       <li><b>ffc27rigid.F</b>: this subroutine sets all of the parameters needed to build the 
-        <a href="../forcefields/c27rigid.html">C27rigid</a> force field.
        </li>
        <li><b>ffcharmm22.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/charmm22.html">Charmm22</a> force field.
@@ -716,6 +722,9 @@
        <li><b>fffris2003.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/fris2003.html">Fris2003</a> force field.
        </li>
+       <li><b>fffris2008.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/fris2008.html">Fris2008</a> force field.
+       </li>
        <li><b>ffgala1994.F</b>: this subroutine sets all of the parameters needed to build the
         <a href="../forcefields/gala1994.html">Gala1994</a> force field.
        </li>
@@ -727,6 +736,15 @@
        </li>
        <li><a name="ffhardsphere.F"><b>ffhardsphere.F</b></a>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/hardsphere.html">HardSphere</a> force field.
+       </li>
+       <li><b>ffhoyt2003.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/hoyt2003.html">Hoyt <i>et al.</i> 2003</a> force field.
+       </li>
+       <li><b>ffjaramillo.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/jaramillo.html">Jaramillo <i>et al.</i> 2001</a> force field.
+       </li>
+       <li><b>ffkbff.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/kbff.html">Kirkwood-Buff</a> force field.
        </li>
        <li><b>ffkfvbvs.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/kfvbvs.html">KFvBvS</a> force field.
@@ -740,6 +758,9 @@
        <li><b>ffljium.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/ljium.html">LJium</a> force field.
        </li>
+       <li><b>ffmcy1976.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/mcy1976.html">MCY 1976</a> force field.
+       </li>
        <li><b>ffmend2003.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/mend2003.html">Mendelev <i>et al.</i> 2003</a> force field.
        </li>
@@ -748,6 +769,9 @@
        </li>
        <li><b>ffmm2.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/mm2.html">MM2</a> force field.
+       </li>
+       <li><b>ffmmff94.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/mmff94.html">MMFF94</a> force field.
        </li>
        <li><b>ffmorrow2002.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/morrow2002.html">Morrow and Maginn 2002</a> force field.
@@ -760,6 +784,9 @@
        </li>
        <li><b>ffnerdv3.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/nerdv3.html">NERD Version 3</a> force field.
+       </li>
+       <li><b>ffopls1996.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/opls1996.html">OPLS-1996</a> force field.
        </li>
        <li><b>ffopls2001.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/opls2001.html">OPLS-2001</a> force field.
@@ -777,7 +804,7 @@
        <li><b>ffpotter1997.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/potter1997.html">Potter <i>et al.</i> 1997</a> force field.
        </li>
-       <li><b>ffqmff_viii.F</b>: this subroutine contains a partial implementation of the QMFF-VIII force field.</li>
+       <li><b>ffqmff_viii.F</b>: this subroutine contains a partial implementation of the <a href="../forcefields/qmff_viii.html">QMFF-VIII</a> force field.</li>
        <li><b>ffreadcharmmfile.F</b>: this subroutine reads in a native Charmm force field file and populates the Towhee force field data structure.</li>
        <li><b>ffreadsetflfile.F</b>: this subroutine reads in an EAM setfl file and populates the Towhee force field data structure.</li>
        <li><b>ffrichar1995.F</b>: this subroutine sets all of the parameters needed to build the 
@@ -838,6 +865,7 @@
         <a href="../forcefields/uff.html">UFF</a> force field.
        </li>
        <li><b>ffunlu2004.F</b>: this subroutine contains a partial implementation of the Unlu and Elliott 2004 force field.</li>
+       <li><b>ffvahid.F</b>: a partial implementation of the SPEAD model of Vahid and Elliot.</li>
        <li><b>ffvega1992.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/vega1992.html">Vega <i>et al.</i> 1992</a> force field.
        </li>
@@ -852,6 +880,9 @@
        </li>
        <li><b>ffweiner1986.F</b>: this subroutine sets all of the parameters needed to build the 
         <a href="../forcefields/weiner1986.html">Weiner <i>et al.</i> 1986</a> force field.
+       </li>
+       <li><b>ffwielop1985.F</b>: this subroutine sets all of the parameters needed to build the 
+        <a href="../forcefields/wielop1985.html">Wielopolski and Smith 1985</a> force field.
        </li>
       </ul>
      </ul>
@@ -896,7 +927,7 @@
  <foot>
   <hr></hr>
   <font face="Arial" size="2">
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->March 28, 2018<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->July 22, 2021<!-- #EndDate -->
    <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>

@@ -18,7 +18,7 @@
      <dt> <b>Overview</b> </dt>
      <ul>
       This section describes the format that is used to specify Towhee force field files (towhee_ff) for the current version of those file 
-      (currently force field version 15, starting with code version 7.1.0).  This documentation was last updated for version 8.1.0.
+      (currently force field version 15, starting with code version 7.1.0).  This documentation was last updated for version 8.2.3.
       Files for many commonly used force fields are provided with the download package and if you are using one of those you do not need to know the
       details of this section.  However, this feature also allows the user to utilize their own force field parameters without having to modify the code
       themselves.  The formatting for this file is extremely sensitive and the user is encouraged to look at the examples in the ForceFields directory.  
@@ -1056,8 +1056,7 @@
          <li> The number coresponding to the improper style.  Below is a list of Improper Styles and their impcoeffs.  The improper potentials have a 
           variety of forms (as shown below).  Any energy terms need to use the standard code units of Kelvins.  All improper angles are computed in
           radians within Towhee, so any additive terms with the improper angles should also be listed in radians.  The improper angle is listed as
-          &phi; in the equations below.  Please note that different authors define the torsional zero differently.  Towhee uses the 
-          convention that a perfect cis bond has a torsional angle of 0.
+          &phi; in the equations below.  Please note that different authors define the torsional zero differently.
          </li>
          <ul>
           <li>1: Simple Harmonic Potential
@@ -1087,7 +1086,7 @@
           </li>
           <li>5: Wilson Harmonic
            <ul>
-            <dt>U<sub>improper</sub>(&phi;) = impcoeff(1) * [ 1 + Cos(impcoeff(2)&phi; - impcoeff(3))]</dt>
+            <dt>U<sub>improper</sub>(&phi;) = impcoeff(0) * [ &phi; - impcoeff(1) ]<sup>2</sup></dt>
            </ul>
           </li>
           <li>6: UFF Cosine Series
@@ -1309,7 +1308,7 @@
  <foot>
   <hr></hr>
   <font face="Arial" size="2">
-   <i>Last updated: </i><!-- #BeginDate format:Am1 -->September 06, 2018<!-- #EndDate -->
+   <i>Last updated: </i><!-- #BeginDate format:Am1 -->July 22, 2021<!-- #EndDate -->
    <i>Send comments to: </i><a href="mailto:marcus_martin@users.sourceforge.net">Marcus Martin</a>
   </font>
  </foot>

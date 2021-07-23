@@ -36,6 +36,7 @@ towhee_ff_Gromos43A1 \
 towhee_ff_HardSphere \
 towhee_ff_Hoyt2003 \
 towhee_ff_Jaramillo \
+towhee_ff_KBFF \
 towhee_ff_KFvBvS \
 towhee_ff_Last1993 \
 towhee_ff_LGM \

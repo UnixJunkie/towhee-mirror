@@ -63,7 +63,7 @@ c     --- local variables
       character*(FFNAMELEN) nbnlocal,canlocal,cbnlocal,ctnlocal
       double precision onepi
 
-      ffname = 'Cui2002'
+      ffname = 'Vahid2010'
 c     --- multi-well potential
       call twh_classical_potential(GLB_SET,'Hard 2580 Multistep')
       call twh_classical_mixrule(GLB_SET,'Lorentz-Berthelot')

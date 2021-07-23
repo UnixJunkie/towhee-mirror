@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2014 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2021 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -28,7 +28,7 @@ c     * alternatively returns a mass given an element name             *
 c     * or, returns a mass given an atom number                        *
 c     *                                                                *
 c     * originally written 03-26-2002 by M.G. Martin                   *
-c     * last modified 08-13-2014 by M.G. Martin                        *
+c     * last modified 07-19-2021 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- debugging logical
@@ -165,10 +165,8 @@ c     --- local variables
       masslist(107) = 264.d0
       masslist(108) = 277.d0
       masslist(109) = 268.d0
-c      masslist(110) = 1.00794d0
 
 
-c      elelist(0) = 'H '
       elelist(1) = ' H'
       elelist(2) = 'He'
       elelist(3) = 'Li'

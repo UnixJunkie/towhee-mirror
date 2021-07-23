@@ -1,7 +1,7 @@
 #include "preproc.h"
 c     ******************************************************************
 c     * MCCCS - Towhee: A Monte Carlo molecular simulation program     *
-c     * Copyright (C) 2002-2013 Marcus G. Martin                       *
+c     * Copyright (C) 2002-2021 Marcus G. Martin                       *
 c     * see the file license.gpl for the full license information      *
 c     *                                                                *
 c     * This program is free software; you can redistribute it and/or  *
@@ -45,7 +45,7 @@ c     ******************************************************************
 c     * controls the generation of the forcefield files                *
 c     *                                                                *
 c     * originally written 06-21-2002 by M.G. Martin                   *
-c     * last modified 03-30-2020 by M.G. Martin                        *
+c     * last modified 07-22-2021 by M.G. Martin                        *
 c     ******************************************************************
       implicit none
 c     --- values passed to/from the subroutine
@@ -248,6 +248,10 @@ c     --- add a forcefield to the list
       ffoutput(nff) = .true.
 c     --- add a forcefield to the list
       nff = nff + 1
+      fflist(nff) = 'KBFF'
+      ffoutput(nff) = .true.
+c     --- add a forcefield to the list
+      nff = nff + 1
       fflist(nff) = 'KFvBvS'
       ffoutput(nff) = .true.
 c     --- add a forcefield to the list
@@ -439,6 +443,11 @@ c     --- add a forcefield to the list
       fflist(nff) = 'Wielop1985'
       ffoutput(nff) = .true.
 
+      if (nff .gt. maxff ) then
+         write(6,*) 'Maximum forcefields exceeded',nff,maxff
+         lfailure = .true.
+         return
+      endif
 c     --- set the forcefield
       write(6,*) 'Choose the name of the forcefield to generate'
       write(6,*) 'a Towhee forcefield file.'
@@ -586,6 +595,9 @@ c        --- initialize the counters
          elseif ( ffinput .eq. 'Jaramillo' ) then
             call twh_ffjaramillo(lfailure,ntypes,nbondtypes,nangletypes
      &           ,ndihedtypes)
+         elseif ( ffinput .eq. 'KBFF' ) then
+            call twh_ffkbff(lfailure,ntypes,nbondtypes,nangletypes
+     &           ,nimprotypes,nbitypes)
          elseif ( ffinput .eq. 'KFvBvS' ) then
             call twh_ffkfvbvs(lfailure,ntypes)
          elseif ( ffinput .eq. 'Last1993' ) then

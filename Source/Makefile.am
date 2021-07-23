@@ -261,6 +261,7 @@ forcefield_SOURCES  = \
 		fffris2008.F \
 		ffhardsphere.F \
                 ffjaramillo.F \
+		ffkbff.F \
 		ffkfvbvs.F \
 		fflast1993.F \
 		fflgm.F \
@@ -410,6 +411,7 @@ ffgromos43a1.o: preproc.h functions.h ffgromos43a1.F
 fffris2003.o: preproc.h functions.h fffris2003.F
 ffhardsphere.o: preproc.h functions.h ffhardsphere.F
 ffjaramillo.o: preproc.h functions.h ffjaramillo.F
+ffkbff.o: preproc.h functions.h ffkbff.F
 ffkfvbvs.o: preproc.h functions.h ffkfvbvs.F
 fflast1993.o: preproc.h functions.h fflast1993.F
 fflgm.o: preproc.h functions.h fflgm.F
